@@ -1,0 +1,17 @@
+{
+  "schema":"soil-fem-mechanics/1","units":"m-kN-kPa",
+  "materials":[
+    {"id":1,"young_kpa":1000.0,"poisson":0.3,"body_force_kn_m3":[0.0,0.0,0.0]},
+    {"id":2,"young_kpa":1000.0,"poisson":0.3,"body_force_kn_m3":[0.0,0.0,0.0]}
+  ],
+  "boundary":{
+    "constraints":[
+      {"node_set":"xmin","direction":[1.0,0.0,0.0],"value_m":0.0},
+      {"node_set":"ymin","direction":[0.0,1.0,0.0],"value_m":0.0},
+      {"node_set":"bottom","direction":[0.0,0.0,1.0],"value_m":0.0}
+    ],
+    "surface_loads":[{"kind":"pressure","face_set":"top","pressure_kpa":1.0}]
+  },
+  "relative_linear_tolerance":1e-10,"maximum_free_dofs":100000,
+  "linear_solver":{"method":"sparse_gmres_ilu0","options":{"restart":60,"maximum_iterations":3000,"pivot_tolerance":1e-14}}
+}

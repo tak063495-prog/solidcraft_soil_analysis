@@ -1,0 +1,65 @@
+{
+  "schema": "soil-fem-projected-mcc-fixed-mesh-verification/1",
+  "passed": true,
+  "production_backend_accepted": false,
+  "general_mixed_terrain_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "spatial_convergence_verified": false,
+  "native_ui_connected": false,
+  "scope": "Fixed actual CAD mesh, dry MCC P1-volume Newton; initial/load/unload/local excavation, frozen compatibility history, independently refined rate FEM, restart/rejection and dual-stress output",
+  "solver_sha256": "09eed93197f8aedcbae79b9d404ccab6becb8b5a0d8b95135cef623a9578210c",
+  "source_snapshot_sha256": "14ed9e95d828fcf06350b90307403ba2feca53441c319c5757d83faefe4c9f55",
+  "build_source_files": 488,
+  "unchanged_compiled_source_files": 204,
+  "verification_source_snapshot_sha256": "ce1a00eb49f1dd44a0bb9791541697c63542e9c9aa26e95a37bf56792bb9ef60",
+  "release_rust_tests_passed": 242,
+  "independent_reference_steps": [
+    200,
+    400
+  ],
+  "fixed_mesh_integration_gates_passed": true,
+  "separate_process_midpoint_restarts": 3,
+  "rejected_converged_trials": 3,
+  "genuine_rejected_plastic_and_active_set_changes_verified": true,
+  "projected_export_invalid_input_refusals": 14,
+  "legacy_export_invalid_input_refusals": 15,
+  "legacy_mcc_mc_nonruntime_fields_exact": true,
+  "legacy_mcc_mc_export_files_byte_exact": true,
+  "finest_candidate": {
+    "name": "ultrafine",
+    "numerical_settings": {
+      "kinematics": "side_rollers",
+      "relative_force_tolerance": 1e-08,
+      "relative_linear_tolerance": 1e-10,
+      "maximum_newton_iterations": 40,
+      "initial_increment": 0.0078125,
+      "minimum_increment": 3.0517578125e-05,
+      "material_maximum_substep": 1e-06,
+      "tangent_perturbation": 1e-07,
+      "maximum_free_dofs": 100000,
+      "linear_solver": {
+        "method": "sparse_gmres_ilu0",
+        "options": {
+          "restart": 200,
+          "maximum_iterations": 6000,
+          "pivot_tolerance": 1e-14
+        }
+      }
+    },
+    "compared_frames": 4,
+    "finest_candidate": true,
+    "excavation_floor_increment_native_m": 0.004806507666577636,
+    "excavation_floor_increment_independent_m": 0.004806512331789496,
+    "comparison_file": "comparison-ultrafine.json"
+  },
+  "limitations": [
+    "General spatial convergence and comparison to an independently refined compatible formulation remain unverified",
+    "Water/member/JOINT/birth/material transitions and native viewer are not connected to this new formulation",
+    "Independent force-audited projected export currently supports explicit/side-roller kinematics",
+    "Some evidence is referenced in the workspace; this is not the P6 clean-environment distribution package",
+    "All other unfinished P0-P6 requirements and post-completion GitHub upload remain required"
+  ],
+  "publication_note": "Summary of local immutable evidence; original paths are provenance, not bundled files. Full workspace archives are retained locally.",
+  "original_report_sha256": "9e554862444cfd4a511f2fcd3a0183e12da24641aafd185027c0f0098b7786e9"
+}

@@ -1,0 +1,133 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "side_rollers",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "crest": "top",
+    "free_surface": "free_surface"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "install_anchors",
+      "name": "install_tie",
+      "anchors": [
+        "Tie1"
+      ]
+    },
+    {
+      "kind": "jack_anchors",
+      "name": "jack_tie",
+      "anchors": [
+        "Tie1"
+      ],
+      "target_force_kn": 50.0
+    },
+    {
+      "kind": "boundary",
+      "name": "preload",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "unload",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "jack_anchors",
+      "name": "detension_tie",
+      "anchors": [
+        "Tie1"
+      ],
+      "target_force_kn": 0.0
+    },
+    {
+      "kind": "remove_anchors",
+      "name": "remove_tie",
+      "anchors": [
+        "Tie1"
+      ]
+    }
+  ],
+  "boundary": {
+    "constraints": [],
+    "surface_loads": [
+      {
+        "kind": "pressure",
+        "face_set": "free_surface",
+        "pressure_kpa": 200.0
+      }
+    ]
+  },
+  "verification_reject_once_stages": [
+    "jack_tie",
+    "preload"
+  ],
+  "anchor_system": {
+    "schema": "soil-fem-anchors/1",
+    "embedding_tolerance_m": 1e-10,
+    "anchors": [
+      {
+        "id": "Tie1",
+        "young_kpa": 200000000.0,
+        "area_m2": 0.0005,
+        "head": {
+          "position_m": [
+            0.0,
+            4.0,
+            9.0
+          ]
+        },
+        "bonded_path": [
+          {
+            "position_m": [
+              4.0,
+              4.0,
+              6.0
+            ]
+          },
+          {
+            "position_m": [
+              5.5,
+              4.0,
+              4.875
+            ]
+          },
+          {
+            "position_m": [
+              7.0,
+              4.0,
+              3.75
+            ]
+          },
+          {
+            "position_m": [
+              8.0,
+              4.0,
+              3.0
+            ]
+          }
+        ],
+        "initially_active": false
+      }
+    ]
+  }
+}

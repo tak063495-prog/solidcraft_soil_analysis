@@ -1,0 +1,88 @@
+{
+  "schema": "soil-fem-mixed-mcc-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 40,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.00390625,
+    "material_maximum_substep": 0.0001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "all",
+        "direction": [
+          1,
+          0,
+          0
+        ],
+        "value_m": 0
+      },
+      {
+        "node_set": "all",
+        "direction": [
+          0,
+          1,
+          0
+        ],
+        "value_m": 0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0,
+          0,
+          1
+        ],
+        "value_m": 0
+      },
+      {
+        "node_set": "top",
+        "direction": [
+          0,
+          0,
+          1
+        ],
+        "value_m": -0.01
+      }
+    ]
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "top": "top"
+  },
+  "pressure_on_original_surface_only": false,
+  "stages": [
+    {
+      "kind": "boundary",
+      "name": "load",
+      "target_factor": 1
+    },
+    {
+      "kind": "boundary",
+      "name": "unload",
+      "target_factor": 0
+    },
+    {
+      "kind": "excavate",
+      "name": "cut",
+      "bodies": [
+        "UpperClay"
+      ],
+      "remaining_surface_pressure_kpa": 100
+    }
+  ],
+  "verification_reject_once_stages": []
+}

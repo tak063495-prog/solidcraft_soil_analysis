@@ -1,0 +1,190 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "side_rollers",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 25,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.0001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "excavation_floor": "Pit:floor",
+    "surrounding_surface": "Pit:surrounding_surface",
+    "excavation_wall": "Pit:wall"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "pressure",
+      "name": "preload",
+      "target_pressure_kpa": 90.0,
+      "initial_increment": 1.0
+    },
+    {
+      "kind": "pressure",
+      "name": "unload",
+      "target_pressure_kpa": 30.0,
+      "initial_increment": 0.5
+    },
+    {
+      "kind": "steady_seepage",
+      "name": "recharge",
+      "flow": {
+        "schema": "soil-fem-darcy/1",
+        "units": "m-s",
+        "materials": [
+          {
+            "id": 1,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                2e-07,
+                0.0
+              ],
+              [
+                2e-07,
+                2e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          },
+          {
+            "id": 2,
+            "hydraulic_conductivity_m_s": [
+              [
+                2e-06,
+                1e-07,
+                0.0
+              ],
+              [
+                1e-07,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3e-06
+              ]
+            ]
+          }
+        ],
+        "heads": [
+          {
+            "face_set": "bottom",
+            "head_m": 8.5
+          },
+          {
+            "face_set": "top",
+            "head_m": 8.0
+          }
+        ]
+      },
+      "exterior_water_level_m": 8.0,
+      "initial_increment": 0.5
+    },
+    {
+      "kind": "excavate",
+      "name": "excavate_pit",
+      "bodies": [
+        "Pit"
+      ],
+      "remaining_surface_pressure_kpa": 30.0,
+      "initial_increment": 0.5
+    },
+    {
+      "kind": "steady_seepage",
+      "name": "reflow_after_excavation",
+      "flow": {
+        "schema": "soil-fem-darcy/1",
+        "units": "m-s",
+        "materials": [
+          {
+            "id": 1,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                2e-07,
+                0.0
+              ],
+              [
+                2e-07,
+                2e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          },
+          {
+            "id": 2,
+            "hydraulic_conductivity_m_s": [
+              [
+                2e-06,
+                1e-07,
+                0.0
+              ],
+              [
+                1e-07,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3e-06
+              ]
+            ]
+          }
+        ],
+        "heads": [
+          {
+            "face_set": "bottom",
+            "head_m": 8.5
+          },
+          {
+            "face_set": "Pit:surrounding_surface",
+            "head_m": 8.0
+          },
+          {
+            "face_set": "Pit:floor",
+            "head_m": 8.0
+          },
+          {
+            "face_set": "Pit:wall",
+            "head_m": 8.0
+          }
+        ]
+      },
+      "exterior_water_level_m": 8.0,
+      "initial_increment": 0.5
+    }
+  ],
+  "verification_reject_once_stages": [
+    "preload",
+    "recharge",
+    "excavate_pit",
+    "reflow_after_excavation"
+  ]
+}

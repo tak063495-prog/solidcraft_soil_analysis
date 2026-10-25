@@ -1,0 +1,142 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 50,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "bottom",
+        "direction": [
+          1,
+          0,
+          0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0,
+          1,
+          0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0,
+          0,
+          1
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "top",
+        "direction": [
+          1,
+          0,
+          0
+        ],
+        "value_m": 0.02
+      },
+      {
+        "node_set": "top",
+        "direction": [
+          0,
+          1,
+          0
+        ],
+        "value_m": 0.012
+      },
+      {
+        "node_set": "top",
+        "direction": [
+          0,
+          0,
+          1
+        ],
+        "value_m": 0.012
+      }
+    ]
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "top": "top"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "boundary",
+      "name": "shear",
+      "target_factor": 0.04,
+      "initial_increment": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "open",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "recontact",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "boundary",
+      "name": "reverse",
+      "target_factor": -0.1,
+      "initial_increment": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "reload",
+      "target_factor": 0.1
+    },
+    {
+      "kind": "boundary",
+      "name": "return",
+      "target_factor": 0.0
+    }
+  ],
+  "verification_reject_once_stages": [
+    "shear",
+    "open",
+    "reverse"
+  ],
+  "joint_system": {
+    "schema": "soil-fem-joints/1",
+    "geometric_tolerance_m": 1e-10,
+    "maximum_increment_m": 0.0005,
+    "tangent_step_m": 1e-08,
+    "joints": [
+      {
+        "id": "Seam",
+        "side_a": "Seam:a",
+        "side_b": "Seam:b",
+        "material": {
+          "normal_stiffness_kpa_m": 1000000.0,
+          "tangential_stiffness_kpa_m": 200000.0,
+          "friction_coefficient": 0.3
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "side_rollers",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-09,
+    "maximum_newton_iterations": 25,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.0002,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 1500
+  },
+  "monitors": {
+    "ground_surface": 10.0,
+    "excavation_floor": 5.0
+  },
+  "stages": [
+    {
+      "kind": "pressure",
+      "name": "preload",
+      "target_pressure_kpa": 105.0
+    },
+    {
+      "kind": "pressure",
+      "name": "unload",
+      "target_pressure_kpa": 100.0
+    },
+    {
+      "kind": "excavate",
+      "name": "excavate_upper_layer",
+      "bodies": [
+        "UpperClay"
+      ],
+      "remaining_surface_pressure_kpa": 100.0
+    }
+  ]
+}

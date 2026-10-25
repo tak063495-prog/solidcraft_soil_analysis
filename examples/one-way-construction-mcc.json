@@ -1,0 +1,185 @@
+{
+  "schema": "soil-fem-one-way-construction/1",
+  "one_way": {
+    "schema": "soil-fem-one-way/1",
+    "flow": {
+      "schema": "soil-fem-richards/1",
+      "units": "m-s",
+      "materials": [
+        {
+          "id": 1,
+          "saturated_conductivity_m_s": [
+            [
+              0.0001,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0001,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0001
+            ]
+          ],
+          "retention": {
+            "residual_water_content": 0.08,
+            "saturated_water_content": 0.6,
+            "alpha_per_m": 1.2,
+            "n": 1.6,
+            "saturated_specific_storage_per_m": 0.0
+          }
+        },
+        {
+          "id": 2,
+          "saturated_conductivity_m_s": [
+            [
+              0.0001,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0001,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0001
+            ]
+          ],
+          "retention": {
+            "residual_water_content": 0.08,
+            "saturated_water_content": 0.6,
+            "alpha_per_m": 1.2,
+            "n": 1.6,
+            "saturated_specific_storage_per_m": 0.0
+          }
+        }
+      ],
+      "initial_head": {
+        "head_m": 1.5
+      },
+      "analysis": {
+        "kind": "transient",
+        "periods": [
+          {
+            "name": "before",
+            "end_time_s": 200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "after",
+            "end_time_s": 400.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "floor",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "settings": {
+        "initial_time_step_s": 100.0,
+        "maximum_time_step_s": 100.0,
+        "minimum_time_step_s": 0.0001,
+        "store_integration_points": false
+      }
+    },
+    "mechanics": {
+      "schema": "soil-fem-stages/1",
+      "settings": {
+        "kinematics": "oedometer",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 40,
+        "initial_increment": 0.5,
+        "minimum_increment": 0.001953125,
+        "material_maximum_substep": 0.0002,
+        "tangent_perturbation": 1e-07,
+        "maximum_free_dofs": 100000,
+        "linear_solver": {
+          "method": "sparse_gmres_ilu0",
+          "options": {
+            "restart": 60,
+            "maximum_iterations": 3000,
+            "pivot_tolerance": 1e-14
+          }
+        }
+      },
+      "monitors": {
+        "top": 1.0,
+        "floor": 0.5
+      },
+      "monitor_sets": {},
+      "pressure_on_original_surface_only": false,
+      "stages": [],
+      "verification_reject_once_stages": []
+    },
+    "bishop": {
+      "kind": "effective_saturation"
+    },
+    "water_weight": "water_equivalent_storage",
+    "initial_porosity_tolerance": 0.02,
+    "maximum_initial_engineering_strain": 0.05,
+    "initial_exterior_water": [],
+    "exterior_periods": [
+      {
+        "name": "before",
+        "reservoirs": []
+      },
+      {
+        "name": "after",
+        "reservoirs": []
+      }
+    ],
+    "solid_weight_reference": "dry_bulk_unit_weight",
+    "porosity_policy": "fixed_hydraulic_material",
+    "store_transfer_integration_points": true
+  },
+  "excavations": [
+    {
+      "name": "cut",
+      "before_period": "after",
+      "bodies": [
+        "UpperClay"
+      ],
+      "water_boundary_policy": "explicit_period_boundaries",
+      "cut_traction_policy": "explicit_period_reservoirs"
+    }
+  ]
+}

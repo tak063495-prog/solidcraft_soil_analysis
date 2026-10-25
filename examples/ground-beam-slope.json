@@ -1,0 +1,74 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "equilibrate",
+    "surface_surcharge_kpa": 0.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-09,
+    "geostatic": {
+      "seed": {
+        "kind": "body_states",
+        "states": {
+          "SoilSlope": {
+            "effective_stress_compression_positive_kpa": [
+              100.0,
+              100.0,
+              100.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.7,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          }
+        }
+      },
+      "initial_boundary_factor": 0.0,
+      "maximum_initial_engineering_strain": 0.05,
+      "relative_volume_tolerance": 1e-08,
+      "base_loads": {
+        "surface_loads": [
+          {
+            "kind": "pressure",
+            "face_set": "free_surface",
+            "pressure_kpa": 100.0
+          }
+        ]
+      }
+    }
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Elastic control ground for independent coupled frame verification",
+      "unit_weight_kn_m3": 20.0,
+      "mohr_coulomb": {
+        "young_kpa": 100000.0,
+        "poisson": 0.3,
+        "cohesion_kpa": 1000.0,
+        "friction_deg": 30.0,
+        "dilation_deg": 5.0,
+        "tension_cutoff_kpa": null,
+        "flow": "non_associated"
+      }
+    }
+  ],
+  "bodies": [
+    {
+      "body": "SoilSlope",
+      "material_id": 1
+    }
+  ]
+}

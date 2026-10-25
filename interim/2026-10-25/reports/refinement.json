@@ -1,0 +1,1242 @@
+{
+  "schema": "soil-fem-projected-mcc-integration-assessment/1",
+  "integration_gates_passed": true,
+  "production_backend_accepted": false,
+  "spatial_convergence_verified": false,
+  "native_ui_connected": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "scope": "One fixed actual CAD slope, dry MCC, P1-volume work-conjugate equilibrium; initialization/load/unload/local excavation",
+  "limits_origin": "Unchanged MCC full-field and reference-refinement gates from assess_mixed_mcc_resolution.py; only the finest candidate is required for field accuracy and all coarse failures are retained",
+  "reference_refinement_includes_initialization": true,
+  "independent_reference_steps": [
+    200,
+    400
+  ],
+  "candidates": [
+    {
+      "name": "coarse",
+      "numerical_settings": {
+        "kinematics": "side_rollers",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 40,
+        "initial_increment": 0.0625,
+        "minimum_increment": 0.000244140625,
+        "material_maximum_substep": 0.0001,
+        "tangent_perturbation": 1e-07,
+        "maximum_free_dofs": 100000,
+        "linear_solver": {
+          "method": "sparse_gmres_ilu0",
+          "options": {
+            "restart": 200,
+            "maximum_iterations": 6000,
+            "pivot_tolerance": 1e-14
+          }
+        }
+      },
+      "compared_frames": 4,
+      "finest_candidate": false,
+      "excavation_floor_increment_native_m": 0.004806047394841752,
+      "excavation_floor_increment_independent_m": 0.004806512331789496,
+      "comparison_file": "comparison-coarse.json"
+    },
+    {
+      "name": "refined",
+      "numerical_settings": {
+        "kinematics": "side_rollers",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 40,
+        "initial_increment": 0.015625,
+        "minimum_increment": 6.103515625e-05,
+        "material_maximum_substep": 1e-05,
+        "tangent_perturbation": 1e-07,
+        "maximum_free_dofs": 100000,
+        "linear_solver": {
+          "method": "sparse_gmres_ilu0",
+          "options": {
+            "restart": 200,
+            "maximum_iterations": 6000,
+            "pivot_tolerance": 1e-14
+          }
+        }
+      },
+      "compared_frames": 4,
+      "finest_candidate": false,
+      "excavation_floor_increment_native_m": 0.004806465672024774,
+      "excavation_floor_increment_independent_m": 0.004806512331789496,
+      "comparison_file": "comparison-refined.json"
+    },
+    {
+      "name": "ultrafine",
+      "numerical_settings": {
+        "kinematics": "side_rollers",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 40,
+        "initial_increment": 0.0078125,
+        "minimum_increment": 3.0517578125e-05,
+        "material_maximum_substep": 1e-06,
+        "tangent_perturbation": 1e-07,
+        "maximum_free_dofs": 100000,
+        "linear_solver": {
+          "method": "sparse_gmres_ilu0",
+          "options": {
+            "restart": 200,
+            "maximum_iterations": 6000,
+            "pivot_tolerance": 1e-14
+          }
+        }
+      },
+      "compared_frames": 4,
+      "finest_candidate": true,
+      "excavation_floor_increment_native_m": 0.004806507666577636,
+      "excavation_floor_increment_independent_m": 0.004806512331789496,
+      "comparison_file": "comparison-ultrafine.json"
+    }
+  ],
+  "independent_refinement": [
+    {
+      "name": "initial_equilibrated",
+      "fields": {
+        "displacement_m": {
+          "relative_l2": 8.260614638731775e-08,
+          "maximum_absolute": 2.2845510656843704e-09
+        },
+        "stress_kpa": {
+          "relative_l2": 6.595449906832366e-09,
+          "maximum_absolute": 1.1652051519206452e-05
+        },
+        "pc_kpa": {
+          "relative_l2": 4.864116807843013e-11,
+          "maximum_absolute": 9.909787550554938e-07
+        },
+        "void_ratio": {
+          "relative_l2": 3.450620287238247e-10,
+          "maximum_absolute": 2.1052146692568385e-09
+        },
+        "plastic_strain": {
+          "relative_l2": 5.8144764608723064e-06,
+          "maximum_absolute": 6.665135061055538e-09
+        }
+      }
+    },
+    {
+      "name": "reload_slope",
+      "fields": {
+        "displacement_m": {
+          "relative_l2": 8.778289807064849e-08,
+          "maximum_absolute": 2.945898951861592e-09
+        },
+        "stress_kpa": {
+          "relative_l2": 7.012137506520799e-09,
+          "maximum_absolute": 1.1714503088455785e-05
+        },
+        "pc_kpa": {
+          "relative_l2": 8.38478882517975e-11,
+          "maximum_absolute": 9.909787550554938e-07
+        },
+        "void_ratio": {
+          "relative_l2": 1.896128536275623e-09,
+          "maximum_absolute": 1.746920208489655e-08
+        },
+        "plastic_strain": {
+          "relative_l2": 2.934189360886434e-06,
+          "maximum_absolute": 8.977405291377138e-09
+        }
+      }
+    },
+    {
+      "name": "unload_slope",
+      "fields": {
+        "displacement_m": {
+          "relative_l2": 8.247460210873011e-08,
+          "maximum_absolute": 2.2675830622931326e-09
+        },
+        "stress_kpa": {
+          "relative_l2": 6.587015506557346e-09,
+          "maximum_absolute": 1.1693581228655603e-05
+        },
+        "pc_kpa": {
+          "relative_l2": 8.068022426406748e-11,
+          "maximum_absolute": 8.791465155866263e-07
+        },
+        "void_ratio": {
+          "relative_l2": 3.2427691307646174e-10,
+          "maximum_absolute": 2.1132380290111996e-09
+        },
+        "plastic_strain": {
+          "relative_l2": 3.046028198762447e-06,
+          "maximum_absolute": 8.977405291377138e-09
+        }
+      }
+    },
+    {
+      "name": "excavate_pit",
+      "fields": {
+        "displacement_m": {
+          "relative_l2": 8.499923182523348e-08,
+          "maximum_absolute": 2.5014251434085644e-09
+        },
+        "stress_kpa": {
+          "relative_l2": 6.648138563515113e-09,
+          "maximum_absolute": 1.1625176227880729e-05
+        },
+        "pc_kpa": {
+          "relative_l2": 8.068022426406748e-11,
+          "maximum_absolute": 8.791465155866263e-07
+        },
+        "void_ratio": {
+          "relative_l2": 3.5433752159632603e-10,
+          "maximum_absolute": 2.405640131541986e-09
+        },
+        "plastic_strain": {
+          "relative_l2": 3.046028198762447e-06,
+          "maximum_absolute": 8.977405291377138e-09
+        }
+      }
+    }
+  ],
+  "gates": [
+    {
+      "name": "independent200_to_400:initial_equilibrated:displacement_m",
+      "observed": 2.2845510656843704e-09,
+      "limit": 1e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:initial_equilibrated:stress_kpa",
+      "observed": 6.595449906832366e-09,
+      "limit": 2.5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:initial_equilibrated:pc_kpa",
+      "observed": 9.909787550554938e-07,
+      "limit": 2.5e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:initial_equilibrated:void_ratio",
+      "observed": 2.1052146692568385e-09,
+      "limit": 1.25e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:initial_equilibrated:plastic_strain",
+      "observed": 6.665135061055538e-09,
+      "limit": 2.5e-07,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200:initial_equilibrated:force",
+      "observed": 1.951288634172938e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent400:initial_equilibrated:force",
+      "observed": 3.910865176569977e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:reload_slope:displacement_m",
+      "observed": 2.945898951861592e-09,
+      "limit": 1e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:reload_slope:stress_kpa",
+      "observed": 7.012137506520799e-09,
+      "limit": 2.5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:reload_slope:pc_kpa",
+      "observed": 9.909787550554938e-07,
+      "limit": 2.5e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:reload_slope:void_ratio",
+      "observed": 1.746920208489655e-08,
+      "limit": 1.25e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:reload_slope:plastic_strain",
+      "observed": 8.977405291377138e-09,
+      "limit": 2.5e-07,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200:reload_slope:force",
+      "observed": 2.2280079218965593e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent400:reload_slope:force",
+      "observed": 1.9137541969252817e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:unload_slope:displacement_m",
+      "observed": 2.2675830622931326e-09,
+      "limit": 1e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:unload_slope:stress_kpa",
+      "observed": 6.587015506557346e-09,
+      "limit": 2.5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:unload_slope:pc_kpa",
+      "observed": 8.791465155866263e-07,
+      "limit": 2.5e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:unload_slope:void_ratio",
+      "observed": 2.1132380290111996e-09,
+      "limit": 1.25e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:unload_slope:plastic_strain",
+      "observed": 8.977405291377138e-09,
+      "limit": 2.5e-07,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200:unload_slope:force",
+      "observed": 1.9198370180675407e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent400:unload_slope:force",
+      "observed": 2.210295693547719e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:excavate_pit:displacement_m",
+      "observed": 2.5014251434085644e-09,
+      "limit": 1e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:excavate_pit:stress_kpa",
+      "observed": 6.648138563515113e-09,
+      "limit": 2.5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:excavate_pit:pc_kpa",
+      "observed": 8.791465155866263e-07,
+      "limit": 2.5e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:excavate_pit:void_ratio",
+      "observed": 2.405640131541986e-09,
+      "limit": 1.25e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200_to_400:excavate_pit:plastic_strain",
+      "observed": 8.977405291377138e-09,
+      "limit": 2.5e-07,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent200:excavate_pit:force",
+      "observed": 2.318179506148214e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "independent400:excavate_pit:force",
+      "observed": 1.740665504482871e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:initial_equilibrated:displacement_relative_all_nodes",
+      "observed": 0.00026974299111991775,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:initial_equilibrated:displacement_maximum_component_error_m",
+      "observed": 7.341029022445156e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:initial_equilibrated:independent_relative_force_residual",
+      "observed": 3.910865176569977e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:initial_equilibrated:stress",
+      "observed": 5.649680448288744e-05,
+      "limit": 1e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:initial_equilibrated:pc",
+      "observed": 0.0006651138807960422,
+      "limit": 0.0001,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:initial_equilibrated:void_ratio",
+      "observed": 1.9350318622546325e-05,
+      "limit": 5e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:initial_equilibrated:plastic_strain",
+      "observed": 1.0482490748364715e-05,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:initial_equilibrated:native_force",
+      "observed": 2.562937715848285e-15,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:initial_equilibrated:relative_volume_equation_residual",
+      "observed": 3.295311765038312e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:initial_equilibrated:relative_pressure_consistency_residual",
+      "observed": 3.9065566450734344e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:reload_slope:displacement_relative_all_nodes",
+      "observed": 0.00030100333967909035,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:reload_slope:displacement_maximum_component_error_m",
+      "observed": 7.497288816641148e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:reload_slope:independent_relative_force_residual",
+      "observed": 1.9137541969252817e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:reload_slope:stress",
+      "observed": 5.4996629415799116e-05,
+      "limit": 1e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:reload_slope:pc",
+      "observed": 0.0006651138807960422,
+      "limit": 0.0001,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:reload_slope:void_ratio",
+      "observed": 2.4394287369222667e-05,
+      "limit": 5e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:reload_slope:plastic_strain",
+      "observed": 1.3502883597634602e-05,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:reload_slope:native_force",
+      "observed": 1.5839917923337393e-11,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:reload_slope:relative_volume_equation_residual",
+      "observed": 3.759601960210694e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:reload_slope:relative_pressure_consistency_residual",
+      "observed": 3.2347866606957463e-13,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:unload_slope:displacement_relative_all_nodes",
+      "observed": 0.0003306957116760752,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:unload_slope:displacement_maximum_component_error_m",
+      "observed": 7.976663400815001e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:unload_slope:independent_relative_force_residual",
+      "observed": 2.210295693547719e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:unload_slope:stress",
+      "observed": 5.6682592890359357e-05,
+      "limit": 1e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:unload_slope:pc",
+      "observed": 0.0006423323030624317,
+      "limit": 0.0001,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:unload_slope:void_ratio",
+      "observed": 4.4672761622788215e-05,
+      "limit": 5e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:unload_slope:plastic_strain",
+      "observed": 1.3502883597634602e-05,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:unload_slope:native_force",
+      "observed": 1.2872342191934644e-14,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:unload_slope:relative_volume_equation_residual",
+      "observed": 4.047369136625991e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:unload_slope:relative_pressure_consistency_residual",
+      "observed": 5.202198390577108e-16,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:excavate_pit:displacement_relative_all_nodes",
+      "observed": 0.00034565916708180906,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:excavate_pit:displacement_maximum_component_error_m",
+      "observed": 9.774647889839588e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:excavate_pit:independent_relative_force_residual",
+      "observed": 1.740665504482871e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:excavate_pit:stress",
+      "observed": 5.735681880316372e-05,
+      "limit": 1e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:excavate_pit:pc",
+      "observed": 0.0006423323030624317,
+      "limit": 0.0001,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:excavate_pit:void_ratio",
+      "observed": 4.4672761622788215e-05,
+      "limit": 5e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:excavate_pit:plastic_strain",
+      "observed": 1.3502883597634602e-05,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "coarse:excavate_pit:native_force",
+      "observed": 7.016474535850569e-10,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:excavate_pit:relative_volume_equation_residual",
+      "observed": 5.823706612583349e-16,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "coarse:excavate_pit:relative_pressure_consistency_residual",
+      "observed": 9.789606483756715e-11,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:displacement_relative_all_nodes",
+      "observed": 2.7442514048856984e-05,
+      "limit": 3e-05,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:displacement_maximum_component_error_m",
+      "observed": 7.518767418963207e-07,
+      "limit": 1e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:independent_relative_force_residual",
+      "observed": 3.910865176569977e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:stress",
+      "observed": 5.76739769273059e-06,
+      "limit": 1e-05,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:pc",
+      "observed": 6.131807207765405e-05,
+      "limit": 0.0001,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:void_ratio",
+      "observed": 1.9869833263186365e-06,
+      "limit": 5e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:plastic_strain",
+      "observed": 1.074277014044946e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:initial_equilibrated:native_force",
+      "observed": 1.5795397757742014e-15,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:relative_volume_equation_residual",
+      "observed": 2.895151893154588e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:initial_equilibrated:relative_pressure_consistency_residual",
+      "observed": 3.873053733154972e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:displacement_relative_all_nodes",
+      "observed": 3.0633106194241595e-05,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:reload_slope:displacement_maximum_component_error_m",
+      "observed": 7.60327400935179e-07,
+      "limit": 1e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:independent_relative_force_residual",
+      "observed": 1.9137541969252817e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:stress",
+      "observed": 5.614339461827599e-06,
+      "limit": 1e-05,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:pc",
+      "observed": 6.131807207765405e-05,
+      "limit": 0.0001,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:void_ratio",
+      "observed": 2.502438732232548e-06,
+      "limit": 5e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:plastic_strain",
+      "observed": 1.3506051125861292e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:reload_slope:native_force",
+      "observed": 2.3288869976765917e-13,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:relative_volume_equation_residual",
+      "observed": 3.020226154502013e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:reload_slope:relative_pressure_consistency_residual",
+      "observed": 4.682108860567416e-15,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:displacement_relative_all_nodes",
+      "observed": 3.3636971439721675e-05,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:unload_slope:displacement_maximum_component_error_m",
+      "observed": 8.080856332033648e-07,
+      "limit": 1e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:independent_relative_force_residual",
+      "observed": 2.210295693547719e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:stress",
+      "observed": 5.7862532000347136e-06,
+      "limit": 1e-05,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:pc",
+      "observed": 5.8978555173894165e-05,
+      "limit": 0.0001,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:void_ratio",
+      "observed": 4.54786228942794e-06,
+      "limit": 5e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:plastic_strain",
+      "observed": 1.3506051125861292e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:unload_slope:native_force",
+      "observed": 7.307729054080574e-11,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:relative_volume_equation_residual",
+      "observed": 3.977576196681273e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:unload_slope:relative_pressure_consistency_residual",
+      "observed": 4.17646742596242e-12,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:displacement_relative_all_nodes",
+      "observed": 3.5167491086267264e-05,
+      "limit": 3e-05,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:excavate_pit:displacement_maximum_component_error_m",
+      "observed": 9.919652049807104e-07,
+      "limit": 1e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:independent_relative_force_residual",
+      "observed": 1.740665504482871e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:stress",
+      "observed": 5.855089398862455e-06,
+      "limit": 1e-05,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:pc",
+      "observed": 5.8978555173894165e-05,
+      "limit": 0.0001,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:void_ratio",
+      "observed": 4.54786228942794e-06,
+      "limit": 5e-06,
+      "required": false,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:plastic_strain",
+      "observed": 1.3506051125861292e-06,
+      "limit": 1e-06,
+      "required": false,
+      "passed": false
+    },
+    {
+      "name": "refined:excavate_pit:native_force",
+      "observed": 3.0886134458368134e-12,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:relative_volume_equation_residual",
+      "observed": 4.499815575948329e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "refined:excavate_pit:relative_pressure_consistency_residual",
+      "observed": 4.311727000919308e-13,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:displacement_relative_all_nodes",
+      "observed": 2.7954132047613564e-06,
+      "limit": 3e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:displacement_maximum_component_error_m",
+      "observed": 7.543137738562355e-08,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:independent_relative_force_residual",
+      "observed": 3.910865176569977e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:stress",
+      "observed": 5.83413411375085e-07,
+      "limit": 1e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:pc",
+      "observed": 7.588734131758201e-06,
+      "limit": 0.0001,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:void_ratio",
+      "observed": 1.9914780535756904e-07,
+      "limit": 5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:plastic_strain",
+      "observed": 1.091457822182014e-07,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:native_force",
+      "observed": 6.635084208515796e-10,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:relative_volume_equation_residual",
+      "observed": 2.1653776178474083e-16,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:initial_equilibrated:relative_pressure_consistency_residual",
+      "observed": 8.596394620875041e-12,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:displacement_relative_all_nodes",
+      "observed": 3.122567277071497e-06,
+      "limit": 3e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:displacement_maximum_component_error_m",
+      "observed": 7.79933855884346e-08,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:independent_relative_force_residual",
+      "observed": 1.9137541969252817e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:stress",
+      "observed": 5.679141150533612e-07,
+      "limit": 1e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:pc",
+      "observed": 7.588734131758201e-06,
+      "limit": 0.0001,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:void_ratio",
+      "observed": 2.5608343978689163e-07,
+      "limit": 5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:plastic_strain",
+      "observed": 1.4268296252709436e-07,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:native_force",
+      "observed": 1.7158317497355498e-14,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:relative_volume_equation_residual",
+      "observed": 3.802476252444987e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:reload_slope:relative_pressure_consistency_residual",
+      "observed": 2.5717358150523717e-16,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:displacement_relative_all_nodes",
+      "observed": 3.4214073571578644e-06,
+      "limit": 3e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:displacement_maximum_component_error_m",
+      "observed": 8.309473811113355e-08,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:independent_relative_force_residual",
+      "observed": 2.210295693547719e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:stress",
+      "observed": 5.853132926606333e-07,
+      "limit": 1e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:pc",
+      "observed": 7.299897575308023e-06,
+      "limit": 0.0001,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:void_ratio",
+      "observed": 4.5783624225137487e-07,
+      "limit": 5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:plastic_strain",
+      "observed": 1.4268296252709436e-07,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:native_force",
+      "observed": 4.900952924322501e-12,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:relative_volume_equation_residual",
+      "observed": 3.916544446834762e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:unload_slope:relative_pressure_consistency_residual",
+      "observed": 2.76599157139183e-13,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:displacement_relative_all_nodes",
+      "observed": 3.573975968971842e-06,
+      "limit": 3e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:displacement_maximum_component_error_m",
+      "observed": 1.0156065022651206e-07,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:independent_relative_force_residual",
+      "observed": 1.740665504482871e-15,
+      "limit": 1e-09,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:stress",
+      "observed": 5.922931892623928e-07,
+      "limit": 1e-05,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:pc",
+      "observed": 7.299897575308023e-06,
+      "limit": 0.0001,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:void_ratio",
+      "observed": 4.5783624225137487e-07,
+      "limit": 5e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:plastic_strain",
+      "observed": 1.4268296252709436e-07,
+      "limit": 1e-06,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:native_force",
+      "observed": 2.0384367876959674e-13,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:relative_volume_equation_residual",
+      "observed": 3.438085915643689e-17,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    },
+    {
+      "name": "ultrafine:excavate_pit:relative_pressure_consistency_residual",
+      "observed": 2.8448284941764724e-14,
+      "limit": 1.0100000000000001e-08,
+      "required": true,
+      "passed": true
+    }
+  ],
+  "limitations": "No mesh-convergence, water/member/JOINT coupling, oedometer export or native display acceptance",
+  "publication_note": "Summary of local immutable evidence; original paths are provenance, not bundled files. Full workspace archives are retained locally.",
+  "original_report_sha256": "f389cb45e25f1c69155f949f8b34c128efdb3ab7dab6e2e922f6785b2f34534e"
+}

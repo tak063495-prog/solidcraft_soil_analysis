@@ -1,0 +1,109 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "equilibrate",
+    "surface_surcharge_kpa": 0.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-09,
+    "geostatic": {
+      "seed": {
+        "kind": "body_states",
+        "states": {
+          "LowerClay": {
+            "effective_stress_compression_positive_kpa": [
+              100.0,
+              100.0,
+              100.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 1.212565202471494,
+            "preconsolidation_pressure_kpa": 140.0
+          },
+          "UpperClay": {
+            "effective_stress_compression_positive_kpa": [
+              100.0,
+              100.0,
+              100.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 1.212565202471494,
+            "preconsolidation_pressure_kpa": 140.0
+          }
+        }
+      },
+      "initial_boundary_factor": 0.0,
+      "maximum_initial_engineering_strain": 0.05,
+      "relative_volume_tolerance": 1e-08,
+      "verification_reject_once": true,
+      "base_loads": {
+        "surface_loads": [
+          {
+            "kind": "pressure",
+            "face_set": "top",
+            "pressure_kpa": 100.0
+          }
+        ]
+      }
+    }
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Mohr-Coulomb clay1",
+      "unit_weight_kn_m3": 100.0,
+      "mcc": {
+        "critical_state_m": 1.4,
+        "lambda": 0.1,
+        "kappa": 0.02,
+        "poisson": 0.1,
+        "reference_pressure_kpa": 1.0,
+        "specific_volume_ncl_at_reference": 2.7
+      }
+    },
+    {
+      "id": 2,
+      "name": "Mohr-Coulomb clay2",
+      "unit_weight_kn_m3": 100.0,
+      "mcc": {
+        "critical_state_m": 1.4,
+        "lambda": 0.1,
+        "kappa": 0.02,
+        "poisson": 0.1,
+        "reference_pressure_kpa": 1.0,
+        "specific_volume_ncl_at_reference": 2.7
+      }
+    }
+  ],
+  "bodies": [
+    {
+      "body": "LowerClay",
+      "material_id": 1
+    },
+    {
+      "body": "UpperClay",
+      "material_id": 2
+    }
+  ]
+}

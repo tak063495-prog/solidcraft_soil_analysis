@@ -1,0 +1,56 @@
+{
+  "schema": "soil-fem-darcy/1",
+  "units": "m-s",
+  "materials": [
+    {
+      "id": 1,
+      "hydraulic_conductivity_m_s": [
+        [
+          1e-06,
+          2e-07,
+          0.0
+        ],
+        [
+          2e-07,
+          2e-06,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1e-06
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "hydraulic_conductivity_m_s": [
+        [
+          2e-06,
+          1e-07,
+          0.0
+        ],
+        [
+          1e-07,
+          1e-06,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3e-06
+        ]
+      ]
+    }
+  ],
+  "heads": [
+    {
+      "face_set": "bottom",
+      "head_m": 8.5
+    },
+    {
+      "face_set": "top",
+      "head_m": 8.0
+    }
+  ]
+}

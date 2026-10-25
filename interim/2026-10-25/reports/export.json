@@ -1,0 +1,102 @@
+{
+  "schema": "soil-fem-projected-mcc-export-verification/1",
+  "passed": true,
+  "production_backend_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "scope": "Output semantics, independent force/reaction and volume audits, roundtrips and corrupted-input refusal; no spatial physics acceptance",
+  "cases": [
+    {
+      "name": "terrain",
+      "frames": 4,
+      "both_stress_definitions_roundtrip": true,
+      "nodal_volume_and_compatibility_offset_roundtrip": true,
+      "maximum_stress_definition_difference_kpa": 8.894675671873102,
+      "maximum_material_pressure_jump_kpa": 0.0,
+      "maximum_frozen_offset_m3": 0.0005277443476175059
+    },
+    {
+      "name": "two-material",
+      "frames": 4,
+      "both_stress_definitions_roundtrip": true,
+      "nodal_volume_and_compatibility_offset_roundtrip": true,
+      "maximum_stress_definition_difference_kpa": 0.10608624637094977,
+      "maximum_material_pressure_jump_kpa": 9.365415798405046,
+      "maximum_frozen_offset_m3": 1.4191698533429509e-18
+    }
+  ],
+  "rejected_inputs": [
+    {
+      "name": "missing-projection",
+      "reason": "mixed volume formulation/state mismatch",
+      "no_output_created": true
+    },
+    {
+      "name": "unknown-formulation",
+      "reason": "unknown projected MCC formulation",
+      "no_output_created": true
+    },
+    {
+      "name": "missing-volume-node",
+      "reason": "projected volume_dofs inventory differs",
+      "no_output_created": true
+    },
+    {
+      "name": "duplicate-volume-node",
+      "reason": "projected volume_dofs inventory differs",
+      "no_output_created": true
+    },
+    {
+      "name": "changed-volume-node",
+      "reason": "projected nodal and GP volume histories disagree",
+      "no_output_created": true
+    },
+    {
+      "name": "missing-offset",
+      "reason": "projected compatibility_offsets inventory differs",
+      "no_output_created": true
+    },
+    {
+      "name": "changed-offset",
+      "reason": "mixed pressure consistency or weak volume equation failed",
+      "no_output_created": true
+    },
+    {
+      "name": "false-pressure-gap",
+      "reason": "projected pressure-gap diagnostic differs",
+      "no_output_created": true
+    },
+    {
+      "name": "false-force-residual",
+      "reason": "projected work-conjugate force or cached residual disagrees",
+      "no_output_created": true
+    },
+    {
+      "name": "false-reaction",
+      "reason": "projected work-conjugate support reactions disagree",
+      "no_output_created": true
+    },
+    {
+      "name": "false-applied-force",
+      "reason": "projected applied force summary disagrees",
+      "no_output_created": true
+    },
+    {
+      "name": "changed-pressure-node",
+      "reason": "projected pressure-gap diagnostic differs",
+      "no_output_created": true
+    },
+    {
+      "name": "relabelled-as-gp-volume",
+      "reason": "mixed volume formulation/state mismatch",
+      "no_output_created": true
+    },
+    {
+      "name": "changed-frozen-material-history",
+      "reason": "removed mixed material history changed",
+      "no_output_created": true
+    }
+  ],
+  "publication_note": "Summary of local immutable evidence; original paths are provenance, not bundled files. Full workspace archives are retained locally.",
+  "original_report_sha256": "5b2486ea1d385eb7466275c23c1012bf6fa060089d638cb5fa8f9bbca1fed1cf"
+}

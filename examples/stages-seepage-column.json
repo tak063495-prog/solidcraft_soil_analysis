@@ -1,0 +1,237 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "oedometer",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 40,
+    "initial_increment": 0.5,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.0002,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "monitors": {
+    "top": 1.0,
+    "floor": 0.5
+  },
+  "monitor_sets": {},
+  "pressure_on_original_surface_only": false,
+  "stages": [
+    {
+      "kind": "steady_seepage",
+      "name": "upward_flow",
+      "flow": {
+        "schema": "soil-fem-darcy/1",
+        "units": "m-s",
+        "materials": [
+          {
+            "id": 1,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          },
+          {
+            "id": 2,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          }
+        ],
+        "heads": [
+          {
+            "face_set": "bottom",
+            "head_m": 1.4
+          },
+          {
+            "face_set": "top",
+            "head_m": 1.0
+          }
+        ]
+      },
+      "exterior_water_level_m": 1.0,
+      "initial_increment": 0.5
+    },
+    {
+      "kind": "steady_seepage",
+      "name": "downward_flow",
+      "flow": {
+        "schema": "soil-fem-darcy/1",
+        "units": "m-s",
+        "materials": [
+          {
+            "id": 1,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          },
+          {
+            "id": 2,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          }
+        ],
+        "heads": [
+          {
+            "face_set": "bottom",
+            "head_m": 0.6
+          },
+          {
+            "face_set": "top",
+            "head_m": 1.0
+          }
+        ]
+      },
+      "exterior_water_level_m": 1.0,
+      "initial_increment": 1.0
+    },
+    {
+      "kind": "hydrostatic_water",
+      "name": "recover_hydrostatic",
+      "target_level_m": 1.0,
+      "initial_increment": 0.5
+    },
+    {
+      "kind": "excavate",
+      "name": "excavate_upper",
+      "bodies": [
+        "UpperClay"
+      ],
+      "remaining_surface_pressure_kpa": 100.0,
+      "initial_increment": 0.5
+    },
+    {
+      "kind": "steady_seepage",
+      "name": "dewater_remaining",
+      "flow": {
+        "schema": "soil-fem-darcy/1",
+        "units": "m-s",
+        "materials": [
+          {
+            "id": 1,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          },
+          {
+            "id": 2,
+            "hydraulic_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ]
+          }
+        ],
+        "heads": [
+          {
+            "face_set": "bottom",
+            "head_m": 0.1
+          },
+          {
+            "face_set": "floor",
+            "head_m": 0.5
+          }
+        ]
+      },
+      "exterior_water_level_m": 0.5,
+      "initial_increment": 0.5
+    }
+  ],
+  "verification_reject_once_stages": [
+    "upward_flow",
+    "downward_flow",
+    "excavate_upper",
+    "dewater_remaining"
+  ]
+}

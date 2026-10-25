@@ -1,0 +1,379 @@
+{
+  "schema": "soil-fem-one-way-construction/1",
+  "one_way": {
+    "schema": "soil-fem-one-way/1",
+    "flow": {
+      "schema": "soil-fem-richards/1",
+      "units": "m-s",
+      "materials": [
+        {
+          "id": 1,
+          "saturated_conductivity_m_s": [
+            [
+              1e-06,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1e-06,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1e-06
+            ]
+          ],
+          "retention": {
+            "residual_water_content": 0.08,
+            "saturated_water_content": 0.4117647058823529,
+            "alpha_per_m": 1.2,
+            "n": 1.6,
+            "saturated_specific_storage_per_m": 0.0
+          }
+        },
+        {
+          "id": 2,
+          "saturated_conductivity_m_s": [
+            [
+              1e-06,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1e-06,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1e-06
+            ]
+          ],
+          "retention": {
+            "residual_water_content": 0.08,
+            "saturated_water_content": 0.4117647058823529,
+            "alpha_per_m": 1.2,
+            "n": 1.6,
+            "saturated_specific_storage_per_m": 0.0
+          }
+        },
+        {
+          "id": 3,
+          "saturated_conductivity_m_s": [
+            [
+              5e-06,
+              0,
+              0
+            ],
+            [
+              0,
+              5e-06,
+              0
+            ],
+            [
+              0,
+              0,
+              5e-06
+            ]
+          ],
+          "retention": {
+            "residual_water_content": 0.08,
+            "saturated_water_content": 0.5,
+            "alpha_per_m": 1.2,
+            "n": 1.6,
+            "saturated_specific_storage_per_m": 0.0
+          }
+        }
+      ],
+      "initial_head": {
+        "head_m": 0.0
+      },
+      "analysis": {
+        "kind": "transient",
+        "periods": [
+          {
+            "name": "hold",
+            "end_time_s": 100.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "floor",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "xmin",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "xmax",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "ymin",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "ymax",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "born",
+            "end_time_s": 200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "xmin",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "xmax",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "ymin",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "ymax",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "changed",
+            "end_time_s": 300.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "xmin",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "xmax",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "ymin",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              },
+              {
+                "face_set": "ymax",
+                "condition": {
+                  "kind": "outward_flux",
+                  "flux_m_s": 0.0
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "settings": {
+        "initial_time_step_s": 100.0,
+        "maximum_time_step_s": 100.0,
+        "minimum_time_step_s": 0.0001,
+        "store_integration_points": false
+      }
+    },
+    "mechanics": {
+      "schema": "soil-fem-stages/1",
+      "settings": {
+        "kinematics": "oedometer",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 40,
+        "initial_increment": 0.5,
+        "minimum_increment": 0.001953125,
+        "material_maximum_substep": 0.0002,
+        "tangent_perturbation": 1e-07,
+        "maximum_free_dofs": 100000,
+        "linear_solver": {
+          "method": "sparse_gmres_ilu0",
+          "options": {
+            "restart": 60,
+            "maximum_iterations": 3000,
+            "pivot_tolerance": 1e-14
+          }
+        }
+      },
+      "monitors": {
+        "top": 1.0,
+        "floor": 0.5
+      },
+      "monitor_sets": {},
+      "pressure_on_original_surface_only": false,
+      "stages": [],
+      "verification_reject_once_stages": []
+    },
+    "bishop": {
+      "kind": "effective_saturation"
+    },
+    "water_weight": "water_equivalent_storage",
+    "initial_porosity_tolerance": 0.15,
+    "maximum_initial_engineering_strain": 0.05,
+    "initial_exterior_water": [],
+    "exterior_periods": [
+      {
+        "name": "hold",
+        "reservoirs": []
+      },
+      {
+        "name": "born",
+        "reservoirs": []
+      },
+      {
+        "name": "changed",
+        "reservoirs": []
+      }
+    ],
+    "solid_weight_reference": "dry_bulk_unit_weight",
+    "porosity_policy": "fixed_hydraulic_material",
+    "store_transfer_integration_points": true
+  },
+  "excavations": [],
+  "initially_inactive_bodies": [
+    "UpperClay"
+  ],
+  "transitions": [
+    {
+      "water_boundary_policy": "explicit_period_boundaries",
+      "surface_traction_policy": "explicit_period_reservoirs",
+      "name": "place",
+      "before_period": "born",
+      "action": {
+        "kind": "birth",
+        "bodies": [
+          "UpperClay"
+        ],
+        "states": {
+          "UpperClay": {
+            "effective_stress_compression_positive_kpa": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.7,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          }
+        },
+        "placement": "cad_new_nodes",
+        "initial_head": {
+          "head_m": 0.0
+        }
+      }
+    },
+    {
+      "water_boundary_policy": "explicit_period_boundaries",
+      "surface_traction_policy": "explicit_period_reservoirs",
+      "name": "improve",
+      "before_period": "changed",
+      "action": {
+        "kind": "material_set",
+        "bodies": [
+          "UpperClay"
+        ],
+        "material_id": 3,
+        "history": {
+          "mode": "preserve"
+        },
+        "water": {
+          "kind": "preserve_water",
+          "reference_head": {
+            "head_m": 0.0
+          }
+        }
+      }
+    }
+  ]
+}

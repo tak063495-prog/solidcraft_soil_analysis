@@ -1,0 +1,18 @@
+{
+  "schema":"soil-fem-stages/1",
+  "settings":{
+    "kinematics":"side_rollers","relative_force_tolerance":1e-8,"relative_linear_tolerance":1e-10,
+    "maximum_newton_iterations":25,"initial_increment":0.25,"minimum_increment":0.001953125,
+    "material_maximum_substep":0.0001,"tangent_perturbation":1e-7,"maximum_free_dofs":100000,
+    "linear_solver":{"method":"sparse_gmres_ilu0","options":{"restart":60,"maximum_iterations":3000,"pivot_tolerance":1e-14}}
+  },
+  "boundary":{"constraints":[{"node_set":"top","direction":[0.0,0.0,1.0],"value_m":-0.02}]},
+  "monitors":{"top":8.0},
+  "monitor_sets":{},
+  "pressure_on_original_surface_only":true,
+  "stages":[
+    {"kind":"boundary","name":"prescribed_compression","target_factor":1.0},
+    {"kind":"boundary","name":"prescribed_return","target_factor":0.0}
+  ],
+  "verification_reject_once_stages":["prescribed_compression"]
+}

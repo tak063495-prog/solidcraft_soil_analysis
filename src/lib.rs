@@ -1,0 +1,59 @@
+//! Tet4/Tet10 soil mechanics, geostatic initialization and staged MCC/MC FEM.
+pub mod anchors;
+pub mod beams;
+pub mod benchmark;
+pub mod boundary;
+pub mod checkpoint;
+pub mod darcy;
+pub mod elastic;
+pub mod elements;
+pub mod embedding;
+pub mod geostatic;
+pub mod ground;
+pub mod hardening;
+pub mod hydraulic_transition;
+pub mod hydrostatic;
+pub mod joint_law;
+pub mod joint_water;
+pub mod joints;
+pub mod linalg;
+pub mod mc;
+pub mod mcc;
+pub mod mcc_split;
+pub mod mechanics;
+pub mod mesh;
+pub mod mixed_flow;
+pub mod mixed_mcc;
+pub mod mixed_mechanics;
+pub mod one_way;
+pub mod one_way_construction;
+pub mod replay;
+pub mod retention;
+pub mod richards;
+pub mod richards_checkpoint;
+pub mod rigidity;
+pub mod soil;
+pub mod solver;
+pub mod stage_control;
+pub mod stage_job;
+pub mod stages;
+pub mod surface_projection;
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("invalid input: {0}")]
+    Input(String),
+    #[error("numerical solve failed: {0}")]
+    Solve(String),
+    #[error("material update failed: {0}")]
+    Material(String),
+    #[error("runtime control failed: {0}")]
+    Control(String),
+    #[error(transparent)]
+    Linear(#[from] linalg::LinearError),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+    #[error(transparent)]
+    Json(#[from] serde_json::Error),
+}
+pub type Result<T> = std::result::Result<T, Error>;

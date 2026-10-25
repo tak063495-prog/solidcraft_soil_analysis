@@ -1,0 +1,84 @@
+{
+  "schema": "soil-fem-richards/1",
+  "units": "m-s",
+  "materials": [
+    {
+      "id": 1,
+      "saturated_conductivity_m_s": [
+        [
+          1e-06,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1e-06,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1e-06
+        ]
+      ],
+      "retention": {
+        "residual_water_content": 0.08,
+        "saturated_water_content": 0.45,
+        "alpha_per_m": 1.2,
+        "n": 1.6,
+        "saturated_specific_storage_per_m": 1e-05
+      }
+    },
+    {
+      "id": 2,
+      "saturated_conductivity_m_s": [
+        [
+          1e-06,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1e-06,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1e-06
+        ]
+      ],
+      "retention": {
+        "residual_water_content": 0.08,
+        "saturated_water_content": 0.45,
+        "alpha_per_m": 1.2,
+        "n": 1.6,
+        "saturated_specific_storage_per_m": 1e-05
+      }
+    }
+  ],
+  "initial_head": {
+    "head_m": 2.0
+  },
+  "analysis": {
+    "kind": "steady",
+    "boundaries": [
+      {
+        "face_set": "bottom",
+        "condition": {
+          "kind": "head",
+          "value": {
+            "head_m": 0.0
+          }
+        }
+      },
+      {
+        "face_set": "top",
+        "condition": {
+          "kind": "atmospheric_no_ponding",
+          "rainfall_vertical_m_s": 0.0
+        }
+      }
+    ]
+  }
+}

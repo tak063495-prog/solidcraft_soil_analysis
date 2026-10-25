@@ -1,0 +1,69 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "horizontal_k0",
+    "surface_surcharge_kpa": 100.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-09
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Mohr-Coulomb clay1",
+      "unit_weight_kn_m3": 1e-08,
+      "mohr_coulomb": {
+        "young_kpa": 10000.0,
+        "poisson": 0.1,
+        "cohesion_kpa": 10.0,
+        "friction_deg": 30.0,
+        "dilation_deg": 5.0,
+        "tension_cutoff_kpa": 0.0,
+        "flow": "non_associated"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Mohr-Coulomb clay2",
+      "unit_weight_kn_m3": 1e-08,
+      "mohr_coulomb": {
+        "young_kpa": 20000.0,
+        "poisson": 0.1,
+        "cohesion_kpa": 10.0,
+        "friction_deg": 30.0,
+        "dilation_deg": 5.0,
+        "tension_cutoff_kpa": 0.0,
+        "flow": "non_associated"
+      }
+    }
+  ],
+  "layers": [
+    {
+      "body": "LowerClay",
+      "material_id": 1,
+      "k0_x": 0.5,
+      "k0_y": 0.5,
+      "consolidation": {
+        "definition": "not_applicable"
+      },
+      "void_ratio": {
+        "mode": "explicit",
+        "value": 0.7
+      }
+    },
+    {
+      "body": "UpperClay",
+      "material_id": 2,
+      "k0_x": 0.5,
+      "k0_y": 0.5,
+      "consolidation": {
+        "definition": "not_applicable"
+      },
+      "void_ratio": {
+        "mode": "explicit",
+        "value": 0.7
+      }
+    }
+  ]
+}

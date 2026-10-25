@@ -1,0 +1,212 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "side_rollers",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "crest": "top",
+    "free_surface": "free_surface"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "install_beams",
+      "name": "install_frame",
+      "members": [
+        "Left",
+        "Right"
+      ],
+      "placement": "current_displacement"
+    },
+    {
+      "kind": "boundary",
+      "name": "load_frame",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "unload_frame",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "remove_beams",
+      "name": "remove_frame",
+      "members": [
+        "Left",
+        "Right"
+      ]
+    }
+  ],
+  "boundary": {
+    "constraints": []
+  },
+  "beam_system": {
+    "schema": "soil-fem-beams/1",
+    "rotation_length_scale_m": 4.0,
+    "maximum_condensed_dofs": 300,
+    "nodes": [
+      {
+        "id": "A",
+        "position_m": [
+          0.0,
+          0.0,
+          10.0
+        ],
+        "match_soil_node": true
+      },
+      {
+        "id": "Crown",
+        "position_m": [
+          6.0,
+          0.0,
+          12.0
+        ]
+      },
+      {
+        "id": "B",
+        "position_m": [
+          12.0,
+          0.0,
+          6.0
+        ],
+        "match_soil_node": true
+      }
+    ],
+    "sections": [
+      {
+        "id": "Steel",
+        "young_kpa": 200000000.0,
+        "poisson": 0.3,
+        "area_m2": 0.02,
+        "iy_m4": 0.0002,
+        "iz_m4": 0.0001,
+        "torsion_j_m4": 8e-05,
+        "unit_weight_kn_m3": 77.0,
+        "formulation": {
+          "kind": "timoshenko",
+          "shear_area_y_m2": 0.015,
+          "shear_area_z_m2": 0.014
+        }
+      }
+    ],
+    "members": [
+      {
+        "id": "Left",
+        "nodes": [
+          "A",
+          "Crown"
+        ],
+        "section_id": "Steel",
+        "local_y": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "initially_active": false,
+        "initial_axial_force_kn": 2.0
+      },
+      {
+        "id": "Right",
+        "nodes": [
+          "Crown",
+          "B"
+        ],
+        "section_id": "Steel",
+        "local_y": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "initially_active": false,
+        "initial_axial_force_kn": -1.0,
+        "rotational_releases": [
+          [
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            true,
+            false
+          ]
+        ]
+      }
+    ],
+    "rotation_constraints": [
+      {
+        "node_id": "A",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "A",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "A",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "B",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value": 0.0
+      }
+    ],
+    "nodal_loads": [
+      {
+        "node_id": "Crown",
+        "boundary_force_kn": [
+          1.0,
+          0.0,
+          -10.0
+        ],
+        "boundary_moment_kn_m": [
+          0.0,
+          2.0,
+          1.0
+        ]
+      }
+    ]
+  },
+  "verification_reject_once_stages": [
+    "install_frame",
+    "load_frame",
+    "remove_frame"
+  ]
+}

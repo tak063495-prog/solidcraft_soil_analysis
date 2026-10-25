@@ -1,0 +1,58 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "oedometer",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 40,
+    "initial_increment": 0.5,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.0002,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "monitors": {
+    "ground_surface": 1.0,
+    "excavation_floor": 0.5
+  },
+  "monitor_sets": {},
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "pressure",
+      "name": "preload",
+      "target_pressure_kpa": 200.0
+    },
+    {
+      "kind": "pressure",
+      "name": "unload",
+      "target_pressure_kpa": 100.0
+    },
+    {
+      "kind": "pressure",
+      "name": "reload",
+      "target_pressure_kpa": 150.0
+    },
+    {
+      "kind": "excavate",
+      "name": "excavate_upper",
+      "bodies": [
+        "UpperClay"
+      ],
+      "remaining_surface_pressure_kpa": 100.0,
+      "initial_increment": 1.0
+    }
+  ],
+  "verification_reject_once_stages": [
+    "preload",
+    "excavate_upper"
+  ]
+}
