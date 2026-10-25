@@ -1,6 +1,6 @@
 # SolidCraft → Rust 3D地盤FEM
 
-**2026-10-26時点の途中成果物です。P0〜P6全体は未完了です。** [最新の実装・検証状況](interim/2026-10-26-k0-reference/README.ja.md)／[実CAD・停止再開の前回記録](interim/2026-10-26-real-cad/README.ja.md)／[SolidCraft差分](integrations/solidcraft/README.ja.md)／[P1候補版差分](integrations/solidcraft-projected/README.ja.md)／[残件](docs/P6_STATUS.ja.md)。
+**2026-10-26時点の途中成果物です。P0〜P6全体は未完了です。** [最新の実装・検証状況](interim/2026-10-26-body-pile/README.ja.md)／[SolidCraft差分](integrations/solidcraft/README.ja.md)／[P1候補版差分](integrations/solidcraft-projected/README.ja.md)／[残件](docs/P6_STATUS.ja.md)。
 
 SolidCraftで作成・編集した3Dソリッドを解析へ渡すための開発環境です。**多層地盤のK0/OCR/pc/e初期化、一般形状の初期応力読込と非線形重力平衡、MCC/MC・独自IDHの全体非線形Tet4/Tet10解析、局所掘削、指定水位工程、定常飽和浸透と不飽和水理から力学へのONE_WAY受渡し、CSR疎求解、保存再開を実装**しています。力学は小ひずみ・静的です。P6全体は未完了で、硬化モデルの現地同定と適用拡張、板/不飽和湿潤JOINT、無応力MCC誕生、有限幅過渡降雨/SRM、SolidCraft画面内統合等の残りを[P6受入要件一覧](docs/P6_STATUS.ja.md)で管理します。
 
@@ -87,6 +87,10 @@ MCCとは別の不変量二重硬化モデルIDHを追加しました。cap圧�
 ```
 
 線形Euler–Bernoulli/Timoshenko梁の軸伸び・曲げ・ねじり、自由節点、局所軸、端部解放、自重・初期軸力、設置/撤去をMCC/MC地盤へ接続しました。独立した全回転保持の3D解と比較し、梁と地盤を合わせた力・モーメント、切戻し・保存再開を検査します。[梁の操作・適用範囲](docs/BEAMS.ja.md)／[検証記録](docs/BEAMS_VERIFICATION.ja.md)。引張専用アンカーは下記へ追加しました。板/シェルは未実装です。乾燥した履歴JOINTは下記へ接続しました。
+
+## 有限断面の3D単杭を地盤へ接続する
+
+有限断面の単杭については、別に [SolidCraftの完全付着・弾性対照例](docs/SOLID_PILE.ja.md) を追加した。1 m角・長さ6 mの杭と地盤を共有面で結び、436/819/2279要素の全場を独立3D疎計算と照合し、3地点の保存再開を確認した。空間収束、杭先端/周面の分担、塑性・すべり、杭列への換算は残る。`scripts/Invoke-SolidPile.ps1` で再現する。
 
 ## 引張専用アンカーの緊張・定着・弛緩
 

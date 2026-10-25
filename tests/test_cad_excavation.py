@@ -28,6 +28,59 @@ def source(folder,name,kind,values,index):
 
 
 class CadExcavation(unittest.TestCase):
+    def test_body_plane_sets_use_all_quadratic_nodes_and_preserve_existing_data_atomically(self):
+        import copy
+        from body_boundary_sets import add_body_boundary_sets
+        points=[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.],[0.,0.,-1.]]
+        corners=[[0,1,2,3],[0,2,1,4]];middle={};quadratic=[]
+        for cell in corners:
+            nodes=cell.copy()
+            for a,b in ((0,1),(1,2),(2,0),(0,3),(1,3),(2,3)):
+                edge=tuple(sorted((cell[a],cell[b])))
+                if edge not in middle:
+                    middle[edge]=len(points);points.append(((np.asarray(points[edge[0]])+points[edge[1]])/2).tolist())
+                nodes.append(middle[edge])
+            quadratic.append(nodes)
+        mesh=dict(nodes=points,tetrahedra=corners,tetrahedra10=quadratic,region_ids=[1,2],material_ids=[1,2],
+            regions=[dict(id=1,body='Upper',bounds_m=[[0.,0.,0.],[1.,1.,1.]]),
+                dict(id=2,body='Lower',bounds_m=[[0.,0.,-1.],[1.,1.,0.]])],
+            node_sets={'existing':[0,1]},face_sets={'existing':[[0,1,2]]})
+        original=copy.deepcopy(mesh);add_body_boundary_sets(mesh)
+        self.assertEqual(mesh['face_sets']['body:Upper:zmin'],[[0,1,2]])
+        self.assertEqual(mesh['face_sets']['body:Lower:zmax'],[[0,1,2]])
+        expected=sorted([0,1,2,middle[(0,1)],middle[(1,2)],middle[(0,2)]])
+        self.assertEqual(mesh['node_sets']['body:Upper:zmin'],expected)
+        self.assertNotIn([0,1,2],mesh['face_sets']['body:Upper:exterior'])
+        self.assertNotIn('body:Upper:zmax',mesh['face_sets'])
+        pruned=copy.deepcopy(mesh)
+        for key in ('node_sets','face_sets'):pruned[key]={k:v for k,v in pruned[key].items() if not k.startswith('body:')}
+        self.assertEqual(pruned,original)
+        once=copy.deepcopy(mesh);add_body_boundary_sets(mesh);self.assertEqual(mesh,once)
+        collision=copy.deepcopy(original);collision['node_sets']['body:Upper:zmin']=[0]
+        before=copy.deepcopy(collision)
+        with self.assertRaisesRegex(ValueError,'collides'):add_body_boundary_sets(collision)
+        self.assertEqual(collision,before)
+        curved=copy.deepcopy(original);curved['nodes'][middle[(0,1)]][2]=.1
+        add_body_boundary_sets(curved)
+        self.assertNotIn('body:Upper:zmin',curved['face_sets'])
+        self.assertNotIn('body:Lower:zmax',curved['face_sets'])
+
+    def test_an_empty_owned_fragment_is_rejected_before_any_mesh_is_exported(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as d:
+            path,_=self.prepare(Path(d));output=path.parent/'lost-fragment.json'
+            real=gmsh.model.mesh.getElements;calls=[]
+            def missing(dim=-1,tag=-1):
+                if dim==3:
+                    calls.append(tag)
+                    if len(calls)==2:return np.array([],dtype=int),[],[]
+                return real(dim,tag)
+            with patch.object(gmsh.model.mesh,'getElements',side_effect=missing),contextlib.redirect_stdout(io.StringIO()):
+                with self.assertRaisesRegex(ValueError,'has no tetrahedral elements'):
+                    generate(path,output,2.)
+            self.assertEqual(len(calls),2)
+            self.assertFalse(output.exists())
+
     def prepare(self,folder,kind='box',values=(3000,3000,6000,4000,4000,3000)):
         regions=[]
         for i,z in enumerate((0,4000)):

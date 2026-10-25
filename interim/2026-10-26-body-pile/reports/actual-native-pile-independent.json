@@ -1,0 +1,138 @@
+{
+  "schema": "soil-fem-independent-solid-pile-control/1",
+  "passed": true,
+  "reference": "Original CAD mesh, input seed and loads; independent GL125 quadrature, sparse LU, nodal SVD constraints; no Rust solved fields generate the solution",
+  "finite_section_single_pile": true,
+  "perfect_bond": true,
+  "pile_row_equivalence": false,
+  "reference_soil_force_convention": "Weak consistent nodal interface force on pile, summed over all shaft/toe interface nodes. No arbitrary shaft/toe edge-force split.",
+  "meshes": [
+    {
+      "mesh": "native",
+      "nodes": 857,
+      "tet10": 436,
+      "free_dofs": 2138,
+      "head_area_mean_loading_increment_m": [
+        9.150532222200927e-05,
+        8.511205234662798e-07,
+        -0.00032521742815831706
+      ],
+      "frames": [
+        {
+          "frame": "initial_equilibrated",
+          "factor": 0.0,
+          "relative_original_matrix_residual": 1.86665037668236e-12,
+          "relative_all_node_displacement_error": 5.229112995256383e-12,
+          "relative_all_gp_stress_error": 1.9941413325631816e-11,
+          "maximum_void_ratio_error": 1.7563728249569976e-13,
+          "head_area_mean_displacement_m": [
+            8.9629039252576e-06,
+            1.145470029422425e-05,
+            -0.010736841365899454
+          ],
+          "tip_area_mean_displacement_m": [
+            -4.884175629713209e-07,
+            -3.499189574871151e-05,
+            -0.01061501171006895
+          ],
+          "total_soil_force_on_pile_kn": [
+            -3.98600263906701e-10,
+            -2.327027459614328e-10,
+            143.9999999970516
+          ]
+        },
+        {
+          "frame": "load_pile",
+          "factor": 1.0,
+          "relative_original_matrix_residual": 1.9392366169778152e-12,
+          "relative_all_node_displacement_error": 3.063272221157562e-13,
+          "relative_all_gp_stress_error": 2.806697344652597e-12,
+          "maximum_void_ratio_error": 1.0436096431476471e-14,
+          "head_area_mean_displacement_m": [
+            0.00010046822614726692,
+            1.2305820817690528e-05,
+            -0.01106205879405777
+          ],
+          "tip_area_mean_displacement_m": [
+            -1.7322419424478192e-05,
+            -3.687709204350617e-05,
+            -0.010926405070114349
+          ],
+          "total_soil_force_on_pile_kn": [
+            -10.000000000409472,
+            1.0184209031649516e-10,
+            243.99999999593012
+          ]
+        },
+        {
+          "frame": "unload_pile",
+          "factor": 0.0,
+          "relative_original_matrix_residual": 1.86665037668236e-12,
+          "relative_all_node_displacement_error": 4.754568747723985e-13,
+          "relative_all_gp_stress_error": 2.5848326696438928e-12,
+          "maximum_void_ratio_error": 1.5765166949677223e-14,
+          "head_area_mean_displacement_m": [
+            8.9629039252576e-06,
+            1.145470029422425e-05,
+            -0.010736841365899454
+          ],
+          "tip_area_mean_displacement_m": [
+            -4.884175629713209e-07,
+            -3.499189574871151e-05,
+            -0.01061501171006895
+          ],
+          "total_soil_force_on_pile_kn": [
+            -3.98600263906701e-10,
+            -2.327027459614328e-10,
+            143.9999999970516
+          ]
+        }
+      ],
+      "all_elastic_gp_fields_checked": true,
+      "shared_finite_interface_nodes": 45,
+      "independently_integrated_volumes_m3": {
+        "1": 793.9999999999994,
+        "2": 5.999999999999999
+      },
+      "accepted_increments": 16,
+      "rejected_increments": 2
+    }
+  ],
+  "mesh_labels": [
+    "native"
+  ],
+  "spatial_convergence_accepted": false,
+  "capacity_or_interface_slip_validated": false,
+  "source_sha256": {
+    "D:\\Work\\soil-fem-3d\\tools\\verify_solid_pile.py": "70ef24ac1c1e73b88c6f80136c6cd1fbb9c2aea7fd6b5147392d1c5c26ea1a4d",
+    "D:\\Work\\soil-fem-3d\\tools\\fem_reference.py": "8e6b24c6a6d691d481eb0475ae9ac3735e86b319bc95815c51c37a6c195c3800",
+    "D:\\Work\\soil-fem-3d\\tools\\verify_high_order.py": "afd060b0737098624d05d47997d67eebed3483bba0141f6f7eafca3e78539dd7",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\ground.json": "d513dcc69e2586703fbd619a4ab97fc5eb95cce1fddddcdd8cca7865324cf860",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\stages.json": "f5a1f1c5386c28d1951166541577d35a8c9056928521dcbcd1f24341ed3f861b",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\design.json": "3a3966f75aa7716d229452e6012b871bd525cb4cc1efb0dc9d85a91ce250ae2b"
+  },
+  "artifacts_sha256": {
+    "native\\mesh.json": "38b0fa5944a658456291f84a17bad6b0ccdce94a0e72b4431fd0392b6a5c4fc5",
+    "native\\stage-results.json": "b076fc2f2869b46864f4e85fbd159f3d54fda6bec684e8431945558f9f8bcb5b",
+    "native\\input-binding.json": "b63acfb937fce29fa765166f0b18a7166ddb4617d0342d7af9e7777115e75214"
+  },
+  "input_and_source_sha256": {
+    "D:\\Work\\soil-fem-3d\\tools\\verify_solid_pile.py": "70ef24ac1c1e73b88c6f80136c6cd1fbb9c2aea7fd6b5147392d1c5c26ea1a4d",
+    "D:\\Work\\soil-fem-3d\\tools\\fem_reference.py": "8e6b24c6a6d691d481eb0475ae9ac3735e86b319bc95815c51c37a6c195c3800",
+    "D:\\Work\\soil-fem-3d\\tools\\verify_high_order.py": "afd060b0737098624d05d47997d67eebed3483bba0141f6f7eafca3e78539dd7",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\ground.json": "d513dcc69e2586703fbd619a4ab97fc5eb95cce1fddddcdd8cca7865324cf860",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\stages.json": "f5a1f1c5386c28d1951166541577d35a8c9056928521dcbcd1f24341ed3f861b",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\design.json": "3a3966f75aa7716d229452e6012b871bd525cb4cc1efb0dc9d85a91ce250ae2b",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\cad\\bodies.json": "1a494f4997aa30e7a0b3cf4108793f79e3ee4696612ed5ac1040008141852ae8",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\solver\\soil-fem-3d.exe": "c8e3f45b602ab5b0b8134fa561f49cb2c68729d3ef63f108bce07d0a3ef4082b",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\native\\mesh.json": "38b0fa5944a658456291f84a17bad6b0ccdce94a0e72b4431fd0392b6a5c4fc5",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\native\\stage-results.json": "b076fc2f2869b46864f4e85fbd159f3d54fda6bec684e8431945558f9f8bcb5b",
+    "D:\\Work\\soil-fem-3d\\runs\\native-body-pile-live-20261026-v1\\independent\\native\\input-binding.json": "b63acfb937fce29fa765166f0b18a7166ddb4617d0342d7af9e7777115e75214"
+  },
+  "solver_sha256": "c8e3f45b602ab5b0b8134fa561f49cb2c68729d3ef63f108bce07d0a3ef4082b",
+  "goal_complete": false,
+  "p6_complete": false,
+  "original_report_sha256": "61f33ab566902428c0ea4f436b75032c1fb7ac8d179f48b18e66eeed081f8595",
+  "original_local_path": "runs/native-body-pile-live-20261026-v1/independent/independent-verification.json",
+  "publication_note": "Historical fixed-scope evidence. Local run paths are provenance; full run data are not included. See snapshot-status.json for the latest state."
+}

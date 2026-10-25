@@ -1,0 +1,45 @@
+{
+  "commands": [
+    {
+      "command": "solid.box",
+      "params": {
+        "corner": [
+          0,
+          0,
+          0
+        ],
+        "length": 10000,
+        "width": 10000,
+        "height": 8000,
+        "operation": "new",
+        "body_name": "Soil"
+      }
+    },
+    {
+      "command": "solid.box",
+      "params": {
+        "corner": [
+          4500,
+          4500,
+          2000
+        ],
+        "length": 1000,
+        "width": 1000,
+        "height": 6000,
+        "operation": "new",
+        "body_name": "Pile"
+      }
+    },
+    {
+      "command": "solid.combine",
+      "params": {
+        "target": "Soil",
+        "tools": [
+          "Pile"
+        ],
+        "operation": "cut",
+        "keep_tools": true
+      }
+    }
+  ]
+}

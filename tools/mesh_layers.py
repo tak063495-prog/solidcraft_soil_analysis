@@ -99,6 +99,8 @@ def generate(manifest_path, output, size, order=1, quadrature_order=3):
         excavation_sets = {name: [] for name in selections}
         for tag,r in sorted(owner.items()):
             kinds, _, blocks = gmsh.model.mesh.getElements(3,tag)
+            if len(kinds) == 0 or not any(len(block) for block in blocks):
+                raise ValueError(f"CAD body {r['body']!r} fragment {tag} has no tetrahedral elements; use a finer mesh or repair the geometry")
             for kind,block in zip(kinds,blocks):
                 if kind != (4 if order==1 else 11):
                     raise ValueError("mesher returned an unexpected tetrahedral order")
@@ -192,6 +194,8 @@ def generate(manifest_path, output, size, order=1, quadrature_order=3):
                 sets[f"{name}:surrounding_surface"]=sorted(surface)
                 face_sets[f'{name}:floor']=floor_faces;face_sets[f'{name}:wall']=wall_faces
                 face_sets[f'{name}:surrounding_surface']=surface_faces
+        from body_boundary_sets import add_body_boundary_sets
+        add_body_boundary_sets(mesh)
         output.write_text(json.dumps(mesh,allow_nan=False),encoding="utf-8")
         gmsh.write(str(output.with_suffix(".msh")))
         output.with_suffix(".provenance.json").write_text(json.dumps({

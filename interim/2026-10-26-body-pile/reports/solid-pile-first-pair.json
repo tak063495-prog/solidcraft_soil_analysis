@@ -1,0 +1,42 @@
+{
+  "schema": "soil-fem-finite-solid-pile-scoped-acceptance/1",
+  "passed": true,
+  "scope": "SolidCraft finite square pile, perfectly bonded elastic MC branches; gravity/load/unload, independent full 3D fields and three restarts",
+  "source_files": 536,
+  "new_source_files": [
+    "examples/ground-solid-pile.json",
+    "examples/solid-pile.json",
+    "examples/stages-solid-pile.json",
+    "scripts/Invoke-SolidPile.ps1",
+    "tools/prepare_solid_pile.py",
+    "tools/verify_solid_pile.py",
+    "tools/verify_solid_pile_history.py"
+  ],
+  "existing_529_sources_unchanged": true,
+  "existing_rust_243_pass_version_unchanged": true,
+  "existing_python_51_pass_sources_unchanged": true,
+  "all_six_frames_all_nodes_and_gp_match_independent_reference": true,
+  "both_meshes_vtu_raw_gp_and_force_audits_passed": true,
+  "full_non_time_result_exact_after_three_checkpoints": true,
+  "head_area_mean_loading_settlement_mm": [
+    0.32521742815831706,
+    0.3485245109509388
+  ],
+  "coarse_to_fine_settlement_relative_difference": 0.06687358294838157,
+  "solver_sha256": "c8e3f45b602ab5b0b8134fa561f49cb2c68729d3ef63f108bce07d0a3ef4082b",
+  "source_manifest_sha256": "0b538add5669970c668f11767b7465bd07b04088d824bf84b5a7d50a3a2c23e9",
+  "evidence_sha256": {
+    "independent-verification.json": "7b84c1192a432e64e5df9e16600e20927f73b8a6fcefcc5e23ca681bad1c7ed2",
+    "history/verification.json": "37ea412c46da36b3545d0f9ef53bd0d032708c0264a1301496dcd6a0f7dc3bff",
+    "coarse/stage-verification.json": "59fd08451fb618878a95a085575872529bebb92dc4a736806609e41805096b29",
+    "fine/stage-verification.json": "a50c13ad52171e3165c0286c7b7f1d1759cb2a798045c719e1feec84e6644415"
+  },
+  "spatial_convergence_accepted": false,
+  "pile_row_equivalence_validated": false,
+  "capacity_or_slip_validated": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "original_report_sha256": "7449339a83d75d0c0ae8b87c7f0e93874f802e919f3cd6cd7251d8f658f6c15f",
+  "original_local_path": "runs/solid-pile-acceptance-20261026-v1/final-validation.json",
+  "publication_note": "Historical fixed-scope evidence. Local run paths are provenance; full run data are not included. See snapshot-status.json for the latest state."
+}
