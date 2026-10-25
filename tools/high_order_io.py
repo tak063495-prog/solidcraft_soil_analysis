@@ -57,7 +57,7 @@ def stages(mesh_file,result_file,output):
     fingerprints={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in (mesh_file,result_file)}
     mesh=json.loads(Path(mesh_file).read_text(encoding='utf-8-sig'));result=json.loads(Path(result_file).read_text(encoding='utf-8-sig'))
     mixed=result['schema'] in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/1')
-    if not mixed and result['schema'] not in ('soil-fem-stage-result/2','soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13') or not result['complete']:raise ValueError('completed high-order/general-material result required')
+    if not mixed and result['schema'] not in ('soil-fem-stage-result/2','soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14') or not result['complete']:raise ValueError('completed high-order/general-material result required')
     if mixed:
         import mixed_mcc_io
         mixed_mcc_io.validate(mesh,result)
@@ -97,8 +97,8 @@ def stages(mesh_file,result_file,output):
         cell.update({'volume_average_'+name:[average(value,layout,ids)[active]] for name,value in raw.items()})
         filename=f'stage-{frame_index:03}.vtu'
         node_fields={'original_node_id':used,'displacement_m':(u-reference)[used],'stage_displacement_increment_m':(u-old)[used]}
-        if mixed or result['schema'] in ('soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):node_fields.update(total_displacement_from_seed_m=u[used],initialization_displacement_m=initial_reference[used])
-        if mixed or result['schema'] in ('soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):node_fields['display_reference_displacement_m']=reference[used]
+        if mixed or result['schema'] in ('soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):node_fields.update(total_displacement_from_seed_m=u[used],initialization_displacement_m=initial_reference[used])
+        if mixed or result['schema'] in ('soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):node_fields['display_reference_displacement_m']=reference[used]
         meshio.write_points_cells(output/filename,xyz[used],[(kind,mapping[cells[active]])],point_data=node_fields,cell_data=cell)
         qp=np.array([i for i,p in enumerate(layout) if active[p['element_index']]])
         positions=np.array([layout[i]['position_m'] for i in qp])
@@ -107,15 +107,15 @@ def stages(mesh_file,result_file,output):
         point_fields={**{k:v[qp] for k,v in raw.items()},'integration_point_id':qp,
                 'original_element_id':np.array([layout[i]['element_index'] for i in qp]),
                 'integration_weight_m3':np.array([layout[i]['weight_m3'] for i in qp]),'displacement_m':point_u}
-        if mixed or result['schema'] in ('soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):point_fields['material_id']=np.array([(state.get('element_material_ids') or mesh['material_ids'])[layout[i]['element_index']] for i in qp])
-        if mixed or result['schema'] in ('soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):
+        if mixed or result['schema'] in ('soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):point_fields['material_id']=np.array([(state.get('element_material_ids') or mesh['material_ids'])[layout[i]['element_index']] for i in qp])
+        if mixed or result['schema'] in ('soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):
             point_fields['total_displacement_from_seed_m']=np.array([np.array(layout[i]['shape_functions'])@u[cells[layout[i]['element_index']]] for i in qp])
             point_fields['initialization_displacement_m']=np.array([np.array(layout[i]['shape_functions'])@initial_reference[cells[layout[i]['element_index']]] for i in qp])
         meshio.write_points_cells(output/point_file,positions,[('vertex',np.arange(len(qp))[:,None])],point_data=point_fields)
         checked=meshio.read(output/filename);point_checked=meshio.read(output/point_file)
         assert np.array_equal(checked.cells_dict[kind],mapping[cells[active]])
         assert np.array_equal(checked.cell_data['material_id'][0],np.asarray(state.get('element_material_ids') or mesh['material_ids'])[active])
-        if mixed or result['schema'] in ('soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):assert np.array_equal(point_checked.point_data['material_id'],point_fields['material_id'])
+        if mixed or result['schema'] in ('soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):assert np.array_equal(point_checked.point_data['material_id'],point_fields['material_id'])
         assert np.allclose(checked.point_data['displacement_m'],(u-reference)[used])
         for k,v in raw.items():assert np.allclose(point_checked.point_data[k],v[qp],equal_nan=True)
         if mixed:
@@ -148,6 +148,9 @@ def stages(mesh_file,result_file,output):
     if result['case'].get('beam_system'):
         from beam_io import export
         export(result,output)
+        if result['case']['beam_system'].get('plates'):
+            from plate_io import export as export_plates
+            export_plates(result,output)
     if result['case'].get('anchor_system'):
         from anchor_io import export
         export(result,output)
@@ -163,6 +166,7 @@ def stages(mesh_file,result_file,output):
             'mesh_sha256':hashlib.sha256(Path(mesh_file).read_bytes()).hexdigest(),'vtu_roundtrip':'passed',
             'integration_point_roundtrip':'passed','cell_field_meaning':'volume_average','frame_count':len(rows)}
     if result['case'].get('joint_system'):record['joint_point_roundtrip']='passed'
+    if (result['case'].get('beam_system') or {}).get('plates'):record['plate_sample_roundtrip']='passed'
     if mixed:
         mixed_mcc_io.write_collection(output,result['frames'])
         record.update(schema='soil-fem-stage-export/3',formulation='Tet10 / material-split P1 effective mean pressure / GP volume MCC',

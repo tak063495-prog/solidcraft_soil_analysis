@@ -94,6 +94,10 @@ pub struct Configuration {
     pub translation_constraints: Vec<Constraint>,
     #[serde(default)]
     pub nodal_loads: Vec<NodalLoad>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub plate_sections: Vec<crate::plates::Section>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub plates: Vec<crate::plates::Member>,
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -102,6 +106,10 @@ pub struct State {
     pub reference_global_kinematics: Vec<[f64; 12]>,
     pub node_displacement_m: Vec<[f64; 3]>,
     pub node_rotation_rad: Vec<[f64; 3]>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub active_plates: Vec<bool>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub plate_reference_global_kinematics: Vec<[f64; 18]>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -131,6 +139,8 @@ pub struct Report {
     pub support_force_kn: [f64; 3],
     pub support_moment_origin_kn_m: [f64; 3],
     pub members: Vec<MemberResult>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub plates: Vec<crate::plates::MemberResult>,
 }
 pub struct Evaluation {
     pub state: State,
@@ -377,6 +387,11 @@ struct MemberData {
     section: usize,
     kernel: Kernel,
 }
+struct PlateData {
+    nodes: [usize; 3],
+    section: usize,
+    kernel: crate::plates::Kernel,
+}
 struct Compiled {
     active_nodes: Vec<bool>,
     k: DMatrix<f64>,
@@ -394,6 +409,7 @@ pub struct Model {
     pub positions: Vec<[f64; 3]>,
     pub attachments: Vec<Option<usize>>,
     members: Vec<MemberData>,
+    plates: Vec<PlateData>,
     cache: RefCell<BTreeMap<Vec<bool>, Rc<Compiled>>>,
 }
 
@@ -441,11 +457,13 @@ fn basis(eqs: &[(Vector3<f64>, f64)]) -> Result<ConstraintBasis> {
 
 impl Model {
     pub fn new(mesh: &Mesh, c: Configuration) -> Result<Self> {
-        if c.schema != "soil-fem-beams/1"
+        if !["soil-fem-beams/1", "soil-fem-structures/1"].contains(&c.schema.as_str())
             || c.nodes.is_empty()
             || c.nodes.len() > 500
-            || c.members.is_empty()
-            || c.sections.is_empty()
+            || (c.members.is_empty() && c.plates.is_empty())
+            || (!c.members.is_empty() && c.sections.is_empty())
+            || (!c.plates.is_empty() && c.plate_sections.is_empty())
+            || c.members.len() + c.plates.len() > 2000
             || !c.rotation_length_scale_m.is_finite()
             || c.rotation_length_scale_m <= 0.
             || c.maximum_condensed_dofs == 0
@@ -477,6 +495,18 @@ impl Model {
         }
         for s in &c.sections {
             s.validate()?;
+        }
+        let plate_sections: BTreeMap<_, _> = c
+            .plate_sections
+            .iter()
+            .enumerate()
+            .map(|(i, s)| (s.id.clone(), i))
+            .collect();
+        if plate_sections.len() != c.plate_sections.len() {
+            return Err(Error::Input("duplicate plate section identifier".into()));
+        }
+        for section in &c.plate_sections {
+            section.validate()?;
         }
         let mut positions = Vec::new();
         let mut attachments = Vec::new();
@@ -561,6 +591,37 @@ impl Model {
                 kernel,
             });
         }
+        let mut plates = Vec::new();
+        for plate in &c.plates {
+            if plate.id.is_empty()
+                || !names.insert(plate.id.clone())
+                || !plate
+                    .constant_traction_kpa
+                    .iter()
+                    .chain(&plate.boundary_traction_kpa)
+                    .all(|v| v.is_finite())
+            {
+                return Err(Error::Input("invalid/duplicate plate member".into()));
+            }
+            let mut nodes = [0; 3];
+            for (i, name) in plate.nodes.iter().enumerate() {
+                nodes[i] = *node_ids
+                    .get(name)
+                    .ok_or_else(|| Error::Input("unknown plate node".into()))?;
+            }
+            let section = *plate_sections
+                .get(&plate.section_id)
+                .ok_or_else(|| Error::Input("unknown plate section".into()))?;
+            let kernel = crate::plates::Kernel::new(
+                nodes.map(|i| positions[i]),
+                &c.plate_sections[section],
+            )?;
+            plates.push(PlateData {
+                nodes,
+                section,
+                kernel,
+            });
+        }
         for constraint in c
             .rotation_constraints
             .iter()
@@ -603,6 +664,7 @@ impl Model {
             positions,
             attachments,
             members,
+            plates,
             cache: RefCell::new(BTreeMap::new()),
         })
     }
@@ -617,10 +679,19 @@ impl Model {
             reference_global_kinematics: vec![[0.; 12]; self.members.len()],
             node_displacement_m: vec![[0.; 3]; self.positions.len()],
             node_rotation_rad: vec![[0.; 3]; self.positions.len()],
+            active_plates: self
+                .configuration
+                .plates
+                .iter()
+                .map(|p| p.initially_active)
+                .collect(),
+            plate_reference_global_kinematics: vec![[0.; 18]; self.plates.len()],
         }
     }
     pub fn validate_state(&self, s: &State) -> Result<()> {
         if s.active_members.len() != self.members.len()
+            || s.active_plates.len() != self.plates.len()
+            || s.plate_reference_global_kinematics.len() != self.plates.len()
             || s.reference_global_kinematics.len() != self.members.len()
             || s.node_displacement_m.len() != self.positions.len()
             || s.node_rotation_rad.len() != self.positions.len()
@@ -628,6 +699,7 @@ impl Model {
                 .reference_global_kinematics
                 .iter()
                 .flatten()
+                .chain(s.plate_reference_global_kinematics.iter().flatten())
                 .chain(s.node_displacement_m.iter().flatten())
                 .chain(s.node_rotation_rad.iter().flatten())
                 .all(|x| x.is_finite())
@@ -657,7 +729,41 @@ impl Model {
                 }
             }
         }
+        for (i, p) in self.plates.iter().enumerate() {
+            if s.active_plates[i] {
+                for n in p.nodes {
+                    old_nodes[n] = true;
+                }
+            }
+        }
         for name in names {
+            if let Some(i) = self.configuration.plates.iter().position(|p| &p.id == name) {
+                if s.active_plates[i] == install {
+                    return Err(Error::Input(
+                        "plate is already in requested active state".into(),
+                    ));
+                }
+                next.active_plates[i] = install;
+                if install {
+                    for (end, n) in self.plates[i].nodes.iter().copied().enumerate() {
+                        if let Some(soil) = self.attachments[n] {
+                            next.node_displacement_m[n] = soil_u[soil];
+                        } else if cad_new_nodes && !old_nodes[n] {
+                            next.node_displacement_m[n] = [0.; 3];
+                        }
+                        if cad_new_nodes && !old_nodes[n] {
+                            next.node_rotation_rad[n] = [0.; 3];
+                        }
+                        for a in 0..3 {
+                            next.plate_reference_global_kinematics[i][6 * end + a] =
+                                next.node_displacement_m[n][a];
+                            next.plate_reference_global_kinematics[i][6 * end + 3 + a] =
+                                next.node_rotation_rad[n][a];
+                        }
+                    }
+                }
+                continue;
+            }
             let i = self
                 .configuration
                 .members
@@ -691,8 +797,10 @@ impl Model {
         }
         Ok(next)
     }
-    fn compiled(&self, active: &[bool]) -> Result<Rc<Compiled>> {
-        if let Some(c) = self.cache.borrow().get(active) {
+    fn compiled(&self, state: &State) -> Result<Rc<Compiled>> {
+        let active = &state.active_members;
+        let key: Vec<bool> = active.iter().chain(&state.active_plates).copied().collect();
+        if let Some(c) = self.cache.borrow().get(&key) {
             return Ok(c.clone());
         }
         let n = self.positions.len();
@@ -708,6 +816,19 @@ impl Model {
                     for b in 0..12 {
                         k[(6 * m.nodes[a / 6] + a % 6, 6 * m.nodes[b / 6] + b % 6)] +=
                             m.kernel.stiffness[(a, b)];
+                    }
+                }
+            }
+        }
+        for (i, p) in self.plates.iter().enumerate() {
+            if state.active_plates[i] {
+                for node in p.nodes {
+                    active_nodes[node] = true;
+                }
+                for a in 0..18 {
+                    for b in 0..18 {
+                        k[(6 * p.nodes[a / 6] + a % 6, 6 * p.nodes[b / 6] + b % 6)] +=
+                            p.kernel.stiffness[(a, b)];
                     }
                 }
             }
@@ -819,13 +940,11 @@ impl Model {
             interface_dofs,
             normals,
         });
-        self.cache
-            .borrow_mut()
-            .insert(active.to_vec(), value.clone());
+        self.cache.borrow_mut().insert(key, value.clone());
         Ok(value)
     }
     fn loads(&self, s: &State, factor: f64) -> Result<AssembledLoads> {
-        let c = self.compiled(&s.active_members)?;
+        let c = self.compiled(s)?;
         let mut loads = DVector::zeros(6 * self.positions.len());
         let mut rest = DVector::zeros(loads.len());
         let mut lines = vec![[0.; 3]; self.members.len()];
@@ -853,6 +972,25 @@ impl Model {
                 rest[6 * m.nodes[a / 6] + a % 6] += constant[a];
             }
         }
+        for (i, p) in self.plates.iter().enumerate() {
+            if !s.active_plates[i] {
+                continue;
+            }
+            let config = &self.configuration.plates[i];
+            let section = &self.configuration.plate_sections[p.section];
+            let mut traction = std::array::from_fn(|a| {
+                config.constant_traction_kpa[a] + factor * config.boundary_traction_kpa[a]
+            });
+            traction[2] -= section.unit_weight_kn_m3 * section.thickness_m;
+            let load = p.kernel.uniform_load(traction);
+            let reference =
+                crate::plates::V18::from_row_slice(&s.plate_reference_global_kinematics[i]);
+            let constant = -p.kernel.stiffness * reference;
+            for a in 0..18 {
+                loads[6 * p.nodes[a / 6] + a % 6] += load[a];
+                rest[6 * p.nodes[a / 6] + a % 6] += constant[a];
+            }
+        }
         for load in &self.configuration.nodal_loads {
             let n = self
                 .configuration
@@ -874,7 +1012,7 @@ impl Model {
     }
     pub fn attached_load(&self, s: &State, factor: f64) -> Result<Vec<(usize, f64)>> {
         self.validate_state(s)?;
-        let c = self.compiled(&s.active_members)?;
+        let c = self.compiled(s)?;
         let (load, _, _) = self.loads(s, factor)?;
         let f = c.t.transpose() * load;
         Ok(c.interface_dofs
@@ -891,7 +1029,7 @@ impl Model {
         factor: f64,
     ) -> Result<Evaluation> {
         self.validate_state(s)?;
-        let c = self.compiled(&s.active_members)?;
+        let c = self.compiled(s)?;
         if c.interface_dofs.iter().any(|g| !soil_active_nodes[g / 3]) {
             return Err(Error::Input("active beam attachment lost its soil node; remove or explicitly detach the member before soil excavation".into()));
         }
@@ -999,6 +1137,19 @@ impl Model {
                 section_forces_at_start_mid_end: samples,
             });
         }
+        let plates = self
+            .plates
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| s.active_plates[*i])
+            .map(|(i, p)| {
+                let relative = crate::plates::V18::from_fn(|a, _| {
+                    d[6 * p.nodes[a / 6] + a % 6] - s.plate_reference_global_kinematics[i][a]
+                });
+                p.kernel
+                    .recover(self.configuration.plates[i].id.clone(), &relative)
+            })
+            .collect();
         let report = Report {
             active_members: s.active_members.iter().filter(|a| **a).count(),
             condensed_dofs: c.q.ncols(),
@@ -1015,6 +1166,7 @@ impl Model {
             support_force_kn: support_f.into(),
             support_moment_origin_kn_m: support_m.into(),
             members: results,
+            plates,
         };
         Ok(Evaluation {
             state,

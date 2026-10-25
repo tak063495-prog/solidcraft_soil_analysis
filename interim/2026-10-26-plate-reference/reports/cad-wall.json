@@ -1,0 +1,80 @@
+{
+  "schema": "soil-fem-cad-wall-scoped-study/1",
+  "passed": true,
+  "solver_sha256": "8a3eda114a0d92a46f5854b84e08c010928c513f7b2a0ccf0fc74dfd86da2e7d",
+  "source_files": 555,
+  "reference": "Each variant independently solves original-input 3D soil+plate, retaining all plate rotations; no Rust solved field generates the reference",
+  "mesh_metrics": [
+    {
+      "mesh": "coarse",
+      "nodes": 359,
+      "tet10": 156,
+      "plates": 80,
+      "shared_wall_nodes": 51,
+      "area_m2": 79.99999999999994,
+      "wall_plate_mean_loading_ux_m": -0.001416447117729424,
+      "soil_quadratic_trace_mean_loading_ux_m": -0.0014211867089752315,
+      "interpolation_mean_difference_m": 4.7395912458074365e-06
+    },
+    {
+      "mesh": "fine",
+      "nodes": 690,
+      "tet10": 335,
+      "plates": 136,
+      "shared_wall_nodes": 83,
+      "area_m2": 79.99999999999996,
+      "wall_plate_mean_loading_ux_m": -0.0014300855536366571,
+      "soil_quadratic_trace_mean_loading_ux_m": -0.0014335516324555492,
+      "interpolation_mean_difference_m": 3.4660788188920974e-06
+    }
+  ],
+  "mesh_pair_relative_wall_loading_displacement_difference": 0.009536797202482784,
+  "two_percent_mesh_pair_gate_satisfied": true,
+  "drilling_sensitivity": [
+    {
+      "case": "coarse-drill-low",
+      "relative_l2_errors": {
+        "displacement": 1.1552825158012252e-09,
+        "stress": 9.506563551830694e-09,
+        "bending_moment": 2.6612683896786642e-09
+      },
+      "one_percent_gate_satisfied": true
+    },
+    {
+      "case": "coarse-drill-high",
+      "relative_l2_errors": {
+        "displacement": 1.1532178276779038e-07,
+        "stress": 9.487144064963991e-07,
+        "bending_moment": 2.6564571541540785e-07
+      },
+      "one_percent_gate_satisfied": true
+    }
+  ],
+  "separate_process_checkpoints_on_coarse_only": 5,
+  "exact_coarse_cutback_clean_path": true,
+  "exact_shared_nodes": true,
+  "pointwise_soil_plate_trace_identity": false,
+  "spatial_convergence_accepted": false,
+  "native_gui_wall_accepted": false,
+  "excavation_retaining_wall_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "evidence_sha256": {
+    "source-snapshot.json": "834d1054dcbbec8c05b2a16326567746bca43208b12d4cb013cbd81e05a69cfa",
+    "coarse\\independent.json": "5d7d0d8e5183421922c7e92ef6f3af9dcac8f4e341bfc0efdefe99443e230ce2",
+    "coarse\\plate-surface-binding.json": "159a7c95fc2fec490436a7c0c470782b66497c57f8d0fb85b5697bd7d021977b",
+    "coarse\\stage-verification.json": "eeecf06b649467c3c7ee48d14a3c38bd76775c7335a7ba5a47fdaadd60e472a7",
+    "coarse-drill-high\\independent.json": "74c1de4ae6d4487ab0e02cdcc82766c7d7d622789371b1d5acad4dd36eeff3e0",
+    "coarse-drill-high\\stage-verification.json": "28a6a19bd8c0cc0f9897712aba6bd598b4cf34447e0bd01fc81ac5d8c69fe7f8",
+    "coarse-drill-low\\independent.json": "9af6a4d982019d5569ee159067ff19dff9c7c621c6e32cda208fc3ed5df6423a",
+    "coarse-drill-low\\stage-verification.json": "327c2e077c89bd9bfb6cdbeeba3b4d4715da069b7a58083cf9a06206800a1dc5",
+    "fine\\independent.json": "2e1c28c83d43e7068778b2b2bee5a435b047faa750a007f54d8b3b80b3766ab9",
+    "fine\\plate-surface-binding.json": "dd178b65e8643b8a6d1e44341e62232c5f91db1776ed3f27332c450224c22ff1",
+    "fine\\stage-verification.json": "7ae07511c7da8364ba56c62f045515dca28f30470695b34ce0a11efae0f5db4f",
+    "coarse\\checkpoints\\verification.json": "2773717a889ad883f31e0bb4425f66e9996dce8c267185c7c5b3858855c4c4d8",
+    "coarse\\history\\verification.json": "2b5cd23ebd47f2673650d517cd65c0944b9eecb26c4561a789aaffe5c8ac0798"
+  },
+  "original_report_sha256": "1bfa76ead223fdd58e092bd427ad764861a0f2c713375d870fcbbfd7d7a6c573",
+  "original_local_path": "runs/plate-wall-cad-20261026-v2/verification.json",
+  "publication_note": "Fixed-scope historical evidence; local paths identify provenance. Full run directories are not included. See snapshot-status.json for current status."
+}

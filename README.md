@@ -1,8 +1,8 @@
 # SolidCraft → Rust 3D地盤FEM
 
-**2026-10-26時点の途中成果物です。P0〜P6全体は未完了です。** [最新の実装・検証状況](interim/2026-10-26-body-pile/README.ja.md)／[SolidCraft差分](integrations/solidcraft/README.ja.md)／[P1候補版差分](integrations/solidcraft-projected/README.ja.md)／[残件](docs/P6_STATUS.ja.md)。
+**2026-10-26の途中成果物（更新6）です。P0〜P6全体は未完了です。** [実装・検証結果と未達項目](interim/2026-10-26-plate-reference/README.ja.md)。
 
-SolidCraftで作成・編集した3Dソリッドを解析へ渡すための開発環境です。**多層地盤のK0/OCR/pc/e初期化、一般形状の初期応力読込と非線形重力平衡、MCC/MC・独自IDHの全体非線形Tet4/Tet10解析、局所掘削、指定水位工程、定常飽和浸透と不飽和水理から力学へのONE_WAY受渡し、CSR疎求解、保存再開を実装**しています。力学は小ひずみ・静的です。P6全体は未完了で、硬化モデルの現地同定と適用拡張、板/不飽和湿潤JOINT、無応力MCC誕生、有限幅過渡降雨/SRM、SolidCraft画面内統合等の残りを[P6受入要件一覧](docs/P6_STATUS.ja.md)で管理します。
+SolidCraftで作成・編集した3Dソリッドを解析へ渡すための開発環境です。**多層地盤のK0/OCR/pc/e初期化、一般形状の初期応力読込と非線形重力平衡、MCC/MC・独自IDHの全体非線形Tet4/Tet10解析、局所掘削、指定水位工程、定常飽和浸透と不飽和水理から力学へのONE_WAY受渡し、CSR疎求解、保存再開を実装**しています。力学は小ひずみ・静的です。P6全体は未完了で、硬化モデルの現地同定と適用拡張、板の実CAD・表示・収束/不飽和湿潤JOINT、無応力MCC誕生、有限幅過渡降雨/SRM、SolidCraft画面内統合等の残りを[P6受入要件一覧](docs/P6_STATUS.ja.md)で管理します。
 
 ## 混合形式MCCの開発検証
 
@@ -86,7 +86,7 @@ MCCとは別の不変量二重硬化モデルIDHを追加しました。cap圧�
 .\scripts\Test-Beams.ps1
 ```
 
-線形Euler–Bernoulli/Timoshenko梁の軸伸び・曲げ・ねじり、自由節点、局所軸、端部解放、自重・初期軸力、設置/撤去をMCC/MC地盤へ接続しました。独立した全回転保持の3D解と比較し、梁と地盤を合わせた力・モーメント、切戻し・保存再開を検査します。[梁の操作・適用範囲](docs/BEAMS.ja.md)／[検証記録](docs/BEAMS_VERIFICATION.ja.md)。引張専用アンカーは下記へ追加しました。板/シェルは未実装です。乾燥した履歴JOINTは下記へ接続しました。
+線形Euler–Bernoulli/Timoshenko梁の軸伸び・曲げ・ねじり、自由節点、局所軸、端部解放、自重・初期軸力、設置/撤去をMCC/MC地盤へ接続しました。独立した全回転保持の3D解と比較し、梁と地盤を合わせた力・モーメント、切戻し・保存再開を検査します。[梁の操作・適用範囲](docs/BEAMS.ja.md)／[検証記録](docs/BEAMS_VERIFICATION.ja.md)。引張専用アンカーは下記へ追加しました。平板CST/DKTの膜・曲げ・節点回転を地盤と梁へ接続し、独立3Dの弾性対照・施工・5地点再開・生値出力を限定検証しました。[平板の入力・検証範囲](docs/PLATES.ja.md)を参照してください。[SolidCraft外壁面の粗密・感度対照](docs/CAD_PLATE_WALL.ja.md)も追加しました。山留め掘削・共有節点間の整合・一般収束・専用表示は未完です。乾燥した履歴JOINTは下記へ接続しました。
 
 ## 有限断面の3D単杭を地盤へ接続する
 

@@ -120,13 +120,17 @@ class SparseProjectedSystem(rate.System):
             'eqa,eq,eqb,eq->eab', self.n, mcm, self.n, self.weight, optimize=True))
         return dd, dt, td, tt
 
+    def factorize(self, matrix):
+        """Fresh original-matrix LU; alternative references override this hook."""
+        return splu(matrix)
+
     def linear_rate(self, ep, force_rate):
         dd, dt, td, tt = self.tangent_blocks(ep)
         m, div = self.mass, self.reduced_divergence
         nt, nf = len(self.keys), len(self.free)
         matrix = bmat([[tt, -td, -m], [-dt, dd, -div.T], [-m, -div, None]], format='csc')
         rhs = np.concatenate((np.zeros(nt), self.reduce(force_rate), np.zeros(nt)))
-        factor = splu(matrix)
+        factor = self.factorize(matrix)
         solution = factor.solve(rhs)
         self.factorizations += 1
         self.maximum_matrix_nnz = max(self.maximum_matrix_nnz, matrix.nnz)

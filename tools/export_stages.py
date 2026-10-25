@@ -12,7 +12,7 @@ import numpy as np
 def export(mesh_file,result_file,output):
     result=json.loads(result_file.read_text(encoding="utf-8"))
     mesh=json.loads(mesh_file.read_text(encoding="utf-8"))
-    if mesh.get('tetrahedra10') or result.get('schema') in ('soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):
+    if mesh.get('tetrahedra10') or result.get('schema') in ('soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):
         from high_order_io import stages
         return stages(mesh_file,result_file,output)
     if result.get("schema")!="soil-fem-stage-result/1" or not result["complete"]:

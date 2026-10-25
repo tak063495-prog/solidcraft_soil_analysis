@@ -1,0 +1,192 @@
+{
+  "schema": "soil-fem-independent-reused-factor-rate-assessment/1",
+  "original_equation_residual_gates_passed": true,
+  "scope": "12 elastic-rate perturbations near the analytical K0 state of the actual CAD input; NOT a completed nonlinear construction reference",
+  "nodes": 550,
+  "tet10": 288,
+  "material_points": 7776,
+  "fresh_seconds": 1.7102791999932379,
+  "reused_seconds": 0.8017019999679178,
+  "measured_warm_rate_speedup": 2.1333103822388857,
+  "matrix_free_seconds": 0.4839938000077382,
+  "measured_warm_matrix_free_speedup": 3.5336799768217975,
+  "comparisons": [
+    {
+      "name": "reused_LU",
+      "strict_componentwise_gate_satisfied": false,
+      "maximum_relative_array_difference": 3.7638986584578e-11,
+      "maximum_component_difference": 3.1859222815455723e-08,
+      "relative_physical_group_errors": {
+        "displacement_rate": 5.633922626382382e-12,
+        "stress_rate": 3.763898660446346e-11,
+        "log_volume_rate": 1.5978839455299103e-11
+      }
+    },
+    {
+      "name": "matrix_free_reused_LU",
+      "strict_componentwise_gate_satisfied": false,
+      "maximum_relative_array_difference": 3.7638972459991545e-11,
+      "maximum_component_difference": 3.185922992088308e-08,
+      "relative_physical_group_errors": {
+        "displacement_rate": 5.63394306486721e-12,
+        "stress_rate": 3.763897247987699e-11,
+        "log_volume_rate": 1.5978875073830826e-11
+      }
+    },
+    {
+      "name": "alternate_fresh_LU_ordering",
+      "strict_componentwise_gate_satisfied": false,
+      "maximum_relative_array_difference": 3.799322037509952e-11,
+      "maximum_component_difference": 3.2409140260369895e-08,
+      "relative_physical_group_errors": {
+        "displacement_rate": 5.638039393269629e-12,
+        "stress_rate": 3.799322039517038e-11,
+        "log_volume_rate": 1.626293126898759e-11
+      }
+    }
+  ],
+  "analytical_uniform_stiffness_scaling": [
+    {
+      "name": "fresh",
+      "maximum_relative_displacement_scaling_error": 8.158849856330684e-12,
+      "maximum_relative_stress_scaling_error": 5.884148122844439e-11,
+      "strict_componentwise_stress_scaling_all_satisfied": false
+    },
+    {
+      "name": "reused",
+      "maximum_relative_displacement_scaling_error": 1.986887992301466e-15,
+      "maximum_relative_stress_scaling_error": 2.3509781454209395e-15,
+      "strict_componentwise_stress_scaling_all_satisfied": true
+    },
+    {
+      "name": "matrix_free",
+      "maximum_relative_displacement_scaling_error": 9.120722087790877e-16,
+      "maximum_relative_stress_scaling_error": 1.2862426889310494e-15,
+      "strict_componentwise_stress_scaling_all_satisfied": true
+    },
+    {
+      "name": "alternate_fresh",
+      "maximum_relative_displacement_scaling_error": 4.1206181140767735e-13,
+      "maximum_relative_stress_scaling_error": 2.5027407296809124e-12,
+      "strict_componentwise_stress_scaling_all_satisfied": false
+    }
+  ],
+  "fresh": {
+    "backend": "scipy.sparse.linalg.splu",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "formulation": "uncondensed compression-volume/displacement/pressure",
+    "free_displacement_dofs": 1349,
+    "primary_volume_dofs": 114,
+    "factorizations": 13,
+    "maximum_matrix_nnz": 128699,
+    "maximum_factor_nnz": 949037,
+    "maximum_true_linear_residual": 1.964460666714318e-14,
+    "maximum_block_residuals": {
+      "force": 1.9080585049413403e-14,
+      "volume": 1.761341109674961e-11,
+      "mean_pressure": 1.182312113050968e-15
+    },
+    "maximum_unrefined_block_residuals": {
+      "force": 1.9080585049413403e-14,
+      "volume": 1.761341109674961e-11,
+      "mean_pressure": 1.182312113050968e-15
+    },
+    "iterative_refinement_corrections": 0,
+    "maximum_mass_residual": 3.7377953350184853e-16,
+    "dense_fallbacks": 0
+  },
+  "reused": {
+    "backend": "original-matrix residual-corrected reused LU; fresh LU on noncoercive material tangents or failed correction",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "formulation": "uncondensed compression-volume/displacement/pressure",
+    "free_displacement_dofs": 1349,
+    "primary_volume_dofs": 114,
+    "maximum_matrix_nnz": 128699,
+    "maximum_factor_nnz": 949023,
+    "maximum_true_linear_residual": 4.5819876856617255e-15,
+    "maximum_block_residuals": {
+      "force": 2.8747366052826817e-15,
+      "volume": 7.448804853296887e-16,
+      "mean_pressure": 1.0211720104731138e-15
+    },
+    "maximum_unrefined_block_residuals": {
+      "force": 2.8747366052826817e-15,
+      "volume": 7.448804853296887e-16,
+      "mean_pressure": 1.0211720104731138e-15
+    },
+    "iterative_refinement_corrections": 0,
+    "maximum_mass_residual": 3.7377953350184853e-16,
+    "dense_fallbacks": 0,
+    "linear_rate_systems": 13,
+    "actual_tangent_lu_factorizations": 1,
+    "cached_factor_hits": 12,
+    "cached_correction_solves": 34,
+    "fresh_fallbacks": 0,
+    "noncoercive_bypasses": 0,
+    "nonfinite_cached_residuals": 0,
+    "maximum_preconditioned_rhs_residual": 0.00041135288720138156,
+    "cache_entries": 1,
+    "material_coercivity_relative_floor": 1e-10,
+    "cached_rhs_relative_tolerance": 1e-14,
+    "original_force_volume_mean_pressure_acceptance_tolerance": 1e-10
+  },
+  "matrix_free": {
+    "backend": "matrix-free original three-field action with corrected cached LU; original assembled/fresh fallback",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "formulation": "uncondensed compression-volume/displacement/pressure",
+    "free_displacement_dofs": 1349,
+    "primary_volume_dofs": 114,
+    "maximum_matrix_nnz": 128699,
+    "maximum_factor_nnz": 949023,
+    "maximum_true_linear_residual": 3.903075760661637e-15,
+    "maximum_block_residuals": {
+      "force": 2.8747366052826817e-15,
+      "volume": 9.28433456600277e-16,
+      "mean_pressure": 1.0181216217124823e-15
+    },
+    "maximum_unrefined_block_residuals": {
+      "force": 4.1843840878491666e-05,
+      "volume": 1.5196376677549244e-11,
+      "mean_pressure": 0.0001099879013312069
+    },
+    "iterative_refinement_corrections": 0,
+    "maximum_mass_residual": 3.7377953350184853e-16,
+    "dense_fallbacks": 0,
+    "linear_rate_systems": 13,
+    "actual_tangent_lu_factorizations": 1,
+    "cached_factor_hits": 12,
+    "cached_correction_solves": 1,
+    "fresh_fallbacks": 0,
+    "noncoercive_bypasses": 0,
+    "nonfinite_cached_residuals": 0,
+    "maximum_preconditioned_rhs_residual": 1.755900965401251e-14,
+    "cache_entries": 1,
+    "material_coercivity_relative_floor": 1e-10,
+    "cached_rhs_relative_tolerance": 1e-14,
+    "original_force_volume_mean_pressure_acceptance_tolerance": 1e-10,
+    "matrix_free_operator_actions": 45,
+    "matrix_free_assemblies_avoided": 12,
+    "matrix_free_corrections": 33,
+    "matrix_free_fallbacks": 0,
+    "matrix_free_rhs_relative_target": 1e-14,
+    "matrix_free_block_relative_target": 1e-13
+  },
+  "input_sha256": {
+    "mesh.json": "8dbdda55392dead7af4eacc935c06d1e6b6a4da41669593d4ee50e809f97ddde",
+    "ground.json": "27f870fb36f11c391ef30739fd7bce149f8ad0b4b13fb8173893c832599e7bce",
+    "case.json": "888a8adeb46f7c7415c8c04554e38bfc9dff14493dc74a9026d43847db64ef7f",
+    "mesh-identity.json": "d759d2c3d51430c784259a9bbac484d937e157cb23c6f967283549f0550c6ea1"
+  },
+  "source_manifest_sha256": "4fecfec19b59fa58e7f9f5a821156efedf9154adace6045a41afaf549e168ef2",
+  "source_files": 559,
+  "strict_componentwise_rate_equivalence_accepted": false,
+  "all_nonlinear_fields_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "original_report_sha256": "c8d78d935b5907d305eacea0c29ae12cbb24e21c083dd09098a748ac9137745f",
+  "original_local_path": "runs/mcc-reused-factor-20261026-v4/assessment.json",
+  "publication_note": "Fixed-scope historical evidence; local paths identify provenance. Full run directories are not included. See snapshot-status.json for current status."
+}

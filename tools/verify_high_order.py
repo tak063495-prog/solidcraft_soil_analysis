@@ -180,7 +180,7 @@ def verify_stages(mesh_path,ground_path,result_path,exports,solver=None):
     if run['schema']=='soil-fem-stage-result/13':
         from verify_joint_water import verify_package
         return verify_package(mesh_path,ground_path,result_path,exports,solver)
-    assert run['complete'] and run['schema'] in ('soil-fem-stage-result/1','soil-fem-stage-result/2','soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13') and run['ground']==ground
+    assert run['complete'] and run['schema'] in ('soil-fem-stage-result/1','soil-fem-stage-result/2','soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14') and run['ground']==ground
     case=ref.normalize_stage_case(json.loads((result_path.parent/'stages.json').read_text()))
     assert case==run['case']
     q,offset=prepare(mesh,run['integration_points']);xyz=np.array(mesh['nodes']);reports=[]

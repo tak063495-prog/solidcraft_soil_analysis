@@ -80,6 +80,7 @@ pub enum Stage {
         #[serde(default)]
         initial_increment: Option<f64>,
     },
+    #[serde(alias = "install_structures")]
     InstallBeams {
         name: String,
         members: Vec<String>,
@@ -87,6 +88,7 @@ pub enum Stage {
         #[serde(default)]
         initial_increment: Option<f64>,
     },
+    #[serde(alias = "remove_structures")]
     RemoveBeams {
         name: String,
         members: Vec<String>,
@@ -672,6 +674,8 @@ fn same_beam_installation(
         (Some(a), Some(b)) => {
             a.active_members == b.active_members
                 && a.reference_global_kinematics == b.reference_global_kinematics
+                && a.active_plates == b.active_plates
+                && a.plate_reference_global_kinematics == b.plate_reference_global_kinematics
         }
         _ => false,
     }
@@ -3871,6 +3875,13 @@ fn equilibrate(
 }
 
 fn result_schema(mesh: &Mesh, ground: &Ground, case: &StageCase) -> &'static str {
+    if case
+        .beam_system
+        .as_ref()
+        .is_some_and(|s| !s.plates.is_empty())
+    {
+        return "soil-fem-stage-result/14";
+    }
     if case.is_projected_mcc() {
         return "soil-fem-projected-mcc-stage-result/1";
     }

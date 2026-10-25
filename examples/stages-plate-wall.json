@@ -1,0 +1,92 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "body:Soil:zmin",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "body:Soil:zmin",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "body:Soil:zmin",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      }
+    ]
+  },
+  "monitors": {
+    "top": 8.0
+  },
+  "monitor_sets": {
+    "ground_surface": "body:Soil:zmax",
+    "wall": "body:Soil:xmax"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "install_structures",
+      "name": "install_wall",
+      "members": [
+        "wall"
+      ],
+      "placement": "cad_new_nodes"
+    },
+    {
+      "kind": "boundary",
+      "name": "load_wall",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "unload_wall",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "remove_structures",
+      "name": "remove_wall",
+      "members": [
+        "wall"
+      ]
+    }
+  ],
+  "verification_reject_once_stages": [
+    "install_wall",
+    "load_wall"
+  ]
+}

@@ -12,7 +12,7 @@ def verify(mesh_path,ground_path,result_path,export_dir,solver=None):
     if result.get('schema') == 'soil-fem-projected-mcc-stage-result/1':
         from verify_projected_stage_package import verify as verify_projected
         return verify_projected(mesh_path,ground_path,result_path,export_dir,solver=solver)
-    if mesh.get('tetrahedra10') or result.get('case',{}).get('boundary') is not None or result.get('schema') in ('soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13'):
+    if mesh.get('tetrahedra10') or result.get('case',{}).get('boundary') is not None or result.get('schema') in ('soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):
         from verify_high_order import verify_stages
         return verify_stages(mesh_path,ground_path,result_path,export_dir,solver=solver)
     assert result["complete"] and result["ground"]==ground

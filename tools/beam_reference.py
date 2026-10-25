@@ -60,21 +60,42 @@ class System:
                 for a in range(3):
                     if m.get('rotational_releases',[[False]*3]*2)[end][a]:self.released[mi,end,a]=self.size;self.size+=1
             self.data.append((ends,s,l,r,t,k))
+        self.plates=cfg.get('plates',[]);self.plate_data=[]
+        if self.plates:
+            from plate_reference import Element
+            sections={s['id']:s for s in cfg['plate_sections']}
+            for p in self.plates:
+                nodes=[self.node_ids[n] for n in p['nodes']];section=sections[p['section_id']]
+                self.plate_data.append((nodes,section,Element(self.positions[nodes],section)))
 
     def initial_state(self):
-        return {'active_members':[m['initially_active'] for m in self.members],'reference_global_kinematics':[[0.]*12 for _ in self.members],
+        state={'active_members':[m['initially_active'] for m in self.members],'reference_global_kinematics':[[0.]*12 for _ in self.members],
             'node_displacement_m':[[0.]*3 for _ in self.nodes],'node_rotation_rad':[[0.]*3 for _ in self.nodes]}
+        if self.plates:state.update(active_plates=[p['initially_active'] for p in self.plates],plate_reference_global_kinematics=[[0.]*18 for _ in self.plates])
+        return state
 
     def active_nodes(self,state):
         active=np.zeros(len(self.nodes),bool)
         for mi,(ends,*_) in enumerate(self.data):
             if state['active_members'][mi]:active[ends]=True
+        for i,(nodes,*_) in enumerate(self.plate_data):
+            if state['active_plates'][i]:active[nodes]=True
         return active
 
     def change(self,state,soil_u,stage):
         import copy
-        result=copy.deepcopy(state);install=stage['kind']=='install_beams';old=self.active_nodes(state)
+        result=copy.deepcopy(state);install=stage['kind'] in ('install_beams','install_structures');old=self.active_nodes(state)
         for name in stage['members']:
+            found=[i for i,p in enumerate(self.plates) if p['id']==name]
+            if found:
+                i=found[0];assert state['active_plates'][i]!=install;result['active_plates'][i]=install
+                if install:
+                    for end,n in enumerate(self.plate_data[i][0]):
+                        if self.attach[n] is not None:result['node_displacement_m'][n]=list(soil_u[self.attach[n]])
+                        elif stage['placement']=='cad_new_nodes' and not old[n]:result['node_displacement_m'][n]=[0.]*3
+                        if stage['placement']=='cad_new_nodes' and not old[n]:result['node_rotation_rad'][n]=[0.]*3
+                        result['plate_reference_global_kinematics'][i][6*end:6*end+6]=result['node_displacement_m'][n]+result['node_rotation_rad'][n]
+                continue
             mi=next(i for i,m in enumerate(self.members) if m['id']==name);assert state['active_members'][mi]!=install;result['active_members'][mi]=install
             if install:
                 ends=self.data[mi][0]
@@ -108,6 +129,16 @@ class System:
                 effective[n]+=effective_f[6*end:6*end+3];external_f+=global_f[6*end:6*end+3]
                 external_m+=np.cross(self.positions[n],global_f[6*end:6*end+3])+global_f[6*end+3:6*end+6]
             info[mi]=(p,local_k,reference,pre,f,l,r,line)
+        for i,(nodes,section,kernel) in enumerate(self.plate_data):
+            if not state['active_plates'][i]:continue
+            p=self.plates[i];indices=np.array([6*n+a for n in nodes for a in range(6)])
+            traction=np.array(p.get('constant_traction_kpa',[0.]*3),float)+factor*np.asarray(p.get('boundary_traction_kpa',[0.]*3))
+            traction[2]-=section['unit_weight_kn_m3']*section['thickness_m'];force=kernel.load(traction)
+            k[np.ix_(indices,indices)]+=kernel.stiffness;load[indices]+=force
+            rest[indices]-=kernel.stiffness@state['plate_reference_global_kinematics'][i]
+            for end,n in enumerate(nodes):
+                f=force[6*end:6*end+3];effective[n]+=f;external_f+=f
+                external_m+=np.cross(self.positions[n],f)
         active=self.active_nodes(state)
         for d in self.cfg.get('nodal_loads',[]):
             n=self.node_ids[d['node_id']];f=np.asarray(d.get('constant_force_kn',[0.]*3))+factor*np.asarray(d.get('boundary_force_kn',[0.]*3));m=np.asarray(d.get('constant_moment_kn_m',[0.]*3))+factor*np.asarray(d.get('boundary_moment_kn_m',[0.]*3));assert active[n] or not np.r_[f,m].any()
@@ -157,7 +188,14 @@ class System:
                 samples.append(np.r_[section_force,section_moment])
             members[self.members[mi]['id']]={'local_end_actions':action,'local_end_relative_rotation_rad':np.array([relative[3:6],relative[9:12]]),
                                            'section_forces_at_start_mid_end':np.asarray(samples),'local_axes':r,'length_m':l}
-        return {'state':result,'interface_residual':interface,'attached_load':attached_load,'external_force':extf,'external_moment':extm,'support_force':support_f,'support_moment':support_m,'members':members,'residual':residual,'positions':self.positions,'node_active':active}
+        out={'state':result,'interface_residual':interface,'attached_load':attached_load,'external_force':extf,'external_moment':extm,'support_force':support_f,'support_moment':support_m,'members':members,'residual':residual,'positions':self.positions,'node_active':active}
+        if self.plates:
+            out['plates']={}
+            for i,(nodes,_,kernel) in enumerate(self.plate_data):
+                if state['active_plates'][i]:
+                    indices=[6*n+a for n in nodes for a in range(6)]
+                    out['plates'][self.plates[i]['id']]=kernel.recover(d[indices]-state['plate_reference_global_kinematics'][i])
+        return out
 
 
 def verify_state(system,native,report,soil_u,factor):
@@ -171,6 +209,14 @@ def verify_state(system,native,report,soil_u,factor):
     for member in report['members']:
         expected=reference['members'][member['id']]
         for key in ('local_end_actions','local_end_relative_rotation_rad','section_forces_at_start_mid_end','local_axes','length_m'):assert np.allclose(member[key],expected[key],atol=1e-7,rtol=1e-8),(member['id'],key)
+    if system.plates:
+        assert {p['id'] for p in report.get('plates',[])}==set(reference['plates'])
+        for p in report.get('plates',[]):
+            expected=reference['plates'][p['id']]
+            for key in ('area_m2','local_axes','membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m'):
+                assert np.allclose(p[key],expected[key],atol=1e-8,rtol=1e-8),(p['id'],key)
+            for actual,wanted in zip(p['samples'],expected['samples'],strict=True):
+                for key in wanted:assert np.allclose(actual[key],wanted[key],atol=1e-8,rtol=1e-8),(p['id'],key)
     return reference
 
 

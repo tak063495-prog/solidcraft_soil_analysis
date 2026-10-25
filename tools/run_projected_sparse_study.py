@@ -9,7 +9,8 @@ import time
 import freeze_sources
 
 
-def run(base, output, steps):
+def run(base, output, steps, factor_reuse=False, matrix_free_factor_reuse=False):
+    if factor_reuse and matrix_free_factor_reuse:raise ValueError('choose one experimental reference backend')
     output.mkdir(parents=True, exist_ok=False)
     root = Path(__file__).resolve().parents[1]
     freeze_sources.freeze(output)
@@ -25,6 +26,10 @@ def run(base, output, steps):
         shutil.copyfile(root/'tools'/name, sources/name)
     for name in ('requirements.lock.txt', 'requirements-reference.lock.txt'):
         shutil.copyfile(root/name, sources/name)
+    if factor_reuse or matrix_free_factor_reuse:
+        shutil.copyfile(root/'tools/mcc_projected_factor_reference.py',sources/'mcc_projected_factor_reference.py')
+    if matrix_free_factor_reuse:
+        shutil.copyfile(root/'tools/mcc_projected_matrixfree_reference.py',sources/'mcc_projected_matrixfree_reference.py')
     started = time.monotonic()
     progress = dict(schema='soil-fem-sparse-reference-study-progress/1', status='prepared',
                     steps=steps, goal_complete=False, p6_complete=False, phases=[])
@@ -42,6 +47,8 @@ def run(base, output, steps):
                    *[str(inputs/name) for name in ('mesh.json', 'ground.json', 'case.json', 'mesh-identity.json')],
                    str(output/(phase+'.json')), '--steps', str(steps),
                    '--dependency-lock', str(sources/'requirements-reference.lock.txt')]
+        if factor_reuse:command.append('--factor-reuse')
+        if matrix_free_factor_reuse:command.append('--matrix-free-factor-reuse')
         if phase == 'cycle':
             command += ['--initial', str(output/'initial.json')]
         code = subprocess.call(command)
@@ -62,5 +69,10 @@ if __name__ == '__main__':
     parser.add_argument('base', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--steps', type=int, default=100)
+    backend = parser.add_mutually_exclusive_group()
+    backend.add_argument('--factor-reuse', action='store_true',
+        help='experimental corrected-factor backend; keeps original equations and residual gates')
+    backend.add_argument('--matrix-free-factor-reuse', action='store_true',
+        help='experimental original-operator backend; original assembled/fresh fallback retained')
     args = parser.parse_args()
-    sys.exit(run(args.base.resolve(), args.output.resolve(), args.steps))
+    sys.exit(run(args.base.resolve(), args.output.resolve(), args.steps, args.factor_reuse,args.matrix_free_factor_reuse))

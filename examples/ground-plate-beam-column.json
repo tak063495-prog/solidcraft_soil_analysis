@@ -1,0 +1,106 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "equilibrate",
+    "surface_surcharge_kpa": 0.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-09,
+    "geostatic": {
+      "seed": {
+        "kind": "body_states",
+        "states": {
+          "LowerClay": {
+            "effective_stress_compression_positive_kpa": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.7,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          },
+          "UpperClay": {
+            "effective_stress_compression_positive_kpa": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.7,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          }
+        }
+      },
+      "initial_boundary_factor": 0.0,
+      "maximum_initial_engineering_strain": 0.05,
+      "relative_volume_tolerance": 1e-08,
+      "verification_reject_once": true
+    }
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Elastic control soil 1",
+      "unit_weight_kn_m3": 20.0,
+      "mohr_coulomb": {
+        "young_kpa": 30000.0,
+        "poisson": 0.3,
+        "cohesion_kpa": 1000000.0,
+        "friction_deg": 0.0,
+        "dilation_deg": 0.0,
+        "tension_cutoff_kpa": null,
+        "flow": "non_associated"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Elastic control soil 2",
+      "unit_weight_kn_m3": 20.0,
+      "mohr_coulomb": {
+        "young_kpa": 45000.0,
+        "poisson": 0.3,
+        "cohesion_kpa": 1000000.0,
+        "friction_deg": 0.0,
+        "dilation_deg": 0.0,
+        "tension_cutoff_kpa": null,
+        "flow": "non_associated"
+      }
+    }
+  ],
+  "bodies": [
+    {
+      "body": "LowerClay",
+      "material_id": 1
+    },
+    {
+      "body": "UpperClay",
+      "material_id": 2
+    }
+  ]
+}

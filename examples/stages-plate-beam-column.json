@@ -1,0 +1,291 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "all",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "all",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      }
+    ]
+  },
+  "monitors": {
+    "top": 8.0
+  },
+  "monitor_sets": {
+    "surface": "top"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "install_structures",
+      "name": "install",
+      "members": [
+        "strut",
+        "wall_left",
+        "wall_right"
+      ],
+      "placement": "cad_new_nodes"
+    },
+    {
+      "kind": "boundary",
+      "name": "load_plate_beam",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "unload_plate_beam",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "remove_structures",
+      "name": "remove",
+      "members": [
+        "strut",
+        "wall_left",
+        "wall_right"
+      ]
+    }
+  ],
+  "verification_reject_once_stages": [
+    "install",
+    "load_plate_beam"
+  ],
+  "beam_system": {
+    "schema": "soil-fem-structures/1",
+    "nodes": [
+      {
+        "id": "a",
+        "position_m": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "match_soil_node": true
+      },
+      {
+        "id": "b",
+        "position_m": [
+          2.0,
+          0.0,
+          1.0
+        ],
+        "match_soil_node": false
+      },
+      {
+        "id": "c",
+        "position_m": [
+          0.0,
+          1.0,
+          1.0
+        ],
+        "match_soil_node": true
+      },
+      {
+        "id": "d",
+        "position_m": [
+          2.0,
+          1.0,
+          1.0
+        ],
+        "match_soil_node": false
+      },
+      {
+        "id": "e",
+        "position_m": [
+          3.0,
+          0.0,
+          1.0
+        ],
+        "match_soil_node": false
+      }
+    ],
+    "sections": [
+      {
+        "id": "strut_section",
+        "young_kpa": 200000000.0,
+        "poisson": 0.3,
+        "area_m2": 0.02,
+        "iy_m4": 0.0001,
+        "iz_m4": 0.0002,
+        "torsion_j_m4": 5e-05,
+        "unit_weight_kn_m3": 78.5,
+        "formulation": {
+          "kind": "euler_bernoulli"
+        }
+      }
+    ],
+    "members": [
+      {
+        "id": "strut",
+        "nodes": [
+          "b",
+          "e"
+        ],
+        "section_id": "strut_section",
+        "local_y": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "initially_active": false,
+        "boundary_line_load_kn_m": [
+          0.0,
+          0.0,
+          -0.2
+        ]
+      }
+    ],
+    "plate_sections": [
+      {
+        "id": "wall_section",
+        "young_kpa": 30000000.0,
+        "poisson": 0.2,
+        "thickness_m": 0.1,
+        "unit_weight_kn_m3": 24.0,
+        "drilling_factor": 0.0001
+      }
+    ],
+    "plates": [
+      {
+        "id": "wall_left",
+        "nodes": [
+          "a",
+          "b",
+          "d"
+        ],
+        "section_id": "wall_section",
+        "initially_active": false,
+        "boundary_traction_kpa": [
+          0.0,
+          0.0,
+          -0.1
+        ]
+      },
+      {
+        "id": "wall_right",
+        "nodes": [
+          "a",
+          "d",
+          "c"
+        ],
+        "section_id": "wall_section",
+        "initially_active": false,
+        "boundary_traction_kpa": [
+          0.0,
+          0.0,
+          -0.1
+        ]
+      }
+    ],
+    "rotation_length_scale_m": 2.0,
+    "maximum_condensed_dofs": 100,
+    "rotation_constraints": [
+      {
+        "node_id": "a",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "a",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "a",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "c",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "c",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value": 0.0
+      },
+      {
+        "node_id": "c",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value": 0.0
+      }
+    ],
+    "nodal_loads": [
+      {
+        "node_id": "e",
+        "boundary_force_kn": [
+          0.0,
+          0.0,
+          -5.0
+        ]
+      }
+    ]
+  }
+}

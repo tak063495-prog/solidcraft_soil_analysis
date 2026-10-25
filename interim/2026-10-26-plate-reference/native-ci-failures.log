@@ -1,0 +1,41 @@
+failures:
+
+---- tests::robustness_goldens::seed_13 stdout ----
+
+thread 'tests::robustness_goldens::seed_13' (26380) panicked at crates\engine\src\tests\robustness_goldens.rs:143:5:
+1 seed(s) build differently from tests/robustness/goldens.json (if that is intended, record it with ROBUSTNESS_GOLDENS_BLESS="why" and say why in the pull request):
+seed 13: area: 2112.846954 -> 2101.521015; edges: 99 -> 103; faces: 39 -> 41; volume: 2410.783741 -> 2396.939549
+
+---- tests::robustness_goldens::seed_23 stdout ----
+
+thread 'tests::robustness_goldens::seed_23' (21620) panicked at crates\engine\src\tests\robustness_goldens.rs:143:5:
+1 seed(s) build differently from tests/robustness/goldens.json (if that is intended, record it with ROBUSTNESS_GOLDENS_BLESS="why" and say why in the pull request):
+seed 23: area: 1795.696636 -> 1795.693105
+
+---- tests::robustness_goldens::seed_36 stdout ----
+
+thread 'tests::robustness_goldens::seed_36' (4944) panicked at crates\engine\src\tests\robustness_goldens.rs:143:5:
+1 seed(s) build differently from tests/robustness/goldens.json (if that is intended, record it with ROBUSTNESS_GOLDENS_BLESS="why" and say why in the pull request):
+seed 36: area: 10408.825748 -> 9964.083285; edges: 60 -> 45; error: null -> "lumps: shell boundaries intersect or touch; cavity ownership"; faces: 26 -> 21; outcome: "ok" -> "failed"; volume: 55729.313103 -> 54852.503099
+
+---- tests::robustness_goldens::seed_67 stdout ----
+
+thread 'tests::robustness_goldens::seed_67' (17868) panicked at crates\engine\src\tests\robustness_goldens.rs:143:5:
+1 seed(s) build differently from tests/robustness/goldens.json (if that is intended, record it with ROBUSTNESS_GOLDENS_BLESS="why" and say why in the pull request):
+seed 67: area: 7943.46222 -> 7940.064; bodies: 2 -> 1; edges: 86 -> 84; faces: 36 -> 35; rejected: 0 -> 1; unsupported: 2 -> 1; volume: 27607.962186 -> 27606.450862
+
+
+failures:
+    tests::robustness_goldens::seed_13
+    tests::robustness_goldens::seed_23
+    tests::robustness_goldens::seed_36
+    tests::robustness_goldens::seed_67
+
+test result: FAILED. 2021 passed; 4 failed; 7 ignored; 0 measured; 0 filtered out; finished in 4450.43s
+
+
+(exit code: 101)
+test: 78 binaries in 5877.6s
+error: failed: engine lib solidcraft_engine
+
+Exit code: 1

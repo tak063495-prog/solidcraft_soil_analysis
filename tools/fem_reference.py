@@ -46,10 +46,16 @@ def normalize_stage_case(value):
             member.setdefault('initial_axial_force_kn',0.)
             for key in ('constant_line_load_kn_m','boundary_line_load_kn_m'):member.setdefault(key,[0.]*3)
             member.setdefault('rotational_releases',[[False]*3 for _ in range(2)])
+        for key in ('plates','plate_sections'):
+            if not beam.get(key):beam.pop(key,None)
+        for plate in beam.get('plates',[]):
+            for key in ('constant_traction_kpa','boundary_traction_kpa'):plate.setdefault(key,[0.]*3)
         for load in beam['nodal_loads']:
             for key in ('constant_force_kn','boundary_force_kn','constant_moment_kn_m','boundary_moment_kn_m'):load.setdefault(key,[0.]*3)
     if value['settings'].get('linear_solver',{}).get('method')=='dense_lu':value['settings'].pop('linear_solver')
     for stage in value['stages']:
+        if stage['kind']=='install_structures':stage['kind']='install_beams'
+        if stage['kind']=='remove_structures':stage['kind']='remove_beams'
         if stage['kind']!='reset_display':stage.setdefault('initial_increment',None)
         if stage['kind']=='steady_seepage':
             flow=stage['flow'];flow.setdefault('fluxes',[])

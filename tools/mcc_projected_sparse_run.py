@@ -14,6 +14,11 @@ def main():
     parser.add_argument('--initial', type=Path)
     parser.add_argument('--steps', type=int, default=100)
     parser.add_argument('--fraction', type=float, default=1.)
+    backend = parser.add_mutually_exclusive_group()
+    backend.add_argument('--factor-reuse', action='store_true',
+        help='experimental corrected-factor reference; full nonlinear CAD-path equivalence is not yet accepted')
+    backend.add_argument('--matrix-free-factor-reuse', action='store_true',
+        help='experimental original-operator reference with corrected cached LU and assembled fallback')
     parser.add_argument('--dependency-lock', type=Path, required=True)
     args = parser.parse_args()
     paths = [getattr(args, name).resolve() for name in ('mesh', 'ground', 'case', 'identity')]
@@ -25,6 +30,15 @@ def main():
         parser.error('reference NumPy/SciPy versions differ from the supplied dependency locks')
     extra = [Path(__file__).resolve(), Path(sparse.__file__).resolve(), lock, runtime_lock]
     factory = sparse.SparseProjectedSystem
+    if args.factor_reuse:
+        import mcc_projected_factor_reference as reused
+        factory = reused.ReusedFactorProjectedSystem
+        extra.append(Path(reused.__file__).resolve())
+    if args.matrix_free_factor_reuse:
+        import mcc_projected_factor_reference as reused
+        import mcc_projected_matrixfree_reference as matrixfree
+        factory = matrixfree.MatrixFreeFactorProjectedSystem
+        extra.extend([Path(reused.__file__).resolve(), Path(matrixfree.__file__).resolve()])
     if args.phase == 'initial':
         initial.solve(*paths, args.output.resolve(), args.fraction, args.steps, factory, extra)
     else:
