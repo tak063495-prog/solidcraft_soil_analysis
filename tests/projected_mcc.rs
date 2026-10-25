@@ -10,6 +10,81 @@ use soil_fem_3d::{
 };
 use std::collections::BTreeMap;
 
+#[test]
+fn pressure_unload_then_display_reset_preserves_exact_load_and_mixed_history() -> Result<()> {
+    let (mesh, mut ground, mut case) = fixture(false)?;
+    ground.initialization.surface_surcharge_kpa = 30.;
+    for (i, material) in ground.materials.iter_mut().enumerate() {
+        material.unit_weight_kn_m3 = 18. + 2. * i as f64;
+    }
+    for layer in &mut ground.layers {
+        layer.consolidation = ground::Consolidation::MccPcOverMeanEffective { ratio: 2. };
+    }
+    case.boundary.as_mut().unwrap().constraints.pop();
+    case.settings.initial_increment = 0.25;
+    case.stages = vec![
+        Stage::Pressure {
+            name: "preload".into(),
+            target_pressure_kpa: 120.,
+            initial_increment: None,
+        },
+        Stage::Pressure {
+            name: "unload".into(),
+            target_pressure_kpa: 30.,
+            initial_increment: None,
+        },
+        Stage::ResetDisplay {
+            name: "zero_display".into(),
+        },
+        Stage::Pressure {
+            name: "reload".into(),
+            target_pressure_kpa: 31.,
+            initial_increment: None,
+        },
+    ];
+    case.verification_reject_once_stages = vec!["zero_display".into()];
+    let full = stages::solve(&mesh, ground.clone(), case.clone())?;
+    assert!(full.complete, "{:?}", full.failure_reason);
+    let before = &full.frames[2].state;
+    let after = &full.frames[3].state;
+    assert_eq!(
+        serde_json::to_vec(&before.applied_nodal_load_kn)?,
+        serde_json::to_vec(&after.applied_nodal_load_kn)?
+    );
+    assert_eq!(
+        serde_json::to_vec(&before.material_states)?,
+        serde_json::to_vec(&after.material_states)?
+    );
+    assert_eq!(
+        serde_json::to_vec(&before.mixed_mcc)?,
+        serde_json::to_vec(&after.mixed_mcc)?
+    );
+    assert_eq!(before.displacement_m, after.displacement_m);
+    assert_eq!(
+        after.display_reference_displacement_m,
+        before.displacement_m
+    );
+    assert!(full.attempts.iter().any(|a| a.stage == "zero_display"
+        && !a.accepted
+        && a.committed_state_unchanged_on_rejection));
+    let count = full
+        .attempts
+        .iter()
+        .take_while(|a| a.stage != "zero_display")
+        .filter(|a| a.accepted)
+        .count()
+        + 1;
+    let partial = stages::solve_until(&mesh, ground.clone(), case.clone(), count)?;
+    let sealed = Checkpoint::seal(&mesh, partial)?;
+    let serialized: Checkpoint = serde_json::from_slice(&serde_json::to_vec(&sealed)?)?;
+    let resumed = serialized.resume(&mesh, ground, case, None)?;
+    assert_eq!(
+        serde_json::to_vec(&full.frames)?,
+        serde_json::to_vec(&resumed.frames)?
+    );
+    Ok(())
+}
+
 fn fixture(local: bool) -> Result<(Mesh, Ground, StageCase)> {
     let mut mesh: Mesh =
         serde_json::from_str(include_str!("../examples/hardening-column-tet10-mesh.json"))?;

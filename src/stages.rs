@@ -4406,16 +4406,23 @@ fn solve_controlled(
         };
         let end_joint_water =
             model.stage_joint_water(&origin, stage, &active, joint_flow_target.as_ref(), 1.)?;
-        let endload = model.physical_load(
-            &active,
-            end_pressure,
-            case.pressure_on_original_surface_only,
-            end_factor,
-            &prepared.element_material_ids,
-            prepared.beams.as_ref(),
-            model.stage_water(&origin, stage, 1.),
-            end_joint_water.as_ref(),
-        )?;
+        let endload = if matches!(stage, Stage::ResetDisplay { .. }) {
+            // Display RESET owns no physical load update. The last pressure
+            // increment may differ from a fresh assembly by a few ulps; retain
+            // its exact committed load, including in checkpoint reconstruction.
+            origin.applied_nodal_load_kn.clone()
+        } else {
+            model.physical_load(
+                &active,
+                end_pressure,
+                case.pressure_on_original_surface_only,
+                end_factor,
+                &prepared.element_material_ids,
+                prepared.beams.as_ref(),
+                model.stage_water(&origin, stage, 1.),
+                end_joint_water.as_ref(),
+            )?
+        };
         let mut release = if matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc() {
             // Projection is domain-dependent: full minus removed work forces
             // need not equal the restricted-domain work force. Reconstruct
@@ -4604,7 +4611,9 @@ fn solve_controlled(
                     "checkpoint geometry/load reconstruction mismatch".into(),
                 ));
             }
-            let expected_load: Vec<_> = if matches!(
+            let expected_load: Vec<_> = if matches!(stage, Stage::ResetDisplay { .. }) {
+                origin.applied_nodal_load_kn.clone()
+            } else if matches!(
                 stage,
                 Stage::HydrostaticWater { .. } | Stage::SteadySeepage { .. }
             ) {
@@ -4726,7 +4735,9 @@ fn solve_controlled(
             } else {
                 (progress + increment).min(1.)
             };
-            let target: Vec<_> = if matches!(
+            let target: Vec<_> = if matches!(stage, Stage::ResetDisplay { .. }) {
+                origin.applied_nodal_load_kn.clone()
+            } else if matches!(
                 stage,
                 Stage::HydrostaticWater { .. } | Stage::SteadySeepage { .. }
             ) {

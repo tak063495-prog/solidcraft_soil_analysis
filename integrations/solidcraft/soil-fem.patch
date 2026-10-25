@@ -521,7 +521,7 @@ index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..b5e481679dd8a605aa7494c2f442810b
    "cmd.inspect_center_of_mass": "Centre of Mass",
    "cmd.sketch_arc_center_point": "Centre Point Arc",
 diff --git a/assets/locales/en.json b/assets/locales/en.json
-index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..05e2c851a9d47574ae4375f53d14fbd152a05e2f 100644
+index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..450dbe794f08a5791eff459f2346b57b26d6a55b 100644
 --- a/assets/locales/en.json
 +++ b/assets/locales/en.json
 @@ -86,6 +86,7 @@
@@ -671,6 +671,74 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..05e2c851a9d47574ae4375f53d14fbd1
    "cmd.appearance_assign": "Appearance",
    "cmd.appearance_library": "Appearance Library",
    "cmd.appearance_list": "List Appearances",
+@@ -1392,6 +1419,67 @@
+   "sketch_text.path_clear": "Take the text off its curve",
+   "sketch_text.path_hint": "A curve of the sketch the text follows: click here, then the curve",
+   "sketch_text.use_font_file": "Use the font file {path}",
++  "soil_fem.analysis_body_label": "Analysis body label",
++  "soil_fem.cad_bodies": "CAD bodies",
++  "soil_fem.choose_cad_body": "Choose CAD body",
++  "soil_fem.compression_slope": "Compression slope λ",
++  "soil_fem.consolidation_history": "Consolidation history",
++  "soil_fem.construction_stages": "Construction stages",
++  "soil_fem.continuum_formulation": "Continuum formulation",
++  "soil_fem.critical_state_m": "Critical-state M",
++  "soil_fem.displacement_formulation": "Displacement formulation",
++  "soil_fem.displacement_magnitude": "Displacement magnitude",
++  "soil_fem.display_reference": "Display reference",
++  "soil_fem.display_triangle_edges": "Display triangle edges",
++  "soil_fem.effective_stress_zz": "Effective stress zz",
++  "soil_fem.element_mean": "Element mean",
++  "soil_fem.excavation_tools": "Excavation tools",
++  "soil_fem.export_analysis_inputs": "Export analysis inputs…",
++  "soil_fem.fit_results": "Fit results",
++  "soil_fem.fixed_legend_range": "Fixed legend range",
++  "soil_fem.initial_ground_state": "Initial ground state",
++  "soil_fem.k_in_x": "K₀ in X",
++  "soil_fem.k_in_y": "K₀ in Y",
++  "soil_fem.kinematic_volumetric_strain": "Kinematic volumetric strain",
++  "soil_fem.load_analysis_inputs": "Load analysis inputs…",
++  "soil_fem.major_axis_of_mean_effective_tensor": "Major axis of mean effective tensor",
++  "soil_fem.major_effective_stress": "Major effective stress",
++  "soil_fem.material_effective_stress_zz": "Material effective stress zz",
++  "soil_fem.material_id": "Material ID",
++  "soil_fem.material_mean_effective_stress_p": "Material mean effective stress p",
++  "soil_fem.material_volumetric_strain": "Material volumetric strain",
++  "soil_fem.materials": "Materials",
++  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC: Tet10 displacement + P1 pressure/volume",
++  "soil_fem.mean_effective_stress_p": "Mean effective stress p",
++  "soil_fem.node": "Node",
++  "soil_fem.poisson_ratio": "Poisson ratio",
++  "soil_fem.preconsolidation_pressure_pc": "Preconsolidation pressure pc",
++  "soil_fem.primary_mean_effective_stress_p": "Primary mean effective stress p",
++  "soil_fem.primary_node_material": "Primary node + material",
++  "soil_fem.raw_integration_point": "Raw integration point",
++  "soil_fem.read_stored_value": "Read stored value",
++  "soil_fem.reference_coordinate_section": "Reference-coordinate section",
++  "soil_fem.reload_from_design": "Reload from design",
++  "soil_fem.review_current_cad": "Review current CAD",
++  "soil_fem.save_a_checkpoint_when_stopping": "Save a checkpoint when stopping",
++  "soil_fem.saved_job_folder": "Saved job folder",
++  "soil_fem.section_only_off_keep_negative_side": "Section only (off: keep negative side)",
++  "soil_fem.selected_value": "Selected value",
++  "soil_fem.soil_bodies": "Soil bodies",
++  "soil_fem.soil_layers": "Soil layers",
++  "soil_fem.stage_increment": "Stage increment",
++  "soil_fem.stage_type": "Stage type",
++  "soil_fem.surface_surcharge_kpa": "Surface surcharge (kPa)",
++  "soil_fem.swelling_slope": "Swelling slope κ",
++  "soil_fem.total_from_seed": "Total from seed",
++  "soil_fem.unit_weight_kn_m": "Unit weight (kN/m³)",
++  "soil_fem.vertical_displacement": "Vertical displacement",
++  "soil_fem.void_ratio": "Void ratio",
++  "soil_fem.volumetric_plastic_strain": "Volumetric plastic strain",
++  "soil_fem.water_elevation_m": "Water elevation (m)",
++  "soil_fem.work_conjugate_effective_stress_zz": "Work-conjugate effective stress zz",
++  "soil_fem.worker_log": "Worker log",
++  "soil_fem.young_s_modulus_kpa": "Young's modulus (kPa)",
+   "solid": "solid",
+   "the parts library is not available": "the parts library is not available",
+   "thread.automatic_size": "Automatic size",
 diff --git a/assets/locales/es.json b/assets/locales/es.json
 index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..1358c744283847c0aef75ed5b8602045c9e438a9 100644
 --- a/assets/locales/es.json
@@ -1566,7 +1634,7 @@ index 6278c49aab9c7d0b1a1465b30f98614ca8131548..9bcc7df990b3bb19d0b8c02aea2f487d
    "cmd.appearance_library": "Libreria degli aspetti",
    "cmd.appearance_list": "Elenca aspetti",
 diff --git a/assets/locales/ja.json b/assets/locales/ja.json
-index cbd221816eb75db2c5856be40c9859d163a8a045..575630c75f6c339588c01a0ff23ef1c889e68758 100644
+index cbd221816eb75db2c5856be40c9859d163a8a045..0dc9afe7b4f298f4b2e25c34e0bb1cf987bbd1d8 100644
 --- a/assets/locales/ja.json
 +++ b/assets/locales/ja.json
 @@ -86,6 +86,7 @@
@@ -1716,6 +1784,74 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..575630c75f6c339588c01a0ff23ef1c8
    "cmd.appearance_assign": "外観",
    "cmd.appearance_library": "外観ライブラリ",
    "cmd.appearance_list": "外観を一覧表示",
+@@ -1392,6 +1419,67 @@
+   "sketch_text.path_clear": "文字を曲線から外す",
+   "sketch_text.path_hint": "文字が沿うスケッチの曲線: ここをクリックしてから曲線をクリック",
+   "sketch_text.use_font_file": "フォント ファイル {path} を使用",
++  "soil_fem.analysis_body_label": "解析ボディ名",
++  "soil_fem.cad_bodies": "CADボディ",
++  "soil_fem.choose_cad_body": "CADボディを選択",
++  "soil_fem.compression_slope": "圧縮指数 λ",
++  "soil_fem.consolidation_history": "圧密履歴",
++  "soil_fem.construction_stages": "施工工程",
++  "soil_fem.continuum_formulation": "連続体の解析方式",
++  "soil_fem.critical_state_m": "限界状態定数 M",
++  "soil_fem.displacement_formulation": "変位方式",
++  "soil_fem.displacement_magnitude": "変位の大きさ",
++  "soil_fem.display_reference": "表示基準からの変位",
++  "soil_fem.display_triangle_edges": "表示三角形の辺を表示",
++  "soil_fem.effective_stress_zz": "有効応力 zz",
++  "soil_fem.element_mean": "要素平均",
++  "soil_fem.excavation_tools": "掘削領域",
++  "soil_fem.export_analysis_inputs": "解析入力を出力…",
++  "soil_fem.fit_results": "解析結果を全体表示",
++  "soil_fem.fixed_legend_range": "凡例範囲を固定",
++  "soil_fem.initial_ground_state": "初期地盤状態",
++  "soil_fem.k_in_x": "X方向の K₀",
++  "soil_fem.k_in_y": "Y方向の K₀",
++  "soil_fem.kinematic_volumetric_strain": "変位場の体積ひずみ",
++  "soil_fem.load_analysis_inputs": "解析入力を読み込む…",
++  "soil_fem.major_axis_of_mean_effective_tensor": "要素平均有効応力の最大主方向",
++  "soil_fem.major_effective_stress": "最大主有効応力",
++  "soil_fem.material_effective_stress_zz": "材料の有効応力 zz",
++  "soil_fem.material_id": "材料ID",
++  "soil_fem.material_mean_effective_stress_p": "材料の平均有効応力 p",
++  "soil_fem.material_volumetric_strain": "材料の体積ひずみ",
++  "soil_fem.materials": "材料",
++  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC：Tet10変位＋P1圧力・体積",
++  "soil_fem.mean_effective_stress_p": "平均有効応力 p",
++  "soil_fem.node": "節点",
++  "soil_fem.poisson_ratio": "ポアソン比",
++  "soil_fem.preconsolidation_pressure_pc": "先行圧密圧力 pc",
++  "soil_fem.primary_mean_effective_stress_p": "一次平均有効応力 p",
++  "soil_fem.primary_node_material": "一次節点＋材料",
++  "soil_fem.raw_integration_point": "生の積分点値",
++  "soil_fem.read_stored_value": "保存された値を照会",
++  "soil_fem.reference_coordinate_section": "基準座標による断面",
++  "soil_fem.reload_from_design": "設計から再読込",
++  "soil_fem.review_current_cad": "現在のCAD対応を確認",
++  "soil_fem.save_a_checkpoint_when_stopping": "停止時に再開データを保存",
++  "soil_fem.saved_job_folder": "保存済みジョブのフォルダー",
++  "soil_fem.section_only_off_keep_negative_side": "断面のみ（オフ：負側を表示）",
++  "soil_fem.selected_value": "選択した値",
++  "soil_fem.soil_bodies": "地盤ボディ",
++  "soil_fem.soil_layers": "地層",
++  "soil_fem.stage_increment": "工程増分",
++  "soil_fem.stage_type": "工程の種類",
++  "soil_fem.surface_surcharge_kpa": "地表面上載圧 (kPa)",
++  "soil_fem.swelling_slope": "膨潤指数 κ",
++  "soil_fem.total_from_seed": "初期種状態からの総変位",
++  "soil_fem.unit_weight_kn_m": "単位体積重量 (kN/m³)",
++  "soil_fem.vertical_displacement": "鉛直変位",
++  "soil_fem.void_ratio": "間隙比",
++  "soil_fem.volumetric_plastic_strain": "体積塑性ひずみ",
++  "soil_fem.water_elevation_m": "水位標高 (m)",
++  "soil_fem.work_conjugate_effective_stress_zz": "釣合いに用いる有効応力 zz",
++  "soil_fem.worker_log": "解析ログ",
++  "soil_fem.young_s_modulus_kpa": "ヤング率 (kPa)",
+   "solid": "中実",
+   "the parts library is not available": "パーツライブラリは利用できません",
+   "thread.automatic_size": "サイズを自動選択",
 diff --git a/assets/locales/ko.json b/assets/locales/ko.json
 index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..0f6d6cb09a240bbb67addffb839e8ef4bfb6d7dc 100644
 --- a/assets/locales/ko.json
@@ -7443,10 +7579,10 @@ index 23408069ad21e7de31939d604c98ca70682bddfb..0ff9c1a9794c59a1a0ad0b00a1074eaf
  fn opaque_pbr_product_gpu_and_cpu_share_color_and_material_semantics() {
 diff --git a/crates/ui-egui/src/soil_analysis.rs b/crates/ui-egui/src/soil_analysis.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda810b9a8f1
+index 0000000000000000000000000000000000000000..5bd06e919a396691e9bdea317bae2f5a52a22fbf
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_analysis.rs
-@@ -0,0 +1,492 @@
+@@ -0,0 +1,515 @@
 +//! A thin editor over analysis.soil.*. Drafts live here; saved attributes,
 +//! identity resolution, source checks and native STEP captures belong to L4.
 +use crate::{SolveApp, ui_kit};
@@ -7586,14 +7722,14 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +/// Preserve integer identifiers and show small scalars without hiding their scale.
 +fn number_input(ui: &mut egui::Ui, value: &mut serde_json::Number) -> bool {
 +    if let Some(mut x) = value.as_u64() {
-+        let changed = ui.add(egui::DragValue::new(&mut x)).changed();
++        let changed = ui_kit::number_field(ui, &mut x, 0..=u64::MAX, 1., "").changed();
 +        if changed {
 +            *value = x.into();
 +        }
 +        return changed;
 +    }
 +    if let Some(mut x) = value.as_i64() {
-+        let changed = ui.add(egui::DragValue::new(&mut x)).changed();
++        let changed = ui_kit::number_field(ui, &mut x, i64::MIN..=i64::MAX, 1., "").changed();
 +        if changed {
 +            *value = x.into();
 +        }
@@ -7602,10 +7738,10 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +    if let Some(mut x) = value.as_f64() {
 +        let magnitude = x.abs();
 +        let speed = if magnitude > 0.0 && magnitude < 0.001 { (magnitude * 0.01).max(f64::MIN_POSITIVE) } else { 0.001 };
-+        let widget = egui::DragValue::new(&mut x).speed(speed).custom_formatter(|v, decimals| {
++        if ui_kit::formatted_number_field(ui, &mut x, f64::MIN..=f64::MAX, speed, "", |v, decimals| {
 +            if v != 0.0 && !(1e-4..1e8).contains(&v.abs()) { format!("{v:.3e}") } else { egui::emath::format_with_decimals_in_range(v, decimals) }
-+        });
-+        if ui.add(widget).changed()
++        })
++        .changed()
 +            && x.is_finite()
 +            && let Some(number) = serde_json::Number::from_f64(x)
 +        {
@@ -7634,7 +7770,7 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +                let path = format!("{id}.{key}");
 +                match v {
 +                    Value::Object(_) | Value::Array(_) => {
-+                        egui::CollapsingHeader::new(field_label(key)).id_salt(&path).default_open(depth < 1).show(ui, |ui| {
++                        ui_kit::section(ui, &path, field_label(key), depth < 1, |ui| {
 +                            changed |= properties(ui, &path, v, depth + 1, budget);
 +                        });
 +                    }
@@ -7648,12 +7784,12 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +                            if matches!(key.as_str(), "kind" | "method" | "definition" | "flow") {
 +                                ui.label(text.as_str());
 +                            } else {
-+                                changed |= ui.text_edit_singleline(text).changed();
++                                changed |= ui_kit::text_field(ui, text, "").1;
 +                            }
 +                        });
 +                    }
 +                    Value::Bool(x) => {
-+                        changed |= ui.checkbox(x, field_label(key)).changed();
++                        changed |= ui_kit::checkbox(ui, crate::i18n::tr_label(field_label(key)), x).changed();
 +                    }
 +                    _ => {
 +                        ui_kit::row(ui, field_label(key), |ui| {
@@ -7668,10 +7804,10 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +                let path = format!("{id}.{i}");
 +                if let Value::String(text) = v {
 +                    ui_kit::row(ui, &format!("{}", i + 1), |ui| {
-+                        changed |= ui.text_edit_singleline(text).changed();
++                        changed |= ui_kit::text_field(ui, text, "").1;
 +                    });
 +                } else {
-+                    egui::CollapsingHeader::new(format!("{}", i + 1)).id_salt(&path).default_open(depth < 2).show(ui, |ui| {
++                    ui_kit::section(ui, &path, &format!("{}", i + 1), depth < 2, |ui| {
 +                        changed |= properties(ui, &path, v, depth + 1, budget);
 +                    });
 +                }
@@ -7745,15 +7881,15 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +    let title = crate::i18n::tr_label("Soil Analysis");
 +    let (closed,action)=ui_kit::Window::new(egui::Id::new("sc_soil_analysis"),"settings",title)
 +        .cards(2.5).fields().keep_open_on_escape().actions("Save","Close",None).show(ctx,valid,|ui|{
-+            ui.horizontal(|ui|{for (n,label) in [(0,"Ground"),(1,"Construction"),(2,"CAD bodies"),(3,"Analysis")] {if ui.selectable_label(d.page==n,label).clicked(){d.page=n;}}});
++            let mut page=usize::from(d.page); if ui_kit::segmented(ui,&mut page,&["Ground","Construction","CAD bodies","Analysis"],ui_kit::Segments::default()){d.page=page as u8;}
 +            ui_kit::text(ui,"Analysis units: m, kN, kPa. CAD geometry is exported in mm.",ui_kit::Text::Note("soil_units"));
 +            ui.horizontal(|ui|{
-+                import=ui.button("Load analysis inputs…").clicked();
-+                reload=ui.button("Reload from design").clicked();
++                import=ui_kit::button(ui,crate::i18n::tr_label("Load analysis inputs…"),ui_kit::Button::Normal).clicked();
++                reload=ui_kit::button(ui,crate::i18n::tr_label("Reload from design"),ui_kit::Button::Normal).clicked();
 +            });
 +            if d.expected_cad!=d.status.get("cad_sha256").and_then(Value::as_str).unwrap_or_default() || d.status.get("cad_changed_since_review").and_then(Value::as_bool)==Some(true){
 +                ui_kit::text(ui,"CAD changed while this editor was open. Review every body assignment before saving.",ui_kit::Text::Report("soil_stale",true));
-+                review=ui.button("Review current CAD").clicked();
++                review=ui_kit::button(ui,crate::i18n::tr_label("Review current CAD"),ui_kit::Button::Normal).clicked();
 +            }
 +            if let Some(issues)=d.status.get("issues").and_then(Value::as_array){for v in issues {if let Some(text)=v.as_str(){ui_kit::text(ui,text,ui_kit::Text::Report("soil_issue",true));}}}
 +            match d.page {
@@ -7762,8 +7898,9 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +                2=>{
 +                    let names:Vec<String>=d.status.get("cad_bodies").and_then(Value::as_array).into_iter().flatten().filter_map(|v|v.get("cad_body").and_then(Value::as_str).map(str::to_string)).collect();
 +                    for (logical,cad) in &mut d.bindings {ui_kit::row(ui,logical,|ui|{
-+                        egui::ComboBox::from_id_salt(("soil_binding",logical)).selected_text(if cad.is_empty(){"Choose CAD body"}else{cad.as_str()}).show_ui(ui,|ui|{
-+                            for name in &names {d.dirty|=ui.selectable_value(cad,name.clone(),name).changed();}
++                        let selected=if cad.is_empty(){crate::i18n::tr_label("Choose CAD body").to_string()}else{cad.clone()};
++                        ui_kit::dropdown_menu(ui,("soil_binding",logical),&selected,|ui|{
++                            for name in &names {if ui_kit::list_picker(ui,name,name,cad==name).clicked() && cad!=name {*cad=name.clone();d.dirty=true;}}
 +                        });
 +                    });}
 +                    ui_kit::text(ui,"Body labels in the analysis stay separate from CAD names. Splits, missing producers and ambiguous outputs require explicit reassignment.",ui_kit::Text::Note("soil_binding_note"));
@@ -7779,12 +7916,12 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +                },
 +            }
 +            #[cfg(not(target_arch="wasm32"))]
-+            {ui_kit::row(ui,"New capture folder",|ui|{ui.text_edit_singleline(&mut d.output_directory);});
++            {ui_kit::row(ui,"New capture folder",|ui|{ui_kit::text_field(ui,&mut d.output_directory,"");});
 +             let reviewed=d.status.get("cad_changed_since_review").and_then(Value::as_bool)!=Some(true)
 +                && d.expected_cad==d.status.get("cad_sha256").and_then(Value::as_str).unwrap_or_default()
 +                && d.expected_setup==d.status.get("setup_sha256").and_then(Value::as_str).unwrap_or_default()
 +                && d.status.get("issues").and_then(Value::as_array).is_some_and(|v|v.is_empty());
-+             export=ui.add_enabled(valid && !d.dirty && reviewed && !d.output_directory.trim().is_empty(),egui::Button::new("Export analysis inputs…")).clicked();}
++             export=ui_kit::button(ui,"Export analysis inputs…",ui_kit::Button::Enabled(valid && !d.dirty && reviewed && !d.output_directory.trim().is_empty())).clicked();}
 +            ui_kit::text(ui,"This editor saves attributes and exports an input capture. Meshing, engineering validation and solving are performed by the external FEM workflow.",ui_kit::Text::Note("soil_scope"));
 +            if let Some(text)=&d.notice {ui_kit::text(ui,text,ui_kit::Text::Note("soil_notice"));}
 +            if let Some(text)=&d.error {ui_kit::text(ui,text,ui_kit::Text::Report("soil_error",true));}
@@ -7845,6 +7982,28 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +mod tests {
 +    use super::*;
 +    use crate::scenario::Harness;
++    #[test]
++    fn kit_numeric_display_preserves_exact_ids_and_small_material_values() {
++        for original in [json!(u64::MAX), json!(i64::MIN), json!(1.25e-12), json!(5.125e12)] {
++            let mut number = original.as_number().unwrap().clone();
++            let ctx = crate::fonts::test_context();
++            let output = ctx.run_ui(egui::RawInput::default(), |ui| {
++                ui_kit::row(ui, "Value", |ui| {
++                    assert!(!number_input(ui, &mut number));
++                });
++            });
++            assert_eq!(Value::Number(number), original);
++            if original == json!(1.25e-12) {
++                assert!(
++                    output.shapes.iter().any(|shape| match &shape.shape {
++                        egui::Shape::Text(text) => text.galley.job.text.contains("1.250e-12"),
++                        _ => false,
++                    }),
++                    "small values must remain visible in scientific notation"
++                );
++            }
++        }
++    }
 +    fn configured() -> Harness {
 +        let mut h = Harness::new();
 +        h.app.run("solid.box", json!({"length":10000,"width":10000,"height":4000})).unwrap();
@@ -7941,10 +8100,10 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +}
 diff --git a/crates/ui-egui/src/soil_jobs.rs b/crates/ui-egui/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee8eb22cbb
+index 0000000000000000000000000000000000000000..821220cd5a05458da1b181313a203b349920e9f8
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_jobs.rs
-@@ -0,0 +1,198 @@
+@@ -0,0 +1,199 @@
 +//! Native job controls are a thin adapter over the engine's owned-process commands.
 +use crate::{SolveApp, ui_kit};
 +use serde_json::{Value, json};
@@ -7991,23 +8150,26 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +        let active = self.status.get("process_alive").and_then(Value::as_bool) == Some(true);
 +        let host = self.status.get("host_available").and_then(Value::as_bool) == Some(true);
 +        ui_kit::row(ui, "New job folder", |ui| {
-+            ui.text_edit_singleline(&mut self.directory);
++            ui_kit::text_field(ui, &mut self.directory, "");
 +        });
 +        ui_kit::row(ui, "Mesh size (m)", |ui| {
-+            ui.add(egui::DragValue::new(&mut self.mesh_size_m).range(0.001..=1e6).speed(0.1));
++            ui_kit::number_field(ui, &mut self.mesh_size_m, 0.001..=1e6, 0.1, "");
 +        });
 +        ui_kit::row(ui, "Element", |ui| {
-+            ui.selectable_value(&mut self.element_order, 1, "Tet4");
-+            ui.selectable_value(&mut self.element_order, 2, "Tet10");
-+        });
-+        ui_kit::row(ui, "Quadrature order", |ui| {
-+            for n in 3..=5 {
-+                ui.selectable_value(&mut self.quadrature_order, n, n.to_string());
++            let mut selected = usize::from(self.element_order.saturating_sub(1));
++            if ui_kit::segmented(ui, &mut selected, &["Tet4", "Tet10"], ui_kit::Segments::default()) {
++                self.element_order = (selected + 1) as u8;
 +            }
 +        });
-+        ui.checkbox(&mut self.cooperative, "Save a checkpoint when stopping");
++        ui_kit::row(ui, "Quadrature order", |ui| {
++            let mut selected = usize::from(self.quadrature_order.saturating_sub(3));
++            if ui_kit::segmented(ui, &mut selected, &["3", "4", "5"], ui_kit::Segments::default()) {
++                self.quadrature_order = (selected + 3) as u8;
++            }
++        });
++        ui_kit::checkbox(ui, crate::i18n::tr_label("Save a checkpoint when stopping"), &mut self.cooperative);
 +        ui_kit::row(ui, "Saved job folder", |ui| {
-+            ui.text_edit_singleline(&mut self.previous_directory);
++            ui_kit::text_field(ui, &mut self.previous_directory, "");
 +        });
 +        if !host {
 +            ui_kit::text(
@@ -8018,30 +8180,28 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +        }
 +        let mut action = None;
 +        ui.horizontal(|ui| {
-+            if ui
-+                .add_enabled(
-+                    host && reviewed && !active && !self.directory.trim().is_empty(),
-+                    egui::Button::new(crate::i18n::tr_label("Start Soil Analysis")),
-+                )
++            if ui_kit::button(ui, "Start Soil Analysis", ui_kit::Button::Enabled(host && reviewed && !active && !self.directory.trim().is_empty()))
 +                .clicked()
 +            {
 +                action = Some("start");
 +            }
-+            if ui
-+                .add_enabled(
-+                    active && self.status.get("cancel_requested").and_then(Value::as_bool) != Some(true),
-+                    egui::Button::new(crate::i18n::tr_label("Stop Soil Analysis")),
-+                )
-+                .clicked()
++            if ui_kit::button(
++                ui,
++                "Stop Soil Analysis",
++                ui_kit::Button::Enabled(active && self.status.get("cancel_requested").and_then(Value::as_bool) != Some(true)),
++            )
++            .clicked()
 +            {
 +                action = Some("cancel");
 +            }
-+            if ui
-+                .add_enabled(
++            if ui_kit::button(
++                ui,
++                "Resume Soil Analysis",
++                ui_kit::Button::Enabled(
 +                    host && reviewed && !active && !self.directory.trim().is_empty() && !self.previous_directory.trim().is_empty(),
-+                    egui::Button::new(crate::i18n::tr_label("Resume Soil Analysis")),
-+                )
-+                .clicked()
++                ),
++            )
++            .clicked()
 +            {
 +                action = Some("resume");
 +            }
@@ -8080,7 +8240,7 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +                "Completed result and VTU audit verified for the current input. Open Soil Result Viewer to inspect this captured result.",
 +                ui_kit::Text::Note("soil_job_complete"),
 +            );
-+            if ui.button(crate::i18n::tr_label("Soil Result Viewer")).clicked() {
++            if ui_kit::button(ui, crate::i18n::tr_label("Soil Result Viewer"), ui_kit::Button::Normal).clicked() {
 +                action = Some("view_results");
 +            }
 +        }
@@ -8091,7 +8251,7 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +            ui_kit::text(ui, error, ui_kit::Text::Note("soil_job_observation"));
 +        }
 +        if let Some(tail) = self.status.pointer("/worker_report/tail").and_then(Value::as_array) {
-+            egui::CollapsingHeader::new("Worker log").show(ui, |ui| {
++            ui_kit::section(ui, "soil_worker_log", "Worker log", false, |ui| {
 +                for line in tail.iter().filter_map(Value::as_str).take(30) {
 +                    ui.label(line);
 +                }
@@ -8145,10 +8305,10 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +}
 diff --git a/crates/ui-egui/src/soil_results.rs b/crates/ui-egui/src/soil_results.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031414912df
+index 0000000000000000000000000000000000000000..aea4924103726394b898463b1519d105a7ca5eb2
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_results.rs
-@@ -0,0 +1,420 @@
+@@ -0,0 +1,425 @@
 +//! Native FEM result workspace. Scientific quantities and section geometry belong
 +//! to L4; this adapter uses the shared GPU pipelines, theme and navigation.
 +use crate::{
@@ -8253,11 +8413,7 @@ index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031
 +    });
 +}
 +fn ramp(t: f64) -> Color32 {
-+    let colors = Tokens::get().analysis.curvature;
-+    let t = t.clamp(0., 1.) * 2.;
-+    let (a, b, k) = if t <= 1. { (colors[0], colors[1], t) } else { (colors[1], colors[2], t - 1.) };
-+    let rgb = std::array::from_fn::<_, 3, _>(|i| ((f64::from(a[i]) * (1. - k) + f64::from(b[i]) * k) * 255.).round().clamp(0., 255.) as u8);
-+    Color32::from_rgb(rgb[0], rgb[1], rgb[2])
++    Tokens::get().analysis_scalar_color(t)
 +}
 +fn gpu(scene: &Scene, settings: &Settings) -> Result<GpuScene, String> {
 +    const MAX_BYTES: usize = 192 << 20;
@@ -8462,39 +8618,39 @@ index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031
 +    let title = crate::i18n::tr_label("Soil Result Viewer");
 +    let (hidden,action)=ui_kit::Window::new(egui::Id::new("soil_results_controls"),"settings",title).cards(1.65).fields()
 +        .placed(egui::Align2::LEFT_TOP,egui::pos2(270.,170.)).actions("","Return to CAD",None).show(ctx,true,|ui| {
-+            ui.horizontal(|ui|{load=ui.button(crate::i18n::tr_label("Open Soil Results")).clicked();fit=ui.button("Fit results").clicked();});
++            ui.horizontal(|ui|{load=ui_kit::button(ui,crate::i18n::tr_label("Open Soil Results"),ui_kit::Button::Normal).clicked();fit=ui_kit::button(ui,crate::i18n::tr_label("Fit results"),ui_kit::Button::Normal).clicked();});
 +            if stale {ui_kit::text(ui,"CAD or analysis inputs changed. Result geometry is hidden until the matching input is restored.",ui_kit::Text::Report("soil_results_stale",true));}
 +            ui.add_enabled_ui(!stale,|ui| {
-+                ui_kit::row(ui,"Stage",|ui|{egui::ComboBox::from_id_salt("soil_result_frame").selected_text(viewer.info.get("frame_name").and_then(Value::as_str).unwrap_or("Stage")).show_ui(ui,|ui| {
++                ui_kit::row(ui,"Stage",|ui|{ui_kit::dropdown_menu(ui,"soil_result_frame",viewer.info.get("frame_name").and_then(Value::as_str).unwrap_or("Stage"),|ui| {
 +                    for frame in viewer.info.get("frames").and_then(Value::as_array).into_iter().flatten() {
-+                        if let (Some(index),Some(name))=(frame.get("index").and_then(Value::as_u64),frame.get("name").and_then(Value::as_str)) {changed|=ui.selectable_value(&mut viewer.settings.frame,index as usize,name).changed();}
++                        if let (Some(index),Some(name))=(frame.get("index").and_then(Value::as_u64),frame.get("name").and_then(Value::as_str)) {changed|=choose(ui,&mut viewer.settings.frame,index as usize,name);}
 +                    }
 +                });});
-+                ui_kit::row(ui,"Quantity",|ui|{egui::ComboBox::from_id_salt("soil_result_quantity").selected_text(quantity_label(&viewer.settings.quantity)).show_ui(ui,|ui| {
-+                    for (quantity,label) in [(Quantity::VerticalDisplacement,"Vertical displacement"),(Quantity::DisplacementMagnitude,"Displacement magnitude"),(Quantity::EffectiveStressZz,"Effective stress zz"),(Quantity::MeanEffectiveStress,"Mean effective stress p"),(Quantity::MajorEffectiveStress,"Major effective stress"),(Quantity::VoidRatio,"Void ratio"),(Quantity::PreconsolidationPressure,"Preconsolidation pressure pc"),(Quantity::VolumetricPlasticStrain,"Volumetric plastic strain")] {changed|=ui.selectable_value(&mut viewer.settings.quantity,quantity,label).changed();}
++                ui_kit::row(ui,"Quantity",|ui|{ui_kit::dropdown_menu(ui,"soil_result_quantity",crate::i18n::tr_label(quantity_label(&viewer.settings.quantity)),|ui| {
++                    for (quantity,label) in [(Quantity::VerticalDisplacement,"Vertical displacement"),(Quantity::DisplacementMagnitude,"Displacement magnitude"),(Quantity::EffectiveStressZz,"Effective stress zz"),(Quantity::MeanEffectiveStress,"Mean effective stress p"),(Quantity::MajorEffectiveStress,"Major effective stress"),(Quantity::VoidRatio,"Void ratio"),(Quantity::PreconsolidationPressure,"Preconsolidation pressure pc"),(Quantity::VolumetricPlasticStrain,"Volumetric plastic strain")] {changed|=choose(ui,&mut viewer.settings.quantity,quantity,label);}
 +                });});
-+                ui_kit::row(ui,"Displacement basis",|ui|{egui::ComboBox::from_id_salt("soil_result_reference").selected_text(format!("{:?}",viewer.settings.displacement_reference)).show_ui(ui,|ui| {
-+                    for (basis,label) in [(DisplacementReference::Display,"Display reference"),(DisplacementReference::Stage,"Stage increment"),(DisplacementReference::Seed,"Total from seed")] {changed|=ui.selectable_value(&mut viewer.settings.displacement_reference,basis,label).changed();}
++                ui_kit::row(ui,"Displacement basis",|ui|{ui_kit::dropdown_menu(ui,"soil_result_reference",crate::i18n::tr_label(match viewer.settings.displacement_reference {DisplacementReference::Display=>"Display reference",DisplacementReference::Stage=>"Stage increment",DisplacementReference::Seed=>"Total from seed"}),|ui| {
++                    for (basis,label) in [(DisplacementReference::Display,"Display reference"),(DisplacementReference::Stage,"Stage increment"),(DisplacementReference::Seed,"Total from seed")] {changed|=choose(ui,&mut viewer.settings.displacement_reference,basis,label);}
 +                });});
-+                ui_kit::row(ui,"Deformation scale",|ui|{changed|=ui.add(egui::DragValue::new(&mut viewer.settings.deformation_scale).range(0.0..=1e6).speed(1.)).changed();});
-+                ui_kit::row(ui,"Display refinement",|ui|{for level in 1..=3 {changed|=ui.selectable_value(&mut viewer.settings.refinement,level,format!("{}",1u32<<level)).changed();}});
++                ui_kit::row(ui,"Deformation scale",|ui|{changed|=ui_kit::number_field(ui,&mut viewer.settings.deformation_scale,0.0..=1e6,1.,"").changed();});
++                ui_kit::row(ui,"Display refinement",|ui|{for level in 1..=3 {changed|=choose(ui,&mut viewer.settings.refinement,level,format!("{}",1u32<<level));}});
 +                let mut manual_range=viewer.settings.color_range.is_some();
-+                if ui.checkbox(&mut manual_range,"Fixed legend range").changed() {
++                if ui_kit::checkbox(ui,crate::i18n::tr_label("Fixed legend range"),&mut manual_range).changed() {
 +                    viewer.settings.color_range=manual_range.then(|| viewer.info.get("color_range").and_then(Value::as_array).and_then(|a| Some([a.first()?.as_f64()?,a.get(1)?.as_f64()?])).unwrap_or([-1.,1.]));
 +                    changed=true;
 +                }
 +                if let Some(range)=viewer.settings.color_range.as_mut() {
-+                    ui_kit::row(ui,"Legend limits",|ui|{for limit in range {changed|=ui.add(egui::DragValue::new(limit).speed(0.1)).changed();}});
++                    ui_kit::row(ui,"Legend limits",|ui|{for limit in range {changed|=ui_kit::number_field(ui,limit,f64::MIN..=f64::MAX,0.1,"").changed();}});
 +                }
 +                let mut section=viewer.settings.section.is_some();
-+                if ui.checkbox(&mut section,"Reference-coordinate section").changed() {viewer.settings.section=section.then_some(Section {normal:[1.,0.,0.],offset_m:0.,slice_only:true});changed=true;}
++                if ui_kit::checkbox(ui,crate::i18n::tr_label("Reference-coordinate section"),&mut section).changed() {viewer.settings.section=section.then_some(Section {normal:[1.,0.,0.],offset_m:0.,slice_only:true});changed=true;}
 +                if let Some(section)=viewer.settings.section.as_mut() {
-+                    ui_kit::row(ui,"Plane normal",|ui|{for n in &mut section.normal {changed|=ui.add(egui::DragValue::new(n).speed(0.1)).changed();}});
-+                    ui_kit::row(ui,"Plane offset (m)",|ui|{changed|=ui.add(egui::DragValue::new(&mut section.offset_m).speed(0.1)).changed();});
-+                    changed|=ui.checkbox(&mut section.slice_only,"Section only (off: keep negative side)").changed();
++                    ui_kit::row(ui,"Plane normal",|ui|{for n in &mut section.normal {changed|=ui_kit::number_field(ui,n,f64::MIN..=f64::MAX,0.1,"").changed();}});
++                    ui_kit::row(ui,"Plane offset (m)",|ui|{changed|=ui_kit::number_field(ui,&mut section.offset_m,f64::MIN..=f64::MAX,0.1,"").changed();});
++                    changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Section only (off: keep negative side)"),&mut section.slice_only).changed();
 +                }
-+                changed|=ui.checkbox(&mut viewer.settings.wireframe,"Display triangle edges").changed();
-+                changed|=ui.checkbox(&mut viewer.settings.principal_directions,"Major axis of mean effective tensor").changed();
++                changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Display triangle edges"),&mut viewer.settings.wireframe).changed();
++                changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Major axis of mean effective tensor"),&mut viewer.settings.principal_directions).changed();
 +            });
 +            if let Some(range)=viewer.info.get("data_range").and_then(Value::as_array)
 +                && let (Some(low),Some(high))=(range.first().and_then(Value::as_f64),range.get(1).and_then(Value::as_f64)) {
@@ -8502,9 +8658,9 @@ index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031
 +            }
 +            ui_kit::text(ui,if viewer.settings.quantity.nodal(){"Nodal displacement interpolation. Z is up: settlement negative, heave positive."}else{"Original-cell integration-weighted means. Stress is compression positive; no smoothing to nodes. Null values are unavailable."},ui_kit::Text::Note("soil_result_values"));
 +            ui_kit::text(ui,"Curved Tet10 surfaces and sections use refined planar display triangles. Section planes use reference coordinates; deformation is applied afterwards.",ui_kit::Text::Note("soil_result_approximation"));
-+            ui.horizontal(|ui| {egui::ComboBox::from_id_salt("soil_query_kind").selected_text(["Node","Element mean","Raw integration point"].get(viewer.query_kind as usize).copied().unwrap_or("Node")).show_ui(ui,|ui| {for (kind,label) in [(0,"Node"),(1,"Element mean"),(2,"Raw integration point")] {ui.selectable_value(&mut viewer.query_kind,kind,label);}});
-+                ui.add(egui::DragValue::new(&mut viewer.query_id));inspect=ui.add_enabled(!stale,egui::Button::new("Read stored value")).clicked();});
-+            if let Some(value)=&viewer.query {egui::CollapsingHeader::new("Selected value").default_open(true).show(ui,|ui| {ui.add(egui::Label::new(serde_json::to_string_pretty(value).unwrap_or_default()).wrap());});}
++            ui.horizontal(|ui| {ui_kit::dropdown_menu(ui,"soil_query_kind",["Node","Element mean","Raw integration point"].get(viewer.query_kind as usize).copied().unwrap_or("Node"),|ui| {for (kind,label) in [(0,"Node"),(1,"Element mean"),(2,"Raw integration point")] {choose(ui,&mut viewer.query_kind,kind,label);}});
++                ui_kit::number_field(ui,&mut viewer.query_id,0..=usize::MAX,1.,"");inspect=ui_kit::button(ui,"Read stored value",ui_kit::Button::Enabled(!stale)).clicked();});
++            if let Some(value)=&viewer.query {ui_kit::section(ui,"soil_selected_value","Selected value",true,|ui| {ui.add(egui::Label::new(serde_json::to_string_pretty(value).unwrap_or_default()).wrap());});}
 +            if let Some(error)=&viewer.error {ui_kit::text(ui,error,ui_kit::Text::Report("soil_result_error",true));}
 +            ui_kit::text(ui,"Close this header to hide controls; Soil Result Viewer reopens them. Return to CAD releases this result.",ui_kit::Text::Note("soil_result_close"));
 +        });
@@ -8569,6 +8725,79 @@ index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031
 +        Quantity::VolumetricPlasticStrain => "Volumetric plastic strain",
 +    }
 +}
++
++fn choose<T: PartialEq>(ui: &mut egui::Ui, value: &mut T, next: T, label: impl AsRef<str>) -> bool {
++    let label = label.as_ref();
++    if ui_kit::list_picker(ui, label, crate::i18n::tr_label(label), *value == next).clicked() && *value != next {
++        *value = next;
++        return true;
++    }
++    false
++}
+diff --git a/crates/ui-egui/src/theme.rs b/crates/ui-egui/src/theme.rs
+index 125392f04119e341b5cc6ee697fe6011d1b81a63..523d4eaf163f5eda4bef623da3e7318427f69ec0 100644
+--- a/crates/ui-egui/src/theme.rs
++++ b/crates/ui-egui/src/theme.rs
+@@ -531,6 +531,16 @@ pub struct Tokens {
+ }
+ 
+ impl Tokens {
++    /// Scientific scalar ramp derived from the current analysis palette, including
++    /// colour-vision modes. No independent caller palette or hard-coded colours.
++    pub(crate) fn analysis_scalar_color(self, fraction: f64) -> Color32 {
++        let colors = self.analysis.curvature;
++        let t = fraction.clamp(0., 1.) * 2.;
++        let (a, b, k) = if t <= 1. { (colors[0], colors[1], t) } else { (colors[1], colors[2], t - 1.) };
++        let rgb = std::array::from_fn::<_, 3, _>(|i| ((f64::from(a[i]) * (1. - k) + f64::from(b[i]) * k) * 255.).round().clamp(0., 255.) as u8);
++        Color32::from_rgb(rgb[0], rgb[1], rgb[2])
++    }
++
+     /// Subtle shell elevation, derived from the semantic application-bar colour.
+     pub(crate) fn shell_shadow(self) -> egui::Shadow {
+         egui::Shadow { offset: [0, self.space_2 as i8], blur: self.space_8 as u8, spread: 0, color: self.app_bar.gamma_multiply(0.18) }
+diff --git a/crates/ui-egui/src/ui_kit/fields.rs b/crates/ui-egui/src/ui_kit/fields.rs
+index 760961c5a2865b5e3759becd04354120eff5d326..3325eb0f917b6bfa213fba55b36c5236d7546d42 100644
+--- a/crates/ui-egui/src/ui_kit/fields.rs
++++ b/crates/ui-egui/src/ui_kit/fields.rs
+@@ -449,7 +449,37 @@ pub(crate) fn number_field<T: egui::emath::Numeric>(
+     speed: f64,
+     suffix: &str,
+ ) -> Response {
+-    let response = ui.add(egui::DragValue::new(value).range(range).speed(speed).suffix(suffix).custom_parser(crate::prefs::parse_number));
++    number_field_impl(ui, value, range, speed, suffix, None)
++}
++
++/// Caller-unit formatting without rounding the stored value; shares numeric input,
++/// locale parsing, geometry and accessibility with every other kit number field.
++pub(crate) fn formatted_number_field<T: egui::emath::Numeric>(
++    ui: &mut Ui,
++    value: &mut T,
++    range: std::ops::RangeInclusive<T>,
++    speed: f64,
++    suffix: &str,
++    format: fn(f64, std::ops::RangeInclusive<usize>) -> String,
++) -> Response {
++    number_field_impl(ui, value, range, speed, suffix, Some(format))
++}
++
++type NumberFormat = fn(f64, std::ops::RangeInclusive<usize>) -> String;
++
++fn number_field_impl<T: egui::emath::Numeric>(
++    ui: &mut Ui,
++    value: &mut T,
++    range: std::ops::RangeInclusive<T>,
++    speed: f64,
++    suffix: &str,
++    format: Option<NumberFormat>,
++) -> Response {
++    let mut field = egui::DragValue::new(value).range(range).speed(speed).suffix(suffix).custom_parser(crate::prefs::parse_number);
++    if let Some(format) = format {
++        field = field.custom_formatter(format);
++    }
++    let response = ui.add(field);
+     response.widget_info(|| {
+         let mut info = egui::WidgetInfo::drag_value(ui.is_enabled(), value.to_f64());
+         info.label = Some(crate::i18n::tr_label(label(ui)).to_string());
 diff --git a/crates/ui-egui/tests/icon_audit.rs b/crates/ui-egui/tests/icon_audit.rs
 index 3e61864b3b9566384b4ff8c4e2dac44e126ad06d..6512ccb7bbf104e9713b2e69d8a1afaa6b33c99e 100644
 --- a/crates/ui-egui/tests/icon_audit.rs

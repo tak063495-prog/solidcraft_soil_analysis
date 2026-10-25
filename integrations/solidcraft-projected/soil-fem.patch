@@ -521,7 +521,7 @@ index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..b5e481679dd8a605aa7494c2f442810b
    "cmd.inspect_center_of_mass": "Centre of Mass",
    "cmd.sketch_arc_center_point": "Centre Point Arc",
 diff --git a/assets/locales/en.json b/assets/locales/en.json
-index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..05e2c851a9d47574ae4375f53d14fbd152a05e2f 100644
+index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..632ee5015fd3ad7a087bcbf9349ad392a0016bec 100644
 --- a/assets/locales/en.json
 +++ b/assets/locales/en.json
 @@ -86,6 +86,7 @@
@@ -671,6 +671,79 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..05e2c851a9d47574ae4375f53d14fbd1
    "cmd.appearance_assign": "Appearance",
    "cmd.appearance_library": "Appearance Library",
    "cmd.appearance_list": "List Appearances",
+@@ -1392,6 +1419,72 @@
+   "sketch_text.path_clear": "Take the text off its curve",
+   "sketch_text.path_hint": "A curve of the sketch the text follows: click here, then the curve",
+   "sketch_text.use_font_file": "Use the font file {path}",
++  "soil_fem.analysis_body_label": "Analysis body label",
++  "soil_fem.cad_bodies": "CAD bodies",
++  "soil_fem.choose_cad_body": "Choose CAD body",
++  "soil_fem.compression_slope": "Compression slope λ",
++  "soil_fem.consolidation_history": "Consolidation history",
++  "soil_fem.construction_stages": "Construction stages",
++  "soil_fem.continuum_formulation": "Continuum formulation",
++  "soil_fem.critical_state_m": "Critical-state M",
++  "soil_fem.displacement_formulation": "Displacement formulation",
++  "soil_fem.displacement_magnitude": "Displacement magnitude",
++  "soil_fem.display_reference": "Display reference",
++  "soil_fem.display_triangle_edges": "Display triangle edges",
++  "soil_fem.effective_stress_zz": "Effective stress zz",
++  "soil_fem.element_mean": "Element mean",
++  "soil_fem.excavation_tools": "Excavation tools",
++  "soil_fem.export_analysis_inputs": "Export analysis inputs…",
++  "soil_fem.fit_results": "Fit results",
++  "soil_fem.fixed_legend_range": "Fixed legend range",
++  "soil_fem.initial_ground_state": "Initial ground state",
++  "soil_fem.k_in_x": "K₀ in X",
++  "soil_fem.k_in_y": "K₀ in Y",
++  "soil_fem.kinematic_volume_strain_cell_mean": "Kinematic volume strain (cell mean)",
++  "soil_fem.kinematic_volumetric_strain": "Kinematic volumetric strain",
++  "soil_fem.load_analysis_inputs": "Load analysis inputs…",
++  "soil_fem.major_axis_of_mean_effective_tensor": "Major axis of mean effective tensor",
++  "soil_fem.major_effective_stress": "Major effective stress",
++  "soil_fem.major_material_effective_stress": "Major material effective stress",
++  "soil_fem.material_effective_stress_zz": "Material effective stress zz",
++  "soil_fem.material_id": "Material ID",
++  "soil_fem.material_mean_effective_stress_p": "Material mean effective stress p",
++  "soil_fem.material_volume_strain_p1": "Material volume strain (P1)",
++  "soil_fem.material_volumetric_strain": "Material volumetric strain",
++  "soil_fem.materials": "Materials",
++  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC: Tet10 displacement + P1 pressure/volume",
++  "soil_fem.mean_effective_stress_p": "Mean effective stress p",
++  "soil_fem.node": "Node",
++  "soil_fem.poisson_ratio": "Poisson ratio",
++  "soil_fem.preconsolidation_pressure_pc": "Preconsolidation pressure pc",
++  "soil_fem.primary_mean_effective_stress_p": "Primary mean effective stress p",
++  "soil_fem.primary_mean_effective_stress_p1": "Primary mean effective stress (P1)",
++  "soil_fem.primary_node_material": "Primary node + material",
++  "soil_fem.raw_integration_point": "Raw integration point",
++  "soil_fem.read_stored_value": "Read stored value",
++  "soil_fem.reference_coordinate_section": "Reference-coordinate section",
++  "soil_fem.reload_from_design": "Reload from design",
++  "soil_fem.review_current_cad": "Review current CAD",
++  "soil_fem.save_a_checkpoint_when_stopping": "Save a checkpoint when stopping",
++  "soil_fem.saved_job_folder": "Saved job folder",
++  "soil_fem.section_only_off_keep_negative_side": "Section only (off: keep negative side)",
++  "soil_fem.selected_value": "Selected value",
++  "soil_fem.soil_bodies": "Soil bodies",
++  "soil_fem.soil_layers": "Soil layers",
++  "soil_fem.stage_increment": "Stage increment",
++  "soil_fem.stage_type": "Stage type",
++  "soil_fem.surface_surcharge_kpa": "Surface surcharge (kPa)",
++  "soil_fem.swelling_slope": "Swelling slope κ",
++  "soil_fem.total_from_seed": "Total from seed",
++  "soil_fem.unit_weight_kn_m": "Unit weight (kN/m³)",
++  "soil_fem.vertical_displacement": "Vertical displacement",
++  "soil_fem.void_ratio": "Void ratio",
++  "soil_fem.volumetric_plastic_strain": "Volumetric plastic strain",
++  "soil_fem.water_elevation_m": "Water elevation (m)",
++  "soil_fem.work_conjugate_effective_stress_zz": "Work-conjugate effective stress zz",
++  "soil_fem.work_conjugate_effective_zz_cell_mean": "Work-conjugate effective zz (cell mean)",
++  "soil_fem.worker_log": "Worker log",
++  "soil_fem.young_s_modulus_kpa": "Young's modulus (kPa)",
+   "solid": "solid",
+   "the parts library is not available": "the parts library is not available",
+   "thread.automatic_size": "Automatic size",
 diff --git a/assets/locales/es.json b/assets/locales/es.json
 index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..1358c744283847c0aef75ed5b8602045c9e438a9 100644
 --- a/assets/locales/es.json
@@ -1566,7 +1639,7 @@ index 6278c49aab9c7d0b1a1465b30f98614ca8131548..9bcc7df990b3bb19d0b8c02aea2f487d
    "cmd.appearance_library": "Libreria degli aspetti",
    "cmd.appearance_list": "Elenca aspetti",
 diff --git a/assets/locales/ja.json b/assets/locales/ja.json
-index cbd221816eb75db2c5856be40c9859d163a8a045..575630c75f6c339588c01a0ff23ef1c889e68758 100644
+index cbd221816eb75db2c5856be40c9859d163a8a045..c2d9dc74d7a87dfc9d5f7296d8787e0247f50ea6 100644
 --- a/assets/locales/ja.json
 +++ b/assets/locales/ja.json
 @@ -86,6 +86,7 @@
@@ -1716,6 +1789,79 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..575630c75f6c339588c01a0ff23ef1c8
    "cmd.appearance_assign": "外観",
    "cmd.appearance_library": "外観ライブラリ",
    "cmd.appearance_list": "外観を一覧表示",
+@@ -1392,6 +1419,72 @@
+   "sketch_text.path_clear": "文字を曲線から外す",
+   "sketch_text.path_hint": "文字が沿うスケッチの曲線: ここをクリックしてから曲線をクリック",
+   "sketch_text.use_font_file": "フォント ファイル {path} を使用",
++  "soil_fem.analysis_body_label": "解析ボディ名",
++  "soil_fem.cad_bodies": "CADボディ",
++  "soil_fem.choose_cad_body": "CADボディを選択",
++  "soil_fem.compression_slope": "圧縮指数 λ",
++  "soil_fem.consolidation_history": "圧密履歴",
++  "soil_fem.construction_stages": "施工工程",
++  "soil_fem.continuum_formulation": "連続体の解析方式",
++  "soil_fem.critical_state_m": "限界状態定数 M",
++  "soil_fem.displacement_formulation": "変位方式",
++  "soil_fem.displacement_magnitude": "変位の大きさ",
++  "soil_fem.display_reference": "表示基準からの変位",
++  "soil_fem.display_triangle_edges": "表示三角形の辺を表示",
++  "soil_fem.effective_stress_zz": "有効応力 zz",
++  "soil_fem.element_mean": "要素平均",
++  "soil_fem.excavation_tools": "掘削領域",
++  "soil_fem.export_analysis_inputs": "解析入力を出力…",
++  "soil_fem.fit_results": "解析結果を全体表示",
++  "soil_fem.fixed_legend_range": "凡例範囲を固定",
++  "soil_fem.initial_ground_state": "初期地盤状態",
++  "soil_fem.k_in_x": "X方向の K₀",
++  "soil_fem.k_in_y": "Y方向の K₀",
++  "soil_fem.kinematic_volume_strain_cell_mean": "変位場の体積ひずみ（要素平均）",
++  "soil_fem.kinematic_volumetric_strain": "変位場の体積ひずみ",
++  "soil_fem.load_analysis_inputs": "解析入力を読み込む…",
++  "soil_fem.major_axis_of_mean_effective_tensor": "要素平均有効応力の最大主方向",
++  "soil_fem.major_effective_stress": "最大主有効応力",
++  "soil_fem.major_material_effective_stress": "材料の最大主有効応力",
++  "soil_fem.material_effective_stress_zz": "材料の有効応力 zz",
++  "soil_fem.material_id": "材料ID",
++  "soil_fem.material_mean_effective_stress_p": "材料の平均有効応力 p",
++  "soil_fem.material_volume_strain_p1": "材料体積ひずみ (P1)",
++  "soil_fem.material_volumetric_strain": "材料の体積ひずみ",
++  "soil_fem.materials": "材料",
++  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC：Tet10変位＋P1圧力・体積",
++  "soil_fem.mean_effective_stress_p": "平均有効応力 p",
++  "soil_fem.node": "節点",
++  "soil_fem.poisson_ratio": "ポアソン比",
++  "soil_fem.preconsolidation_pressure_pc": "先行圧密圧力 pc",
++  "soil_fem.primary_mean_effective_stress_p": "一次平均有効応力 p",
++  "soil_fem.primary_mean_effective_stress_p1": "一次平均有効応力 (P1)",
++  "soil_fem.primary_node_material": "一次節点＋材料",
++  "soil_fem.raw_integration_point": "生の積分点値",
++  "soil_fem.read_stored_value": "保存された値を照会",
++  "soil_fem.reference_coordinate_section": "基準座標による断面",
++  "soil_fem.reload_from_design": "設計から再読込",
++  "soil_fem.review_current_cad": "現在のCAD対応を確認",
++  "soil_fem.save_a_checkpoint_when_stopping": "停止時に再開データを保存",
++  "soil_fem.saved_job_folder": "保存済みジョブのフォルダー",
++  "soil_fem.section_only_off_keep_negative_side": "断面のみ（オフ：負側を表示）",
++  "soil_fem.selected_value": "選択した値",
++  "soil_fem.soil_bodies": "地盤ボディ",
++  "soil_fem.soil_layers": "地層",
++  "soil_fem.stage_increment": "工程増分",
++  "soil_fem.stage_type": "工程の種類",
++  "soil_fem.surface_surcharge_kpa": "地表面上載圧 (kPa)",
++  "soil_fem.swelling_slope": "膨潤指数 κ",
++  "soil_fem.total_from_seed": "初期種状態からの総変位",
++  "soil_fem.unit_weight_kn_m": "単位体積重量 (kN/m³)",
++  "soil_fem.vertical_displacement": "鉛直変位",
++  "soil_fem.void_ratio": "間隙比",
++  "soil_fem.volumetric_plastic_strain": "体積塑性ひずみ",
++  "soil_fem.water_elevation_m": "水位標高 (m)",
++  "soil_fem.work_conjugate_effective_stress_zz": "釣合いに用いる有効応力 zz",
++  "soil_fem.work_conjugate_effective_zz_cell_mean": "釣合い有効応力 zz（要素平均）",
++  "soil_fem.worker_log": "解析ログ",
++  "soil_fem.young_s_modulus_kpa": "ヤング率 (kPa)",
+   "solid": "中実",
+   "the parts library is not available": "パーツライブラリは利用できません",
+   "thread.automatic_size": "サイズを自動選択",
 diff --git a/assets/locales/ko.json b/assets/locales/ko.json
 index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..0f6d6cb09a240bbb67addffb839e8ef4bfb6d7dc 100644
 --- a/assets/locales/ko.json
@@ -3692,7 +3838,7 @@ index dadd216509aa34a793c5080c1952afcc4b03d4d5..ac3684e0be5c70fc13322e435e012d0c
          *b = name.to_string();
      }
 diff --git a/crates/engine/src/cmd/mod.rs b/crates/engine/src/cmd/mod.rs
-index b26c54e865804d49260dc3369e2111178ee87660..99636f8bd3c2a208c9c3d4cf74e46f086665dd07 100644
+index b26c54e865804d49260dc3369e2111178ee87660..d3f6dc38919e84e4f41c1e933b7cb1f3d40eb5d5 100644
 --- a/crates/engine/src/cmd/mod.rs
 +++ b/crates/engine/src/cmd/mod.rs
 @@ -82,6 +82,7 @@ mod sketch_import;
@@ -3711,6 +3857,27 @@ index b26c54e865804d49260dc3369e2111178ee87660..99636f8bd3c2a208c9c3d4cf74e46f08
      v.extend(inspect::COMMANDS.iter());
      v.extend(compare::COMMANDS.iter());
      v.extend(silhouette::COMMANDS.iter());
+@@ -315,7 +317,9 @@ pub fn find_command(id: &str) -> Option<&'static CommandSpec> {
+ 
+ /// The end of an unknown command's error: up to three ids like `id`, nearest first. Ids a few
+ /// letters away (`solid.extrud` → `solid.extrude`) come before ids that end in the same word
+-/// (`file.open` → `doc.open`). Empty when nothing is close.
++/// (`file.open` → `doc.open`). A suffix fallback keeps only the nearest distance;
++/// adding a distant namespace must not dilute a short command's correction.
++/// Empty when nothing is close.
+ pub(crate) fn did_you_mean(id: &str) -> String {
+     let id = id.to_ascii_lowercase();
+     if id.len() > 64 {
+@@ -331,6 +335,9 @@ pub(crate) fn did_you_mean(id: &str) -> String {
+         })
+         .collect();
+     found.sort();
++    if let Some((fallback, best_distance, _)) = found.first().copied() {
++        found.retain(|(far, distance, _)| if fallback { *distance == best_distance } else { !*far });
++    }
+     let ids: Vec<String> = found.iter().take(3).map(|(_, _, c)| format!("`{c}`")).collect();
+     match ids.as_slice() {
+         [] => String::new(),
 diff --git a/crates/engine/src/cmd/soil_fem.rs b/crates/engine/src/cmd/soil_fem.rs
 new file mode 100644
 index 0000000000000000000000000000000000000000..e45ed9362cb1e95a7f382a86586f63b4486c8ff1
@@ -4438,10 +4605,10 @@ index 0000000000000000000000000000000000000000..dee1e8299a43e04cbc773301f62b582d
 +}
 diff --git a/crates/engine/src/soil_jobs.rs b/crates/engine/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789c1a7b353
+index 0000000000000000000000000000000000000000..5affe7b45e13422ae6fb44150e24f9164f8e68d3
 --- /dev/null
 +++ b/crates/engine/src/soil_jobs.rs
-@@ -0,0 +1,828 @@
+@@ -0,0 +1,907 @@
 +//! Transient, host-owned external FEM jobs. Neither executable paths nor process
 +//! ownership are read from a design. Scratch sessions have no execution host.
 +use crate::{Result, Session, params::bad};
@@ -4449,6 +4616,15 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +use serde_json::{Value, json};
 +
 +const CMD: &str = "analysis.soil.job";
++
++#[cfg(not(target_arch = "wasm32"))]
++fn expected_view_schema(snapshot: &Value) -> Result<&'static str> {
++    match snapshot.pointer("/snapshot/stages/schema").and_then(Value::as_str) {
++        Some("soil-fem-stages/1") => Ok("soil-fem-solidcraft-view/1"),
++        Some("soil-fem-projected-mcc-stages/1") => Ok("soil-fem-solidcraft-view/2"),
++        _ => Err(bad(CMD, "unsupported captured construction family")),
++    }
++}
 +
 +#[derive(Deserialize)]
 +#[serde(deny_unknown_fields)]
@@ -4537,6 +4713,7 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +        pub(super) child: Child,
 +        directory: PathBuf,
 +        input: String,
++        view_schema: &'static str,
 +        token: String,
 +        worker_id: Option<String>,
 +        cancelled: bool,
@@ -4663,7 +4840,7 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +            let audit = read(&audit_path)?;
 +            let digest = hash(&path)?;
 +            let solver = owner.get("solver_sha256").and_then(Value::as_str).filter(|s| s.len() == 64 && s.bytes().all(|b| b.is_ascii_hexdigit()));
-+            if manifest.get("schema").and_then(Value::as_str) != Some("soil-fem-solidcraft-view/1")
++            if manifest.get("schema").and_then(Value::as_str) != Some(self.view_schema)
 +                || solver.is_none()
 +                || manifest.get("complete") != Some(&Value::Bool(true))
 +                || manifest.get("input_sha256").and_then(Value::as_str) != Some(&self.input)
@@ -4743,15 +4920,23 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +            self.job.as_mut().map(|j| j.child.try_wait().map(|s| s.is_none()).map_err(|e| bad(CMD, e.to_string()))).unwrap_or(Ok(false))
 +        }
 +
-+        pub(super) fn start(&mut self, host: Host, request: &Start, input: String) -> Result<()> {
-+            self.launch(host, Path::new(&request.directory), input, Some(request), None)
++        pub(super) fn start(&mut self, host: Host, request: &Start, input: String, view_schema: &'static str) -> Result<()> {
++            self.launch(host, Path::new(&request.directory), input, Some(request), None, view_schema)
 +        }
 +
-+        pub(super) fn resume(&mut self, host: Host, directory: &Path, previous: &Path, input: String) -> Result<()> {
-+            self.launch(host, directory, input, None, Some(previous))
++        pub(super) fn resume(&mut self, host: Host, directory: &Path, previous: &Path, input: String, view_schema: &'static str) -> Result<()> {
++            self.launch(host, directory, input, None, Some(previous), view_schema)
 +        }
 +
-+        fn launch(&mut self, host: Host, directory: &Path, input: String, request: Option<&Start>, previous: Option<&Path>) -> Result<()> {
++        fn launch(
++            &mut self,
++            host: Host,
++            directory: &Path,
++            input: String,
++            request: Option<&Start>,
++            previous: Option<&Path>,
++            view_schema: &'static str,
++        ) -> Result<()> {
 +            let directory = external_path(directory)?;
 +            let log_path = directory.join("host-worker.log");
 +            let log = OpenOptions::new().write(true).create_new(true).open(&log_path).map_err(|e| bad(CMD, e.to_string()))?;
@@ -4793,8 +4978,16 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +            }
 +            let child = command.spawn().map_err(|e| bad(CMD, format!("could not start FEM worker: {e}")))?;
 +            self.serial = serial;
-+            self.job =
-+                Some(Owned { child, directory, input, token, worker_id: None, cancelled: false, cooperative: request.is_none_or(|r| r.cooperative) });
++            self.job = Some(Owned {
++                child,
++                directory,
++                input,
++                view_schema,
++                token,
++                worker_id: None,
++                cancelled: false,
++                cooperative: request.is_none_or(|r| r.cooperative),
++            });
 +            Ok(())
 +        }
 +
@@ -4883,7 +5076,9 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +        }
 +
 +        fn owned_mode(s: &mut Session, directory: PathBuf, cooperative: bool) {
-+            let input = crate::soil_fem::snapshot(s, &json!({})).unwrap()["input_sha256"].as_str().unwrap().to_string();
++            let frozen = crate::soil_fem::snapshot(s, &json!({})).unwrap();
++            let input = frozen["input_sha256"].as_str().unwrap().to_string();
++            let view_schema = expected_view_schema(&frozen).unwrap();
 +            let mut cmd = Command::new(std::env::current_exe().unwrap());
 +            cmd.args(["--exact", "soil_jobs::native::tests::job_child_protocol", "--nocapture"])
 +                .env("SOLIDCRAFT_SOIL_JOB_TEST_CHILD", if cooperative { "checkpoint-after-eof" } else { "wait-for-eof" })
@@ -4896,7 +5091,8 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +                cmd.creation_flags(0x08000000);
 +            }
 +            let child = cmd.spawn().unwrap();
-+            s.soil_jobs.job = Some(Owned { child, directory, input, token: "owned-token".into(), worker_id: None, cancelled: false, cooperative });
++            s.soil_jobs.job =
++                Some(Owned { child, directory, input, view_schema, token: "owned-token".into(), worker_id: None, cancelled: false, cooperative });
 +        }
 +
 +        fn write(path: &Path, value: &Value) {
@@ -4912,7 +5108,7 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +            );
 +            write(
 +                &folder.join("workflow/view/view-manifest.json"),
-+                &json!({"schema":"soil-fem-solidcraft-view/1","complete":true,"input_sha256":j.input,"solver_binary_sha256":"a".repeat(64)}),
++                &json!({"schema":j.view_schema,"complete":true,"input_sha256":j.input,"solver_binary_sha256":"a".repeat(64)}),
 +            );
 +            let manifest = hash(&folder.join("workflow/view/view-manifest.json")).unwrap();
 +            write(&folder.join("workflow/view-verification.json"), &json!({"passed":true,"input_sha256":j.input,"view_manifest_sha256":manifest}));
@@ -5063,6 +5259,55 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +        }
 +
 +        #[test]
++        fn completed_view_family_is_bound_to_launch_snapshot_even_after_receipt_resealing() {
++            assert!(expected_view_schema(&json!({})).is_err());
++            assert!(expected_view_schema(&json!({"snapshot":{"stages":{"schema":"unknown"}}})).is_err());
++            for projected in [false, true] {
++                let mut s = configured();
++                if projected {
++                    let model = crate::soil_fem::inspect(&s).unwrap();
++                    let mut saved = model["configuration"].clone();
++                    saved["ground"]["materials"][0]["mcc"] = json!({});
++                    saved["stages"]["schema"] = json!("soil-fem-projected-mcc-stages/1");
++                    saved["stages"]["settings"] = json!({"kinematics":"side_rollers"});
++                    s.execute(
++                        "analysis.soil.configure",
++                        &json!({"ground":saved["ground"],"stages":saved["stages"],"bindings":saved["bindings"],
++                        "expected_cad_sha256":model["cad_sha256"],"expected_setup_sha256":model["setup_sha256"]}),
++                    )
++                    .unwrap();
++                }
++                let root = folder();
++                owned(&mut s, root.clone());
++                assert_eq!(
++                    s.soil_jobs.job.as_ref().unwrap().view_schema,
++                    if projected { "soil-fem-solidcraft-view/2" } else { "soil-fem-solidcraft-view/1" }
++                );
++                receipt(&s);
++                finish(&mut s);
++                assert_eq!(s.execute("analysis.soil.job.status", &json!({})).unwrap()["result_usable"], true);
++                let manifest_path = root.join("job/workflow/view/view-manifest.json");
++                let audit_path = root.join("job/workflow/view-verification.json");
++                let status_path = root.join("job/status.json");
++                let mut manifest = read(&manifest_path).unwrap();
++                manifest["schema"] = json!(if projected { "soil-fem-solidcraft-view/1" } else { "soil-fem-solidcraft-view/2" });
++                write(&manifest_path, &manifest);
++                let digest = hash(&manifest_path).unwrap();
++                let mut audit = read(&audit_path).unwrap();
++                audit["view_manifest_sha256"] = json!(digest);
++                write(&audit_path, &audit);
++                let mut status = read(&status_path).unwrap();
++                status["result_sha256"] = json!(digest);
++                status["view_audit_sha256"] = json!(hash(&audit_path).unwrap());
++                write(&status_path, &status);
++                let rejected = s.execute("analysis.soil.job.status", &json!({})).unwrap();
++                assert_eq!(rejected["state"], "failed");
++                assert_eq!(rejected["result_usable"], false);
++                assert!(rejected["observation_error"].as_str().unwrap().contains("version differs"));
++            }
++        }
++
++        #[test]
 +        fn process_handle_is_authoritative_and_status_identity_is_checked() {
 +            let mut s = configured();
 +            let root = folder();
@@ -5169,15 +5414,15 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +        if frozen.get("input_sha256").and_then(Value::as_str) != Some(&request.expected_input_sha256) {
 +            return Err(bad(CMD, "analysis inputs changed before job start"));
 +        }
-+        if frozen.pointer("/snapshot/stages/schema").and_then(Value::as_str) == Some("soil-fem-projected-mcc-stages/1") && request.element_order != 2
-+        {
++        let view_schema = expected_view_schema(&frozen)?;
++        if view_schema == "soil-fem-solidcraft-view/2" && request.element_order != 2 {
 +            return Err(bad(CMD, "projected MCC requires Tet10 (element order 2)"));
 +        }
 +        solidcraft_io::vfs::check(&request.directory).map_err(|e| bad(CMD, e.to_string()))?;
 +        std::fs::create_dir(&request.directory).map_err(|e| bad(CMD, format!("new job folder required: {e}")))?;
 +        let capture = std::path::Path::new(&request.directory).join("capture");
 +        crate::soil_fem::export(s, &json!({"directory":capture,"expected_input_sha256":request.expected_input_sha256}))?;
-+        s.soil_jobs.start(host, &request, request.expected_input_sha256.clone())?;
++        s.soil_jobs.start(host, &request, request.expected_input_sha256.clone(), view_schema)?;
 +        status(s, &json!({}))
 +    }
 +    #[cfg(target_arch = "wasm32")]
@@ -5232,6 +5477,7 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +        if frozen.get("input_sha256").and_then(Value::as_str) != Some(&request.expected_input_sha256) {
 +            return Err(bad(CMD, "analysis inputs changed before job resume"));
 +        }
++        let view_schema = expected_view_schema(&frozen)?;
 +        solidcraft_io::vfs::check(&request.previous_directory).map_err(|e| bad(CMD, e.to_string()))?;
 +        let previous = std::path::Path::new(&request.previous_directory);
 +        let saved = previous.join("job");
@@ -5239,7 +5485,7 @@ index 0000000000000000000000000000000000000000..f1a89a4c83495822c002293fb5ba3789
 +        native::saved_checkpoint(&saved, &request.expected_input_sha256, &report)?;
 +        solidcraft_io::vfs::check(&request.directory).map_err(|e| bad(CMD, e.to_string()))?;
 +        std::fs::create_dir(&request.directory).map_err(|e| bad(CMD, format!("new resume folder required: {e}")))?;
-+        s.soil_jobs.resume(host, std::path::Path::new(&request.directory), previous, request.expected_input_sha256)?;
++        s.soil_jobs.resume(host, std::path::Path::new(&request.directory), previous, request.expected_input_sha256, view_schema)?;
 +        status(s, &json!({}))
 +    }
 +    #[cfg(target_arch = "wasm32")]
@@ -7774,6 +8020,22 @@ index 0000000000000000000000000000000000000000..34246b74784dfc2c807d1b4eb27d6743
 +    use std::io::Write;
 +    file.write_all(&serde_json::to_vec_pretty(&report).unwrap()).unwrap();
 +}
+diff --git a/crates/engine/src/tests.rs b/crates/engine/src/tests.rs
+index f2d8cf46a3fabfb6d77cb86aff446c26eaf4bec5..1b0860951e853c71976e05d2a52279877e28101f 100644
+--- a/crates/engine/src/tests.rs
++++ b/crates/engine/src/tests.rs
+@@ -898,6 +898,11 @@ fn unknown_commands_suggest_the_closest_ids() {
+     let mut s = Session::default();
+     let mut msg = |id: &str| s.execute(id, &serde_json::json!({})).unwrap_err().to_string();
+     assert_eq!(msg("file.open"), "unknown command `file.open` (did you mean `doc.open`?)");
++    assert!(
++        msg("analysis.soil.results.opne").starts_with("unknown command `analysis.soil.results.opne` (did you mean `analysis.soil.results.open`"),
++        "{}",
++        msg("analysis.soil.results.opne")
++    );
+     assert!(msg("solid.extrud").starts_with("unknown command `solid.extrud` (did you mean `solid.extrude`"), "{}", msg("solid.extrud"));
+     assert!(msg("Extrude").contains("`solid.extrude`"), "{}", msg("Extrude"));
+     assert_eq!(msg("FusionFilletEdgesCommand"), "unknown command `FusionFilletEdgesCommand`");
 diff --git a/crates/gpu/src/view.rs b/crates/gpu/src/view.rs
 index 6b96e5fd86ab5d3ee2f4fbcdc86d9e8e715b4323..53bc5c6e6dfc0c93d1b86bff613bfe80d8cae9ba 100644
 --- a/crates/gpu/src/view.rs
@@ -8042,10 +8304,10 @@ index 23408069ad21e7de31939d604c98ca70682bddfb..0ff9c1a9794c59a1a0ad0b00a1074eaf
  fn opaque_pbr_product_gpu_and_cpu_share_color_and_material_semantics() {
 diff --git a/crates/ui-egui/src/soil_analysis.rs b/crates/ui-egui/src/soil_analysis.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6d67b6a30
+index 0000000000000000000000000000000000000000..6a043157969d18ce051cb5f18ed019d91f996a0d
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_analysis.rs
-@@ -0,0 +1,501 @@
+@@ -0,0 +1,529 @@
 +//! A thin editor over analysis.soil.*. Drafts live here; saved attributes,
 +//! identity resolution, source checks and native STEP captures belong to L4.
 +use crate::{SolveApp, ui_kit};
@@ -8185,14 +8447,14 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +/// Preserve integer identifiers and show small scalars without hiding their scale.
 +fn number_input(ui: &mut egui::Ui, value: &mut serde_json::Number) -> bool {
 +    if let Some(mut x) = value.as_u64() {
-+        let changed = ui.add(egui::DragValue::new(&mut x)).changed();
++        let changed = ui_kit::number_field(ui, &mut x, 0..=u64::MAX, 1., "").changed();
 +        if changed {
 +            *value = x.into();
 +        }
 +        return changed;
 +    }
 +    if let Some(mut x) = value.as_i64() {
-+        let changed = ui.add(egui::DragValue::new(&mut x)).changed();
++        let changed = ui_kit::number_field(ui, &mut x, i64::MIN..=i64::MAX, 1., "").changed();
 +        if changed {
 +            *value = x.into();
 +        }
@@ -8201,10 +8463,10 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +    if let Some(mut x) = value.as_f64() {
 +        let magnitude = x.abs();
 +        let speed = if magnitude > 0.0 && magnitude < 0.001 { (magnitude * 0.01).max(f64::MIN_POSITIVE) } else { 0.001 };
-+        let widget = egui::DragValue::new(&mut x).speed(speed).custom_formatter(|v, decimals| {
++        if ui_kit::formatted_number_field(ui, &mut x, f64::MIN..=f64::MAX, speed, "", |v, decimals| {
 +            if v != 0.0 && !(1e-4..1e8).contains(&v.abs()) { format!("{v:.3e}") } else { egui::emath::format_with_decimals_in_range(v, decimals) }
-+        });
-+        if ui.add(widget).changed()
++        })
++        .changed()
 +            && x.is_finite()
 +            && let Some(number) = serde_json::Number::from_f64(x)
 +        {
@@ -8233,7 +8495,7 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +                let path = format!("{id}.{key}");
 +                match v {
 +                    Value::Object(_) | Value::Array(_) => {
-+                        egui::CollapsingHeader::new(field_label(key)).id_salt(&path).default_open(depth < 1).show(ui, |ui| {
++                        ui_kit::section(ui, &path, field_label(key), depth < 1, |ui| {
 +                            changed |= properties(ui, &path, v, depth + 1, budget);
 +                        });
 +                    }
@@ -8247,12 +8509,12 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +                            if matches!(key.as_str(), "kind" | "method" | "definition" | "flow") {
 +                                ui.label(text.as_str());
 +                            } else {
-+                                changed |= ui.text_edit_singleline(text).changed();
++                                changed |= ui_kit::text_field(ui, text, "").1;
 +                            }
 +                        });
 +                    }
 +                    Value::Bool(x) => {
-+                        changed |= ui.checkbox(x, field_label(key)).changed();
++                        changed |= ui_kit::checkbox(ui, crate::i18n::tr_label(field_label(key)), x).changed();
 +                    }
 +                    _ => {
 +                        ui_kit::row(ui, field_label(key), |ui| {
@@ -8267,10 +8529,10 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +                let path = format!("{id}.{i}");
 +                if let Value::String(text) = v {
 +                    ui_kit::row(ui, &format!("{}", i + 1), |ui| {
-+                        changed |= ui.text_edit_singleline(text).changed();
++                        changed |= ui_kit::text_field(ui, text, "").1;
 +                    });
 +                } else {
-+                    egui::CollapsingHeader::new(format!("{}", i + 1)).id_salt(&path).default_open(depth < 2).show(ui, |ui| {
++                    ui_kit::section(ui, &path, &format!("{}", i + 1), depth < 2, |ui| {
 +                        changed |= properties(ui, &path, v, depth + 1, budget);
 +                    });
 +                }
@@ -8287,6 +8549,14 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +        }
 +    }
 +    changed
++}
++
++fn choose<T: PartialEq>(ui: &mut egui::Ui, value: &mut T, next: T, label: &str) -> bool {
++    if ui_kit::list_picker(ui, label, crate::i18n::tr_label(label), *value == next).clicked() && *value != next {
++        *value = next;
++        return true;
++    }
++    false
 +}
 +
 +fn field_label(key: &str) -> &str {
@@ -8344,25 +8614,23 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +    let title = crate::i18n::tr_label("Soil Analysis");
 +    let (closed,action)=ui_kit::Window::new(egui::Id::new("sc_soil_analysis"),"settings",title)
 +        .cards(2.5).fields().keep_open_on_escape().actions("Save","Close",None).show(ctx,valid,|ui|{
-+            ui.horizontal(|ui|{for (n,label) in [(0,"Ground"),(1,"Construction"),(2,"CAD bodies"),(3,"Analysis")] {if ui.selectable_label(d.page==n,label).clicked(){d.page=n;}}});
++            let mut page=usize::from(d.page); if ui_kit::segmented(ui,&mut page,&["Ground","Construction","CAD bodies","Analysis"],ui_kit::Segments::default()){d.page=page as u8;}
 +            ui_kit::text(ui,"Analysis units: m, kN, kPa. CAD geometry is exported in mm.",ui_kit::Text::Note("soil_units"));
 +            ui.horizontal(|ui|{
-+                import=ui.button("Load analysis inputs…").clicked();
-+                reload=ui.button("Reload from design").clicked();
++                import=ui_kit::button(ui,crate::i18n::tr_label("Load analysis inputs…"),ui_kit::Button::Normal).clicked();
++                reload=ui_kit::button(ui,crate::i18n::tr_label("Reload from design"),ui_kit::Button::Normal).clicked();
 +            });
 +            if d.expected_cad!=d.status.get("cad_sha256").and_then(Value::as_str).unwrap_or_default() || d.status.get("cad_changed_since_review").and_then(Value::as_bool)==Some(true){
 +                ui_kit::text(ui,"CAD changed while this editor was open. Review every body assignment before saving.",ui_kit::Text::Report("soil_stale",true));
-+                review=ui.button("Review current CAD").clicked();
++                review=ui_kit::button(ui,crate::i18n::tr_label("Review current CAD"),ui_kit::Button::Normal).clicked();
 +            }
 +            if let Some(issues)=d.status.get("issues").and_then(Value::as_array){for v in issues {if let Some(text)=v.as_str(){ui_kit::text(ui,text,ui_kit::Text::Report("soil_issue",true));}}}
 +            match d.page {
 +                0=>if let Some(v)=&mut d.ground {d.dirty|=properties(ui,"soil_ground",v,0,&mut 512);}else{ui.label("Load the ground-material and initial-state inputs to begin.");},
 +                1=>if let Some(v)=&mut d.stages {
 +                    let mut projected=v.get("schema").and_then(Value::as_str)==Some("soil-fem-projected-mcc-stages/1");
-+                    ui_kit::row(ui,"Continuum formulation",|ui|{egui::ComboBox::from_id_salt("soil_formulation")
-+                        .selected_text(if projected{"MCC: Tet10 displacement + P1 pressure/volume"}else{"Displacement formulation"})
-+                        .show_ui(ui,|ui|{let changed=ui.selectable_value(&mut projected,false,"Displacement formulation").changed()
-+                            | ui.selectable_value(&mut projected,true,"MCC: Tet10 displacement + P1 pressure/volume").changed();
++                    ui_kit::row(ui,"Continuum formulation",|ui|{ui_kit::dropdown_menu(ui,"soil_formulation",crate::i18n::tr_label(if projected{"MCC: Tet10 displacement + P1 pressure/volume"}else{"Displacement formulation"}),|ui|{let changed=choose(ui, &mut projected, false, "Displacement formulation")
++                            | choose(ui, &mut projected, true, "MCC: Tet10 displacement + P1 pressure/volume");
 +                            if changed && let Some(object)=v.as_object_mut() {object.insert("schema".into(),json!(if projected{"soil-fem-projected-mcc-stages/1"}else{"soil-fem-stages/1"}));d.dirty=true;}});});
 +                    if projected {ui_kit::text(ui,"Dry MCC with Tet10 only. Material GP stress, primary pressure and work-conjugate stress remain distinct. Water, members and contact are not connected to this formulation.",ui_kit::Text::Note("soil_projected_scope"));}
 +                    d.dirty|=properties(ui,"soil_stages",v,0,&mut 512);
@@ -8370,8 +8638,8 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +                2=>{
 +                    let names:Vec<String>=d.status.get("cad_bodies").and_then(Value::as_array).into_iter().flatten().filter_map(|v|v.get("cad_body").and_then(Value::as_str).map(str::to_string)).collect();
 +                    for (logical,cad) in &mut d.bindings {ui_kit::row(ui,logical,|ui|{
-+                        egui::ComboBox::from_id_salt(("soil_binding",logical)).selected_text(if cad.is_empty(){"Choose CAD body"}else{cad.as_str()}).show_ui(ui,|ui|{
-+                            for name in &names {d.dirty|=ui.selectable_value(cad,name.clone(),name).changed();}
++                        let selected=if cad.is_empty(){crate::i18n::tr_label("Choose CAD body").to_string()}else{cad.clone()}; ui_kit::dropdown_menu(ui,("soil_binding",logical),&selected,|ui|{
++                            for name in &names {if ui_kit::list_picker(ui,name,name,cad==name).clicked() && cad!=name {*cad=name.clone();d.dirty=true;}}
 +                        });
 +                    });}
 +                    ui_kit::text(ui,"Body labels in the analysis stay separate from CAD names. Splits, missing producers and ambiguous outputs require explicit reassignment.",ui_kit::Text::Note("soil_binding_note"));
@@ -8387,12 +8655,12 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +                },
 +            }
 +            #[cfg(not(target_arch="wasm32"))]
-+            {ui_kit::row(ui,"New capture folder",|ui|{ui.text_edit_singleline(&mut d.output_directory);});
++            {ui_kit::row(ui,"New capture folder",|ui|{ui_kit::text_field(ui,&mut d.output_directory,"");});
 +             let reviewed=d.status.get("cad_changed_since_review").and_then(Value::as_bool)!=Some(true)
 +                && d.expected_cad==d.status.get("cad_sha256").and_then(Value::as_str).unwrap_or_default()
 +                && d.expected_setup==d.status.get("setup_sha256").and_then(Value::as_str).unwrap_or_default()
 +                && d.status.get("issues").and_then(Value::as_array).is_some_and(|v|v.is_empty());
-+             export=ui.add_enabled(valid && !d.dirty && reviewed && !d.output_directory.trim().is_empty(),egui::Button::new("Export analysis inputs…")).clicked();}
++             export=ui_kit::button(ui,"Export analysis inputs…",ui_kit::Button::Enabled(valid && !d.dirty && reviewed && !d.output_directory.trim().is_empty())).clicked();}
 +            ui_kit::text(ui,"This editor saves attributes and exports an input capture. Meshing, engineering validation and solving are performed by the external FEM workflow.",ui_kit::Text::Note("soil_scope"));
 +            if let Some(text)=&d.notice {ui_kit::text(ui,text,ui_kit::Text::Note("soil_notice"));}
 +            if let Some(text)=&d.error {ui_kit::text(ui,text,ui_kit::Text::Report("soil_error",true));}
@@ -8453,6 +8721,28 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +mod tests {
 +    use super::*;
 +    use crate::scenario::Harness;
++    #[test]
++    fn kit_numeric_display_preserves_exact_ids_and_small_material_values() {
++        for original in [json!(u64::MAX), json!(i64::MIN), json!(1.25e-12), json!(5.125e12)] {
++            let mut number = original.as_number().unwrap().clone();
++            let ctx = crate::fonts::test_context();
++            let output = ctx.run_ui(egui::RawInput::default(), |ui| {
++                ui_kit::row(ui, "Value", |ui| {
++                    assert!(!number_input(ui, &mut number));
++                });
++            });
++            assert_eq!(Value::Number(number), original);
++            if original == json!(1.25e-12) {
++                assert!(
++                    output.shapes.iter().any(|shape| match &shape.shape {
++                        egui::Shape::Text(text) => text.galley.job.text.contains("1.250e-12"),
++                        _ => false,
++                    }),
++                    "small values must remain visible in scientific notation"
++                );
++            }
++        }
++    }
 +    fn configured() -> Harness {
 +        let mut h = Harness::new();
 +        h.app.run("solid.box", json!({"length":10000,"width":10000,"height":4000})).unwrap();
@@ -8549,10 +8839,10 @@ index 0000000000000000000000000000000000000000..e0db99d30a86c5d2f862c91d17159bb6
 +}
 diff --git a/crates/ui-egui/src/soil_jobs.rs b/crates/ui-egui/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee8eb22cbb
+index 0000000000000000000000000000000000000000..821220cd5a05458da1b181313a203b349920e9f8
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_jobs.rs
-@@ -0,0 +1,198 @@
+@@ -0,0 +1,199 @@
 +//! Native job controls are a thin adapter over the engine's owned-process commands.
 +use crate::{SolveApp, ui_kit};
 +use serde_json::{Value, json};
@@ -8599,23 +8889,26 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +        let active = self.status.get("process_alive").and_then(Value::as_bool) == Some(true);
 +        let host = self.status.get("host_available").and_then(Value::as_bool) == Some(true);
 +        ui_kit::row(ui, "New job folder", |ui| {
-+            ui.text_edit_singleline(&mut self.directory);
++            ui_kit::text_field(ui, &mut self.directory, "");
 +        });
 +        ui_kit::row(ui, "Mesh size (m)", |ui| {
-+            ui.add(egui::DragValue::new(&mut self.mesh_size_m).range(0.001..=1e6).speed(0.1));
++            ui_kit::number_field(ui, &mut self.mesh_size_m, 0.001..=1e6, 0.1, "");
 +        });
 +        ui_kit::row(ui, "Element", |ui| {
-+            ui.selectable_value(&mut self.element_order, 1, "Tet4");
-+            ui.selectable_value(&mut self.element_order, 2, "Tet10");
-+        });
-+        ui_kit::row(ui, "Quadrature order", |ui| {
-+            for n in 3..=5 {
-+                ui.selectable_value(&mut self.quadrature_order, n, n.to_string());
++            let mut selected = usize::from(self.element_order.saturating_sub(1));
++            if ui_kit::segmented(ui, &mut selected, &["Tet4", "Tet10"], ui_kit::Segments::default()) {
++                self.element_order = (selected + 1) as u8;
 +            }
 +        });
-+        ui.checkbox(&mut self.cooperative, "Save a checkpoint when stopping");
++        ui_kit::row(ui, "Quadrature order", |ui| {
++            let mut selected = usize::from(self.quadrature_order.saturating_sub(3));
++            if ui_kit::segmented(ui, &mut selected, &["3", "4", "5"], ui_kit::Segments::default()) {
++                self.quadrature_order = (selected + 3) as u8;
++            }
++        });
++        ui_kit::checkbox(ui, crate::i18n::tr_label("Save a checkpoint when stopping"), &mut self.cooperative);
 +        ui_kit::row(ui, "Saved job folder", |ui| {
-+            ui.text_edit_singleline(&mut self.previous_directory);
++            ui_kit::text_field(ui, &mut self.previous_directory, "");
 +        });
 +        if !host {
 +            ui_kit::text(
@@ -8626,30 +8919,28 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +        }
 +        let mut action = None;
 +        ui.horizontal(|ui| {
-+            if ui
-+                .add_enabled(
-+                    host && reviewed && !active && !self.directory.trim().is_empty(),
-+                    egui::Button::new(crate::i18n::tr_label("Start Soil Analysis")),
-+                )
++            if ui_kit::button(ui, "Start Soil Analysis", ui_kit::Button::Enabled(host && reviewed && !active && !self.directory.trim().is_empty()))
 +                .clicked()
 +            {
 +                action = Some("start");
 +            }
-+            if ui
-+                .add_enabled(
-+                    active && self.status.get("cancel_requested").and_then(Value::as_bool) != Some(true),
-+                    egui::Button::new(crate::i18n::tr_label("Stop Soil Analysis")),
-+                )
-+                .clicked()
++            if ui_kit::button(
++                ui,
++                "Stop Soil Analysis",
++                ui_kit::Button::Enabled(active && self.status.get("cancel_requested").and_then(Value::as_bool) != Some(true)),
++            )
++            .clicked()
 +            {
 +                action = Some("cancel");
 +            }
-+            if ui
-+                .add_enabled(
++            if ui_kit::button(
++                ui,
++                "Resume Soil Analysis",
++                ui_kit::Button::Enabled(
 +                    host && reviewed && !active && !self.directory.trim().is_empty() && !self.previous_directory.trim().is_empty(),
-+                    egui::Button::new(crate::i18n::tr_label("Resume Soil Analysis")),
-+                )
-+                .clicked()
++                ),
++            )
++            .clicked()
 +            {
 +                action = Some("resume");
 +            }
@@ -8688,7 +8979,7 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +                "Completed result and VTU audit verified for the current input. Open Soil Result Viewer to inspect this captured result.",
 +                ui_kit::Text::Note("soil_job_complete"),
 +            );
-+            if ui.button(crate::i18n::tr_label("Soil Result Viewer")).clicked() {
++            if ui_kit::button(ui, crate::i18n::tr_label("Soil Result Viewer"), ui_kit::Button::Normal).clicked() {
 +                action = Some("view_results");
 +            }
 +        }
@@ -8699,7 +8990,7 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +            ui_kit::text(ui, error, ui_kit::Text::Note("soil_job_observation"));
 +        }
 +        if let Some(tail) = self.status.pointer("/worker_report/tail").and_then(Value::as_array) {
-+            egui::CollapsingHeader::new("Worker log").show(ui, |ui| {
++            ui_kit::section(ui, "soil_worker_log", "Worker log", false, |ui| {
 +                for line in tail.iter().filter_map(Value::as_str).take(30) {
 +                    ui.label(line);
 +                }
@@ -8753,10 +9044,10 @@ index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee
 +}
 diff --git a/crates/ui-egui/src/soil_results.rs b/crates/ui-egui/src/soil_results.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..20088e13afb40dadec31a0bf71e2936b44db5fe9
+index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07e08b4909
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_results.rs
-@@ -0,0 +1,427 @@
+@@ -0,0 +1,432 @@
 +//! Native FEM result workspace. Scientific quantities and section geometry belong
 +//! to L4; this adapter uses the shared GPU pipelines, theme and navigation.
 +use crate::{
@@ -8863,11 +9154,7 @@ index 0000000000000000000000000000000000000000..20088e13afb40dadec31a0bf71e2936b
 +    });
 +}
 +fn ramp(t: f64) -> Color32 {
-+    let colors = Tokens::get().analysis.curvature;
-+    let t = t.clamp(0., 1.) * 2.;
-+    let (a, b, k) = if t <= 1. { (colors[0], colors[1], t) } else { (colors[1], colors[2], t - 1.) };
-+    let rgb = std::array::from_fn::<_, 3, _>(|i| ((f64::from(a[i]) * (1. - k) + f64::from(b[i]) * k) * 255.).round().clamp(0., 255.) as u8);
-+    Color32::from_rgb(rgb[0], rgb[1], rgb[2])
++    Tokens::get().analysis_scalar_color(t)
 +}
 +fn gpu(scene: &Scene, settings: &Settings) -> Result<GpuScene, String> {
 +    const MAX_BYTES: usize = 192 << 20;
@@ -9072,39 +9359,39 @@ index 0000000000000000000000000000000000000000..20088e13afb40dadec31a0bf71e2936b
 +    let title = crate::i18n::tr_label("Soil Result Viewer");
 +    let (hidden,action)=ui_kit::Window::new(egui::Id::new("soil_results_controls"),"settings",title).cards(1.65).fields()
 +        .placed(egui::Align2::LEFT_TOP,egui::pos2(270.,170.)).actions("","Return to CAD",None).show(ctx,true,|ui| {
-+            ui.horizontal(|ui|{load=ui.button(crate::i18n::tr_label("Open Soil Results")).clicked();fit=ui.button("Fit results").clicked();});
++            ui.horizontal(|ui|{load=ui_kit::button(ui,crate::i18n::tr_label("Open Soil Results"),ui_kit::Button::Normal).clicked();fit=ui_kit::button(ui,crate::i18n::tr_label("Fit results"),ui_kit::Button::Normal).clicked();});
 +            if stale {ui_kit::text(ui,"CAD or analysis inputs changed. Result geometry is hidden until the matching input is restored.",ui_kit::Text::Report("soil_results_stale",true));}
 +            ui.add_enabled_ui(!stale,|ui| {
-+                ui_kit::row(ui,"Stage",|ui|{egui::ComboBox::from_id_salt("soil_result_frame").selected_text(viewer.info.get("frame_name").and_then(Value::as_str).unwrap_or("Stage")).show_ui(ui,|ui| {
++                ui_kit::row(ui,"Stage",|ui|{ui_kit::dropdown_menu(ui,"soil_result_frame",viewer.info.get("frame_name").and_then(Value::as_str).unwrap_or("Stage"),|ui| {
 +                    for frame in viewer.info.get("frames").and_then(Value::as_array).into_iter().flatten() {
-+                        if let (Some(index),Some(name))=(frame.get("index").and_then(Value::as_u64),frame.get("name").and_then(Value::as_str)) {changed|=ui.selectable_value(&mut viewer.settings.frame,index as usize,name).changed();}
++                        if let (Some(index),Some(name))=(frame.get("index").and_then(Value::as_u64),frame.get("name").and_then(Value::as_str)) {changed|=choose(ui,&mut viewer.settings.frame,index as usize,name);}
 +                    }
 +                });});
-+                ui_kit::row(ui,"Quantity",|ui|{egui::ComboBox::from_id_salt("soil_result_quantity").selected_text(quantity_label(&viewer.settings.quantity)).show_ui(ui,|ui| {
-+                    for (quantity,label) in [(Quantity::VerticalDisplacement,"Vertical displacement"),(Quantity::DisplacementMagnitude,"Displacement magnitude"),(Quantity::EffectiveStressZz,"Material effective stress zz"),(Quantity::MeanEffectiveStress,"Material mean effective stress p"),(Quantity::MajorEffectiveStress,"Major material effective stress"),(Quantity::VoidRatio,"Void ratio"),(Quantity::PreconsolidationPressure,"Preconsolidation pressure pc"),(Quantity::VolumetricPlasticStrain,"Volumetric plastic strain"),(Quantity::PrimaryMeanEffectiveStress,"Primary mean effective stress (P1)"),(Quantity::WorkEffectiveStressZz,"Work-conjugate effective zz (cell mean)"),(Quantity::MaterialVolumeStrain,"Material volume strain (P1)"),(Quantity::KinematicVolumeStrain,"Kinematic volume strain (cell mean)")] {changed|=ui.selectable_value(&mut viewer.settings.quantity,quantity,label).changed();}
++                ui_kit::row(ui,"Quantity",|ui|{ui_kit::dropdown_menu(ui,"soil_result_quantity",crate::i18n::tr_label(quantity_label(&viewer.settings.quantity)),|ui| {
++                    for (quantity,label) in [(Quantity::VerticalDisplacement,"Vertical displacement"),(Quantity::DisplacementMagnitude,"Displacement magnitude"),(Quantity::EffectiveStressZz,"Material effective stress zz"),(Quantity::MeanEffectiveStress,"Material mean effective stress p"),(Quantity::MajorEffectiveStress,"Major material effective stress"),(Quantity::VoidRatio,"Void ratio"),(Quantity::PreconsolidationPressure,"Preconsolidation pressure pc"),(Quantity::VolumetricPlasticStrain,"Volumetric plastic strain"),(Quantity::PrimaryMeanEffectiveStress,"Primary mean effective stress (P1)"),(Quantity::WorkEffectiveStressZz,"Work-conjugate effective zz (cell mean)"),(Quantity::MaterialVolumeStrain,"Material volume strain (P1)"),(Quantity::KinematicVolumeStrain,"Kinematic volume strain (cell mean)")] {changed|=choose(ui,&mut viewer.settings.quantity,quantity,label);}
 +                });});
-+                ui_kit::row(ui,"Displacement basis",|ui|{egui::ComboBox::from_id_salt("soil_result_reference").selected_text(format!("{:?}",viewer.settings.displacement_reference)).show_ui(ui,|ui| {
-+                    for (basis,label) in [(DisplacementReference::Display,"Display reference"),(DisplacementReference::Stage,"Stage increment"),(DisplacementReference::Seed,"Total from seed")] {changed|=ui.selectable_value(&mut viewer.settings.displacement_reference,basis,label).changed();}
++                ui_kit::row(ui,"Displacement basis",|ui|{ui_kit::dropdown_menu(ui,"soil_result_reference",crate::i18n::tr_label(match viewer.settings.displacement_reference {DisplacementReference::Display=>"Display reference",DisplacementReference::Stage=>"Stage increment",DisplacementReference::Seed=>"Total from seed"}),|ui| {
++                    for (basis,label) in [(DisplacementReference::Display,"Display reference"),(DisplacementReference::Stage,"Stage increment"),(DisplacementReference::Seed,"Total from seed")] {changed|=choose(ui,&mut viewer.settings.displacement_reference,basis,label);}
 +                });});
-+                ui_kit::row(ui,"Deformation scale",|ui|{changed|=ui.add(egui::DragValue::new(&mut viewer.settings.deformation_scale).range(0.0..=1e6).speed(1.)).changed();});
-+                ui_kit::row(ui,"Display refinement",|ui|{for level in 1..=3 {changed|=ui.selectable_value(&mut viewer.settings.refinement,level,format!("{}",1u32<<level)).changed();}});
++                ui_kit::row(ui,"Deformation scale",|ui|{changed|=ui_kit::number_field(ui,&mut viewer.settings.deformation_scale,0.0..=1e6,1.,"").changed();});
++                ui_kit::row(ui,"Display refinement",|ui|{for level in 1..=3 {changed|=choose(ui,&mut viewer.settings.refinement,level,format!("{}",1u32<<level));}});
 +                let mut manual_range=viewer.settings.color_range.is_some();
-+                if ui.checkbox(&mut manual_range,"Fixed legend range").changed() {
++                if ui_kit::checkbox(ui,crate::i18n::tr_label("Fixed legend range"),&mut manual_range).changed() {
 +                    viewer.settings.color_range=manual_range.then(|| viewer.info.get("color_range").and_then(Value::as_array).and_then(|a| Some([a.first()?.as_f64()?,a.get(1)?.as_f64()?])).unwrap_or([-1.,1.]));
 +                    changed=true;
 +                }
 +                if let Some(range)=viewer.settings.color_range.as_mut() {
-+                    ui_kit::row(ui,"Legend limits",|ui|{for limit in range {changed|=ui.add(egui::DragValue::new(limit).speed(0.1)).changed();}});
++                    ui_kit::row(ui,"Legend limits",|ui|{for limit in range {changed|=ui_kit::number_field(ui,limit,f64::MIN..=f64::MAX,0.1,"").changed();}});
 +                }
 +                let mut section=viewer.settings.section.is_some();
-+                if ui.checkbox(&mut section,"Reference-coordinate section").changed() {viewer.settings.section=section.then_some(Section {normal:[1.,0.,0.],offset_m:0.,slice_only:true});changed=true;}
++                if ui_kit::checkbox(ui,crate::i18n::tr_label("Reference-coordinate section"),&mut section).changed() {viewer.settings.section=section.then_some(Section {normal:[1.,0.,0.],offset_m:0.,slice_only:true});changed=true;}
 +                if let Some(section)=viewer.settings.section.as_mut() {
-+                    ui_kit::row(ui,"Plane normal",|ui|{for n in &mut section.normal {changed|=ui.add(egui::DragValue::new(n).speed(0.1)).changed();}});
-+                    ui_kit::row(ui,"Plane offset (m)",|ui|{changed|=ui.add(egui::DragValue::new(&mut section.offset_m).speed(0.1)).changed();});
-+                    changed|=ui.checkbox(&mut section.slice_only,"Section only (off: keep negative side)").changed();
++                    ui_kit::row(ui,"Plane normal",|ui|{for n in &mut section.normal {changed|=ui_kit::number_field(ui,n,f64::MIN..=f64::MAX,0.1,"").changed();}});
++                    ui_kit::row(ui,"Plane offset (m)",|ui|{changed|=ui_kit::number_field(ui,&mut section.offset_m,f64::MIN..=f64::MAX,0.1,"").changed();});
++                    changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Section only (off: keep negative side)"),&mut section.slice_only).changed();
 +                }
-+                changed|=ui.checkbox(&mut viewer.settings.wireframe,"Display triangle edges").changed();
-+                changed|=ui.checkbox(&mut viewer.settings.principal_directions,"Major axis of mean effective tensor").changed();
++                changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Display triangle edges"),&mut viewer.settings.wireframe).changed();
++                changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Major axis of mean effective tensor"),&mut viewer.settings.principal_directions).changed();
 +            });
 +            if let Some(range)=viewer.info.get("data_range").and_then(Value::as_array)
 +                && let (Some(low),Some(high))=(range.first().and_then(Value::as_f64),range.get(1).and_then(Value::as_f64)) {
@@ -9112,11 +9399,11 @@ index 0000000000000000000000000000000000000000..20088e13afb40dadec31a0bf71e2936b
 +            }
 +            ui_kit::text(ui,if viewer.settings.quantity.nodal(){"Nodal displacement interpolation. Z is up: settlement negative, heave positive."}else{"Original-cell integration-weighted means. Stress is compression positive; no smoothing to nodes. Null values are unavailable."},ui_kit::Text::Note("soil_result_values"));
 +            ui_kit::text(ui,"Curved Tet10 surfaces and sections use refined planar display triangles. Section planes use reference coordinates; deformation is applied afterwards.",ui_kit::Text::Note("soil_result_approximation"));
-+            ui.horizontal(|ui| {egui::ComboBox::from_id_salt("soil_query_kind").selected_text(["Node","Element mean","Raw integration point","Primary node + material"].get(viewer.query_kind as usize).copied().unwrap_or("Node")).show_ui(ui,|ui| {for (kind,label) in [(0,"Node"),(1,"Element mean"),(2,"Raw integration point"),(3,"Primary node + material")] {ui.selectable_value(&mut viewer.query_kind,kind,label);}});
-+                ui.add(egui::DragValue::new(&mut viewer.query_id));
-+                if viewer.query_kind==3 {ui.label("Material");ui.add(egui::DragValue::new(&mut viewer.query_material).range(1..=u32::MAX));}
-+                inspect=ui.add_enabled(!stale,egui::Button::new("Read stored value")).clicked();});
-+            if let Some(value)=&viewer.query {egui::CollapsingHeader::new("Selected value").default_open(true).show(ui,|ui| {ui.add(egui::Label::new(serde_json::to_string_pretty(value).unwrap_or_default()).wrap());});}
++            ui.horizontal(|ui| {ui_kit::dropdown_menu(ui,"soil_query_kind",["Node","Element mean","Raw integration point","Primary node + material"].get(viewer.query_kind as usize).copied().unwrap_or("Node"),|ui| {for (kind,label) in [(0,"Node"),(1,"Element mean"),(2,"Raw integration point"),(3,"Primary node + material")] {choose(ui,&mut viewer.query_kind,kind,label);}});
++                ui_kit::number_field(ui,&mut viewer.query_id,0..=usize::MAX,1.,"");
++                if viewer.query_kind==3 {ui.label("Material");ui_kit::number_field(ui,&mut viewer.query_material,1..=u32::MAX,1.,"");}
++                inspect=ui_kit::button(ui,"Read stored value",ui_kit::Button::Enabled(!stale)).clicked();});
++            if let Some(value)=&viewer.query {ui_kit::section(ui,"soil_selected_value","Selected value",true,|ui| {ui.add(egui::Label::new(serde_json::to_string_pretty(value).unwrap_or_default()).wrap());});}
 +            if let Some(error)=&viewer.error {ui_kit::text(ui,error,ui_kit::Text::Report("soil_result_error",true));}
 +            ui_kit::text(ui,"Close this header to hide controls; Soil Result Viewer reopens them. Return to CAD releases this result.",ui_kit::Text::Note("soil_result_close"));
 +        });
@@ -9184,6 +9471,107 @@ index 0000000000000000000000000000000000000000..20088e13afb40dadec31a0bf71e2936b
 +        Quantity::VolumetricPlasticStrain => "Volumetric plastic strain",
 +    }
 +}
++
++fn choose<T: PartialEq>(ui: &mut egui::Ui, value: &mut T, next: T, label: impl AsRef<str>) -> bool {
++    let label = label.as_ref();
++    if ui_kit::list_picker(ui, label, crate::i18n::tr_label(label), *value == next).clicked() && *value != next {
++        *value = next;
++        return true;
++    }
++    false
++}
+diff --git a/crates/ui-egui/src/theme.rs b/crates/ui-egui/src/theme.rs
+index 125392f04119e341b5cc6ee697fe6011d1b81a63..523d4eaf163f5eda4bef623da3e7318427f69ec0 100644
+--- a/crates/ui-egui/src/theme.rs
++++ b/crates/ui-egui/src/theme.rs
+@@ -531,6 +531,16 @@ pub struct Tokens {
+ }
+ 
+ impl Tokens {
++    /// Scientific scalar ramp derived from the current analysis palette, including
++    /// colour-vision modes. No independent caller palette or hard-coded colours.
++    pub(crate) fn analysis_scalar_color(self, fraction: f64) -> Color32 {
++        let colors = self.analysis.curvature;
++        let t = fraction.clamp(0., 1.) * 2.;
++        let (a, b, k) = if t <= 1. { (colors[0], colors[1], t) } else { (colors[1], colors[2], t - 1.) };
++        let rgb = std::array::from_fn::<_, 3, _>(|i| ((f64::from(a[i]) * (1. - k) + f64::from(b[i]) * k) * 255.).round().clamp(0., 255.) as u8);
++        Color32::from_rgb(rgb[0], rgb[1], rgb[2])
++    }
++
+     /// Subtle shell elevation, derived from the semantic application-bar colour.
+     pub(crate) fn shell_shadow(self) -> egui::Shadow {
+         egui::Shadow { offset: [0, self.space_2 as i8], blur: self.space_8 as u8, spread: 0, color: self.app_bar.gamma_multiply(0.18) }
+diff --git a/crates/ui-egui/src/ui_kit/fields.rs b/crates/ui-egui/src/ui_kit/fields.rs
+index 760961c5a2865b5e3759becd04354120eff5d326..3325eb0f917b6bfa213fba55b36c5236d7546d42 100644
+--- a/crates/ui-egui/src/ui_kit/fields.rs
++++ b/crates/ui-egui/src/ui_kit/fields.rs
+@@ -449,7 +449,37 @@ pub(crate) fn number_field<T: egui::emath::Numeric>(
+     speed: f64,
+     suffix: &str,
+ ) -> Response {
+-    let response = ui.add(egui::DragValue::new(value).range(range).speed(speed).suffix(suffix).custom_parser(crate::prefs::parse_number));
++    number_field_impl(ui, value, range, speed, suffix, None)
++}
++
++/// Caller-unit formatting without rounding the stored value; shares numeric input,
++/// locale parsing, geometry and accessibility with every other kit number field.
++pub(crate) fn formatted_number_field<T: egui::emath::Numeric>(
++    ui: &mut Ui,
++    value: &mut T,
++    range: std::ops::RangeInclusive<T>,
++    speed: f64,
++    suffix: &str,
++    format: fn(f64, std::ops::RangeInclusive<usize>) -> String,
++) -> Response {
++    number_field_impl(ui, value, range, speed, suffix, Some(format))
++}
++
++type NumberFormat = fn(f64, std::ops::RangeInclusive<usize>) -> String;
++
++fn number_field_impl<T: egui::emath::Numeric>(
++    ui: &mut Ui,
++    value: &mut T,
++    range: std::ops::RangeInclusive<T>,
++    speed: f64,
++    suffix: &str,
++    format: Option<NumberFormat>,
++) -> Response {
++    let mut field = egui::DragValue::new(value).range(range).speed(speed).suffix(suffix).custom_parser(crate::prefs::parse_number);
++    if let Some(format) = format {
++        field = field.custom_formatter(format);
++    }
++    let response = ui.add(field);
+     response.widget_info(|| {
+         let mut info = egui::WidgetInfo::drag_value(ui.is_enabled(), value.to_f64());
+         info.label = Some(crate::i18n::tr_label(label(ui)).to_string());
+diff --git a/crates/ui-egui/tests/icon_audit.rs b/crates/ui-egui/tests/icon_audit.rs
+index 3e61864b3b9566384b4ff8c4e2dac44e126ad06d..6512ccb7bbf104e9713b2e69d8a1afaa6b33c99e 100644
+--- a/crates/ui-egui/tests/icon_audit.rs
++++ b/crates/ui-egui/tests/icon_audit.rs
+@@ -436,7 +436,8 @@ fn requested_menu_icons_have_artwork_and_match_manifest() {
+     } else {
+         let expected = std::fs::read_to_string(&path).unwrap_or_default();
+         assert_eq!(
+-            expected, manifest,
++            expected.replace("\r\n", "\n"),
++            manifest,
+             "Runtime icon discovery changed. Regenerate with UPDATE_ICON_MANIFEST=1 cargo test -p solidcraft-ui-egui --test icon_audit"
+         );
+     }
+diff --git a/crates/ui-egui/tests/window_widths.rs b/crates/ui-egui/tests/window_widths.rs
+index 06a9375d92ffb2e0719f53394e24df5ee2769bb4..f4c6b21a8cde458e80841018a4c5d10c24f3c4e6 100644
+--- a/crates/ui-egui/tests/window_widths.rs
++++ b/crates/ui-egui/tests/window_widths.rs
+@@ -19,6 +19,9 @@ fn window_widths(h: &Harness) -> Vec<(egui::Id, f32)> {
+ }
+ 
+ fn kit_table_limit(id: egui::Id) -> Option<f32> {
++    if id == egui::Id::new("sc_soil_analysis") {
++        return Some(solidcraft_ui_egui::theme::Tokens::get().form_card_width * 2.5);
++    }
+     // The accepted Preferences board has a page list and one control/preview pair at 880 pt.
+     if id == egui::Id::new("sc_prefs") {
+         return Some(solidcraft_ui_egui::theme::Tokens::get().form_card_width * 10.0 / 3.0);
 diff --git a/xtask/src/icons.rs b/xtask/src/icons.rs
 index e3f618584e02dbf3d3ab27103a817cebeb091d75..18f3191bde2fc07816212fe2bd3bd17e730914a8 100644
 --- a/xtask/src/icons.rs
@@ -9199,3 +9587,117 @@ index e3f618584e02dbf3d3ab27103a817cebeb091d75..18f3191bde2fc07816212fe2bd3bd17e
          command.args(args).current_dir(root);
          super::run(command, "UI icon standards (Python 3.11+)")?;
      }
+diff --git a/xtask/src/test.rs b/xtask/src/test.rs
+index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f376b9a9e18 100644
+--- a/xtask/src/test.rs
++++ b/xtask/src/test.rs
+@@ -1,8 +1,9 @@
+-//! `cargo xtask test`: build the workspace's tests once, then run every test binary at the same
+-//! time. `cargo test` runs them one after another, so one slow binary held up all the others;
++//! `cargo xtask test`: build the workspace's tests once, then run a bounded queue of test
++//! binaries. `cargo test` runs them one after another, so one slow binary held up all the others;
+ //! the doc tests and any other `side` jobs run alongside on their own thread.
+ 
+ use std::process::{Command, Stdio};
++use std::sync::atomic::{AtomicUsize, Ordering};
+ use std::sync::mpsc;
+ use std::time::Instant;
+ 
+@@ -20,17 +21,25 @@ struct TestBin {
+ /// its whole output.
+ pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>) -> Result<(), String> {
+     let bins = build(cargo_args)?;
++    let configured = std::env::var("SOLIDCRAFT_TEST_JOBS").ok();
++    let jobs = parallelism(configured.as_deref(), std::thread::available_parallelism().map_or(1, usize::from), bins.len())?;
++    eprintln!("test: {jobs} concurrent binaries (SOLIDCRAFT_TEST_JOBS)");
++    let next = AtomicUsize::new(0);
+     let start = Instant::now();
+     let (tx, rx) = mpsc::channel::<(String, Result<String, String>, f64)>();
+     let mut failed = Vec::new();
+     std::thread::scope(|scope| {
+-        for b in &bins {
++        for _ in 0..jobs {
+             let tx = tx.clone();
++            let bins = &bins;
++            let next = &next;
+             scope.spawn(move || {
+-                let t0 = Instant::now();
+-                let mut c = Command::new(&b.exe);
+-                c.args(test_args).current_dir(&b.dir).env("CARGO_MANIFEST_DIR", &b.dir);
+-                let _ = tx.send((b.label.clone(), finish(c), t0.elapsed().as_secs_f64()));
++                while let Some(b) = bins.get(next.fetch_add(1, Ordering::Relaxed)) {
++                    let t0 = Instant::now();
++                    let mut c = Command::new(&b.exe);
++                    c.args(test_args).current_dir(&b.dir).env("CARGO_MANIFEST_DIR", &b.dir);
++                    let _ = tx.send((b.label.clone(), finish(c), t0.elapsed().as_secs_f64()));
++                }
+             });
+         }
+         let tx_side = tx.clone();
+@@ -55,6 +64,18 @@ pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>
+     if failed.is_empty() { Ok(()) } else { Err(format!("failed: {}", failed.join(", "))) }
+ }
+ 
++fn parallelism(configured: Option<&str>, available: usize, binaries: usize) -> Result<usize, String> {
++    let jobs = match configured {
++        Some(value) => value
++            .parse::<usize>()
++            .ok()
++            .filter(|n| (1..=64).contains(n))
++            .ok_or_else(|| "SOLIDCRAFT_TEST_JOBS must be an integer in 1..=64".to_string())?,
++        None => available.clamp(1, 4),
++    };
++    Ok(jobs.min(binaries.max(1)))
++}
++
+ /// Run to the end: the last `test result:` line on success, all output on failure.
+ fn finish(mut c: Command) -> Result<String, String> {
+     let out = c.stdin(Stdio::null()).output().map_err(|e| format!("failed to spawn: {e}"))?;
+@@ -103,3 +124,33 @@ pub fn doc_tests(cargo_args: &[&str], test_args: &[&str]) -> (String, Command) {
+     c.args(["test", "--workspace", "--profile", "ci", "--doc"]).args(cargo_args).arg("--").args(test_args);
+     ("doc tests".into(), c)
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn binary_parallelism_is_bounded_and_invalid_overrides_fail() {
++        assert_eq!(parallelism(None, 128, 500).unwrap(), 4);
++        assert_eq!(parallelism(None, 1, 500).unwrap(), 1);
++        assert_eq!(parallelism(Some("2"), 128, 500).unwrap(), 2);
++        assert_eq!(parallelism(Some("64"), 128, 3).unwrap(), 3);
++        for value in ["0", "65", "many", "-1"] {
++            assert!(parallelism(Some(value), 128, 500).is_err());
++        }
++    }
++    #[test]
++    fn concurrent_binary_queue_visits_every_entry_exactly_once() {
++        let next = AtomicUsize::new(0);
++        let values: Vec<_> = (0..257).map(|_| AtomicUsize::new(0)).collect();
++        std::thread::scope(|scope| {
++            for _ in 0..4 {
++                scope.spawn(|| {
++                    while let Some(value) = values.get(next.fetch_add(1, Ordering::Relaxed)) {
++                        value.fetch_add(1, Ordering::Relaxed);
++                    }
++                });
++            }
++        });
++        assert!(values.iter().all(|v| v.load(Ordering::Relaxed) == 1));
++    }
++}
+diff --git a/xtask/src/ui_containers.rs b/xtask/src/ui_containers.rs
+index 5cddfa9467c8f51f9ab9be6145fb6e21cc9ae6e7..fb9e1ff7ed266e6f173f83ca4836420395e008b6 100644
+--- a/xtask/src/ui_containers.rs
++++ b/xtask/src/ui_containers.rs
+@@ -325,7 +325,8 @@ pub fn run(root: &Path) -> Result<(), String> {
+                 let source = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+                 let found = violations(&source).map_err(|e| format!("{}: {e}", path.display()))?;
+                 if !found.is_empty() {
+-                    failures.push(format!("{}: {}", path.strip_prefix(root).unwrap_or(&path).display(), found.join(", ")));
++                    let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy().replace('\\', "/");
++                    failures.push(format!("{relative}: {}", found.join(", ")));
+                 }
+             }
+         }
