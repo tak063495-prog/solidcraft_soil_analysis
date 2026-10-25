@@ -1,0 +1,79 @@
+name: FEM build and verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fem-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  windows-fem:
+    name: Rust and Python on Windows
+    runs-on: windows-2025
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      CARGO_BUILD_JOBS: '2'
+      RUST_TEST_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONUTF8: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: |
+            requirements.lock.txt
+            requirements-reference.lock.txt
+      - name: Install pinned dependencies and record sources
+        run: |
+          New-Item -ItemType Directory -Force runs/ci | Out-Null
+          rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip install --disable-pip-version-check -r requirements-reference.lock.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/freeze_sources.py runs/ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustc --version --verbose | Out-File runs/ci/rust-version.log
+          python -m pip freeze | Out-File runs/ci/python-packages.log
+      - name: Check formatting
+        run: cargo fmt --all --check
+      - name: Check all Rust targets
+        run: cargo clippy --locked --all-targets -- -D warnings
+      - name: Run all Rust tests
+        run: |
+          cargo test --locked --release 2>&1 | Tee-Object -FilePath runs/ci/rust-tests.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build the CLI used by geometry tests
+        run: cargo build --locked --release
+      - name: Run all Python tests
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tests.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Save source fingerprints and verification logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: fem-windows-${{ github.sha }}
+          path: |
+            runs/ci/*.json
+            runs/ci/*.log
+          if-no-files-found: warn
+          retention-days: 14

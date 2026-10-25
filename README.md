@@ -1,6 +1,6 @@
 # SolidCraft → Rust 3D地盤FEM
 
-**2026-10-26の途中成果物（更新6）です。P0〜P6全体は未完了です。** [実装・検証結果と未達項目](interim/2026-10-26-plate-reference/README.ja.md)。
+**途中成果物です。P0〜P6全体は未完了です。** [FEM専用CIの範囲](docs/CI.ja.md)、[板・CAD壁の限定検証](docs/CAD_PLATE_WALL.ja.md)、[残件](docs/P6_STATUS.ja.md)を参照してください。SolidCraft全体CIの形状比較4件は未達です。
 
 SolidCraftで作成・編集した3Dソリッドを解析へ渡すための開発環境です。**多層地盤のK0/OCR/pc/e初期化、一般形状の初期応力読込と非線形重力平衡、MCC/MC・独自IDHの全体非線形Tet4/Tet10解析、局所掘削、指定水位工程、定常飽和浸透と不飽和水理から力学へのONE_WAY受渡し、CSR疎求解、保存再開を実装**しています。力学は小ひずみ・静的です。P6全体は未完了で、硬化モデルの現地同定と適用拡張、板の実CAD・表示・収束/不飽和湿潤JOINT、無応力MCC誕生、有限幅過渡降雨/SRM、SolidCraft画面内統合等の残りを[P6受入要件一覧](docs/P6_STATUS.ja.md)で管理します。
 
