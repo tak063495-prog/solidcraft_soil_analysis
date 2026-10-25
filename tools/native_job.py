@@ -7,6 +7,7 @@ PowerShell child and its descendants; observers never kill a recorded PID.
 import argparse
 from datetime import datetime,timezone
 import json
+import importlib.util
 import math
 import os
 from pathlib import Path
@@ -46,10 +47,17 @@ def watch_host(stream):
 def utc():return datetime.now(timezone.utc).isoformat()
 
 
+def frozen_profile(runtime):
+    """Load later phases from the captured workflow, never a newly edited file."""
+    spec=importlib.util.spec_from_file_location('_soil_native_staged_profile',runtime/'tools/native_stage_profile.py')
+    if spec is None or spec.loader is None:raise ValueError('captured staged profile is unavailable')
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def atomic(path,value):
-    temporary=path.with_name(path.name+'.'+uuid.uuid4().hex+'.part')
-    with temporary.open('x',encoding='utf-8') as stream:json.dump(value,stream,ensure_ascii=False,allow_nan=False)
-    os.replace(temporary,path)
+    native_workflow_snapshot.atomic_json(path,value)
 
 
 def copy_checked(source,destination,digest):
@@ -153,9 +161,9 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
         if copied!=recorded:raise ValueError('capture changed during job preparation')
         (folder/'solver').mkdir();pinned=folder/'solver/soil-fem-3d.exe';copy_checked(solver,pinned,solver_digest)
         if resume_from is not None:
-            import native_stage_profile
-            native_stage_profile.clone_context(resume_from,folder,pinned,owner)
-            return native_stage_profile.execute(folder,runtime,pinned,owner,publish,cancelled,stop_child,previous_folder=resume_from,receipt=receipt)
+            profile=frozen_profile(runtime)
+            profile.clone_context(resume_from,folder,pinned,owner)
+            return profile.execute(folder,runtime,pinned,owner,publish,cancelled,stop_child,previous_folder=resume_from,receipt=receipt)
         command=[shell,'-NoProfile','-File',str(runtime/'scripts/Invoke-SolidCraftCapture.ps1'),'-CaptureFolder',str(owned),
             '-MeshSizeM',str(mesh_size),'-ElementOrder',str(order),'-QuadratureOrder',str(quadrature),
             '-SolverPath',str(pinned),'-OutputDirectory',str(folder/'workflow'),'-PythonPath',sys.executable]
@@ -191,8 +199,7 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
             if cancelled_run or cancelled():publish(state='cancelled',exit_code=code,phase=phase(folder),tail=tail);return 2
         if code!=0:publish(state='failed',exit_code=code,phase=phase(folder),tail=tail);return 1
         if cooperative:
-            import native_stage_profile
-            return native_stage_profile.execute(folder,runtime,pinned,owner,publish,cancelled,stop_child)
+            return frozen_profile(runtime).execute(folder,runtime,pinned,owner,publish,cancelled,stop_child)
         native_workflow_snapshot.verify(runtime,source_hashes)
         manifest_path=folder/'workflow/view/view-manifest.json';manifest=read(manifest_path)
         audit=read(folder/'workflow/view-verification.json')

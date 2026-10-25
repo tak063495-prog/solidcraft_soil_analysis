@@ -11,10 +11,10 @@ index bdd869ea8072ef3d9427104078dfe8d350a9b492..8cca88fa3c2c994665eafe18796030dd
   "solidcraft-geom",
   "solidcraft-io",
 diff --git a/apps/solidcraft/src/main.rs b/apps/solidcraft/src/main.rs
-index 1eec426ed757937944cdfcf4105a8615755358ae..f76535b4f291ecf5e4f98de42c7ecae3a186575d 100644
+index 1eec426ed757937944cdfcf4105a8615755358ae..68d73874221f616160205cc515c5e453332fd43b 100644
 --- a/apps/solidcraft/src/main.rs
 +++ b/apps/solidcraft/src/main.rs
-@@ -688,6 +688,11 @@ fn main() -> eframe::Result {
+@@ -688,6 +688,16 @@ fn main() -> eframe::Result {
              solidcraft_ui_egui::fonts::load_system_fonts_in_background(&cc.egui_ctx);
              mark("fonts");
              let mut app = SolveApp::new(Session::default(), services(cc));
@@ -23,11 +23,16 @@ index 1eec426ed757937944cdfcf4105a8615755358ae..f76535b4f291ecf5e4f98de42c7ecae3
 +            {
 +                eprintln!("SolidCraft FEM host: {error}");
 +            }
++            if let Some(solver) = std::env::var_os("SOLIDCRAFT_SOIL_FEM_SOLVER")
++                && let Err(error) = app.session.set_soil_job_solver(std::path::Path::new(&solver))
++            {
++                eprintln!("SolidCraft FEM solver: {error}");
++            }
              app.apply_off_thread = Some(solidcraft_ui_egui::dialogs::APPLY_AT_ONCE);
              app.custom_titlebar = CUSTOM_TITLEBAR;
              // Windows: the OS hit test offers the resize border, at the window's DPI, from the
 diff --git a/assets/locales/cs.json b/assets/locales/cs.json
-index 02bcc75e77e87f4120fb541eb7c3b8ef29e98055..e18ac4206228d8804b847e27aa1ee4ded49b325d 100644
+index 02bcc75e77e87f4120fb541eb7c3b8ef29e98055..0bc4d540a74d6334b07e077a1ce087e38cfcbd08 100644
 --- a/assets/locales/cs.json
 +++ b/assets/locales/cs.json
 @@ -72,6 +72,7 @@
@@ -130,15 +135,17 @@ index 02bcc75e77e87f4120fb541eb7c3b8ef29e98055..e18ac4206228d8804b847e27aa1ee4de
    "Quantity": "Množství",
    "RECENT": "NEDÁVNÉ",
    "REFERENCE": "REFERENCE",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Obnovit vnější hranici",
    "Restore the inherited component or physical material appearance": "Obnovit zděděný vzhled komponenty nebo fyzického materiálu",
    "Result": "Výsledek",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Pořídit snímek znovu",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Obrátit",
    "Reverse Direction": "Obrátit směr",
    "Revert": "Vrátit",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Rovina náčrtu není připojena k ploše tělesa.",
    "Sketch points": "Body náčrtu",
    "Slot width": "Šířka drážky",
@@ -161,7 +168,7 @@ index 02bcc75e77e87f4120fb541eb7c3b8ef29e98055..e18ac4206228d8804b847e27aa1ee4de
    "Study": "Studie",
    "Style": "Styl",
    "Suppressed": "Potlačeno",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Kladka",
    "cam.roller_pick": "Kladka (volitelné)",
    "cam.tip_pick": "Hrot (volitelné)",
@@ -174,7 +181,7 @@ index 02bcc75e77e87f4120fb541eb7c3b8ef29e98055..e18ac4206228d8804b847e27aa1ee4de
    "cmd.appearance_library": "Knihovna vzhledů",
    "cmd.appearance_list": "Seznam vzhledů",
 diff --git a/assets/locales/da.json b/assets/locales/da.json
-index ad57acb9bc159be6cea579576a93648f0c1aede8..c59644cffa7e4f9f83957ef62db40ad7e0465d5c 100644
+index ad57acb9bc159be6cea579576a93648f0c1aede8..ece1c5c346cfd7663fcac23856a7ffb80c38f3fd 100644
 --- a/assets/locales/da.json
 +++ b/assets/locales/da.json
 @@ -72,6 +72,7 @@
@@ -277,15 +284,17 @@ index ad57acb9bc159be6cea579576a93648f0c1aede8..c59644cffa7e4f9f83957ef62db40ad7
    "Quantity": "Antal",
    "RECENT": "SENESTE",
    "REFERENCE": "REFERENCE",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Gendan ydre afgrænsning",
    "Restore the inherited component or physical material appearance": "Gendan udseendet fra komponenten eller det fysiske materiale",
    "Result": "Resultat",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Tag skærmbillede igen",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Vend om",
    "Reverse Direction": "Vend retning",
    "Revert": "Tilbagefør",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Skitseplanet er ikke tilknyttet en flade på et emne.",
    "Sketch points": "Skitsepunkter",
    "Slot width": "Slidsbredde",
@@ -308,7 +317,7 @@ index ad57acb9bc159be6cea579576a93648f0c1aede8..c59644cffa7e4f9f83957ef62db40ad7
    "Study": "Undersøgelse",
    "Style": "Stil",
    "Suppressed": "Undertrykt",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Rulle",
    "cam.roller_pick": "Rulle (valgfri)",
    "cam.tip_pick": "Spids (valgfri)",
@@ -321,7 +330,7 @@ index ad57acb9bc159be6cea579576a93648f0c1aede8..c59644cffa7e4f9f83957ef62db40ad7
    "cmd.appearance_library": "Udseendebibliotek",
    "cmd.appearance_list": "Vis udseender",
 diff --git a/assets/locales/de.json b/assets/locales/de.json
-index a077ebdc060cfb79fd1e69446de3881afc6f5aa1..7cc4646b71cb816df2cbca16522d99f67844c184 100644
+index a077ebdc060cfb79fd1e69446de3881afc6f5aa1..f98ef3b0f63f805d74ee9d51f4d962de0640cd94 100644
 --- a/assets/locales/de.json
 +++ b/assets/locales/de.json
 @@ -85,6 +85,7 @@
@@ -424,15 +433,17 @@ index a077ebdc060cfb79fd1e69446de3881afc6f5aa1..7cc4646b71cb816df2cbca16522d99f6
    "Quantity": "Größe",
    "RECENT": "ZULETZT",
    "REFERENCE": "REFERENZ",
-@@ -372,6 +388,7 @@
+@@ -371,7 +387,9 @@
+   "Restore the inherited component or physical material appearance": "Das geerbte Erscheinungsbild der Komponente oder des physikalischen Materials wiederherstellen",
    "Restore this studio's tools": "Werkzeuge dieses Studios wiederherstellen",
    "Result": "Ergebnis",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Screenshot erneut aufnehmen",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Umkehren",
    "Reverse Direction": "Richtung umkehren",
    "Revert": "Zurücksetzen",
-@@ -428,19 +445,23 @@
+@@ -428,19 +446,23 @@
    "Sketch plane has no body-face attachment.": "Die Skizzenebene hat keine Anbindung an eine Körperfläche.",
    "Sketch points": "Skizzenpunkte",
    "Slot width": "Langlochbreite",
@@ -456,7 +467,7 @@ index a077ebdc060cfb79fd1e69446de3881afc6f5aa1..7cc4646b71cb816df2cbca16522d99f6
    "Studio": "Studio",
    "Study": "Untersuchung",
    "Style": "Stil",
-@@ -543,6 +564,11 @@
+@@ -543,6 +565,11 @@
    "cam.roller": "Rolle",
    "cam.roller_pick": "Rolle (optional)",
    "cam.tip_pick": "Spitze (optional)",
@@ -469,10 +480,10 @@ index a077ebdc060cfb79fd1e69446de3881afc6f5aa1..7cc4646b71cb816df2cbca16522d99f6
    "cmd.appearance_library": "Erscheinungsbild-Bibliothek",
    "cmd.appearance_list": "Erscheinungsbilder auflisten",
 diff --git a/assets/locales/en-GB.json b/assets/locales/en-GB.json
-index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..97ce9b6e9d1f8f14a3cf92e6b8252453a1d44e7c 100644
+index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..b5e481679dd8a605aa7494c2f442810bc0518163 100644
 --- a/assets/locales/en-GB.json
 +++ b/assets/locales/en-GB.json
-@@ -2,9 +2,35 @@
+@@ -2,9 +2,36 @@
    "Center X": "Centre X",
    "Center Y": "Centre Y",
    "Center of mass": "Centre of mass",
@@ -495,6 +506,7 @@ index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..97ce9b6e9d1f8f14a3cf92e6b8252453
 +  "Plane normal": "Plane normal",
 +  "Plane offset (m)": "Plane offset (m)",
 +  "Quadrature order": "Quadrature order",
++  "Resume Soil Analysis": "Resume Soil Analysis",
 +  "Return to CAD": "Return to CAD",
 +  "Soil Result Viewer": "Soil Result Viewer",
 +  "Stage": "Stage",
@@ -509,7 +521,7 @@ index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..97ce9b6e9d1f8f14a3cf92e6b8252453
    "cmd.inspect_center_of_mass": "Centre of Mass",
    "cmd.sketch_arc_center_point": "Centre Point Arc",
 diff --git a/assets/locales/en.json b/assets/locales/en.json
-index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..17aa1314cd81e80522a812451d388920e180e663 100644
+index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..05e2c851a9d47574ae4375f53d14fbd152a05e2f 100644
 --- a/assets/locales/en.json
 +++ b/assets/locales/en.json
 @@ -86,6 +86,7 @@
@@ -612,15 +624,17 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..17aa1314cd81e80522a812451d388920
    "Quantity": "Quantity",
    "RECENT": "RECENT",
    "REFERENCE": "REFERENCE",
-@@ -385,6 +401,7 @@
+@@ -384,7 +400,9 @@
+   "Restore the inherited component or physical material appearance": "Restore the inherited component or physical material appearance",
    "Restore this studio's tools": "Restore this studio's tools",
    "Result": "Result",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Retake screenshot",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Reverse",
    "Reverse Direction": "Reverse Direction",
    "Revert": "Revert",
-@@ -444,13 +461,16 @@
+@@ -444,13 +462,16 @@
    "Sketch plane has no body-face attachment.": "Sketch plane has no body-face attachment.",
    "Sketch points": "Sketch points",
    "Slot width": "Slot width",
@@ -637,7 +651,7 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..17aa1314cd81e80522a812451d388920
    "Start bulge": "Start bulge",
    "Start continuity": "Start continuity",
    "Step": "Step",
-@@ -458,6 +478,7 @@
+@@ -458,6 +479,7 @@
    "Steps to reproduce (optional)": "Steps to reproduce (optional)",
    "Stitch the kept pieces": "Stitch the kept pieces",
    "Stitch to both bodies": "Stitch to both bodies",
@@ -645,7 +659,7 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..17aa1314cd81e80522a812451d388920
    "Studio": "Studio",
    "Study": "Study",
    "Style": "Style",
-@@ -590,6 +611,11 @@
+@@ -590,6 +612,11 @@
    "cam.roller": "Roller",
    "cam.roller_pick": "Roller (optional)",
    "cam.tip_pick": "Tip (optional)",
@@ -658,7 +672,7 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..17aa1314cd81e80522a812451d388920
    "cmd.appearance_library": "Appearance Library",
    "cmd.appearance_list": "List Appearances",
 diff --git a/assets/locales/es.json b/assets/locales/es.json
-index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..fa2ec377e6f3bdf2bc88989314875a0f8c50e9a7 100644
+index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..1358c744283847c0aef75ed5b8602045c9e438a9 100644
 --- a/assets/locales/es.json
 +++ b/assets/locales/es.json
 @@ -72,6 +72,7 @@
@@ -761,15 +775,17 @@ index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..fa2ec377e6f3bdf2bc88989314875a0f
    "Quantity": "Cantidad",
    "RECENT": "RECIENTES",
    "REFERENCE": "REFERENCIA",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Restaurar contorno exterior",
    "Restore the inherited component or physical material appearance": "Restaurar la apariencia heredada del componente o del material físico",
    "Result": "Resultado",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Repetir captura de pantalla",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Invertir",
    "Reverse Direction": "Invertir dirección",
    "Revert": "Revertir",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "El plano del boceto no está vinculado a ninguna cara del cuerpo.",
    "Sketch points": "Puntos del boceto",
    "Slot width": "Anchura de la ranura",
@@ -792,7 +808,7 @@ index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..fa2ec377e6f3bdf2bc88989314875a0f
    "Study": "Estudio",
    "Style": "Estilo",
    "Suppressed": "Suprimido",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Rodillo",
    "cam.roller_pick": "Rodillo (opcional)",
    "cam.tip_pick": "Punta (opcional)",
@@ -805,7 +821,7 @@ index 88d2e4278b16a31dbcdd85f0325cb74a836db32e..fa2ec377e6f3bdf2bc88989314875a0f
    "cmd.appearance_library": "Biblioteca de apariencias",
    "cmd.appearance_list": "Listar apariencias",
 diff --git a/assets/locales/fr.json b/assets/locales/fr.json
-index 2b5dbb0da1495ac770f9e30555b8e96523f0f9c5..7ac7fa6a09886e473e7fd627e4a56fd0ff1ae4f0 100644
+index 2b5dbb0da1495ac770f9e30555b8e96523f0f9c5..e28ef62d170de4100683a003506505dc4acfe20b 100644
 --- a/assets/locales/fr.json
 +++ b/assets/locales/fr.json
 @@ -72,6 +72,7 @@
@@ -908,15 +924,17 @@ index 2b5dbb0da1495ac770f9e30555b8e96523f0f9c5..7ac7fa6a09886e473e7fd627e4a56fd0
    "Quantity": "Grandeur",
    "RECENT": "RÉCENTS",
    "REFERENCE": "RÉFÉRENCE",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Restaurer le contour extérieur",
    "Restore the inherited component or physical material appearance": "Rétablir l'apparence héritée du composant ou du matériau physique",
    "Result": "Résultat",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Reprendre la capture d'écran",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Inverser",
    "Reverse Direction": "Inverser la direction",
    "Revert": "Rétablir",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Le plan d'esquisse n'est rattaché à aucune face de corps.",
    "Sketch points": "Points d'esquisse",
    "Slot width": "Largeur de rainure",
@@ -939,7 +957,7 @@ index 2b5dbb0da1495ac770f9e30555b8e96523f0f9c5..7ac7fa6a09886e473e7fd627e4a56fd0
    "Study": "Étude",
    "Style": "Style",
    "Suppressed": "Désactivé",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Galet",
    "cam.roller_pick": "Galet (facultatif)",
    "cam.tip_pick": "Pointe (facultatif)",
@@ -952,7 +970,7 @@ index 2b5dbb0da1495ac770f9e30555b8e96523f0f9c5..7ac7fa6a09886e473e7fd627e4a56fd0
    "cmd.appearance_library": "Bibliothèque d'apparences",
    "cmd.appearance_list": "Lister les apparences",
 diff --git a/assets/locales/gl.json b/assets/locales/gl.json
-index c919ff1fe46e4aab01bb5584a8496eb8ebb8e4d1..dfff9825339337db43fb48859d83402bc6facd2f 100644
+index c919ff1fe46e4aab01bb5584a8496eb8ebb8e4d1..8a110dd067cfc80d06ff906ad72bde9d5231631f 100644
 --- a/assets/locales/gl.json
 +++ b/assets/locales/gl.json
 @@ -72,6 +72,7 @@
@@ -1055,15 +1073,17 @@ index c919ff1fe46e4aab01bb5584a8496eb8ebb8e4d1..dfff9825339337db43fb48859d83402b
    "Quantity": "Cantidade",
    "RECENT": "RECENTES",
    "REFERENCE": "REFERENCIA",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Restaurar o contorno exterior",
    "Restore the inherited component or physical material appearance": "Restaurar a aparencia herdada do compoñente ou do material físico",
    "Result": "Resultado",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Repetir a captura de pantalla",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Inverter",
    "Reverse Direction": "Inverter a dirección",
    "Revert": "Reverter",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "O plano do bosquexo non está ancorado a ningunha cara dun corpo.",
    "Sketch points": "Puntos do bosquexo",
    "Slot width": "Largura da ranura",
@@ -1086,7 +1106,7 @@ index c919ff1fe46e4aab01bb5584a8496eb8ebb8e4d1..dfff9825339337db43fb48859d83402b
    "Study": "Estudo",
    "Style": "Estilo",
    "Suppressed": "Suprimida",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Rolete",
    "cam.roller_pick": "Rolete (opcional)",
    "cam.tip_pick": "Punta (opcional)",
@@ -1099,7 +1119,7 @@ index c919ff1fe46e4aab01bb5584a8496eb8ebb8e4d1..dfff9825339337db43fb48859d83402b
    "cmd.appearance_library": "Biblioteca de aparencias",
    "cmd.appearance_list": "Listar as aparencias",
 diff --git a/assets/locales/hu.json b/assets/locales/hu.json
-index d3ec51ef9f99fa85f5e17f1baa52c0a48af56791..5e1a16a63734eca8b9714b664c353aefbdb5a6f9 100644
+index d3ec51ef9f99fa85f5e17f1baa52c0a48af56791..e975f7476d8f47063d863fc8ab5bc35d3497ffed 100644
 --- a/assets/locales/hu.json
 +++ b/assets/locales/hu.json
 @@ -72,6 +72,7 @@
@@ -1202,15 +1222,17 @@ index d3ec51ef9f99fa85f5e17f1baa52c0a48af56791..5e1a16a63734eca8b9714b664c353aef
    "Quantity": "Mennyiség",
    "RECENT": "LEGUTÓBBI",
    "REFERENCE": "REFERENCIA",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Külső határ visszaállítása",
    "Restore the inherited component or physical material appearance": "Az örökölt komponens- vagy fizikai anyagmegjelenés visszaállítása",
    "Result": "Eredmény",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Képernyőkép újrakészítése",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Megfordítás",
    "Reverse Direction": "Irány megfordítása",
    "Revert": "Visszaállítás",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "A vázlatsíknak nincs testlap-rögzítése.",
    "Sketch points": "Vázlatpontok",
    "Slot width": "Horony szélessége",
@@ -1233,7 +1255,7 @@ index d3ec51ef9f99fa85f5e17f1baa52c0a48af56791..5e1a16a63734eca8b9714b664c353aef
    "Study": "Vizsgálat",
    "Style": "Stílus",
    "Suppressed": "Elnyomva",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Görgő",
    "cam.roller_pick": "Görgő (opcionális)",
    "cam.tip_pick": "Csúcs (opcionális)",
@@ -1246,7 +1268,7 @@ index d3ec51ef9f99fa85f5e17f1baa52c0a48af56791..5e1a16a63734eca8b9714b664c353aef
    "cmd.appearance_library": "Megjelenéstár",
    "cmd.appearance_list": "Megjelenések listázása",
 diff --git a/assets/locales/id.json b/assets/locales/id.json
-index 4769ca3924776e1516b0c38b5e01080f57c7c077..abb60ef248a82e25cba2157e6cdc53b42ed31895 100644
+index 4769ca3924776e1516b0c38b5e01080f57c7c077..23b414faa105f3870b4d3477b45d5ef32f73406f 100644
 --- a/assets/locales/id.json
 +++ b/assets/locales/id.json
 @@ -72,6 +72,7 @@
@@ -1349,15 +1371,17 @@ index 4769ca3924776e1516b0c38b5e01080f57c7c077..abb60ef248a82e25cba2157e6cdc53b4
    "Quantity": "Jumlah",
    "RECENT": "TERBARU",
    "REFERENCE": "REFERENSI",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Pulihkan batas luar",
    "Restore the inherited component or physical material appearance": "Pulihkan tampilan komponen atau material fisik yang diwarisi",
    "Result": "Hasil",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Ambil ulang tangkapan layar",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Balik",
    "Reverse Direction": "Balik Arah",
    "Revert": "Kembalikan",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "Bidang sketsa tidak memiliki lampiran muka bodi.",
    "Sketch points": "Titik sketsa",
    "Slot width": "Lebar slot",
@@ -1380,7 +1404,7 @@ index 4769ca3924776e1516b0c38b5e01080f57c7c077..abb60ef248a82e25cba2157e6cdc53b4
    "Study": "Studi",
    "Style": "Gaya",
    "Suppressed": "Ditekan",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Rol",
    "cam.roller_pick": "Rol (opsional)",
    "cam.tip_pick": "Ujung (opsional)",
@@ -1393,7 +1417,7 @@ index 4769ca3924776e1516b0c38b5e01080f57c7c077..abb60ef248a82e25cba2157e6cdc53b4
    "cmd.appearance_library": "Pustaka Tampilan",
    "cmd.appearance_list": "Daftar Tampilan",
 diff --git a/assets/locales/it.json b/assets/locales/it.json
-index 6278c49aab9c7d0b1a1465b30f98614ca8131548..ac378f66c4c3d10a040e2c1baafbd42e284bfefe 100644
+index 6278c49aab9c7d0b1a1465b30f98614ca8131548..9bcc7df990b3bb19d0b8c02aea2f487d15a8a151 100644
 --- a/assets/locales/it.json
 +++ b/assets/locales/it.json
 @@ -72,6 +72,7 @@
@@ -1496,15 +1520,17 @@ index 6278c49aab9c7d0b1a1465b30f98614ca8131548..ac378f66c4c3d10a040e2c1baafbd42e
    "Quantity": "Quantità",
    "RECENT": "RECENTI",
    "REFERENCE": "RIFERIMENTO",
-@@ -300,6 +316,7 @@
+@@ -299,7 +315,9 @@
+   "Restore outer boundary": "Ripristina contorno esterno",
    "Restore the inherited component or physical material appearance": "Ripristina l'aspetto ereditato dal componente o dal materiale fisico",
    "Result": "Risultato",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Acquisisci di nuovo la schermata",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Inverti",
    "Reverse Direction": "Inverti direzione",
    "Revert": "Ripristina",
-@@ -345,18 +362,22 @@
+@@ -345,18 +363,22 @@
    "Sketch plane has no body-face attachment.": "Il piano dello schizzo non è collegato a una faccia di un corpo.",
    "Sketch points": "Punti dello schizzo",
    "Slot width": "Larghezza dell'asola",
@@ -1527,7 +1553,7 @@ index 6278c49aab9c7d0b1a1465b30f98614ca8131548..ac378f66c4c3d10a040e2c1baafbd42e
    "Study": "Studio",
    "Style": "Stile",
    "Suppressed": "Sospeso",
-@@ -438,6 +459,11 @@
+@@ -438,6 +460,11 @@
    "cam.roller": "Rullo",
    "cam.roller_pick": "Rullo (facoltativo)",
    "cam.tip_pick": "Punta (facoltativa)",
@@ -1540,7 +1566,7 @@ index 6278c49aab9c7d0b1a1465b30f98614ca8131548..ac378f66c4c3d10a040e2c1baafbd42e
    "cmd.appearance_library": "Libreria degli aspetti",
    "cmd.appearance_list": "Elenca aspetti",
 diff --git a/assets/locales/ja.json b/assets/locales/ja.json
-index cbd221816eb75db2c5856be40c9859d163a8a045..e294fd649dc7bc6b06322d889154f77ac2fa9f58 100644
+index cbd221816eb75db2c5856be40c9859d163a8a045..575630c75f6c339588c01a0ff23ef1c889e68758 100644
 --- a/assets/locales/ja.json
 +++ b/assets/locales/ja.json
 @@ -86,6 +86,7 @@
@@ -1643,15 +1669,17 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..e294fd649dc7bc6b06322d889154f77a
    "Quantity": "量",
    "RECENT": "最近使用した項目",
    "REFERENCE": "参照",
-@@ -385,6 +401,7 @@
+@@ -384,7 +400,9 @@
+   "Restore the inherited component or physical material appearance": "コンポーネントまたは物理マテリアルから継承した外観に戻す",
    "Restore this studio's tools": "このスタジオのツールを復元",
    "Result": "結果",
++  "Resume Soil Analysis": "地盤解析を再開",
    "Retake screenshot": "スクリーンショットを再取得",
 +  "Return to CAD": "CADに戻る",
    "Reverse": "反転",
    "Reverse Direction": "方向を反転",
    "Revert": "元に戻す",
-@@ -444,13 +461,16 @@
+@@ -444,13 +462,16 @@
    "Sketch plane has no body-face attachment.": "スケッチ平面にボディ面のアタッチメントがありません。",
    "Sketch points": "スケッチ点",
    "Slot width": "長穴の幅",
@@ -1668,7 +1696,7 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..e294fd649dc7bc6b06322d889154f77a
    "Start bulge": "開始側の膨らみ",
    "Start continuity": "開始側の連続性",
    "Step": "ステップ",
-@@ -458,6 +478,7 @@
+@@ -458,6 +479,7 @@
    "Steps to reproduce (optional)": "再現手順（任意）",
    "Stitch the kept pieces": "残した部分をステッチ",
    "Stitch to both bodies": "両方のボディにステッチ",
@@ -1676,7 +1704,7 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..e294fd649dc7bc6b06322d889154f77a
    "Studio": "スタジオ",
    "Study": "スタディ",
    "Style": "スタイル",
-@@ -590,6 +611,11 @@
+@@ -590,6 +612,11 @@
    "cam.roller": "ローラー",
    "cam.roller_pick": "ローラー (オプション)",
    "cam.tip_pick": "先端 (オプション)",
@@ -1689,7 +1717,7 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..e294fd649dc7bc6b06322d889154f77a
    "cmd.appearance_library": "外観ライブラリ",
    "cmd.appearance_list": "外観を一覧表示",
 diff --git a/assets/locales/ko.json b/assets/locales/ko.json
-index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..89ab9b2fabe581ca05146a608b332a959d11421f 100644
+index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..0f6d6cb09a240bbb67addffb839e8ef4bfb6d7dc 100644
 --- a/assets/locales/ko.json
 +++ b/assets/locales/ko.json
 @@ -72,6 +72,7 @@
@@ -1792,15 +1820,17 @@ index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..89ab9b2fabe581ca05146a608b332a95
    "Quantity": "양",
    "RECENT": "최근",
    "REFERENCE": "참조",
-@@ -298,6 +314,7 @@
+@@ -297,7 +313,9 @@
+   "Restore outer boundary": "외부 경계 복원",
    "Restore the inherited component or physical material appearance": "상속된 구성요소 또는 물리 재질 외관 복원",
    "Result": "결과",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "스크린샷 다시 찍기",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "반전",
    "Reverse Direction": "방향 반전",
    "Revert": "되돌리기",
-@@ -343,18 +360,22 @@
+@@ -343,18 +361,22 @@
    "Sketch plane has no body-face attachment.": "스케치 평면에 바디 면 부착이 없습니다.",
    "Sketch points": "스케치 점",
    "Slot width": "슬롯 폭",
@@ -1823,7 +1853,7 @@ index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..89ab9b2fabe581ca05146a608b332a95
    "Study": "연구",
    "Style": "스타일",
    "Suppressed": "억제됨",
-@@ -436,6 +457,11 @@
+@@ -436,6 +458,11 @@
    "cam.roller": "롤러",
    "cam.roller_pick": "롤러 (선택 사항)",
    "cam.tip_pick": "끝점 (선택 사항)",
@@ -1836,7 +1866,7 @@ index a53aa4dfc5fb1e6e52b86c4498f51f71a97e0bd3..89ab9b2fabe581ca05146a608b332a95
    "cmd.appearance_library": "외관 라이브러리",
    "cmd.appearance_list": "외관 목록",
 diff --git a/assets/locales/ms.json b/assets/locales/ms.json
-index 1f96eb3987f64a568728510fe7fe0902fb01d109..17e0be22d5e945a441e995e0fc8c7c7c14111aad 100644
+index 1f96eb3987f64a568728510fe7fe0902fb01d109..9933b8197983f14f24ad1f18bb6887ab3af116cd 100644
 --- a/assets/locales/ms.json
 +++ b/assets/locales/ms.json
 @@ -72,6 +72,7 @@
@@ -1939,15 +1969,17 @@ index 1f96eb3987f64a568728510fe7fe0902fb01d109..17e0be22d5e945a441e995e0fc8c7c7c
    "Quantity": "Kuantiti",
    "RECENT": "TERKINI",
    "REFERENCE": "RUJUKAN",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Pulihkan sempadan luar",
    "Restore the inherited component or physical material appearance": "Pulihkan penampilan yang diwarisi daripada komponen atau bahan fizikal",
    "Result": "Hasil",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Tangkap semula",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Songsangkan",
    "Reverse Direction": "Songsangkan Arah",
    "Revert": "Kembalikan",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Satah lakaran tiada pautan ke muka jasad.",
    "Sketch points": "Titik lakaran",
    "Slot width": "Lebar slot",
@@ -1970,7 +2002,7 @@ index 1f96eb3987f64a568728510fe7fe0902fb01d109..17e0be22d5e945a441e995e0fc8c7c7c
    "Study": "Kajian",
    "Style": "Gaya",
    "Suppressed": "Dinyahaktifkan",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Penggelek",
    "cam.roller_pick": "Penggelek (tidak wajib)",
    "cam.tip_pick": "Hujung (tidak wajib)",
@@ -1983,7 +2015,7 @@ index 1f96eb3987f64a568728510fe7fe0902fb01d109..17e0be22d5e945a441e995e0fc8c7c7c
    "cmd.appearance_library": "Koleksi Penampilan",
    "cmd.appearance_list": "Senarai Penampilan",
 diff --git a/assets/locales/nl.json b/assets/locales/nl.json
-index 6166d780d26b443ad479cb4e9c99624d8576676f..51ae4bc5ff6460c1e177360bd43ef6f4658e4dcd 100644
+index 6166d780d26b443ad479cb4e9c99624d8576676f..9bd9b6624f0c81206de44172141a52fb940aa926 100644
 --- a/assets/locales/nl.json
 +++ b/assets/locales/nl.json
 @@ -72,6 +72,7 @@
@@ -2086,15 +2118,17 @@ index 6166d780d26b443ad479cb4e9c99624d8576676f..51ae4bc5ff6460c1e177360bd43ef6f4
    "Quantity": "Aantal",
    "RECENT": "RECENT",
    "REFERENCE": "REFERENTIE",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Buitenste begrenzing herstellen",
    "Restore the inherited component or physical material appearance": "Het overgeërfde component- of fysieke materiaaluiterlijk herstellen",
    "Result": "Resultaat",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Schermafbeelding opnieuw maken",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Omkeren",
    "Reverse Direction": "Richting omkeren",
    "Revert": "Terugdraaien",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "Het schetsvlak heeft geen bevestiging aan een lichaamsvlak.",
    "Sketch points": "Schetspunten",
    "Slot width": "Sleufbreedte",
@@ -2117,7 +2151,7 @@ index 6166d780d26b443ad479cb4e9c99624d8576676f..51ae4bc5ff6460c1e177360bd43ef6f4
    "Study": "Studie",
    "Style": "Stijl",
    "Suppressed": "Onderdrukt",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Rol",
    "cam.roller_pick": "Rol (optioneel)",
    "cam.tip_pick": "Punt (optioneel)",
@@ -2130,7 +2164,7 @@ index 6166d780d26b443ad479cb4e9c99624d8576676f..51ae4bc5ff6460c1e177360bd43ef6f4
    "cmd.appearance_library": "Uiterlijkbibliotheek",
    "cmd.appearance_list": "Uiterlijken weergeven",
 diff --git a/assets/locales/pl.json b/assets/locales/pl.json
-index 46599bcaf36b7b17820df270b59176e276864987..314502577cfb07f569d86b379fb9fc08358e9674 100644
+index 46599bcaf36b7b17820df270b59176e276864987..6ce56903e635a10bbfea1f471cab439d347a089d 100644
 --- a/assets/locales/pl.json
 +++ b/assets/locales/pl.json
 @@ -72,6 +72,7 @@
@@ -2233,15 +2267,17 @@ index 46599bcaf36b7b17820df270b59176e276864987..314502577cfb07f569d86b379fb9fc08
    "Quantity": "Liczba",
    "RECENT": "OSTATNIE",
    "REFERENCE": "ODNIESIENIE",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Przywróć kontur zewnętrzny",
    "Restore the inherited component or physical material appearance": "Przywróć wygląd odziedziczony z komponentu lub materiału fizycznego",
    "Result": "Wynik",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Ponów zrzut ekranu",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Odwróć",
    "Reverse Direction": "Odwróć kierunek",
    "Revert": "Przywróć",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Płaszczyzna szkicu nie ma zaczepienia do ściany bryły.",
    "Sketch points": "Punkty szkicu",
    "Slot width": "Szerokość rowka",
@@ -2264,7 +2300,7 @@ index 46599bcaf36b7b17820df270b59176e276864987..314502577cfb07f569d86b379fb9fc08
    "Study": "Badanie",
    "Style": "Styl",
    "Suppressed": "Wygaszone",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Rolka",
    "cam.roller_pick": "Rolka (opcjonalnie)",
    "cam.tip_pick": "Końcówka (opcjonalnie)",
@@ -2277,7 +2313,7 @@ index 46599bcaf36b7b17820df270b59176e276864987..314502577cfb07f569d86b379fb9fc08
    "cmd.appearance_library": "Biblioteka wyglądów",
    "cmd.appearance_list": "Lista wyglądów",
 diff --git a/assets/locales/pt-BR.json b/assets/locales/pt-BR.json
-index 591c6afd90d49a5ebe92f1d097029e88756785bc..74bff8a9d0e48fc9b9efb6dda5dac33a6ba0ae79 100644
+index 591c6afd90d49a5ebe92f1d097029e88756785bc..503df80885aa1b4b1c84d91a834a7a73b3f353f2 100644
 --- a/assets/locales/pt-BR.json
 +++ b/assets/locales/pt-BR.json
 @@ -72,6 +72,7 @@
@@ -2380,15 +2416,17 @@ index 591c6afd90d49a5ebe92f1d097029e88756785bc..74bff8a9d0e48fc9b9efb6dda5dac33a
    "Quantity": "Quantidade",
    "RECENT": "RECENTES",
    "REFERENCE": "REFERÊNCIA",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Restaurar contorno externo",
    "Restore the inherited component or physical material appearance": "Restaurar a aparência herdada do componente ou do material físico",
    "Result": "Resultado",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Refazer captura de tela",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Inverter",
    "Reverse Direction": "Inverter direção",
    "Revert": "Reverter",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "O plano do esboço não está fixado a uma face de corpo.",
    "Sketch points": "Pontos do esboço",
    "Slot width": "Largura do rasgo",
@@ -2411,7 +2449,7 @@ index 591c6afd90d49a5ebe92f1d097029e88756785bc..74bff8a9d0e48fc9b9efb6dda5dac33a
    "Study": "Estudo",
    "Style": "Estilo",
    "Suppressed": "Suprimido",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Rolete",
    "cam.roller_pick": "Rolete (opcional)",
    "cam.tip_pick": "Ponta (opcional)",
@@ -2424,7 +2462,7 @@ index 591c6afd90d49a5ebe92f1d097029e88756785bc..74bff8a9d0e48fc9b9efb6dda5dac33a
    "cmd.appearance_library": "Biblioteca de aparências",
    "cmd.appearance_list": "Listar aparências",
 diff --git a/assets/locales/ro.json b/assets/locales/ro.json
-index 53597dd9b8123a54b979d7c2a36fa873905931bd..c87fee503c81fd3f86163c372c136c106f5caf8c 100644
+index 53597dd9b8123a54b979d7c2a36fa873905931bd..aae5d572dbff40e781c8fa87fad55db861c9cac5 100644
 --- a/assets/locales/ro.json
 +++ b/assets/locales/ro.json
 @@ -72,6 +72,7 @@
@@ -2527,15 +2565,17 @@ index 53597dd9b8123a54b979d7c2a36fa873905931bd..c87fee503c81fd3f86163c372c136c10
    "Quantity": "Cantitate",
    "RECENT": "RECENTE",
    "REFERENCE": "REFERINȚĂ",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Restabilește limita exterioară",
    "Restore the inherited component or physical material appearance": "Restabilește aspectul moștenit al componentei sau al materialului fizic",
    "Result": "Rezultat",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Refă captura de ecran",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Inversează",
    "Reverse Direction": "Inversează direcția",
    "Revert": "Revino",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "Planul schiței nu are atașare la fața unui corp.",
    "Sketch points": "Punctele schiței",
    "Slot width": "Lățime canal",
@@ -2558,7 +2598,7 @@ index 53597dd9b8123a54b979d7c2a36fa873905931bd..c87fee503c81fd3f86163c372c136c10
    "Study": "Studiu",
    "Style": "Stil",
    "Suppressed": "Suprimat",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Rolă",
    "cam.roller_pick": "Rolă (opțional)",
    "cam.tip_pick": "Vârf (opțional)",
@@ -2571,7 +2611,7 @@ index 53597dd9b8123a54b979d7c2a36fa873905931bd..c87fee503c81fd3f86163c372c136c10
    "cmd.appearance_library": "Bibliotecă de aspecte",
    "cmd.appearance_list": "Listează aspectele",
 diff --git a/assets/locales/ru.json b/assets/locales/ru.json
-index 25d4f47116a1c6a0f39baca756dff99d45ca654a..9abb0437eed225f28ed1620bd3552c736c9c52de 100644
+index 25d4f47116a1c6a0f39baca756dff99d45ca654a..ce84cf4699575d3fc9eaa3873df64cc055c0f7e1 100644
 --- a/assets/locales/ru.json
 +++ b/assets/locales/ru.json
 @@ -72,6 +72,7 @@
@@ -2674,15 +2714,17 @@ index 25d4f47116a1c6a0f39baca756dff99d45ca654a..9abb0437eed225f28ed1620bd3552c73
    "Quantity": "Величина",
    "RECENT": "НЕДАВНИЕ",
    "REFERENCE": "ССЫЛОЧНАЯ ГЕОМЕТРИЯ",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Восстановить внешнюю границу",
    "Restore the inherited component or physical material appearance": "Вернуть унаследованный внешний вид компонента или физического материала",
    "Result": "Результат",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Сделать скриншот заново",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Обратить",
    "Reverse Direction": "Обратить направление",
    "Revert": "Вернуть",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "Плоскость эскиза не привязана к грани тела.",
    "Sketch points": "Точки эскиза",
    "Slot width": "Ширина паза",
@@ -2705,7 +2747,7 @@ index 25d4f47116a1c6a0f39baca756dff99d45ca654a..9abb0437eed225f28ed1620bd3552c73
    "Study": "Исследование",
    "Style": "Стиль",
    "Suppressed": "Подавлено",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Ролик",
    "cam.roller_pick": "Ролик (необязательно)",
    "cam.tip_pick": "Острие (необязательно)",
@@ -2718,7 +2760,7 @@ index 25d4f47116a1c6a0f39baca756dff99d45ca654a..9abb0437eed225f28ed1620bd3552c73
    "cmd.appearance_library": "Библиотека внешних видов",
    "cmd.appearance_list": "Список внешних видов",
 diff --git a/assets/locales/sv.json b/assets/locales/sv.json
-index dd182062b56c10cdb660ba1ef9b25be4279f33c6..40e88866ed04e35b9938821d1a357d62c416f6c7 100644
+index dd182062b56c10cdb660ba1ef9b25be4279f33c6..83d6965b8dbdbbc624bbd7c1cf2d6f2ccbb33957 100644
 --- a/assets/locales/sv.json
 +++ b/assets/locales/sv.json
 @@ -72,6 +72,7 @@
@@ -2821,15 +2863,17 @@ index dd182062b56c10cdb660ba1ef9b25be4279f33c6..40e88866ed04e35b9938821d1a357d62
    "Quantity": "Antal",
    "RECENT": "SENASTE",
    "REFERENCE": "REFERENS",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Återställ yttre gräns",
    "Restore the inherited component or physical material appearance": "Återställ det ärvda utseendet från komponent eller fysiskt material",
    "Result": "Resultat",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Ta om skärmdump",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Vänd",
    "Reverse Direction": "Vänd riktning",
    "Revert": "Återgå",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "Skissplanet saknar fäste på kroppsyta.",
    "Sketch points": "Skisspunkter",
    "Slot width": "Spårbredd",
@@ -2852,7 +2896,7 @@ index dd182062b56c10cdb660ba1ef9b25be4279f33c6..40e88866ed04e35b9938821d1a357d62
    "Study": "Studie",
    "Style": "Stil",
    "Suppressed": "Undertryckt",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Rulle",
    "cam.roller_pick": "Rulle (valfritt)",
    "cam.tip_pick": "Spets (valfritt)",
@@ -2865,7 +2909,7 @@ index dd182062b56c10cdb660ba1ef9b25be4279f33c6..40e88866ed04e35b9938821d1a357d62
    "cmd.appearance_library": "Utseendebibliotek",
    "cmd.appearance_list": "Lista utseenden",
 diff --git a/assets/locales/tr.json b/assets/locales/tr.json
-index 7d1561e9e0c397da619edede7c60a1f24664b9fe..1b9a250138a28e632306a04ffe253134b90b0d74 100644
+index 7d1561e9e0c397da619edede7c60a1f24664b9fe..c1a42af788b04ee04e41b3534c50073e5130a0df 100644
 --- a/assets/locales/tr.json
 +++ b/assets/locales/tr.json
 @@ -72,6 +72,7 @@
@@ -2968,15 +3012,17 @@ index 7d1561e9e0c397da619edede7c60a1f24664b9fe..1b9a250138a28e632306a04ffe253134
    "Quantity": "Büyüklük",
    "RECENT": "SON KULLANILANLAR",
    "REFERENCE": "REFERANS",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "Dış sınırı geri yükle",
    "Restore the inherited component or physical material appearance": "Bileşenden veya fiziksel malzemeden devralınan görünümü geri yükle",
    "Result": "Sonuç",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Ekran görüntüsünü yeniden al",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Ters çevir",
    "Reverse Direction": "Yönü ters çevir",
    "Revert": "Geri al",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "Eskiz düzleminin bir gövde yüzüne bağlaması yok.",
    "Sketch points": "Eskiz noktaları",
    "Slot width": "Yuva genişliği",
@@ -2999,7 +3045,7 @@ index 7d1561e9e0c397da619edede7c60a1f24664b9fe..1b9a250138a28e632306a04ffe253134
    "Study": "Etüt",
    "Style": "Stil",
    "Suppressed": "Bastırılmış",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "Makara",
    "cam.roller_pick": "Makara (isteğe bağlı)",
    "cam.tip_pick": "Uç (isteğe bağlı)",
@@ -3012,7 +3058,7 @@ index 7d1561e9e0c397da619edede7c60a1f24664b9fe..1b9a250138a28e632306a04ffe253134
    "cmd.appearance_library": "Görünüm kitaplığı",
    "cmd.appearance_list": "Görünümleri listele",
 diff --git a/assets/locales/uk.json b/assets/locales/uk.json
-index c3e103226755feb44e8a5979cfb70e35348ac2c1..c169f176e198a82dd4efdfdc69233d80ce61cb7a 100644
+index c3e103226755feb44e8a5979cfb70e35348ac2c1..cee8cf361c9bfc369e91ad929047effdb3f3e65e 100644
 --- a/assets/locales/uk.json
 +++ b/assets/locales/uk.json
 @@ -72,6 +72,7 @@
@@ -3115,15 +3161,17 @@ index c3e103226755feb44e8a5979cfb70e35348ac2c1..c169f176e198a82dd4efdfdc69233d80
    "Quantity": "Величина",
    "RECENT": "НЕДАВНІ",
    "REFERENCE": "ДОПОМІЖНА ГЕОМЕТРІЯ",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Відновити зовнішню межу",
    "Restore the inherited component or physical material appearance": "Відновити успадкований вигляд компонента або фізичного матеріалу",
    "Result": "Результат",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Повторити знімок екрана",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Обернути",
    "Reverse Direction": "Обернути напрямок",
    "Revert": "Повернути",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Площина ескізу не має прив'язки до грані тіла.",
    "Sketch points": "Точки ескізу",
    "Slot width": "Ширина паза",
@@ -3146,7 +3194,7 @@ index c3e103226755feb44e8a5979cfb70e35348ac2c1..c169f176e198a82dd4efdfdc69233d80
    "Study": "Дослідження",
    "Style": "Стиль",
    "Suppressed": "Придушено",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Ролик",
    "cam.roller_pick": "Ролик (необов'язково)",
    "cam.tip_pick": "Вістря (необов'язково)",
@@ -3159,7 +3207,7 @@ index c3e103226755feb44e8a5979cfb70e35348ac2c1..c169f176e198a82dd4efdfdc69233d80
    "cmd.appearance_library": "Бібліотека виглядів",
    "cmd.appearance_list": "Список виглядів",
 diff --git a/assets/locales/vi.json b/assets/locales/vi.json
-index 9085e21046085ef1fb73e10039a4bbe62551b16b..0d5dd1ef878b6da40339d06ec91e416a22a661ff 100644
+index 9085e21046085ef1fb73e10039a4bbe62551b16b..f23b5323fe83a98c0d4f5962e2434313b93f71a7 100644
 --- a/assets/locales/vi.json
 +++ b/assets/locales/vi.json
 @@ -72,6 +72,7 @@
@@ -3262,15 +3310,17 @@ index 9085e21046085ef1fb73e10039a4bbe62551b16b..0d5dd1ef878b6da40339d06ec91e416a
    "Quantity": "Số lượng",
    "RECENT": "GẦN ĐÂY",
    "REFERENCE": "THAM CHIẾU",
-@@ -297,6 +313,7 @@
+@@ -296,7 +312,9 @@
+   "Restore outer boundary": "Khôi phục biên dạng bao ngoài",
    "Restore the inherited component or physical material appearance": "Khôi phục vẻ ngoài kế thừa từ cụm chi tiết hoặc vật liệu vật lý",
    "Result": "Kết quả",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "Chụp lại màn hình",
 +  "Return to CAD": "Return to CAD",
    "Reverse": "Đảo chiều",
    "Reverse Direction": "Đảo ngược hướng",
    "Revert": "Hoàn nguyên",
-@@ -342,18 +359,22 @@
+@@ -342,18 +360,22 @@
    "Sketch plane has no body-face attachment.": "Mặt phẳng phác thảo không có liên kết với bề mặt thân khối.",
    "Sketch points": "Điểm phác thảo",
    "Slot width": "Bề rộng rãnh then",
@@ -3293,7 +3343,7 @@ index 9085e21046085ef1fb73e10039a4bbe62551b16b..0d5dd1ef878b6da40339d06ec91e416a
    "Study": "Nghiên cứu",
    "Style": "Kiểu hiển thị",
    "Suppressed": "Bị tạm nén",
-@@ -435,6 +456,11 @@
+@@ -435,6 +457,11 @@
    "cam.roller": "Con lăn cam",
    "cam.roller_pick": "Con lăn cam (tùy chọn)",
    "cam.tip_pick": "Đầu tiếp xúc cam (tùy chọn)",
@@ -3306,7 +3356,7 @@ index 9085e21046085ef1fb73e10039a4bbe62551b16b..0d5dd1ef878b6da40339d06ec91e416a
    "cmd.appearance_library": "Thư viện màu sắc bề mặt",
    "cmd.appearance_list": "Danh sách màu sắc bề mặt",
 diff --git a/assets/locales/zh-TW.json b/assets/locales/zh-TW.json
-index 8723cc9cf825127f008222a73b9f116223356dec..8afbc2b101a72de2eac4afdcbb645d95966e7fea 100644
+index 8723cc9cf825127f008222a73b9f116223356dec..b25bbc6679b6897d08de6f9c9e9c45a42590dee6 100644
 --- a/assets/locales/zh-TW.json
 +++ b/assets/locales/zh-TW.json
 @@ -72,6 +72,7 @@
@@ -3409,15 +3459,17 @@ index 8723cc9cf825127f008222a73b9f116223356dec..8afbc2b101a72de2eac4afdcbb645d95
    "Quantity": "數量",
    "RECENT": "最近使用",
    "REFERENCE": "參考",
-@@ -296,6 +312,7 @@
+@@ -295,7 +311,9 @@
+   "Restore outer boundary": "還原外邊界",
    "Restore the inherited component or physical material appearance": "還原繼承的元件或物理材質外觀",
    "Result": "結果",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "重新截圖",
 +  "Return to CAD": "返回CAD",
    "Reverse": "反向",
    "Reverse Direction": "反向",
    "Revert": "還原",
-@@ -341,18 +358,22 @@
+@@ -341,18 +359,22 @@
    "Sketch plane has no body-face attachment.": "草圖平面沒有實體面附著。",
    "Sketch points": "草圖點",
    "Slot width": "槽寬",
@@ -3440,7 +3492,7 @@ index 8723cc9cf825127f008222a73b9f116223356dec..8afbc2b101a72de2eac4afdcbb645d95
    "Study": "研究",
    "Style": "樣式",
    "Suppressed": "已抑制",
-@@ -434,6 +455,11 @@
+@@ -434,6 +456,11 @@
    "cam.roller": "滾子",
    "cam.roller_pick": "滾子（可選）",
    "cam.tip_pick": "尖端（可選）",
@@ -3453,7 +3505,7 @@ index 8723cc9cf825127f008222a73b9f116223356dec..8afbc2b101a72de2eac4afdcbb645d95
    "cmd.appearance_library": "外觀庫",
    "cmd.appearance_list": "列出外觀",
 diff --git a/assets/locales/zh.json b/assets/locales/zh.json
-index cdc703e30419f7feba96abcc165b82a83c7821a5..7e4200fbb56cf7453a6153aee7e4b2e9c7dfbef7 100644
+index cdc703e30419f7feba96abcc165b82a83c7821a5..3f4ae81166f9a7dfd39d1b3819100f3be6b0fc7d 100644
 --- a/assets/locales/zh.json
 +++ b/assets/locales/zh.json
 @@ -86,6 +86,7 @@
@@ -3556,15 +3608,17 @@ index cdc703e30419f7feba96abcc165b82a83c7821a5..7e4200fbb56cf7453a6153aee7e4b2e9
    "Quantity": "物理量",
    "RECENT": "最近使用",
    "REFERENCE": "参考",
-@@ -385,6 +401,7 @@
+@@ -384,7 +400,9 @@
+   "Restore the inherited component or physical material appearance": "还原继承的组件或物理材质外观",
    "Restore this studio's tools": "恢复此工作室的工具",
    "Result": "结果",
++  "Resume Soil Analysis": "Resume Soil Analysis",
    "Retake screenshot": "重新截图",
 +  "Return to CAD": "返回CAD",
    "Reverse": "反向",
    "Reverse Direction": "反向",
    "Revert": "还原",
-@@ -444,13 +461,16 @@
+@@ -444,13 +462,16 @@
    "Sketch plane has no body-face attachment.": "草图平面没有实体面附着。",
    "Sketch points": "草图点",
    "Slot width": "槽宽",
@@ -3581,7 +3635,7 @@ index cdc703e30419f7feba96abcc165b82a83c7821a5..7e4200fbb56cf7453a6153aee7e4b2e9
    "Start bulge": "起始鼓度",
    "Start continuity": "起始连续性",
    "Step": "步骤",
-@@ -458,6 +478,7 @@
+@@ -458,6 +479,7 @@
    "Steps to reproduce (optional)": "重现步骤（可选）",
    "Stitch the kept pieces": "缝合保留的部分",
    "Stitch to both bodies": "缝合到两个实体",
@@ -3589,7 +3643,7 @@ index cdc703e30419f7feba96abcc165b82a83c7821a5..7e4200fbb56cf7453a6153aee7e4b2e9
    "Studio": "工作室",
    "Study": "研究",
    "Style": "样式",
-@@ -590,6 +611,11 @@
+@@ -590,6 +612,11 @@
    "cam.roller": "滚子",
    "cam.roller_pick": "滚子（可选）",
    "cam.tip_pick": "尖端（可选）",
@@ -3659,10 +3713,10 @@ index b26c54e865804d49260dc3369e2111178ee87660..99636f8bd3c2a208c9c3d4cf74e46f08
      v.extend(silhouette::COMMANDS.iter());
 diff --git a/crates/engine/src/cmd/soil_fem.rs b/crates/engine/src/cmd/soil_fem.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..d6c98ad899e5dbdf92b9ff86270655543ab9c296
+index 0000000000000000000000000000000000000000..baf1cd25099a2c425bc5fe5b83a2ace638ae5beb
 --- /dev/null
 +++ b/crates/engine/src/cmd/soil_fem.rs
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,41 @@
 +//! The soil-analysis editor and immutable external-analysis capture share this registry.
 +use super::CommandSpec;
 +pub static COMMANDS: &[CommandSpec] = &[
@@ -3678,13 +3732,16 @@ index 0000000000000000000000000000000000000000..d6c98ad899e5dbdf92b9ff8627065554
 +        .icon("settings").noundo().params("No parameters; release the transient result without changing the design, undo state or files"),
 +    CommandSpec::new("analysis.soil.job.start", "Start Soil Analysis", crate::soil_jobs::start)
 +        .icon("settings").noundo()
-+        .params("directory: new job folder, expected_input_sha256, mesh_size_m, element_order: 1|2, quadrature_order: 3|4|5; capture reviewed inputs and start the external worker installed by the native host"),
++        .params("directory: new job folder, expected_input_sha256, mesh_size_m, element_order: 1|2, quadrature_order: 3|4|5, cooperative?: false (legacy default); capture reviewed inputs and start only the installed native host worker"),
 +    CommandSpec::new("analysis.soil.job.status", "Inspect Soil Analysis Job", crate::soil_jobs::status)
 +        .icon("settings").noundo()
 +        .params("No parameters; inspect the last owned process and worker report, input staleness and verified completion; never infer process liveness from a status file"),
++    CommandSpec::new("analysis.soil.job.resume", "Resume Soil Analysis", crate::soil_jobs::resume)
++        .icon("settings").noundo()
++        .params("directory: new output folder, previous_directory: saved native job folder, expected_input_sha256; resume bound data with the installed host solver and workflow, never executable paths from saved data"),
 +    CommandSpec::new("analysis.soil.job.cancel", "Stop Soil Analysis", crate::soil_jobs::cancel)
 +        .icon("settings").noundo()
-+        .params("job: identity returned by job.start/status; request cleanup through the owned worker pipe, without promising a new checkpoint; idempotent for a retained terminal job"),
++        .params("job: identity returned by job.start/status; close the owned worker pipe, saving at an accepted increment for cooperative jobs or stopping legacy jobs; idempotent for a retained terminal job"),
 +    CommandSpec::new("analysis.soil.read_inputs", "Read Soil Analysis Inputs", crate::soil_fem::read_inputs)
 +        .icon("settings").noundo().doc_only()
 +        .params("ground_path, stages_path: explicitly allowed JSON files, at most 64 KiB together; read bridge-contract-valid inputs without changing a design or running a solver"),
@@ -4334,10 +4391,10 @@ index 0000000000000000000000000000000000000000..afb6ed005e2b2c3562c9bf71912b4cf1
 +}
 diff --git a/crates/engine/src/soil_jobs.rs b/crates/engine/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f24367452
+index 0000000000000000000000000000000000000000..b206f7093d72a35e2dd2ecc9881d66acd2c92735
 --- /dev/null
 +++ b/crates/engine/src/soil_jobs.rs
-@@ -0,0 +1,590 @@
+@@ -0,0 +1,824 @@
 +//! Transient, host-owned external FEM jobs. Neither executable paths nor process
 +//! ownership are read from a design. Scratch sessions have no execution host.
 +use crate::{Result, Session, params::bad};
@@ -4354,6 +4411,16 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +    mesh_size_m: f64,
 +    element_order: u8,
 +    quadrature_order: u8,
++    #[serde(default)]
++    cooperative: bool,
++}
++
++#[derive(Deserialize)]
++#[serde(deny_unknown_fields)]
++struct Resume {
++    directory: String,
++    previous_directory: String,
++    expected_input_sha256: String,
 +}
 +
 +#[cfg(not(target_arch = "wasm32"))]
@@ -4381,6 +4448,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +        root: PathBuf,
 +        python: PathBuf,
 +        worker: PathBuf,
++        solver: Option<PathBuf>,
 +    }
 +
 +    fn external_path(path: &Path) -> Result<PathBuf> {
@@ -4414,7 +4482,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +                    return Err(bad(CMD, format!("FEM host file is missing: {}", path.display())));
 +                }
 +            }
-+            Ok(Self { root, python, worker })
++            Ok(Self { root, python, worker, solver: None })
 +        }
 +    }
 +
@@ -4425,6 +4493,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +        token: String,
 +        worker_id: Option<String>,
 +        cancelled: bool,
++        cooperative: bool,
 +    }
 +
 +    impl Drop for Owned {
@@ -4435,7 +4504,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +        }
 +    }
 +
-+    fn read(path: &Path) -> Result<Value> {
++    pub(super) fn read(path: &Path) -> Result<Value> {
 +        let bytes = solidcraft_io::vfs::read(&path.to_string_lossy(), 256 << 10).map_err(|e| bad(CMD, e.to_string()))?;
 +        serde_json::from_slice(&bytes).map_err(|e| bad(CMD, e.to_string()))
 +    }
@@ -4445,14 +4514,78 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +        Ok(format!("{:x}", Sha256::digest(bytes)))
 +    }
 +
++    fn artifact_hash(path: &Path, expected_size: u64) -> Result<String> {
++        use std::io::Read;
++        if expected_size > 8 << 30 {
++            return Err(bad(CMD, "checkpoint artifact exceeds its size limit"));
++        }
++        solidcraft_io::vfs::check(&path.to_string_lossy()).map_err(|e| bad(CMD, e.to_string()))?;
++        let mut file = std::fs::File::open(path).map_err(|e| bad(CMD, e.to_string()))?;
++        let mut digest = Sha256::new();
++        let mut total = 0_u64;
++        let mut buffer = [0_u8; 65536];
++        loop {
++            let size = file.read(&mut buffer).map_err(|e| bad(CMD, e.to_string()))?;
++            if size == 0 {
++                break;
++            }
++            total += size as u64;
++            if total > expected_size {
++                return Err(bad(CMD, "checkpoint artifact size changed"));
++            }
++            digest.update(buffer.get(..size).ok_or_else(|| bad(CMD, "invalid checkpoint read size"))?);
++        }
++        if total != expected_size {
++            return Err(bad(CMD, "checkpoint artifact size changed"));
++        }
++        Ok(format!("{:x}", digest.finalize()))
++    }
++
++    pub(super) fn saved_checkpoint(folder: &Path, input: &str, report: &Value) -> Result<()> {
++        let owner = read(&folder.join("job.json"))?;
++        let receipt_path = folder.join("checkpoint-receipt.json");
++        let receipt = read(&receipt_path)?;
++        let solver = owner.get("solver_sha256").and_then(Value::as_str).filter(|s| s.len() == 64 && s.bytes().all(|b| b.is_ascii_hexdigit()));
++        let artifact = match receipt.get("kind").and_then(Value::as_str) {
++            Some("solver_checkpoint") => "workflow/analysis/solver-job/checkpoint.json",
++            Some("completed_solver_result") => "workflow/analysis/stage-results.json",
++            _ => return Err(bad(CMD, "unsupported saved checkpoint kind")),
++        };
++        if owner.get("schema").and_then(Value::as_str) != Some("soil-fem-native-job/2")
++            || report.get("schema").and_then(Value::as_str) != Some("soil-fem-native-job-status/2")
++            || report.get("state").and_then(Value::as_str) != Some("checkpointed")
++            || report.get("exit_code").and_then(Value::as_i64) != Some(3)
++            || solver.is_none()
++            || report.get("resume_available") != Some(&Value::Bool(true))
++            || report.get("checkpoint_receipt").and_then(Value::as_str) != Some("checkpoint-receipt.json")
++            || report.get("checkpoint_receipt_sha256").and_then(Value::as_str) != Some(&hash(&receipt_path)?)
++            || receipt.get("schema").and_then(Value::as_str) != Some("soil-fem-native-checkpoint/1")
++            || owner.get("job_id").and_then(Value::as_str).is_none_or(str::is_empty)
++            || report.get("job_id") != owner.get("job_id")
++            || receipt.get("job_id") != owner.get("job_id")
++            || owner.get("input_sha256").and_then(Value::as_str) != Some(input)
++            || report.get("input_sha256").and_then(Value::as_str) != Some(input)
++            || receipt.get("input_sha256").and_then(Value::as_str) != Some(input)
++            || receipt.get("solver_sha256") != owner.get("solver_sha256")
++            || receipt.get("artifact").and_then(Value::as_str) != Some(artifact)
++        {
++            return Err(bad(CMD, "saved checkpoint identity or receipt changed"));
++        }
++        let size = receipt.get("artifact_bytes").and_then(Value::as_u64).ok_or_else(|| bad(CMD, "checkpoint size is missing"))?;
++        if receipt.get("artifact_sha256").and_then(Value::as_str) != Some(&artifact_hash(&folder.join(artifact), size)?) {
++            return Err(bad(CMD, "saved checkpoint artifact changed"));
++        }
++        Ok(())
++    }
++
 +    impl Owned {
 +        fn report(&mut self) -> Result<Value> {
 +            let report = read(&self.directory.join("job/status.json"))?;
 +            let owner = read(&self.directory.join("job/job.json"))?;
 +            let id = report.get("job_id").and_then(Value::as_str).filter(|s| !s.is_empty() && s.len() <= 128);
 +            let state = report.get("state").and_then(Value::as_str).unwrap_or_default();
-+            if report.get("schema").and_then(Value::as_str) != Some("soil-fem-native-job-status/1")
-+                || owner.get("schema").and_then(Value::as_str) != Some("soil-fem-native-job/1")
++            if report.get("schema").and_then(Value::as_str) != Some(if self.cooperative { "soil-fem-native-job-status/2" } else { "soil-fem-native-job-status/1" })
++                || owner.get("schema").and_then(Value::as_str) != Some(if self.cooperative { "soil-fem-native-job/2" } else { "soil-fem-native-job/1" })
 +                || id.is_none()
 +                || report.get("job_id") != owner.get("job_id")
 +                || self.worker_id.as_deref().is_some_and(|known| Some(known) != id)
@@ -4462,7 +4595,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +                // with the launch token, while liveness always comes from Child.
 +                || report.get("host_token").and_then(Value::as_str) != Some(&self.token)
 +                || owner.get("host_token").and_then(Value::as_str) != Some(&self.token)
-+                || !matches!(state, "preparing" | "running" | "cancelling" | "cancelled" | "succeeded" | "failed")
++                || !(matches!(state, "preparing" | "running" | "cancelling" | "cancelled" | "succeeded" | "failed") || (self.cooperative && state == "checkpointed"))
 +            {
 +                return Err(bad(CMD, "worker status does not match this owned job"));
 +            }
@@ -4528,13 +4661,22 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +                }
 +            } else if code == Some(2) && report.get("state").and_then(Value::as_str) == Some("cancelled") {
 +                "cancelled"
++            } else if self.cooperative && code == Some(3) {
++                match saved_checkpoint(&self.directory.join("job"), &self.input, &report) {
++                    Ok(()) => "checkpointed",
++                    Err(error) => {
++                        observation_error = Some(error.to_string());
++                        "failed"
++                    }
++                }
 +            } else {
 +                "failed"
 +            };
 +            Ok(json!({"job":self.token,"directory":self.directory,"input_sha256":self.input,"state":state,
 +                "process_alive":alive,"process_exit_code":code,"worker_report":report,"observation_error":observation_error,
 +                "cancel_requested":self.cancelled,"result":result,
-+                "stop_policy":"process_stop_without_new_checkpoint"}))
++                "resume_available":state == "checkpointed",
++                "stop_policy":if self.cooperative { "cooperative_staged_checkpoint" } else { "process_stop_without_new_checkpoint" }}))
 +        }
 +    }
 +
@@ -4555,30 +4697,43 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +        }
 +
 +        pub(super) fn start(&mut self, host: Host, request: &Start, input: String) -> Result<()> {
-+            let directory = external_path(Path::new(&request.directory))?;
++            self.launch(host, Path::new(&request.directory), input, Some(request), None)
++        }
++
++        pub(super) fn resume(&mut self, host: Host, directory: &Path, previous: &Path, input: String) -> Result<()> {
++            self.launch(host, directory, input, None, Some(previous))
++        }
++
++        fn launch(&mut self, host: Host, directory: &Path, input: String, request: Option<&Start>, previous: Option<&Path>) -> Result<()> {
++            let directory = external_path(directory)?;
 +            let log_path = directory.join("host-worker.log");
 +            let log = OpenOptions::new().write(true).create_new(true).open(&log_path).map_err(|e| bad(CMD, e.to_string()))?;
 +            let serial = self.serial.checked_add(1).ok_or_else(|| bad(CMD, "job counter exhausted"))?;
 +            let token = identity(serial)?;
 +            let mut command = Command::new(&host.python);
-+            command
-+                .arg(&host.worker)
-+                .arg("run")
-+                .arg(directory.join("capture"))
-+                .arg(directory.join("job"))
-+                .args([
++            command.arg(&host.worker);
++            if let Some(request) = request {
++                command.arg("run").arg(directory.join("capture")).arg(directory.join("job")).args([
 +                    "--mesh-size-m",
 +                    &request.mesh_size_m.to_string(),
 +                    "--order",
 +                    &request.element_order.to_string(),
 +                    "--quadrature",
 +                    &request.quadrature_order.to_string(),
-+                    "--expected-input-sha256",
-+                    &input,
-+                    "--watch-stdin",
-+                    "--host-token",
-+                    &token,
-+                ])
++                ]);
++                if request.cooperative {
++                    command.arg("--cooperative");
++                }
++            } else if let Some(previous) = previous {
++                command.arg("resume").arg(previous.join("job")).arg(directory.join("job"));
++            } else {
++                return Err(bad(CMD, "missing job launch request"));
++            }
++            if let Some(solver) = &host.solver {
++                command.arg("--solver").arg(solver);
++            }
++            command
++                .args(["--expected-input-sha256", &input, "--watch-stdin", "--host-token", &token])
 +                .current_dir(&host.root)
 +                .env("PYTHONUTF8", "1")
 +                .stdin(Stdio::piped())
@@ -4591,7 +4746,8 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +            }
 +            let child = command.spawn().map_err(|e| bad(CMD, format!("could not start FEM worker: {e}")))?;
 +            self.serial = serial;
-+            self.job = Some(Owned { child, directory, input, token, worker_id: None, cancelled: false });
++            self.job =
++                Some(Owned { child, directory, input, token, worker_id: None, cancelled: false, cooperative: request.is_none_or(|r| r.cooperative) });
 +            Ok(())
 +        }
 +
@@ -4616,6 +4772,19 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +    }
 +
 +    impl Session {
++        /// Override a program only through native host configuration, never a design or command.
++        pub fn set_soil_job_solver(&mut self, solver: &Path) -> Result<()> {
++            if self.soil_jobs.busy()? {
++                return Err(bad(CMD, "cannot replace an active FEM solver"));
++            }
++            let solver = external_path(solver)?;
++            if !solver.is_file() {
++                return Err(bad(CMD, "FEM solver must be an installed file"));
++            }
++            let host = self.soil_jobs.host.as_mut().ok_or_else(|| bad(CMD, "configure the FEM host before its solver"))?;
++            host.solver = Some(solver);
++            Ok(())
++        }
 +        /// Install only from explicit native host configuration, never design metadata.
 +        pub fn set_soil_job_root(&mut self, root: &Path) -> Result<()> {
 +            if self.soil_jobs.busy()? {
@@ -4663,10 +4832,14 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +        }
 +
 +        fn owned(s: &mut Session, directory: PathBuf) {
++            owned_mode(s, directory, false);
++        }
++
++        fn owned_mode(s: &mut Session, directory: PathBuf, cooperative: bool) {
 +            let input = crate::soil_fem::snapshot(s, &json!({})).unwrap()["input_sha256"].as_str().unwrap().to_string();
 +            let mut cmd = Command::new(std::env::current_exe().unwrap());
 +            cmd.args(["--exact", "soil_jobs::native::tests::job_child_protocol", "--nocapture"])
-+                .env("SOLIDCRAFT_SOIL_JOB_TEST_CHILD", "wait-for-eof")
++                .env("SOLIDCRAFT_SOIL_JOB_TEST_CHILD", if cooperative { "checkpoint-after-eof" } else { "wait-for-eof" })
 +                .stdin(Stdio::piped())
 +                .stdout(Stdio::null())
 +                .stderr(Stdio::null());
@@ -4676,7 +4849,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +                cmd.creation_flags(0x08000000);
 +            }
 +            let child = cmd.spawn().unwrap();
-+            s.soil_jobs.job = Some(Owned { child, directory, input, token: "owned-token".into(), worker_id: None, cancelled: false });
++            s.soil_jobs.job = Some(Owned { child, directory, input, token: "owned-token".into(), worker_id: None, cancelled: false, cooperative });
 +        }
 +
 +        fn write(path: &Path, value: &Value) {
@@ -4714,13 +4887,94 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +            assert!(j.child.try_wait().unwrap().is_some(), "owned test child must finish after pipe closure");
 +        }
 +
++        fn saved_receipt(s: &Session) {
++            let job = s.soil_jobs.job.as_ref().unwrap();
++            let folder = job.directory.join("job");
++            let artifact = "workflow/analysis/solver-job/checkpoint.json";
++            std::fs::create_dir_all(folder.join("workflow/analysis/solver-job")).unwrap();
++            let bytes = b"checkpoint data only";
++            std::fs::write(folder.join(artifact), bytes).unwrap();
++            write(
++                &folder.join("job.json"),
++                &json!({"schema":"soil-fem-native-job/2","job_id":"worker-owned","host_token":job.token,
++                "input_sha256":job.input,"solver_sha256":"a".repeat(64)}),
++            );
++            write(
++                &folder.join("checkpoint-receipt.json"),
++                &json!({"schema":"soil-fem-native-checkpoint/1","job_id":"worker-owned",
++                "input_sha256":job.input,"solver_sha256":"a".repeat(64),"kind":"solver_checkpoint","artifact":artifact,
++                "artifact_bytes":bytes.len(),"artifact_sha256":artifact_hash(&folder.join(artifact),bytes.len() as u64).unwrap()}),
++            );
++            write(
++                &folder.join("status.json"),
++                &json!({"schema":"soil-fem-native-job-status/2","job_id":"worker-owned","host_token":job.token,
++                "input_sha256":job.input,"state":"checkpointed","exit_code":3,"resume_available":true,
++                "checkpoint_receipt":"checkpoint-receipt.json","checkpoint_receipt_sha256":hash(&folder.join("checkpoint-receipt.json")).unwrap()}),
++            );
++        }
++
 +        #[test]
 +        fn job_child_protocol() {
-+            if std::env::var("SOLIDCRAFT_SOIL_JOB_TEST_CHILD").as_deref() != Ok("wait-for-eof") {
++            let mode = std::env::var("SOLIDCRAFT_SOIL_JOB_TEST_CHILD");
++            if !matches!(mode.as_deref(), Ok("wait-for-eof" | "checkpoint-after-eof")) {
 +                return;
 +            }
 +            let mut buffer = Vec::new();
 +            std::io::stdin().read_to_end(&mut buffer).unwrap();
++            if mode.as_deref() == Ok("checkpoint-after-eof") {
++                std::process::exit(3);
++            }
++        }
++
++        #[test]
++        fn saved_state_requires_owned_process_exit_and_matching_data_and_current_cad() {
++            let mut s = configured();
++            let root = folder();
++            owned_mode(&mut s, root.clone(), true);
++            saved_receipt(&s);
++            let alive = s.execute("analysis.soil.job.status", &json!({})).unwrap();
++            assert_eq!(alive["process_alive"], true);
++            assert_eq!(alive["resume_available"], false, "a saved report cannot override a live owned process");
++            finish(&mut s);
++            let saved = s.execute("analysis.soil.job.status", &json!({})).unwrap();
++            assert_eq!(saved["state"], "checkpointed", "{saved}");
++            assert_eq!(saved["process_exit_code"], 3);
++            assert_eq!(saved["resume_usable"], true);
++            assert_eq!(saved["result_usable"], false);
++            assert_eq!(saved["stop_policy"], "cooperative_staged_checkpoint");
++            let original = s.model.state().bodies.first().unwrap().name.clone();
++            s.execute("body.rename", &json!({"body":original,"name":"changed"})).unwrap();
++            assert_eq!(s.execute("analysis.soil.job.status", &json!({})).unwrap()["resume_usable"], false);
++            s.execute("edit.undo", &json!({})).unwrap();
++            assert_eq!(s.execute("analysis.soil.job.status", &json!({})).unwrap()["resume_usable"], true);
++            std::fs::write(root.join("job/workflow/analysis/solver-job/checkpoint.json"), b"changed").unwrap();
++            let invalid = s.execute("analysis.soil.job.status", &json!({})).unwrap();
++            assert_eq!(invalid["state"], "failed");
++            assert_eq!(invalid["resume_available"], false);
++        }
++
++        #[test]
++        fn resume_checks_current_input_and_saved_artifact_before_creating_output_and_refuses_program_parameters() {
++            let mut s = configured();
++            let root = folder();
++            owned_mode(&mut s, root.clone(), true);
++            saved_receipt(&s);
++            finish(&mut s);
++            s.soil_jobs.host = Some(Host { root: root.clone(), python: PathBuf::from("unused"), worker: PathBuf::from("unused"), solver: None });
++            let input = s.soil_jobs.job.as_ref().unwrap().input.clone();
++            let output = root.join("refused-resume");
++            let mut params = json!({"directory":output,"previous_directory":root,"expected_input_sha256":input});
++            params["solver"] = json!("a program supplied by saved data");
++            assert!(s.execute("analysis.soil.job.resume", &params).is_err());
++            params.as_object_mut().unwrap().remove("solver");
++            params["expected_input_sha256"] = json!("wrong");
++            assert!(s.execute("analysis.soil.job.resume", &params).is_err());
++            assert!(!output.exists());
++            params["expected_input_sha256"] = json!(input);
++            std::fs::write(root.join("job/workflow/analysis/solver-job/checkpoint.json"), b"changed").unwrap();
++            let error = s.execute("analysis.soil.job.resume", &params).unwrap_err().to_string();
++            assert!(error.contains("artifact"), "{error}");
++            assert!(!output.exists());
 +        }
 +
 +        #[test]
@@ -4752,7 +5006,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +            assert!(s.execute("analysis.soil.job.start", &p).is_err());
 +            assert!(!out.exists());
 +            // A trusted test host is installed directly; design fields never install one.
-+            s.soil_jobs.host = Some(Host { root: root.clone(), python: PathBuf::from("unused"), worker: PathBuf::from("unused") });
++            s.soil_jobs.host = Some(Host { root: root.clone(), python: PathBuf::from("unused"), worker: PathBuf::from("unused"), solver: None });
 +            let mut scratch = s.scratch();
 +            assert!(scratch.soil_jobs.host().is_none());
 +            assert!(scratch.execute("analysis.soil.job.start", &p).is_err());
@@ -4896,6 +5150,7 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +            value["current_input_sha256"] = json!(sha);
 +            value["stale"] = json!(stale);
 +            value["result_usable"] = json!(!stale && value.get("state").and_then(Value::as_str) == Some("succeeded"));
++            value["resume_usable"] = json!(!stale && value.get("resume_available") == Some(&Value::Bool(true)));
 +            value["current_input_error"] = json!(current.err().map(|e| e.to_string()));
 +        }
 +        Ok(value)
@@ -4904,6 +5159,42 @@ index 0000000000000000000000000000000000000000..a78bc29d73d60ee7d94c57aa18534e7f
 +    {
 +        let _ = s;
 +        Ok(json!({"state":"unavailable","host_available":false}))
++    }
++}
++
++pub fn resume(s: &mut Session, params: &Value) -> Result<Value> {
++    let request: Resume = serde_json::from_value(params.clone()).map_err(|e| bad(CMD, e.to_string()))?;
++    if request.directory.is_empty()
++        || request.directory.len() > 4096
++        || request.previous_directory.is_empty()
++        || request.previous_directory.len() > 4096
++    {
++        return Err(bad(CMD, "new output and saved job folders are required"));
++    }
++    #[cfg(not(target_arch = "wasm32"))]
++    {
++        let host = s.soil_jobs.host().cloned().ok_or_else(|| bad(CMD, "FEM host is unavailable"))?;
++        if s.soil_jobs.busy()? {
++            return Err(bad(CMD, "an FEM job is already running in this session"));
++        }
++        let frozen = crate::soil_fem::snapshot(s, &Value::Null)?;
++        if frozen.get("input_sha256").and_then(Value::as_str) != Some(&request.expected_input_sha256) {
++            return Err(bad(CMD, "analysis inputs changed before job resume"));
++        }
++        solidcraft_io::vfs::check(&request.previous_directory).map_err(|e| bad(CMD, e.to_string()))?;
++        let previous = std::path::Path::new(&request.previous_directory);
++        let saved = previous.join("job");
++        let report = native::read(&saved.join("status.json"))?;
++        native::saved_checkpoint(&saved, &request.expected_input_sha256, &report)?;
++        solidcraft_io::vfs::check(&request.directory).map_err(|e| bad(CMD, e.to_string()))?;
++        std::fs::create_dir(&request.directory).map_err(|e| bad(CMD, format!("new resume folder required: {e}")))?;
++        s.soil_jobs.resume(host, std::path::Path::new(&request.directory), previous, request.expected_input_sha256)?;
++        status(s, &json!({}))
++    }
++    #[cfg(target_arch = "wasm32")]
++    {
++        let _ = (s, request.expected_input_sha256);
++        Err(bad(CMD, "external FEM jobs require the native desktop application"))
 +    }
 +}
 +
@@ -7650,10 +7941,10 @@ index 0000000000000000000000000000000000000000..c07b9a263fc86af259ee3d6f4c86dda8
 +}
 diff --git a/crates/ui-egui/src/soil_jobs.rs b/crates/ui-egui/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e8eae8f95
+index 0000000000000000000000000000000000000000..017336d7aa2f45ee74bbb32ac4619aee8eb22cbb
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_jobs.rs
-@@ -0,0 +1,149 @@
+@@ -0,0 +1,198 @@
 +//! Native job controls are a thin adapter over the engine's owned-process commands.
 +use crate::{SolveApp, ui_kit};
 +use serde_json::{Value, json};
@@ -7663,13 +7954,24 @@ index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e
 +    mesh_size_m: f64,
 +    element_order: u8,
 +    quadrature_order: u8,
++    cooperative: bool,
++    previous_directory: String,
 +    status: Value,
 +    next_poll: f64,
 +}
 +
 +impl Default for JobsPanel {
 +    fn default() -> Self {
-+        Self { directory: String::new(), mesh_size_m: 2., element_order: 2, quadrature_order: 3, status: Value::Null, next_poll: 0. }
++        Self {
++            directory: String::new(),
++            mesh_size_m: 2.,
++            element_order: 2,
++            quadrature_order: 3,
++            cooperative: true,
++            previous_directory: String::new(),
++            status: Value::Null,
++            next_poll: 0.,
++        }
 +    }
 +}
 +
@@ -7678,6 +7980,9 @@ index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e
 +        if app.now >= self.next_poll || self.status.is_null() {
 +            self.next_poll = app.now + 0.5;
 +            self.status = app.run("analysis.soil.job.status", json!({}))?;
++            if self.previous_directory.is_empty() && self.status.get("resume_available").and_then(Value::as_bool) == Some(true) {
++                self.previous_directory = self.status.get("directory").and_then(Value::as_str).unwrap_or_default().to_string();
++            }
 +        }
 +        Ok(())
 +    }
@@ -7699,6 +8004,10 @@ index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e
 +            for n in 3..=5 {
 +                ui.selectable_value(&mut self.quadrature_order, n, n.to_string());
 +            }
++        });
++        ui.checkbox(&mut self.cooperative, "Save a checkpoint when stopping");
++        ui_kit::row(ui, "Saved job folder", |ui| {
++            ui.text_edit_singleline(&mut self.previous_directory);
 +        });
 +        if !host {
 +            ui_kit::text(
@@ -7727,12 +8036,30 @@ index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e
 +            {
 +                action = Some("cancel");
 +            }
++            if ui
++                .add_enabled(
++                    host && reviewed && !active && !self.directory.trim().is_empty() && !self.previous_directory.trim().is_empty(),
++                    egui::Button::new(crate::i18n::tr_label("Resume Soil Analysis")),
++                )
++                .clicked()
++            {
++                action = Some("resume");
++            }
 +        });
 +        let state = self.status.get("state").and_then(Value::as_str).unwrap_or("waiting");
 +        let phase = self.status.pointer("/worker_report/phase").and_then(Value::as_str).unwrap_or("waiting for worker");
 +        ui.label(format!("State: {state} · {phase}"));
 +        if let Some(seconds) = self.status.pointer("/worker_report/elapsed_seconds").and_then(Value::as_f64) {
 +            ui.label(format!("Elapsed: {seconds:.1} s"));
++        }
++        if let Some(progress) = self.status.pointer("/worker_report/solver_report/last_progress") {
++            let stage = progress.get("stage").and_then(Value::as_str).unwrap_or("initialization");
++            let fraction = progress.get("progress").and_then(Value::as_f64).unwrap_or(0.);
++            let iteration = progress.get("newton_iteration").and_then(Value::as_u64).unwrap_or(0);
++            ui.label(format!("{stage}: {:.1}% · Newton {iteration}", fraction * 100.));
++        }
++        if self.status.get("resume_usable").and_then(Value::as_bool) == Some(true) {
++            ui_kit::text(ui, "Checkpoint verified for this model. Choose a new job folder and resume.", ui_kit::Text::Note("soil_job_saved"));
 +        }
 +        if let Some(input) = self.status.get("input_sha256").and_then(Value::as_str) {
 +            ui.label(format!("Input SHA-256: {input}"));
@@ -7772,7 +8099,11 @@ index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e
 +        }
 +        ui_kit::text(
 +            ui,
-+            "Stop ends the owned worker process tree. It does not create a new restart checkpoint.",
++            if self.status.get("stop_policy").and_then(Value::as_str) == Some("cooperative_staged_checkpoint") || (!active && self.cooperative) {
++                "Stop waits for an accepted increment and saves a checkpoint. Resume uses the same installed solver and workflow version. Before solving starts, Stop cancels preparation."
++            } else {
++                "Legacy Stop ends the owned worker process tree without creating a new checkpoint."
++            },
 +            ui_kit::Text::Note("soil_job_stop_policy"),
 +        );
 +        action
@@ -7795,10 +8126,19 @@ index 0000000000000000000000000000000000000000..86955b0e42fe7a0e1551973a7e63e54e
 +            app.run(
 +                "analysis.soil.job.start",
 +                json!({"directory":self.directory.trim(),"expected_input_sha256":snapshot.get("input_sha256"),
-+                "mesh_size_m":self.mesh_size_m,"element_order":self.element_order,"quadrature_order":self.quadrature_order}),
++                "mesh_size_m":self.mesh_size_m,"element_order":self.element_order,"quadrature_order":self.quadrature_order,"cooperative":self.cooperative}),
 +            )?
-+        } else {
++        } else if action == "resume" {
++            let snapshot = app.run("analysis.soil.snapshot", json!({}))?;
++            app.run(
++                "analysis.soil.job.resume",
++                json!({"directory":self.directory.trim(),"previous_directory":self.previous_directory.trim(),
++                "expected_input_sha256":snapshot.get("input_sha256")}),
++            )?
++        } else if action == "cancel" {
 +            app.run("analysis.soil.job.cancel", json!({"job":self.status.get("job")}))?
++        } else {
++            return Err("Unknown soil job action".into());
 +        };
 +        Ok(())
 +    }
@@ -8229,3 +8569,18 @@ index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031
 +        Quantity::VolumetricPlasticStrain => "Volumetric plastic strain",
 +    }
 +}
+diff --git a/xtask/src/icons.rs b/xtask/src/icons.rs
+index e3f618584e02dbf3d3ab27103a817cebeb091d75..18f3191bde2fc07816212fe2bd3bd17e730914a8 100644
+--- a/xtask/src/icons.rs
++++ b/xtask/src/icons.rs
+@@ -8,7 +8,9 @@ pub fn run(root: &Path) -> Result<(), String> {
+         vec!["-B", "assets/icons/ui/design/tools/icon_status.py", "--check"],
+         vec!["-B", "-m", "unittest", "discover", "-s", "tests/tools", "-p", "test_icon*.py"],
+     ] {
+-        let mut command = Command::new("python3");
++        // setup-python and standard Windows installations expose python.exe;
++        // python3.exe may instead be an unavailable Windows Store alias.
++        let mut command = Command::new(if cfg!(windows) { "python" } else { "python3" });
+         command.args(args).current_dir(root);
+         super::run(command, "UI icon standards (Python 3.11+)")?;
+     }

@@ -1,6 +1,38 @@
 # 外部解析ジョブの起動・状態・停止
 
-2026-10-24。拡張版SolidCraftのAnalysisタブから、外部FEMワーカーの起動・監視・停止とCAD変更後の結果失効を実装し、実GUIと実MCC解析で限定検証した。**協調中断・保存点からの画面内再開・3D結果描画は未完で、P5全体の完了ではない。** Python/Gmsh/PowerShellは外部解析側に置き、SolidCraftアプリへ組み込まない。
+拡張版SolidCraftのAnalysisタブから、外部FEMワーカーの起動・監視・停止とCAD変更後の結果失効を実装し、実GUIと実MCC解析で限定検証した。Python/Gmsh/PowerShellは外部解析側に置き、SolidCraftアプリへ組み込まない。P5全体は未完了である。
+
+## 2026-10-25：協調ワーカーと再開の接続
+
+`tools/native_job.py run --cooperative` は形状とメッシュを準備した後、Rustの施工ジョブCLIを使用する。停止要求とホストパイプのEOFを、求解中は受理増分での保存要求へ変換する。結果書出し中の停止では完了した生結果を保存し、新しい出力先へ再開して書出しと監査をやり直す。準備中の停止には再開点を約束しない。従来のフラグなし実行は旧プロセス停止方式である。
+
+```powershell
+$solver = '.\runs\projected-mcc-development-20261025-v1\solver\soil-fem-3d.exe'
+.venv\Scripts\python.exe tools\native_job.py run CAPTURE NEW_JOB --solver $solver --cooperative --mesh-size-m 4
+.venv\Scripts\python.exe tools\native_job.py cancel NEW_JOB
+# 終了値3とcheckpointedを確認してから、新しい出力先へ再開する。
+.venv\Scripts\python.exe tools\native_job.py resume NEW_JOB NEW_RESTART --solver $solver
+```
+
+ワーカーの終了値は成功0、失敗1、保存なしの取消2、保存済みの中断3。内部Rust CLIの中断値2と区別する。保存点の入力SHA・ソルバー・処理コード版・データ指紋を確認し、古いジョブから実行プログラムを選ばない。再開時には再メッシュせず、保存時の形状・物性・工程と監査用の来歴をコピーする。異なるCAD入力、異なるインストール済みソルバーや処理版、変更した保存点での再開を拒否する。
+
+実行開始時に外部処理のソースを `runtime/` へ固定し、その版から後続の処理を読む。元作業フォルダーの編集と実行中の処理を混在させない。再開には現在のインストールが保存時と同じ版であることを必要とする。Windowsの一時的な読取競合では、完成済みの同じ一時ファイルを使って置換を最大5回だけ再試行する。拒否が続けば元の状態ファイルを保持して失敗を報告する。
+
+`runs/native-cooperative-verification-20261025-v4/verification.json` に実CADの二層MCC・局所掘削を記録した。連続実行に対して、求解中の停止要求、求解中のホスト切断、結果書出し中の停止の3経路を別プロセスで再開し、`elapsed_seconds` とバイナリSHA以外の全結果が厳密に一致した。全経路の実行版SHAは別に照合している。この例では塑性化を必須にしておらず、塑性履歴の施工CLI検証は後述の別の記録である。単体12試験では入力/保存点の改変拒否、ソース固定、所有プロセスの停止、読取競合も検査した。v2の進捗観測取り逃しとv3のWindows置換失敗は保持している。
+
+SolidCraft側には `job.start` の `cooperative`、`analysis.soil.job.resume`、保存点の指紋検査、進捗表示と再開操作を追加した。旧ホストの7回帰に保存・再開の2試験を加えた9件が合格した。実際の所有プロセスが終了するまで保存状態を認定しないこと、CAD変更による再開の失効、改変した保存点と入力版不一致を出力先の作成前に拒否すること、コマンド経由のプログラム指定の拒否を確認した。記録は `runs/native-cooperative-ui-20261025-v1/engine-verification.json`。ソルバーの選択は起動時の `SOLIDCRAFT_SOIL_FEM_SOLVER` または `Start-SolidCraftSoil.ps1 -SolverPath` だけで行い、CAD入力や保存ジョブの実行パス指定は受け付けない。P1体積MCCの新しい出力形式をビューアへ接続する作業も別途残る。
+
+## 2026-10-26：実画面での停止・再開と別起動からの再開
+
+新しいネイティブ実行版 `5f84d89bcf624c673988146e6e46d21998ae659f4b305b6429b52e7b29da3cdb` をビルドし、実ウィンドウからStart、求解中のStop、保存点からのResume、結果ビューアを操作した。2層K0/MCC・550節点・7776積分点の局所掘削で、進捗0.828125の受理済み増分を保存した。CAD改名でResumeが無効になり、登録コマンドのUndoで入力が厳密に戻ると有効になった。元のモデルを保全した検証用コピーだけを使用している。
+
+同じ起動中の再開と、アプリを終了して保存済みモデルを別起動で開いてからの再開が正常完了した。両方とも同じ入力で128増分を連続実行した結果に対し、全節点・全積分点履歴を含む非実行時フィールドが厳密に一致し、実行版SHAも別に一致確認した。別起動では新規解析用メッシュ欄を既定2 mのままにしたが、再開は保存時の4 mメッシュと入力をバイト単位で保持し、再メッシュしていない。画面のメッシュ指定は新規Start用である。
+
+再開後の実画面で掘削形状、鉛直変位コンター、量とmm単位、完了・監査済みの表示を確認した。[保存状態](../runs/native-cooperative-gui-20261025-v1/saved.png)／[再開後の3D表示](../runs/native-cooperative-gui-20261025-v1/resumed-view.png)。既存UIの編集・CAD変更・入力読込の3回帰試験も合格した。記録は `runs/native-cooperative-gui-verification-20261026-v1/verification.json`。これは従来の変位型MCC形式の連携検証であり、塑性化を必須にした独立材料則検証、P1体積の新形式、求解中の実app.quit、全P5/P6の受入を代替しない。
+
+検証では固定した開発CLI `09eed93197f8aedcbae79b9d404ccab6becb8b5a0d8b95135cef623a9578210c` をホストのソルバー設定へ指定し、既定の旧受入版は置換していない。総合 `cargo xtask ci` は継続中である。初回はWindowsの `python3` エイリアスでアイコン検査が起動できなかったため、Windowsだけ `python` を選ぶ起動処理を修正した。次の実行では省略取得されていた上流の `skills/` 文書がMCP試験のコンパイルに必要と判明し、同じ固定コミットから `git sparse-checkout add skills` で展開した。試験ソースは変更していない。3回目は書式・資産・アイコン17試験・ライセンス・カタログ整列・依存方向・UIコンテナー・全ターゲットの警告禁止clippyを通過し、全体試験のビルドとWASM等を継続している。ログは `runs/native-cooperative-ci-20261026-v3.log`。未完の品質検査を合格へ変更しない。
+
+以下の2026-10-24の記録と「新しい保存点を作らない停止」の説明は、旧プロファイルと当時のネイティブ実行版に対するものである。
 
 ## 外部CLI
 

@@ -5,6 +5,27 @@ Imported CAD files never supply script or executable paths.
 """
 from pathlib import Path, PurePosixPath
 import hashlib
+import json
+import os
+import time
+import uuid
+
+
+def atomic_json(path, value):
+    temporary = path.with_name(path.name+'.'+uuid.uuid4().hex+'.part')
+    with temporary.open('x', encoding='utf-8') as stream:
+        json.dump(value, stream, ensure_ascii=False, allow_nan=False)
+    # A Windows observer may briefly hold the old file without delete sharing.
+    # Retry replacement of this same owned, complete temporary; never rewrite
+    # the live file or select any other temporary/path.
+    for attempt in range(5):
+        try:
+            os.replace(temporary, path)
+            return
+        except PermissionError:
+            if attempt == 4:
+                raise
+            time.sleep(.01)
 
 
 def sha(path):

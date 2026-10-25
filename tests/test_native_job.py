@@ -9,11 +9,93 @@ import tempfile
 import time
 import unittest
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
-from native_job import atomic,copy_checked,request_cancel,run,status,stop_child,watch_host
+from native_job import atomic,copy_checked,request_cancel,run,status,stop_child,watch_host,frozen_profile
 from verify_acceptance_packet import sha
 
 
 class NativeJob(unittest.TestCase):
+    def test_atomic_status_retries_only_its_own_complete_temporary_on_windows_reader_contention(self):
+        from unittest.mock import patch
+        import native_workflow_snapshot as snapshot
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);path=folder/'status.json';atomic(path,{'old':True})
+            real_replace=os.replace;attempts=[]
+            def replace(source,destination):
+                attempts.append((source,destination))
+                self.assertEqual(json.loads(source.read_text(encoding='utf-8')),{'new':True})
+                if len(attempts)<4:raise PermissionError('reader held old status')
+                real_replace(source,destination)
+            with patch.object(snapshot.os,'replace',side_effect=replace):atomic(path,{'new':True})
+            self.assertEqual(len(attempts),4);self.assertEqual(len(set(attempts)),1)
+            self.assertEqual(json.loads(path.read_text(encoding='utf-8')),{'new':True})
+            self.assertFalse(list(folder.glob('*.part')))
+            with patch.object(snapshot.os,'replace',side_effect=PermissionError('persistent refusal')) as denied:
+                with self.assertRaises(PermissionError):atomic(path,{'unpublished':True})
+                self.assertEqual(denied.call_count,5)
+            self.assertEqual(json.loads(path.read_text(encoding='utf-8')),{'new':True})
+            self.assertEqual(len(list(folder.glob('*.part'))),1)
+
+    def test_frozen_workflow_survives_source_edits_and_loads_its_own_later_profile(self):
+        import native_workflow_snapshot as snapshot
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/'source';(root/'tools').mkdir(parents=True)
+            source=root/'tools/native_stage_profile.py';source.write_text('VALUE = 17\n',encoding='utf-8')
+            bindings={'tools/native_stage_profile.py':sha(source)}
+            runtime=snapshot.capture(root,Path(tmp)/'runtime',bindings)
+            source.write_text('raise RuntimeError("edited workflow must never run")\n',encoding='utf-8')
+            snapshot.verify(runtime,bindings)
+            self.assertEqual(frozen_profile(runtime).VALUE,17)
+            (runtime/'tools/native_stage_profile.py').write_text('VALUE = 99\n',encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'captured workflow'):snapshot.verify(runtime,bindings)
+
+    def test_workflow_inventory_cannot_copy_outside_either_root(self):
+        import native_workflow_snapshot as snapshot
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/'source';root.mkdir()
+            secret=Path(tmp)/'outside';secret.write_text('outside',encoding='utf-8')
+            for i,name in enumerate(('../outside','/outside','C:/outside','tools\\outside')):
+                with self.subTest(name=name),self.assertRaisesRegex(ValueError,'safe relative'):
+                    snapshot.capture(root,Path(tmp)/('runtime-'+str(i)),{name:sha(secret)})
+
+    def saved_fixture(self, folder):
+        import native_stage_profile as profile
+        from test_solidcraft_view import job_fixture
+        workflow=folder/'workflow';job_fixture(workflow)
+        shutil.copytree(workflow/'conformal',folder/'capture')
+        shutil.copyfile(folder/'capture/native-capture.json',folder/'capture/capture.json')
+        atomic(workflow/'analysis/prepared-stage-input.json',dict(prepared=True))
+        atomic(workflow/'conformal/prepared-model.json',dict(prepared=True))
+        artifact=workflow/'analysis/solver-job/checkpoint.json';artifact.parent.mkdir()
+        artifact.write_bytes(b'{"checkpoint":"data only, not executable"}')
+        capture=json.loads((folder/'capture/capture.json').read_text(encoding='utf-8'))
+        owner=dict(schema='soil-fem-native-job/2',job_id='saved-owned',input_sha256=capture['input_sha256'],
+                   solver_sha256='a'*64,tool_sources_sha256={'current':'trusted'})
+        atomic(folder/'job.json',owner)
+        report=dict(schema='soil-fem-native-job-status/2',job_id=owner['job_id'])
+        profile.saved(folder,owner,'solver_checkpoint',artifact,lambda **changes:report.update(changes))
+        atomic(folder/'status.json',report)
+        return owner,report
+
+    def test_saved_resume_requires_current_host_solver_workflow_and_cad_identity(self):
+        import native_stage_profile as profile
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);owner,report=self.saved_fixture(folder)
+            actual,receipt=profile.previous(folder,'a'*64,{'current':'trusted'},owner['input_sha256'])
+            self.assertEqual(actual,owner);self.assertEqual(receipt['kind'],'solver_checkpoint')
+            for solver,sources,cad in [('b'*64,{'current':'trusted'},owner['input_sha256']),
+                                       ('a'*64,{'current':'changed'},owner['input_sha256']),
+                                       ('a'*64,{'current':'trusted'},'f'*64)]:
+                with self.subTest(solver=solver,sources=sources,cad=cad),self.assertRaises(ValueError):
+                    profile.previous(folder,solver,sources,cad)
+
+    def test_checkpoint_receipt_artifact_and_analysis_input_tampering_are_refused(self):
+        import native_stage_profile as profile
+        for name in ('checkpoint-receipt.json','workflow/analysis/solver-job/checkpoint.json',*profile.INPUT_FILES):
+            with self.subTest(name=name),tempfile.TemporaryDirectory() as tmp:
+                folder=Path(tmp);self.saved_fixture(folder)
+                with (folder/name).open('ab') as stream:stream.write(b' changed')
+                with self.assertRaises(ValueError):profile.previous(folder,'a'*64,{'current':'trusted'})
+
     def test_live_host_pipe_allows_normal_interpreter_shutdown(self):
         # Regression for the actual native-host run: a daemon must not retain
         # BufferedReader's lock and crash Python when a job finishes normally.

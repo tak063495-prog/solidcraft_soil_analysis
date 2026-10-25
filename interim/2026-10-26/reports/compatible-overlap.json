@@ -1,0 +1,106 @@
+{
+  "schema": "soil-fem-compatible-spatial-overlap-record/1",
+  "evidence_integrity_passed": true,
+  "comparison_recorded": true,
+  "source_archive_verified": true,
+  "benchmark_recipe_bound_through_native_input_bytes": true,
+  "reference_steps": 100,
+  "comparisons": [
+    {
+      "left_elements": 224,
+      "right_elements": 413,
+      "geometry": {
+        "quadrature_order": 3,
+        "candidate_pairs": 13610,
+        "positive_volume_pairs": 3374,
+        "total_intersection_volume_m3": 768.0,
+        "maximum_hull_volume_consistency_error_m3": 1.4155343563970746e-15,
+        "maximum_affine_deviation_m": 3.552713678800501e-15,
+        "scipy": "1.18.1",
+        "numpy": "2.5.4"
+      },
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "from_seed_relative_l2": 0.0064894872941669525,
+          "from_seed_rms_m": 5.311093699221531e-05,
+          "stage_increment_relative_l2": 0.0064894872941669525,
+          "stage_increment_rms_m": 5.311093699221531e-05
+        },
+        {
+          "name": "reload_slope",
+          "from_seed_relative_l2": 0.01124149825483736,
+          "from_seed_rms_m": 9.342494360510892e-05,
+          "stage_increment_relative_l2": 0.0452293713146672,
+          "stage_increment_rms_m": 8.259909576554834e-05
+        },
+        {
+          "name": "unload_slope",
+          "from_seed_relative_l2": 0.0065949687120440996,
+          "from_seed_rms_m": 5.397234725375513e-05,
+          "stage_increment_relative_l2": 0.044558281945408604,
+          "stage_increment_rms_m": 8.13296903278793e-05
+        },
+        {
+          "name": "excavate_pit",
+          "from_seed_relative_l2": 0.030004914870275134,
+          "from_seed_rms_m": 0.00023363438058269018,
+          "stage_increment_relative_l2": 0.18960194985681497,
+          "stage_increment_rms_m": 0.00022736706877465524
+        }
+      ]
+    },
+    {
+      "left_elements": 413,
+      "right_elements": 723,
+      "geometry": {
+        "quadrature_order": 3,
+        "candidate_pairs": 25489,
+        "positive_volume_pairs": 6487,
+        "total_intersection_volume_m3": 768.0000000000001,
+        "maximum_hull_volume_consistency_error_m3": 1.1657341758564144e-15,
+        "maximum_affine_deviation_m": 3.552713678800501e-15,
+        "scipy": "1.18.1",
+        "numpy": "2.5.4"
+      },
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "from_seed_relative_l2": 0.009264318402992735,
+          "from_seed_rms_m": 7.595262503684527e-05,
+          "stage_increment_relative_l2": 0.009264318402992735,
+          "stage_increment_rms_m": 7.595262503684527e-05
+        },
+        {
+          "name": "reload_slope",
+          "from_seed_relative_l2": 0.012350529055446244,
+          "from_seed_rms_m": 0.00010278180326054791,
+          "stage_increment_relative_l2": 0.04495759077645402,
+          "stage_increment_rms_m": 8.211655276028333e-05
+        },
+        {
+          "name": "unload_slope",
+          "from_seed_relative_l2": 0.009395194934143728,
+          "from_seed_rms_m": 7.702291036499307e-05,
+          "stage_increment_relative_l2": 0.04427280971056301,
+          "stage_increment_rms_m": 8.081563985852015e-05
+        },
+        {
+          "name": "excavate_pit",
+          "from_seed_relative_l2": 0.015838220005145117,
+          "from_seed_rms_m": 0.00012365849755852396,
+          "stage_increment_relative_l2": 0.07792187489436847,
+          "stage_increment_rms_m": 9.417687251873401e-05
+        }
+      ]
+    }
+  ],
+  "numerical_increment_refinement_verified": false,
+  "spatial_convergence_verified": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "limitations": "Affine Tet10 independent compatible formulation at 100 steps on each mesh; no raw GP history transfer. Two mesh pairs are insufficient to certify a continuum limit. Time/increment error still needs separate refinement.",
+  "original_report_sha256": "ba5862f4e0884622d7a747e964b927cc831d1843435e286f15edf46c2f1c4c47",
+  "original_local_path": "runs/compatible-mcc-overlap-20261026-v1/verification.json",
+  "publication_note": "Summary only. Local run paths are provenance, not bundled files."
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "soil-fem-mcc-723-field-and-formulation-record/1",
+  "evidence_integrity_passed": true,
+  "native_against_independent_100_field_accuracy_passed": true,
+  "reference_refinement_passed": null,
+  "integration_gates_passed": false,
+  "spatial_convergence_verified": false,
+  "comparisons": [
+    {
+      "name": "initial_equilibrated",
+      "volume_integrated_displacement_relative_l2": 0.00505850146607166,
+      "maximum_plastic_strain_difference": 0.0009632109938397728,
+      "plastic_history_quadrature_volume_m3": {
+        "projected": 0.5905752897690834,
+        "compatible": 0.5439779371063614
+      }
+    },
+    {
+      "name": "reload_slope",
+      "volume_integrated_displacement_relative_l2": 0.006401461287150901,
+      "maximum_plastic_strain_difference": 0.00995476626023483,
+      "plastic_history_quadrature_volume_m3": {
+        "projected": 1.5225001917676542,
+        "compatible": 1.9120047602601093
+      }
+    },
+    {
+      "name": "unload_slope",
+      "volume_integrated_displacement_relative_l2": 0.005136764716705041,
+      "maximum_plastic_strain_difference": 0.00995476626023483,
+      "plastic_history_quadrature_volume_m3": {
+        "projected": 1.5225001917676542,
+        "compatible": 1.913611711758997
+      }
+    },
+    {
+      "name": "excavate_pit",
+      "volume_integrated_displacement_relative_l2": 0.009856406742316564,
+      "maximum_plastic_strain_difference": 0.00995476626023483,
+      "plastic_history_quadrature_volume_m3": {
+        "projected": 1.3771655807041858,
+        "compatible": 1.7627224070047498
+      }
+    }
+  ],
+  "compatible_overlap_record_sha256": "ba5862f4e0884622d7a747e964b927cc831d1843435e286f15edf46c2f1c4c47",
+  "goal_complete": false,
+  "p6_complete": false,
+  "limitations": "Single native increment setting versus one 100-step projected reference. Reference-200 is running; no increment-refinement acceptance yet. Different formulations are comparisons, not continuum error bounds.",
+  "original_report_sha256": "d691c276e171d1e85acee4e7fee473aaddada5b6d365e49c6471c541ba076414",
+  "original_local_path": "runs/compatible-mcc-overlap-20261026-v1/723-field-and-formulation-verification.json",
+  "publication_note": "Summary only. Local run paths are provenance, not bundled files."
+}

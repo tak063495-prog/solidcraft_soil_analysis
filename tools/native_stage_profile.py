@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 from import_solidcraft_capture import read, validate
-from native_workflow_snapshot import sha, verify
+from native_workflow_snapshot import sha, verify, atomic_json
 
 INPUT_FILES = ('workflow/analysis/ground/mesh.json', 'workflow/analysis/ground/ground.json',
                'workflow/analysis/ground/model-input-package.json', 'workflow/analysis/stages.json',
@@ -21,10 +21,7 @@ INPUT_FILES = ('workflow/analysis/ground/mesh.json', 'workflow/analysis/ground/g
 
 
 def atomic(path, value):
-    temporary = path.with_name(path.name+'.'+uuid.uuid4().hex+'.part')
-    with temporary.open('x', encoding='utf-8') as stream:
-        json.dump(value, stream, ensure_ascii=False, allow_nan=False)
-    temporary.replace(path)
+    atomic_json(path, value)
 
 
 def copy_file(source, target, digest):
