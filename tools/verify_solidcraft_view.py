@@ -15,7 +15,9 @@ from verify_acceptance_packet import sha
 
 def verify(job,packet,output):
     job=job.resolve();packet=packet.resolve();manifest=read(packet/'view-manifest.json')
-    if manifest.get('schema')!='soil-fem-solidcraft-view/1' or manifest.get('complete') is not True:raise ValueError('complete view packet required')
+    if manifest.get('schema') not in ('soil-fem-solidcraft-view/1','soil-fem-solidcraft-view/2') or manifest.get('complete') is not True:raise ValueError('complete view packet required')
+    projected=manifest['schema']=='soil-fem-solidcraft-view/2'
+    if projected and manifest['semantics'].get('source_result_schema')!='soil-fem-projected-mcc-stage-result/1':raise ValueError('projected source schema required')
     for base,files in ((job,manifest['job_sources_sha256']),(packet,manifest['files_sha256'])):
         for name,digest in files.items():
             path=(base/name).resolve()
@@ -24,6 +26,8 @@ def verify(job,packet,output):
     results=job/'analysis/results';reports=[]
     for frame in manifest['frames']:
         i=frame['index'];view=read(packet/frame['frame']);points=read(packet/frame['integration_points'])
+        version='2' if projected else '1'
+        if view.get('schema')!='soil-fem-view-frame/'+version or points.get('schema')!='soil-fem-view-integration-points/'+version:raise ValueError('view frame family differs from manifest')
         vtk=meshio.read(results/f'stage-{i:03}.vtu');kind='tetra10' if geometry['cell_kind']=='tetra10' else 'tetra'
         node_ids=np.asarray(view['active_node_ids']);element_ids=np.asarray(view['active_element_ids'])
         if not np.array_equal(node_ids,vtk.point_data['original_node_id']):raise ValueError('original node identifiers differ from VTU')
@@ -68,6 +72,15 @@ def verify(job,packet,output):
                 if name not in vtk.cell_data:continue
                 if not np.allclose(np.asarray(values,dtype=float),vtk.cell_data[name][0],rtol=1e-13,atol=1e-13,equal_nan=True):raise ValueError('legacy single-point value differs from VTU: '+name)
                 checked_raw.append(name)
+        if projected:
+            primary=view['mixed_primary'];vtk_primary=meshio.read(results/f'mean-pressure-dofs-{i:03}.vtu')
+            if not np.array_equal(primary['positions_m'],vtk_primary.points):raise ValueError('primary coordinates differ from VTU')
+            for name,key in (('original_node_ids','original_node_id'),('material_ids','material_id'),
+                ('mean_effective_stress_compression_positive_kpa','mean_effective_stress_compression_positive_kpa'),
+                ('cumulative_material_volume_strain_compression_positive','cumulative_material_volume_strain_compression_positive'),
+                ('frozen_compatibility_offset_m3','frozen_compatibility_offset_m3')):
+                if not np.array_equal(primary[name],vtk_primary.point_data[key]):raise ValueError('primary view field differs from VTU: '+name)
+            if view['field_semantics'].get('equilibrium_stress')!='work_conjugate_effective_stress_compression_positive_kpa':raise ValueError('projected equilibrium stress semantics differ')
         reports.append(dict(index=i,name=view['name'],active_nodes=len(node_ids),active_elements=len(element_ids),boundary_faces=len(actual),
             raw_points=len(points['element_ids']),checked_node_fields=checked_node,checked_volume_average_fields=checked_cell,checked_raw_fields=checked_raw))
     report=dict(schema='soil-fem-solidcraft-view-verification/1',passed=True,input_sha256=manifest['input_sha256'],

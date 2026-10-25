@@ -1,0 +1,72 @@
+{
+  "schema": "soil-fem-mcc-initial-reference-refinement/1",
+  "initial_refinement_passed": true,
+  "fields": {
+    "displacement_m": {
+      "relative_l2": 2.947239998935124e-07,
+      "maximum_absolute": 8.700942164679981e-09
+    },
+    "stress_kpa": {
+      "relative_l2": 2.2392242593223992e-08,
+      "maximum_absolute": 4.0585741700738254e-05
+    },
+    "pc_kpa": {
+      "relative_l2": 2.57086321504662e-10,
+      "maximum_absolute": 5.242342066225092e-06
+    },
+    "void_ratio": {
+      "relative_l2": 1.3036593697379708e-09,
+      "maximum_absolute": 9.637791009708963e-09
+    },
+    "plastic_strain": {
+      "relative_l2": 1.951392333778293e-05,
+      "maximum_absolute": 3.1279094023879336e-08
+    }
+  },
+  "gates": [
+    {
+      "field": "displacement_m",
+      "metric": "maximum_absolute",
+      "observed": 8.700942164679981e-09,
+      "limit": 1e-08,
+      "passed": true
+    },
+    {
+      "field": "stress_kpa",
+      "metric": "relative_l2",
+      "observed": 2.2392242593223992e-08,
+      "limit": 2.5e-06,
+      "passed": true
+    },
+    {
+      "field": "pc_kpa",
+      "metric": "maximum_absolute",
+      "observed": 5.242342066225092e-06,
+      "limit": 2.5e-05,
+      "passed": true
+    },
+    {
+      "field": "void_ratio",
+      "metric": "maximum_absolute",
+      "observed": 9.637791009708963e-09,
+      "limit": 1.25e-06,
+      "passed": true
+    },
+    {
+      "field": "plastic_strain",
+      "metric": "maximum_absolute",
+      "observed": 3.1279094023879336e-08,
+      "limit": 2.5e-07,
+      "passed": true
+    }
+  ],
+  "full_cycle_refinement_verified": false,
+  "integration_gates_passed": false,
+  "spatial_convergence_verified": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "limitation": "Initial equilibrium only; the 200-step construction cycle is still running on its original live handle.",
+  "original_report_sha256": "8d116e8bfea55b163a920ed6b254f699824ca83517460f1ae1e876820eec2e4e",
+  "original_local_path": "runs/projected-mcc-723-initial-refinement-20261026-v1/assessment.json",
+  "publication_note": "Bounded summary. Local run paths are provenance and are not bundled files."
+}

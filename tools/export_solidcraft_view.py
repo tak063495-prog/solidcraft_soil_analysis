@@ -65,6 +65,20 @@ def boundary(cells,active,xyz):
 
 
 def scene_frame(mesh,run,index):
+    return _scene_frame(mesh,run,index)
+
+
+def _scene_frame(mesh,run,index,*,validated_mixed=False):
+    mixed=None
+    if run.get('schema') in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/1'):
+        # These fields change the display contract. Validate the whole path,
+        # including DEATH offsets and frozen histories, before extracting one
+        # frame. Old native readers must reject the version-2 frame explicitly.
+        import mixed_mcc_io
+        if not validated_mixed:mixed_mcc_io.validate(mesh,run)
+        mixed=mixed_mcc_io.frame_fields(mesh,run,run['frames'][index])
+    elif any(f.get('state',{}).get('mixed_mcc') is not None for f in run.get('frames',[])):
+        raise ValueError('mixed primary state requires its own result schema')
     xyz=np.asarray(mesh['nodes'],dtype=float)
     cells=np.asarray(mesh.get('tetrahedra10') or mesh['tetrahedra'],dtype=int)
     frame=run['frames'][index];state=frame['state'];layout=run.get('integration_points')
@@ -101,6 +115,7 @@ def scene_frame(mesh,run,index):
     states=state['material_states']
     if len(states)!=len(layout):raise ValueError('integration history length mismatch')
     raw=state_fields(states)
+    if mixed is not None:raw.update(mixed['raw'])
     for name in raw:
         if name=='material_model':continue
         if any(name in s and not np.isfinite(np.asarray(s[name],dtype=float)).all() for s in states):raise ValueError('non-finite stored material field')
@@ -131,6 +146,27 @@ def scene_frame(mesh,run,index):
         maximum_normalized_yield=frame['maximum_normalized_yield'])
     points=dict(schema='soil-fem-view-integration-points/1',frame_index=index,
         integration_point_ids=qp,element_ids=element_ids[qp],positions_m=positions[qp],weights_m3=weights[qp],fields=point_fields)
+    if mixed is not None:
+        view['schema']='soil-fem-view-frame/2'
+        points['schema']='soil-fem-view-integration-points/2'
+        keys=mixed['keys']
+        primary=dict(original_node_ids=[node for node,material in keys],
+            material_ids=[material for node,material in keys],
+            positions_m=xyz[[node for node,material in keys]],
+            mean_effective_stress_compression_positive_kpa=mixed['primary'])
+        if 'projected_volume_dofs' in mixed:
+            primary.update(cumulative_material_volume_strain_compression_positive=mixed['projected_volume_dofs'],
+                frozen_compatibility_offset_m3=mixed['projected_compatibility_offsets'])
+        view['mixed_primary']=primary
+        view['field_semantics']=dict(
+            source_result_schema=run['schema'],
+            material_stress='effective_stress_compression_positive_kpa; raw GP constitutive history',
+            primary_pressure='material-split P1 mean effective pressure; not pore pressure or a displacement-node average',
+            equilibrium_stress='work_conjugate_effective_stress_compression_positive_kpa' if 'projected_volume_dofs' in mixed else 'effective_stress_compression_positive_kpa',
+            volume='material and kinematic cumulative volume strains remain distinct',
+            primary_identity='(original_node_ids, material_ids); coincident material-boundary values remain separate',
+            inactive='primary fields contain active corner/material pairs only; removed GP history stays in the authoritative result')
+        view['mixed_equation_audit']=mixed['metrics']
     return clean(view),clean(points)
 
 
@@ -170,7 +206,11 @@ def export(job,output):
     solver=analysis/'solver/soil-fem-3d.exe';solver_hash=sha(solver)
     if accepted.get('solver_binary_sha256')!=solver_hash or run.get('provenance',{}).get('solver_binary_sha256')!=solver_hash:raise ValueError('job solver fingerprint mismatch')
     if run.get('complete') is not True or run.get('failure_reason') is not None:raise ValueError('incomplete analysis cannot be displayed as accepted')
-    if run.get('schema') not in {f'soil-fem-stage-result/{i}' for i in range(1,14)}:raise ValueError('unsupported result schema for native viewer')
+    projected=run.get('schema')=='soil-fem-projected-mcc-stage-result/1'
+    if not projected and run.get('schema') not in {f'soil-fem-stage-result/{i}' for i in range(1,14)}:raise ValueError('unsupported result schema for native viewer')
+    if projected:
+        from verify_projected_stage_package import audit
+        audit(mesh,ground,stages,run)
     if not 1<=len(run.get('frames',[]))<=257:raise ValueError('viewer requires 1..257 frames')
     if not equal(run['last_committed'],run['frames'][-1]['state']):raise ValueError('final frame differs from committed state')
     verification=read(analysis/'stage-verification.json');exports=read(analysis/'results/export-verification.json')
@@ -178,6 +218,8 @@ def export(job,output):
         raise ValueError('independent force and raw field audit required')
     if len(verification.get('frames',[]))!=len(run['frames']):raise ValueError('independent audit frame count mismatch')
     if exports.get('result_sha256')!=sha(result_path) or exports.get('mesh_sha256')!=sha(mesh_path):raise ValueError('export audit input/result mismatch')
+    if projected and (verification.get('schema')!='soil-fem-stage-verification/3' or verification.get('independent_load_and_domain_audit')!='passed'):
+        raise ValueError('projected load/domain and work-conjugate audit required')
     for frame in verification['frames']:
         r=frame['independent_force_residual']
         if not np.isfinite(r) or r>stages['settings']['relative_force_tolerance']*1.01:raise ValueError('independent residual exceeds job tolerance')
@@ -196,7 +238,10 @@ def export(job,output):
         regions=mesh['regions'],node_sets=mesh.get('node_sets',{}),crs=mesh.get('crs'),origin_m=mesh.get('origin_m',[0.,0.,0.]))
     write('geometry.json',geometry);frames=[]
     for i in range(len(run['frames'])):
-        view,points=scene_frame(mesh,run,i);name=f'frame-{i:03}.json';point_name=f'points-{i:03}.json'
+        # The projected audit above has checked every frame, frozen history and
+        # domain transition. Do not repeat the whole path for each extracted
+        # frame (quadratic work in the number of construction stages).
+        view,points=_scene_frame(mesh,run,i,validated_mixed=projected);name=f'frame-{i:03}.json';point_name=f'points-{i:03}.json'
         write(name,view);write(point_name,points)
         frames.append(dict(index=i,name=view['name'],frame=name,integration_points=point_name))
     if any(sha(job/p)!=digest for p,digest in hashes.items()):raise ValueError('job changed while exporting view packet')
@@ -218,6 +263,14 @@ def export(job,output):
             boundary_faces='original node ids; Tri3 or Tri6; tessellation is a viewer approximation'),
         omissions=['beam/anchor/contact result layers','water fields','principal-direction glyphs'],
         scope='Native-viewer data foundation only; no native viewport implementation or P5 completion is implied.')
+    if projected:
+        manifest['schema']='soil-fem-solidcraft-view/2'
+        manifest['semantics'].update(source_result_schema=run['schema'],
+            material_stress='effective_stress_compression_positive_kpa; raw constitutive GP history',
+            equilibrium_stress='work_conjugate_effective_stress_compression_positive_kpa',
+            primary_pressure='material-split P1 mean effective stress; distinct from pore pressure',
+            mixed_primary='active corner/material pairs; no cross-material averaging',
+            volume='cumulative material volume and kinematic divergence remain distinct')
     write('view-manifest.json',manifest,track=False)
     print('Native viewer data:',len(frames),'frames; explicit nodal, cell-average and raw integration-point fields')
     return manifest

@@ -114,7 +114,9 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
     if folder.is_relative_to(capture):raise ValueError('job output must be outside the source capture')
     if not math.isfinite(mesh_size) or mesh_size<=0 or order not in (1,2) or quadrature not in (3,4,5):raise ValueError('invalid mesh settings')
     if host_token is not None and (not isinstance(host_token,str) or not host_token or len(host_token)>128):raise ValueError('invalid native host token')
-    recorded,_,_,_=validate(capture)
+    recorded,_,stages,_=validate(capture)
+    if stages.get('schema') == 'soil-fem-projected-mcc-stages/1' and order != 2 and resume_from is None:
+        raise ValueError('projected MCC native jobs require Tet10 (element order 2)')
     if expected_input is not None and recorded['input_sha256']!=expected_input:raise ValueError('capture differs from the host input snapshot')
     solver=(solver or ROOT/'target/release/soil-fem-3d.exe').resolve();solver_digest=sha(solver)
     shell=shutil.which('pwsh')

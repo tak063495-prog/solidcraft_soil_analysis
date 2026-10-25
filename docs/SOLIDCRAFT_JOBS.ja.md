@@ -28,7 +28,9 @@ SolidCraft側には `job.start` の `cooperative`、`analysis.soil.job.resume`�
 
 同じ起動中の再開と、アプリを終了して保存済みモデルを別起動で開いてからの再開が正常完了した。両方とも同じ入力で128増分を連続実行した結果に対し、全節点・全積分点履歴を含む非実行時フィールドが厳密に一致し、実行版SHAも別に一致確認した。別起動では新規解析用メッシュ欄を既定2 mのままにしたが、再開は保存時の4 mメッシュと入力をバイト単位で保持し、再メッシュしていない。画面のメッシュ指定は新規Start用である。
 
-再開後の実画面で掘削形状、鉛直変位コンター、量とmm単位、完了・監査済みの表示を確認した。[保存状態](../runs/native-cooperative-gui-20261025-v1/saved.png)／[再開後の3D表示](../runs/native-cooperative-gui-20261025-v1/resumed-view.png)。既存UIの編集・CAD変更・入力読込の3回帰試験も合格した。記録は `runs/native-cooperative-gui-verification-20261026-v1/verification.json`。これは従来の変位型MCC形式の連携検証であり、塑性化を必須にした独立材料則検証、P1体積の新形式、求解中の実app.quit、全P5/P6の受入を代替しない。
+再開後の実画面で掘削形状、鉛直変位コンター、量とmm単位、完了・監査済みの表示を確認した。[保存状態](../runs/native-cooperative-gui-20261025-v1/saved.png)／[再開後の3D表示](../runs/native-cooperative-gui-20261025-v1/resumed-view.png)。既存UIの編集・CAD変更・入力読込の3回帰試験も合格した。記録は `runs/native-cooperative-gui-verification-20261026-v1/verification.json`。これは従来の変位型MCC形式の連携検証であり、塑性化を必須にした独立材料則検証、P1体積の新形式、全P5/P6の受入を代替しない。
+
+別試験では実際のアプリを新規起動し、登録制御APIから協調Start→求解中の `app.quit` を実行した。終了直前に生存中のワーカーとソルバーへ読取専用のWin32ハンドルを開き、同じハンドルで終了値3と2を確認した。アプリは正常終了0で、進捗0.1328125の受理済み増分を保存した。別起動の実アプリから登録Resumeを実行して正常完了し、128増分の連続解析に対して全非実行時フィールドと元メッシュ・入力が厳密に一致した。アプリ終了後に過去PIDへ停止要求を出す方法は使用していない。記録は `runs/native-cooperative-app-exit-20261026-v2/verification.json`。これは実プロセスと登録コマンドの試験であり、GUIクリック試験とは区別する。v1は試験用出力先を先に作ったためStartが拒否された記録と、観測用Pythonの文字コード問題を保持し、当該アプリを終了して新しいv2で検証した。
 
 検証では固定した開発CLI `09eed93197f8aedcbae79b9d404ccab6becb8b5a0d8b95135cef623a9578210c` をホストのソルバー設定へ指定し、既定の旧受入版は置換していない。総合 `cargo xtask ci` は継続中である。初回はWindowsの `python3` エイリアスでアイコン検査が起動できなかったため、Windowsだけ `python` を選ぶ起動処理を修正した。次の実行では省略取得されていた上流の `skills/` 文書がMCP試験のコンパイルに必要と判明し、同じ固定コミットから `git sparse-checkout add skills` で展開した。試験ソースは変更していない。3回目は書式・資産・アイコン17試験・ライセンス・カタログ整列・依存方向・UIコンテナー・全ターゲットの警告禁止clippyを通過し、全体試験のビルドとWASM等を継続している。ログは `runs/native-cooperative-ci-20261026-v3.log`。未完の品質検査を合格へ変更しない。
 
@@ -36,7 +38,7 @@ SolidCraft側には `job.start` の `cooperative`、`analysis.soil.job.resume`�
 
 ## 外部CLI
 
-2026-10-25追記。以下の既存nativeワーカー経路と別に、Rustの施工力学CLIへライブ反復通知・受理増分での協調中断・新しいジョブへの再開を追加した。**nativeのStopボタンやONE_WAY/Richards専用コントローラへの接続は未完**である。
+2026-10-25時点のCLI追加記録。以下は外部施工力学CLIのライブ反復通知・受理増分での協調中断・新しいジョブへの再開の仕様である。nativeの協調Stop/Resumeとアプリ終了は上記の後続試験で接続・限定検証した。ONE_WAY/Richards専用コントローラへの接続は未完である。
 
 新CLIは開発ビルドで実行する。prepareは入力3ファイルと実行バイナリを新規フォルダーへ固定する。run/resumeにはそのフォルダーの固定バイナリを使用する。
 

@@ -59,7 +59,7 @@ def validate(folder,*,manifest_name='capture.json'):
     if payload.get('schema')!='solidcraft-soil-snapshot/1' or payload.get('cad_length_unit')!='mm' or payload.get('analysis_units')!='m-kN-kPa':raise ValueError('capture units/schema mismatch')
     ground=read(folder/'ground.json');stages=read(folder/'stages.json')
     if not equal(ground,payload.get('ground')) or not equal(stages,payload.get('stages')):raise ValueError('ground/stages differ from the captured snapshot')
-    if ground.get('schema')!='soil-fem-ground/1' or ground.get('units')!='m-kN-kPa' or stages.get('schema')!='soil-fem-stages/1':raise ValueError('unsupported FEM input schema')
+    if ground.get('schema')!='soil-fem-ground/1' or ground.get('units')!='m-kN-kPa' or stages.get('schema') not in ('soil-fem-stages/1','soil-fem-projected-mcc-stages/1'):raise ValueError('unsupported FEM input schema')
     field='bodies' if ground.get('initialization',{}).get('method')=='equilibrate' else 'layers'
     entries=ground.get(field,[]);mapping={x['body']:x['material_id'] for x in entries};tools=ground.get('excavation_bodies',[])
     if not mapping or len(mapping)!=len(entries) or len(set(tools))!=len(tools) or set(mapping)&set(tools):raise ValueError('duplicate/missing material or excavation labels')

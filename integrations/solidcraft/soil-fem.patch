@@ -8569,6 +8569,34 @@ index 0000000000000000000000000000000000000000..cd4b114fab88fdfe8cded5ccff120031
 +        Quantity::VolumetricPlasticStrain => "Volumetric plastic strain",
 +    }
 +}
+diff --git a/crates/ui-egui/tests/icon_audit.rs b/crates/ui-egui/tests/icon_audit.rs
+index 3e61864b3b9566384b4ff8c4e2dac44e126ad06d..6512ccb7bbf104e9713b2e69d8a1afaa6b33c99e 100644
+--- a/crates/ui-egui/tests/icon_audit.rs
++++ b/crates/ui-egui/tests/icon_audit.rs
+@@ -436,7 +436,8 @@ fn requested_menu_icons_have_artwork_and_match_manifest() {
+     } else {
+         let expected = std::fs::read_to_string(&path).unwrap_or_default();
+         assert_eq!(
+-            expected, manifest,
++            expected.replace("\r\n", "\n"),
++            manifest,
+             "Runtime icon discovery changed. Regenerate with UPDATE_ICON_MANIFEST=1 cargo test -p solidcraft-ui-egui --test icon_audit"
+         );
+     }
+diff --git a/crates/ui-egui/tests/window_widths.rs b/crates/ui-egui/tests/window_widths.rs
+index 06a9375d92ffb2e0719f53394e24df5ee2769bb4..f4c6b21a8cde458e80841018a4c5d10c24f3c4e6 100644
+--- a/crates/ui-egui/tests/window_widths.rs
++++ b/crates/ui-egui/tests/window_widths.rs
+@@ -19,6 +19,9 @@ fn window_widths(h: &Harness) -> Vec<(egui::Id, f32)> {
+ }
+ 
+ fn kit_table_limit(id: egui::Id) -> Option<f32> {
++    if id == egui::Id::new("sc_soil_analysis") {
++        return Some(solidcraft_ui_egui::theme::Tokens::get().form_card_width * 2.5);
++    }
+     // The accepted Preferences board has a page list and one control/preview pair at 880 pt.
+     if id == egui::Id::new("sc_prefs") {
+         return Some(solidcraft_ui_egui::theme::Tokens::get().form_card_width * 10.0 / 3.0);
 diff --git a/xtask/src/icons.rs b/xtask/src/icons.rs
 index e3f618584e02dbf3d3ab27103a817cebeb091d75..18f3191bde2fc07816212fe2bd3bd17e730914a8 100644
 --- a/xtask/src/icons.rs
@@ -8584,3 +8612,117 @@ index e3f618584e02dbf3d3ab27103a817cebeb091d75..18f3191bde2fc07816212fe2bd3bd17e
          command.args(args).current_dir(root);
          super::run(command, "UI icon standards (Python 3.11+)")?;
      }
+diff --git a/xtask/src/test.rs b/xtask/src/test.rs
+index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f376b9a9e18 100644
+--- a/xtask/src/test.rs
++++ b/xtask/src/test.rs
+@@ -1,8 +1,9 @@
+-//! `cargo xtask test`: build the workspace's tests once, then run every test binary at the same
+-//! time. `cargo test` runs them one after another, so one slow binary held up all the others;
++//! `cargo xtask test`: build the workspace's tests once, then run a bounded queue of test
++//! binaries. `cargo test` runs them one after another, so one slow binary held up all the others;
+ //! the doc tests and any other `side` jobs run alongside on their own thread.
+ 
+ use std::process::{Command, Stdio};
++use std::sync::atomic::{AtomicUsize, Ordering};
+ use std::sync::mpsc;
+ use std::time::Instant;
+ 
+@@ -20,17 +21,25 @@ struct TestBin {
+ /// its whole output.
+ pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>) -> Result<(), String> {
+     let bins = build(cargo_args)?;
++    let configured = std::env::var("SOLIDCRAFT_TEST_JOBS").ok();
++    let jobs = parallelism(configured.as_deref(), std::thread::available_parallelism().map_or(1, usize::from), bins.len())?;
++    eprintln!("test: {jobs} concurrent binaries (SOLIDCRAFT_TEST_JOBS)");
++    let next = AtomicUsize::new(0);
+     let start = Instant::now();
+     let (tx, rx) = mpsc::channel::<(String, Result<String, String>, f64)>();
+     let mut failed = Vec::new();
+     std::thread::scope(|scope| {
+-        for b in &bins {
++        for _ in 0..jobs {
+             let tx = tx.clone();
++            let bins = &bins;
++            let next = &next;
+             scope.spawn(move || {
+-                let t0 = Instant::now();
+-                let mut c = Command::new(&b.exe);
+-                c.args(test_args).current_dir(&b.dir).env("CARGO_MANIFEST_DIR", &b.dir);
+-                let _ = tx.send((b.label.clone(), finish(c), t0.elapsed().as_secs_f64()));
++                while let Some(b) = bins.get(next.fetch_add(1, Ordering::Relaxed)) {
++                    let t0 = Instant::now();
++                    let mut c = Command::new(&b.exe);
++                    c.args(test_args).current_dir(&b.dir).env("CARGO_MANIFEST_DIR", &b.dir);
++                    let _ = tx.send((b.label.clone(), finish(c), t0.elapsed().as_secs_f64()));
++                }
+             });
+         }
+         let tx_side = tx.clone();
+@@ -55,6 +64,18 @@ pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>
+     if failed.is_empty() { Ok(()) } else { Err(format!("failed: {}", failed.join(", "))) }
+ }
+ 
++fn parallelism(configured: Option<&str>, available: usize, binaries: usize) -> Result<usize, String> {
++    let jobs = match configured {
++        Some(value) => value
++            .parse::<usize>()
++            .ok()
++            .filter(|n| (1..=64).contains(n))
++            .ok_or_else(|| "SOLIDCRAFT_TEST_JOBS must be an integer in 1..=64".to_string())?,
++        None => available.clamp(1, 4),
++    };
++    Ok(jobs.min(binaries.max(1)))
++}
++
+ /// Run to the end: the last `test result:` line on success, all output on failure.
+ fn finish(mut c: Command) -> Result<String, String> {
+     let out = c.stdin(Stdio::null()).output().map_err(|e| format!("failed to spawn: {e}"))?;
+@@ -103,3 +124,33 @@ pub fn doc_tests(cargo_args: &[&str], test_args: &[&str]) -> (String, Command) {
+     c.args(["test", "--workspace", "--profile", "ci", "--doc"]).args(cargo_args).arg("--").args(test_args);
+     ("doc tests".into(), c)
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    #[test]
++    fn binary_parallelism_is_bounded_and_invalid_overrides_fail() {
++        assert_eq!(parallelism(None, 128, 500).unwrap(), 4);
++        assert_eq!(parallelism(None, 1, 500).unwrap(), 1);
++        assert_eq!(parallelism(Some("2"), 128, 500).unwrap(), 2);
++        assert_eq!(parallelism(Some("64"), 128, 3).unwrap(), 3);
++        for value in ["0", "65", "many", "-1"] {
++            assert!(parallelism(Some(value), 128, 500).is_err());
++        }
++    }
++    #[test]
++    fn concurrent_binary_queue_visits_every_entry_exactly_once() {
++        let next = AtomicUsize::new(0);
++        let values: Vec<_> = (0..257).map(|_| AtomicUsize::new(0)).collect();
++        std::thread::scope(|scope| {
++            for _ in 0..4 {
++                scope.spawn(|| {
++                    while let Some(value) = values.get(next.fetch_add(1, Ordering::Relaxed)) {
++                        value.fetch_add(1, Ordering::Relaxed);
++                    }
++                });
++            }
++        });
++        assert!(values.iter().all(|v| v.load(Ordering::Relaxed) == 1));
++    }
++}
+diff --git a/xtask/src/ui_containers.rs b/xtask/src/ui_containers.rs
+index 5cddfa9467c8f51f9ab9be6145fb6e21cc9ae6e7..fb9e1ff7ed266e6f173f83ca4836420395e008b6 100644
+--- a/xtask/src/ui_containers.rs
++++ b/xtask/src/ui_containers.rs
+@@ -325,7 +325,8 @@ pub fn run(root: &Path) -> Result<(), String> {
+                 let source = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+                 let found = violations(&source).map_err(|e| format!("{}: {e}", path.display()))?;
+                 if !found.is_empty() {
+-                    failures.push(format!("{}: {}", path.strip_prefix(root).unwrap_or(&path).display(), found.join(", ")));
++                    let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy().replace('\\', "/");
++                    failures.push(format!("{relative}: {}", found.join(", ")));
+                 }
+             }
+         }
