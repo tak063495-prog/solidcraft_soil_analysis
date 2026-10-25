@@ -9,6 +9,7 @@ import zipfile
 def manifest():
     root=Path(__file__).resolve().parents[1]
     files=[root/n for n in ('Cargo.toml','Cargo.lock','rust-toolchain.toml','requirements.lock.txt','sources.lock.json','README.md')]
+    if (root/'requirements-reference.lock.txt').exists():files.append(root/'requirements-reference.lock.txt')
     files += [p for name in ('src','tests','examples','scripts','docs','tools') for p in (root/name).rglob('*')
               if p.is_file() and p.suffix in ('.rs','.py','.json','.ps1','.md','.csv')]
     return {p.relative_to(root).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(set(files))}

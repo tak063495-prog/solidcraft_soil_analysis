@@ -41,7 +41,7 @@ def terms(state, parameters):
 class System:
     constitutive_terms=staticmethod(terms)
 
-    def __init__(self, mesh, ground, active, case=None):
+    def __init__(self, mesh, ground, active, case=None, maximum_free_dofs=6500):
         self.mesh=mesh;self.ground=ground;self.active=np.asarray(active,dtype=bool)
         self.element_ids=np.flatnonzero(self.active);self.xyz=np.asarray(mesh['nodes'])
         kinematics=(case or {}).get('settings',{}).get('kinematics','side_rollers')
@@ -60,7 +60,9 @@ class System:
             for node,basis in bases.items():
                 self.rotation[node,:,:basis.shape[1]]=basis;self.fixed[node,:basis.shape[1]]=False
         self.free=np.flatnonzero(~self.fixed.reshape(-1))
-        if len(self.free)>6500:raise ValueError('independent verification is limited to 6500 free DOFs')
+        if type(maximum_free_dofs) is not int or not 1<=maximum_free_dofs<=100000:
+            raise ValueError('invalid independent verification DOF budget')
+        if len(self.free)>maximum_free_dofs:raise ValueError('independent verification DOF budget exceeded')
         q=[ref.volume(mesh,int(e)) for e in self.element_ids]
         self.b=np.stack([v['b'] for v in q]);self.weight=np.stack([v['weight'] for v in q])
         self.dofs=np.stack([(v['nodes'][:,None]*3+np.arange(3)).reshape(-1) for v in q])
@@ -242,7 +244,7 @@ def seed(mesh,ground,identity=None):
     return np.stack(out)
 
 
-def solve(mesh,ground,case,count,progress=None,identity=None):
+def solve(mesh,ground,case,count,progress=None,identity=None,system_factory=System,frame_callback=None):
     if ground['initialization']['method'] not in ('horizontal_k0','equilibrate') or ground['initialization']['water_level_m'] is not None:
         raise ValueError('independent reference requires dry K0 or explicit geostatic initialization')
     if any(case.get(k) for k in ('joint_system','beam_system','anchor_system','initially_inactive_bodies')):
@@ -260,7 +262,9 @@ def solve(mesh,ground,case,count,progress=None,identity=None):
         residual=np.linalg.norm(system.reduce(physical_load-system.force(local)))/max(np.linalg.norm(physical_load),1.)
         frames.append(dict(name=name,displacement_m=u.reshape(-1,3).tolist(),active_elements=active.tolist(),
             material_state=state.tolist(),relative_free_force_residual=float(residual),diagnostics=diagnostics))
-    system=System(mesh,ground,active,case)
+        if hasattr(system,'solver_diagnostics'):frames[-1]['sparse_solver_diagnostics']=system.solver_diagnostics()
+        if frame_callback is not None:frame_callback(frames[-1])
+    system=system_factory(mesh,ground,active,case)
     if np.max(terms(state.reshape(-1,14),system.parameters)[0])>1e-8:raise ValueError('initial seed lies outside MCC yield surface')
     geostatic=None
     if cfg:
@@ -277,9 +281,9 @@ def solve(mesh,ground,case,count,progress=None,identity=None):
     for stage in case['stages']:
         before=load()
         if stage['kind']=='pressure':
-            pressure=stage['target_pressure_kpa'];system=System(mesh,ground,active,case)
+            pressure=stage['target_pressure_kpa'];system=system_factory(mesh,ground,active,case)
         elif stage['kind']=='boundary':
-            factor=stage['target_factor'];system=System(mesh,ground,active,case)
+            factor=stage['target_factor'];system=system_factory(mesh,ground,active,case)
         elif stage['kind']=='excavate':
             groups=[]
             for body in stage['bodies']:
@@ -292,15 +296,19 @@ def solve(mesh,ground,case,count,progress=None,identity=None):
                     groups.append(indices)
             remove=np.unique(np.concatenate(groups))
             if not active[remove].all():raise ValueError('overlapping reference excavation')
-            active[remove]=False;pressure=stage['remaining_surface_pressure_kpa'];system=System(mesh,ground,active,case)
+            active[remove]=False;pressure=stage['remaining_surface_pressure_kpa'];system=system_factory(mesh,ground,active,case)
             before=system.force(state[active].reshape(-1,14))
         else:raise ValueError('reference supports pressure/boundary/excavation stages only')
         after=load()
         local,u,diag=system.advance(state[active].reshape(-1,14),u,after-before,count,progress)
         state[active]=local.reshape(state[active].shape);frame(stage['name'],system,diag)
-    return dict(schema='soil-fem-independent-mcc-rate-fem/1',frames=frames,geostatic=geostatic,reference_displacement_m=reference_displacement.tolist(),
+    report=dict(schema='soil-fem-independent-mcc-rate-fem/1',frames=frames,geostatic=geostatic,reference_displacement_m=reference_displacement.tolist(),
                 method='analytic continuum tangent; independent sparse NumPy PCG/global assembly and nodal SVD; explicit midpoint with loading/unloading events; no stress projection',
                 limitations='dry small-strain MCC; homogeneous directional constraints; initial/pressure/boundary/excavation stages; acceptance requires independent refinement and field comparison')
+    if system_factory is not System:
+        report['reference_backend']=system_factory.__module__+'.'+system_factory.__name__
+        report['method']='analytic continuum tangent; compatible Tet10 strain; independent sparse direct global assembly and nodal SVD; explicit midpoint with loading/unloading events; no stress projection'
+    return report
 
 
 if __name__=='__main__':

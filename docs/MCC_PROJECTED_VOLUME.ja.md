@@ -2,6 +2,8 @@
 
 先行する研究用Python計算と、その後のRust開発接続を区別して記録する。先行診断は `runs/mcc-projected-volume-diagnostic-20261025-v1/`、後続の開発版は `runs/projected-mcc-development-20261025-v1/` に保存する。一般地形の空間収束、他物理・native統合、P6全体の完成は未達である。
 
+密行列の自由度制限を越えるため、[独立疎行列参照](MCC_SPARSE_REFERENCE.ja.md)を追加した。12条件の速度・演算子照合と、実CADの初期平衡→載除荷→局所掘削の全場38項目で密行列版との一致を確認した。同一形状の413／723要素を生成し、面積平均の比較指標と空間細分化の検証を進めている。
+
 ## 後続Rust開発版：P1体積と凍結適合差
 
 実行版SHA256 `09eed93197f8aedcbae79b9d404ccab6becb8b5a0d8b95135cef623a9578210c` を独立した開発ディレクトリへ保存した。入力 `soil-fem-projected-mcc-stages/1`、結果 `soil-fem-projected-mcc-stage-result/1` で、従来GP体積方式と区別する。MCC固定分割更新・陰関数接線を使い、Tet10変位・材料別P1圧力・P1体積の3場を縮約せずNewton/CSRへ組み立てる。

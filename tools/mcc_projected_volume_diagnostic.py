@@ -78,6 +78,18 @@ class ProjectedSystem(rate.System):
         out[:, :, :3] += volumetric[:, :, None]/3
         return out
 
+    def volume(self, displacement):
+        return self.a_full @ displacement
+
+    def mass_solve(self, rhs):
+        return np.linalg.solve(self.mass, rhs)
+
+    def project_volume(self, theta):
+        rhs = np.zeros(len(self.keys))
+        local = np.einsum('eqa,eq,eq->ea', self.n, theta, self.weight)
+        np.add.at(rhs, self.pi.reshape(-1), local.reshape(-1))
+        return self.mass_solve(rhs)
+
     def pressure(self, state):
         mean = state[:, :3].mean(axis=1).reshape(self.weight.shape)
         rhs = np.zeros(len(self.keys))
@@ -164,7 +176,8 @@ class ProjectedSystem(rate.System):
                     independently_applied_tangent_relative_error=tangent)
 
 
-def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, steps):
+def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, steps,
+          system_factory=ProjectedSystem, extra_sources=()):
     if not 0 < fraction <= 1 or steps < 2:
         raise ValueError('fraction in (0,1] and at least two reference steps required')
     mesh, ground, case, identity = map(read, (mesh_file, ground_file, case_file, identity_file))
@@ -175,8 +188,9 @@ def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, st
         raise ValueError('diagnostic excludes contacts, members and initially inactive domains')
     sources = [mesh_file, ground_file, case_file, identity_file, Path(__file__), Path(rate.__file__),
                Path(ref.__file__), Path(mcc_rate_midpoint.__file__), Path(verify_high_order.__file__), Path(high_order_io.__file__)]
+    sources += list(extra_sources)
     fingerprints = {str(p): sha(p) for p in sources}
-    system = ProjectedSystem(mesh, ground, np.ones(len(mesh['tetrahedra']), dtype=bool), case)
+    system = system_factory(mesh, ground, np.ones(len(mesh['tetrahedra']), dtype=bool), case)
     initial = rate.seed(mesh, ground, identity).reshape(-1, 14)
     start = system.force(initial)
     physical = rate.physical(mesh, ground, system.active, ground['initialization']['surface_surcharge_kpa'],
@@ -188,7 +202,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, st
     pressure, rhs = system.pressure(final)
     pg = np.einsum('eqa,ea->eq', system.n, pressure[system.pi])
     pm = final[:, :3].mean(axis=1).reshape(system.weight.shape)
-    theta = system.a_full@u
+    theta = system.volume(u)
     report = dict(schema='soil-fem-projected-volume-mcc-diagnostic/1', diagnostic_only=True,
         production_backend=False, goal_complete=False, p6_complete=False, full_initialization_accepted=False,
         load_fraction=fraction, reference_steps=steps, operator_checks=system.checks,
@@ -210,6 +224,9 @@ def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, st
         maximum_true_linear_residual=system.maximum_true_linear_residual, diagnostics=diagnostics,
         input_and_source_sha256=fingerprints,
         limitations='Changed diagnostic discretization, no production integration, no pointwise pressure-consistency acceptance, no excavation/restart/mesh-convergence acceptance')
+    report['reference_backend'] = system_factory.__module__+'.'+system_factory.__name__
+    if hasattr(system, 'solver_diagnostics'):
+        report['sparse_solver_diagnostics'] = system.solver_diagnostics()
     assert residual < 1e-8 and report['maximum_material_strain'] < cfg['maximum_initial_engineering_strain']
     assert fingerprints == {str(p): sha(p) for p in sources}, 'source/input changed during diagnostic'
     with output.open('x', encoding='utf-8') as stream:

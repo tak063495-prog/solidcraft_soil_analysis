@@ -5,11 +5,13 @@ param(
     [ValidateSet(1,2)][int]$ElementOrder=2,
     [ValidateSet(3,4,5)][int]$QuadratureOrder=3,
     [string]$SolverPath,
-    [string]$OutputDirectory
+    [string]$OutputDirectory,
+    [string]$PythonPath,
+    [switch]$PrepareOnly
 )
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
-$python=Join-Path $projectRoot '.venv\Scripts\python.exe'
+$python=if($PythonPath){(Resolve-Path -LiteralPath $PythonPath).Path}else{Join-Path $projectRoot '.venv\Scripts\python.exe'}
 $CaptureFolder=(Resolve-Path -LiteralPath $CaptureFolder).Path
 if(-not $SolverPath){$SolverPath=Join-Path $projectRoot 'target\release\soil-fem-3d.exe'}
 $SolverPath=(Resolve-Path -LiteralPath $SolverPath).Path
@@ -41,7 +43,12 @@ try {
         if($LASTEXITCODE -ne 0){throw 'JOINT displacement-node split failed'}
         $prepared="$runDir\split"
     }
-    & "$PSScriptRoot\Invoke-Stages.ps1" -PreparedModel $prepared -GroundFile "$runDir\conformal\ground.json" -StageFile "$runDir\conformal\stages.json" -SolverPath $SolverPath -OutputDirectory "$runDir\analysis"
+    & "$PSScriptRoot\Invoke-Stages.ps1" -PreparedModel $prepared -GroundFile "$runDir\conformal\ground.json" -StageFile "$runDir\conformal\stages.json" -SolverPath $SolverPath -OutputDirectory "$runDir\analysis" -PythonPath $python -PrepareOnly:$PrepareOnly
+    if($PrepareOnly){
+        if(-not (Test-Path -LiteralPath "$runDir\analysis\prepared-stage-input.json")){throw 'Prepared-stage input receipt was not created'}
+        Write-Host "Native capture prepared for owned staged analysis: $runDir"
+        return
+    }
     & $python tools\export_solidcraft_view.py $runDir "$runDir\view"
     if($LASTEXITCODE -ne 0){throw 'Native viewer data export failed; completed mechanical results remain in analysis'}
     & $python tools\verify_solidcraft_view.py $runDir "$runDir\view" "$runDir\view-verification.json"

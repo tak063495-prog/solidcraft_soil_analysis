@@ -20,9 +20,10 @@ import time
 import uuid
 from import_solidcraft_capture import read,validate
 from verify_acceptance_packet import sha
+import native_workflow_snapshot
 
 ROOT=Path(__file__).resolve().parents[1]
-TERMINAL={'succeeded','failed','cancelled'}
+TERMINAL={'succeeded','failed','cancelled','checkpointed'}
 
 
 def watch_host(stream):
@@ -58,7 +59,7 @@ def copy_checked(source,destination,digest):
 
 def status(folder):
     value=read(folder.resolve()/'status.json',256*1024)
-    if value.get('schema')!='soil-fem-native-job-status/1':raise ValueError('unsupported job status')
+    if value.get('schema') not in ('soil-fem-native-job-status/1','soil-fem-native-job-status/2'):raise ValueError('unsupported job status')
     # This is a last-reported snapshot, not proof that a process is still alive.
     value['observation']='last worker report; the host must also observe its owned child process'
     return value
@@ -66,7 +67,7 @@ def status(folder):
 
 def request_cancel(folder):
     folder=folder.resolve();owner=read(folder/'job.json',256*1024);current=status(folder)
-    if owner.get('schema')!='soil-fem-native-job/1' or owner['job_id']!=current['job_id']:raise ValueError('job identity mismatch')
+    if owner.get('schema') not in ('soil-fem-native-job/1','soil-fem-native-job/2') or owner['job_id']!=current['job_id']:raise ValueError('job identity mismatch')
     if current['state'] in TERMINAL:return dict(requested=False,state=current['state'],job_id=owner['job_id'])
     request=folder/'cancel-request.json';value=dict(job_id=owner['job_id'],requested_utc=utc())
     try:
@@ -100,7 +101,7 @@ def phase(folder):
     return 'importing_geometry'
 
 
-def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=None,expected_input=None,host_disconnected=None,host_token=None):
+def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=None,expected_input=None,host_disconnected=None,host_token=None,cooperative=False,resume_from=None):
     capture=capture.resolve();folder=folder.resolve()
     if folder.is_relative_to(capture):raise ValueError('job output must be outside the source capture')
     if not math.isfinite(mesh_size) or mesh_size<=0 or order not in (1,2) or quadrature not in (3,4,5):raise ValueError('invalid mesh settings')
@@ -113,17 +114,27 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
     if split is not None:split=split.resolve();read(split)
     sources=[*sorted((ROOT/'tools').glob('*.py')),ROOT/'scripts/Invoke-SolidCraftCapture.ps1',ROOT/'scripts/Invoke-Stages.ps1',ROOT/'requirements.lock.txt']
     source_hashes={str(p.relative_to(ROOT)).replace('\\','/'):sha(p) for p in sources}
+    previous_owner=None;receipt=None
+    if resume_from is not None:
+        import native_stage_profile
+        resume_from=resume_from.resolve();cooperative=True
+        previous_owner,receipt=native_stage_profile.previous(resume_from,solver_digest,source_hashes,expected_input)
+        if recorded['input_sha256']!=previous_owner['input_sha256']:raise ValueError('resume capture differs')
+        mesh_size,order,quadrature=(previous_owner[k] for k in ('mesh_size_m','element_order','quadrature_order'))
     folder.mkdir(parents=True,exist_ok=False)
     job_id=uuid.uuid4().hex;started=time.monotonic()
-    owner=dict(schema='soil-fem-native-job/1',job_id=job_id,created_utc=utc(),input_sha256=recorded['input_sha256'],
+    owner=dict(schema='soil-fem-native-job/2' if cooperative else 'soil-fem-native-job/1',job_id=job_id,created_utc=utc(),input_sha256=recorded['input_sha256'],
         host_token=host_token,
         native_exporter_sha256=recorded['exporter_binary_sha256'],solver_sha256=solver_digest,
-        mesh_size_m=mesh_size,element_order=order,quadrature_order=quadrature,tool_sources_sha256=source_hashes)
+        mesh_size_m=mesh_size,element_order=order,quadrature_order=quadrature,tool_sources_sha256=source_hashes,
+        workflow_sources='runtime',profile='cooperative_staged' if cooperative else 'legacy_process',
+        parent_job_id=previous_owner['job_id'] if previous_owner else None)
     atomic(folder/'job.json',owner)
-    current=dict(schema='soil-fem-native-job-status/1',job_id=job_id,input_sha256=owner['input_sha256'],
+    current=dict(schema='soil-fem-native-job-status/2' if cooperative else 'soil-fem-native-job-status/1',job_id=job_id,input_sha256=owner['input_sha256'],
         host_token=host_token,
         state='preparing',phase='snapshot',worker_pid=os.getpid(),child_pid=None,created_utc=owner['created_utc'],
-        updated_utc=utc(),elapsed_seconds=0.,exit_code=None,result=None,log='worker.log',tail=[])
+        updated_utc=utc(),elapsed_seconds=0.,exit_code=None,result=None,log='worker.log',tail=[],
+        stop_policy='cooperative_staged_checkpoint' if cooperative else 'process_stop_without_new_checkpoint',resume_available=False)
     def publish(**changes):
         current.update(changes);current.update(updated_utc=utc(),elapsed_seconds=time.monotonic()-started)
         atomic(folder/'status.json',current)
@@ -132,6 +143,7 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
         return (host_disconnected is not None and host_disconnected.is_set()) or (path.exists() and read(path,4096).get('job_id')==job_id)
     publish();child=None;reader=None
     try:
+        runtime=native_workflow_snapshot.capture(ROOT,folder/'runtime',source_hashes)
         owned=folder/'capture';owned.mkdir()
         for name,digest in recorded['files_sha256'].items():
             if cancelled():publish(state='cancelled',phase='snapshot');return 2
@@ -140,16 +152,21 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
         copied,_,_,_=validate(owned)
         if copied!=recorded:raise ValueError('capture changed during job preparation')
         (folder/'solver').mkdir();pinned=folder/'solver/soil-fem-3d.exe';copy_checked(solver,pinned,solver_digest)
-        command=[shell,'-NoProfile','-File',str(ROOT/'scripts/Invoke-SolidCraftCapture.ps1'),'-CaptureFolder',str(owned),
+        if resume_from is not None:
+            import native_stage_profile
+            native_stage_profile.clone_context(resume_from,folder,pinned,owner)
+            return native_stage_profile.execute(folder,runtime,pinned,owner,publish,cancelled,stop_child,previous_folder=resume_from,receipt=receipt)
+        command=[shell,'-NoProfile','-File',str(runtime/'scripts/Invoke-SolidCraftCapture.ps1'),'-CaptureFolder',str(owned),
             '-MeshSizeM',str(mesh_size),'-ElementOrder',str(order),'-QuadratureOrder',str(quadrature),
-            '-SolverPath',str(pinned),'-OutputDirectory',str(folder/'workflow')]
+            '-SolverPath',str(pinned),'-OutputDirectory',str(folder/'workflow'),'-PythonPath',sys.executable]
         if split is not None:
             spec=folder/'joint-split.json';copy_checked(split,spec,sha(split));command+=['-SplitFile',str(spec)]
+        if cooperative:command+=['-PrepareOnly']
         if cancelled():publish(state='cancelled',phase='snapshot');return 2
         lines=queue.Queue(maxsize=256)
         options=dict(creationflags=subprocess.CREATE_NEW_PROCESS_GROUP|subprocess.CREATE_NO_WINDOW) if os.name=='nt' else dict(start_new_session=True)
         with (folder/'worker.log').open('x',encoding='utf-8') as log:
-            child=subprocess.Popen(command,cwd=ROOT,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,
+            child=subprocess.Popen(command,cwd=runtime,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,
                 text=True,encoding='utf-8',errors='replace',env={**os.environ,'PYTHONUTF8':'1'},**options)
             def collect():
                 try:
@@ -173,7 +190,10 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
             reader.join(timeout=5);code=child.wait();child.stdout.close()
             if cancelled_run or cancelled():publish(state='cancelled',exit_code=code,phase=phase(folder),tail=tail);return 2
         if code!=0:publish(state='failed',exit_code=code,phase=phase(folder),tail=tail);return 1
-        if any(sha(ROOT/name)!=digest for name,digest in source_hashes.items()):raise ValueError('FEM workflow source changed during the job')
+        if cooperative:
+            import native_stage_profile
+            return native_stage_profile.execute(folder,runtime,pinned,owner,publish,cancelled,stop_child)
+        native_workflow_snapshot.verify(runtime,source_hashes)
         manifest_path=folder/'workflow/view/view-manifest.json';manifest=read(manifest_path)
         audit=read(folder/'workflow/view-verification.json')
         if manifest.get('complete') is not True or manifest.get('input_sha256')!=owner['input_sha256'] or manifest.get('solver_binary_sha256')!=solver_digest:
@@ -196,7 +216,12 @@ if __name__=='__main__':
     runner.add_argument('--quadrature',type=int,default=3);runner.add_argument('--split',type=Path);runner.add_argument('--expected-input-sha256')
     runner.add_argument('--watch-stdin',action='store_true',help='native host pipe: EOF requests owned-process cleanup')
     runner.add_argument('--host-token',help='opaque identity supplied by the native process owner, never a PID to signal')
+    runner.add_argument('--cooperative',action='store_true',help='save solver checkpoints at accepted increments; requires staged-job CLI support')
+    resume=commands.add_parser('resume');resume.add_argument('previous',type=Path);resume.add_argument('job',type=Path)
+    resume.add_argument('--solver',type=Path);resume.add_argument('--expected-input-sha256');resume.add_argument('--host-token')
+    resume.add_argument('--watch-stdin',action='store_true')
     for name in ('status','cancel'):commands.add_parser(name).add_argument('job',type=Path)
     args=parser.parse_args()
-    if args.command=='run':sys.exit(run(args.capture,args.job,solver=args.solver,mesh_size=args.mesh_size_m,order=args.order,quadrature=args.quadrature,split=args.split,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token))
+    if args.command=='run':sys.exit(run(args.capture,args.job,solver=args.solver,mesh_size=args.mesh_size_m,order=args.order,quadrature=args.quadrature,split=args.split,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=args.cooperative))
+    if args.command=='resume':sys.exit(run(args.previous/'capture',args.job,solver=args.solver,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=True,resume_from=args.previous))
     print(json.dumps(request_cancel(args.job) if args.command=='cancel' else status(args.job),ensure_ascii=False))

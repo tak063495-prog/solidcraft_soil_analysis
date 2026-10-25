@@ -1,0 +1,123 @@
+{
+  "schema": "soil-fem-mcc-overlap-verification-record/1",
+  "evidence_integrity_passed": true,
+  "analytic_polynomial_cases_passed": 4,
+  "benchmark_initial_and_boundary_recipes_verified": true,
+  "benchmark_summaries": [
+    {
+      "elements": 224,
+      "integration_points": 6048,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 15.999999999999998,
+      "loaded_area_m2": 101.19288512538813,
+      "loaded_oriented_area_vector_m2": [
+        32.00000000000001,
+        -1.736736869577051e-16,
+        95.99999999999999
+      ],
+      "minimum_input_mean_pressure_kpa": 0.04706420759701402,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 5.684341886080802e-14,
+      "maximum_initial_pc_recipe_error_kpa": 2.2737367544323206e-13,
+      "maximum_initial_void_ratio_recipe_error": 3.774758283725532e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure"
+    },
+    {
+      "elements": 413,
+      "integration_points": 11151,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 16.0,
+      "loaded_area_m2": 101.1928851253881,
+      "loaded_oriented_area_vector_m2": [
+        31.999999999999982,
+        -1.8235144396171913e-16,
+        96.0
+      ],
+      "minimum_input_mean_pressure_kpa": 0.047064207597049545,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 5.684341886080802e-14,
+      "maximum_initial_pc_recipe_error_kpa": 3.410605131648481e-13,
+      "maximum_initial_void_ratio_recipe_error": 3.774758283725532e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure"
+    },
+    {
+      "elements": 723,
+      "integration_points": 19521,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 16.0,
+      "loaded_area_m2": 101.1928851253881,
+      "loaded_oriented_area_vector_m2": [
+        31.999999999999986,
+        -8.040333697978284e-17,
+        96.00000000000006
+      ],
+      "minimum_input_mean_pressure_kpa": 0.047064207596996255,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 5.684341886080802e-14,
+      "maximum_initial_pc_recipe_error_kpa": 2.2737367544323206e-13,
+      "maximum_initial_void_ratio_recipe_error": 3.774758283725532e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure"
+    }
+  ],
+  "numerical_mesh_comparisons": [
+    {
+      "left_elements": 224,
+      "right_elements": 413,
+      "final_from_seed": {
+        "active_volume_m3": 752.0,
+        "maximum_element_coverage_relative_error": 3.235177522505653e-14,
+        "maximum_element_coverage_error_m3": 3.108624468950438e-14,
+        "difference_squared_integral_m5": 4.037487922020219e-05,
+        "reference_squared_integral_m5": 0.04583649961141624,
+        "rms_difference_m": 0.00023171102469031295,
+        "relative_l2": 0.029679043191415018
+      },
+      "final_stage_increment": {
+        "active_volume_m3": 752.0,
+        "maximum_element_coverage_relative_error": 3.235177522505653e-14,
+        "maximum_element_coverage_error_m3": 3.108624468950438e-14,
+        "difference_squared_integral_m5": 3.4985773950124974e-05,
+        "reference_squared_integral_m5": 0.0010902535756053208,
+        "rms_difference_m": 0.0002156933832364236,
+        "relative_l2": 0.17913563314203193
+      }
+    },
+    {
+      "left_elements": 413,
+      "right_elements": 723,
+      "final_from_seed": {
+        "active_volume_m3": 752.0000000000002,
+        "maximum_element_coverage_relative_error": 3.4311646539144507e-14,
+        "maximum_element_coverage_error_m3": 2.6201263381153694e-14,
+        "difference_squared_integral_m5": 1.686567058872025e-05,
+        "reference_squared_integral_m5": 0.04595253818693766,
+        "rms_difference_m": 0.00014975898451327432,
+        "relative_l2": 0.019157862615055688
+      },
+      "final_stage_increment": {
+        "active_volume_m3": 752.0000000000002,
+        "maximum_element_coverage_relative_error": 3.4311646539144507e-14,
+        "maximum_element_coverage_error_m3": 2.6201263381153694e-14,
+        "difference_squared_integral_m5": 8.468617291195022e-06,
+        "reference_squared_integral_m5": 0.0011049487506508884,
+        "rms_difference_m": 0.00010612002244545166,
+        "relative_l2": 0.08754577383020691
+      }
+    }
+  ],
+  "source_archives_verified": {
+    "D:\\Work\\soil-fem-3d\\runs\\tet10-overlap-verification-20261025-v1": 520,
+    "D:\\Work\\soil-fem-3d\\runs\\mcc-mesh-overlap-20261025-v2": 521
+  },
+  "spatial_convergence_verified": false,
+  "native_ui_connected": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "limitations": "Affine meshes only; 723-cell independent field comparison, independent integration refinement, 1792-cell solution and all other P0-P6 work remain pending",
+  "original_report_sha256": "689f58c7dba0b333d2a32ae797279441ba0f010cc3f3fd062e8dcde4faa8060e",
+  "original_local_path": "runs/mcc-overlap-verification-20261025-v1/verification.json",
+  "publication_note": "Summary only. Local evidence paths are provenance; full run folders are not bundled."
+}

@@ -110,7 +110,7 @@ def verify(mesh_path,ground_path,result_path,export_dir,solver=None):
     producer=result.get('provenance',{}).get('solver_binary_sha256')
     assert producer==hashlib.sha256(((solver or root/'target/release/soil-fem-3d.exe')).read_bytes()).hexdigest(),'result produced by a different binary'
     package={"schema":"soil-fem-accepted-staged-run/1","inputs_and_results_sha256":{str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [mesh_path,ground_path,result_path,result_path.parent/"stages.json"]},
-             "solver_binary_sha256":hashlib.sha256((root/"target/release/soil-fem-3d.exe").read_bytes()).hexdigest()}
+             "solver_binary_sha256":hashlib.sha256((solver or root/"target/release/soil-fem-3d.exe").read_bytes()).hexdigest()}
     (result_path.parent/"accepted-stage-run.json").write_text(json.dumps(package,indent=2),encoding="utf-8")
     print(json.dumps(report,indent=2))
 

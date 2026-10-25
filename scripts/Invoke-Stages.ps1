@@ -10,12 +10,14 @@ param(
     [ValidateSet(1,2)][int]$ElementOrder = 1,
     [ValidateSet(3,4,5)][int]$QuadratureOrder = 3,
     [string]$SolverPath,
-    [string]$OutputDirectory
+    [string]$OutputDirectory,
+    [string]$PythonPath,
+    [switch]$PrepareOnly
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $env:PATH = "$env:USERPROFILE\.cargo\bin;$env:PATH"
-$python = Join-Path $projectRoot '.venv\Scripts\python.exe'
+$python = if($PythonPath){(Resolve-Path -LiteralPath $PythonPath).Path}else{Join-Path $projectRoot '.venv\Scripts\python.exe'}
 if ($PreparedModel -and ($GroundRun -or $Design -or $Live -or -not $GroundFile -or -not $StageFile)) { throw '-PreparedModel requires explicit GroundFile/StageFile and cannot be combined with GroundRun/Design/Live' }
 if ($PreparedModel) { $PreparedModel=(Resolve-Path -LiteralPath $PreparedModel).Path }
 if ($GroundRun -and -not $StageFile) { throw 'Specify -StageFile with -GroundRun: stage pressures are absolute and must match the initial load' }
@@ -68,6 +70,26 @@ try {
         if ($GroundFile -and (Get-Content -LiteralPath $GroundFile -Raw | ConvertFrom-Json).initialization.method -eq 'equilibrate') { $arguments.PrepareOnly=$true }
         & "$PSScriptRoot\Invoke-Ground.ps1" @arguments
         $meshPath = "$runDir\ground\mesh.json"; $groundPath = "$runDir\ground\ground.json"
+    }
+    if ($PrepareOnly) {
+        if (-not $PreparedModel) { throw '-PrepareOnly requires an explicit prepared model' }
+        $preparedRecord = @{
+            schema='soil-fem-prepared-stage-input/1'
+            equilibrium_verified=$false
+            mesh='ground/mesh.json'
+            ground='ground/ground.json'
+            stages='stages.json'
+            solver='solver/soil-fem-3d.exe'
+            files_sha256=@{
+                'ground/mesh.json'=(Get-FileHash -LiteralPath $meshPath -Algorithm SHA256).Hash.ToLower()
+                'ground/ground.json'=(Get-FileHash -LiteralPath $groundPath -Algorithm SHA256).Hash.ToLower()
+                'stages.json'=(Get-FileHash -LiteralPath "$runDir\stages.json" -Algorithm SHA256).Hash.ToLower()
+                'solver/soil-fem-3d.exe'=(Get-FileHash -LiteralPath $SolverPath -Algorithm SHA256).Hash.ToLower()
+            }
+        }
+        $preparedRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath "$runDir\prepared-stage-input.json" -Encoding utf8NoBOM
+        Write-Host "Staged soil FEM inputs prepared; equilibrium not evaluated: $runDir"
+        return
     }
     & $SolverPath solve-stages $meshPath $groundPath "$runDir\stages.json" "$runDir\stage-results.json"
     if ($LASTEXITCODE -ne 0) { throw 'Staged FEM incomplete: inspect failed result and last_committed; no accepted export was created' }

@@ -14,6 +14,7 @@ import mcc_projected_volume_diagnostic as projected
 
 def physical_case(value):
     out = {k: v for k, v in value.items() if k not in ('schema', 'settings', 'verification_reject_once_stages')}
+    out['kinematics'] = value.get('settings', {}).get('kinematics', 'side_rollers')
     out['stages'] = [{k: v for k, v in stage.items() if k != 'initial_increment'} for stage in value['stages']]
     return out
 
@@ -30,12 +31,16 @@ def integrals(system, state, seed, u):
     return out, scale, theta
 
 
-def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output, steps):
+def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output, steps,
+          system_factory=ProjectedSystem, extra_sources=()):
     if steps < 2:
         raise ValueError('at least two rate-integration steps required')
     mesh, ground, case, identity, initial = map(read, (mesh_file, ground_file, case_file, identity_file, initial_file))
     if initial['schema'] != 'soil-fem-projected-volume-mcc-diagnostic/1' or initial['load_fraction'] != 1:
         raise ValueError('an original-input projected full initialization is required')
+    backend = system_factory.__module__+'.'+system_factory.__name__
+    if initial.get('reference_backend', ProjectedSystem.__module__+'.'+ProjectedSystem.__name__) != backend:
+        raise ValueError('initial/reference solver backend differs')
     bindings = initial['input_and_source_sha256']
     for name, digest in bindings.items():
         assert sha(Path(name)) == digest, name
@@ -51,6 +56,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
         raise ValueError('unsupported members, contacts or initial inactive domains')
     source_files = [Path(__file__), Path(projected.__file__), Path(rate.__file__), Path(ref.__file__),
                     Path(projected.mcc_rate_midpoint.__file__), Path(projected.verify_high_order.__file__), Path(projected.high_order_io.__file__)]
+    source_files += list(extra_sources)
     inputs = [mesh_file, ground_file, case_file, identity_file, initial_file]
     fingerprints = {str(p): sha(p) for p in inputs+source_files}
     active = np.ones(len(mesh['tetrahedra']), dtype=bool)
@@ -58,7 +64,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
     seed = rate.seed(mesh, ground, identity)
     u = np.asarray(initial['displacement_m']).reshape(-1).copy()
     origin = u.copy()
-    system = ProjectedSystem(mesh, ground, active, case)
+    system = system_factory(mesh, ground, active, case)
     offset = np.zeros(len(system.keys))
     pressure = ground['initialization']['surface_surcharge_kpa']
     factor = 0.
@@ -79,10 +85,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
         compatibility = float(np.linalg.norm(defect-offset)/max(np.linalg.norm(volume_scale), float(system.weight.sum())*1e-12))
         assert residual < 1e-8 and compatibility < 1e-8
         p, _ = system.pressure(local)
-        rhs = np.zeros(len(system.keys))
-        local_theta = np.einsum('eqa,eq,eq->ea', system.n, theta, system.weight)
-        np.add.at(rhs, system.pi.reshape(-1), local_theta.reshape(-1))
-        nodal_theta = np.linalg.solve(system.mass, rhs)
+        nodal_theta = system.project_volume(theta)
         theta_error = float(abs(np.einsum('eqa,ea->eq', system.n, nodal_theta[system.pi])-theta).max())
         assert theta_error < 1e-10
         used = np.unique(np.asarray(mesh['tetrahedra10'])[active])
@@ -102,6 +105,8 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
             maximum_nodal_gp_volume_difference=theta_error,
             plastic_points=int(np.count_nonzero(np.linalg.norm(local[:, 8:], axis=1)>1e-10)),
             monitors=monitors, diagnostics=diagnostics))
+        if hasattr(system, 'solver_diagnostics'):
+            frames[-1]['sparse_solver_diagnostics'] = system.solver_diagnostics()
 
     frame('initial_equilibrated', u.copy(), initial['diagnostics'])
     for stage in case['stages']:
@@ -124,7 +129,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
                 raise ValueError('unknown, empty or overlapping excavation')
             active[remove] = False
             pressure = stage['remaining_surface_pressure_kpa']
-            system = ProjectedSystem(mesh, ground, active, case)
+            system = system_factory(mesh, ground, active, case)
             offset = integrals(system, state, seed, u)[0]
         else:
             raise ValueError('only pressure/boundary/excavation diagnostic stages are supported')
@@ -150,6 +155,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
         initial_reference_sha256=sha(initial_file), reference_displacement_m=origin.reshape(-1, 3).tolist(),
         frames=frames, release_audits=release_audits, input_and_source_sha256=fingerprints,
         limitations='No spatial-convergence acceptance; explicit rate integrator differs from Rust fixed-partition updates; no members/water/contact or production export')
+    report['reference_backend'] = backend
     with output.open('x', encoding='utf-8') as stream:
         json.dump(report, stream, allow_nan=False)
     print('Independent projected-volume construction diagnostic completed', flush=True)
