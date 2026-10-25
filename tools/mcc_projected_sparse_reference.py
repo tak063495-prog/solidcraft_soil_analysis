@@ -60,6 +60,8 @@ class SparseProjectedSystem(rate.System):
         self.rbd[:, :, :3] -= self.rb[:, :, :3].sum(axis=2)[:, :, None, :]/3
         self.maximum_true_linear_residual = 0.
         self.maximum_block_residuals = dict(force=0., volume=0., mean_pressure=0.)
+        self.maximum_unrefined_block_residuals = dict(force=0., volume=0., mean_pressure=0.)
+        self.iterative_refinement_corrections = 0
         self.factorizations = 0
         self.maximum_matrix_nnz = 0
         self.maximum_factor_nnz = 0
@@ -129,18 +131,29 @@ class SparseProjectedSystem(rate.System):
         self.factorizations += 1
         self.maximum_matrix_nnz = max(self.maximum_matrix_nnz, matrix.nnz)
         self.maximum_factor_nnz = max(self.maximum_factor_nnz, factor.L.nnz+factor.U.nnz)
-        theta, reduced, pressure = np.split(solution, (nt, nt+nf))
-        residual = matrix@solution-rhs
-        error = float(np.linalg.norm(residual)/max(np.linalg.norm(rhs), 1e-30))
-        blocks = dict(
-            force=float(np.linalg.norm(residual[nt:nt+nf])/max(np.linalg.norm(rhs[nt:nt+nf]), 1e-30)),
-            volume=float(np.linalg.norm(residual[nt+nf:])/max(np.linalg.norm(m@theta), np.linalg.norm(div@reduced), 1e-30)),
-            mean_pressure=float(np.linalg.norm(residual[:nt])/max(np.linalg.norm(tt@theta), np.linalg.norm(td@reduced), np.linalg.norm(m@pressure), 1e-30)))
+        for correction in range(4):
+            theta, reduced, pressure = np.split(solution, (nt, nt+nf))
+            residual = matrix@solution-rhs
+            error = float(np.linalg.norm(residual)/max(np.linalg.norm(rhs), 1e-30))
+            blocks = dict(
+                force=float(np.linalg.norm(residual[nt:nt+nf])/max(np.linalg.norm(rhs[nt:nt+nf]), 1e-30)),
+                volume=float(np.linalg.norm(residual[nt+nf:])/max(np.linalg.norm(m@theta), np.linalg.norm(div@reduced), 1e-30)),
+                mean_pressure=float(np.linalg.norm(residual[:nt])/max(np.linalg.norm(tt@theta), np.linalg.norm(td@reduced), np.linalg.norm(m@pressure), 1e-30)))
+            if correction == 0:
+                for key, value in blocks.items():
+                    self.maximum_unrefined_block_residuals[key] = max(self.maximum_unrefined_block_residuals[key], value)
+            finite = bool(np.isfinite([error, *blocks.values()]).all())
+            if finite and error <= 1e-10 and max(blocks.values()) <= 1e-10:
+                break
+            if not finite or correction == 3:
+                raise ValueError(f'sparse three-field true linear residual exceeded tolerance: {error}, {blocks}')
+            # Reuse the same LU factors, but form each correction RHS from the
+            # original unscaled equations. No altered material, load or gate.
+            solution -= factor.solve(residual)
+            self.iterative_refinement_corrections += 1
         self.maximum_true_linear_residual = max(self.maximum_true_linear_residual, error)
         for key, value in blocks.items():
             self.maximum_block_residuals[key] = max(self.maximum_block_residuals[key], value)
-        if error > 1e-10 or max(blocks.values()) > 1e-10:
-            raise ValueError(f'sparse three-field true linear residual exceeded tolerance: {error}, {blocks}')
         coordinates = np.zeros(self.xyz.size)
         coordinates[self.free] = reduced
         du = self.lift(coordinates)
@@ -189,4 +202,6 @@ class SparseProjectedSystem(rate.System):
                     maximum_factor_nnz=self.maximum_factor_nnz,
                     maximum_true_linear_residual=self.maximum_true_linear_residual,
                     maximum_block_residuals=self.maximum_block_residuals,
+                    maximum_unrefined_block_residuals=self.maximum_unrefined_block_residuals,
+                    iterative_refinement_corrections=self.iterative_refinement_corrections,
                     maximum_mass_residual=self.maximum_mass_residual, dense_fallbacks=self.dense_fallbacks)

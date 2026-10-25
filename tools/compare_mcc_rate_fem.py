@@ -51,10 +51,12 @@ def compare(reference,rust,mesh=None):
                 maximum_absolute_all_points=float(np.max(np.abs(observed-expected))),
                 relative_active_points=relative(observed[gp_mask],expected[gp_mask]))
         ru=np.asarray(rf['displacement_m']);nu=np.asarray(actual['displacement_m'])
+        reference_display_origin=np.asarray(rf.get('display_reference_displacement_m',reference_origin))
+        native_display_origin=np.asarray(actual.get('display_reference_displacement_m',native_origin))
         row=dict(name=rf['name'],displacement_relative_all_nodes=relative(nu,ru),
             displacement_maximum_component_error_m=float(np.max(np.abs(nu-ru))),
-            display_displacement_relative_all_nodes=relative(nu-native_origin,ru-reference_origin),
-            display_displacement_maximum_component_error_m=float(np.max(np.abs((nu-native_origin)-(ru-reference_origin)))),
+            display_displacement_relative_all_nodes=relative(nu-native_display_origin,ru-reference_display_origin),
+            display_displacement_maximum_component_error_m=float(np.max(np.abs((nu-native_display_origin)-(ru-reference_display_origin)))),
             independent_relative_force_residual=rf['relative_free_force_residual'],
             independent_plastic_points=int(np.count_nonzero(np.linalg.norm(ref_fields['plastic_strain'],axis=1)>1e-10)),
             rust_plastic_points=int(np.count_nonzero(np.linalg.norm(native_fields['plastic_strain'],axis=1)>1e-10)),
@@ -72,8 +74,8 @@ def compare(reference,rust,mesh=None):
                 monitors[name]=dict(active_nodes=len(ids),independent_mean_from_seed_m=float(z.mean()),rust_mean_from_seed_m=float(nz.mean()),
                     independent_minimum_from_seed_m=float(z.min()),rust_minimum_from_seed_m=float(nz.min()),
                     independent_maximum_from_seed_m=float(z.max()),rust_maximum_from_seed_m=float(nz.max()))
-                monitors[name].update(independent_mean_from_display_reference_m=float((ru-reference_origin)[ids,2].mean()),
-                                      rust_mean_from_display_reference_m=float((nu-native_origin)[ids,2].mean()))
+                monitors[name].update(independent_mean_from_display_reference_m=float((ru-reference_display_origin)[ids,2].mean()),
+                                      rust_mean_from_display_reference_m=float((nu-native_display_origin)[ids,2].mean()))
                 if previous_reference is not None:
                     monitors[name].update(independent_stage_increment_mean_m=float((ru-previous_reference)[ids,2].mean()),
                                           rust_stage_increment_mean_m=float((nu-previous_native)[ids,2].mean()))

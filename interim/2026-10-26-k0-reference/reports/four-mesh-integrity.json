@@ -1,0 +1,390 @@
+{
+  "schema": "soil-fem-four-mesh-completed-evidence/1",
+  "evidence_integrity_passed": true,
+  "same_initial_and_load_recipes_verified": true,
+  "all_gp_geometry_independently_recomputed": true,
+  "recipes": [
+    {
+      "elements": 224,
+      "integration_points": 6048,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 15.999999999999998,
+      "loaded_area_m2": 101.19288512538813,
+      "loaded_oriented_area_vector_m2": [
+        32.00000000000001,
+        -1.736736869577051e-16,
+        95.99999999999999
+      ],
+      "minimum_input_mean_pressure_kpa": 0.04706420759701402,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 5.684341886080802e-14,
+      "maximum_initial_pc_recipe_error_kpa": 2.2737367544323206e-13,
+      "maximum_initial_void_ratio_recipe_error": 3.774758283725532e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure",
+      "independent_position_error_m": 5.329070518200751e-15,
+      "independent_weight_error_m3": 9.992007221626409e-16
+    },
+    {
+      "elements": 413,
+      "integration_points": 11151,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 16.0,
+      "loaded_area_m2": 101.1928851253881,
+      "loaded_oriented_area_vector_m2": [
+        31.999999999999982,
+        -1.8235144396171913e-16,
+        96.0
+      ],
+      "minimum_input_mean_pressure_kpa": 0.047064207597049545,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 5.684341886080802e-14,
+      "maximum_initial_pc_recipe_error_kpa": 3.410605131648481e-13,
+      "maximum_initial_void_ratio_recipe_error": 3.774758283725532e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure",
+      "independent_position_error_m": 5.329070518200751e-15,
+      "independent_weight_error_m3": 7.771561172376096e-16
+    },
+    {
+      "elements": 723,
+      "integration_points": 19521,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 16.0,
+      "loaded_area_m2": 101.1928851253881,
+      "loaded_oriented_area_vector_m2": [
+        31.999999999999986,
+        -8.040333697978284e-17,
+        96.00000000000006
+      ],
+      "minimum_input_mean_pressure_kpa": 0.047064207596996255,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 5.684341886080802e-14,
+      "maximum_initial_pc_recipe_error_kpa": 2.2737367544323206e-13,
+      "maximum_initial_void_ratio_recipe_error": 3.774758283725532e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure",
+      "independent_position_error_m": 5.329070518200751e-15,
+      "independent_weight_error_m3": 3.3306690738754696e-16
+    },
+    {
+      "elements": 1792,
+      "integration_points": 48384,
+      "original_volume_m3": 768.0,
+      "removed_volume_m3": 15.999999999999996,
+      "loaded_area_m2": 101.19288512538816,
+      "loaded_oriented_area_vector_m2": [
+        31.999999999999993,
+        -1.5332594117156751e-16,
+        96.0
+      ],
+      "minimum_input_mean_pressure_kpa": 0.023532103798480364,
+      "maximum_initial_position_error_m": 0.0,
+      "maximum_initial_stress_recipe_error_kpa": 8.526512829121202e-14,
+      "maximum_initial_pc_recipe_error_kpa": 3.410605131648481e-13,
+      "maximum_initial_void_ratio_recipe_error": 7.549516567451064e-14,
+      "seed_recipe": "p=20(10-x/3-z); isotropic K0=1; pc/p=4; explicit MCC reference void ratio; zero initial plastic history",
+      "boundary_recipe": "side rollers; original free-surface pressure 0->5->0 kPa; Pit removal with zero remaining pressure",
+      "independent_position_error_m": 5.329070518200751e-15,
+      "independent_weight_error_m3": 1.3877787807814457e-16
+    }
+  ],
+  "completed_comparisons": [
+    {
+      "left_elements": 224,
+      "right_elements": 1792,
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "from_seed": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 1.3174561762275306e-05,
+            "reference_squared_integral_m5": 0.05172972556241785,
+            "rms_difference_m": 0.00013097472005936604,
+            "relative_l2": 0.015958718041970767
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 0.0,
+            "reference_squared_integral_m5": 0.0,
+            "rms_difference_m": 0.0,
+            "relative_l2": null
+          },
+          "stage_increment": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 1.3174561762275306e-05,
+            "reference_squared_integral_m5": 0.05172972556241785,
+            "rms_difference_m": 0.00013097472005936604,
+            "relative_l2": 0.015958718041970767
+          }
+        },
+        {
+          "name": "reload_slope",
+          "from_seed": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 1.514183960057794e-05,
+            "reference_squared_integral_m5": 0.05324926495672071,
+            "rms_difference_m": 0.00014041345013893504,
+            "relative_l2": 0.016862909609100134
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 6.374426151345829e-06,
+            "reference_squared_integral_m5": 0.0025504749362484434,
+            "rms_difference_m": 9.110452267166295e-05,
+            "relative_l2": 0.049993094184604105
+          },
+          "stage_increment": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 6.374426151345829e-06,
+            "reference_squared_integral_m5": 0.0025504749362484434,
+            "rms_difference_m": 9.110452267166295e-05,
+            "relative_l2": 0.049993094184604105
+          }
+        },
+        {
+          "name": "unload_slope",
+          "from_seed": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 1.4757990618213457e-05,
+            "reference_squared_integral_m5": 0.051712350050596656,
+            "rms_difference_m": 0.00013862226955819703,
+            "relative_l2": 0.016893377139753103
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 6.736960389695606e-07,
+            "reference_squared_integral_m5": 6.973348203992635e-07,
+            "rms_difference_m": 2.9617703896064406e-05,
+            "relative_l2": 0.9829044949267439
+          },
+          "stage_increment": {
+            "active_volume_m3": 768.0,
+            "maximum_element_coverage_relative_error": 7.668865542598255e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 6.1716868487288366e-06,
+            "reference_squared_integral_m5": 0.0025438998149628373,
+            "rms_difference_m": 8.964402146424679e-05,
+            "relative_l2": 0.04925518323836756
+          }
+        },
+        {
+          "name": "excavate_pit",
+          "from_seed": {
+            "active_volume_m3": 752.0,
+            "maximum_element_coverage_relative_error": 7.031875082219599e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 4.267160904917624e-05,
+            "reference_squared_integral_m5": 0.04595244300693734,
+            "rms_difference_m": 0.0002382103292673289,
+            "relative_l2": 0.03047299968445326
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 752.0,
+            "maximum_element_coverage_relative_error": 7.031875082219599e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 3.0101782119609253e-05,
+            "reference_squared_integral_m5": 0.0010848954624327,
+            "rms_difference_m": 0.00020007240085675678,
+            "relative_l2": 0.1665720603400144
+          },
+          "stage_increment": {
+            "active_volume_m3": 752.0,
+            "maximum_element_coverage_relative_error": 7.031875082219599e-14,
+            "maximum_element_coverage_error_m3": 3.375077994860476e-14,
+            "difference_squared_integral_m5": 2.9393394969536062e-05,
+            "reference_squared_integral_m5": 0.00108483929930287,
+            "rms_difference_m": 0.00019770422705561876,
+            "relative_l2": 0.16460467683960645
+          }
+        }
+      ]
+    },
+    {
+      "left_elements": 723,
+      "right_elements": 1792,
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "from_seed": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 2.7904157856143936e-06,
+            "reference_squared_integral_m5": 0.05172972556241788,
+            "rms_difference_m": 6.027730823053349e-05,
+            "relative_l2": 0.0073445361512819544
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 0.0,
+            "reference_squared_integral_m5": 0.0,
+            "rms_difference_m": 0.0,
+            "relative_l2": null
+          },
+          "stage_increment": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 2.7904157856143936e-06,
+            "reference_squared_integral_m5": 0.05172972556241788,
+            "rms_difference_m": 6.027730823053349e-05,
+            "relative_l2": 0.0073445361512819544
+          }
+        },
+        {
+          "name": "reload_slope",
+          "from_seed": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 6.287665347626551e-06,
+            "reference_squared_integral_m5": 0.05324926495672073,
+            "rms_difference_m": 9.048239748548923e-05,
+            "relative_l2": 0.01086645537519905
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 3.733173571148419e-06,
+            "reference_squared_integral_m5": 0.0025504749362484456,
+            "rms_difference_m": 6.972017704676915e-05,
+            "relative_l2": 0.038258554849445875
+          },
+          "stage_increment": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 3.733173571148419e-06,
+            "reference_squared_integral_m5": 0.0025504749362484456,
+            "rms_difference_m": 6.972017704676915e-05,
+            "relative_l2": 0.038258554849445875
+          }
+        },
+        {
+          "name": "unload_slope",
+          "from_seed": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 3.6738558811805307e-06,
+            "reference_squared_integral_m5": 0.051712350050596684,
+            "rms_difference_m": 6.916405505718859e-05,
+            "relative_l2": 0.008428764514674213
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 5.608702208581618e-07,
+            "reference_squared_integral_m5": 6.973348203992532e-07,
+            "rms_difference_m": 2.7024059035281838e-05,
+            "relative_l2": 0.8968308005967325
+          },
+          "stage_increment": {
+            "active_volume_m3": 768.0000000000002,
+            "maximum_element_coverage_relative_error": 4.683753385137389e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 2.995543036457674e-06,
+            "reference_squared_integral_m5": 0.002543899814962839,
+            "rms_difference_m": 6.24535560401028e-05,
+            "relative_l2": 0.034315298403584035
+          }
+        },
+        {
+          "name": "excavate_pit",
+          "from_seed": {
+            "active_volume_m3": 752.0000000000002,
+            "maximum_element_coverage_relative_error": 4.334033132380463e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 1.2244567769507441e-05,
+            "reference_squared_integral_m5": 0.04595244300693736,
+            "rms_difference_m": 0.00012760356541358824,
+            "relative_l2": 0.016323655739628316
+          },
+          "from_construction_origin": {
+            "active_volume_m3": 752.0000000000002,
+            "maximum_element_coverage_relative_error": 4.334033132380463e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 9.160708320857138e-06,
+            "reference_squared_integral_m5": 0.0010848954624327009,
+            "rms_difference_m": 0.00011037116009113618,
+            "relative_l2": 0.09189049294040716
+          },
+          "stage_increment": {
+            "active_volume_m3": 752.0000000000002,
+            "maximum_element_coverage_relative_error": 4.334033132380463e-14,
+            "maximum_element_coverage_error_m3": 1.554312234475219e-14,
+            "difference_squared_integral_m5": 8.739089339768268e-06,
+            "reference_squared_integral_m5": 0.0010848392993028705,
+            "rms_difference_m": 0.00010780134248320475,
+            "relative_l2": 0.08975329160428971
+          }
+        }
+      ]
+    }
+  ],
+  "source_archives_verified": {
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1": 515,
+    "D:\\Work\\soil-fem-3d\\runs\\projected-sparse-spatial-2m-200-20261026-v2": 526
+  },
+  "fixed_723_field_accuracy_passed": true,
+  "reference_100_to_200_refinement_passed": false,
+  "spatial_convergence_verified": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "sha256": {
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-development-20261025-v1\\terrain-ultrafine-job\\result.json": "2be0c66566186295d9bbef45bd17f027997700c4c6beab7d3e6710bc43b7898b",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-development-20261025-v1\\terrain-ultrafine-job\\status.json": "e3c55670d8fbc2ff75392f11639432c637a02fc096671c1353f4cfe11dc6c88f",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-development-20261025-v1\\terrain-ultrafine-job\\job.json": "36278c02463933e27064cf08bd4efe1d53e9c608809c77587a2d6238e63feb72",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-development-20261025-v1\\terrain-ultrafine-job\\inputs\\mesh.json": "cb4fbaf359c5bb0f9d57b577424d37d6eafccaa91813005fb5b042afde9e1dfe",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-development-20261025-v1\\terrain-ultrafine-job\\inputs\\ground.json": "0752f9d2ce5ed87384d02ed7f56f30d30e724cb45227c86185661bec61fef995",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-development-20261025-v1\\terrain-ultrafine-job\\inputs\\case.json": "0a845bbedeee22dacacf8d9284d16193d22b13aaf2403b671b6a7e34927164bc",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-3m\\ultrafine-job\\result.json": "46a1029dc09890170a9da7063e2348ec662354f791e23b774600f34bab88ab44",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-3m\\ultrafine-job\\status.json": "79df913049e8c359f3904343ae07f798035bcb0d9854d48d8ea498b60aff7934",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-3m\\ultrafine-job\\job.json": "5797247ed1ae68c438d3cceb266daef5e311a3ddc351be05bac941634b393064",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-3m\\ultrafine-job\\inputs\\mesh.json": "ce1897f8c6ce948c745b9751ec974701a4985744bc4c28a13bb680e54c56fd65",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-3m\\ultrafine-job\\inputs\\ground.json": "8069ffd5620a3f42249b1d63b11cd8c6343ae0f315456cdc5e8921aa8c5e5905",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-3m\\ultrafine-job\\inputs\\case.json": "0a845bbedeee22dacacf8d9284d16193d22b13aaf2403b671b6a7e34927164bc",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-2m\\ultrafine-job\\result.json": "701bacc6fb4c19c5161504e2531236b5c062878a8d556fa7d0ee0b391a5ef1a2",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-2m\\ultrafine-job\\status.json": "2caad4c780eb33ce33b02292aeb2322d2949214ac5f93e9a25abd942eba71c0d",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-2m\\ultrafine-job\\job.json": "6072ddb8e0b684d517be7cdf8fc80ab17fd73bbeb7506ecbe130be10abfb910c",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-2m\\ultrafine-job\\inputs\\mesh.json": "0f8ad443ee442b5ec34811579a6de792004394f0b527fdccf02d61f04902e1e9",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-2m\\ultrafine-job\\inputs\\ground.json": "23f3d24ec8d158de259b0e2cbc169f578ab88a50446f45bf2d5aaa390ee6f1ca",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-inputs-20261025-v1\\mesh-2m\\ultrafine-job\\inputs\\case.json": "0a845bbedeee22dacacf8d9284d16193d22b13aaf2403b671b6a7e34927164bc",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\ultrafine-job\\result.json": "8a19f890855febbb38175b24030f98a2fe4c668bb9a96e6af3542d5c8d345ce4",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\ultrafine-job\\status.json": "fcae41ce361eff1d4a3e73bd7f59d97516620eab81f5765405f7d32968f39165",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\ultrafine-job\\job.json": "06049d4c6717b75d5772eb7a026a75c0c2cae8bf45db51399eb4c5f680862b8c",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\ultrafine-job\\inputs\\mesh.json": "8bb794d3aa6637d98127af01ff7978e80de55cfaab53146e483082c56a8b2fe0",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\ultrafine-job\\inputs\\ground.json": "4da023304d1506817c4952ed55fb088a256b1fe445f41cf3657de1bc96d7cbb6",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\ultrafine-job\\inputs\\case.json": "0a845bbedeee22dacacf8d9284d16193d22b13aaf2403b671b6a7e34927164bc",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-completed-20261026-v1\\overlap-224-1792.json": "dde1025a194e882f948c779680fd2f0dd0f019bb245505e6adea1610586555d3",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-completed-20261026-v1\\overlap-723-1792.json": "71bf4cd78b36b983c204471a6e8f5846732ed53b5e32c4e5605a6fba828528ba",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-spatial-2m-assessment-20261026-v2\\assessment.json": "67fefb9bf587e8726eb7a1a160107ece89214687bce8530e2e9ac2c7855aac83",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-completed-20261026-v1\\seal-comparisons.py": "cd95ed5e07b855f191b89a87349feb3f1ab4ace3cc20f80cdb1e429f4f48302a",
+    "D:\\Work\\soil-fem-3d\\tools\\fem_reference.py": "8e6b24c6a6d691d481eb0475ae9ac3735e86b319bc95815c51c37a6c195c3800",
+    "D:\\Work\\soil-fem-3d\\tools\\record_mcc_overlap_verification.py": "269014a16025469f67972cecb488da6b35d0caa6202817e54736d96ee4d243fb"
+  },
+  "original_report_sha256": "02a98e03de3000cbc3dace4aebeb651fc1a69d7d220a077b0c36915f3ca4cba9",
+  "original_local_path": "runs/projected-mcc-nested-completed-20261026-v1/completed-comparison-verification.json",
+  "publication_note": "Fixed-scope historical record. Local paths are provenance, not included run data. Pending flags apply to creation time; see snapshot-status.json."
+}

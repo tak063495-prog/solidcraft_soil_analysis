@@ -34,6 +34,18 @@ def copy_file(source, target, digest):
         raise ValueError('saved input changed during copy: '+source.name)
 
 
+def read_solver_status(path):
+    # Windows can briefly deny an open while the solver replaces status.json.
+    # Retry only this same bounded read; never return stale/corrupt progress.
+    for attempt in range(5):
+        try:
+            return read(path, 256*1024)
+        except PermissionError:
+            if attempt == 4:
+                raise
+            time.sleep(.01)
+
+
 def plain(name):
     if not isinstance(name, str) or not name or Path(name).name != name or name in ('.', '..') or any(c in name for c in ('/', '\\', ':')):
         raise ValueError('saved inventory requires plain filenames')
@@ -103,6 +115,7 @@ def command(args, runtime, log_path, publish, cancelled, stop_child, *, phase, s
     lines = queue.Queue(maxsize=256)
     options = dict(creationflags=subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW) if os.name == 'nt' else dict(start_new_session=True)
     child = None
+    reader = None
     with log_path.open('x', encoding='utf-8') as log:
         try:
             child = subprocess.Popen(args, cwd=runtime, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -145,7 +158,7 @@ def command(args, runtime, log_path, publish, cancelled, stop_child, *, phase, s
                 if time.monotonic()-last_write > .3:
                     extra = {}
                     if solver_job and (solver_job/'status.json').is_file():
-                        status = read(solver_job/'status.json', 256*1024)
+                        status = read_solver_status(solver_job/'status.json')
                         if status.get('schema') != 'soil-fem-stages-job-status/1':
                             raise ValueError('unsupported solver progress schema')
                         extra['solver_report'] = status
@@ -158,6 +171,10 @@ def command(args, runtime, log_path, publish, cancelled, stop_child, *, phase, s
         except BaseException:
             if child is not None and child.poll() is None:
                 stop_child(child)
+            if reader is not None:
+                reader.join(timeout=5)
+            if child is not None and child.stdout is not None:
+                child.stdout.close()
             raise
 
 
@@ -195,7 +212,7 @@ def execute(folder, runtime, solver, owner, publish, cancelled, stop_child, *, p
             raise ValueError('staged job solver fingerprint differs')
         code, stopped = command([str(pinned), 'run-stages-job', str(solver_job)], runtime, folder/'solver-run.log',
                                 publish, cancelled, stop_child, phase='solving', solver_job=solver_job, solver=pinned)
-        status = read(solver_job/'status.json', 256*1024)
+        status = read_solver_status(solver_job/'status.json')
         manifest = read(solver_job/'job.json', 256*1024)
         if status.get('job_id') != manifest.get('job_id'):
             raise ValueError('solver status and job identity differ')

@@ -1,6 +1,6 @@
 # SolidCraft → Rust 3D地盤FEM
 
-**2026-10-26時点の途中成果物です。P0〜P6全体は未完了です。** [最新の実CAD・停止再開検証](interim/2026-10-26-real-cad/README.ja.md)／[SolidCraft差分](integrations/solidcraft/README.ja.md)／[新P1方式の差分](integrations/solidcraft-projected/README.ja.md)／[残件](docs/P6_STATUS.ja.md)。
+**2026-10-26時点の途中成果物です。P0〜P6全体は未完了です。** [最新の実装・検証状況](interim/2026-10-26-k0-reference/README.ja.md)／[実CAD・停止再開の前回記録](interim/2026-10-26-real-cad/README.ja.md)／[SolidCraft差分](integrations/solidcraft/README.ja.md)／[P1候補版差分](integrations/solidcraft-projected/README.ja.md)／[残件](docs/P6_STATUS.ja.md)。
 
 SolidCraftで作成・編集した3Dソリッドを解析へ渡すための開発環境です。**多層地盤のK0/OCR/pc/e初期化、一般形状の初期応力読込と非線形重力平衡、MCC/MC・独自IDHの全体非線形Tet4/Tet10解析、局所掘削、指定水位工程、定常飽和浸透と不飽和水理から力学へのONE_WAY受渡し、CSR疎求解、保存再開を実装**しています。力学は小ひずみ・静的です。P6全体は未完了で、硬化モデルの現地同定と適用拡張、板/不飽和湿潤JOINT、無応力MCC誕生、有限幅過渡降雨/SRM、SolidCraft画面内統合等の残りを[P6受入要件一覧](docs/P6_STATUS.ja.md)で管理します。
 

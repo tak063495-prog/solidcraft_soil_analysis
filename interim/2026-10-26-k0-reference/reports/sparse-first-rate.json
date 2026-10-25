@@ -1,0 +1,67 @@
+{
+  "schema": "soil-fem-nested-sparse-refinement-regression/1",
+  "passed": true,
+  "elements": 1792,
+  "integration_points": 48384,
+  "original_error": "sparse three-field true linear residual exceeded tolerance: 2.85521492750356e-13, {'force': 2.5787081230693315e-13, 'volume': 2.424489817068202e-10, 'mean_pressure': 2.1826938750854287e-14}",
+  "original_diagnostics": {
+    "backend": "scipy.sparse.linalg.splu",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "formulation": "uncondensed compression-volume/displacement/pressure",
+    "free_displacement_dofs": 8098,
+    "primary_volume_dofs": 459,
+    "factorizations": 1,
+    "maximum_matrix_nnz": 835761,
+    "maximum_factor_nnz": 15518983,
+    "maximum_true_linear_residual": 2.85521492750356e-13,
+    "maximum_block_residuals": {
+      "force": 2.5787081230693315e-13,
+      "volume": 2.424489817068202e-10,
+      "mean_pressure": 2.1826938750854287e-14
+    },
+    "maximum_mass_residual": 4.272701921459051e-16,
+    "dense_fallbacks": 0
+  },
+  "repaired_diagnostics": {
+    "backend": "scipy.sparse.linalg.splu",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "formulation": "uncondensed compression-volume/displacement/pressure",
+    "free_displacement_dofs": 8098,
+    "primary_volume_dofs": 459,
+    "factorizations": 1,
+    "maximum_matrix_nnz": 835761,
+    "maximum_factor_nnz": 15518983,
+    "maximum_true_linear_residual": 1.8137290268368916e-14,
+    "maximum_block_residuals": {
+      "force": 1.8123168961948755e-14,
+      "volume": 1.3701667418864294e-15,
+      "mean_pressure": 2.1036461455818776e-16
+    },
+    "maximum_unrefined_block_residuals": {
+      "force": 2.5787081230693315e-13,
+      "volume": 2.424489817068202e-10,
+      "mean_pressure": 2.1826938750854287e-14
+    },
+    "iterative_refinement_corrections": 1,
+    "maximum_mass_residual": 4.272701921459051e-16,
+    "dense_fallbacks": 0
+  },
+  "unchanged_original_matrix_residual_limit": 1e-10,
+  "full_nonlinear_cycle_verified": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "sha256": {
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\inputs\\mesh.json": "8bb794d3aa6637d98127af01ff7978e80de55cfaab53146e483082c56a8b2fe0",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\inputs\\ground.json": "4da023304d1506817c4952ed55fb088a256b1fe445f41cf3657de1bc96d7cbb6",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\inputs\\case.json": "bea9ac829a17db8b06d3b2bad79f8543825e4c7028e47442c1c72b6960b79eb6",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-inputs-20261025-v1\\inputs\\mesh-identity.json": "43c9d53186a760b3bda7d7c306a0fa4fc7c1e3e2a883f7178600d4e2af695cbe",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-sparse-nested-1792-100-20261026-v1\\reference-sources\\mcc_projected_sparse_reference.py": "d200d45f1269d59efffc9dd162a684dbcf9904c3ce086092bf37b5bb93673c18",
+    "D:\\Work\\soil-fem-3d\\tools\\mcc_projected_sparse_reference.py": "61696f56f75f46e82a2ff3ff34828a8e934a63b4be381380b4ea5abff75d1d89",
+    "D:\\Work\\soil-fem-3d\\runs\\projected-mcc-nested-completed-20261026-v1\\verify-first-rate.py": "29989246806f81fea4c19dff6e0b0b0971f412c2791de9ad854c1fd49ceb9eb3"
+  },
+  "original_report_sha256": "e8f8f298c86b435585814ddc8652da5364828d24c52674e4e0e33f7390966182",
+  "original_local_path": "runs/projected-mcc-nested-completed-20261026-v1/first-rate-verification.json",
+  "publication_note": "Fixed-scope historical record. Local paths are provenance, not included run data. Pending flags apply to creation time; see snapshot-status.json."
+}

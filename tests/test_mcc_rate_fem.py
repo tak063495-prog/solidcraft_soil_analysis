@@ -50,6 +50,125 @@ class RatePhysics(unittest.TestCase):
 
 
 class GlobalReference(unittest.TestCase):
+    def test_projected_k0_initialization_and_display_reset_preserve_physics_and_display_basis(self):
+        import copy
+        import contextlib
+        import io
+        import json
+        import tempfile
+        import mcc_projected_volume_diagnostic as initial
+        import mcc_projected_cycle_diagnostic as cycle
+        import mcc_projected_sparse_reference as sparse
+        import compare_mcc_rate_fem as comparison
+        import fem_reference as geometry
+        points=[[float(x),float(y),float(z)] for z in (0,1) for y in (0,1) for x in (0,1)]
+        cells=[[0,1,3,7],[0,3,2,7],[0,2,6,7],[0,6,4,7],[0,4,5,7],[0,5,1,7]]
+        middle={};quadratic=[]
+        for cell in cells:
+            nodes=cell.copy()
+            for a,b in ((0,1),(1,2),(2,0),(0,3),(1,3),(2,3)):
+                edge=tuple(sorted((cell[a],cell[b])))
+                if edge not in middle:
+                    middle[edge]=len(points);points.append(((np.asarray(points[edge[0]])+points[edge[1]])/2).tolist())
+                nodes.append(middle[edge])
+            quadratic.append(nodes)
+        mesh=dict(nodes=points,tetrahedra=cells,tetrahedra10=quadratic,quadrature_order=3,
+            material_ids=[1]*6,region_ids=[1]*6,regions=[dict(id=1,body='Clay',material_id=1,bounds_m=[[0.,0.,0.],[1.,1.,1.]])],
+            node_sets={'top':[i for i,p in enumerate(points) if p[2]==1.]})
+        law=dict(critical_state_m=1.2,**{'lambda':.2,'kappa':.04},poisson=.3,
+            specific_volume_ncl_at_reference=2.7,reference_pressure_kpa=1.)
+        ground=dict(schema='soil-fem-ground/1',units='m-kN-kPa',
+            materials=[dict(id=1,mcc=law,unit_weight_kn_m3=0.)],
+            layers=[dict(body='Clay',material_id=1,k0_x=1.,k0_y=1.,
+                consolidation=dict(definition='mcc_pc_over_mean_effective',ratio=2.),void_ratio=dict(mode='from_mcc_reference'))],
+            initialization=dict(method='horizontal_k0',surface_surcharge_kpa=100.,water_level_m=None,relative_equilibrium_tolerance=1e-9))
+        case=dict(schema='soil-fem-projected-mcc-stages/1',settings=dict(kinematics='side_rollers'),
+            pressure_on_original_surface_only=True,monitor_sets={'top':'top'},stages=[
+                dict(kind='pressure',name='load',target_pressure_kpa=110.),
+                dict(kind='reset_display',name='reset'),dict(kind='pressure',name='unload',target_pressure_kpa=105.)])
+        layout=[]
+        for element in range(len(cells)):
+            q=geometry.volume(mesh,element)
+            for local,(position,weight) in enumerate(zip(q['position'],q['weight'])):
+                layout.append(dict(element_index=element,local_index=local,position_m=position.tolist(),weight_m3=float(weight)))
+        with tempfile.TemporaryDirectory() as tmp,contextlib.redirect_stdout(io.StringIO()):
+            folder=Path(tmp)
+            files=[folder/(name+'.json') for name in ('mesh','ground','case','mesh-identity')]
+            for path,value in zip(files,(mesh,ground,case,{})):path.write_text(json.dumps(value),encoding='utf-8')
+            initial_file=folder/'initial.json';output=folder/'cycle.json'
+            initial.solve(*files,initial_file,1.,80,sparse.SparseProjectedSystem)
+            first=json.loads(initial_file.read_text())
+            self.assertEqual(first['initialization_method'],'horizontal_k0')
+            np.testing.assert_array_equal(first['displacement_m'],0.)
+            cycle.solve(*files,initial_file,output,80,sparse.SparseProjectedSystem)
+            result=json.loads(output.read_text());self.assertEqual(len(result['frames']),4)
+            loaded,reset,unloaded=result['frames'][1:]
+            for name in ('displacement_m','active_elements','material_state','pressure_dofs','volume_dofs','compatibility_offsets'):
+                self.assertEqual(loaded[name],reset[name],name)
+            np.testing.assert_array_equal(reset['display_displacement_m'],0.)
+            self.assertGreater(float(abs(np.asarray(reset['display_reference_displacement_m'])).max()),1e-5)
+            v0=2.7-.2*np.log(200.)+.04*np.log(2.)
+            final_p=100.+5.*1.3/2.1
+            final_v=v0-.04*np.log(final_p/100.)
+            final_strain=np.log(v0/final_v)
+            expected=np.zeros((len(points),3));expected[:,2]=-np.asarray(points)[:,2]*final_strain
+            np.testing.assert_allclose(unloaded['displacement_m'],expected,rtol=1e-6,atol=1e-10)
+            native=[]
+            for frame in result['frames']:
+                raw=np.asarray(frame['material_state']).reshape(-1,14)
+                states=[dict(effective_stress_compression_positive_kpa=p[:6].tolist(),preconsolidation_pressure_kpa=float(np.exp(p[6])),
+                    void_ratio=float(np.exp(p[7])-1),plastic_strain_compression_positive=p[8:].tolist()) for p in raw]
+                native.append(dict(name=frame['name'],state=dict(displacement_m=frame['displacement_m'],active_elements=frame['active_elements'],
+                    display_reference_displacement_m=frame['display_reference_displacement_m'],material_states=states)))
+            view={**result,'frames':[{**f,'relative_free_force_residual':f['relative_work_conjugate_force_residual']} for f in result['frames']]}
+            compared=comparison.compare(view,dict(complete=True,case=case,frames=native,integration_points=layout,
+                reference_displacement_m=result['reference_displacement_m']),mesh)
+            self.assertEqual(compared['frames'][2]['monitors']['top']['independent_mean_from_display_reference_m'],0.)
+            self.assertEqual(compared['frames'][2]['display_displacement_maximum_component_error_m'],0.)
+            self.assertGreater(compared['frames'][3]['monitors']['top']['independent_mean_from_display_reference_m'],1e-5)
+            bad=copy.deepcopy(mesh)
+            for p in bad['nodes']:p[2]*=1+.1*p[0]
+            files[0].write_text(json.dumps(bad),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'not in discrete equilibrium'):
+                initial.solve(*files,folder/'unbalanced.json',1.,80,sparse.SparseProjectedSystem)
+            self.assertFalse((folder/'unbalanced.json').exists())
+
+    def test_projected_sparse_refinement_restores_analytic_rates_and_rejects_uncorrected_errors(self):
+        from unittest.mock import patch
+        import mcc_projected_sparse_reference as sparse
+        import mcc_projected_volume_diagnostic as dense
+        mesh,ground,case,_=self.specimen(True,True)
+        system=sparse.SparseProjectedSystem(mesh,ground,[True],case)
+        reference=dense.ProjectedSystem(mesh,ground,[True],case)
+        state=np.zeros((system.weight.size,14));state[:,:3]=100.;state[:,6:8]=np.log([200.,2.])
+        stress=state.copy();stress[:,:6]+=[1.,2.,3.,.4,.3,.2]
+        load=reference.force(stress)-reference.force(state)
+        expected=reference.rate(state,load,np.zeros(len(state),dtype=bool))
+        real=sparse.splu
+        class PerturbedFactor:
+            def __init__(self,matrix,persistent=False):
+                self.factor=real(matrix);self.calls=0;self.persistent=persistent
+                self.L,self.U=self.factor.L,self.factor.U
+            def solve(self,rhs):
+                self.calls+=1
+                if self.persistent:return np.zeros(len(rhs))
+                value=self.factor.solve(rhs)
+                if self.calls==1:value[0]+=1e-5
+                return value
+        with patch.object(sparse,'splu',side_effect=PerturbedFactor):
+            actual=system.rate(state,load,np.zeros(len(state),dtype=bool))
+        for left,right in zip(actual,expected):np.testing.assert_allclose(left,right,rtol=1e-9,atol=1e-10)
+        self.assertGreater(system.iterative_refinement_corrections,0)
+        self.assertGreater(max(system.maximum_unrefined_block_residuals.values()),1e-10)
+        self.assertLessEqual(max(system.maximum_block_residuals.values()),1e-10)
+        factors=[]
+        def unusable(matrix):
+            factor=PerturbedFactor(matrix,True);factors.append(factor);return factor
+        with patch.object(sparse,'splu',side_effect=unusable):
+            with self.assertRaisesRegex(ValueError,'true linear residual exceeded'):
+                system.rate(state,load,np.zeros(len(state),dtype=bool))
+        self.assertEqual(factors[0].calls,4)
+
     def specimen(self,rotate=False,quadratic=False):
         points=np.vstack((np.zeros(3),np.eye(3)));q=np.eye(3)
         if quadratic:points=np.vstack((points,[(points[a]+points[b])/2 for a,b in ((0,1),(1,2),(2,0),(0,3),(1,3),(2,3))]))

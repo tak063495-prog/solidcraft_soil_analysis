@@ -14,6 +14,59 @@ from verify_acceptance_packet import sha
 
 
 class NativeJob(unittest.TestCase):
+    def test_live_solver_survives_transient_status_read_denials(self):
+        from unittest.mock import patch
+        import native_stage_profile as profile
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            expected={'schema':'soil-fem-stages-job-status/1','job_id':'owned-test','revision':7}
+            (folder/'status.json').write_text(json.dumps(expected),encoding='utf-8')
+            real=profile.read;attempts=[];reports=[]
+            def reader(actual,limit):
+                attempts.append((actual,limit))
+                if len(attempts)<4:raise PermissionError('transient status sharing')
+                return real(actual,limit)
+            with patch.object(profile,'read',side_effect=reader):
+                code,stopped=profile.command([sys.executable,'-c',"import time; print('ready',flush=True); time.sleep(.5)"],
+                    ROOT,folder/'worker.log',lambda **kw:reports.append(kw),lambda:False,
+                    lambda child:self.fail('transient read must not stop owned child'),phase='solving',solver_job=folder)
+            self.assertEqual((code,stopped),(0,False))
+            self.assertTrue(any(report.get('solver_report')==expected for report in reports))
+            self.assertGreaterEqual(len(attempts),4)
+            self.assertEqual(set(attempts),{(folder/'status.json',256*1024)})
+            self.assertEqual(real(folder/'status.json'),expected)
+
+    def test_solver_status_denial_is_bounded_and_corrupt_or_missing_progress_is_not_retried(self):
+        from unittest.mock import patch
+        import native_stage_profile as profile
+        path=Path('owned/status.json')
+        with patch.object(profile,'read',side_effect=PermissionError('permanent denial')) as reader,patch.object(profile.time,'sleep') as sleep:
+            with self.assertRaises(PermissionError):profile.read_solver_status(path)
+            self.assertEqual(reader.call_count,5)
+            self.assertEqual(sleep.call_count,4)
+            self.assertEqual({call.args for call in reader.call_args_list},{(path,256*1024)})
+        for error in (ValueError('invalid JSON'),FileNotFoundError('missing progress')):
+            with self.subTest(error=type(error).__name__),patch.object(profile,'read',side_effect=error) as reader,patch.object(profile.time,'sleep') as sleep:
+                with self.assertRaises(type(error)):profile.read_solver_status(path)
+                self.assertEqual(reader.call_count,1)
+                sleep.assert_not_called()
+
+    def test_persistent_status_failure_stops_owned_child_and_closes_output(self):
+        from unittest.mock import patch
+        import native_stage_profile as profile
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);(folder/'status.json').write_text('{}',encoding='utf-8');stopped=[]
+            def stop(child):
+                stopped.append(child);stop_child(child)
+            with patch.object(profile,'read',side_effect=PermissionError('persistent status denial')) as reader:
+                with self.assertRaises(PermissionError):
+                    profile.command([sys.executable,'-c',"import time; print('ready',flush=True); time.sleep(.5)"],
+                        ROOT,folder/'worker.log',lambda **kw:None,lambda:False,stop,phase='solving',solver_job=folder)
+            self.assertEqual(reader.call_count,5)
+            self.assertEqual(len(stopped),1)
+            self.assertIsNotNone(stopped[0].poll())
+            self.assertTrue(stopped[0].stdout.closed)
+
     def test_atomic_status_retries_only_its_own_complete_temporary_on_windows_reader_contention(self):
         from unittest.mock import patch
         import native_workflow_snapshot as snapshot

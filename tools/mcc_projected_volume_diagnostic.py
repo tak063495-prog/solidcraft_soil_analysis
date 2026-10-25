@@ -182,8 +182,12 @@ def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, st
         raise ValueError('fraction in (0,1] and at least two reference steps required')
     mesh, ground, case, identity = map(read, (mesh_file, ground_file, case_file, identity_file))
     cfg = ground['initialization'].get('geostatic')
-    if cfg is None or cfg['initial_boundary_factor'] != 0 or ground['initialization']['water_level_m'] is not None:
-        raise ValueError('dry geostatic zero initial construction-boundary factor required')
+    horizontal = ground['initialization']['method'] == 'horizontal_k0' and cfg is None
+    if ground['initialization']['water_level_m'] is not None or (
+            not horizontal and (ground['initialization']['method'] != 'equilibrate' or cfg is None or cfg['initial_boundary_factor'] != 0)):
+        raise ValueError('dry horizontal K0 or zero-boundary-factor geostatic initialization required')
+    if horizontal and fraction != 1:
+        raise ValueError('analytical K0 initialization has no partial load fraction')
     if any(case.get(k) for k in ('joint_system', 'beam_system', 'anchor_system', 'initially_inactive_bodies')):
         raise ValueError('diagnostic excludes contacts, members and initially inactive domains')
     sources = [mesh_file, ground_file, case_file, identity_file, Path(__file__), Path(rate.__file__),
@@ -196,8 +200,19 @@ def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, st
     physical = rate.physical(mesh, ground, system.active, ground['initialization']['surface_surcharge_kpa'],
                              case.get('pressure_on_original_surface_only', False))[0].reshape(-1)
     change = fraction*(physical-start)
-    final, u, diagnostics = system.advance(initial, np.zeros(system.xyz.size), change, steps,
-        progress=lambda t, n, e: print(f'Projected-volume initialization {fraction*t:.9f}, steps {n}, events {e}', flush=True))
+    if horizontal:
+        yield_value = rate.terms(initial, system.parameters)[0]
+        relative = float(np.linalg.norm(system.reduce(change))/max(np.linalg.norm(physical), 1.))
+        tolerance = ground['initialization'].get('relative_equilibrium_tolerance', 1e-9)
+        if not np.isfinite(yield_value).all() or float(yield_value.max()) > 1e-10:
+            raise ValueError('analytical K0 seed lies outside the MCC yield surface')
+        if not np.isfinite(relative) or relative > min(tolerance, 1e-9):
+            raise ValueError('analytical K0 seed is not in discrete equilibrium')
+        final, u = initial.copy(), np.zeros(system.xyz.size)
+        diagnostics = dict(accepted_steps=0, events=0, analytical_k0_no_relaxation=True)
+    else:
+        final, u, diagnostics = system.advance(initial, np.zeros(system.xyz.size), change, steps,
+            progress=lambda t, n, e: print(f'Projected-volume initialization {fraction*t:.9f}, steps {n}, events {e}', flush=True))
     residual = float(np.linalg.norm(system.reduce(start+change-system.force(final)))/max(np.linalg.norm(start+change), 1.))
     pressure, rhs = system.pressure(final)
     pg = np.einsum('eqa,ea->eq', system.n, pressure[system.pi])
@@ -225,9 +240,11 @@ def solve(mesh_file, ground_file, case_file, identity_file, output, fraction, st
         input_and_source_sha256=fingerprints,
         limitations='Changed diagnostic discretization, no production integration, no pointwise pressure-consistency acceptance, no excavation/restart/mesh-convergence acceptance')
     report['reference_backend'] = system_factory.__module__+'.'+system_factory.__name__
+    if horizontal:
+        report['initialization_method'] = 'horizontal_k0'
     if hasattr(system, 'solver_diagnostics'):
         report['sparse_solver_diagnostics'] = system.solver_diagnostics()
-    assert residual < 1e-8 and report['maximum_material_strain'] < cfg['maximum_initial_engineering_strain']
+    assert residual < 1e-8 and (horizontal or report['maximum_material_strain'] < cfg['maximum_initial_engineering_strain'])
     assert fingerprints == {str(p): sha(p) for p in sources}, 'source/input changed during diagnostic'
     with output.open('x', encoding='utf-8') as stream:
         json.dump(report, stream, allow_nan=False)

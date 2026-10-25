@@ -1,6 +1,7 @@
 """Independent rate-form projected-volume construction with frozen history.
 
-Continues an explicitly identified original-input projected initial calculation.
+Continues an explicitly identified original-input projected initialization or
+analytical horizontal K0 state. Display RESET changes only the display origin.
 No Rust state, pressure, displacement or holding vector generates the solution.
 The changed spatial discretization remains research-only, not P6 acceptance.
 """
@@ -50,8 +51,10 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
     assert physical_case(case) == physical_case(read(by_name['case.json'])), 'initial physical case differs'
     assert sha(Path(projected.__file__)) == sha(by_name['mcc_projected_volume_diagnostic.py'])
     cfg = ground['initialization'].get('geostatic')
-    if not cfg or cfg['initial_boundary_factor'] != 0 or ground['initialization']['water_level_m'] is not None:
-        raise ValueError('diagnostic requires a dry zero-boundary-factor geostatic initial state')
+    horizontal = ground['initialization']['method'] == 'horizontal_k0' and cfg is None
+    if ground['initialization']['water_level_m'] is not None or (
+            not horizontal and (ground['initialization']['method'] != 'equilibrate' or not cfg or cfg['initial_boundary_factor'] != 0)):
+        raise ValueError('diagnostic requires dry horizontal K0 or zero-boundary-factor geostatic initialization')
     if any(case.get(k) for k in ('joint_system', 'anchor_system', 'beam_system', 'initially_inactive_bodies')):
         raise ValueError('unsupported members, contacts or initial inactive domains')
     source_files = [Path(__file__), Path(projected.__file__), Path(rate.__file__), Path(ref.__file__),
@@ -64,6 +67,11 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
     seed = rate.seed(mesh, ground, identity)
     u = np.asarray(initial['displacement_m']).reshape(-1).copy()
     origin = u.copy()
+    display_origin = origin.copy()
+    has_display_reset = any(stage['kind'] == 'reset_display' for stage in case['stages'])
+    if horizontal and (initial.get('initialization_method') != 'horizontal_k0' or
+            not np.array_equal(state, seed) or np.any(u)):
+        raise ValueError('horizontal initialization must be the independently recomputed K0 seed with zero displacement')
     system = system_factory(mesh, ground, active, case)
     offset = np.zeros(len(system.keys))
     pressure = ground['initialization']['surface_surcharge_kpa']
@@ -83,7 +91,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
         residual = float(np.linalg.norm(system.reduce(physical-force))/scale)
         defect, volume_scale, theta = integrals(system, state, seed, u)
         compatibility = float(np.linalg.norm(defect-offset)/max(np.linalg.norm(volume_scale), float(system.weight.sum())*1e-12))
-        assert residual < 1e-8 and compatibility < 1e-8
+        assert residual < 1e-8 and compatibility < 1e-8, (name, residual, compatibility)
         p, _ = system.pressure(local)
         nodal_theta = system.project_volume(theta)
         theta_error = float(abs(np.einsum('eqa,ea->eq', system.n, nodal_theta[system.pi])-theta).max())
@@ -107,11 +115,19 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
             monitors=monitors, diagnostics=diagnostics))
         if hasattr(system, 'solver_diagnostics'):
             frames[-1]['sparse_solver_diagnostics'] = system.solver_diagnostics()
+        if has_display_reset:
+            frames[-1]['display_reference_displacement_m'] = display_origin.reshape(-1, 3).tolist()
+            frames[-1]['display_displacement_m'] = (u-display_origin).reshape(-1, 3).tolist()
 
-    frame('initial_equilibrated', u.copy(), initial['diagnostics'])
+    frame('initial_k0' if horizontal else 'initial_equilibrated', u.copy(), initial['diagnostics'])
     for stage in case['stages']:
         previous = u.copy()
         old_state = state.copy()
+        if stage['kind'] == 'reset_display':
+            display_origin = u.copy()
+            frame(stage['name'], previous, dict(accepted_steps=0, events=0, physical_state_unchanged=True))
+            assert np.array_equal(state, old_state)
+            continue
         if stage['kind'] == 'pressure':
             pressure = stage['target_pressure_kpa']
         elif stage['kind'] == 'boundary':
@@ -132,7 +148,7 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
             system = system_factory(mesh, ground, active, case)
             offset = integrals(system, state, seed, u)[0]
         else:
-            raise ValueError('only pressure/boundary/excavation diagnostic stages are supported')
+            raise ValueError('only pressure/boundary/excavation/display-reset diagnostic stages are supported')
         before = system.force(state[active].reshape(-1, 14))
         after = load()
         if stage['kind'] == 'excavate':
@@ -156,6 +172,8 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
         frames=frames, release_audits=release_audits, input_and_source_sha256=fingerprints,
         limitations='No spatial-convergence acceptance; explicit rate integrator differs from Rust fixed-partition updates; no members/water/contact or production export')
     report['reference_backend'] = backend
+    if horizontal:
+        report['state_origin'] = 'Analytical original-input K0/OCR/reference-void-ratio seed; no Rust solved field or history'
     with output.open('x', encoding='utf-8') as stream:
         json.dump(report, stream, allow_nan=False)
     print('Independent projected-volume construction diagnostic completed', flush=True)

@@ -1,0 +1,105 @@
+{
+  "schema": "soil-fem-native-completion-repair-build/1",
+  "passed": true,
+  "source_manifest_sha256": "c580a5015896ecac960d39c709b40e71bb4ae99843ace4ae7bba052bd6deae07",
+  "modified_files": 56,
+  "app_binary_sha256": "b854239c4d3f72ac176e242a704df70c50845f90493163655fc25e9504679d50",
+  "checks": [
+    {
+      "name": "engine-soil",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "solidcraft-engine",
+        "--lib",
+        "soil_",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 0,
+      "log_sha256": "ecf35187ca1830d16bc5abc602229cf473d9e32a574d672801b0e1657ec2f8fa"
+    },
+    {
+      "name": "engine-suggestions",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "solidcraft-engine",
+        "--lib",
+        "tests::unknown_commands_suggest_the_nearest_id",
+        "--",
+        "--exact",
+        "--test-threads=2"
+      ],
+      "exit_code": 0,
+      "log_sha256": "ee825248216d3387ba3e9dea26ffdcb08c7628fe8977e7f70026bcb37ec2c4fc"
+    },
+    {
+      "name": "ui-locales",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "solidcraft-ui-egui",
+        "--lib",
+        "i18n::tests",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 0,
+      "log_sha256": "416fd9548eebbeba9fd065243765dd2c13bb19cbe8c7b5445812903b86a3e933"
+    },
+    {
+      "name": "ui-gallery",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "solidcraft-ui-egui",
+        "--lib",
+        "ui_kit::gallery",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 0,
+      "log_sha256": "5bf694eca777931a4fe208f4d6cb3c8bc93d94da1fc8b3b7cb9fcf48b753118b"
+    },
+    {
+      "name": "focused-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "solidcraft-engine",
+        "-p",
+        "solidcraft-ui-egui",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log_sha256": "b600c703d05fc8f9b9c2f69e491ee0b3a8687fdf0288f2f5450c22904381689f"
+    },
+    {
+      "name": "app-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "solidcraft"
+      ],
+      "exit_code": 0,
+      "log_sha256": "45b887e341d625c840459edd677aabee25c01ba7e0bc289f6fd465ef9cb1b70d"
+    }
+  ],
+  "full_native_ci_complete": false,
+  "actual_app_completion_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "original_report_sha256": "5ed372338b823e1490b3a3364225446097db986a0538e315e6fc4f0bc924e5eb",
+  "original_local_path": "runs/native-ui-kit-repair-20261026-v2/verification.json",
+  "publication_note": "Fixed-scope historical record. Local paths are provenance, not included run data. Pending flags apply to creation time; see snapshot-status.json."
+}
