@@ -22,6 +22,11 @@ BACKENDS={
 
 def read(path):return json.loads(path.read_text(encoding='utf-8-sig'))
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def path_identity(path):
+    # Windows TEMP may use an 8.3 alias or a different drive/name case from
+    # Python's __file__. Compare canonical file identity, retaining raw hashes.
+    return os.path.normcase(str(Path(path).resolve()))
 def atomic(path,value):
     temporary=path.with_suffix('.tmp')
     temporary.write_text(json.dumps(value,indent=2,allow_nan=False)+'\n',encoding='utf-8')
@@ -58,8 +63,13 @@ def preflight(folder):
         if sha(prior_cycle)!=version.get('previous_completed_cycle_sha256'):
             raise ValueError('historical completed cycle changed')
         prior_bindings=read(prior_cycle)['input_and_source_sha256']
+        by_identity={}
+        for name,digest in prior_bindings.items():
+            key=path_identity(name)
+            if key in by_identity:raise ValueError('ambiguous historical source identity')
+            by_identity[key]=digest
         for name,digest in prior_files.items():
-            if sha(Path(name))!=digest or prior_bindings.get(name)!=digest:
+            if sha(Path(name))!=digest or by_identity.get(path_identity(name))!=digest:
                 raise ValueError('historical completed source binding changed')
             overrides[Path(name).name]=digest
             fingerprints[name]=digest

@@ -87,9 +87,12 @@ class ReferenceResume(unittest.TestCase):
             prior=Path(d)/'prior';current=Path(d)/'current';prior.mkdir();current.mkdir()
             fixture(prior);fixture(current);resume.run(prior)
             program=prior/'reference-sources/mcc_projected_sparse_run.py'
+            # A valid spelling can differ from the worker's canonical __file__
+            # (notably Windows runner TEMP short names). Byte hashes stay exact.
+            alias=program.parent/'alias';alias.mkdir();program_alias=alias/'..'/program.name
             version=dict(same_programs_as_completed_200=True,steps=2,
                 previous_completed_cycle_sha256=resume.sha(prior/'cycle.json'),
-                files_sha256={str(program):resume.sha(program)})
+                files_sha256={str(program_alias):resume.sha(program)})
             (current/'reference-version-binding.json').write_text(json.dumps(version),encoding='utf-8')
             snapshot=resume.read(current/'source-snapshot.json');snapshot['tools/mcc_projected_sparse_run.py']='0'*64
             (current/'source-snapshot.json').write_text(json.dumps(snapshot),encoding='utf-8')
