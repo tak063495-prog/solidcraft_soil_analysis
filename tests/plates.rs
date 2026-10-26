@@ -180,8 +180,9 @@ fn thin_cantilever_plate_matches_closed_form_without_shear_locking_or_drilling_d
 }
 
 #[test]
-fn plate_is_coupled_to_mc_and_mcc_with_installation_cutback_and_checkpoint_history() -> Result<()> {
-    for mcc in [false, true] {
+fn plate_is_coupled_to_mc_mcc_and_mixed_forms_with_cutback_and_checkpoint_history() -> Result<()> {
+    for formulation in ["mc", "mcc", "mixed", "projected"] {
+        let mcc = formulation != "mc";
         let mut mesh: Mesh = serde_json::from_str(include_str!("../examples/mc-column-mesh.json"))?;
         let base = mesh.nodes.iter().position(|p| *p == [0., 0., 1.]).unwrap();
         mesh.node_sets.insert("PlateBase".into(), vec![base]);
@@ -201,6 +202,11 @@ fn plate_is_coupled_to_mc_and_mcc_with_installation_cutback_and_checkpoint_histo
         })?;
         let mut case: StageCase =
             serde_json::from_str(include_str!("../examples/stages-geostatic-column.json"))?;
+        if formulation == "mixed" {
+            case.schema = "soil-fem-mixed-mcc-stages/1".into();
+        } else if formulation == "projected" {
+            case.schema = "soil-fem-projected-mcc-stages/1".into();
+        }
         let c = json!({"schema":"soil-fem-structures/1","nodes":[
             {"id":"a","position_m":[0.,0.,1.],"soil_node_set":"PlateBase"},
             {"id":"b","position_m":[2.,0.,1.],"soil_node_set":null},
@@ -219,8 +225,15 @@ fn plate_is_coupled_to_mc_and_mcc_with_installation_cutback_and_checkpoint_histo
             {"kind":"remove_structures","name":"remove","members":["wall"]}]))?;
         case.verification_reject_once_stages = vec!["install".into(), "load_plate".into()];
         let full = stages::solve(&mesh, ground.clone(), case.clone())?;
-        assert!(full.complete, "{:?}", full.failure_reason);
-        assert_eq!(full.schema, "soil-fem-stage-result/14");
+        assert!(full.complete, "{formulation}: {:?}", full.failure_reason);
+        assert_eq!(
+            full.schema,
+            match formulation {
+                "mixed" => "soil-fem-mixed-mcc-stage-result/2",
+                "projected" => "soil-fem-projected-mcc-stage-result/2",
+                _ => "soil-fem-stage-result/14",
+            }
+        );
         for frame in &full.frames {
             assert!(frame.force_balance_error_kn.iter().all(|v| v.abs() < 1e-6));
             assert!(

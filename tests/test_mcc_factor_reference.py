@@ -14,6 +14,7 @@ import fem_reference as ref
 import mcc_projected_sparse_reference as fresh
 import mcc_projected_factor_reference as reused
 import mcc_projected_matrixfree_reference as matrixfree
+import mcc_projected_coercive_reference as coercive
 import mcc_projected_volume_diagnostic as initial
 import mcc_projected_cycle_diagnostic as cycle
 
@@ -101,7 +102,8 @@ class FactorReference(unittest.TestCase):
             outputs=[]
             for name,factory in [('fresh',fresh.SparseProjectedSystem),('reused',self.candidate_factory)]:
                 start=folder/(name+'-initial.json');end=folder/(name+'-cycle.json')
-                extra=[Path(fresh.__file__),Path(reused.__file__),Path(matrixfree.__file__)]
+                extra=[Path(fresh.__file__),Path(reused.__file__),Path(matrixfree.__file__),
+                       Path(sys.modules[self.candidate_factory.__module__].__file__)]
                 initial.solve(*files,start,1.,40,factory,extra)
                 cycle.solve(*files,start,end,40,factory,extra)
                 outputs.append(json.loads(end.read_text()))
@@ -131,6 +133,25 @@ class MatrixFreeReference(FactorReference):
         vector=np.random.default_rng(917).normal(size=matrix.shape[0])
         expected=matrix@vector;actual,_=b.original_action(ep,vector)
         self.assertLess(np.linalg.norm(actual-expected)/np.linalg.norm(expected),1e-12)
+
+
+class SharedCoerciveReference(MatrixFreeReference):
+    candidate_factory=coercive.CoerciveSharedFactorProjectedSystem
+
+    def test_successive_distinct_coercive_material_masks_share_only_corrected_original_solves(self):
+        a,b=self.systems();state=self.state(a,100.,110.)
+        q=np.sqrt(1.2**2*100.*10.)
+        state[:,0]+=2*q/3;state[:,1:3]-=q/3
+        trial=state.copy();trial[:,:6]+=[1.,2.,3.,.4,.3,.2]
+        force=a.force(trial)-a.force(state);plastic=np.zeros(len(state),bool)
+        order=np.argsort(a.weight.reshape(-1))
+        for i in range(9):
+            if i:plastic[order[i-1]]=True
+            assert_rates(self,a.rate(state,force,plastic),b.rate(state,force,plastic))
+        self.assertEqual(b.material_active_set_changes,8)
+        self.assertGreater(b.active_set_change_cached_hits,0)
+        self.assertLess(b.actual_tangent_factorizations,a.factorizations)
+        self.assertLessEqual(max(b.maximum_block_residuals.values()),1e-10)
 
 
 if __name__=='__main__':unittest.main()

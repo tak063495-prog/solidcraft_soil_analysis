@@ -9,7 +9,7 @@ import numpy as np
 def verify(mesh_path,ground_path,result_path,export_dir,solver=None):
     mesh=json.loads(mesh_path.read_text(encoding="utf-8"));ground=json.loads(ground_path.read_text(encoding="utf-8"))
     result=json.loads(result_path.read_text(encoding="utf-8"))
-    if result.get('schema') == 'soil-fem-projected-mcc-stage-result/1':
+    if result.get('schema') in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-mixed-mcc-stage-result/2','soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):
         from verify_projected_stage_package import verify as verify_projected
         return verify_projected(mesh_path,ground_path,result_path,export_dir,solver=solver)
     if mesh.get('tetrahedra10') or result.get('case',{}).get('boundary') is not None or result.get('schema') in ('soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):

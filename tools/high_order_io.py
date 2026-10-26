@@ -56,7 +56,7 @@ def initial(mesh,state,output):
 def stages(mesh_file,result_file,output):
     fingerprints={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in (mesh_file,result_file)}
     mesh=json.loads(Path(mesh_file).read_text(encoding='utf-8-sig'));result=json.loads(Path(result_file).read_text(encoding='utf-8-sig'))
-    mixed=result['schema'] in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/1')
+    mixed=result['schema'] in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/1','soil-fem-mixed-mcc-stage-result/2','soil-fem-projected-mcc-stage-result/2')
     if not mixed and result['schema'] not in ('soil-fem-stage-result/2','soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14') or not result['complete']:raise ValueError('completed high-order/general-material result required')
     if mixed:
         import mixed_mcc_io
@@ -178,7 +178,7 @@ def stages(mesh_file,result_file,output):
             inactive_primary_pressure_meaning='undefined; CSV blank, frozen material history retained',
             source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(mixed_mcc_io.__file__),Path(mixed_mcc_io.ref.__file__))},
             sha256={str(p.relative_to(output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in output.rglob('*') if p.is_file()})
-        if result['schema']==mixed_mcc_io.PROJECTED_SCHEMA:
+        if result['schema'] in mixed_mcc_io.PROJECTED_SCHEMAS:
             record.update(schema='soil-fem-stage-export/4',formulation=mixed_mcc_io.PROJECTED_FORMULATION,
                 pressure_consistency='weak material-split P1 projection; material GP pressure is a distinct field',
                 equilibrium_stress_field='work_conjugate_effective_stress_compression_positive_kpa',

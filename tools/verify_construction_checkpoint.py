@@ -9,7 +9,7 @@ from verify_geostatic_checkpoint import stable_report
 
 def verify(solver,run,output):
     output.mkdir(parents=True,exist_ok=False);baseline=json.loads((run/'stage-results.json').read_text())
-    assert baseline['complete'] and baseline['schema'] in ('soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/14')
+    assert baseline['complete'] and baseline['schema'] in ('soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/14','soil-fem-mixed-mcc-stage-result/2','soil-fem-projected-mcc-stage-result/2')
     digest=hashlib.sha256(solver.read_bytes()).hexdigest();assert baseline['provenance']['solver_binary_sha256']==digest
     inputs=[str(run/'ground/mesh.json'),str(run/'ground/ground.json'),str(run/'stages.json')]
     geo=sum(a['accepted'] for a in baseline['geostatic']['attempts']) if baseline.get('geostatic') else 0

@@ -1,4 +1,4 @@
-"""Bind named, straight exterior mesh faces to shared soil/flat-plate nodes.
+"""Bind named, straight exterior or declared shared-interface faces to plates.
 
 Tri6 is split into four Tri3 plates using all six soil nodes. This preserves
 the source geometry and exact nodal transfer, but does not make the quadratic
@@ -15,7 +15,8 @@ import fem_reference as ref
 
 
 def attach(mesh, case, specification):
-    if specification.get('schema')!='soil-fem-plate-surfaces/1':
+    version=specification.get('schema')
+    if version not in ('soil-fem-plate-surfaces/1','soil-fem-plate-surfaces/2'):
         raise ValueError('plate surface specification schema required')
     surfaces=specification.get('surfaces',[])
     if not surfaces or len(surfaces)>20:raise ValueError('require 1 to20 plate surfaces')
@@ -70,15 +71,38 @@ def attach(mesh, case, specification):
             raise ValueError('unique safe surface ID required')
         if surface['section_id'] not in section_ids:raise ValueError('unknown plate surface section')
         if not isinstance(surface['initially_active'],bool):raise ValueError('explicit initial plate activity required')
+        attachment=surface.get('attachment','exterior')
+        if attachment not in ('exterior','shared_interface'):
+            raise ValueError('unknown plate surface attachment')
+        if attachment=='shared_interface' and version!='soil-fem-plate-surfaces/2':
+            raise ValueError('shared-interface plate attachment requires surface schema /2')
+        opposite=surface.get('opposite_body')
+        if attachment=='shared_interface' and (not isinstance(opposite,str) or not opposite or opposite==surface['owner_body']):
+            raise ValueError('shared interface requires a distinct opposite body')
+        if attachment=='exterior' and opposite is not None:
+            raise ValueError('an exterior plate surface cannot declare an opposite body')
         faces=mesh.get('face_sets',{}).get(surface['face_set'],[])
         if not faces:raise ValueError('unknown or empty plate face set')
-        cells=[];total_area=0.;source_area=0.;groups[name]=[]
+        cells=[];total_area=0.;source_area=0.;groups[name]=[];owner_pairs=[]
         for face_index,key in enumerate(sorted(tuple(sorted(f)) for f in faces)):
             if key in selected:raise ValueError('overlapping/duplicate plate surface faces')
             selected.add(key);owners=topology.get(key,[])
-            if len(owners)!=1 or regions[mesh['region_ids'][owners[0]]]!=surface['owner_body']:
-                raise ValueError('plate surface must be exterior to its declared owner body')
-            q=ref.face(mesh,owners[0],key);nodes=q['nodes'];points=xyz[nodes]
+            owned=[e for e in owners if regions[mesh['region_ids'][e]]==surface['owner_body']]
+            other=[e for e in owners if regions[mesh['region_ids'][e]]==opposite]
+            if attachment=='exterior':
+                if len(owners)!=1 or len(owned)!=1:
+                    raise ValueError('plate surface must be exterior to its declared owner body')
+            elif len(owners)!=2 or len(owned)!=1 or len(other)!=1:
+                raise ValueError('plate interface must have exactly its two declared body owners')
+            q=ref.face(mesh,owned[0],key);nodes=q['nodes'];points=xyz[nodes]
+            if attachment=='shared_interface':
+                opposing=ref.face(mesh,other[0],key)
+                if set(map(int,nodes))!=set(map(int,opposing['nodes'])):
+                    raise ValueError('shared plate interface has nonconforming trace nodes')
+                normal=q['area_vector'].sum(axis=0);opposing_normal=opposing['area_vector'].sum(axis=0)
+                if np.linalg.norm(normal+opposing_normal)>1e-10*max(np.linalg.norm(normal),1.):
+                    raise ValueError('shared plate interface owner orientations disagree')
+                owner_pairs.append(dict(owner_element=owned[0],opposite_element=other[0],face=list(key)))
             scale=max(np.linalg.norm(points.max(axis=0)-points.min(axis=0)),1.)
             if len(nodes)==6:
                 expected=np.array([(points[i]+points[j])/2 for i,j in ((0,1),(1,2),(2,0))])
@@ -109,6 +133,8 @@ def attach(mesh, case, specification):
         records.append(dict(id=name,face_set=surface['face_set'],owner_body=surface['owner_body'],source_faces=len(faces),
             plate_triangles=len(cells),shared_soil_nodes=len(used),area_m2=total_area,source_area_m2=source_area,
             outward_orientation_checked=True,all_quadratic_trace_nodes_retained=True))
+        if version=='soil-fem-plate-surfaces/2':
+            records[-1].update(attachment=attachment,opposite_body=opposite,owner_pairs=owner_pairs)
     if len(cfg['nodes'])>500 or len(cfg['members'])+len(cfg['plates'])>2000:
         raise ValueError('surface plate system exceeds declared Rust structural budget; no truncation')
     for stage in result_case['stages']:
@@ -120,6 +146,10 @@ def attach(mesh, case, specification):
         geometry_and_connectivity_changed=False,soil_plate_coupling='Exact shared nodal translations; structural rotations shared by node ID',
         interpolation_limitation='Tri6 soil trace and four Tri3 plate traces agree at all six nodes, not pointwise between nodes',
         geometry_scope='Straight exterior Tri3/Tri6 faces; no persistent CAD face ID claim',goal_complete=False,p6_complete=False)
+    if version=='soil-fem-plate-surfaces/2':
+        binding.update(schema='soil-fem-plate-surface-binding/2',
+            geometry_scope='Straight exterior or explicitly declared conforming shared-interface faces; no persistent CAD face ID claim',
+            interface_limitation='Shared soil translations on both sides before excavation; no opening, slip or JOINT introduced. Owner-side orientation is explicit; retaining-wall mechanics and pointwise trace identity require separate verification.')
     return result_mesh,result_case,binding
 
 

@@ -9,6 +9,7 @@ import numpy as np
 
 
 class MatrixFreeFactorProjectedSystem(reused.ReusedFactorProjectedSystem):
+    maximum_matrix_free_corrections=6
     def __init__(self,*args,**kwargs):
         self.matrix_free_operator_actions=0;self.matrix_free_assemblies_avoided=0
         self.matrix_free_corrections=0;self.matrix_free_fallbacks=0
@@ -46,7 +47,7 @@ class MatrixFreeFactorProjectedSystem(reused.ReusedFactorProjectedSystem):
         self._factors.move_to_end(key)
         rhs=np.concatenate((np.zeros(nt),self.reduce(force_rate),np.zeros(nt)))
         solution=factor.solve(rhs);previous=float('inf');first_blocks=None
-        for correction in range(7):
+        for correction in range(self.maximum_matrix_free_corrections+1):
             action,parts=self.original_action(ep,solution);residual=action-rhs
             tt_theta,minus_td_u,mp,mtheta,divu=parts
             error=float(np.linalg.norm(residual)/max(np.linalg.norm(rhs),1e-30))
@@ -65,7 +66,7 @@ class MatrixFreeFactorProjectedSystem(reused.ReusedFactorProjectedSystem):
                 de=-np.einsum('eqai,ei->eqa',self.bd,du[self.dofs])
                 de[:,:,:3]+=np.einsum('eqa,ea->eq',self.n,theta[self.pi])[:,:,None]/3
                 return du,de.reshape(-1,6)
-            if not np.isfinite(worst) or correction==6 or (correction>=2 and worst>=previous*.95):break
+            if not np.isfinite(worst) or correction==self.maximum_matrix_free_corrections or (correction>=2 and worst>=previous*.95):break
             solution-=factor.solve(residual);self.matrix_free_corrections+=1;previous=worst
         self.matrix_free_fallbacks+=1
         self._factors.pop(key,None) # The fallback factors the current original matrix.
@@ -77,5 +78,6 @@ class MatrixFreeFactorProjectedSystem(reused.ReusedFactorProjectedSystem):
             matrix_free_operator_actions=self.matrix_free_operator_actions,
             matrix_free_assemblies_avoided=self.matrix_free_assemblies_avoided,
             matrix_free_corrections=self.matrix_free_corrections,matrix_free_fallbacks=self.matrix_free_fallbacks,
+            maximum_matrix_free_corrections=self.maximum_matrix_free_corrections,
             matrix_free_rhs_relative_target=1e-14,matrix_free_block_relative_target=1e-13)
         return report

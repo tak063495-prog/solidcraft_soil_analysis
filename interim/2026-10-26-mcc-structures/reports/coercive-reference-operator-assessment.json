@@ -1,0 +1,166 @@
+{
+  "schema": "soil-fem-coercive-material-active-set-rate-assessment/1",
+  "nodes": 550,
+  "tet10": 288,
+  "material_points": 7776,
+  "rates": 25,
+  "seconds": [
+    2.642515200073831,
+    3.114871200057678,
+    1.4178087000036612
+  ],
+  "comparisons": [
+    {
+      "name": "active-set-keyed",
+      "strict_componentwise_gate_satisfied": false,
+      "relative_group_errors": {
+        "u": 7.571869776236613e-12,
+        "stress": 4.5896619879905316e-11,
+        "log_volume": 1.92093198975641e-11
+      },
+      "maximum_component_difference": 4.2767787533648516e-08
+    },
+    {
+      "name": "fixed-coercive-space",
+      "strict_componentwise_gate_satisfied": false,
+      "relative_group_errors": {
+        "u": 7.571926139439223e-12,
+        "stress": 4.589661703483472e-11,
+        "log_volume": 1.9209335160734277e-11
+      },
+      "maximum_component_difference": 4.2767759111939085e-08
+    }
+  ],
+  "solvers": [
+    {
+      "backend": "scipy.sparse.linalg.splu",
+      "scipy": "1.18.1",
+      "numpy": "2.5.4",
+      "formulation": "uncondensed compression-volume/displacement/pressure",
+      "free_displacement_dofs": 1349,
+      "primary_volume_dofs": 114,
+      "factorizations": 25,
+      "maximum_matrix_nnz": 128699,
+      "maximum_factor_nnz": 949029,
+      "maximum_true_linear_residual": 1.8717829035528188e-14,
+      "maximum_block_residuals": {
+        "force": 1.7987142370239334e-14,
+        "volume": 2.0589477769112238e-11,
+        "mean_pressure": 1.215696136003721e-15
+      },
+      "maximum_unrefined_block_residuals": {
+        "force": 1.7987142370239334e-14,
+        "volume": 2.0589477769112238e-11,
+        "mean_pressure": 1.215696136003721e-15
+      },
+      "iterative_refinement_corrections": 0,
+      "maximum_mass_residual": 3.7377953350184853e-16,
+      "dense_fallbacks": 0
+    },
+    {
+      "backend": "matrix-free original three-field action with corrected cached LU; original assembled/fresh fallback",
+      "scipy": "1.18.1",
+      "numpy": "2.5.4",
+      "formulation": "uncondensed compression-volume/displacement/pressure",
+      "free_displacement_dofs": 1349,
+      "primary_volume_dofs": 114,
+      "maximum_matrix_nnz": 128699,
+      "maximum_factor_nnz": 949029,
+      "maximum_true_linear_residual": 3.5005304408736288e-15,
+      "maximum_block_residuals": {
+        "force": 3.4418525728142096e-15,
+        "volume": 1.0202434819353051e-15,
+        "mean_pressure": 2.611659627962079e-16
+      },
+      "maximum_unrefined_block_residuals": {
+        "force": 3.4418525728142096e-15,
+        "volume": 1.0202434819353051e-15,
+        "mean_pressure": 2.611659627962079e-16
+      },
+      "iterative_refinement_corrections": 0,
+      "maximum_mass_residual": 3.7377953350184853e-16,
+      "dense_fallbacks": 0,
+      "linear_rate_systems": 25,
+      "actual_tangent_lu_factorizations": 25,
+      "cached_factor_hits": 0,
+      "cached_correction_solves": 25,
+      "fresh_fallbacks": 0,
+      "noncoercive_bypasses": 0,
+      "nonfinite_cached_residuals": 0,
+      "maximum_preconditioned_rhs_residual": 1.8717829035528188e-14,
+      "cache_entries": 2,
+      "material_coercivity_relative_floor": 1e-10,
+      "cached_rhs_relative_tolerance": 1e-14,
+      "original_force_volume_mean_pressure_acceptance_tolerance": 1e-10,
+      "matrix_free_operator_actions": 0,
+      "matrix_free_assemblies_avoided": 0,
+      "matrix_free_corrections": 0,
+      "matrix_free_fallbacks": 0,
+      "maximum_matrix_free_corrections": 6,
+      "matrix_free_rhs_relative_target": 1e-14,
+      "matrix_free_block_relative_target": 1e-13
+    },
+    {
+      "backend": "fixed-space coercive material-active-set shared LU; matrix-free original action, true-residual corrections and original fresh fallback",
+      "scipy": "1.18.1",
+      "numpy": "2.5.4",
+      "formulation": "uncondensed compression-volume/displacement/pressure",
+      "free_displacement_dofs": 1349,
+      "primary_volume_dofs": 114,
+      "maximum_matrix_nnz": 128699,
+      "maximum_factor_nnz": 949029,
+      "maximum_true_linear_residual": 9.184446599368084e-15,
+      "maximum_block_residuals": {
+        "force": 9.111334456246994e-15,
+        "volume": 1.1592096377320155e-15,
+        "mean_pressure": 3.173583725352411e-16
+      },
+      "maximum_unrefined_block_residuals": {
+        "force": 0.0005195332905505298,
+        "volume": 1.7312971477975097e-11,
+        "mean_pressure": 9.876793872703335e-06
+      },
+      "iterative_refinement_corrections": 0,
+      "maximum_mass_residual": 3.7377953350184853e-16,
+      "dense_fallbacks": 0,
+      "linear_rate_systems": 25,
+      "actual_tangent_lu_factorizations": 1,
+      "cached_factor_hits": 24,
+      "cached_correction_solves": 1,
+      "fresh_fallbacks": 0,
+      "noncoercive_bypasses": 0,
+      "nonfinite_cached_residuals": 0,
+      "maximum_preconditioned_rhs_residual": 1.6151188883439487e-14,
+      "cache_entries": 1,
+      "material_coercivity_relative_floor": 1e-10,
+      "cached_rhs_relative_tolerance": 1e-14,
+      "original_force_volume_mean_pressure_acceptance_tolerance": 1e-10,
+      "matrix_free_operator_actions": 159,
+      "matrix_free_assemblies_avoided": 24,
+      "matrix_free_corrections": 135,
+      "matrix_free_fallbacks": 0,
+      "maximum_matrix_free_corrections": 20,
+      "matrix_free_rhs_relative_target": 1e-14,
+      "matrix_free_block_relative_target": 1e-13,
+      "material_active_set_changes": 24,
+      "active_set_change_cached_hits": 24,
+      "material_active_set_is_cache_key": false,
+      "geometry_support_and_P1_spaces_fixed_per_system": true,
+      "experimental_full_nonlinear_path_acceptance": false
+    }
+  ],
+  "original_equation_residual_gates_passed": true,
+  "full_nonlinear_path_accepted": false,
+  "source_manifest_sha256": "5aa22b2d4e6e4dbd43a5c0701dd256a28951107cbf780702815873670b2e7a5d",
+  "input_sha256": {
+    "mesh.json": "8dbdda55392dead7af4eacc935c06d1e6b6a4da41669593d4ee50e809f97ddde",
+    "ground.json": "27f870fb36f11c391ef30739fd7bce149f8ad0b4b13fb8173893c832599e7bce",
+    "case.json": "888a8adeb46f7c7415c8c04554e38bfc9dff14493dc74a9026d43847db64ef7f",
+    "mesh-identity.json": "d759d2c3d51430c784259a9bbac484d937e157cb23c6f967283549f0550c6ea1"
+  },
+  "scope": "Constructed yield-surface state, individual GP branch combinations for operator comparison only; not a physically accepted loading path or a full-construction speedup",
+  "goal_complete": false,
+  "p6_complete": false,
+  "original_local_path": "runs/mcc-coercive-shared-20261026-v1/assessment.json",
+  "original_report_sha256": "75e512aff632cc4dd119c63e77d06bb69dfe1e3e7f4791a3759da5640e12f862"
+}

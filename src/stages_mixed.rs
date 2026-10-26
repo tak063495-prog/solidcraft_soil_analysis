@@ -75,7 +75,6 @@ pub(super) fn validate_definition(mesh: &Mesh, ground: &Ground, case: &StageCase
         || ground.initialization.water_level_m.is_some()
         || case.joint_system.is_some()
         || case.anchor_system.is_some()
-        || case.beam_system.is_some()
         || !case.initially_inactive_bodies.is_empty()
         || case.stages.iter().any(|s| {
             !matches!(
@@ -84,10 +83,12 @@ pub(super) fn validate_definition(mesh: &Mesh, ground: &Ground, case: &StageCase
                     | Stage::Pressure { .. }
                     | Stage::Excavate { .. }
                     | Stage::ResetDisplay { .. }
+                    | Stage::InstallBeams { .. }
+                    | Stage::RemoveBeams { .. }
             )
         })
     {
-        return Err(Error::Input("mixed MCC currently requires dry Tet10/order>=3, MCC materials, and boundary/pressure/excavation/display stages; water, structures and material/birth transitions need explicit mixed integration".into()));
+        return Err(Error::Input("mixed MCC requires dry Tet10/order>=3, MCC materials, and boundary/pressure/excavation/display/beam-plate installation stages; water, anchors, joints and soil material/birth transitions need explicit mixed integration".into()));
     }
     Ok(())
 }
@@ -181,6 +182,18 @@ impl Layout {
                     let t = theta[e.point_start + qi].unwrap();
                     connectivity.extend(up.iter().map(|&r| vec![t, r]));
                 }
+            }
+            if let Some(beams) = &m.beams {
+                // Condensation couples soil attachments across distinct soil
+                // elements. The mixed pattern needs the same nonlocal block
+                // as the displacement formulation, shifted past volume DOFs.
+                let mut rows = Vec::new();
+                for &node in beams.attachments.iter().flatten() {
+                    for axis in 0..3 {
+                        rows.extend(dofs.rows[3 * node + axis].iter().map(|&(r, _)| nt + r));
+                    }
+                }
+                connectivity.push(rows);
             }
             Some(CsrPattern::from_connectivity(count, connectivity)?)
         };
@@ -739,6 +752,7 @@ fn needed_partitions(
 
 struct Evaluation {
     states: Vec<soil::State>,
+    beams: Option<crate::beams::Evaluation>,
     residual: DVector<f64>,
     matrix: Option<Tangent>,
     force: f64,
@@ -906,6 +920,37 @@ fn evaluate(
             }
         }
     }
+    let beams = if let Some(model) = &m.beams {
+        let history = old
+            .beams
+            .as_ref()
+            .ok_or_else(|| Error::Input("missing mixed beam/plate history".into()))?;
+        let beam = model.evaluate(
+            history,
+            &x.u,
+            &layout.dofs.active_nodes,
+            target.boundary_factor,
+        )?;
+        for (i, &g) in beam.interface_dofs.iter().enumerate() {
+            internal[g] += beam.interface_internal_kn[i];
+            actual_internal[g] += beam.interface_internal_kn[i];
+            if let Some(matrix) = &mut matrix {
+                for (j, &h) in beam.interface_dofs.iter().enumerate() {
+                    let value = beam.interface_tangent_kn_m[(i, j)];
+                    if value != 0. {
+                        for &(r, cr) in &layout.dofs.rows[g] {
+                            for &(c, cc) in &layout.dofs.rows[h] {
+                                matrix.add(layout.nt + r, layout.nt + c, cr * cc * value)?;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Some(beam)
+    } else {
+        None
+    };
     let force: Vec<_> = internal
         .iter()
         .zip(&target.load)
@@ -938,6 +983,7 @@ fn evaluate(
         / norm(&scale).max(volume_measure * 1e-12);
     Ok(Evaluation {
         states,
+        beams,
         residual,
         matrix,
         force: force_error,
@@ -1055,6 +1101,7 @@ pub(super) fn trial(
             let mut state = old.clone();
             state.displacement_m = x.u;
             state.material_states = eval.states;
+            state.beams = eval.beams.map(|b| b.state);
             state.active_elements = target.active;
             state.applied_nodal_load_kn = target.load;
             state.boundary_factor = target.boundary_factor;
@@ -1066,12 +1113,14 @@ pub(super) fn trial(
             } else {
                 vec![]
             };
-            state.excavation_release_load_kn = if target.stage == 0 && m.ground.is_general() {
-                vec![0.; target.release.len()]
-            } else {
-                target.release
-            };
-            state.transition_release_load_kn.clear();
+            let transition = target.stage > 0 && m.case.stages[target.stage - 1].is_transition();
+            state.excavation_release_load_kn =
+                if (target.stage == 0 && m.ground.is_general()) || transition {
+                    vec![0.; target.release.len()]
+                } else {
+                    target.release.clone()
+                };
+            state.transition_release_load_kn = if transition { target.release } else { vec![] };
             state.mixed_mcc = Some(mixed_mcc::State {
                 tangent_method: mixed_mcc::TANGENT_METHOD.into(),
                 pressure_dofs: primary(&layout, &x.p),
@@ -1297,15 +1346,25 @@ mod tests {
 
     #[test]
     fn full_three_field_jacobian_matches_residual_directional_differences() -> Result<()> {
-        check_jacobian(false)
+        check_jacobian(false, false)
     }
 
     #[test]
     fn projected_three_field_jacobian_matches_all_residual_blocks() -> Result<()> {
-        check_jacobian(true)
+        check_jacobian(true, false)
     }
 
-    fn check_jacobian(projected: bool) -> Result<()> {
+    #[test]
+    fn mixed_beam_plate_jacobian_includes_nonlocal_structural_tangent() -> Result<()> {
+        check_jacobian(false, true)
+    }
+
+    #[test]
+    fn projected_beam_plate_jacobian_includes_nonlocal_structural_tangent() -> Result<()> {
+        check_jacobian(true, true)
+    }
+
+    fn check_jacobian(projected: bool, structures: bool) -> Result<()> {
         let mesh: Mesh =
             serde_json::from_str(include_str!("../examples/hardening-column-tet10-mesh.json"))?;
         let ground: Ground =
@@ -1314,6 +1373,26 @@ mod tests {
             serde_json::from_str(include_str!("../examples/stages-mixed-mcc.json"))?;
         if projected {
             case.schema = "soil-fem-projected-mcc-stages/1".into();
+        }
+        if structures {
+            case.beam_system = Some(serde_json::from_value(serde_json::json!({
+                "schema":"soil-fem-structures/1",
+                "nodes":[
+                    {"id":"a","position_m":[0.,0.,1.],"match_soil_node":true},
+                    {"id":"b","position_m":[1.,1.,1.],"match_soil_node":true},
+                    {"id":"c","position_m":[1.,0.,1.],"match_soil_node":true}],
+                "sections":[{"id":"strut","young_kpa":2e6,"poisson":0.3,"area_m2":0.02,
+                    "iy_m4":0.0001,"iz_m4":0.0002,"torsion_j_m4":0.00005,"unit_weight_kn_m3":0.,
+                    "formulation":{"kind":"euler_bernoulli"}}],
+                "members":[{"id":"beam","nodes":["a","b"],"section_id":"strut","local_y":[0.,0.,1.],"initially_active":true}],
+                "plate_sections":[{"id":"wall","young_kpa":3e6,"poisson":0.2,"thickness_m":0.05,"unit_weight_kn_m3":0.,"drilling_factor":1e-4}],
+                "plates":[{"id":"plate","nodes":["a","b","c"],"section_id":"wall","initially_active":true}],
+                "rotation_length_scale_m":1.,"maximum_condensed_dofs":60,
+                "rotation_constraints":[
+                    {"node_id":"a","direction":[1.,0.,0.],"value":0.},
+                    {"node_id":"a","direction":[0.,1.,0.],"value":0.},
+                    {"node_id":"a","direction":[0.,0.,1.],"value":0.}]
+            }))?);
         }
         case.stages.clear();
         let initial = solve(&mesh, ground.clone(), case.clone())?;

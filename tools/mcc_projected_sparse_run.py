@@ -19,6 +19,8 @@ def main():
         help='experimental corrected-factor reference; full nonlinear CAD-path equivalence is not yet accepted')
     backend.add_argument('--matrix-free-factor-reuse', action='store_true',
         help='experimental original-operator reference with corrected cached LU and assembled fallback')
+    backend.add_argument('--coercive-factor-reuse', action='store_true',
+        help='experimental fixed-space coercive reuse across material active sets; full CAD-path acceptance pending')
     parser.add_argument('--dependency-lock', type=Path, required=True)
     args = parser.parse_args()
     paths = [getattr(args, name).resolve() for name in ('mesh', 'ground', 'case', 'identity')]
@@ -39,6 +41,12 @@ def main():
         import mcc_projected_matrixfree_reference as matrixfree
         factory = matrixfree.MatrixFreeFactorProjectedSystem
         extra.extend([Path(reused.__file__).resolve(), Path(matrixfree.__file__).resolve()])
+    if args.coercive_factor_reuse:
+        import mcc_projected_factor_reference as reused
+        import mcc_projected_matrixfree_reference as matrixfree
+        import mcc_projected_coercive_reference as coercive
+        factory = coercive.CoerciveSharedFactorProjectedSystem
+        extra.extend([Path(reused.__file__).resolve(),Path(matrixfree.__file__).resolve(),Path(coercive.__file__).resolve()])
     if args.phase == 'initial':
         initial.solve(*paths, args.output.resolve(), args.fraction, args.steps, factory, extra)
     else:

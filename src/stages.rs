@@ -3875,18 +3875,26 @@ fn equilibrate(
 }
 
 fn result_schema(mesh: &Mesh, ground: &Ground, case: &StageCase) -> &'static str {
+    if case.is_projected_mcc() {
+        return if case.beam_system.is_some() {
+            "soil-fem-projected-mcc-stage-result/2"
+        } else {
+            "soil-fem-projected-mcc-stage-result/1"
+        };
+    }
+    if case.is_mixed_mcc() {
+        return if case.beam_system.is_some() {
+            "soil-fem-mixed-mcc-stage-result/2"
+        } else {
+            "soil-fem-mixed-mcc-stage-result/1"
+        };
+    }
     if case
         .beam_system
         .as_ref()
         .is_some_and(|s| !s.plates.is_empty())
     {
         return "soil-fem-stage-result/14";
-    }
-    if case.is_projected_mcc() {
-        return "soil-fem-projected-mcc-stage-result/1";
-    }
-    if case.is_mixed_mcc() {
-        return "soil-fem-mixed-mcc-stage-result/1";
     }
     if case
         .joint_system

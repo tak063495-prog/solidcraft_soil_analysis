@@ -63,5 +63,62 @@ class PlateSurfaces(unittest.TestCase):
         structure['nodes'].append(dict(id='other_rotation',position_m=mesh['nodes'][node],soil_node_set='BeamRoot'))
         with self.assertRaisesRegex(ValueError,'multiple existing rotations'):attach(mesh,case,spec)
 
+    def interface_fixture(self):
+        mesh,case,spec=self.fixture();regions={r['id']:r['body'] for r in mesh['regions']}
+        mesh['face_sets']['wall']=[list(f) for f,owners in ref.topology(mesh).items()
+            if len(owners)==2 and {regions[mesh['region_ids'][e]] for e in owners}=={'LowerClay','UpperClay'}]
+        spec['schema']='soil-fem-plate-surfaces/2'
+        spec['surfaces'][0].update(attachment='shared_interface',owner_body='LowerClay',opposite_body='UpperClay')
+        return mesh,case,spec
+
+    def test_shared_interface_keeps_both_soil_traces_and_support_after_opposite_body_removal(self):
+        mesh,case,spec=self.interface_fixture();before=copy.deepcopy((mesh,case,spec))
+        output,result,binding=attach(mesh,case,spec)
+        self.assertEqual((mesh,case,spec),before)
+        self.assertEqual(binding['schema'],'soil-fem-plate-surface-binding/2')
+        record=binding['surfaces'][0]
+        self.assertAlmostEqual(record['area_m2'],1.,places=12)
+        self.assertEqual(record['attachment'],'shared_interface')
+        self.assertEqual(len(record['owner_pairs']),len(mesh['face_sets']['wall']))
+        retained={n for pair in record['owner_pairs'] for n in mesh['tetrahedra10'][pair['owner_element']]}
+        self.assertTrue(set(map(int,binding['soil_node_to_structure_id']))<=retained)
+        xyz=np.asarray(output['nodes'])
+        by_id={n['id']:n for n in result['beam_system']['nodes']}
+        for plate in result['beam_system']['plates']:
+            points=np.array([by_id[n]['position_m'] for n in plate['nodes']])
+            self.assertGreater(np.cross(points[1]-points[0],points[2]-points[0])[2],0.)
+
+    def test_shared_interface_reverses_orientation_with_explicit_owner(self):
+        mesh,case,spec=self.interface_fixture()
+        spec['surfaces'][0].update(owner_body='UpperClay',opposite_body='LowerClay')
+        _,result,binding=attach(mesh,case,spec)
+        by_id={n['id']:n for n in result['beam_system']['nodes']}
+        for plate in result['beam_system']['plates']:
+            points=np.array([by_id[n]['position_m'] for n in plate['nodes']])
+            self.assertLess(np.cross(points[1]-points[0],points[2]-points[0])[2],0.)
+
+    def test_shared_interface_requires_version_and_exact_two_body_declaration(self):
+        for failure in ('legacy','missing_opposite','same_body','wrong_body','exterior_mode'):
+            with self.subTest(failure=failure):
+                mesh,case,spec=self.interface_fixture();surface=spec['surfaces'][0]
+                if failure=='legacy':spec['schema']='soil-fem-plate-surfaces/1'
+                if failure=='missing_opposite':surface.pop('opposite_body')
+                if failure=='same_body':surface['opposite_body']=surface['owner_body']
+                if failure=='wrong_body':surface['opposite_body']='Missing'
+                if failure=='exterior_mode':surface['attachment']='exterior'
+                before=copy.deepcopy((mesh,case,spec))
+                with self.assertRaises(ValueError):attach(mesh,case,spec)
+                self.assertEqual((mesh,case,spec),before)
+
+    def test_shared_interface_rejects_unshared_quadratic_midnode_without_input_mutation(self):
+        mesh,case,spec=self.interface_fixture();face=mesh['face_sets']['wall'][0]
+        owners=ref.topology(mesh)[tuple(sorted(face))]
+        owner=owners[0];mid=int(ref.face_nodes(mesh,owner,face)[3])
+        new=len(mesh['nodes']);mesh['nodes'].append(copy.deepcopy(mesh['nodes'][mid]))
+        cell=mesh['tetrahedra10'][owner];cell[cell.index(mid)]=new
+        before=copy.deepcopy((mesh,case,spec))
+        with self.assertRaisesRegex(ValueError,'nonconforming'):attach(mesh,case,spec)
+        self.assertEqual((mesh,case,spec),before)
+
 
 if __name__=='__main__':unittest.main()

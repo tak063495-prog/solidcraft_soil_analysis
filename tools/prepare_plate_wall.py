@@ -16,11 +16,12 @@ def read(path):return json.loads(path.read_text(encoding='utf-8-sig'))
 def write(path,value):path.write_text(json.dumps(value,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 
 
-def prepare(output,cli,sizes):
+def prepare(output,cli,sizes,example='plate-wall'):
     if len(sizes)!=2 or not all(math.isfinite(v) and v>0 for v in sizes) or sizes[0]<=sizes[1]:
         raise ValueError('require finite coarse > fine >0 mesh sizes')
-    files=[('plate-wall.json','design.json'),('ground-plate-wall.json','ground.json'),
-        ('stages-plate-wall.json','stages-template.json'),('plate-wall-surfaces.json','surface-spec.json')]
+    if example not in ('plate-wall','plate-excavation'):raise ValueError('unknown plate example')
+    files=[(example+'.json','design.json'),('ground-'+example+'.json','ground.json'),
+        ('stages-'+example+'.json','stages-template.json'),(example+'-surfaces.json','surface-spec.json')]
     cli=cli.resolve();output=output.resolve()
     if not cli.is_file():raise ValueError('SolidCraft CLI executable is missing')
     for source,_ in files:read(root/'examples'/source)
@@ -49,5 +50,6 @@ def prepare(output,cli,sizes):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('output',type=Path);parser.add_argument('--cli',type=Path,required=True)
-    parser.add_argument('--mesh-sizes-m',type=float,nargs=2,default=[4.,3.]);args=parser.parse_args()
-    prepare(args.output,args.cli,args.mesh_sizes_m)
+    parser.add_argument('--mesh-sizes-m',type=float,nargs=2,default=[4.,3.])
+    parser.add_argument('--example',choices=('plate-wall','plate-excavation'),default='plate-wall');args=parser.parse_args()
+    prepare(args.output,args.cli,args.mesh_sizes_m,args.example)

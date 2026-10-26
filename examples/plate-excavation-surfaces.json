@@ -1,0 +1,43 @@
+{
+  "schema": "soil-fem-plate-surfaces/2",
+  "sections": [
+    {
+      "id": "concrete_wall",
+      "young_kpa": 30000000.0,
+      "poisson": 0.2,
+      "thickness_m": 0.2,
+      "unit_weight_kn_m3": 24.0,
+      "drilling_factor": 0.0001
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "wall_upper",
+      "face_set": "interface:Pit:Retained",
+      "owner_body": "Retained",
+      "section_id": "concrete_wall",
+      "initially_active": false,
+      "boundary_traction_kpa": [
+        5.0,
+        0.0,
+        0.0
+      ],
+      "opposite_body": "Pit",
+      "attachment": "shared_interface"
+    },
+    {
+      "id": "wall_lower",
+      "face_set": "interface:Base:Retained",
+      "owner_body": "Retained",
+      "section_id": "concrete_wall",
+      "initially_active": false,
+      "boundary_traction_kpa": [
+        5.0,
+        0.0,
+        0.0
+      ],
+      "opposite_body": "Base",
+      "attachment": "shared_interface"
+    }
+  ]
+}

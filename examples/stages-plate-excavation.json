@@ -1,0 +1,137 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "bottom",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "xmin",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "xmax",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "ymin",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "ymax",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      }
+    ]
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "surrounding_surface": "body:Retained:zmax",
+    "excavation_floor": "body:Base:zmax",
+    "wall": "body:Retained:xmax"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "install_structures",
+      "name": "install_wall",
+      "members": [
+        "wall_upper",
+        "wall_lower"
+      ],
+      "placement": "cad_new_nodes"
+    },
+    {
+      "kind": "excavate",
+      "name": "excavate_pit",
+      "bodies": [
+        "Pit"
+      ],
+      "remaining_surface_pressure_kpa": 0.0
+    },
+    {
+      "kind": "boundary",
+      "name": "load_wall",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "unload_wall",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "remove_structures",
+      "name": "remove_wall",
+      "members": [
+        "wall_upper",
+        "wall_lower"
+      ]
+    }
+  ],
+  "verification_reject_once_stages": [
+    "excavate_pit",
+    "load_wall"
+  ]
+}

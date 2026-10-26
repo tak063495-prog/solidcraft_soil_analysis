@@ -9,8 +9,8 @@ import time
 import freeze_sources
 
 
-def run(base, output, steps, factor_reuse=False, matrix_free_factor_reuse=False):
-    if factor_reuse and matrix_free_factor_reuse:raise ValueError('choose one experimental reference backend')
+def run(base, output, steps, factor_reuse=False, matrix_free_factor_reuse=False,coercive_factor_reuse=False):
+    if sum(map(bool,(factor_reuse,matrix_free_factor_reuse,coercive_factor_reuse)))>1:raise ValueError('choose one experimental reference backend')
     output.mkdir(parents=True, exist_ok=False)
     root = Path(__file__).resolve().parents[1]
     freeze_sources.freeze(output)
@@ -26,10 +26,12 @@ def run(base, output, steps, factor_reuse=False, matrix_free_factor_reuse=False)
         shutil.copyfile(root/'tools'/name, sources/name)
     for name in ('requirements.lock.txt', 'requirements-reference.lock.txt'):
         shutil.copyfile(root/name, sources/name)
-    if factor_reuse or matrix_free_factor_reuse:
+    if factor_reuse or matrix_free_factor_reuse or coercive_factor_reuse:
         shutil.copyfile(root/'tools/mcc_projected_factor_reference.py',sources/'mcc_projected_factor_reference.py')
-    if matrix_free_factor_reuse:
+    if matrix_free_factor_reuse or coercive_factor_reuse:
         shutil.copyfile(root/'tools/mcc_projected_matrixfree_reference.py',sources/'mcc_projected_matrixfree_reference.py')
+    if coercive_factor_reuse:
+        shutil.copyfile(root/'tools/mcc_projected_coercive_reference.py',sources/'mcc_projected_coercive_reference.py')
     started = time.monotonic()
     progress = dict(schema='soil-fem-sparse-reference-study-progress/1', status='prepared',
                     steps=steps, goal_complete=False, p6_complete=False, phases=[])
@@ -49,6 +51,7 @@ def run(base, output, steps, factor_reuse=False, matrix_free_factor_reuse=False)
                    '--dependency-lock', str(sources/'requirements-reference.lock.txt')]
         if factor_reuse:command.append('--factor-reuse')
         if matrix_free_factor_reuse:command.append('--matrix-free-factor-reuse')
+        if coercive_factor_reuse:command.append('--coercive-factor-reuse')
         if phase == 'cycle':
             command += ['--initial', str(output/'initial.json')]
         code = subprocess.call(command)
@@ -74,5 +77,7 @@ if __name__ == '__main__':
         help='experimental corrected-factor backend; keeps original equations and residual gates')
     backend.add_argument('--matrix-free-factor-reuse', action='store_true',
         help='experimental original-operator backend; original assembled/fresh fallback retained')
+    backend.add_argument('--coercive-factor-reuse', action='store_true',
+        help='experimental coercive active-set shared factor; fixed-space original equations and gates retained')
     args = parser.parse_args()
-    sys.exit(run(args.base.resolve(), args.output.resolve(), args.steps, args.factor_reuse,args.matrix_free_factor_reuse))
+    sys.exit(run(args.base.resolve(),args.output.resolve(),args.steps,args.factor_reuse,args.matrix_free_factor_reuse,args.coercive_factor_reuse))

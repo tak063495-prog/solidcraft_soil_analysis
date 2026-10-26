@@ -1,0 +1,76 @@
+{
+  "schema": "soil-fem-cad-internal-wall-excavation-control/1",
+  "passed": true,
+  "solver_sha256": "8a3eda114a0d92a46f5854b84e08c010928c513f7b2a0ccf0fc74dfd86da2e7d",
+  "source_files": 569,
+  "independent_cases": 4,
+  "independent_frames": 24,
+  "mesh_metrics": [
+    {
+      "mesh": "coarse",
+      "nodes": 311,
+      "tet10": 144,
+      "plates": 32,
+      "wall_quadratic_trace_mean_excavation_ux_m": 0.0009107807732735123,
+      "surrounding_surface_mean_excavation_uz_m": -0.0002934819552184194,
+      "excavation_floor_mean_excavation_uz_m": 0.0038657307085132155
+    },
+    {
+      "mesh": "fine",
+      "nodes": 436,
+      "tet10": 214,
+      "plates": 64,
+      "wall_quadratic_trace_mean_excavation_ux_m": 0.0009079858728589294,
+      "surrounding_surface_mean_excavation_uz_m": -0.0002926136494039062,
+      "excavation_floor_mean_excavation_uz_m": 0.003864081947963545
+    }
+  ],
+  "drilling_sensitivity": [
+    {
+      "case": "coarse-drill-low",
+      "relative_displacement_stress_moment_errors": [
+        9.688370788423706e-10,
+        1.940138346190471e-09,
+        1.2165033526876175e-09
+      ],
+      "one_percent_gate_satisfied": true
+    },
+    {
+      "case": "coarse-drill-high",
+      "relative_displacement_stress_moment_errors": [
+        9.676503031504175e-08,
+        1.9377307227737014e-07,
+        1.2151493801901748e-07
+      ],
+      "one_percent_gate_satisfied": true
+    }
+  ],
+  "separate_process_coarse_restarts": 6,
+  "exact_coarse_cutback_clean_path": true,
+  "all_mc_plastic_histories_exact_zero": true,
+  "excavation_holding_from_independent_original_inputs": true,
+  "pointwise_soil_plate_trace_identity": false,
+  "spatial_convergence_accepted": false,
+  "plastic_retaining_wall_accepted": false,
+  "water_joint_wall_accepted": false,
+  "native_gui_wall_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "evidence_sha256": {
+    "source-snapshot.json": "1f6104ad879370b2f86609026c460a9099b42b18014d7d299b77977120f2f049",
+    "coarse\\independent.json": "964bcc855a35f688a760ea37dbce61dfaca8417a46e157b52fb4719cdfdc6272",
+    "coarse\\plate-surface-binding.json": "75926c8eb26bed3bd15f828c6965df7339a1a6b72b4ac0b2c660b3336ecf1db0",
+    "coarse\\stage-verification.json": "5d32d40ab2d65930d01aad29402c59da5a19c5405bf1973645a92a5d14a8c775",
+    "coarse-drill-high\\independent.json": "50d4eb8b3c5fcd53ca10620ea8f67b4e7ce530bc70de3c462db1facc07ce0b13",
+    "coarse-drill-high\\stage-verification.json": "d46b027542fa57ba44aba618f61a25d17ef9bed6a10418958e87e9b4bd846d0c",
+    "coarse-drill-low\\independent.json": "9c648d2505b2dc5e1d4b533412474811c42157028c51348b455e299ab00d550e",
+    "coarse-drill-low\\stage-verification.json": "1d1440241ba8f24e4fd93b63d5dde457b4d4b2d1a58e150bbe7528c040bbb0d4",
+    "fine\\independent.json": "38fbb7139cba68e3b927a53fcf0a94c1e0205626c2fc7167b0157d1256e227d1",
+    "fine\\plate-surface-binding.json": "25081288d41992ad096868b2a148dda2ccb5ad62f8cbbd308d1ca80d23ef1e5b",
+    "fine\\stage-verification.json": "6dd1069eb4d51965f3977d4ed20682a043a414842a00e48be742ae83bd8be9bf",
+    "coarse\\checkpoints\\verification.json": "603a833db5fb00018687c3550af0c0f991dc8c8be4807a14bf52c52c452e9cc5",
+    "coarse\\history\\verification.json": "faa4bcf7da82bb08b2a963cc2664fe11c592ec35db9bbb87a2a6b219250e8c15"
+  },
+  "original_local_path": "runs/plate-interface-excavation-cad-20261026-v1/verification.json",
+  "original_report_sha256": "578f3fcfec8ad0d1afc6ee9e0535da2c85a7777a8f96fb163a62a20ed0c55a05"
+}

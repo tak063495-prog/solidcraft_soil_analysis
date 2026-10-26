@@ -1,0 +1,93 @@
+{
+  "schema": "soil-fem-mixed-mcc-structure-validation/1",
+  "passed": true,
+  "created_utc": "2026-10-26T09:59:29.545966+00:00",
+  "solver_sha256": "7738b0e38f18a19c5872ed663e7d7d0264f5759bd8947c662ccb48f41f66cb2f",
+  "final_source_manifest_sha256": "4ed06ae430bf92b8aa208178c652645f1a5cfdb5b3c3cbec1e6bffb7ef7db122",
+  "source_files": 578,
+  "rust_tests_passed": 249,
+  "python_tests_passed": 94,
+  "fmt_clippy": "passed",
+  "independent_physical_paths": 4,
+  "independent_history_fields_and_member_resultants": "passed",
+  "separate_process_restarts": 16,
+  "clean_cutback_control_paths": 2,
+  "vtu_raw_frames": 36,
+  "comparisons": [
+    {
+      "formulation": "projected",
+      "maximum_coarse_relative_errors": {
+        "displacement": 0.0035014601386789135,
+        "stress": 0.00033741189992506906,
+        "pc": 4.024109146623578e-05,
+        "void_ratio": 5.280259548326151e-05,
+        "plastic_strain": 0.0027376099786497916
+      },
+      "maximum_fine_relative_errors": {
+        "displacement": 0.0008708755279267056,
+        "stress": 8.454470733931708e-05,
+        "pc": 9.686619332721592e-06,
+        "void_ratio": 1.3117283609461194e-05,
+        "plastic_strain": 0.0006605394100914593
+      }
+    },
+    {
+      "formulation": "gp",
+      "maximum_coarse_relative_errors": {
+        "displacement": 0.0034983158899624047,
+        "stress": 0.00032505766404723437,
+        "pc": 4.0331249122823096e-05,
+        "void_ratio": 5.2590850267685865e-05,
+        "plastic_strain": 0.002749096268733643
+      },
+      "maximum_fine_relative_errors": {
+        "displacement": 0.000873702892174265,
+        "stress": 8.108242472351685e-05,
+        "pc": 9.552675904130399e-06,
+        "void_ratio": 1.313801165531435e-05,
+        "plastic_strain": 0.0006503471292369009
+      }
+    }
+  ],
+  "evidence_sha256": {
+    "runs\\mcc-structures-projected-20261026-v1\\stage-results.json": "1fc332e6193fcc85da4ae0206473821faf6898b389ad0e024b871a38ccc2cc88",
+    "runs\\mcc-structures-projected-20261026-v1\\stage-verification.json": "6832b38f6ae91a29c50289cceb5ea275a30334b3688336f86fc41969741e3d2c",
+    "runs\\mcc-structures-projected-20261026-v1\\accepted-stage-run.json": "112688c72c78e51603c2f68b85aac706ae9a518f6a6c40b9ae53d7ce0acb571d",
+    "runs\\mcc-structures-projected-20261026-v1\\export\\export-verification.json": "1c4b916792f520d466262f94d308f8efeda0b5e4f6b94a96252f310b7e9e3587",
+    "runs\\mcc-structures-projected-fine-20261026-v1\\stage-results.json": "9f837b3177af91356bddb7eb947e00483640e68da2f0faabe2568174639e9856",
+    "runs\\mcc-structures-projected-fine-20261026-v1\\stage-verification.json": "72cd9802ff0aced7d26a450929489640bf7c0da0348258dc4d1ba327ef202d9d",
+    "runs\\mcc-structures-projected-fine-20261026-v1\\accepted-stage-run.json": "033f1858392fc1ea93223854ba19939a411ac0415970e845a42fc87ce7b605d4",
+    "runs\\mcc-structures-projected-fine-20261026-v1\\export\\export-verification.json": "708f9de5aceb6c4470c433ccdfb34146ed5f3dd658eec56538f12d17e8ae3ecc",
+    "runs\\mcc-structures-projected-20261026-v1\\comparison.json": "10fb571dd45aeaa18673b405446cc2f900b8e3bdfa82784c7367512e7b063163",
+    "runs\\mcc-structures-projected-20261026-v1\\reference100.json": "36877bfa0411f910633c29f888fa3b6b2ee6315b97e24cfd96c15eeee1689853",
+    "runs\\mcc-structures-projected-20261026-v1\\reference200.json": "8aafcfe6d93e17068425d93d90f3a77732cf67787673746f1e5fed64eb81442d",
+    "runs\\mcc-structures-projected-20261026-v1\\checkpoints\\verification.json": "3d8c31e56b8d8f8d6604984a8cf227e2db49214432e23ee51bb560b7b8945c19",
+    "runs\\mcc-structures-projected-20261026-v1\\history\\verification.json": "a1c80acdd0fa9604bdd53932a25b7953c0b617d74e8fd1698bcf630652145b5c",
+    "runs\\mcc-structures-gp-20261026-v1\\stage-results.json": "b9808cbdefa45c4c8dfa52822f8038efdbab9e9c213c6afb54e76b607a2ebd6d",
+    "runs\\mcc-structures-gp-20261026-v1\\stage-verification.json": "73a40072da4bbcd58a002f4fac0cd67f08af7409f09343039cbdd20b02b7674d",
+    "runs\\mcc-structures-gp-20261026-v1\\accepted-stage-run.json": "24ab0e76b03ed2f4e85af404204c77d3cbf4012b38cdf322a02bac95205c0874",
+    "runs\\mcc-structures-gp-20261026-v1\\export\\export-verification.json": "0524a86cc3c5b87d6e7dc7f96b442fccb9c221a79c7770b75c993e78dbdd39e5",
+    "runs\\mcc-structures-gp-fine-20261026-v1\\stage-results.json": "e38829c0c9de06fea95f5ed40fbf2d2d50f7914b6a24e90d07b105e090f7e893",
+    "runs\\mcc-structures-gp-fine-20261026-v1\\stage-verification.json": "25a25e82a1c13440b9cabf68645dc22d77833ba1a89154428f54e8f0a64943d0",
+    "runs\\mcc-structures-gp-fine-20261026-v1\\accepted-stage-run.json": "afde2816589213fc3d980cea8d57ccc7fc073ed940c3a0eef04748fb8b076a13",
+    "runs\\mcc-structures-gp-fine-20261026-v1\\export\\export-verification.json": "907186bd36e749fb9d6bcc78dce3974b3bef8171eb8d07f31a5f2828e97469ba",
+    "runs\\mcc-structures-gp-20261026-v1\\comparison.json": "1c4f50ea439d17fb7740c305969cd3e2b2a5eea68267daf8bb632f47be337375",
+    "runs\\mcc-structures-gp-20261026-v1\\reference100.json": "bf2f6b152b2ce759947699c0f7407180d7c1650339f3f7d835c7d6c73517c823",
+    "runs\\mcc-structures-gp-20261026-v1\\reference200.json": "1a0e589c66e4776aff5b4502789ec0c089e4626209843d416af5d0bcd7cc8369",
+    "runs\\mcc-structures-gp-20261026-v1\\checkpoints\\verification.json": "0072c95e03fff743b6898308fd66b0749af135676bd28942865da611478021d8",
+    "runs\\mcc-structures-gp-20261026-v1\\history\\verification.json": "a2983383e819f66f2598ed75d49ae9ead8a6b602b393b78dedd9b3760d7f2cc9"
+  },
+  "log_sha256": {
+    "runs\\mixed-structures-20261026-v1-full-rust.log": "75c8563de35f17921dffa846941daef6767465cae554f53908f657dc6e5b27bb",
+    "runs\\mixed-structures-20261026-v1-python-full-v2.log": "cf6426f1fbcdd24a7b6165d9720ff1ff539a45fc4a4a3f09200ba3ff20ed73e1",
+    "runs\\mixed-structures-20261026-v1-quality.log": "cc6a2a343252a901f0805956f61a7f1d932bb81ae2dde6c57b9317752e04d85d"
+  },
+  "spatial_convergence_accepted": false,
+  "arbitrary_cad_acceptance": false,
+  "native_structural_view_accepted": false,
+  "all_native_quality_gates_passed": false,
+  "goal_complete": false,
+  "p6_complete": false,
+  "original_local_path": "runs/mcc-structures-20261026-v1/final-validation.json",
+  "original_report_sha256": "c8bacc2debd069285b8b507b8f2e01c8d35286d8d736513d6dfa783aeff8a91a"
+}

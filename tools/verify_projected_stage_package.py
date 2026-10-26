@@ -88,8 +88,8 @@ def restricted_pressure(mesh, fields, active):
 
 def internal(mesh, fields, active, restrict=False):
     result = np.zeros((len(mesh['nodes']), 3))
-    stress = fields['raw']['work_conjugate_effective_stress_compression_positive_kpa']
-    if restrict:
+    stress = fields['raw'].get('work_conjugate_effective_stress_compression_positive_kpa',fields['material_stress'])
+    if restrict and 'work_conjugate_effective_stress_compression_positive_kpa' in fields['raw']:
         pressure = restricted_pressure(mesh,fields,active)
         stress = stress.copy()
         stress[:,:3] += (pressure-stress[:,:3].mean(axis=1))[:,None]
@@ -166,11 +166,11 @@ def initial_state(mesh, ground, case, run):
 
 
 def audit(mesh, ground, case, run):
-    require(run.get('schema') == mixed_mcc_io.PROJECTED_SCHEMA, 'projected MCC result required')
+    require(run.get('schema') in mixed_mcc_io.SCHEMAS, 'mixed MCC result required')
     require(ref.normalize_ground(copy.deepcopy(ground)) == run['ground'], 'result ground differs from input')
     normalized = ref.normalize_stage_case(copy.deepcopy(case))
     require(normalized == run['case'], 'result construction differs from input')
-    require(not any(normalized.get(name) for name in ('joint_system', 'beam_system', 'anchor_system', 'initially_inactive_bodies')),
+    require(not any(normalized.get(name) for name in ('joint_system', 'anchor_system', 'initially_inactive_bodies')),
         'unsupported projected construction coupling')
     mixed_mcc_io.validate(mesh, run)
     case, ground = run['case'], run['ground']
@@ -188,6 +188,11 @@ def audit(mesh, ground, case, run):
     prior_fields = None
     rows = []
     expected_audits = []
+    expected_transitions = []
+    structure_model = None
+    if case.get('beam_system'):
+        from beam_reference import System, verify_state
+        structure_model = System(mesh,case['beam_system'])
     require(run['frames'][0]['name'] == ('initial_equilibrated' if run.get('geostatic') is not None else 'initial_k0'), 'initial frame origin differs')
     for index, frame in enumerate(run['frames']):
         state = frame['state']
@@ -210,7 +215,7 @@ def audit(mesh, ground, case, run):
                     active[elements] = False
                 selected = sorted(set(selected))
                 pressure = stage['remaining_surface_pressure_kpa']
-            elif stage['kind'] != 'reset_display':
+            elif stage['kind'] not in ('reset_display','install_beams','remove_beams'):
                 raise ValueError('unsupported projected stage')
             if stage['kind'] == 'reset_display':
                 from verify_construction import verify_display_reset
@@ -221,31 +226,59 @@ def audit(mesh, ground, case, run):
         force, geometry = physical(mesh, ground, active, pressure, case.get('pressure_on_original_surface_only', False))
         if case.get('boundary') and factor:
             force += factor*ref.conditions_load(mesh, case['boundary'], active)
+        soil_force = force.copy()
+        structure = None
+        if structure_model is not None:
+            structure=verify_state(structure_model,state['beams'],frame['beam_results'],np.asarray(state['displacement_m']),factor)
+            for node,load in structure['attached_load'].items():force[node]+=load
         require(np.allclose(force.reshape(-1), state['applied_nodal_load_kn'], rtol=1e-10, atol=1e-8), 'applied load differs from independent geometry/load assembly')
         require(np.linalg.norm(state['excavation_release_load_kn']) < 1e-9, 'completed stage retains excavation holding load')
+        require(np.linalg.norm(state.get('transition_release_load_kn',[])) < 1e-9, 'completed stage retains member transition holding load')
         fields = mixed_mcc_io.frame_fields(mesh, run, frame)
         _,maximum_yield = material_internal(mesh,ground,state['material_states'],active,quadrature,offsets)
         require(np.isclose(maximum_yield,frame['maximum_normalized_yield'],rtol=1e-8,atol=1e-8), 'material yield diagnostic differs')
         work = internal(mesh, fields, active)
+        if structure is not None:
+            for node,load in structure['attached_load'].items():
+                work[node]+=load+structure['interface_residual'][node]
         conditions = {**case, 'boundary':case.get('boundary') or {'constraints':[]}}
         bases, constraint_error = ref.staged_constraint_space(mesh, conditions, state)
         reaction = np.zeros_like(xyz)
+        free_residual=[]
         for node, basis in bases.items():
             residual = work[node]-force[node]
+            free_residual.extend(basis.T@residual)
             reaction[node] = residual-basis@(basis.T@residual)
+        actual_residual=float(np.linalg.norm(free_residual)/max(np.linalg.norm(force),1.))
+        require(actual_residual<case['settings']['relative_force_tolerance'] and abs(actual_residual-frame['relative_force_residual'])<1e-11,'independent mixed/member force residual differs')
+        fields['metrics']['independent_work_conjugate_force_residual']=actual_residual
         require(abs(constraint_error-frame['maximum_constraint_error_m']) < 1e-11, 'constraint diagnostic differs')
-        balance = (force+reaction).sum(axis=0)
+        balance = (soil_force+reaction).sum(axis=0)
+        if structure is not None:balance+=structure['external_force']+structure['support_force']
         require(np.allclose(balance, frame['force_balance_error_kn'], rtol=1e-8, atol=1e-7), 'force balance diagnostic differs')
-        center = (xyz.min(axis=0)+xyz.max(axis=0))/2
-        moment = np.cross(xyz-center, force+reaction).sum(axis=0)
-        relative_moment = float(np.linalg.norm(moment)/max(np.linalg.norm(force, axis=1).sum()*np.linalg.norm(np.ptp(xyz, axis=0)), 1.))
+        moment = np.cross(xyz, soil_force+reaction).sum(axis=0)
+        if structure is not None:moment+=structure['external_moment']+structure['support_moment']
+        relative_moment = float(np.linalg.norm(moment)/max(np.linalg.norm(soil_force, axis=1).sum()*np.linalg.norm(np.ptp(xyz, axis=0)), 1.))
         require(relative_moment < 1e-7, 'independent global moment balance failed')
+        if structure is not None:
+            require(np.allclose(moment,frame['global_moment_balance_error_kn_m'],rtol=1e-8,atol=1e-7), 'member/soil moment diagnostic differs')
         display = np.asarray(state.get('display_reference_displacement_m') or reference)
         previous = run['frames'][max(0,index-1)]
         verify_monitors(mesh, case, frame, previous, display)
         if selected:
             used = np.unique(ref.cells(mesh)[active])
-            holding = internal(mesh, prior_fields, active, restrict=True)-force
+            if run['schema'] in mixed_mcc_io.PROJECTED_SCHEMAS:
+                holding = internal(mesh, prior_fields, active, restrict=True)-force
+                if structure_model is not None:
+                    old=previous['state']
+                    retained=structure_model.solve_interface(old['beams'],np.asarray(old['displacement_m']),factor)
+                    for node,load in retained['attached_load'].items():holding[node]+=load+retained['interface_residual'][node]
+            else:
+                # GP-volume uses the previous applied load minus the removed
+                # material force. At constrained rows this intentionally omits
+                # the old support reaction, unlike projected-domain holding.
+                removed=before & ~active
+                holding=np.asarray(previous['state']['applied_nodal_load_kn']).reshape(-1,3)-force-internal(mesh,prior_fields,removed)
             holding[np.setdiff1d(np.arange(len(xyz)), used)] = 0.
             matches = [a for a in run['excavation_audits'] if a['stage'] == frame['name']]
             require(len(matches) == 1, 'excavation audit missing or duplicated')
@@ -256,12 +289,32 @@ def audit(mesh, ground, case, run):
             require(np.allclose(holding.reshape(-1), recorded['initial_holding_load_kn'], rtol=1e-9, atol=1e-7), 'excavation holding differs from restricted work-conjugate stress')
             require(recorded['zero_release_relative_force_residual'] < case['settings']['relative_force_tolerance'], 'initial excavation residual exceeds tolerance')
             expected_audits.append(frame['name'])
+        if index and case['stages'][index-1]['kind'] in ('install_beams','remove_beams'):
+            require(structure_model is not None,'member transition without a member system')
+            old=previous['state'];stage=case['stages'][index-1]
+            prepared=structure_model.change(old['beams'],np.asarray(old['displacement_m']),stage)
+            matches=[a for a in run['transition_audits'] if a['stage']==frame['name']]
+            require(len(matches)==1,'member transition audit missing or duplicated')
+            recorded=matches[0]
+            require(recorded['selected_elements']==[] and recorded['prepared_state']['beams']==prepared,'prepared member placement/history differs')
+            for key in ('material_states','displacement_m','mixed_mcc','active_elements'):
+                require(recorded['prepared_state'][key]==old[key],'member transition changed soil history: '+key)
+            for key in ('active_members','active_plates','reference_global_kinematics','plate_reference_global_kinematics'):
+                require(state['beams'].get(key)==prepared.get(key),'committed member reference/activity differs: '+key)
+            retained=structure_model.solve_interface(prepared,np.asarray(old['displacement_m']),factor)
+            holding=internal(mesh,prior_fields,active)-force
+            for node,load in retained['attached_load'].items():holding[node]+=load+retained['interface_residual'][node]
+            used=np.unique(ref.cells(mesh)[active]);holding[np.setdiff1d(np.arange(len(xyz)),used)]=0.
+            require(np.allclose(holding.reshape(-1),recorded['initial_holding_load_kn'],rtol=1e-9,atol=1e-7),'member transition holding differs')
+            require(recorded['zero_release_relative_force_residual']<case['settings']['relative_force_tolerance'],'member transition residual exceeds tolerance')
+            expected_transitions.append(frame['name'])
         rows.append(dict(stage=frame['name'], active_elements=int(active.sum()),
             independent_force_residual=fields['metrics']['independent_work_conjugate_force_residual'],
             relative_moment_error=relative_moment, force_balance_error_kn=balance.tolist(),
             **geometry, **fields['metrics']))
         prior_fields = fields
     require([a['stage'] for a in run['excavation_audits']] == expected_audits, 'unexpected excavation audits')
+    require([a['stage'] for a in run['transition_audits']] == expected_transitions, 'unexpected member transition audits')
     require(all(a['committed_state_unchanged_on_rejection'] for a in run['attempts'] if not a['accepted']), 'rejected trial changed committed state')
     return rows
 
@@ -274,7 +327,8 @@ def verify(mesh_path, ground_path, result_path, export_dir, solver=None):
     mesh, ground, run, case = [json.loads(p.read_text(encoding='utf-8-sig')) for p in paths]
     rows = audit(mesh, ground, case, run)
     metadata = json.loads((export_dir/'export-verification.json').read_text(encoding='utf-8'))
-    require(metadata.get('schema') == 'soil-fem-stage-export/4', 'projected VTU export required')
+    projected=run['schema'] in mixed_mcc_io.PROJECTED_SCHEMAS
+    require(metadata.get('schema') == ('soil-fem-stage-export/4' if projected else 'soil-fem-stage-export/3'), 'mixed VTU export required')
     require(metadata['mesh_sha256'] == sha(mesh_path) and metadata['result_sha256'] == sha(result_path), 'export source differs')
     for name, digest in metadata['sha256'].items():
         path = (export_dir/name).resolve()
@@ -294,7 +348,7 @@ def verify(mesh_path, ground_path, result_path, export_dir, solver=None):
     require(run['provenance']['solver_binary_sha256'] == sha(binary), 'result produced by a different solver')
     require(binding == {str(p.resolve()):sha(p) for p in paths}, 'input changed during audit')
     report = dict(schema='soil-fem-stage-verification/3', frames=rows, vtu_roundtrip='passed', raw_integration_point_roundtrip='passed',
-        formulation=mixed_mcc_io.PROJECTED_FORMULATION, independent_load_and_domain_audit='passed',
+        formulation=mixed_mcc_io.PROJECTED_FORMULATION if projected else 'Tet10 / material-split P1 effective mean pressure / GP volume MCC', independent_load_and_domain_audit='passed',
         spatial_convergence_verified=False)
     package = dict(schema='soil-fem-accepted-staged-run/1', inputs_and_results_sha256=binding,
         solver_binary_sha256=run['provenance']['solver_binary_sha256'])

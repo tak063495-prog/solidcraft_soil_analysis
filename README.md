@@ -81,6 +81,8 @@ MCCとは別の不変量二重硬化モデルIDHを追加しました。cap圧�
 
 ## 3D梁・切梁を地盤へ接続する
 
+混合MCCのGP体積/P1投影体積にも梁・板を接続しました。二層K0地盤の塑性硬化・除荷・上層掘削と部材設置/撤去を独立3D解と比較し、数値刻み細分化で最大変位差は約0.350％から0.088％未満へ減少しました。16地点の別プロセス再開と生値出力も照合しています。[定式化・証拠・残件](docs/MCC_STRUCTURES.ja.md)。実CADの塑性山留めと一般空間収束、native部材表示は継続作業です。
+
 ```powershell
 .\scripts\Invoke-Stages.ps1 -Design examples\geostatic-slope.json -GroundFile examples\ground-beam-slope.json -StageFile examples\stages-beam-slope.json -ElementOrder 2 -MeshSizeM 4
 .\scripts\Test-Beams.ps1

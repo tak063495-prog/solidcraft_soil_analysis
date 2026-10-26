@@ -12,6 +12,11 @@ import fem_reference as ref
 
 SCHEMA='soil-fem-mixed-mcc-stage-result/1'
 PROJECTED_SCHEMA='soil-fem-projected-mcc-stage-result/1'
+STRUCTURAL_SCHEMA='soil-fem-mixed-mcc-stage-result/2'
+STRUCTURAL_PROJECTED_SCHEMA='soil-fem-projected-mcc-stage-result/2'
+PROJECTED_SCHEMAS=(PROJECTED_SCHEMA,STRUCTURAL_PROJECTED_SCHEMA)
+STRUCTURAL_SCHEMAS=(STRUCTURAL_SCHEMA,STRUCTURAL_PROJECTED_SCHEMA)
+SCHEMAS=(SCHEMA,PROJECTED_SCHEMA,STRUCTURAL_SCHEMA,STRUCTURAL_PROJECTED_SCHEMA)
 PROJECTED_FORMULATION='tet10_u_material_p1_p_p1_volume_frozen_compatibility'
 LEGACY_TANGENT='finite_difference_fixed_partition'
 TANGENT_METHODS={LEGACY_TANGENT, 'implicit_branch_fixed_partition'}
@@ -26,10 +31,13 @@ def array(value,shape,name):
 def frame_fields(mesh,result,frame,check_geometry=False):
     layout=result['integration_points'];ng=len(layout);ne=len(mesh['tetrahedra'])
     state=frame['state'];mixed=state.get('mixed_mcc')
-    if any(state.get(k) is not None for k in ('pore_pressure_kpa','hydrostatic_water_level_m','joint_water','joints','anchors','beams')):
+    if any(state.get(k) is not None for k in ('pore_pressure_kpa','hydrostatic_water_level_m','joint_water','joints','anchors')):
         raise ValueError('mixed wet/member/interface export needs explicit supported coupling')
+    structural=result.get('schema') in STRUCTURAL_SCHEMAS
+    if structural != isinstance(result['case'].get('beam_system'),dict) or structural != isinstance(state.get('beams'),dict):
+        raise ValueError('mixed structural schema/configuration/state mismatch')
     if not isinstance(mixed,dict):raise ValueError('missing primary mixed MCC state')
-    projected=result.get('schema')==PROJECTED_SCHEMA
+    projected=result.get('schema') in PROJECTED_SCHEMAS
     projection=mixed.get('projected_volume')
     if projected != isinstance(projection,dict):raise ValueError('mixed volume formulation/state mismatch')
     if projected and projection.get('formulation')!=PROJECTED_FORMULATION:raise ValueError('unknown projected MCC formulation')
@@ -144,12 +152,13 @@ def frame_fields(mesh,result,frame,check_geometry=False):
     if projected:
         work_stress=stress.copy();work_stress[:,:3]+=(gp_pressure-mean)[:,None]
         raw['work_conjugate_effective_stress_compression_positive_kpa']=work_stress
-    out=dict(raw=raw,keys=keys,primary=primary,owner=owner,active=active,
+    out=dict(raw=raw,material_stress=stress,keys=keys,primary=primary,owner=owner,active=active,
                 metrics=dict(relative_volume_equation_residual=volume_relative,relative_pressure_consistency_residual=pressure,
                     maximum_material_engineering_strain_from_seed=maximum_material))
     if projected:
         out.update(projected_volume_dofs=nodal_theta,projected_compatibility_offsets=offsets)
-        out['metrics'].update(projected_force_audit(mesh,result,frame,work_stress))
+    if projected or structural:
+        out['metrics'].update(projected_force_audit(mesh,result,frame,work_stress if projected else stress))
     return out
 
 
@@ -162,6 +171,16 @@ def projected_force_audit(mesh,result,frame,work_stress):
             np.add.at(internal,q['nodes'],local)
         cursor+=nq
     target=array(state['applied_nodal_load_kn'],(len(mesh['nodes'])*3,),'applied nodal force').reshape(-1,3)
+    structure=None
+    if result.get('schema') in STRUCTURAL_SCHEMAS:
+        from beam_reference import System,verify_state
+        model=System(mesh,result['case']['beam_system'])
+        if frame.get('beam_results') is None:
+            structure=model.solve_interface(state['beams'],np.asarray(state['displacement_m']),state['boundary_factor'])
+        else:
+            structure=verify_state(model,state['beams'],frame['beam_results'],np.asarray(state['displacement_m']),state['boundary_factor'])
+        for node,load in structure['attached_load'].items():
+            internal[node]+=load+structure['interface_residual'][node]
     case=result['case']
     if case['settings']['kinematics'] not in ('explicit','side_rollers'):
         raise ValueError('projected force export audit currently requires independent-node kinematics')
@@ -174,9 +193,13 @@ def projected_force_audit(mesh,result,frame,work_stress):
     tolerance=case['settings']['relative_force_tolerance']
     if actual>tolerance or error>1e-10 or abs(actual-frame['relative_force_residual'])>1e-11:
         raise ValueError('projected work-conjugate force or cached residual disagrees')
+    applied=target.sum(axis=0)
+    if structure is not None:
+        support+=structure['support_force']
+        applied+=structure['external_force']-sum(structure['attached_load'].values(),np.zeros(3))
     if not np.allclose(support,frame['support_reaction_kn'],rtol=1e-11,atol=1e-8):
         raise ValueError('projected work-conjugate support reactions disagree')
-    if not np.allclose(target.sum(axis=0),frame['applied_force_kn'],rtol=1e-11,atol=1e-8):
+    if not np.allclose(applied,frame['applied_force_kn'],rtol=1e-11,atol=1e-8):
         raise ValueError('projected applied force summary disagrees')
     return dict(independent_work_conjugate_force_residual=actual,
         support_reaction_maximum_error_kn=float(abs(support-frame['support_reaction_kn']).max()))
@@ -197,12 +220,14 @@ def projected_offsets(mesh,state,active,keys):
 
 
 def validate(mesh,result):
-    projected=result.get('schema')==PROJECTED_SCHEMA
-    if result.get('schema') not in (SCHEMA,PROJECTED_SCHEMA) or not result.get('complete') or not result.get('frames') or result.get('failure_reason') is not None:
+    projected=result.get('schema') in PROJECTED_SCHEMAS
+    structural=result.get('schema') in STRUCTURAL_SCHEMAS
+    if result.get('schema') not in SCHEMAS or not result.get('complete') or not result.get('frames') or result.get('failure_reason') is not None:
         raise ValueError('completed mixed MCC result required')
     if result['case']['schema']!=('soil-fem-projected-mcc-stages/1' if projected else 'soil-fem-mixed-mcc-stages/1') or not mesh.get('tetrahedra10'):
         raise ValueError('mixed MCC Tet10 input/result schema mismatch')
-    if len(result['frames'])!=len(result['case']['stages'])+1 or any(s['kind'] not in ('boundary','pressure','excavate','reset_display') for s in result['case']['stages']):
+    allowed=('boundary','pressure','excavate','reset_display')+ (('install_beams','remove_beams') if structural else ())
+    if len(result['frames'])!=len(result['case']['stages'])+1 or any(s['kind'] not in allowed for s in result['case']['stages']):
         raise ValueError('unsupported or incomplete mixed construction stages')
     if mesh['units']!='m-kN-kPa' or result['ground']['units']!='m-kN-kPa' or result['ground']['initialization']['water_level_m'] is not None:
         raise ValueError('mixed dry material/mesh units or water policy mismatch')
@@ -211,6 +236,7 @@ def validate(mesh,result):
     previous=None
     method=result['frames'][0]['state'].get('mixed_mcc',{}).get('tangent_method',LEGACY_TANGENT)
     for i,frame in enumerate(result['frames']):
+        if structural and frame.get('beam_results') is None:raise ValueError('missing mixed beam/plate result report')
         fields=frame_fields(mesh,result,frame,check_geometry=i==0)
         if projected:
             if previous is None:
