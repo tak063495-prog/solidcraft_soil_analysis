@@ -30,6 +30,7 @@ cd D:\Work\soil-fem-3d
 |---|---|
 |`seed.kind: body_states`|ボディ名をキーにした均一な初期材料状態|
 |`seed.kind: integration_points`|メッシュに結び付いた全積分点の初期状態|
+|`seed.kind: mcc_affine_fields`|ボディ別の一次有効応力場、pc/p、NCL間隙比からメッシュ上で評価するMCCの種状態。[仕様と例](MCC_AFFINE_SEED.ja.md)|
 |`initial_boundary_factor`|初期平衡完了時の一般拘束値・追加荷重の係数|
 |`maximum_initial_engineering_strain`|初期化の種状態から許す工学ひずみ成分の絶対最大値。例は0.05|
 |`relative_volume_tolerance`|積分したボディ体積と入力CAD体積の許容相対差|

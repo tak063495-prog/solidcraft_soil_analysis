@@ -103,18 +103,27 @@ fn atomic_status(folder: &Path, status: &Status, sequence: u64) -> Result<()> {
     let temporary = folder.join(format!(".status-{}-{sequence}.part", std::process::id()));
     write_new(&temporary, status)?;
     let target = folder.join("status.json");
-    // A transient Windows reader may briefly hold the destination without
-    // delete sharing. Retry this same owned temporary, never another path.
-    for retry in 0..5 {
-        match fs::rename(&temporary, &target) {
+    replace_status(&temporary, &target)
+}
+fn replace_status(temporary: &Path, target: &Path) -> Result<()> {
+    // Windows observers/scanners may hold the destination without delete
+    // sharing for longer than 40 ms. Back off for at most 630 ms, retrying
+    // exactly this already complete owned temporary. Never reserialize a
+    // progress event, select another temporary, or remove the old snapshot.
+    let mut delays = [10, 20, 40, 80, 160, 320].into_iter();
+    loop {
+        match fs::rename(temporary, target) {
             Ok(()) => return Ok(()),
-            Err(e) if retry < 4 && e.kind() == std::io::ErrorKind::PermissionDenied => {
-                std::thread::sleep(std::time::Duration::from_millis(10))
+            Err(e) if cfg!(windows) && matches!(e.raw_os_error(), Some(5 | 32 | 33)) => {
+                if let Some(delay) = delays.next() {
+                    std::thread::sleep(std::time::Duration::from_millis(delay));
+                } else {
+                    return Err(e.into());
+                }
             }
             Err(e) => return Err(e.into()),
         }
     }
-    unreachable!()
 }
 fn copy_checked(source: &Path, target: &Path) -> Result<String> {
     let digest = checkpoint::hash_file(source)?;
@@ -435,4 +444,79 @@ pub fn run(folder: &Path) -> Result<Outcome> {
         observer.finish(State::Failed, None, Some(error.to_string()))?;
     }
     result
+}
+
+#[cfg(all(test, windows))]
+mod tests {
+    use super::*;
+    use std::{os::windows::fs::OpenOptionsExt, sync::Arc, time::Duration};
+
+    fn snapshots() -> (PathBuf, PathBuf, PathBuf) {
+        let directory = std::env::temp_dir().join(format!(
+            "soil-fem-status-{}-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos(),
+            TOKENS.fetch_add(1, Ordering::Relaxed)
+        ));
+        fs::create_dir(&directory).unwrap();
+        let target = directory.join("status.json");
+        let temporary = directory.join(".owned-complete.part");
+        fs::write(&target, b"{\"state\":\"old\"}").unwrap();
+        fs::write(&temporary, b"{\"state\":\"new\",\"sequence\":7}").unwrap();
+        (directory, temporary, target)
+    }
+
+    fn reader_without_delete_sharing(target: &Path) -> File {
+        OpenOptions::new()
+            .read(true)
+            .share_mode(1 | 2)
+            .open(target)
+            .unwrap()
+    }
+
+    #[test]
+    fn windows_status_replacement_waits_for_reader_without_rewriting_snapshot() {
+        let (directory, temporary, target) = snapshots();
+        let reader = reader_without_delete_sharing(&target);
+        let error = fs::rename(&temporary, &target).unwrap_err();
+        assert!(matches!(error.raw_os_error(), Some(5 | 32 | 33)));
+        assert_eq!(fs::read(&target).unwrap(), b"{\"state\":\"old\"}");
+        let expected = fs::read(&temporary).unwrap();
+        let barrier = Arc::new(std::sync::Barrier::new(2));
+        let held = barrier.clone();
+        let release = std::thread::spawn(move || {
+            held.wait();
+            std::thread::sleep(Duration::from_millis(100));
+            drop(reader);
+        });
+        barrier.wait();
+        replace_status(&temporary, &target).unwrap();
+        release.join().unwrap();
+        assert_eq!(fs::read(&target).unwrap(), expected);
+        assert!(!temporary.exists());
+        fs::remove_file(target).unwrap();
+        fs::remove_dir(directory).unwrap();
+    }
+
+    #[test]
+    fn windows_status_replacement_failure_preserves_versions_and_owned_temporary() {
+        let (directory, temporary, target) = snapshots();
+        let old = fs::read(&target).unwrap();
+        let next = fs::read(&temporary).unwrap();
+        let reader = reader_without_delete_sharing(&target);
+        let start = Instant::now();
+        assert!(replace_status(&temporary, &target).is_err());
+        assert!(start.elapsed() >= Duration::from_millis(600));
+        assert_eq!(fs::read(&target).unwrap(), old);
+        assert_eq!(fs::read(&temporary).unwrap(), next);
+        drop(reader);
+        replace_status(&temporary, &target).unwrap();
+        assert_eq!(fs::read(&target).unwrap(), next);
+        assert!(!temporary.exists());
+        fs::remove_file(target).unwrap();
+        fs::remove_dir(directory).unwrap();
+    }
 }

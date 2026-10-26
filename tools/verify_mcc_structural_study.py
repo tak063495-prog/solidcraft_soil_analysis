@@ -64,11 +64,12 @@ def differences(a,b,native):
         plastic_strain=relative(left[:,8:],right[:,8:]))
 
 
-def verify(coarse_folder,fine_folder,output,source_archive=None):
+def verify(coarse_folder,fine_folder,output,source_archive=None,reference_dir=None):
     if output.exists():raise ValueError('new comparison output required')
+    reference_dir=reference_dir or coarse_folder
     paths=[coarse_folder/'ground/mesh.json',coarse_folder/'ground/ground.json',coarse_folder/'stages.json',
         coarse_folder/'stage-results.json',fine_folder/'stage-results.json',fine_folder/'ground/mesh.json',
-        fine_folder/'ground/ground.json',fine_folder/'stages.json',coarse_folder/'reference100.json',coarse_folder/'reference200.json']
+        fine_folder/'ground/ground.json',fine_folder/'stages.json',reference_dir/'reference100.json',reference_dir/'reference200.json']
     bindings={str(p.resolve()):sha(p) for p in paths}
     if source_archive is not None:
         bindings[str(source_archive.resolve())]=sha(source_archive)
@@ -166,4 +167,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     for name in ('coarse','fine','output'):p.add_argument(name,type=Path)
     p.add_argument('--source-archive',type=Path)
-    a=p.parse_args();verify(a.coarse.resolve(),a.fine.resolve(),a.output.resolve(),a.source_archive.resolve() if a.source_archive else None)
+    p.add_argument('--references',type=Path,help='separately frozen reference directory; physical/source bindings remain mandatory')
+    a=p.parse_args();verify(a.coarse.resolve(),a.fine.resolve(),a.output.resolve(),a.source_archive.resolve() if a.source_archive else None,
+        a.references.resolve() if a.references else None)

@@ -31,11 +31,14 @@ def fixture():
     return mesh,run
 
 
-def job_fixture(root):
+def job_fixture(root, specimen=None):
     """Minimal transport fixture. No solver or CAD binary is executed."""
-    mesh,run=fixture();analysis=root/'analysis';conformal=root/'conformal';conformal.mkdir(parents=True)
+    mesh,run=fixture() if specimen is None else specimen;analysis=root/'analysis';conformal=root/'conformal';conformal.mkdir(parents=True)
     ground=dict(schema='soil-fem-ground/1',units='m-kN-kPa',initialization=dict(method='equilibrate'),materials=[dict(id=1)],bodies=[dict(body='Clay',material_id=1)])
     stages=dict(schema='soil-fem-stages/1',settings=dict(relative_force_tolerance=1e-8),stages=[dict(kind='excavate')])
+    if specimen is not None:
+        stages=dict(schema='soil-fem-stages/1',settings=dict(relative_force_tolerance=1e-8),stages=[],beam_system=run['case']['beam_system'])
+        run['case']=stages
     payload=dict(schema='solidcraft-soil-snapshot/1',cad_sha256='c'*64,cad_length_unit='mm',analysis_units='m-kN-kPa',
         ground=ground,stages=stages,bindings=[dict(analysis_body='Clay',cad_body='CAD layer')])
     (conformal/'body-0001.step').write_text('Transport-test placeholder only; never imported as geometry',encoding='utf-8')
@@ -59,7 +62,7 @@ def job_fixture(root):
     write(prepared/'model-input-package.json',dict(schema='soil-fem-prepared-model-import/1',ground_sha256=sha(prepared/'ground.json'),
         original_inventory=dict(schema='soil-fem-prepared-model/1',files_sha256=inventory)))
     write(analysis/'accepted-stage-run.json',dict(schema='soil-fem-accepted-staged-run/1',inputs_and_results_sha256={str(p):sha(p) for p in inputs},solver_binary_sha256=sha(solver)))
-    write(analysis/'stage-verification.json',dict(vtu_roundtrip='passed',raw_integration_point_roundtrip='passed',frames=[dict(independent_force_residual=0.)]*2))
+    write(analysis/'stage-verification.json',dict(vtu_roundtrip='passed',raw_integration_point_roundtrip='passed',frames=[dict(independent_force_residual=0.)]*len(run['frames'])))
     write(analysis/'results/export-verification.json',dict(result_sha256=sha(analysis/'stage-results.json'),mesh_sha256=sha(analysis/'ground/mesh.json')))
 
 

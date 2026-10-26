@@ -1,0 +1,66 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "equilibrate",
+    "surface_surcharge_kpa": 100.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-9,
+    "geostatic": {
+      "seed": {
+        "kind": "mcc_affine_fields",
+        "fields": [
+          {
+            "body": "Retained",
+            "reference_position_m": [0.0, 0.0, 6.0],
+            "effective_stress_at_reference_compression_positive_kpa": [60.0, 60.0, 100.0, 0.0, 0.0, 0.0],
+            "effective_stress_gradient_kpa_per_m": [[0.0, 0.0, -12.0], [0.0, 0.0, -12.0], [0.0, 0.0, -20.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+            "pc_over_mean_effective": 1.8,
+            "void_ratio": {"mode": "from_mcc_reference"}
+          },
+          {
+            "body": "Base",
+            "reference_position_m": [0.0, 0.0, 6.0],
+            "effective_stress_at_reference_compression_positive_kpa": [60.0, 60.0, 100.0, 0.0, 0.0, 0.0],
+            "effective_stress_gradient_kpa_per_m": [[0.0, 0.0, -12.0], [0.0, 0.0, -12.0], [0.0, 0.0, -20.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+            "pc_over_mean_effective": 1.8,
+            "void_ratio": {"mode": "from_mcc_reference"}
+          },
+          {
+            "body": "Pit",
+            "reference_position_m": [0.0, 0.0, 6.0],
+            "effective_stress_at_reference_compression_positive_kpa": [60.0, 60.0, 100.0, 0.0, 0.0, 0.0],
+            "effective_stress_gradient_kpa_per_m": [[0.0, 0.0, -12.0], [0.0, 0.0, -12.0], [0.0, 0.0, -20.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+            "pc_over_mean_effective": 1.8,
+            "void_ratio": {"mode": "from_mcc_reference"}
+          }
+        ]
+      },
+      "initial_boundary_factor": 0.0,
+      "maximum_initial_engineering_strain": 0.05,
+      "relative_volume_tolerance": 1e-8,
+      "verification_reject_once": true
+    }
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Research MCC internal wall soil",
+      "unit_weight_kn_m3": 20.0,
+      "mcc": {
+        "critical_state_m": 1.4,
+        "lambda": 0.12,
+        "kappa": 0.025,
+        "poisson": 0.2,
+        "reference_pressure_kpa": 1.0,
+        "specific_volume_ncl_at_reference": 3.0
+      }
+    }
+  ],
+  "bodies": [
+    {"body": "Retained", "material_id": 1},
+    {"body": "Base", "material_id": 1},
+    {"body": "Pit", "material_id": 1}
+  ]
+}

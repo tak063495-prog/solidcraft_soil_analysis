@@ -1,5 +1,7 @@
 # FEM本体の新規Windows環境での検査
 
+公開dfb7c29のWindows実行40304406676は、Rust249件・fmt/clippy・CLI buildが合格し、Python94件のうち履歴参照再開の1件が失敗した。元ログとartifactは `runs/fem-ci-dfb7-failure-20261026-v1` に保持する。履歴ソースのパスを文字列だけで照合する処理を、実ファイルの正規化したパス＋変更しないバイトSHAへ修正し、別表記の同一ファイルを検査する回帰試験を追加した。修正f962806の[Windows CI40309767151](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40309767151)は成功した。ダウンロードしたartifactのRust249件・Python94件（無視0）、Rust1.99.1とPython固定依存、ソース578件を公開時の原本と照合した。157件はバイト一致、421件はcheckoutのCRLF化だけで一致する。記録は `runs/fem-ci-f962-success-20261026-v1/verification.json`。後続のローカルPython・native構造部材表示の変更はこの実行の対象外であり、SolidCraft総合CIの未達も保持する。
+
 混合MCCと梁・板の連成を加えたローカル版では、Rust全249件・Python全94件、fmt/clippyが合格した（`runs/mixed-structures-20261026-v1-*`）。以下の公開f12d374に対するWindows成功とは版を区別する。SolidCraft総合CIの未達も継続して保持する。
 
 `.github/workflows/fem-ci.yml` は `windows-2025` のGitHubホスト環境で、固定Rust 1.99.1、Python 3.13、既存の固定依存ファイルを使う。mainへのpush、pull request、手動実行を対象とする。

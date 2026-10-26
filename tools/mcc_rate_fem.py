@@ -176,14 +176,15 @@ class System:
             h=min(step,1-t);candidate,du=midpoint(state,h,plastic)
             yf=terms(candidate,self.parameters)[0]
             _,_,potential,_=self.rate(candidate,force_rate,plastic)
-            crossed=(~plastic)&(yf>1e-9);unloaded=plastic&(potential<-1e-11);next_plastic=plastic.copy()
+            # Residual yield drift while unloading is not a loading event.
+            crossed=(~plastic)&(yf>1e-9)&(potential>1e-12);unloaded=plastic&(potential<-1e-11);next_plastic=plastic.copy()
             if np.any(crossed)|np.any(unloaded):
                 lo=0.;hi=h
                 for _ in range(28):
                     mid=(lo+hi)/2;trial,_=midpoint(state,mid,plastic)
                     fy=terms(trial,self.parameters)[0]
                     _,_,ld,_=self.rate(trial,force_rate,plastic)
-                    if np.any((~plastic)&(fy>1e-9)) or np.any(plastic&(ld<-1e-11)):hi=mid
+                    if np.any((~plastic)&(fy>1e-9)&(ld>1e-12)) or np.any(plastic&(ld<-1e-11)):hi=mid
                     else:lo=mid
                 h=hi;candidate,du=midpoint(state,h,plastic)
                 fy=terms(candidate,self.parameters)[0];_,_,ld,_=self.rate(candidate,force_rate,plastic)
@@ -209,6 +210,28 @@ def seed(mesh,ground,identity=None):
     out=[]
     cfg=ground['initialization'].get('geostatic')
     regions={r['id']:r['body'] for r in mesh['regions']};point_index=0
+    affine={}
+    if cfg and cfg['seed']['kind']=='mcc_affine_fields':
+        fields=cfg['seed']['fields'];bodies={b['body']:b['material_id'] for b in ground['bodies']}
+        materials={m['id']:m for m in ground['materials']}
+        for f in fields:
+            body=f['body']
+            if not body or body in affine or body not in bodies:raise ValueError('invalid/duplicate affine MCC body')
+            position=np.asarray(f['reference_position_m'],dtype=float)
+            stress=np.asarray(f['effective_stress_at_reference_compression_positive_kpa'],dtype=float)
+            gradient=np.asarray(f['effective_stress_gradient_kpa_per_m'],dtype=float)
+            ratio=f['pc_over_mean_effective'];void=f['void_ratio']
+            if (position.shape!=(3,) or stress.shape!=(6,) or gradient.shape!=(6,3)
+                or not all(np.isfinite(a).all() for a in (position,stress,gradient))
+                or not np.isfinite(ratio) or ratio<1.
+                or void.get('mode') not in ('from_mcc_reference','explicit')
+                or (void['mode']=='explicit' and (not np.isfinite(void['value']) or void['value']<=0))):
+                raise ValueError('invalid affine MCC coefficients/pc-over-mean/void ratio')
+            material=materials[bodies[body]]
+            if 'mcc' not in material:raise ValueError('affine MCC seed requires MCC on every body')
+            affine[body]=(position,stress,gradient,ratio,void,material['mcc'])
+        if not affine or set(affine)!=set(bodies) or set(affine)!=set(regions.values()):
+            raise ValueError('affine MCC seed must specify every body exactly once')
     if cfg and cfg['seed']['kind']=='integration_points':
         if identity is None or identity.get('schema')!='soil-fem-mesh-identity/1' or identity['mesh_sha256']!=cfg['seed']['mesh_sha256']:
             raise ValueError('integration-point seeds require matching mesh identity metadata')
@@ -226,6 +249,25 @@ def seed(mesh,ground,identity=None):
                     if not np.allclose(source['position_m'],q['position'][qi],rtol=0.,atol=1e-8) or not np.allclose(meta['position_m'],q['position'][qi],rtol=0.,atol=1e-8):
                         raise ValueError('seed point position differs from independent geometry')
                     row=source['state']
+                elif cfg['seed']['kind']=='mcc_affine_fields':
+                    body=regions[mesh['region_ids'][ei]]
+                    if bodies[body]!=mesh['material_ids'][ei]:raise ValueError('affine seed body/material mapping differs from mesh')
+                    origin,base,gradient,ratio,void,m=affine[body]
+                    stress=base+gradient@(q['position'][qi]-origin);p=float(stress[:3].mean());pc=ratio*p
+                    if not np.isfinite(stress).all() or not np.isfinite(pc) or p<=0 or pc<=0:
+                        raise ValueError('affine MCC seed has nonpositive/nonfinite pressure')
+                    e=m['specific_volume_ncl_at_reference']-m['lambda']*np.log(pc/m['reference_pressure_kpa'])+m['kappa']*np.log(pc/p)-1.
+                    if void['mode']=='explicit':
+                        if abs(void['value']-e)>1e-8*(1+max(abs(void['value']),abs(e))):
+                            raise ValueError('affine MCC explicit e/pc/reference inconsistency')
+                        e=void['value']
+                    dev=stress.copy();dev[:3]-=p
+                    q2=1.5*(dev[:3]@dev[:3]+2*dev[3:]@dev[3:])
+                    yf=(q2+m['critical_state_m']**2*p*(p-pc))/(m['critical_state_m']**2*pc**2)
+                    if not np.isfinite(e) or e<=0 or not np.isfinite(yf) or yf>1e-8:
+                        raise ValueError('affine MCC seed outside admissible void ratio/yield surface')
+                    row=dict(effective_stress_compression_positive_kpa=stress.tolist(),preconsolidation_pressure_kpa=pc,
+                        void_ratio=float(e),plastic_strain_compression_positive=[0.]*6)
                 else:raise ValueError('unsupported geostatic seed kind')
                 if row['preconsolidation_pressure_kpa']<=0 or row['void_ratio']<=0:raise ValueError('inadmissible MCC seed pc or void ratio')
                 rows.append([*row['effective_stress_compression_positive_kpa'],np.log(row['preconsolidation_pressure_kpa']),

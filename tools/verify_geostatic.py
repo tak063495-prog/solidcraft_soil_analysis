@@ -33,13 +33,17 @@ def verify_initial(mesh,ground,run,q,offset):
     if definition['kind']=='body_states':
         regions={r['id']:r['body'] for r in mesh['regions']}
         expected=[definition['states'][regions[mesh['region_ids'][p['element_index']]]] for p in run['integration_points']]
-    else:
+    elif definition['kind']=='mcc_affine_fields':
+        from mcc_seed_audit import verify_affine_seed
+        verify_affine_seed(mesh,ground,seed['material_states']);expected=None
+    elif definition['kind']=='integration_points':
         assert definition['mesh_sha256']==run['provenance']['mesh_sha256'];expected=[]
         for p,qinfo in zip(definition['points'],run['integration_points']):
             assert p['element_index']==qinfo['element_index'] and p['local_index']==qinfo['local_index']
             assert p['material_id']==mesh['material_ids'][p['element_index']]
             assert np.allclose(p['position_m'],qinfo['position_m'],atol=1e-8,rtol=0);expected.append(p['state'])
-    assert expected==seed['material_states']
+    else:raise ValueError('unsupported geostatic seed definition')
+    if expected is not None:assert expected==seed['material_states']
     force,_=internal(mesh,ground,seed['material_states'],all_active,q,offset)
     joint_system=None
     if case.get('joint_system'):

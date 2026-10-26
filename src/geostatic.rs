@@ -27,6 +27,40 @@ pub struct PointSeed {
     pub position_m: [f64; 3],
     pub state: soil::State,
 }
+/// Mesh-independent, unstrained MCC seed. This is a stress recipe, not a claim
+/// of geostatic equilibrium. The ordinary physical-force Newton still runs.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MccAffineField {
+    pub body: String,
+    pub reference_position_m: [f64; 3],
+    pub effective_stress_at_reference_compression_positive_kpa: [f64; 6],
+    /// Rows xx,yy,zz,xy,yz,xz; columns global x,y,z.
+    pub effective_stress_gradient_kpa_per_m: [[f64; 3]; 6],
+    /// Isotropic MCC pc/p, explicitly distinct from vertical OCR.
+    pub pc_over_mean_effective: f64,
+    pub void_ratio: crate::ground::VoidRatio,
+}
+impl MccAffineField {
+    fn validate(&self) -> Result<()> {
+        if self.body.is_empty()
+            || !self
+                .reference_position_m
+                .iter()
+                .chain(&self.effective_stress_at_reference_compression_positive_kpa)
+                .chain(self.effective_stress_gradient_kpa_per_m.iter().flatten())
+                .all(|x| x.is_finite())
+            || !self.pc_over_mean_effective.is_finite()
+            || self.pc_over_mean_effective < 1.
+            || matches!(self.void_ratio, crate::ground::VoidRatio::Explicit { value } if !value.is_finite() || value <= 0.)
+        {
+            return Err(Error::Input(
+                "invalid affine MCC seed field/pc-over-mean/void ratio".into(),
+            ));
+        }
+        Ok(())
+    }
+}
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Seed {
@@ -36,6 +70,9 @@ pub enum Seed {
     IntegrationPoints {
         mesh_sha256: String,
         points: Vec<PointSeed>,
+    },
+    MccAffineFields {
+        fields: Vec<MccAffineField>,
     },
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -56,6 +93,20 @@ pub struct Configuration {
 }
 impl Configuration {
     pub fn validate(&self) -> Result<()> {
+        if let Seed::MccAffineFields { fields } = &self.seed {
+            let mut names = BTreeSet::new();
+            if fields.is_empty() {
+                return Err(Error::Input(
+                    "affine MCC seed fields must not be empty".into(),
+                ));
+            }
+            for field in fields {
+                field.validate()?;
+                if !names.insert(&field.body) {
+                    return Err(Error::Input("duplicate affine MCC seed body".into()));
+                }
+            }
+        }
         if !self.initial_boundary_factor.is_finite()
             || !self.maximum_initial_engineering_strain.is_finite()
             || !(1e-8..=0.1).contains(&self.maximum_initial_engineering_strain)
@@ -166,6 +217,59 @@ pub fn states(mesh: &Mesh, ground: &Ground) -> Result<Vec<soil::State>> {
         }
     }
     let out = match &cfg.seed {
+        Seed::MccAffineFields { fields } => {
+            let fields: BTreeMap<_, _> = fields.iter().map(|f| (f.body.as_str(), f)).collect();
+            if fields.keys().copied().collect::<BTreeSet<_>>() != bodies.keys().copied().collect() {
+                return Err(Error::Input(
+                    "affine MCC seed must specify every body exactly once".into(),
+                ));
+            }
+            layout
+                .iter()
+                .map(|q| {
+                    let field = fields[regions[&mesh.region_ids[q.element_index]].body.as_str()];
+                    let soil::Model::Mcc(parameters) =
+                        material[&mesh.material_ids[q.element_index]]
+                    else {
+                        return Err(Error::Input(
+                            "affine MCC seed requires MCC on every mapped body".into(),
+                        ));
+                    };
+                    let stress = std::array::from_fn(|i| {
+                        field.effective_stress_at_reference_compression_positive_kpa[i]
+                            + (0..3)
+                                .map(|a| {
+                                    field.effective_stress_gradient_kpa_per_m[i][a]
+                                        * (q.position_m[a] - field.reference_position_m[a])
+                                })
+                                .sum::<f64>()
+                    });
+                    let p = crate::mcc::invariants(&stress).0;
+                    let pc = p * field.pc_over_mean_effective;
+                    let expected_e = parameters.reference_void_ratio(p, pc)?;
+                    let e = match field.void_ratio {
+                        crate::ground::VoidRatio::FromMccReference => expected_e,
+                        crate::ground::VoidRatio::Explicit { value } => {
+                            if (value - expected_e).abs()
+                                > 1e-8 * (1. + value.abs().max(expected_e.abs()))
+                            {
+                                return Err(Error::Input(format!(
+                                    "affine MCC explicit e/pc/reference inconsistency in {}",
+                                    field.body
+                                )));
+                            }
+                            value
+                        }
+                    };
+                    Ok(soil::State::Mcc(crate::mcc::State {
+                        effective_stress_compression_positive_kpa: stress,
+                        void_ratio: e,
+                        preconsolidation_pressure_kpa: pc,
+                        plastic_strain_compression_positive: [0.; 6],
+                    }))
+                })
+                .collect::<Result<Vec<_>>>()?
+        }
         Seed::BodyStates { states } => {
             if states.keys().map(String::as_str).collect::<BTreeSet<_>>()
                 != bodies.keys().copied().collect()

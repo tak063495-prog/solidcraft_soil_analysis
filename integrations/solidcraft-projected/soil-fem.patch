@@ -3953,7 +3953,7 @@ index b26c54e865804d49260dc3369e2111178ee87660..d3f6dc38919e84e4f41c1e933b7cb1f3
          [] => String::new(),
 diff --git a/crates/engine/src/cmd/soil_fem.rs b/crates/engine/src/cmd/soil_fem.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..e45ed9362cb1e95a7f382a86586f63b4486c8ff1
+index 0000000000000000000000000000000000000000..ef2ce5bf4e80dcae4905cd8c2fb95d6982600512
 --- /dev/null
 +++ b/crates/engine/src/cmd/soil_fem.rs
 @@ -0,0 +1,41 @@
@@ -3967,7 +3967,7 @@ index 0000000000000000000000000000000000000000..e45ed9362cb1e95a7f382a86586f63b4
 +    CommandSpec::new("analysis.soil.results.configure", "Configure Soil Result View", crate::soil_results::configure)
 +        .icon("settings").noundo().params("Full transient settings: frame, quantity, displacement_reference, deformation_scale, refinement: 1..3, section: null|{normal,offset_m,slice_only}, color_range: null|[min,max], wireframe, principal_directions; no CAD mutation"),
 +    CommandSpec::new("analysis.soil.results.query", "Inspect Soil Result Value", crate::soil_results::query)
-+        .icon("settings").noundo().params("Exactly one: node, element, integration_point, primary_node plus primary_material, or ray_origin_mm plus ray_direction; distinguish material GP stress, work-conjugate stress, primary pressure, cell means and display interpolation"),
++        .icon("settings").noundo().params("Exactly one: node, element, integration_point, primary_node plus primary_material, structural_node, beam, plate, or ray_origin_mm plus ray_direction; distinguish material GP stress, work-conjugate stress, primary pressure, cell means, raw local member actions and display interpolation; inactive members retain archived kinematics with null results"),
 +    CommandSpec::new("analysis.soil.results.close", "Close Soil Results", crate::soil_results::close)
 +        .icon("settings").noundo().params("No parameters; release the transient result without changing the design, undo state or files"),
 +    CommandSpec::new("analysis.soil.job.start", "Start Soil Analysis", crate::soil_jobs::start)
@@ -4059,10 +4059,10 @@ index 942e6b385f0a170b277d3946ff009929b63e1e39..ea7a4e3bdbaff2eddec965a27e898e18
              evaluations: 0,
 diff --git a/crates/engine/src/soil_fem.rs b/crates/engine/src/soil_fem.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..dee1e8299a43e04cbc773301f62b582d7a2e07e2
+index 0000000000000000000000000000000000000000..ed7673c68566ec6e7e32e069fbbede82ae8b1ce8
 --- /dev/null
 +++ b/crates/engine/src/soil_fem.rs
-@@ -0,0 +1,613 @@
+@@ -0,0 +1,637 @@
 +//! Persistent analysis attributes and input-only snapshots. The FEM remains an
 +//! external process; appearance, density and display meshes never supply soil data.
 +use crate::params::bad;
@@ -4179,13 +4179,17 @@ index 0000000000000000000000000000000000000000..dee1e8299a43e04cbc773301f62b582d
 +    if projected
 +        && (materials.iter().any(|m| !m.get("mcc").is_some_and(Value::is_object))
 +            || ground.pointer("/initialization/water_level_m").is_some_and(|v| !v.is_null())
-+            || ["joint_system", "beam_system", "anchor_system"].iter().any(|key| stages.get(*key).is_some_and(|v| !v.is_null()))
++            || ["joint_system", "anchor_system"].iter().any(|key| stages.get(*key).is_some_and(|v| !v.is_null()))
++            || stages
++                .get("beam_system")
++                .filter(|v| !v.is_null())
++                .is_some_and(|v| !matches!(v.get("schema").and_then(Value::as_str), Some("soil-fem-beams/1" | "soil-fem-structures/1")))
 +            || stages.get("initially_inactive_bodies").is_some_and(|v| v.as_array().is_none_or(|a| !a.is_empty()))
 +            || !matches!(stages.pointer("/settings/kinematics").and_then(Value::as_str), Some("side_rollers" | "explicit")))
 +    {
 +        return Err(bad(
 +            CMD,
-+            "projected MCC native inputs require dry MCC, side_rollers/explicit kinematics, and no water/member/contact/birth coupling",
++            "projected MCC native inputs require dry MCC, side_rollers/explicit kinematics, explicit linear structures, and no water/contact/anchor/birth coupling",
 +        ));
 +    }
 +    let mut ids = BTreeSet::new();
@@ -4227,10 +4231,24 @@ index 0000000000000000000000000000000000000000..dee1e8299a43e04cbc773301f62b582d
 +        .ok_or_else(|| bad(CMD, "stages must be an array of at most 256 steps"))?;
 +    if projected
 +        && stages.get("stages").and_then(Value::as_array).is_some_and(|steps| {
-+            steps.iter().any(|step| !matches!(step.get("kind").and_then(Value::as_str), Some("boundary" | "pressure" | "excavate" | "reset_display")))
++            steps.iter().any(|step| {
++                !matches!(
++                    step.get("kind").and_then(Value::as_str),
++                    Some(
++                        "boundary"
++                            | "pressure"
++                            | "excavate"
++                            | "reset_display"
++                            | "install_beams"
++                            | "remove_beams"
++                            | "install_structures"
++                            | "remove_structures"
++                    )
++                )
++            })
 +        })
 +    {
-+        return Err(bad(CMD, "projected MCC supports boundary/pressure/excavation/display-reset stages"));
++        return Err(bad(CMD, "projected MCC supports boundary/pressure/excavation/display-reset and linear structure installation/removal stages"));
 +    }
 +    if names.len() > LIMIT {
 +        return Err(bad(CMD, "at most 256 analysis bodies"));
@@ -4660,6 +4678,12 @@ index 0000000000000000000000000000000000000000..dee1e8299a43e04cbc773301f62b582d
 +        s.execute("analysis.soil.configure", &value).unwrap();
 +        let snapshot = s.execute("analysis.soil.snapshot", &json!({})).unwrap();
 +        assert_eq!(snapshot["snapshot"]["stages"]["schema"], "soil-fem-projected-mcc-stages/1");
++        for schema in ["soil-fem-beams/1", "soil-fem-structures/1"] {
++            let mut structural = value["stages"].clone();
++            structural["beam_system"] = json!({"schema":schema});
++            structural["stages"] = json!([{"kind":"install_structures","name":"install","members":["wall"],"placement":"cad_new_nodes"},{"kind":"remove_structures","name":"remove","members":["wall"]}]);
++            assert!(required_body_labels(&value["ground"], &structural).is_ok());
++        }
 +        let mut wet = value["ground"].clone();
 +        wet["initialization"]["water_level_m"] = json!(0.);
 +        assert!(required_body_labels(&wet, &value["stages"]).is_err());
@@ -4678,10 +4702,10 @@ index 0000000000000000000000000000000000000000..dee1e8299a43e04cbc773301f62b582d
 +}
 diff --git a/crates/engine/src/soil_jobs.rs b/crates/engine/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..caf0b8a4e14f0219eedca853626f6f6792ff7065
+index 0000000000000000000000000000000000000000..984eddc484da55014690de14d9aef065b17f5767
 --- /dev/null
 +++ b/crates/engine/src/soil_jobs.rs
-@@ -0,0 +1,908 @@
+@@ -0,0 +1,910 @@
 +//! Transient, host-owned external FEM jobs. Neither executable paths nor process
 +//! ownership are read from a design. Scratch sessions have no execution host.
 +use crate::{Result, Session, params::bad};
@@ -4692,11 +4716,12 @@ index 0000000000000000000000000000000000000000..caf0b8a4e14f0219eedca853626f6f67
 +
 +#[cfg(not(target_arch = "wasm32"))]
 +fn expected_view_schema(snapshot: &Value) -> Result<&'static str> {
-+    match snapshot.pointer("/snapshot/stages/schema").and_then(Value::as_str) {
++    let standard = match snapshot.pointer("/snapshot/stages/schema").and_then(Value::as_str) {
 +        Some("soil-fem-stages/1") => Ok("soil-fem-solidcraft-view/1"),
 +        Some("soil-fem-projected-mcc-stages/1") => Ok("soil-fem-solidcraft-view/2"),
 +        _ => Err(bad(CMD, "unsupported captured construction family")),
-+    }
++    }?;
++    Ok(if snapshot.pointer("/snapshot/stages/beam_system").is_some_and(Value::is_object) { "soil-fem-solidcraft-view/3" } else { standard })
 +}
 +
 +#[derive(Deserialize)]
@@ -5489,7 +5514,8 @@ index 0000000000000000000000000000000000000000..caf0b8a4e14f0219eedca853626f6f67
 +            return Err(bad(CMD, "analysis inputs changed before job start"));
 +        }
 +        let view_schema = expected_view_schema(&frozen)?;
-+        if view_schema == "soil-fem-solidcraft-view/2" && request.element_order != 2 {
++        if frozen.pointer("/snapshot/stages/schema").and_then(Value::as_str) == Some("soil-fem-projected-mcc-stages/1") && request.element_order != 2
++        {
 +            return Err(bad(CMD, "projected MCC requires Tet10 (element order 2)"));
 +        }
 +        solidcraft_io::vfs::check(&request.directory).map_err(|e| bad(CMD, e.to_string()))?;
@@ -5592,10 +5618,10 @@ index 0000000000000000000000000000000000000000..caf0b8a4e14f0219eedca853626f6f67
 +}
 diff --git a/crates/engine/src/soil_results/geometry.rs b/crates/engine/src/soil_results/geometry.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..36710d054dcd7ab3e4cef8448639ffacf25193c2
+index 0000000000000000000000000000000000000000..09ba1305d7ec4f63ffa605ff894f2cd753517ec4
 --- /dev/null
 +++ b/crates/engine/src/soil_results/geometry.rs
-@@ -0,0 +1,671 @@
+@@ -0,0 +1,714 @@
 +//! Scientific display geometry. Tet10 is evaluated in its reference coordinates;
 +//! subdivisions approximate curved faces/sections, never alter the FEM solution.
 +use super::native::*;
@@ -5913,6 +5939,9 @@ index 0000000000000000000000000000000000000000..36710d054dcd7ab3e4cef8448639ffac
 +}
 +
 +pub(super) fn build(g: &Geometry, f: &Frame, settings: &Settings, manifest: &str) -> Result<Scene> {
++    if settings.quantity.structural() {
++        return super::structures::build(g, f, settings, manifest);
++    }
 +    let mut bounds = Aabb3::EMPTY;
 +    for point in &g.nodes_m {
 +        bounds.add(Vec3::from(*point));
@@ -5921,6 +5950,8 @@ index 0000000000000000000000000000000000000000..36710d054dcd7ab3e4cef8448639ffac
 +        key: String::new(),
 +        triangles: Vec::new(),
 +        glyphs: Vec::new(),
++        member_lines: Vec::new(),
++        structural_hits: BTreeMap::new(),
 +        bounds: Aabb3::EMPTY,
 +        data_range: [f64::INFINITY, f64::NEG_INFINITY],
 +        color_range: [0., 1.],
@@ -6119,6 +6150,44 @@ index 0000000000000000000000000000000000000000..36710d054dcd7ab3e4cef8448639ffac
 +        nearest = Some(json!({"element":t.element_id,"section":t.section,"display_position_mm":origin+direction*d,"value":scalar,
 +            "display_position_m":(origin+direction*d)/1000.+scene.render_origin_m,
 +            "location":"display triangle interpolation for nodal quantities; constant original-cell mean otherwise"}));
++        if let Some(meta) = scene.structural_hits.get(&t.element_id).and_then(Value::as_object)
++            && let Some(hit) = nearest.as_mut().and_then(Value::as_object_mut)
++        {
++            hit.remove("element");
++            hit.insert("location".into(), json!("raw plate sample displayed on its equal-area subregion; no nodal smoothing"));
++            hit.extend(meta.iter().map(|(k, v)| (k.clone(), v.clone())));
++        }
++    }
++    let radius = (scene.bounds.diagonal() * 0.004).max(1.);
++    for line in &scene.member_lines {
++        let edge = line.b_mm - line.a_mm;
++        let r = origin - line.a_mm;
++        let c = edge.dot(edge);
++        if c <= 1e-20 {
++            continue;
++        }
++        let b = direction.dot(edge);
++        let d = direction.dot(r);
++        let e = edge.dot(r);
++        let denominator = c - b * b;
++        let mut u = if denominator > c * 1e-14 { ((e - b * d) / denominator).clamp(0., 1.) } else { 0. };
++        let mut t = (b * u - d).max(0.);
++        u = ((e + b * t) / c).clamp(0., 1.);
++        t = (b * u - d).max(0.);
++        if t >= distance || (origin + direction * t - line.a_mm - edge * u).len() > radius {
++            continue;
++        }
++        let Some(meta) = scene.structural_hits.get(&line.element_id).and_then(Value::as_object) else {
++            continue;
++        };
++        distance = t;
++        let mut hit = json!({"value":line.scalar,"display_position_mm":line.a_mm+edge*u,
++            "display_position_m":(line.a_mm+edge*u)/1000.+scene.render_origin_m,
++            "location":"member display segment; beam start/mid/end interpolation or raw plate section sample; stored values are available by member query"});
++        if let Some(object) = hit.as_object_mut() {
++            object.extend(meta.iter().map(|(k, v)| (k.clone(), v.clone())));
++        }
++        nearest = Some(hit);
 +    }
 +    nearest.unwrap_or(Value::Null)
 +}
@@ -6269,10 +6338,10 @@ index 0000000000000000000000000000000000000000..36710d054dcd7ab3e4cef8448639ffac
 +}
 diff --git a/crates/engine/src/soil_results/mod.rs b/crates/engine/src/soil_results/mod.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..e20f5097235f17dad69379a978d5d7a717f76324
+index 0000000000000000000000000000000000000000..242e2e01365587c7de931824a3b4e4c3129d2d5e
 --- /dev/null
 +++ b/crates/engine/src/soil_results/mod.rs
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,31 @@
 +//! Native, version-bound FEM result viewing. All quantities and geometry remain
 +//! separate from the CAD document, its appearances and its undo history.
 +#[cfg(not(target_arch = "wasm32"))]
@@ -6281,6 +6350,8 @@ index 0000000000000000000000000000000000000000..e20f5097235f17dad69379a978d5d7a7
 +mod native;
 +#[cfg(not(target_arch = "wasm32"))]
 +mod projected;
++#[cfg(not(target_arch = "wasm32"))]
++mod structures;
 +#[cfg(not(target_arch = "wasm32"))]
 +pub use native::*;
 +
@@ -6304,10 +6375,10 @@ index 0000000000000000000000000000000000000000..e20f5097235f17dad69379a978d5d7a7
 +pub use unavailable as close;
 diff --git a/crates/engine/src/soil_results/native.rs b/crates/engine/src/soil_results/native.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b147726f55a479
+index 0000000000000000000000000000000000000000..4d9e62a34793aeef5bf047de8d554b2d3848648e
 --- /dev/null
 +++ b/crates/engine/src/soil_results/native.rs
-@@ -0,0 +1,1056 @@
+@@ -0,0 +1,1163 @@
 +use super::geometry;
 +use crate::{
 +    Result, Session,
@@ -6344,12 +6415,25 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    VoidRatio,
 +    PreconsolidationPressure,
 +    VolumetricPlasticStrain,
++    BeamAxialForce,
++    BeamMomentY,
++    BeamMomentZ,
++    PlateMembraneXx,
++    PlateMembraneYy,
++    PlateMembraneXy,
++    PlateBendingXx,
++    PlateBendingYy,
++    PlateBendingXy,
 +}
 +impl Quantity {
 +    pub fn unit(&self) -> &'static str {
 +        match self {
 +            Self::VerticalDisplacement | Self::DisplacementMagnitude => "mm",
 +            Self::VoidRatio | Self::VolumetricPlasticStrain | Self::MaterialVolumeStrain | Self::KinematicVolumeStrain => "1",
++            Self::BeamAxialForce => "kN",
++            Self::BeamMomentY | Self::BeamMomentZ => "kN m",
++            Self::PlateMembraneXx | Self::PlateMembraneYy | Self::PlateMembraneXy => "kN/m",
++            Self::PlateBendingXx | Self::PlateBendingYy | Self::PlateBendingXy => "kN m/m",
 +            _ => "kPa",
 +        }
 +    }
@@ -6358,6 +6442,20 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    }
 +    pub fn primary(&self) -> bool {
 +        matches!(self, Self::PrimaryMeanEffectiveStress | Self::MaterialVolumeStrain)
++    }
++    pub fn structural(&self) -> bool {
++        matches!(
++            self,
++            Self::BeamAxialForce
++                | Self::BeamMomentY
++                | Self::BeamMomentZ
++                | Self::PlateMembraneXx
++                | Self::PlateMembraneYy
++                | Self::PlateMembraneXy
++                | Self::PlateBendingXx
++                | Self::PlateBendingYy
++                | Self::PlateBendingXy
++        )
 +    }
 +}
 +#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -6490,7 +6588,7 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +#[derive(Deserialize)]
 +#[serde(deny_unknown_fields)]
 +pub(super) struct Frame {
-+    schema: String,
++    pub(super) schema: String,
 +    pub index: usize,
 +    pub name: String,
 +    pub active_element_ids: Vec<usize>,
@@ -6507,6 +6605,8 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    pub field_semantics: Value,
 +    #[serde(default)]
 +    pub mixed_equation_audit: Value,
++    #[serde(default)]
++    pub(super) structures: Option<super::structures::Fields>,
 +}
 +#[derive(Deserialize)]
 +pub(super) struct PointFields {
@@ -6549,10 +6649,19 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    pub b_mm: Vec3,
 +}
 +#[derive(Clone, Debug)]
++pub struct MemberLine {
++    pub a_mm: Vec3,
++    pub b_mm: Vec3,
++    pub scalar: f64,
++    pub element_id: usize,
++}
++#[derive(Clone, Debug)]
 +pub struct Scene {
 +    pub key: String,
 +    pub triangles: Vec<Triangle>,
 +    pub glyphs: Vec<Glyph>,
++    pub member_lines: Vec<MemberLine>,
++    pub structural_hits: BTreeMap<usize, Value>,
 +    pub bounds: Aabb3,
 +    pub data_range: [f64; 2],
 +    pub color_range: [f64; 2],
@@ -6560,6 +6669,15 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    pub unavailable_cells: usize,
 +    pub reference_section_area_m2: f64,
 +    pub approximation: &'static str,
++}
++impl Scene {
++    /// Availability is independent of a section hiding all active geometry.
++    pub fn quantity_available(&self, quantity: &Quantity) -> bool {
++        !quantity.structural() || !self.structural_hits.is_empty()
++    }
++    pub fn has_visible_geometry(&self) -> bool {
++        !self.triangles.is_empty() || !self.member_lines.is_empty()
++    }
 +}
 +
 +struct Loaded {
@@ -6655,7 +6773,14 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    let count = f.active_element_ids.len();
 +    let nodes = f.active_node_ids.len();
 +    let c = &f.cell_fields;
-+    if f.schema != if f.mixed_primary.is_some() { "soil-fem-view-frame/2" } else { "soil-fem-view-frame/1" }
++    if f.schema
++        != if f.structures.is_some() {
++            "soil-fem-view-frame/3"
++        } else if f.mixed_primary.is_some() {
++            "soil-fem-view-frame/2"
++        } else {
++            "soil-fem-view-frame/1"
++        }
 +        || f.index != entry.index
 +        || f.name != entry.name
 +        || count == 0
@@ -6802,6 +6927,7 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +}
 +fn validate_against_source(g: &Geometry, f: &Frame, run: &Value, mesh: &Value, layout: &[PointMeta]) -> Result<()> {
 +    super::projected::validate(g, f, run, mesh, layout)?;
++    super::structures::validate(g, f, run, mesh)?;
 +    let state = source_state(run, f.index)?;
 +    let mask = state
 +        .get("active_elements")
@@ -6939,7 +7065,7 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    let bytes = read(&root, "view/view-manifest.json", 256 << 10)?;
 +    let manifest_sha = sha(&bytes);
 +    let m: Manifest = serde_json::from_slice(&bytes).map_err(|e| bad(CMD, e.to_string()))?;
-+    if !matches!(m.schema.as_str(), "soil-fem-solidcraft-view/1" | "soil-fem-solidcraft-view/2")
++    if !matches!(m.schema.as_str(), "soil-fem-solidcraft-view/1" | "soil-fem-solidcraft-view/2" | "soil-fem-solidcraft-view/3")
 +        || !m.complete
 +        || m.input_sha256 != expected
 +        || !is_sha(&m.cad_sha256)
@@ -7042,7 +7168,7 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +            .and_then(Value::as_str)
 +            .and_then(|s| s.strip_prefix("soil-fem-stage-result/"))
 +            .and_then(|s| s.parse::<u8>().ok())
-+            .is_none_or(|n| !(1..=13).contains(&n))
++            .is_none_or(|n| !(1..=14).contains(&n))
 +    {
 +        return Err(bad(CMD, "unsupported authoritative result schema"));
 +    }
@@ -7066,7 +7192,15 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    {
 +        return Err(bad(CMD, "display geometry differs from authoritative prepared mesh"));
 +    }
-+    if (m.schema == "soil-fem-solidcraft-view/2") != super::projected::is_projected(&source_run) {
++    let structural = source_run.pointer("/case/beam_system").is_some_and(Value::is_object);
++    let expected = if structural {
++        "soil-fem-solidcraft-view/3"
++    } else if super::projected::is_projected(&source_run) {
++        "soil-fem-solidcraft-view/2"
++    } else {
++        "soil-fem-solidcraft-view/1"
++    };
++    if m.schema != expected || (structural && m.semantics.get("source_result_schema") != source_run.get("schema")) {
 +        return Err(bad(CMD, "display/source result family differs"));
 +    }
 +    let layout = source_layout(&geometry, &source_run)?;
@@ -7150,19 +7284,28 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +    };
 +    let applicability = current(s, &loaded.manifest.input_sha256);
 +    let scene = &loaded.scene;
-+    Ok(json!({"loaded":true,"stale":applicability.is_err(),"input_error":applicability.err().map(|e|e.to_string()),
++    let quantity_available = scene.quantity_available(&loaded.settings.quantity);
++    let mut value = json!({"loaded":true,"stale":applicability.is_err(),"input_error":applicability.err().map(|e|e.to_string()),
 +        "input_sha256":loaded.manifest.input_sha256,"manifest_sha256":loaded.manifest_sha,"frames":loaded.manifest.frames,"settings":loaded.settings,
 +        "frame_name":loaded.frame.name,"node_count":loaded.geometry.nodes_m.len(),"active_nodes":loaded.frame.active_node_ids.len(),"active_elements":loaded.frame.active_element_ids.len(),
 +        "triangles":scene.triangles.len(),"section_triangles":scene.triangles.iter().filter(|t|t.section).count(),"glyphs":scene.glyphs.len(),
++        "member_display_segments":scene.member_lines.len(),
++        "structural_nodes":loaded.frame.structures.as_ref().map(|d|d.nodes.ids.len()),
++        "defined_beams":loaded.frame.structures.as_ref().map(|d|d.members.len()),
++        "defined_plates":loaded.frame.structures.as_ref().map(|d|d.plates.len()),
++        "active_beams":loaded.frame.structures.as_ref().map(|d|d.members.iter().filter(|m|m.active).count()),
++        "active_plates":loaded.frame.structures.as_ref().map(|d|d.plates.iter().filter(|m|m.active).count()),
 +        "reference_section_area_m2":scene.reference_section_area_m2,
-+        "data_range":scene.data_range,"color_range":scene.color_range,"unit":loaded.settings.quantity.unit(),"unavailable_cells":scene.unavailable_cells,
++        "data_range":quantity_available.then_some(scene.data_range),"color_range":quantity_available.then_some(scene.color_range),"unit":loaded.settings.quantity.unit(),"unavailable_cells":scene.unavailable_cells,
 +        "bounds_mm":if scene.bounds.is_empty(){None}else{Some(scene.bounds)},"render_origin_m":scene.render_origin_m,"crs":loaded.geometry.crs,"origin_m":loaded.geometry.origin_m,
 +        "region_count":loaded.geometry.regions.as_array().map(Vec::len),"monitor_count":loaded.frame.monitors.as_object().map(|m|m.len()),"export_scope":loaded.manifest.scope,
-+        "quantity_location":if loaded.settings.quantity.primary(){"P1 interpolation of material-split corner values; no cross-material averaging"}else if loaded.settings.quantity.nodal(){"quadratic/linear interpolation of stored nodal values"}else{"constant per original cell; integration-weighted mean; no nodal smoothing"},
++        "quantity_location":if loaded.settings.quantity.structural(){"beam sections in local axes; raw plate DKT samples on equal-area regions; no cross-member averaging"}else if loaded.settings.quantity.primary(){"P1 interpolation of material-split corner values; no cross-material averaging"}else if loaded.settings.quantity.nodal(){"quadratic/linear interpolation of stored nodal values"}else{"constant per original cell; integration-weighted mean; no nodal smoothing"},
 +        "result_family":loaded.source_run.get("schema"),"field_semantics":loaded.frame.field_semantics,"primary_rows":loaded.frame.mixed_primary.as_ref().map(|p|p.original_node_ids.len()),
 +        "section_coordinates":"reference mesh in m; deformation applied after section intersection","approximation":scene.approximation,
 +        "relative_force_residual":loaded.frame.relative_force_residual,"maximum_normalized_yield":loaded.frame.maximum_normalized_yield,
-+        "omissions":loaded.manifest.omissions}))
++        "omissions":loaded.manifest.omissions});
++    value["quantity_available"] = json!(quantity_available);
++    Ok(value)
 +}
 +pub fn close(s: &mut Session, p: &Value) -> Result<Value> {
 +    if p.as_object().is_none_or(|m| !m.is_empty()) {
@@ -7206,6 +7349,9 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +        integration_point: Option<usize>,
 +        primary_node: Option<usize>,
 +        primary_material: Option<u32>,
++        structural_node: Option<usize>,
++        beam: Option<usize>,
++        plate: Option<usize>,
 +        ray_origin_mm: Option<[f64; 3]>,
 +        ray_direction: Option<[f64; 3]>,
 +    }
@@ -7216,9 +7362,35 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +        + usize::from(q.element.is_some())
 +        + usize::from(q.integration_point.is_some())
 +        + usize::from(q.primary_node.is_some() || q.primary_material.is_some())
++        + usize::from(q.structural_node.is_some())
++        + usize::from(q.beam.is_some())
++        + usize::from(q.plate.is_some())
 +        + usize::from(q.ray_origin_mm.is_some() || q.ray_direction.is_some());
 +    if choices != 1 {
 +        return Err(bad(CMD, "choose exactly one node, element, integration point or complete ray"));
++    }
++    if q.structural_node.is_some() || q.beam.is_some() || q.plate.is_some() {
++        let data = l.frame.structures.as_ref().ok_or_else(|| bad(CMD, "this frame has no structural result data"))?;
++        if let Some(index) = q.structural_node {
++            let id = data.nodes.ids.get(index).ok_or_else(|| bad(CMD, "structural node index is outside the model"))?;
++            return Ok(contextual(
++                &l,
++                json!({"structural_node":index,"id":id,"position_m":data.nodes.positions_m.get(index),
++                "displacement_from_cad_m":data.nodes.displacement_m.get(index),"rotation_rad":data.nodes.rotation_rad.get(index),
++                "active":data.nodes.active.get(index),"soil_node":data.nodes.soil_node_ids.get(index),"semantics":data.semantics}),
++            ));
++        }
++        let (family, index, entries) = if let Some(index) = q.beam {
++            ("beam", index, &data.members)
++        } else {
++            ("plate", q.plate.ok_or_else(|| bad(CMD, "missing structural query index"))?, &data.plates)
++        };
++        let entry = entries.get(index).ok_or_else(|| bad(CMD, "structural member index is outside the model"))?;
++        return Ok(contextual(
++            &l,
++            json!({"family":family,"index":index,"member":entry,"semantics":data.semantics,
++            "location":"raw structural report in its own local axes; installation reference and inactive archived state retained"}),
++        ));
 +    }
 +    if q.primary_node.is_some() || q.primary_material.is_some() {
 +        let node = q.primary_node.ok_or_else(|| bad(CMD, "primary node and material are both required"))?;
@@ -7262,7 +7434,13 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +        let count = points.integration_point_ids.len();
 +        let f = &points.fields;
 +        if points.schema
-+            != if super::projected::is_projected(&l.source_run) { "soil-fem-view-integration-points/2" } else { "soil-fem-view-integration-points/1" }
++            != if l.frame.structures.is_some() {
++                "soil-fem-view-integration-points/3"
++            } else if super::projected::is_projected(&l.source_run) {
++                "soil-fem-view-integration-points/2"
++            } else {
++                "soil-fem-view-integration-points/1"
++            }
 +            || points.frame_index != l.settings.frame
 +            || !unique_sorted(&points.integration_point_ids, 5_000_000)
 +            || [
@@ -7366,7 +7544,7 @@ index 0000000000000000000000000000000000000000..7fe013aff725890052d52fc520b14772
 +mod tests;
 diff --git a/crates/engine/src/soil_results/projected.rs b/crates/engine/src/soil_results/projected.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..78b7ec84170997fdb197d5f1dde32db14f1e956b
+index 0000000000000000000000000000000000000000..c6e8306cf222a63a8161c97dfb6f63f759e2dcf9
 --- /dev/null
 +++ b/crates/engine/src/soil_results/projected.rs
 @@ -0,0 +1,382 @@
@@ -7394,7 +7572,7 @@ index 0000000000000000000000000000000000000000..78b7ec84170997fdb197d5f1dde32db1
 +}
 +
 +pub(super) fn is_projected(run: &Value) -> bool {
-+    run.get("schema").and_then(Value::as_str) == Some(RESULT)
++    matches!(run.get("schema").and_then(Value::as_str), Some(RESULT | "soil-fem-projected-mcc-stage-result/2"))
 +}
 +pub(super) fn tensor(key: &str) -> bool {
 +    matches!(
@@ -7752,12 +7930,683 @@ index 0000000000000000000000000000000000000000..78b7ec84170997fdb197d5f1dde32db1
 +    }
 +    Ok(())
 +}
+diff --git a/crates/engine/src/soil_results/structures.rs b/crates/engine/src/soil_results/structures.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..e3a9bab12f1cf53e1c18eca32946b84e45beb060
+--- /dev/null
++++ b/crates/engine/src/soil_results/structures.rs
+@@ -0,0 +1,665 @@
++//! Raw linear frame/plate fields: source-bound, separate from continuum means.
++use super::native::{Frame, Geometry};
++use super::native::{MemberLine, Quantity, Scene, Settings, Triangle, Vertex};
++use crate::geom::{Aabb3, Vec3};
++use crate::{Result, params::bad};
++use serde::{Deserialize, Serialize};
++use serde_json::{Value, json};
++use sha2::{Digest, Sha256};
++use std::collections::{BTreeMap, BTreeSet};
++
++const CMD: &str = "analysis.soil.results";
++const LIMIT: usize = 10_000;
++
++#[derive(Clone, Deserialize, Serialize)]
++#[serde(deny_unknown_fields)]
++pub(super) struct Nodes {
++    pub ids: Vec<String>,
++    pub positions_m: Vec<[f64; 3]>,
++    pub soil_node_ids: Vec<Option<usize>>,
++    pub displacement_m: Vec<[f64; 3]>,
++    pub rotation_rad: Vec<[f64; 3]>,
++    pub active: Vec<bool>,
++}
++#[derive(Clone, Deserialize, Serialize)]
++#[serde(deny_unknown_fields)]
++pub(super) struct Entry {
++    pub id: String,
++    pub nodes: Vec<usize>,
++    pub section_id: String,
++    pub active: bool,
++    pub reference_global_kinematics: Vec<f64>,
++    pub result: Option<Value>,
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub thickness_m: Option<f64>,
++}
++#[derive(Clone, Deserialize, Serialize)]
++#[serde(deny_unknown_fields)]
++pub(super) struct Fields {
++    pub schema: String,
++    pub nodes: Nodes,
++    pub members: Vec<Entry>,
++    pub plates: Vec<Entry>,
++    pub global_resultants: BTreeMap<String, [f64; 3]>,
++    pub semantics: Value,
++}
++pub(super) fn semantics() -> Value {
++    json!({"coordinates":"CAD metres; displacement from CAD; soil display RESET is not applied",
++        "beam_section_components":["axial_N","shear_Vy","shear_Vz","torsion_T","moment_My","moment_Mz"],
++        "beam_section_units":["kN","kN","kN","kN m","kN m","kN m"],
++        "beam_samples":"start, middle, end; exact local axes and end releases retained",
++        "plate_components":["xx","yy","xy"],"plate_membrane":"tension-positive kN/m",
++        "plate_bending":"kN m/m; positive with reported local curvature; xy is engineering twist",
++        "plate_samples":"raw DKT barycentric locations; no nodal averaging",
++        "inactive":"archived node kinematics and installation references retained; result null"})
++}
++
++fn finite(v: f64) -> bool {
++    v.is_finite() && v.abs() <= 1e100
++}
++fn number(value: Option<&Value>) -> Result<f64> {
++    value.and_then(Value::as_f64).filter(|v| finite(*v)).ok_or_else(|| bad(CMD, "invalid structural scalar"))
++}
++pub(super) fn vector<const N: usize>(value: Option<&Value>) -> Result<[f64; N]>
++where
++    [f64; N]: serde::de::DeserializeOwned,
++{
++    let v: [f64; N] =
++        serde_json::from_value(value.cloned().ok_or_else(|| bad(CMD, "missing structural vector"))?).map_err(|e| bad(CMD, e.to_string()))?;
++    if !v.iter().copied().all(finite) {
++        return Err(bad(CMD, "nonfinite or oversized structural vector"));
++    }
++    Ok(v)
++}
++fn same(a: &Value, b: &Value) -> bool {
++    match (a, b) {
++        (Value::Number(a), Value::Number(b)) => {
++            a.as_f64().zip(b.as_f64()).is_some_and(|(a, b)| finite(a) && finite(b) && (a - b).abs() <= 1e-12 + 1e-11 * a.abs().max(b.abs()))
++        }
++        (Value::Array(a), Value::Array(b)) => a.len() == b.len() && a.iter().zip(b).all(|(a, b)| same(a, b)),
++        (Value::Object(a), Value::Object(b)) => a.len() == b.len() && a.iter().all(|(key, a)| b.get(key).is_some_and(|b| same(a, b))),
++        _ => a == b,
++    }
++}
++fn bound(actual: &Value, expected: Option<&Value>) -> Result<()> {
++    if !expected.is_some_and(|expected| same(actual, expected)) {
++        return Err(bad(CMD, "structural display differs from authoritative member history/report"));
++    }
++    Ok(())
++}
++fn values(value: Option<&Value>, maximum: usize) -> Result<&[Value]> {
++    value
++        .and_then(Value::as_array)
++        .filter(|a| a.len() <= maximum)
++        .map(Vec::as_slice)
++        .ok_or_else(|| bad(CMD, "missing or oversized structural inventory"))
++}
++fn matrix<const N: usize>(value: Option<&Value>, rows: usize) -> Result<()>
++where
++    [f64; N]: serde::de::DeserializeOwned,
++{
++    let array = values(value, rows)?;
++    if array.len() != rows {
++        return Err(bad(CMD, "structural matrix row count differs"));
++    }
++    for row in array {
++        vector::<N>(Some(row))?;
++    }
++    Ok(())
++}
++fn axes(value: Option<&Value>) -> Result<()> {
++    matrix::<3>(value, 3)?;
++    let rows: [[f64; 3]; 3] =
++        serde_json::from_value(value.cloned().ok_or_else(|| bad(CMD, "missing structural axes"))?).map_err(|e| bad(CMD, e.to_string()))?;
++    let r = crate::geom::Vec3::from(rows[0]);
++    let s = crate::geom::Vec3::from(rows[1]);
++    let t = crate::geom::Vec3::from(rows[2]);
++    if (r.len() - 1.).abs() > 1e-8 || (s.len() - 1.).abs() > 1e-8 || (t.len() - 1.).abs() > 1e-8 || (r.cross(s) - t).len() > 1e-8 {
++        return Err(bad(CMD, "invalid structural local axes"));
++    }
++    Ok(())
++}
++fn validate_result(entry: &Entry, plate: bool) -> Result<()> {
++    if entry.active != entry.result.is_some() {
++        return Err(bad(CMD, "inactive structural result must be null"));
++    }
++    let Some(result) = &entry.result else {
++        return Ok(());
++    };
++    if result.get("id").and_then(Value::as_str) != Some(&entry.id) {
++        return Err(bad(CMD, "structural result id differs"));
++    }
++    axes(result.get("local_axes"))?;
++    if plate {
++        if number(result.get("area_m2"))? <= 0. {
++            return Err(bad(CMD, "invalid plate area"));
++        }
++        for key in ["membrane_energy_kn_m", "bending_energy_kn_m", "drilling_penalty_energy_kn_m"] {
++            if number(result.get(key))? < 0. {
++                return Err(bad(CMD, "negative structural energy"));
++            }
++        }
++        let samples = values(result.get("samples"), 3)?;
++        if samples.len() != 3 {
++            return Err(bad(CMD, "three raw DKT samples required"));
++        }
++        for sample in samples {
++            let bary = vector::<3>(sample.get("barycentric"))?;
++            if bary.iter().any(|v| *v < 0.) || (bary.iter().sum::<f64>() - 1.).abs() > 1e-10 {
++                return Err(bad(CMD, "invalid plate sample position"));
++            }
++            for key in ["membrane_strain", "curvature_per_m", "membrane_force_kn_m", "bending_moment_kn"] {
++                vector::<3>(sample.get(key))?;
++            }
++            number(sample.get("drilling_mismatch_rad"))?;
++        }
++    } else {
++        if number(result.get("length_m"))? <= 0. {
++            return Err(bad(CMD, "invalid beam length"));
++        }
++        vector::<12>(result.get("local_end_actions"))?;
++        matrix::<3>(result.get("local_end_relative_rotation_rad"), 2)?;
++        matrix::<6>(result.get("section_forces_at_start_mid_end"), 3)?;
++    }
++    Ok(())
++}
++
++pub(super) fn validate(g: &Geometry, f: &Frame, run: &Value, mesh: &Value) -> Result<()> {
++    let configured = run.pointer("/case/beam_system").filter(|v| v.is_object());
++    let Some(data) = &f.structures else {
++        if configured.is_some() {
++            return Err(bad(CMD, "missing structural frame fields"));
++        }
++        return Ok(());
++    };
++    let cfg = configured.ok_or_else(|| bad(CMD, "structural display without source configuration"))?;
++    let source = run.get("frames").and_then(|v| v.get(f.index)).ok_or_else(|| bad(CMD, "missing structural source frame"))?;
++    let state = source.pointer("/state/beams").ok_or_else(|| bad(CMD, "missing source member state"))?;
++    let report = source.get("beam_results").ok_or_else(|| bad(CMD, "missing source member report"))?;
++    let n = data.nodes.ids.len();
++    if data.schema != "soil-fem-view-structures/1"
++        || data.semantics != semantics()
++        || n > LIMIT
++        || data.members.len() > LIMIT
++        || data.plates.len() > LIMIT
++        || [
++            data.nodes.positions_m.len(),
++            data.nodes.soil_node_ids.len(),
++            data.nodes.displacement_m.len(),
++            data.nodes.rotation_rad.len(),
++            data.nodes.active.len(),
++        ]
++        .iter()
++        .any(|v| *v != n)
++        || data.nodes.ids.iter().any(|id| id.is_empty() || id.len() > 1024)
++        || data.nodes.ids.iter().collect::<BTreeSet<_>>().len() != n
++        || data.nodes.positions_m.iter().chain(&data.nodes.displacement_m).chain(&data.nodes.rotation_rad).flatten().any(|v| !finite(*v))
++    {
++        return Err(bad(CMD, "invalid structural node inventory or fields"));
++    }
++    let definitions = values(cfg.get("nodes"), LIMIT)?;
++    if definitions.len() != n {
++        return Err(bad(CMD, "structural source node count differs"));
++    }
++    let mut ids = BTreeMap::new();
++    let mut matching_budget = 0usize;
++    for (i, definition) in definitions.iter().enumerate() {
++        let id = definition.get("id").and_then(Value::as_str).ok_or_else(|| bad(CMD, "missing structural node id"))?;
++        if data.nodes.ids.get(i).map(String::as_str) != Some(id) || ids.insert(id, i).is_some() {
++            return Err(bad(CMD, "structural source ids differ"));
++        }
++        let soil = if definition.get("match_soil_node").and_then(Value::as_bool) == Some(true) {
++            matching_budget = matching_budget.saturating_add(g.nodes_m.len());
++            if matching_budget > 2_000_000 {
++                return Err(bad(CMD, "structural coordinate matching budget exceeded; use bound node sets"));
++            }
++            let position = crate::geom::Vec3::from(vector::<3>(definition.get("position_m"))?);
++            let found: Vec<_> =
++                g.nodes_m.iter().enumerate().filter(|(_, p)| (crate::geom::Vec3::from(**p) - position).len() <= 1e-8).map(|(i, _)| i).collect();
++            if found.len() != 1 {
++                return Err(bad(CMD, "ambiguous structural soil coordinate attachment"));
++            }
++            found.first().copied()
++        } else if let Some(set) = definition.get("soil_node_set").and_then(Value::as_str) {
++            let selected = values(mesh.get("node_sets").and_then(|v| v.get(set)), 1)?;
++            if selected.len() != 1 {
++                return Err(bad(CMD, "one soil node required per structural attachment"));
++            }
++            Some(
++                selected
++                    .first()
++                    .and_then(Value::as_u64)
++                    .and_then(|v| usize::try_from(v).ok())
++                    .ok_or_else(|| bad(CMD, "invalid structural soil attachment"))?,
++            )
++        } else {
++            None
++        };
++        if data.nodes.soil_node_ids.get(i).copied() != Some(soil) {
++            return Err(bad(CMD, "structural soil node mapping differs"));
++        }
++        let position = match soil {
++            Some(node) => *g.nodes_m.get(node).ok_or_else(|| bad(CMD, "structural soil node outside mesh"))?,
++            None => vector::<3>(definition.get("position_m"))?,
++        };
++        bound(&json!(data.nodes.positions_m.get(i)), Some(&json!(position)))?;
++        if data.nodes.active.get(i) == Some(&true)
++            && let Some(node) = soil
++        {
++            if f.active_node_ids.binary_search(&node).is_err() {
++                return Err(bad(CMD, "active structure is attached to removed soil"));
++            }
++            bound(&json!(data.nodes.displacement_m.get(i)), source.pointer("/state/displacement_m").and_then(|v| v.get(node)))?;
++        }
++    }
++    for (actual, expected) in [
++        (json!(data.nodes.displacement_m), state.get("node_displacement_m")),
++        (json!(data.nodes.rotation_rad), state.get("node_rotation_rad")),
++        (json!(data.nodes.active), report.get("node_active")),
++    ] {
++        bound(&actual, expected)?;
++    }
++    let mut union = BTreeSet::new();
++    let mut names = BTreeSet::new();
++    let mut sections = BTreeMap::new();
++    for section in cfg.get("plate_sections").map(|v| values(Some(v), LIMIT)).transpose()?.unwrap_or_default() {
++        let id = section.get("id").and_then(Value::as_str).ok_or_else(|| bad(CMD, "missing plate section id"))?;
++        if sections.insert(id, section).is_some() {
++            return Err(bad(CMD, "duplicate plate section id"));
++        }
++    }
++    for (entries, key, active_key, reference_key, width) in [
++        (&data.members, "members", "active_members", "reference_global_kinematics", 2usize),
++        (&data.plates, "plates", "active_plates", "plate_reference_global_kinematics", 3usize),
++    ] {
++        let source_definitions = if key == "plates" && cfg.get(key).is_none() { &[][..] } else { values(cfg.get(key), LIMIT)? };
++        if source_definitions.len() != entries.len() {
++            return Err(bad(CMD, "structural member inventory differs"));
++        }
++        let source_reports = report.get(key).map(|v| values(Some(v), LIMIT)).transpose()?.unwrap_or_default();
++        let mut expected_reports = BTreeMap::new();
++        for r in source_reports {
++            let id = r.get("id").and_then(Value::as_str).ok_or_else(|| bad(CMD, "missing source member report id"))?;
++            if expected_reports.insert(id, r).is_some() {
++                return Err(bad(CMD, "duplicate source member report"));
++            }
++        }
++        let mut live = 0;
++        for (i, (entry, definition)) in entries.iter().zip(source_definitions).enumerate() {
++            if !names.insert(entry.id.as_str())
++                || definition.get("id").and_then(Value::as_str) != Some(&entry.id)
++                || definition.get("section_id").and_then(Value::as_str) != Some(&entry.section_id)
++                || entry.nodes.len() != width
++                || entry.nodes.iter().any(|n| *n >= data.nodes.ids.len())
++                || entry.nodes.iter().collect::<BTreeSet<_>>().len() != width
++                || entry.reference_global_kinematics.len() != 6 * width
++                || !entry.reference_global_kinematics.iter().copied().all(finite)
++            {
++                return Err(bad(CMD, "structural definition or installation reference differs"));
++            }
++            let expected_nodes: Vec<_> = values(definition.get("nodes"), width)?
++                .iter()
++                .map(|v| v.as_str().and_then(|v| ids.get(v)).copied().ok_or_else(|| bad(CMD, "unknown structural connectivity id")))
++                .collect::<Result<_>>()?;
++            if expected_nodes != entry.nodes {
++                return Err(bad(CMD, "structural connectivity differs"));
++            }
++            bound(&json!(entry.active), state.get(active_key).and_then(|v| v.get(i)))?;
++            bound(&json!(entry.reference_global_kinematics), state.get(reference_key).and_then(|v| v.get(i)))?;
++            validate_result(entry, width == 3)?;
++            if entry.active {
++                let points: Vec<_> = entry
++                    .nodes
++                    .iter()
++                    .map(|n| data.nodes.positions_m.get(*n).copied().map(Vec3::from).ok_or_else(|| bad(CMD, "missing structural geometry")))
++                    .collect::<Result<_>>()?;
++                let a = *points.first().ok_or_else(|| bad(CMD, "missing member corner"))?;
++                let b = *points.get(1).ok_or_else(|| bad(CMD, "missing member corner"))?;
++                let result = entry.result.as_ref().ok_or_else(|| bad(CMD, "missing active structural result"))?;
++                let ex = (b - a).normalized().ok_or_else(|| bad(CMD, "zero member edge"))?;
++                let local_x = vector::<3>(result.get("local_axes").and_then(|v| v.get(0)))?;
++                if (Vec3::from(local_x) - ex).len() > 1e-8 {
++                    return Err(bad(CMD, "structural local x axis differs from CAD geometry"));
++                }
++                if width == 3 {
++                    let c = *points.get(2).ok_or_else(|| bad(CMD, "missing plate corner"))?;
++                    let normal = (b - a).cross(c - a);
++                    let area = normal.len() * 0.5;
++                    let z = Vec3::from(vector::<3>(result.get("local_axes").and_then(|v| v.get(2)))?);
++                    if area <= 1e-16
++                        || (area - number(result.get("area_m2"))?).abs() > 1e-10 * area.max(1.)
++                        || (normal / normal.len() - z).len() > 1e-8
++                    {
++                        return Err(bad(CMD, "plate reference area/normal differs from CAD geometry"));
++                    }
++                } else if ((b - a).len() - number(result.get("length_m"))?).abs() > 1e-10 * (b - a).len().max(1.) {
++                    return Err(bad(CMD, "beam reference length differs from CAD geometry"));
++                }
++                live += 1;
++                union.extend(entry.nodes.iter().copied());
++                bound(
++                    entry.result.as_ref().ok_or_else(|| bad(CMD, "missing active structural result"))?,
++                    expected_reports.get(entry.id.as_str()).copied(),
++                )?;
++            }
++            if width == 3 {
++                let section = sections.get(entry.section_id.as_str()).ok_or_else(|| bad(CMD, "missing source plate section"))?;
++                let thickness = entry.thickness_m.filter(|v| finite(*v) && *v > 0.).ok_or_else(|| bad(CMD, "invalid plate thickness"))?;
++                bound(&json!(thickness), section.get("thickness_m"))?;
++            } else if entry.thickness_m.is_some() {
++                return Err(bad(CMD, "beam has a plate thickness"));
++            }
++        }
++        if live != expected_reports.len() {
++            return Err(bad(CMD, "extra inactive structural reports"));
++        }
++    }
++    if data.nodes.active.iter().enumerate().any(|(i, active)| *active != union.contains(&i)) {
++        return Err(bad(CMD, "structural active nodes differ from connectivity"));
++    }
++    let keys = ["external_force_kn", "external_moment_origin_kn_m", "support_force_kn", "support_moment_origin_kn_m"];
++    if data.global_resultants.len() != keys.len() {
++        return Err(bad(CMD, "structural resultant inventory differs"));
++    }
++    for key in keys {
++        bound(&json!(data.global_resultants.get(key)), report.get(key))?;
++    }
++    Ok(())
++}
++
++#[derive(Clone, Copy)]
++struct Sample {
++    position: Vec3,
++    displacement: Vec3,
++}
++impl Sample {
++    fn between(self, other: Self, t: f64) -> Self {
++        Self { position: self.position * (1. - t) + other.position * t, displacement: self.displacement * (1. - t) + other.displacement * t }
++    }
++}
++fn point(data: &Fields, node: usize) -> Result<Sample> {
++    Ok(Sample {
++        position: Vec3::from(*data.nodes.positions_m.get(node).ok_or_else(|| bad(CMD, "missing structural position"))?),
++        displacement: Vec3::from(*data.nodes.displacement_m.get(node).ok_or_else(|| bad(CMD, "missing structural displacement"))?),
++    })
++}
++fn vertex(scene: &mut Scene, sample: Sample, scalar: f64, scale: f64) -> Result<Vertex> {
++    let p = (sample.position + sample.displacement * scale - scene.render_origin_m) * 1000.;
++    if !p.is_finite() || [p.x, p.y, p.z].iter().any(|v| v.abs() > 1e30) || !finite(scalar) {
++        return Err(bad(CMD, "structural display coordinates or values exceed the GPU range"));
++    }
++    scene.bounds.add(p);
++    Ok(Vertex { position_mm: p, scalar: Some(scalar) })
++}
++fn line(scene: &mut Scene, a: Sample, b: Sample, q: f64, id: usize, scale: f64) -> Result<()> {
++    let a = vertex(scene, a, q, scale)?.position_mm;
++    let b = vertex(scene, b, q, scale)?.position_mm;
++    scene.member_lines.push(MemberLine { a_mm: a, b_mm: b, scalar: q, element_id: id });
++    Ok(())
++}
++fn plane(settings: &Settings) -> Result<Option<(Vec3, f64, bool)>> {
++    let Some(section) = &settings.section else {
++        return Ok(None);
++    };
++    let raw = Vec3::from(section.normal);
++    let normal = raw.normalized().ok_or_else(|| bad(CMD, "invalid structural section normal"))?;
++    Ok(Some((normal, section.offset_m / raw.len(), section.slice_only)))
++}
++struct Clip<'a> {
++    settings: &'a Settings,
++    section: Option<(Vec3, f64, bool)>,
++    epsilon: f64,
++    marker: f64,
++}
++fn clip_line(scene: &mut Scene, mut a: Sample, mut b: Sample, q: f64, id: usize, clip: &Clip<'_>) -> Result<()> {
++    let settings = clip.settings;
++    let section = clip.section;
++    let epsilon = clip.epsilon;
++    let marker = clip.marker;
++    if let Some((normal, offset, slice)) = section {
++        let da = normal.dot(a.position) - offset;
++        let db = normal.dot(b.position) - offset;
++        if slice && !(da.abs() <= epsilon && db.abs() <= epsilon) {
++            if (da > epsilon && db > epsilon) || (da < -epsilon && db < -epsilon) {
++                return Ok(());
++            }
++            let t = if (da - db).abs() > epsilon { (da / (da - db)).clamp(0., 1.) } else { 0. };
++            let cross = a.between(b, t);
++            let basis = if normal.z.abs() < 0.9 { normal.cross(Vec3::from([0., 0., 1.])) } else { normal.cross(Vec3::from([1., 0., 0.])) };
++            let axis = basis.normalized().ok_or_else(|| bad(CMD, "invalid structural slice marker"))? * marker;
++            for direction in [axis, normal.cross(axis)] {
++                line(
++                    scene,
++                    Sample { position: cross.position - direction, ..cross },
++                    Sample { position: cross.position + direction, ..cross },
++                    q,
++                    id,
++                    settings.deformation_scale,
++                )?;
++            }
++            return Ok(());
++        }
++        if !slice {
++            if da > epsilon && db > epsilon {
++                return Ok(());
++            }
++            if (da > epsilon) != (db > epsilon) {
++                let cut = a.between(b, (da / (da - db)).clamp(0., 1.));
++                if da > epsilon {
++                    a = cut;
++                } else {
++                    b = cut;
++                }
++            }
++        }
++    }
++    line(scene, a, b, q, id, settings.deformation_scale)
++}
++fn plate_triangle(
++    scene: &mut Scene,
++    triangle: [Sample; 3],
++    q: f64,
++    id: usize,
++    settings: &Settings,
++    section: Option<(Vec3, f64, bool)>,
++    epsilon: f64,
++) -> Result<()> {
++    let mut polygon = triangle.to_vec();
++    let mut sliced = false;
++    if let Some((normal, offset, slice)) = section {
++        let distances = triangle.map(|s| normal.dot(s.position) - offset);
++        let coplanar = distances.iter().all(|d| d.abs() <= epsilon);
++        if slice && !coplanar {
++            let mut intersections: Vec<Sample> = Vec::new();
++            for (i, j) in [(0, 1), (1, 2), (2, 0)] {
++                let a = triangle[i];
++                let b = triangle[j];
++                let da = distances[i];
++                let db = distances[j];
++                if da.abs() <= epsilon && intersections.iter().all(|p| (p.position - a.position).len() > epsilon) {
++                    intersections.push(a);
++                }
++                if (da > epsilon && db < -epsilon) || (da < -epsilon && db > epsilon) {
++                    let point = a.between(b, da / (da - db));
++                    if intersections.iter().all(|p| (p.position - point.position).len() > epsilon) {
++                        intersections.push(point);
++                    }
++                }
++            }
++            if let (Some(a), Some(b)) = (intersections.first(), intersections.get(1)) {
++                line(scene, *a, *b, q, id, settings.deformation_scale)?;
++            }
++            return Ok(());
++        }
++        sliced = slice;
++        if !slice && !coplanar {
++            polygon.clear();
++            for (i, j) in [(0, 1), (1, 2), (2, 0)] {
++                let a = triangle[i];
++                let b = triangle[j];
++                let da = distances[i];
++                let db = distances[j];
++                if da <= epsilon {
++                    polygon.push(a);
++                }
++                if (da > epsilon) != (db > epsilon) {
++                    polygon.push(a.between(b, (da / (da - db)).clamp(0., 1.)));
++                }
++            }
++        }
++    }
++    let Some(first) = polygon.first().copied() else {
++        return Ok(());
++    };
++    for pair in polygon.get(1..).unwrap_or_default().windows(2) {
++        let a = pair.first().copied().ok_or_else(|| bad(CMD, "invalid structural display polygon"))?;
++        let b = pair.get(1).copied().ok_or_else(|| bad(CMD, "invalid structural display polygon"))?;
++        if sliced {
++            scene.reference_section_area_m2 += (a.position - first.position).cross(b.position - first.position).len() * 0.5;
++        }
++        let vertices = [
++            vertex(scene, first, q, settings.deformation_scale)?,
++            vertex(scene, a, q, settings.deformation_scale)?,
++            vertex(scene, b, q, settings.deformation_scale)?,
++        ];
++        scene.triangles.push(Triangle { vertices, element_id: id, section: sliced });
++    }
++    Ok(())
++}
++
++pub(super) fn build(g: &Geometry, f: &Frame, settings: &Settings, manifest: &str) -> Result<Scene> {
++    let data = f.structures.as_ref().ok_or_else(|| bad(CMD, "this frame has no structural result layer"))?;
++    let (plate, component, field) = match settings.quantity {
++        Quantity::BeamAxialForce => (false, 0, "section_forces_at_start_mid_end"),
++        Quantity::BeamMomentY => (false, 4, "section_forces_at_start_mid_end"),
++        Quantity::BeamMomentZ => (false, 5, "section_forces_at_start_mid_end"),
++        Quantity::PlateMembraneXx => (true, 0, "membrane_force_kn_m"),
++        Quantity::PlateMembraneYy => (true, 1, "membrane_force_kn_m"),
++        Quantity::PlateMembraneXy => (true, 2, "membrane_force_kn_m"),
++        Quantity::PlateBendingXx => (true, 0, "bending_moment_kn"),
++        Quantity::PlateBendingYy => (true, 1, "bending_moment_kn"),
++        Quantity::PlateBendingXy => (true, 2, "bending_moment_kn"),
++        _ => return Err(bad(CMD, "choose a structural quantity")),
++    };
++    let entries = if plate { &data.plates } else { &data.members };
++    if entries.is_empty() {
++        return Err(bad(CMD, "this model has no definitions for the selected structural family"));
++    }
++    let mut reference = Aabb3::EMPTY;
++    for point in &g.nodes_m {
++        reference.add(Vec3::from(*point));
++    }
++    if reference.is_empty() {
++        return Err(bad(CMD, "missing reference geometry for structural layer"));
++    }
++    let mut scene = Scene {
++        key: String::new(),
++        triangles: Vec::new(),
++        glyphs: Vec::new(),
++        member_lines: Vec::new(),
++        structural_hits: BTreeMap::new(),
++        bounds: Aabb3::EMPTY,
++        data_range: [f64::INFINITY, f64::NEG_INFINITY],
++        color_range: [0., 1.],
++        render_origin_m: reference.center(),
++        unavailable_cells: 0,
++        reference_section_area_m2: 0.,
++        approximation: "Structural coordinates/displacements from CAD, independent of soil display RESET. Straight endpoint beam geometry, 16 display segments interpolating raw start/mid/end sections. Flat plates use linear nodal displacement and three equal-area raw DKT sample regions; no cross-element smoothing. Sections use reference coordinates. Inactive entries are hidden; raw values and archived histories are available by member query.",
++    };
++    let epsilon = (reference.diagonal() * 1e-11).max(1e-12);
++    let marker = (reference.diagonal() * 0.002).max(0.001);
++    let section = plane(settings)?;
++    let clip = Clip { settings, section, epsilon, marker };
++    let mut active = 0usize;
++    for (index, entry) in entries.iter().enumerate() {
++        if !entry.active {
++            continue;
++        }
++        active += 1;
++        validate_result(entry, plate)?;
++        let id = g
++            .cells
++            .len()
++            .checked_add(if plate { index } else { data.plates.len().saturating_add(index) })
++            .ok_or_else(|| bad(CMD, "structural display identity overflow"))?;
++        scene.structural_hits.insert(id, if plate { json!({"plate":index,"plate_id":entry.id}) } else { json!({"beam":index,"beam_id":entry.id}) });
++        let result = entry.result.as_ref().ok_or_else(|| bad(CMD, "missing structural result"))?;
++        let points: Vec<_> = entry.nodes.iter().map(|n| point(data, *n)).collect::<Result<_>>()?;
++        if plate {
++            let a = *points.first().ok_or_else(|| bad(CMD, "missing plate corner"))?;
++            let b = *points.get(1).ok_or_else(|| bad(CMD, "missing plate corner"))?;
++            let c = *points.get(2).ok_or_else(|| bad(CMD, "missing plate corner"))?;
++            let center = a.between(b, 0.5).between(c, 1. / 3.);
++            let samples = values(result.get("samples"), 3)?;
++            for (i, (corner, next, prior)) in [(a, b, c), (b, c, a), (c, a, b)].into_iter().enumerate() {
++                let sample = samples.get(i).ok_or_else(|| bad(CMD, "missing raw DKT sample"))?;
++                // The supported solver's sample order is tied to each corner.
++                let bary = vector::<3>(sample.get("barycentric"))?;
++                for (j, v) in bary.iter().enumerate() {
++                    if (*v - if i == j { 2. / 3. } else { 1. / 6. }).abs() > 1e-12 {
++                        return Err(bad(CMD, "unsupported DKT sample ordering"));
++                    }
++                }
++                let q = *vector::<3>(sample.get(field))?.get(component).ok_or_else(|| bad(CMD, "invalid plate component"))?;
++                scene.data_range[0] = scene.data_range[0].min(q);
++                scene.data_range[1] = scene.data_range[1].max(q);
++                plate_triangle(&mut scene, [corner, corner.between(next, 0.5), center], q, id, settings, section, epsilon)?;
++                plate_triangle(&mut scene, [corner, center, corner.between(prior, 0.5)], q, id, settings, section, epsilon)?;
++            }
++        } else {
++            let a = *points.first().ok_or_else(|| bad(CMD, "missing beam end"))?;
++            let b = *points.get(1).ok_or_else(|| bad(CMD, "missing beam end"))?;
++            let samples = values(result.get(field), 3)?;
++            let mut q = [0.; 3];
++            for (i, sample) in samples.iter().enumerate() {
++                if let Some(value) = q.get_mut(i) {
++                    *value = *vector::<6>(Some(sample))?.get(component).ok_or_else(|| bad(CMD, "invalid beam component"))?;
++                }
++            }
++            for value in q {
++                scene.data_range[0] = scene.data_range[0].min(value);
++                scene.data_range[1] = scene.data_range[1].max(value);
++            }
++            let quadratic = 2. * q[0] - 4. * q[1] + 2. * q[2];
++            let linear = -3. * q[0] + 4. * q[1] - q[2];
++            if quadratic != 0. {
++                let extremum = -linear / (2. * quadratic);
++                if (0.0..1.0).contains(&extremum) {
++                    let value = quadratic * extremum * extremum + linear * extremum + q[0];
++                    scene.data_range[0] = scene.data_range[0].min(value);
++                    scene.data_range[1] = scene.data_range[1].max(value);
++                }
++            }
++            for i in 0..16 {
++                let t = (f64::from(i) + 0.5) / 16.;
++                let value = 2. * (t - 0.5) * (t - 1.) * q[0] + 4. * t * (1. - t) * q[1] + 2. * t * (t - 0.5) * q[2];
++                scene.data_range[0] = scene.data_range[0].min(value);
++                scene.data_range[1] = scene.data_range[1].max(value);
++                clip_line(&mut scene, a.between(b, f64::from(i) / 16.), a.between(b, f64::from(i + 1) / 16.), value, id, &clip)?;
++            }
++        }
++    }
++    if active == 0 {
++        scene.data_range = [0., 0.];
++    }
++    if !scene.data_range.iter().copied().all(finite) {
++        return Err(bad(CMD, "structural display values are invalid"));
++    }
++    if scene.bounds.is_empty() {
++        for point in &g.nodes_m {
++            scene.bounds.add((Vec3::from(*point) - scene.render_origin_m) * 1000.);
++        }
++    }
++    scene.color_range = if let Some(range) = settings.color_range {
++        range
++    } else if scene.data_range[0] == scene.data_range[1] {
++        let v = scene.data_range[0];
++        let half = (v.abs() * 0.01).max(1e-12);
++        [v - half, v + half]
++    } else {
++        scene.data_range
++    };
++    scene.key =
++        format!("{:x}", Sha256::digest(format!("{manifest}:{}", serde_json::to_string(settings).map_err(|e| bad(CMD, e.to_string()))?).as_bytes()));
++    Ok(scene)
++}
 diff --git a/crates/engine/src/soil_results/tests.rs b/crates/engine/src/soil_results/tests.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..34246b74784dfc2c807d1b4eb27d674392e97679
+index 0000000000000000000000000000000000000000..26357e19225ca2bbc57d9c542932e9f9d98d1d2f
 --- /dev/null
 +++ b/crates/engine/src/soil_results/tests.rs
-@@ -0,0 +1,336 @@
+@@ -0,0 +1,473 @@
 +//! Synthetic protocol fixtures test reader invariants, not mechanical accuracy.
 +use super::*;
 +use std::sync::atomic::{AtomicU64, Ordering};
@@ -8094,6 +8943,143 @@ index 0000000000000000000000000000000000000000..34246b74784dfc2c807d1b4eb27d6743
 +    use std::io::Write;
 +    file.write_all(&serde_json::to_vec_pretty(&report).unwrap()).unwrap();
 +}
++
++fn structural_fixture() -> (Geometry, Frame, Value, Value) {
++    let xyz = json!([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
++    let mesh = json!({"nodes":xyz,"node_sets":{"a":[0],"b":[1],"c":[2]}});
++    let g: Geometry = serde_json::from_value(json!({"schema":"soil-fem-view-geometry/1","length_unit":"m","axis":"Z-up",
++        "nodes_m":xyz,"cells":[[0,1,2,3]],"cell_kind":"tetra4","regions":[],"node_sets":mesh["node_sets"],"crs":"LOCAL","origin_m":[0.,0.,0.]}))
++    .unwrap();
++    let axes = json!([[1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]);
++    let beam = json!({"id":"beam","length_m":1.,"local_axes":axes,"local_end_actions":vec![0.;12],
++        "local_end_relative_rotation_rad":vec![[0.;3];2],"section_forces_at_start_mid_end":[[9.,0.,0.,0.,2.,3.],[8.,0.,0.,0.,4.,5.],[7.,0.,0.,0.,6.,7.]]});
++    let samples: Vec<_> = (0..3)
++        .map(|i| {
++            json!({"barycentric":std::array::from_fn::<_,3,_>(|j|if i==j {2./3.}else{1./6.}),
++        "membrane_strain":vec![0.;3],"curvature_per_m":vec![0.;3],"membrane_force_kn_m":[10.,20.,30.],
++        "bending_moment_kn":[1.+i as f64,4.,5.],"drilling_mismatch_rad":0.})
++        })
++        .collect();
++    let plate = json!({"id":"plate","area_m2":0.5,"local_axes":axes,"samples":samples,"membrane_energy_kn_m":1.,"bending_energy_kn_m":2.,"drilling_penalty_energy_kn_m":0.});
++    let nodes = json!({"ids":["a","b","c"],"positions_m":[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.]],"soil_node_ids":[0,1,2],
++        "displacement_m":[[0.,0.,0.],[0.,0.,-0.1],[0.,0.,-0.2]],"rotation_rad":vec![[0.;3];3],"active":vec![true;3]});
++    let resultants = json!({"external_force_kn":vec![0.;3],"external_moment_origin_kn_m":vec![0.;3],"support_force_kn":vec![0.;3],"support_moment_origin_kn_m":vec![0.;3]});
++    let data = json!({"schema":"soil-fem-view-structures/1","nodes":nodes,
++        "members":[{"id":"beam","nodes":[0,1],"section_id":"b","active":true,"reference_global_kinematics":vec![0.;12],"result":beam}],
++        "plates":[{"id":"plate","nodes":[0,1,2],"section_id":"p","active":true,"reference_global_kinematics":vec![0.;18],"result":plate,"thickness_m":0.1}],
++        "global_resultants":resultants,"semantics":super::super::structures::semantics()});
++    let f:Frame=serde_json::from_value(json!({"schema":"soil-fem-view-frame/3","index":0,"name":"loaded","active_element_ids":[0],"active_node_ids":[0,1,2,3],
++        "boundary_faces":[],"node_fields":{},"cell_fields":{"effective_stress_compression_positive_kpa":[[100.,100.,100.,0.,0.,0.]],
++            "plastic_strain_compression_positive":[vec![0.;6]],"void_ratio":[1.],"preconsolidation_pressure_kpa":[200.],"material_id":[1],"region_id":[1],"material_model":[0]},
++        "monitors":{},"relative_force_residual":0.,"maximum_normalized_yield":-0.1,"structures":data})).unwrap();
++    let definitions: Vec<_> = ["a", "b", "c"].into_iter().map(|id| json!({"id":id,"soil_node_set":id})).collect();
++    let mut report = resultants.clone();
++    report["members"] = json!([beam]);
++    report["plates"] = json!([plate]);
++    report["node_active"] = nodes["active"].clone();
++    let run = json!({"schema":"soil-fem-stage-result/14","case":{"beam_system":{"nodes":definitions,
++        "members":[{"id":"beam","nodes":["a","b"],"section_id":"b"}],"plates":[{"id":"plate","nodes":["a","b","c"],"section_id":"p"}],
++        "plate_sections":[{"id":"p","thickness_m":0.1}]}},"frames":[{"beam_results":report,
++        "state":{"displacement_m":[[0.,0.,0.],[0.,0.,-0.1],[0.,0.,-0.2],[0.,0.,0.]],"beams":{"active_members":[true],"active_plates":[true],"node_displacement_m":nodes["displacement_m"],"node_rotation_rad":nodes["rotation_rad"],
++        "reference_global_kinematics":[vec![0.;12]],"plate_reference_global_kinematics":[vec![0.;18]]}}}]});
++    (g, f, run, mesh)
++}
++
++#[test]
++fn structural_frame_is_bound_to_source_axes_samples_references_and_connectivity() {
++    let (g, mut f, mut run, mesh) = structural_fixture();
++    super::super::structures::validate(&g, &f, &run, &mesh).unwrap();
++    f.structures.as_mut().unwrap().plates[0].result.as_mut().unwrap()["samples"][0]["bending_moment_kn"][0] = json!(1.01);
++    assert!(super::super::structures::validate(&g, &f, &run, &mesh).is_err());
++    let (_, mut f, _, _) = structural_fixture();
++    f.structures.as_mut().unwrap().members[0].reference_global_kinematics[0] = 0.1;
++    assert!(super::super::structures::validate(&g, &f, &run, &mesh).is_err());
++    let (_, mut f, _, _) = structural_fixture();
++    f.structures.as_mut().unwrap().nodes.soil_node_ids[0] = Some(3);
++    assert!(super::super::structures::validate(&g, &f, &run, &mesh).is_err());
++    let (_, f, _, _) = structural_fixture();
++    run["frames"][0]["beam_results"]["plates"][0]["local_axes"] = json!(vec![[0.; 3]; 3]);
++    assert!(super::super::structures::validate(&g, &f, &run, &mesh).is_err());
++}
++
++#[test]
++fn structural_scene_keeps_raw_plate_regions_units_references_and_beam_section_extrema() {
++    let (g, f, _, _) = structural_fixture();
++    let beam = geometry::build(&g, &f, &Settings { quantity: Quantity::BeamMomentY, deformation_scale: 2., ..Default::default() }, "loaded").unwrap();
++    assert_eq!(beam.member_lines.len(), 16);
++    assert!(beam.triangles.is_empty());
++    assert!(beam.has_visible_geometry());
++    assert!(beam.quantity_available(&Quantity::BeamMomentY));
++    assert_eq!(beam.data_range, [2., 6.]);
++    assert_eq!(Quantity::BeamAxialForce.unit(), "kN");
++    assert_eq!(Quantity::BeamMomentY.unit(), "kN m");
++    assert_eq!(Quantity::PlateBendingXx.unit(), "kN m/m");
++    assert_eq!(Quantity::PlateMembraneXx.unit(), "kN/m");
++    assert!((beam.member_lines.last().unwrap().b_mm.z + 700.).abs() < 1e-10);
++    let plate =
++        geometry::build(&g, &f, &Settings { quantity: Quantity::PlateBendingXx, deformation_scale: 0., ..Default::default() }, "loaded").unwrap();
++    assert_eq!(plate.triangles.len(), 6);
++    assert_eq!(plate.data_range, [1., 3.]);
++    let values: Vec<_> = plate.triangles.iter().map(|t| t.vertices[0].scalar.unwrap()).collect();
++    assert_eq!(values, vec![1., 1., 2., 2., 3., 3.]);
++    // Soil display basis is intentionally absent from the structural map: both
++    // settings retain CAD member displacement, never subtract a soil RESET.
++    let second = geometry::build(
++        &g,
++        &f,
++        &Settings {
++            quantity: Quantity::BeamMomentY,
++            deformation_scale: 2.,
++            displacement_reference: DisplacementReference::Stage,
++            ..Default::default()
++        },
++        "loaded",
++    )
++    .unwrap();
++    assert_eq!(beam.member_lines.last().unwrap().b_mm, second.member_lines.last().unwrap().b_mm);
++}
++
++#[test]
++fn structural_sections_use_reference_geometry_and_removed_members_leave_no_stale_triangles_or_lines() {
++    let (g, mut f, _, _) = structural_fixture();
++    let settings = Settings {
++        quantity: Quantity::PlateBendingXx,
++        deformation_scale: 0.,
++        section: Some(Section { normal: [0., 0., 1.], offset_m: 0., slice_only: true }),
++        ..Default::default()
++    };
++    let coplanar = geometry::build(&g, &f, &settings, "loaded").unwrap();
++    assert_eq!(coplanar.triangles.len(), 6);
++    assert!((coplanar.reference_section_area_m2 - 0.5).abs() < 1e-12);
++    let cut = geometry::build(
++        &g,
++        &f,
++        &Settings { section: Some(Section { normal: [1., 0., 0.], offset_m: 0.5, slice_only: true }), ..settings.clone() },
++        "loaded",
++    )
++    .unwrap();
++    assert!(cut.triangles.is_empty());
++    assert!(!cut.member_lines.is_empty());
++    assert!(cut.has_visible_geometry());
++    assert!(cut.quantity_available(&Quantity::PlateBendingXx));
++    assert!(cut.member_lines.iter().all(|line| line.a_mm.x.abs() < 1e-10 && line.b_mm.x.abs() < 1e-10));
++    let hit = geometry::pick(&cut, Vec3::from([0., -250., 0.]), Vec3::from([0., 0., -1.]));
++    assert_eq!(hit["plate"], 0);
++    assert_eq!(hit["plate_id"], "plate");
++    assert!(hit.get("element").is_none());
++    let data = f.structures.as_mut().unwrap();
++    data.nodes.active.fill(false);
++    for entry in data.members.iter_mut().chain(&mut data.plates) {
++        entry.active = false;
++        entry.result = None;
++    }
++    let removed = geometry::build(&g, &f, &Settings { frame: 1, ..settings }, "removed").unwrap();
++    assert!(removed.triangles.is_empty() && removed.member_lines.is_empty());
++    assert!(!removed.has_visible_geometry());
++    assert!(!removed.quantity_available(&Quantity::PlateBendingXx));
++    assert_ne!(removed.key, coplanar.key);
++    assert_eq!(f.structures.as_ref().unwrap().nodes.displacement_m[1], [0., 0., -0.1]);
++}
 diff --git a/crates/engine/src/tests.rs b/crates/engine/src/tests.rs
 index f2d8cf46a3fabfb6d77cb86aff446c26eaf4bec5..1b0860951e853c71976e05d2a52279877e28101f 100644
 --- a/crates/engine/src/tests.rs
@@ -8110,6 +9096,29 @@ index f2d8cf46a3fabfb6d77cb86aff446c26eaf4bec5..1b0860951e853c71976e05d2a5227987
      assert!(msg("solid.extrud").starts_with("unknown command `solid.extrud` (did you mean `solid.extrude`"), "{}", msg("solid.extrud"));
      assert!(msg("Extrude").contains("`solid.extrude`"), "{}", msg("Extrude"));
      assert_eq!(msg("FusionFilletEdgesCommand"), "unknown command `FusionFilletEdgesCommand`");
+diff --git a/crates/engine/src/tests/mesh_convert.rs b/crates/engine/src/tests/mesh_convert.rs
+index 315683b8fe93ea7caf264e4f64673a9195ed6058..f201a9c210bbd44e70824a7f89a35ce4175fe243 100644
+--- a/crates/engine/src/tests/mesh_convert.rs
++++ b/crates/engine/src/tests/mesh_convert.rs
+@@ -184,7 +184,7 @@ fn stl_export_is_closed_where_faces_meet() {
+ #[test]
+ fn save_mesh_rejects_unknown_format_and_slicer_without_writing() {
+     let mut s = imported_box();
+-    let path = std::env::temp_dir().join(format!("solvecraft-save-mesh-{}.stl", std::process::id()));
++    let path = std::env::temp_dir().join(format!("solidcraft-save-mesh-rejected-{}.stl", std::process::id()));
+     let _ = std::fs::remove_file(&path);
+     for params in [json!({"path":path,"format":"nope"}), json!({"path":path,"slicer":"no such slicer anywhere"})] {
+         assert!(s.execute("file.save_mesh", &params).is_err());
+@@ -197,7 +197,8 @@ fn save_mesh_writes_stl_and_3mf() {
+     let mut s = imported_box();
+     let dir = std::env::temp_dir();
+     for (ext, format) in [("stl", None), ("3mf", None), ("dat", Some("3mf"))] {
+-        let path = dir.join(format!("solvecraft-save-mesh-{}.{ext}", std::process::id()));
++        // The rejection test removes its own output path while tests run in parallel.
++        let path = dir.join(format!("solidcraft-save-mesh-written-{}.{ext}", std::process::id()));
+         let mut params = json!({"path": path});
+         if let Some(f) = format {
+             params["format"] = json!(f);
 diff --git a/crates/gpu/src/view.rs b/crates/gpu/src/view.rs
 index 6b96e5fd86ab5d3ee2f4fbcdc86d9e8e715b4323..53bc5c6e6dfc0c93d1b86bff613bfe80d8cae9ba 100644
 --- a/crates/gpu/src/view.rs
@@ -8353,10 +9362,10 @@ index c65a550ddf243dec1908415976ddab3c01f04927..24856b4843fd799086112ee4d49f6bf5
              render_workspace::show(self, ui);
          } else {
 diff --git a/crates/ui-egui/src/render_workspace_tests.rs b/crates/ui-egui/src/render_workspace_tests.rs
-index 23408069ad21e7de31939d604c98ca70682bddfb..0ff9c1a9794c59a1a0ad0b00a1074eafb5ac789f 100644
+index 23408069ad21e7de31939d604c98ca70682bddfb..2568819343f32deb5eea61af3103b856a8e8550b 100644
 --- a/crates/ui-egui/src/render_workspace_tests.rs
 +++ b/crates/ui-egui/src/render_workspace_tests.rs
-@@ -2,6 +2,19 @@ use super::*;
+@@ -2,6 +2,43 @@ use super::*;
  use crate::scenario::Harness;
  use solidcraft_engine::Session;
  
@@ -8371,6 +9380,30 @@ index 23408069ad21e7de31939d604c98ca70682bddfb..0ff9c1a9794c59a1a0ad0b00a1074eaf
 +        crate::gpu::render_product_after_supersampled_model_offscreen(scene, 256).expect("transition regression requires a real GPU adapter");
 +    let at = (128 * 256 + 128) * 4;
 +    assert_eq!(&pixels[at..at + 4], &[0, 0, 255, 255], "result blue must replace the previous supersampled CAD green");
++}
++
++#[cfg(not(target_arch = "wasm32"))]
++#[test]
++fn structural_line_only_and_empty_layers_replace_the_previous_cad_gpu_frame() {
++    let mut scene = crate::gpu::GpuScene::default();
++    scene.line([-0.8, 0., 0.5], [0.8, 0., 0.5], [0, 0, 255, 255], 3., false);
++    let line = crate::gpu::render_product_after_supersampled_model_offscreen(scene, 128).expect("structural line regression requires a real GPU");
++    assert!(
++        line.as_chunks::<4>().0.iter().filter(|p| p[2] > 200 && p[0] < 20 && p[1] < 20).count() > 32,
++        "a member-only layer must draw its blue lines without any triangle mesh"
++    );
++    let empty = crate::gpu::render_product_after_supersampled_model_offscreen(crate::gpu::GpuScene::default(), 128)
++        .expect("empty structural layer requires a real GPU");
++    let cold = crate::gpu::render_product_offscreen(
++        crate::gpu::GpuScene::default(),
++        solidcraft_engine::render::Mat4::IDENTITY.to_f32(),
++        [0., 0., 1.],
++        [0., 0., 2., 0.],
++        128,
++        false,
++    )
++    .expect("empty structural baseline requires a real GPU");
++    assert_eq!(empty, cold, "an empty result layer must clear the previous CAD frame");
 +}
 +
  #[cfg(not(target_arch = "wasm32"))]
@@ -9118,10 +10151,10 @@ index 0000000000000000000000000000000000000000..821220cd5a05458da1b181313a203b34
 +}
 diff --git a/crates/ui-egui/src/soil_results.rs b/crates/ui-egui/src/soil_results.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07e08b4909
+index 0000000000000000000000000000000000000000..03084b5d7d127a43986dce9be127111fd65c8f90
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_results.rs
-@@ -0,0 +1,432 @@
+@@ -0,0 +1,485 @@
 +//! Native FEM result workspace. Scientific quantities and section geometry belong
 +//! to L4; this adapter uses the shared GPU pipelines, theme and navigation.
 +use crate::{
@@ -9234,7 +10267,7 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +    const MAX_BYTES: usize = 192 << 20;
 +    let triangle_bytes = scene.triangles.len().checked_mul(3 * crate::gpu::TRI_SIZE).ok_or("display GPU size overflow")?;
 +    let line_count = if settings.wireframe { scene.triangles.len().saturating_mul(3) } else { 0 };
-+    let line_bytes = line_count.saturating_add(scene.glyphs.len()).saturating_mul(crate::gpu::LINE_SIZE);
++    let line_bytes = line_count.saturating_add(scene.glyphs.len()).saturating_add(scene.member_lines.len()).saturating_mul(crate::gpu::LINE_SIZE);
 +    if triangle_bytes.saturating_add(line_bytes) > MAX_BYTES {
 +        return Err("FEM display exceeds the 192 MiB GPU budget; reduce refinement or disable edges".into());
 +    }
@@ -9261,6 +10294,10 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +    }
 +    for glyph in &scene.glyphs {
 +        out.line(glyph.a_mm.to_f32(), glyph.b_mm.to_f32(), Tokens::get().text.to_array(), 1.4, false);
++    }
++    for line in &scene.member_lines {
++        let color = ramp((line.scalar - low) / (high - low));
++        out.line(line.a_mm.to_f32(), line.b_mm.to_f32(), color.to_array(), 2., false);
 +    }
 +    Ok(out)
 +}
@@ -9306,9 +10343,6 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +    ui.painter().rect_filled(rect, 0., Tokens::get().viewport_top);
 +    let result = (|| -> Result<(), String> {
 +        let scene = app.session.soil_result_scene().map_err(|e| e.to_string())?.ok_or("No soil results are loaded")?;
-+        if scene.triangles.is_empty() {
-+            return Err("The reference section has no visible intersection on its retained side".into());
-+        }
 +        if app.viewport.gpu.is_none() {
 +            return Err("A GPU viewport is required for this FEM result view".into());
 +        }
@@ -9365,7 +10399,25 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +                ssaa: 1.,
 +            }),
 +        ));
-+        legend(ui, crate::shell::workspace_content(app, rect), &scene, &settings);
++        // Upload even an empty scene above: removal/empty cuts must replace
++        // the previous GPU frame rather than retaining stale member geometry.
++        if scene.quantity_available(&settings.quantity) {
++            legend(ui, crate::shell::workspace_content(app, rect), &scene, &settings);
++        }
++        if !scene.has_visible_geometry() {
++            let message = if scene.quantity_available(&settings.quantity) {
++                "The reference section has no visible intersection on its retained side"
++            } else {
++                "No active members for this quantity in this stage"
++            };
++            ui.painter().text(
++                rect.center(),
++                egui::Align2::CENTER_CENTER,
++                message,
++                egui::FontId::proportional(Tokens::get().font_body),
++                Tokens::get().text_dim,
++            );
++        }
 +        if response.clicked()
 +            && let Some(point) = response.interact_pointer_pos()
 +        {
@@ -9443,12 +10495,26 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +                });});
 +                ui_kit::row(ui,"Quantity",|ui|{ui_kit::dropdown_menu(ui,"soil_result_quantity",crate::i18n::tr_label(quantity_label(&viewer.settings.quantity)),|ui| {
 +                    for (quantity,label) in [(Quantity::VerticalDisplacement,"Vertical displacement"),(Quantity::DisplacementMagnitude,"Displacement magnitude"),(Quantity::EffectiveStressZz,"Material effective stress zz"),(Quantity::MeanEffectiveStress,"Material mean effective stress p"),(Quantity::MajorEffectiveStress,"Major material effective stress"),(Quantity::VoidRatio,"Void ratio"),(Quantity::PreconsolidationPressure,"Preconsolidation pressure pc"),(Quantity::VolumetricPlasticStrain,"Volumetric plastic strain"),(Quantity::PrimaryMeanEffectiveStress,"Primary mean effective stress (P1)"),(Quantity::WorkEffectiveStressZz,"Work-conjugate effective zz (cell mean)"),(Quantity::MaterialVolumeStrain,"Material volume strain (P1)"),(Quantity::KinematicVolumeStrain,"Kinematic volume strain (cell mean)")] {changed|=choose(ui,&mut viewer.settings.quantity,quantity,label);}
++                    if viewer.info.get("defined_beams").and_then(Value::as_u64).is_some_and(|n|n>0) {
++                        for quantity in [Quantity::BeamAxialForce,Quantity::BeamMomentY,Quantity::BeamMomentZ] {
++                            let label=quantity_label(&quantity);changed|=choose(ui,&mut viewer.settings.quantity,quantity,label);
++                        }
++                    }
++                    if viewer.info.get("defined_plates").and_then(Value::as_u64).is_some_and(|n|n>0) {
++                        for quantity in [Quantity::PlateMembraneXx,Quantity::PlateMembraneYy,Quantity::PlateMembraneXy,Quantity::PlateBendingXx,Quantity::PlateBendingYy,Quantity::PlateBendingXy] {
++                            let label=quantity_label(&quantity);changed|=choose(ui,&mut viewer.settings.quantity,quantity,label);
++                        }
++                    }
 +                });});
++                if viewer.settings.quantity.structural() {
++                    ui_kit::row(ui,"Displacement basis",|ui|{ui.label("Member CAD reference");});
++                } else {
 +                ui_kit::row(ui,"Displacement basis",|ui|{ui_kit::dropdown_menu(ui,"soil_result_reference",crate::i18n::tr_label(match viewer.settings.displacement_reference {DisplacementReference::Display=>"Display reference",DisplacementReference::Stage=>"Stage increment",DisplacementReference::Seed=>"Total from seed"}),|ui| {
 +                    for (basis,label) in [(DisplacementReference::Display,"Display reference"),(DisplacementReference::Stage,"Stage increment"),(DisplacementReference::Seed,"Total from seed")] {changed|=choose(ui,&mut viewer.settings.displacement_reference,basis,label);}
 +                });});
++                }
 +                ui_kit::row(ui,"Deformation scale",|ui|{changed|=ui_kit::number_field(ui,&mut viewer.settings.deformation_scale,0.0..=1e6,1.,"").changed();});
-+                ui_kit::row(ui,"Display refinement",|ui|{for level in 1..=3 {changed|=choose(ui,&mut viewer.settings.refinement,level,format!("{}",1u32<<level));}});
++                if !viewer.settings.quantity.structural() {ui_kit::row(ui,"Display refinement",|ui|{for level in 1..=3 {changed|=choose(ui,&mut viewer.settings.refinement,level,format!("{}",1u32<<level));}});}
 +                let mut manual_range=viewer.settings.color_range.is_some();
 +                if ui_kit::checkbox(ui,crate::i18n::tr_label("Fixed legend range"),&mut manual_range).changed() {
 +                    viewer.settings.color_range=manual_range.then(|| viewer.info.get("color_range").and_then(Value::as_array).and_then(|a| Some([a.first()?.as_f64()?,a.get(1)?.as_f64()?])).unwrap_or([-1.,1.]));
@@ -9465,15 +10531,23 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +                    changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Section only (off: keep negative side)"),&mut section.slice_only).changed();
 +                }
 +                changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Display triangle edges"),&mut viewer.settings.wireframe).changed();
-+                changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Major axis of mean effective tensor"),&mut viewer.settings.principal_directions).changed();
++                if !viewer.settings.quantity.structural() {changed|=ui_kit::checkbox(ui,crate::i18n::tr_label("Major axis of mean effective tensor"),&mut viewer.settings.principal_directions).changed();}
 +            });
 +            if let Some(range)=viewer.info.get("data_range").and_then(Value::as_array)
 +                && let (Some(low),Some(high))=(range.first().and_then(Value::as_f64),range.get(1).and_then(Value::as_f64)) {
 +                ui.label(format!("Range: {low:.5e} to {high:.5e} {}",viewer.settings.quantity.unit()));
 +            }
-+            ui_kit::text(ui,if viewer.settings.quantity.nodal(){"Nodal displacement interpolation. Z is up: settlement negative, heave positive."}else{"Original-cell integration-weighted means. Stress is compression positive; no smoothing to nodes. Null values are unavailable."},ui_kit::Text::Note("soil_result_values"));
++            ui_kit::text(ui,if viewer.settings.quantity.structural(){"Beam section actions use local axes. Plates display raw DKT samples on three equal-area regions without averaging across plates. Member displacement is from CAD, independent of soil display RESET. Inactive members are hidden; read their archived values by index."}else if viewer.settings.quantity.primary(){"Material-specific P1 interpolation of stored corner values. Material boundaries retain separate values. Compression is positive."}else if viewer.settings.quantity.nodal(){"Nodal displacement interpolation. Z is up: settlement negative, heave positive."}else{"Original-cell integration-weighted means. Stress is compression positive; no smoothing to nodes. Null values are unavailable."},ui_kit::Text::Note("soil_result_values"));
 +            ui_kit::text(ui,"Curved Tet10 surfaces and sections use refined planar display triangles. Section planes use reference coordinates; deformation is applied afterwards.",ui_kit::Text::Note("soil_result_approximation"));
-+            ui.horizontal(|ui| {ui_kit::dropdown_menu(ui,"soil_query_kind",["Node","Element mean","Raw integration point","Primary node + material"].get(viewer.query_kind as usize).copied().unwrap_or("Node"),|ui| {for (kind,label) in [(0,"Node"),(1,"Element mean"),(2,"Raw integration point"),(3,"Primary node + material")] {choose(ui,&mut viewer.query_kind,kind,label);}});
++            if viewer.settings.quantity.structural() {
++                ui_kit::text(ui,"Structural display geometry uses straight beam ends and flat plate triangles with linear nodal displacement. Beam colors interpolate start/mid/end section values over 16 display segments. No active members produces an empty layer.",ui_kit::Text::Note("soil_result_structural_approximation"));
++            }
++            ui.horizontal(|ui| {ui_kit::dropdown_menu(ui,"soil_query_kind",["Node","Element mean","Raw integration point","Primary node + material","Structural node","Beam index","Plate index"].get(viewer.query_kind as usize).copied().unwrap_or("Node"),|ui| {
++                for (kind,label) in [(0,"Node"),(1,"Element mean"),(2,"Raw integration point"),(3,"Primary node + material")] {choose(ui,&mut viewer.query_kind,kind,label);}
++                if viewer.info.get("structural_nodes").and_then(Value::as_u64).is_some() {choose(ui,&mut viewer.query_kind,4,"Structural node");}
++                if viewer.info.get("defined_beams").and_then(Value::as_u64).is_some_and(|n|n>0) {choose(ui,&mut viewer.query_kind,5,"Beam index");}
++                if viewer.info.get("defined_plates").and_then(Value::as_u64).is_some_and(|n|n>0) {choose(ui,&mut viewer.query_kind,6,"Plate index");}
++            });
 +                ui_kit::number_field(ui,&mut viewer.query_id,0..=usize::MAX,1.,"");
 +                if viewer.query_kind==3 {ui.label("Material");ui_kit::number_field(ui,&mut viewer.query_material,1..=u32::MAX,1.,"");}
 +                inspect=ui_kit::button(ui,"Read stored value",ui_kit::Button::Enabled(!stale)).clicked();});
@@ -9510,6 +10584,9 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +            0 => json!({"node":viewer.query_id}),
 +            1 => json!({"element":viewer.query_id}),
 +            3 => json!({"primary_node":viewer.query_id,"primary_material":viewer.query_material}),
++            4 => json!({"structural_node":viewer.query_id}),
++            5 => json!({"beam":viewer.query_id}),
++            6 => json!({"plate":viewer.query_id}),
 +            _ => json!({"integration_point":viewer.query_id}),
 +        };
 +        match app.run("analysis.soil.results.query", params) {
@@ -9543,6 +10620,15 @@ index 0000000000000000000000000000000000000000..3c7590be22e5baca2e0ccd25433f7b07
 +        Quantity::VoidRatio => "Void ratio",
 +        Quantity::PreconsolidationPressure => "Preconsolidation pressure pc",
 +        Quantity::VolumetricPlasticStrain => "Volumetric plastic strain",
++        Quantity::BeamAxialForce => "Beam axial force N",
++        Quantity::BeamMomentY => "Beam moment My (local)",
++        Quantity::BeamMomentZ => "Beam moment Mz (local)",
++        Quantity::PlateMembraneXx => "Plate membrane Nxx (local)",
++        Quantity::PlateMembraneYy => "Plate membrane Nyy (local)",
++        Quantity::PlateMembraneXy => "Plate membrane Nxy (local)",
++        Quantity::PlateBendingXx => "Plate bending Mxx (local)",
++        Quantity::PlateBendingYy => "Plate bending Myy (local)",
++        Quantity::PlateBendingXy => "Plate bending Mxy (local)",
 +    }
 +}
 +
@@ -9660,23 +10746,65 @@ index 06a9375d92ffb2e0719f53394e24df5ee2769bb4..f4c6b21a8cde458e80841018a4c5d10c
      // The accepted Preferences board has a page list and one control/preview pair at 880 pt.
      if id == egui::Id::new("sc_prefs") {
          return Some(solidcraft_ui_egui::theme::Tokens::get().form_card_width * 10.0 / 3.0);
+diff --git a/docs/robustness.md b/docs/robustness.md
+index ebb88d88824dcbfa159bd02182ba93c31e07594d..7fcb701b2209824af867cbf5e6f9df3279f42d1d 100644
+--- a/docs/robustness.md
++++ b/docs/robustness.md
+@@ -90,6 +90,13 @@ changes to body grouping can therefore change the generated design. This preserv
+ original geometric reference independently of those choices. These checks supplement the
+ snapshots' stricter repeatability comparisons of raw topology and tessellated measurements.
+ 
++Windows records for seeds 13, 23, 36 and 67 were also independently sampled on
++unmodified `edf57cec293dcea301201f1d5173b33e16351466`, with the original locked
++dependency versions. The engine and geometry dependency sources were verified
++unchanged. They reproduce the maintained Windows suite's differences; shared
++records and the relative `1e-6` tolerance remain unchanged. Seed 36 still records
++the kernel's cavity-ownership refusal, rather than certifying a valid result.
++
+ ## Successful Boolean retries
+ 
+ When an accepted Boolean result needs a retry that can make it differ from the
+diff --git a/tests/robustness/goldens.json b/tests/robustness/goldens.json
+index 378044afe904a3cdb59f3c4765c5b099459cdfe3..7eb85d445d9c05330c406e1e7f68bd99d24aa272 100644
+--- a/tests/robustness/goldens.json
++++ b/tests/robustness/goldens.json
+@@ -98,7 +98,7 @@
+   "94": {"area":3480.70333,"bodies":1,"edges":63,"error":null,"faces":27,"outcome":"ok","rejected":1,"shells":2,"steps":["revolved section","cut cylinder","fillet","hole","rectangular pattern","cut box","cut box"],"unsupported":0,"volume":5456.446856},
+   "95": {"area":2375.340299,"bodies":1,"edges":33,"error":null,"faces":12,"outcome":"ok","rejected":2,"shells":1,"steps":["revolved section","hole","cut cylinder","cut sphere","circular pattern","cut sphere"],"unsupported":1,"volume":6704.220611}
+  },
+- "platforms": {"windows":{"seeds":{"1":{"area":2642.450837,"bodies":1,"edges":32,"error":null,"faces":13,"outcome":"ok","rejected":0,"shells":1,"steps":["revolved section","cut cylinder","join cylinder"],"unsupported":0,"volume":6991.569339},"23":{"area":1795.696636,"bodies":1,"edges":15,"error":null,"faces":7,"outcome":"ok","rejected":0,"shells":1,"steps":["revolved section","cut sphere"],"unsupported":0,"volume":3198.694618},"34":{"area":1086.303608,"bodies":1,"edges":30,"error":null,"faces":14,"outcome":"ok","rejected":0,"shells":1,"steps":["revolved section","cut sphere","hole"],"unsupported":0,"volume":2134.3653},"67":{"area":7943.46222,"bodies":2,"edges":86,"error":null,"faces":36,"outcome":"ok","rejected":0,"shells":2,"steps":["extruded profile","cut cylinder","hole","join cylinder","join box","hole","chamfer","rectangular pattern"],"unsupported":2,"volume":27607.962186},"94":{"area":3470.837042,"bodies":1,"edges":63,"error":null,"faces":27,"outcome":"ok","rejected":1,"shells":2,"steps":["revolved section","cut cylinder","fillet","hole","rectangular pattern","cut box","cut box"],"unsupported":0,"volume":5456.438772}}}},
++ "platforms": {"windows":{"seeds":{"1":{"area":2642.450837,"bodies":1,"edges":32,"error":null,"faces":13,"outcome":"ok","rejected":0,"shells":1,"steps":["revolved section","cut cylinder","join cylinder"],"unsupported":0,"volume":6991.569339},"23":{"area":1795.693105,"bodies":1,"edges":15,"error":null,"faces":7,"outcome":"ok","rejected":0,"shells":1,"steps":["revolved section","cut sphere"],"unsupported":0,"volume":3198.69409},"34":{"area":1086.303608,"bodies":1,"edges":30,"error":null,"faces":14,"outcome":"ok","rejected":0,"shells":1,"steps":["revolved section","cut sphere","hole"],"unsupported":0,"volume":2134.3653},"67":{"area":7940.064,"bodies":1,"edges":84,"error":null,"faces":35,"outcome":"ok","rejected":1,"shells":2,"steps":["extruded profile","cut cylinder","hole","join cylinder","join box","hole","chamfer","rectangular pattern"],"unsupported":1,"volume":27606.450862},"94":{"area":3470.837042,"bodies":1,"edges":63,"error":null,"faces":27,"outcome":"ok","rejected":1,"shells":2,"steps":["revolved section","cut cylinder","fillet","hole","rectangular pattern","cut box","cut box"],"unsupported":0,"volume":5456.438772},"13":{"area":2101.521015,"bodies":1,"edges":103,"error":null,"faces":41,"outcome":"ok","rejected":1,"shells":1,"steps":["revolved section","cut cylinder","join box","rectangular pattern","cut cylinder","cut box","fillet","hole"],"unsupported":0,"volume":2396.939549},"36":{"area":9964.083285,"bodies":1,"edges":45,"error":"lumps: shell boundaries intersect or touch; cavity ownership","faces":21,"outcome":"failed","rejected":0,"shells":2,"steps":["revolved section","cut cylinder","join box","fillet","join cylinder"],"unsupported":0,"volume":54852.503099}}}},
+  "notes": [
+   {"reason":"First record: what each seed builds on main at 1a0100cd","seeds":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95]},
+   {"reason":"seed 0 meshes differently since display tessellation plans (#805), which landed alongside these goldens (#826)","seeds":[0]},
+@@ -148,6 +148,7 @@
+   {"reason":"A cut no longer comes out empty where a shell of one body meets nothing of the other (a sealed void, a body clear of the tool): truck placed such faces by their surfaces alone, which a turned body's reversed faces and a void's inward shell got wrong. Seeds 0, 45 and 77 each had a cut refused as empty that now takes what it should, and the generator builds different steps after it: seed 0 a sphere clear of the body (removes nothing), seed 45 a hole on the axis of a shelled turned body (widens its bore from r 2.5 to r 4 over 17.5 mm: 536.0 mm3), seed 77 a hole inside a turned body's bore (removes nothing; a later pattern copy drills r 1.5 through 27.5 mm: 194.4 mm3). Every step passes the validity and volume-direction checks.","seeds":[0,45,77]},
+   {"reason":"Trimmed faces of display meshes stay on their surfaces (#1653): seeds 1, 23, 55, 64 and 86 end with bodies whose trimmed faces were meshed off their surfaces; measured on the corrected meshes their area and volume move slightly (seed 86 most: area +9.6 mm2, volume -41.4 mm3, 0.2 %). Steps, outcome and counts are unchanged; recorded from Linux CI on main at the time of the rebase. The slow seeds 14, 20 and 40 (run only by the merge queue) move too: 14 area +0.92 mm2 / volume +2.64 mm3, 20 area +2.60 mm2 / volume +14.8 mm3, 40 area +0.61 mm2 / volume -2.25 mm3, from merge-group run 39450833424.","seeds":[1,14,20,23,40,55,64,86]},
+   {"reason":"measure (#2069): a body whose meshes leave a crack is summed about its box's centre instead of the origin, so the crack is closed by a cone to a point inside the body. Seeds 14, 20, 40, 55, 61 and 86 end with such a body; their volumes move from main's by -0.52 %, +0.11 %, -0.017 %, -0.001 %, -0.0015 % and +0.026 %. Steps, outcomes, counts and areas (to 3e-7 relative) are unchanged. Recorded on Linux.","seeds":[14,20,40,55,61,86]},
+-  {"reason":"Chamfer cutters that reach into a nearby wall are not used (#4539): a chamfer in seed 9 was refused, as its result changed 33 mm3 of the part, more than the chamfer can (20). With its cutter refused it builds locally, so the design takes 8 steps without the final cut box. Area 2427.18 -> 2403.70 mm2, volume 6417.16 -> 6524.64 mm3, unsupported steps 2 -> 0; counts unchanged. Recorded on Linux.","seeds":[9]}
++  {"reason":"Chamfer cutters that reach into a nearby wall are not used (#4539): a chamfer in seed 9 was refused, as its result changed 33 mm3 of the part, more than the chamfer can (20). With its cutter refused it builds locally, so the design takes 8 steps without the final cut box. Area 2427.18 -> 2403.70 mm2, volume 6417.16 -> 6524.64 mm3, unsupported steps 2 -> 0; counts unchanged. Recorded on Linux.","seeds":[9]},
++  {"reason":"Windows MSVC records independently reproduced on unmodified edf57cec293dcea301201f1d5173b33e16351466 with original locked dependency versions. Engine source (271 files) and lower geometry sources (407 files) verified unchanged; independent collector records SHA256 9cbf0454ef29ecda77348137774107d38494890e9325b99a82003c6958a1b5a2. Same differences reproduced by the maintained full CI. Shared records, other platforms, all 96 seed tests and 1e-6 tolerance are unchanged. Seed 36 remains a recorded kernel refusal, not a geometric validity acceptance.","seeds":[13,23,36,67],"platform":"windows"}
+  ]
+ }
 diff --git a/xtask/src/icons.rs b/xtask/src/icons.rs
-index e3f618584e02dbf3d3ab27103a817cebeb091d75..18f3191bde2fc07816212fe2bd3bd17e730914a8 100644
+index e3f618584e02dbf3d3ab27103a817cebeb091d75..14440237397c3c2df49f7f17e5b8ab0d7fba0911 100644
 --- a/xtask/src/icons.rs
 +++ b/xtask/src/icons.rs
-@@ -8,7 +8,9 @@ pub fn run(root: &Path) -> Result<(), String> {
+@@ -8,8 +8,10 @@ pub fn run(root: &Path) -> Result<(), String> {
          vec!["-B", "assets/icons/ui/design/tools/icon_status.py", "--check"],
          vec!["-B", "-m", "unittest", "discover", "-s", "tests/tools", "-p", "test_icon*.py"],
      ] {
 -        let mut command = Command::new("python3");
+-        command.args(args).current_dir(root);
 +        // setup-python and standard Windows installations expose python.exe;
 +        // python3.exe may instead be an unavailable Windows Store alias.
 +        let mut command = Command::new(if cfg!(windows) { "python" } else { "python3" });
-         command.args(args).current_dir(root);
++        command.args(args).current_dir(root).env("PYTHONUTF8", "1");
          super::run(command, "UI icon standards (Python 3.11+)")?;
      }
+     Ok(())
 diff --git a/xtask/src/test.rs b/xtask/src/test.rs
-index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f376b9a9e18 100644
+index 799c820f7d1b346bc788c27814a96db29c6355fd..d844d84b69dbfbe6d2158e1d3213f8d1188dfa02 100644
 --- a/xtask/src/test.rs
 +++ b/xtask/src/test.rs
 @@ -1,8 +1,9 @@
@@ -9691,10 +10819,12 @@ index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f37
  use std::sync::mpsc;
  use std::time::Instant;
  
-@@ -20,17 +21,25 @@ struct TestBin {
+@@ -20,17 +21,39 @@ struct TestBin {
  /// its whole output.
  pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>) -> Result<(), String> {
      let bins = build(cargo_args)?;
++    #[cfg(windows)]
++    let rust_library = rust_library_path()?;
 +    let configured = std::env::var("SOLIDCRAFT_TEST_JOBS").ok();
 +    let jobs = parallelism(configured.as_deref(), std::thread::available_parallelism().map_or(1, usize::from), bins.len())?;
 +    eprintln!("test: {jobs} concurrent binaries (SOLIDCRAFT_TEST_JOBS)");
@@ -9708,6 +10838,8 @@ index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f37
              let tx = tx.clone();
 +            let bins = &bins;
 +            let next = &next;
++            #[cfg(windows)]
++            let rust_library = &rust_library;
              scope.spawn(move || {
 -                let t0 = Instant::now();
 -                let mut c = Command::new(&b.exe);
@@ -9717,15 +10849,59 @@ index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f37
 +                    let t0 = Instant::now();
 +                    let mut c = Command::new(&b.exe);
 +                    c.args(test_args).current_dir(&b.dir).env("CARGO_MANIFEST_DIR", &b.dir);
++                    #[cfg(windows)]
++                    match test_library_path(&b.exe, rust_library, std::env::var_os("PATH").as_deref()) {
++                        Ok(path) => {
++                            c.env("PATH", path);
++                        }
++                        Err(error) => {
++                            let _ = tx.send((b.label.clone(), Err(error), t0.elapsed().as_secs_f64()));
++                            continue;
++                        }
++                    }
 +                    let _ = tx.send((b.label.clone(), finish(c), t0.elapsed().as_secs_f64()));
 +                }
              });
          }
          let tx_side = tx.clone();
-@@ -55,6 +64,18 @@ pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>
+@@ -55,6 +78,52 @@ pub fn run(cargo_args: &[&str], test_args: &[&str], side: Vec<(String, Command)>
      if failed.is_empty() { Ok(()) } else { Err(format!("failed: {}", failed.join(", "))) }
  }
  
++/// Cargo extends PATH for its own test launches. This runner launches their exact
++/// artifacts itself, so Windows also needs the compiler's standard-library DLL
++/// directory and the artifact's profile/deps directories (not just cargo's shims).
++#[cfg(windows)]
++fn rust_library_path() -> Result<std::path::PathBuf, String> {
++    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into());
++    let output = Command::new(rustc)
++        .args(["--print", "target-libdir"])
++        .current_dir(root())
++        .stdin(Stdio::null())
++        .output()
++        .map_err(|e| format!("rustc library path: {e}"))?;
++    if !output.status.success() {
++        return Err(format!("rustc library path: {}: {}", output.status, String::from_utf8_lossy(&output.stderr)));
++    }
++    let text = String::from_utf8(output.stdout).map_err(|e| format!("rustc library path is not UTF-8: {e}"))?;
++    let library = std::path::PathBuf::from(text.trim());
++    if text.trim().is_empty() || !library.is_dir() {
++        return Err("rustc returned a missing standard-library directory".into());
++    }
++    Ok(library)
++}
++
++#[cfg(windows)]
++fn test_library_path(exe: &str, library: &std::path::Path, inherited: Option<&std::ffi::OsStr>) -> Result<std::ffi::OsString, String> {
++    let deps = std::path::Path::new(exe).parent().ok_or_else(|| "test artifact has no parent directory".to_string())?;
++    let profile = deps.parent().ok_or_else(|| "test artifact has no profile directory".to_string())?;
++    let mut paths = vec![deps.to_path_buf(), profile.to_path_buf(), library.to_path_buf()];
++    if let Some(inherited) = inherited {
++        paths.extend(std::env::split_paths(inherited));
++    }
++    std::env::join_paths(paths).map_err(|e| format!("test DLL search path: {e}"))
++}
++
 +fn parallelism(configured: Option<&str>, available: usize, binaries: usize) -> Result<usize, String> {
 +    let jobs = match configured {
 +        Some(value) => value
@@ -9741,7 +10917,7 @@ index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f37
  /// Run to the end: the last `test result:` line on success, all output on failure.
  fn finish(mut c: Command) -> Result<String, String> {
      let out = c.stdin(Stdio::null()).output().map_err(|e| format!("failed to spawn: {e}"))?;
-@@ -103,3 +124,33 @@ pub fn doc_tests(cargo_args: &[&str], test_args: &[&str]) -> (String, Command) {
+@@ -103,3 +172,43 @@ pub fn doc_tests(cargo_args: &[&str], test_args: &[&str]) -> (String, Command) {
      c.args(["test", "--workspace", "--profile", "ci", "--doc"]).args(cargo_args).arg("--").args(test_args);
      ("doc tests".into(), c)
  }
@@ -9749,6 +10925,16 @@ index 799c820f7d1b346bc788c27814a96db29c6355fd..df51b5f1a82fd75d253dbc14372c2f37
 +#[cfg(test)]
 +mod tests {
 +    use super::*;
++    #[test]
++    #[cfg(windows)]
++    fn direct_artifacts_keep_cargo_library_and_inherited_search_paths() {
++        use std::path::{Path, PathBuf};
++        let old = std::env::join_paths([PathBuf::from("D:/Tools with spaces"), PathBuf::from("D:/Other")]).unwrap();
++        let path = test_library_path("D:/Build output/ci/deps/test.exe", Path::new("D:/Rust lib"), Some(&old)).unwrap();
++        let paths: Vec<_> = std::env::split_paths(&path).collect();
++        assert_eq!(paths, ["D:/Build output/ci/deps", "D:/Build output/ci", "D:/Rust lib", "D:/Tools with spaces", "D:/Other"].map(PathBuf::from));
++        assert!(test_library_path("test.exe", Path::new("D:/Rust lib"), None).is_err());
++    }
 +    #[test]
 +    fn binary_parallelism_is_bounded_and_invalid_overrides_fail() {
 +        assert_eq!(parallelism(None, 128, 500).unwrap(), 4);

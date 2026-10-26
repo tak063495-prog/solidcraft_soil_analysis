@@ -137,7 +137,11 @@ def initial_state(mesh, ground, case, run):
         if definition['kind'] == 'body_states':
             regions = {r['id']:r['body'] for r in mesh['regions']}
             expected = [definition['states'][regions[mesh['region_ids'][p['element_index']]]] for p in run['integration_points']]
-        else:
+        elif definition['kind'] == 'mcc_affine_fields':
+            from mcc_seed_audit import verify_affine_seed
+            verify_affine_seed(mesh,ground,seed['material_states'])
+            expected = None
+        elif definition['kind'] == 'integration_points':
             require(definition['mesh_sha256'] == run['provenance']['mesh_sha256'], 'geostatic seed mesh differs')
             require(len(definition['points']) == len(run['integration_points']), 'geostatic seed inventory differs')
             expected = []
@@ -146,7 +150,10 @@ def initial_state(mesh, ground, case, run):
                     point['material_id'] == mesh['material_ids'][point['element_index']] and
                     np.allclose(point['position_m'],layout['position_m'],rtol=0.,atol=1e-8), 'geostatic seed point binding differs')
                 expected.append(point['state'])
-        require(expected == seed['material_states'], 'geostatic seed differs from input material history')
+        else:
+            raise ValueError('unsupported geostatic seed definition')
+        if expected is not None:
+            require(expected == seed['material_states'], 'geostatic seed differs from input material history')
         require(all(seed['active_elements']) and not np.asarray(seed['displacement_m']).any(), 'geostatic seed domain/displacement differs')
         # On the unchanged seed domain, the saved P1 field is authoritative.
         # Audit its weak projection independently rather than replacing it by

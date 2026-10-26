@@ -70,7 +70,7 @@ def scene_frame(mesh,run,index):
 
 def _scene_frame(mesh,run,index,*,validated_mixed=False):
     mixed=None
-    if run.get('schema') in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/1'):
+    if run.get('schema') in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/1','soil-fem-mixed-mcc-stage-result/2','soil-fem-projected-mcc-stage-result/2'):
         # These fields change the display contract. Validate the whole path,
         # including DEATH offsets and frozen histories, before extracting one
         # frame. Old native readers must reject the version-2 frame explicitly.
@@ -167,6 +167,11 @@ def _scene_frame(mesh,run,index,*,validated_mixed=False):
             primary_identity='(original_node_ids, material_ids); coincident material-boundary values remain separate',
             inactive='primary fields contain active corner/material pairs only; removed GP history stays in the authoritative result')
         view['mixed_equation_audit']=mixed['metrics']
+    from solidcraft_structure_fields import fields as structure_fields
+    structures=structure_fields(mesh,run,index)
+    if structures is not None:
+        view['schema']='soil-fem-view-frame/3';points['schema']='soil-fem-view-integration-points/3'
+        view['structures']=structures
     return clean(view),clean(points)
 
 
@@ -206,8 +211,10 @@ def export(job,output):
     solver=analysis/'solver/soil-fem-3d.exe';solver_hash=sha(solver)
     if accepted.get('solver_binary_sha256')!=solver_hash or run.get('provenance',{}).get('solver_binary_sha256')!=solver_hash:raise ValueError('job solver fingerprint mismatch')
     if run.get('complete') is not True or run.get('failure_reason') is not None:raise ValueError('incomplete analysis cannot be displayed as accepted')
-    projected=run.get('schema')=='soil-fem-projected-mcc-stage-result/1'
-    if not projected and run.get('schema') not in {f'soil-fem-stage-result/{i}' for i in range(1,14)}:raise ValueError('unsupported result schema for native viewer')
+    projected=run.get('schema') in ('soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2')
+    structural=isinstance(run.get('case',{}).get('beam_system'),dict)
+    if not projected and run.get('schema') not in {f'soil-fem-stage-result/{i}' for i in range(1,15)}:raise ValueError('unsupported result schema for native viewer')
+    if run['schema']=='soil-fem-projected-mcc-stage-result/2' and not structural:raise ValueError('structural projected source lacks members')
     if projected:
         from verify_projected_stage_package import audit
         audit(mesh,ground,stages,run)
@@ -271,6 +278,14 @@ def export(job,output):
             primary_pressure='material-split P1 mean effective stress; distinct from pore pressure',
             mixed_primary='active corner/material pairs; no cross-material averaging',
             volume='cumulative material volume and kinematic divergence remain distinct')
+    if structural:
+        manifest['schema']='soil-fem-solidcraft-view/3'
+        manifest['semantics'].update(source_result_schema=run['schema'],
+            structures='raw beam section forces and DKT plate samples in their reported local axes; archived inactive state retained',
+            structural_displacement='from CAD; independent of soil display RESET',
+            structural_units='beam kN and kN m; plate membrane kN/m and bending kN m/m; rotations rad')
+        manifest['omissions']=['anchor/contact result layers','water fields']
+        manifest['scope']='Versioned continuum and linear frame/plate display data; native rendering and mechanical/spatial acceptance require separate evidence.'
     write('view-manifest.json',manifest,track=False)
     print('Native viewer data:',len(frames),'frames; explicit nodal, cell-average and raw integration-point fields')
     return manifest

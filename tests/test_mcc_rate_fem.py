@@ -6,9 +6,45 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 import numpy as np
 from mcc_rate_fem import System, seed, solve, terms
 from mcc_rate_midpoint import advance_cached
+from mcc_rate_rk4 import advance_rk4
 
 
 class RatePhysics(unittest.TestCase):
+    def test_rk4_softening_path_converges_at_fourth_order_against_radau_without_projection(self):
+        from scipy.integrate import solve_ivp
+        parameters=np.array([[1.44,.2,.04,.3]])
+        strain=np.array([.03,-.015,-.015,.004,-.002,.003])
+        class Material:
+            constitutive_terms=staticmethod(terms)
+            calls=0;linear_iterations=0;dense_fallbacks=0
+            def select(self,state,force,plastic):return np.ones(len(state),dtype=bool)
+            def rate(self,state,force,plastic):
+                self.calls+=1
+                yf,d,n,dn,den=terms(state,parameters)
+                multiplier=np.einsum('qa,a->q',dn,strain)/den
+                if np.any(multiplier<=0):raise ValueError('test path left plastic loading')
+                flow=multiplier[:,None]*n;dy=np.zeros_like(state)
+                dy[:,:6]=np.einsum('qab,qb->qa',d,strain-flow)
+                dy[:,6]=np.exp(state[:,7])/(.2-.04)*flow[:,:3].sum(axis=1)
+                dy[:,7]=-strain[:3].sum();dy[:,8:]=flow
+                return strain,dy,multiplier*np.linalg.norm(n,axis=1),yf
+        Material.parameters=parameters
+        initial=np.zeros((1,14));initial[0,:6]=[80.,20.,20.,0.,0.,0.]
+        initial[0,6:8]=np.log([102.5,2.]);original=initial.copy()
+        material=Material()
+        truth=solve_ivp(lambda t,y:material.rate(y.reshape(1,14),None,None)[1].reshape(-1),
+            (0.,1.),initial.reshape(-1),method='Radau',rtol=2e-12,atol=2e-13)
+        self.assertTrue(truth.success);self.assertLess(np.exp(truth.y[6,-1]),100.)
+        errors=[]
+        for count in (8,16,32):
+            actual,u,diagnostic=advance_rk4(Material(),initial,np.zeros(6),None,count)
+            errors.append(float(abs(actual-truth.y[:,-1]).max()))
+            self.assertEqual(diagnostic['accepted_steps'],count);self.assertEqual(diagnostic['events'],0)
+            self.assertLess(diagnostic['maximum_normalized_yield_drift'],2e-6)
+            np.testing.assert_allclose(u,strain,atol=1e-15,rtol=0.)
+        self.assertGreater(errors[0]/errors[1],14.);self.assertGreater(errors[1]/errors[2],14.)
+        self.assertLess(errors[2],7e-7);np.testing.assert_array_equal(initial,original)
+
     def setUp(self):
         self.parameters=np.array([[1.2**2,.2,.04,.3]])
         self.state=np.zeros((1,14));self.state[0,:3]=100.;self.state[0,6:8]=np.log([100.,2.])
@@ -50,6 +86,25 @@ class RatePhysics(unittest.TestCase):
 
 
 class GlobalReference(unittest.TestCase):
+    def test_rk4_global_nc_loading_and_elastic_unloading_match_closed_form(self):
+        for quadratic in (False,True):
+            mesh,ground,case,_=self.specimen(True,quadratic)
+            system=System(mesh,ground,[True],case)
+            state=np.zeros((system.weight.size,14));state[:,:3]=100.;state[:,6:8]=np.log([100.,2.])
+            trial=state.copy();trial[:,:3]=120.
+            load=system.force(trial)-system.force(state)
+            actual,u,_=advance_rk4(system,state,np.zeros(system.xyz.size),load,32)
+            expected_v=2.-.2*np.log(1.2)
+            np.testing.assert_allclose(actual[:,:3],120.,atol=1e-10,rtol=0.)
+            np.testing.assert_allclose(np.exp(actual[:,6]),120.,atol=1e-8,rtol=0.)
+            np.testing.assert_allclose(np.exp(actual[:,7]),expected_v,atol=2e-11,rtol=0.)
+            np.testing.assert_allclose(u.reshape(-1,3),-np.asarray(mesh['nodes'])*np.log(2./expected_v)/3,atol=2e-11,rtol=0.)
+            unloaded,v,_=advance_rk4(system,actual,u,-load,32)
+            expected_v+=.04*np.log(1.2)
+            np.testing.assert_allclose(unloaded[:,:3],100.,atol=2e-10,rtol=0.)
+            np.testing.assert_array_equal(unloaded[:,6],actual[:,6])
+            np.testing.assert_allclose(v.reshape(-1,3),-np.asarray(mesh['nodes'])*np.log(2./expected_v)/3,atol=2e-11,rtol=0.)
+
     def test_projected_k0_initialization_and_display_reset_preserve_physics_and_display_basis(self):
         import copy
         import contextlib
@@ -220,6 +275,43 @@ class GlobalReference(unittest.TestCase):
         point['position_m']=[.3,.25,.25]
         with self.assertRaisesRegex(ValueError,'position'):seed(mesh,ground,identity)
 
+    def test_affine_seed_reuses_original_recipe_on_tet4_tet10_and_checks_admissibility(self):
+        import copy
+        import fem_reference as geometry
+        for quadratic in (False,True):
+            mesh,ground,_,_=self.specimen(True,quadratic)
+            mesh.update(regions=[dict(id=1,body='soil')],region_ids=[1])
+            ground['bodies']=[dict(body='soil',material_id=1)]
+            law=ground['materials'][0]['mcc']
+            law.update(reference_pressure_kpa=1.,specific_volume_ncl_at_reference=3.)
+            field=dict(body='soil',reference_position_m=[1.,2.,3.],
+                effective_stress_at_reference_compression_positive_kpa=[100.,100.,100.,0.,0.,0.],
+                effective_stress_gradient_kpa_per_m=[[2.,0.,0.],[0.,3.,0.],[0.,0.,-4.],
+                    [.1,.2,.3],[-.2,.3,.1],[.3,-.1,.2]],
+                pc_over_mean_effective=2.,void_ratio=dict(mode='from_mcc_reference'))
+            ground['initialization']=dict(geostatic=dict(seed=dict(kind='mcc_affine_fields',fields=[field])))
+            result=seed(mesh,ground)[0];position=geometry.volume(mesh,0)['position']
+            x,y,z=(position-np.array([1.,2.,3.])).T
+            expected=np.column_stack((100+2*x,100+3*y,100-4*z,.1*x+.2*y+.3*z,-.2*x+.3*y+.1*z,.3*x-.1*y+.2*z))
+            np.testing.assert_allclose(result[:,:6],expected,rtol=0.,atol=1e-12)
+            p=expected[:,:3].mean(axis=1);pc=2*p
+            np.testing.assert_allclose(np.exp(result[:,6]),pc,rtol=1e-14)
+            volume=3.-.2*np.log(pc)+.04*np.log(2.)
+            np.testing.assert_allclose(np.exp(result[:,7]),volume,rtol=1e-14)
+            np.testing.assert_array_equal(result[:,8:],0.)
+            invalid=[]
+            invalid.append([]);invalid.append([field,field])
+            for key,value in (('body','foreign'),('pc_over_mean_effective',.5),
+                    ('effective_stress_at_reference_compression_positive_kpa',[-100.]*6),
+                    ('effective_stress_at_reference_compression_positive_kpa',[100.,100.,100.,1000.,0.,0.]),
+                    ('reference_position_m',[np.nan,0.,0.]),('void_ratio',dict(mode='explicit',value=1.))):
+                bad=copy.deepcopy(field);bad[key]=value;invalid.append([bad])
+            for fields in invalid:
+                bad=copy.deepcopy(ground);bad['initialization']['geostatic']['seed']['fields']=fields
+                with self.assertRaises(ValueError):seed(mesh,bad)
+            bad=copy.deepcopy(ground);bad['materials'][0].pop('mcc')
+            with self.assertRaisesRegex(ValueError,'requires MCC'):seed(mesh,bad)
+
     def test_general_geostatic_equilibrium_and_boundary_cycle_follow_isotropic_closed_form(self):
         mesh,ground,case,_=self.specimen();mesh.update(regions=[dict(id=1,body='soil')],region_ids=[1],
             face_sets={'all':[[1,2,3],[0,3,2],[0,1,3],[0,2,1]]})
@@ -238,6 +330,27 @@ class GlobalReference(unittest.TestCase):
         self.assertAlmostEqual(np.exp(loaded[7]),expected_v,places=9)
         np.testing.assert_allclose(result['frames'][1]['displacement_m'],-np.asarray(mesh['nodes'])*expected_strain,rtol=1e-6,atol=1e-10)
         np.testing.assert_allclose(result['frames'][-1]['displacement_m'],0.,atol=2e-10)
+
+    def test_unloading_from_permitted_positive_yield_drift_does_not_retrigger_loading(self):
+        mesh,ground,case,_=self.specimen(True,False)
+        p0=100.*(1.+1e-7);p1=p0-1e-6
+        for cached in (False,True):
+            with self.subTest(cached=cached):
+                system=System(mesh,ground,[True],case)
+                state=np.zeros((system.weight.size,14));state[:,:3]=p0;state[:,6:8]=np.log([100.,2.])
+                trial=state.copy();trial[:,:3]=p1
+                force=system.force(trial)-system.force(state)
+                method=system.advance if cached else system.advance_uncached
+                result,u,diagnostics=method(state,np.zeros(system.xyz.size),force,1024)
+                np.testing.assert_allclose(result[:,:3],p1,rtol=0.,atol=2e-10)
+                np.testing.assert_array_equal(result[:,6],state[:,6]);np.testing.assert_array_equal(result[:,8:],0.)
+                kappa=system.parameters[0,2];volume=2.-kappa*np.log(p1/p0)
+                np.testing.assert_allclose(np.exp(result[:,7]),volume,rtol=1e-12,atol=0.)
+                strain=-np.log(volume/2.)/3
+                np.testing.assert_allclose(u,-np.asarray(mesh['nodes']).reshape(-1)*strain,rtol=0.,atol=2e-12)
+                self.assertGreater(terms(result,system.parameters)[0].min(),1e-9,'no yield projection is introduced')
+                self.assertEqual(diagnostics['events'],0)
+                self.assertEqual(diagnostics['accepted_steps'],1024)
 
     def test_cached_event_start_preserves_every_state_and_displacement_bit(self):
         for quadratic in (False,True):

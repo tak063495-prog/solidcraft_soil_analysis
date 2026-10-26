@@ -11,7 +11,9 @@ from scipy.sparse.linalg import splu
 
 
 class StructuralSystem(sparse.SparseProjectedSystem):
-    def __init__(self, mesh, ground, active, case, *, projected=True):
+    def __init__(self, mesh, ground, active, case, *, projected=True, integration_method='midpoint'):
+        if integration_method not in ('midpoint','rk4'):raise ValueError('unknown independent integration method')
+        self.integration_method=integration_method
         self.projected = True
         # Parent initialization audits its own projected spatial operators.
         # GP-volume strain is an independent unknown, not a displacement map.
@@ -26,6 +28,12 @@ class StructuralSystem(sparse.SparseProjectedSystem):
             self.gp_assembly = sparse.Assembly(self.ti, self.pi, (ng, np1))
             self.volume_pressure_mass = self.gp_assembly.matrix(self.n*self.weight[:, :, None])
         self.structures = None
+
+    def advance(self,state,displacement,force_rate,count,progress=None):
+        if self.integration_method=='rk4':
+            from mcc_rate_rk4 import advance_rk4
+            return advance_rk4(self,state,displacement,force_rate,count,progress)
+        return super().advance(state,displacement,force_rate,count,progress)
 
     def configure_structures(self, model, history, factor_rate):
         """Fix active members/installation references for one load interval."""

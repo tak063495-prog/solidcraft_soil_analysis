@@ -4,6 +4,10 @@ for name in ('OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','OMP_NUM_THREADS'):os.envi
 from pathlib import Path
 import sys
 import unittest
+import contextlib
+import io
+import json
+import tempfile
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from test_mcc_factor_reference import specimen
@@ -27,6 +31,60 @@ def configuration(mesh):
 
 
 class StructuralRate(unittest.TestCase):
+    def test_rk4_member_checkpoint_restores_exact_history_and_refuses_other_integrator(self):
+        from prepare_mcc_structures import inputs
+        from run_mcc_structural_reference import solve
+        mesh,ground,case=inputs(Path(__file__).resolve().parents[1]);case['stages']=case['stages'][:3]
+        case['stages'][2]['target_factor']=.1
+        with tempfile.TemporaryDirectory() as tmp,contextlib.redirect_stdout(io.StringIO()):
+            folder=Path(tmp);paths=[folder/(n+'.json') for n in ('mesh','ground','case')]
+            for path,value in zip(paths,(mesh,ground,case)):path.write_text(json.dumps(value))
+            solve(*paths,folder/'whole.json',16,integration_method='rk4',checkpoint_dir=folder/'checkpoints')
+            checkpoint=folder/'checkpoints/phase-002.json'
+            solve(*paths,folder/'resumed.json',16,integration_method='rk4',resume_file=checkpoint)
+            whole=json.loads((folder/'whole.json').read_text());resumed=json.loads((folder/'resumed.json').read_text())
+            self.assertEqual(whole['integration_method'],'rk4')
+            self.assertEqual(whole['release_audits'],resumed['release_audits'])
+            for a,b in zip(whole['frames'],resumed['frames'],strict=True):
+                for key in ('material_state','displacement_m','beams','active_elements','primary_pressure'):
+                    self.assertEqual(a[key],b[key],key)
+            self.assertTrue(any(k.endswith('mcc_rate_rk4.py') for k in whole['input_and_source_sha256']))
+            with self.assertRaisesRegex(ValueError,'binding changed'):
+                solve(*paths,folder/'wrong-method.json',16,integration_method='midpoint',resume_file=checkpoint)
+            self.assertFalse((folder/'wrong-method.json').exists())
+
+    def test_independent_stage_checkpoints_restore_member_and_material_histories_and_reject_changed_bindings(self):
+        from prepare_mcc_structures import inputs
+        from run_mcc_structural_reference import solve
+        mesh,ground,case=inputs(Path(__file__).resolve().parents[1])
+        original=case['stages']
+        case['stages']=[original[0],original[1],original[2],next(s for s in original if s['kind']=='excavate'),original[-1]]
+        case['stages'][2]['target_factor']=.1
+        with tempfile.TemporaryDirectory() as tmp,contextlib.redirect_stdout(io.StringIO()):
+            folder=Path(tmp);paths=[folder/(n+'.json') for n in ('mesh','ground','case')]
+            for path,value in zip(paths,(mesh,ground,case)):path.write_text(json.dumps(value))
+            solve(*paths,folder/'continuous.json',16,checkpoint_dir=folder/'checkpoints')
+            continuous=json.loads((folder/'continuous.json').read_text())
+            self.assertGreater(continuous['frames'][1]['plastic_points'],0)
+            self.assertFalse(all(continuous['frames'][-1]['active_elements']))
+            for phase in (2,4):
+                output=folder/f'resumed-{phase}.json'
+                solve(*paths,output,16,resume_file=folder/'checkpoints'/f'phase-{phase:03}.json')
+                resumed=json.loads(output.read_text())
+                self.assertEqual(resumed['release_audits'],continuous['release_audits'])
+                for a,b in zip(continuous['frames'],resumed['frames'],strict=True):
+                    for name in ('material_state','displacement_m','beams','active_elements','primary_pressure','plastic_points'):
+                        self.assertEqual(a[name],b[name],(phase,name))
+            checkpoint=folder/'checkpoints/phase-001.json';saved=json.loads(checkpoint.read_text())
+            with self.assertRaisesRegex(ValueError,'binding changed'):
+                solve(*paths,folder/'wrong-steps.json',8,resume_file=checkpoint)
+            saved['payload']['surface_pressure_kpa']+=1.;bad=folder/'tampered.json';bad.write_text(json.dumps(saved))
+            with self.assertRaisesRegex(ValueError,'binding changed'):
+                solve(*paths,folder/'tampered-result.json',16,resume_file=bad)
+            changed=json.loads(paths[2].read_text());changed['stages'][2]['target_factor']=.2;paths[2].write_text(json.dumps(changed))
+            with self.assertRaisesRegex(ValueError,'binding changed'):
+                solve(*paths,folder/'changed-result.json',16,resume_file=checkpoint)
+
     def check_form(self,projected):
         mesh,ground,case=specimen();system=StructuralSystem(mesh,ground,[True],case,projected=projected)
         members=Members(mesh,configuration(mesh));history=members.initial_state();system.configure_structures(members,history,.7)

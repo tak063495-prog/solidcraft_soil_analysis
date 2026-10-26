@@ -20,14 +20,17 @@ def advance_cached(self,state,displacement,force_rate,count,progress=None):
         h=min(step,1-t);candidate,du=midpoint(h)
         yf=terms(candidate,self.parameters)[0]
         _,_,potential,_=self.rate(candidate,force_rate,plastic)
-        crossed=(~plastic)&(yf>1e-9);unloaded=plastic&(potential<-1e-11);next_plastic=plastic.copy()
+        # An accepted plastic step may retain a small positive yield drift.
+        # After unloading selection, that residual alone is not a new loading
+        # event: the elastic trial must also have a positive loading direction.
+        crossed=(~plastic)&(yf>1e-9)&(potential>1e-12);unloaded=plastic&(potential<-1e-11);next_plastic=plastic.copy()
         if np.any(crossed)|np.any(unloaded):
             lo=0.;hi=h
             for _ in range(28):
                 mid=(lo+hi)/2;trial,_=midpoint(mid)
                 fy=terms(trial,self.parameters)[0]
                 _,_,ld,_=self.rate(trial,force_rate,plastic)
-                if np.any((~plastic)&(fy>1e-9)) or np.any(plastic&(ld<-1e-11)):hi=mid
+                if np.any((~plastic)&(fy>1e-9)&(ld>1e-12)) or np.any(plastic&(ld<-1e-11)):hi=mid
                 else:lo=mid
             h=hi;candidate,du=midpoint(h)
             fy=terms(candidate,self.parameters)[0];_,_,ld,_=self.rate(candidate,force_rate,plastic)

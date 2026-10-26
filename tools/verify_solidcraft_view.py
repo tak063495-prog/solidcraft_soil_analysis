@@ -15,18 +15,20 @@ from verify_acceptance_packet import sha
 
 def verify(job,packet,output):
     job=job.resolve();packet=packet.resolve();manifest=read(packet/'view-manifest.json')
-    if manifest.get('schema') not in ('soil-fem-solidcraft-view/1','soil-fem-solidcraft-view/2') or manifest.get('complete') is not True:raise ValueError('complete view packet required')
-    projected=manifest['schema']=='soil-fem-solidcraft-view/2'
-    if projected and manifest['semantics'].get('source_result_schema')!='soil-fem-projected-mcc-stage-result/1':raise ValueError('projected source schema required')
+    if manifest.get('schema') not in ('soil-fem-solidcraft-view/1','soil-fem-solidcraft-view/2','soil-fem-solidcraft-view/3') or manifest.get('complete') is not True:raise ValueError('complete view packet required')
+    structural=manifest['schema']=='soil-fem-solidcraft-view/3'
+    projected=manifest['schema']=='soil-fem-solidcraft-view/2' or manifest['semantics'].get('source_result_schema')=='soil-fem-projected-mcc-stage-result/2'
+    if projected and manifest['semantics'].get('source_result_schema') not in ('soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):raise ValueError('projected source schema required')
     for base,files in ((job,manifest['job_sources_sha256']),(packet,manifest['files_sha256'])):
         for name,digest in files.items():
             path=(base/name).resolve()
             if not path.is_relative_to(base) or sha(path)!=digest:raise ValueError('view packet/source file hash mismatch')
     geometry=read(packet/manifest['geometry']);xyz=np.asarray(geometry['nodes_m']);cells=np.asarray(geometry['cells'])
+    structural_source=(read(job/'analysis/ground/mesh.json'),read(job/'analysis/stage-results.json')) if structural else None
     results=job/'analysis/results';reports=[]
     for frame in manifest['frames']:
         i=frame['index'];view=read(packet/frame['frame']);points=read(packet/frame['integration_points'])
-        version='2' if projected else '1'
+        version='3' if structural else '2' if projected else '1'
         if view.get('schema')!='soil-fem-view-frame/'+version or points.get('schema')!='soil-fem-view-integration-points/'+version:raise ValueError('view frame family differs from manifest')
         vtk=meshio.read(results/f'stage-{i:03}.vtu');kind='tetra10' if geometry['cell_kind']=='tetra10' else 'tetra'
         node_ids=np.asarray(view['active_node_ids']);element_ids=np.asarray(view['active_element_ids'])
@@ -81,8 +83,16 @@ def verify(job,packet,output):
                 ('frozen_compatibility_offset_m3','frozen_compatibility_offset_m3')):
                 if not np.array_equal(primary[name],vtk_primary.point_data[key]):raise ValueError('primary view field differs from VTU: '+name)
             if view['field_semantics'].get('equilibrium_stress')!='work_conjugate_effective_stress_compression_positive_kpa':raise ValueError('projected equilibrium stress semantics differ')
+        structural_counts=None
+        if structural:
+            from solidcraft_structure_fields import fields
+            from verify_structural_view_fields import verify as verify_structure_vtu
+            source_mesh,source_run=structural_source
+            if view.get('structures')!=fields(source_mesh,source_run,i):raise ValueError('structural display differs from authoritative source')
+            structural_counts=verify_structure_vtu(view['structures'],results,i)
         reports.append(dict(index=i,name=view['name'],active_nodes=len(node_ids),active_elements=len(element_ids),boundary_faces=len(actual),
-            raw_points=len(points['element_ids']),checked_node_fields=checked_node,checked_volume_average_fields=checked_cell,checked_raw_fields=checked_raw))
+            raw_points=len(points['element_ids']),checked_node_fields=checked_node,checked_volume_average_fields=checked_cell,checked_raw_fields=checked_raw,
+            **({'checked_structural_cells':structural_counts} if structural else {})))
     report=dict(schema='soil-fem-solidcraft-view-verification/1',passed=True,input_sha256=manifest['input_sha256'],
         view_manifest_sha256=sha(packet/'view-manifest.json'),frames=reports,
         scope='External display data compared with independently read existing VTU exports; not a native GUI or new physical reference solution.')
