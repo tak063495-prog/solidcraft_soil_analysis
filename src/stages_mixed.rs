@@ -796,8 +796,7 @@ fn evaluate(
         .enumerate()
         .filter(|(i, _)| target.active[*i])
     {
-        let material = m.ground.materials[m.material_index(&old.element_material_ids, ei)?]
-            .model
+        let material = m.material_models[m.material_index(&old.element_material_ids, ei)?]
             .as_mcc()
             .ok_or_else(|| Error::Input("mixed backend requires MCC".into()))?;
         let du = DVector::from_iterator(
@@ -814,7 +813,11 @@ fn evaluate(
             let l = shape(q);
             let de = -&q.b * &du;
             let div = de.iter().take(3).sum::<f64>();
-            let dev = std::array::from_fn(|a| de[a] - if a < 3 { div / 3. } else { 0. });
+            let mut dev = std::array::from_fn(|a| de[a] - if a < 3 { div / 3. } else { 0. });
+            // Hydrostatic increments can leave subtraction roundoff larger
+            // than the almost-zero deviatoric part. Preserve the exact trace
+            // constraint instead of relaxing the split material input check.
+            dev[2] = -(dev[0] + dev[1]);
             let history = old.material_states[point]
                 .as_mcc()
                 .ok_or_else(|| Error::Input("wrong mixed MCC history type".into()))?;

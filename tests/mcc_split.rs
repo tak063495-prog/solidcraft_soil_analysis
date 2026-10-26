@@ -9,6 +9,7 @@ fn parameters() -> mcc::Parameters {
         poisson: 0.3,
         reference_pressure_kpa: 1.,
         specific_volume_ncl_at_reference: 3.5,
+        integration: soil_fem_3d::mcc::Integration::BackwardEuler,
     }
 }
 

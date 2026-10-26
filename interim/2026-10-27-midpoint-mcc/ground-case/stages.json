@@ -1,0 +1,58 @@
+{
+  "monitor_sets": {
+    "excavation_floor": "Pit:floor",
+    "excavation_wall": "Pit:wall",
+    "surrounding_surface": "Pit:surrounding_surface"
+  },
+  "monitors": {},
+  "pressure_on_original_surface_only": true,
+  "schema": "soil-fem-projected-mcc-stages/1",
+  "settings": {
+    "initial_increment": 0.00390625,
+    "kinematics": "side_rollers",
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14,
+        "restart": 60
+      }
+    },
+    "material_maximum_substep": 2.5e-05,
+    "maximum_free_dofs": 100000,
+    "maximum_newton_iterations": 40,
+    "minimum_increment": 0.00048828125,
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "tangent_perturbation": 1e-07,
+    "mcc_integration": "midpoint"
+  },
+  "stages": [
+    {
+      "kind": "pressure",
+      "name": "preload",
+      "target_pressure_kpa": 120.0
+    },
+    {
+      "kind": "pressure",
+      "name": "unload",
+      "target_pressure_kpa": 30.0
+    },
+    {
+      "kind": "reset_display",
+      "name": "reset_after_unload"
+    },
+    {
+      "bodies": [
+        "Pit"
+      ],
+      "kind": "excavate",
+      "name": "excavate_pit",
+      "remaining_surface_pressure_kpa": 30.0
+    }
+  ],
+  "verification_reject_once_stages": [
+    "preload",
+    "excavate_pit"
+  ]
+}

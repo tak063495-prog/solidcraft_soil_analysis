@@ -37,6 +37,10 @@ pub struct Settings {
     pub initial_increment: f64,
     pub minimum_increment: f64,
     pub material_maximum_substep: f64,
+    /// Numerical override for every MCC material; other constitutive laws retain
+    /// their own integration. Ground input and its physical parameters stay intact.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mcc_integration: Option<crate::mcc::Integration>,
     pub tangent_perturbation: f64,
     pub maximum_free_dofs: usize,
     #[serde(default, skip_serializing_if = "LinearSolver::is_dense")]
@@ -494,6 +498,7 @@ struct Element {
     material: usize,
 }
 struct Model<'a> {
+    material_models: Vec<soil::Model>,
     observer: Option<&'a dyn crate::stage_control::Observer>,
     wet_joints: Option<crate::joint_water::Model>,
     soil_points: Vec<bool>,
@@ -1237,7 +1242,7 @@ impl<'a> Model<'a> {
                 prepared.element_material_ids[ei] = id;
             }
             let mi = self.material_index(&prepared.element_material_ids, ei)?;
-            let model = &self.ground.materials[mi].model;
+            let model = &self.material_models[mi];
             if self.wet_joints.as_ref().is_some_and(|w| !w.is_soil(ei))
                 && !matches!(model, soil::Model::MohrCoulomb(_))
             {
@@ -1310,6 +1315,26 @@ impl<'a> Model<'a> {
         Ok((prepared, selected))
     }
     fn new(mesh: &'a Mesh, ground: &'a Ground, case: &'a StageCase) -> Result<Self> {
+        if case.settings.mcc_integration.is_some()
+            && !ground.materials.iter().any(|m| m.model.is_mcc())
+        {
+            return Err(Error::Input(
+                "MCC integration override requires an MCC material".into(),
+            ));
+        }
+        let material_models = ground
+            .materials
+            .iter()
+            .map(|material| {
+                let mut model = material.model.clone();
+                if let (soil::Model::Mcc(parameters), Some(integration)) =
+                    (&mut model, case.settings.mcc_integration)
+                {
+                    parameters.integration = integration;
+                }
+                model
+            })
+            .collect();
         if case.is_mixed_mcc() {
             mixed::validate_definition(mesh, ground, case)?;
         }
@@ -1399,6 +1424,7 @@ impl<'a> Model<'a> {
             }
         }
         Ok(Self {
+            material_models,
             wet_joints,
             observer: None,
             soil_points,
@@ -1982,9 +2008,8 @@ impl<'a> Model<'a> {
                     let point = e.point_start + qi;
                     let de = -&q.b * &du;
                     let strain = std::array::from_fn(|i| de[i]);
-                    let material = &self.ground.materials
-                        [self.material_index(&committed.element_material_ids, ei)?]
-                    .model;
+                    let material = &self.material_models
+                        [self.material_index(&committed.element_material_ids, ei)?];
                     let (update, d) = if mode.tangent {
                         let (a, d) = material.stress_tangent_partition(
                             &committed.material_states[point],
@@ -2947,8 +2972,7 @@ impl<'a> Model<'a> {
                 e.points.iter().enumerate().map(move |(qi, _)| {
                     self.material_index(&state.element_material_ids, ei)
                         .and_then(|mi| {
-                            self.ground.materials[mi]
-                                .model
+                            self.material_models[mi]
                                 .normalized_yield(&state.material_states[e.point_start + qi])
                         })
                 })

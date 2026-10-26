@@ -1,0 +1,70 @@
+{
+  "excavation_bodies": [
+    "Pit"
+  ],
+  "initialization": {
+    "method": "horizontal_k0",
+    "relative_equilibrium_tolerance": 1e-9,
+    "surface_surcharge_kpa": 30.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665
+  },
+  "layers": [
+    {
+      "body": "LowerClay",
+      "consolidation": {
+        "definition": "mcc_pc_over_mean_effective",
+        "ratio": 2.0
+      },
+      "k0_x": 1.0,
+      "k0_y": 1.0,
+      "material_id": 1,
+      "void_ratio": {
+        "mode": "from_mcc_reference"
+      }
+    },
+    {
+      "body": "UpperClay",
+      "consolidation": {
+        "definition": "mcc_pc_over_mean_effective",
+        "ratio": 2.0
+      },
+      "k0_x": 1.0,
+      "k0_y": 1.0,
+      "material_id": 2,
+      "void_ratio": {
+        "mode": "from_mcc_reference"
+      }
+    }
+  ],
+  "materials": [
+    {
+      "id": 1,
+      "mcc": {
+        "critical_state_m": 1.4,
+        "kappa": 0.01,
+        "lambda": 0.08,
+        "poisson": 0.3,
+        "reference_pressure_kpa": 1.0,
+        "specific_volume_ncl_at_reference": 2.7
+      },
+      "name": "Lower overconsolidated clay",
+      "unit_weight_kn_m3": 20.0
+    },
+    {
+      "id": 2,
+      "mcc": {
+        "critical_state_m": 1.4,
+        "kappa": 0.01,
+        "lambda": 0.08,
+        "poisson": 0.3,
+        "reference_pressure_kpa": 1.0,
+        "specific_volume_ncl_at_reference": 2.7
+      },
+      "name": "Upper overconsolidated clay",
+      "unit_weight_kn_m3": 18.0
+    }
+  ],
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa"
+}

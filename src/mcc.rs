@@ -7,6 +7,23 @@ use serde::{Deserialize, Serialize};
 #[path = "mcc_sensitivity.rs"]
 mod sensitivity;
 
+#[path = "mcc_midpoint.rs"]
+mod midpoint;
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Integration {
+    #[default]
+    BackwardEuler,
+    Midpoint,
+}
+
+impl Integration {
+    fn is_default(&self) -> bool {
+        *self == Self::BackwardEuler
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Parameters {
@@ -16,6 +33,8 @@ pub struct Parameters {
     pub poisson: f64,
     pub reference_pressure_kpa: f64,
     pub specific_volume_ncl_at_reference: f64,
+    #[serde(default, skip_serializing_if = "Integration::is_default")]
+    pub integration: Integration,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -53,6 +72,9 @@ impl Parameters {
         strain: [f64; 6],
         steps: usize,
     ) -> Result<(Update, crate::elastic::Tensor)> {
+        if self.integration == Integration::Midpoint {
+            return midpoint::integrate(self, committed, strain, steps, true);
+        }
         sensitivity::integrate(self, committed, strain, steps)
     }
     /// Fixed partition for differentiating the complete increment map. In
@@ -63,6 +85,9 @@ impl Parameters {
         strain: [f64; 6],
         steps: usize,
     ) -> Result<Update> {
+        if self.integration == Integration::Midpoint {
+            return midpoint::integrate(self, committed, strain, steps, false).map(|x| x.0);
+        }
         self.validate_state(committed)?;
         if steps == 0 || steps > 100_000 || !strain.iter().all(|x| x.is_finite()) {
             return Err(Error::Input("invalid fixed MCC partition".into()));
@@ -229,8 +254,9 @@ impl Parameters {
     }
 
     /// Immutable trial update. A failed call cannot alter the committed state.
-    /// Substeps freeze K,G and hardening coefficient at each substep's start;
-    /// backward Euler return is solved in p,q,ln(pc),plastic multiplier.
+    /// The default freezes K,G and hardening at each substep's start and uses
+    /// a backward Euler return. Midpoint instead integrates the elastic branch
+    /// exactly and solves the coupled midpoint plastic flow and hardening.
     pub fn integrate(
         &self,
         committed: &State,
@@ -254,6 +280,14 @@ impl Parameters {
         let mut steps = required as usize;
         let mut last = String::new();
         while steps <= 100_000 {
+            if self.integration == Integration::Midpoint {
+                match midpoint::integrate(self, committed, strain, steps, false) {
+                    Ok((update, _)) => return Ok(update),
+                    Err(error) => last = error.to_string(),
+                }
+                steps *= 2;
+                continue;
+            }
             let mut state = committed.clone();
             let mut plastic = 0;
             let increment = strain.map(|x| x / steps as f64);
@@ -287,6 +321,10 @@ impl Parameters {
     }
 
     fn substep(&self, old: &State, de: [f64; 6]) -> Result<(State, bool)> {
+        if self.integration == Integration::Midpoint {
+            let update = midpoint::integrate(self, old, de, 1, false)?.0;
+            return Ok((update.state, update.plastic_substeps != 0));
+        }
         let (k, g) = self.moduli(old)?;
         let ev = de[0] + de[1] + de[2];
         let mut trial = old.effective_stress_compression_positive_kpa;
@@ -467,6 +505,7 @@ mod tests {
             poisson: 0.3,
             reference_pressure_kpa: 1.,
             specific_volume_ncl_at_reference: 3.5,
+            integration: crate::mcc::Integration::BackwardEuler,
         }
     }
     pub fn isotropic(p: f64, pc: f64) -> Result<State> {

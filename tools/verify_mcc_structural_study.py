@@ -46,7 +46,12 @@ def relative(a,b,floor=1e-12):
 
 
 def physical_case(case):
-    return {k:v for k,v in ref.normalize_stage_case(case).items() if k not in ('settings','verification_reject_once_stages')}
+    normalized=ref.normalize_stage_case(case)
+    numerical={'relative_force_tolerance','relative_linear_tolerance','maximum_newton_iterations','initial_increment','minimum_increment','material_maximum_substep','tangent_perturbation','maximum_free_dofs','linear_solver','mcc_integration'}
+    out={k:v for k,v in normalized.items() if k not in ('settings','verification_reject_once_stages')}
+    out['physical_settings']={k:v for k,v in normalized['settings'].items() if k not in numerical}
+    out['stages']=[{k:v for k,v in stage.items() if k!='initial_increment'} for stage in normalized['stages']]
+    return out
 
 
 def material(frame,native):
@@ -64,7 +69,7 @@ def differences(a,b,native):
         plastic_strain=relative(left[:,8:],right[:,8:]))
 
 
-def verify(coarse_folder,fine_folder,output,source_archive=None,reference_dir=None):
+def verify(coarse_folder,fine_folder,output,source_archive=None,reference_dir=None,reference_inputs=None):
     if output.exists():raise ValueError('new comparison output required')
     reference_dir=reference_dir or coarse_folder
     paths=[coarse_folder/'ground/mesh.json',coarse_folder/'ground/ground.json',coarse_folder/'stages.json',
@@ -77,10 +82,15 @@ def verify(coarse_folder,fine_folder,output,source_archive=None,reference_dir=No
     if mesh!=mesh_fine or ground!=ground_fine or physical_case(case)!=physical_case(case_fine):raise ValueError('refinement changed the physical problem')
     if not coarse['complete'] or not fine['complete'] or coarse['provenance']['solver_binary_sha256']!=fine['provenance']['solver_binary_sha256']:
         raise ValueError('completed runs from the same solver required')
+    ref_inputs=reference_inputs or coarse_folder
+    ref_paths=[ref_inputs/'ground/mesh.json',ref_inputs/'ground/ground.json',ref_inputs/'stages.json']
+    for native_path,reference_path in zip(paths[:2],ref_paths[:2],strict=True):
+        if sha(native_path)!=sha(reference_path):raise ValueError('mapped reference changed mesh or material/initial history')
+    if physical_case(case)!=physical_case(read(ref_paths[2])):raise ValueError('mapped reference changed physical construction or kinematics')
+    bindings.update({str(p.resolve()):sha(p) for p in ref_paths})
     for reference in (r100,r200):
         verify_reference_bindings(reference,source_archive)
-        if reference['input_and_source_sha256'][str(paths[0].resolve())]!=sha(paths[0]):raise ValueError('reference mesh differs')
-        for name,path in zip(('mesh','ground','case'),paths[:3]):
+        for name,path in zip(('mesh','ground','case'),ref_paths):
             if reference['input_and_source_sha256'][str(path.resolve())]!=sha(path):raise ValueError('reference '+name+' differs')
     if (r100['reference_steps'],r200['reference_steps'])!=(100,200):raise ValueError('100/200 reference refinement required')
     if len({len(r['frames']) for r in (coarse,fine,r100,r200)})!=1:raise ValueError('construction frame inventory differs')
@@ -152,7 +162,7 @@ def verify(coarse_folder,fine_folder,output,source_archive=None,reference_dir=No
     for key in coarse_max:
         if coarse_max[key]>1e-8 and fine_max[key]>coarse_max[key]/2:
             raise ValueError('Rust numerical refinement did not reduce maximum '+key+' error by at least half')
-    watched=paths+([] if source_archive is None else [source_archive])
+    watched=paths+ref_paths+([] if source_archive is None else [source_archive])
     if bindings!={str(p.resolve()):sha(p) for p in watched}:raise ValueError('comparison inputs changed')
     report=dict(schema='soil-fem-mcc-structural-refinement/1',frames=rows,
         maximum_coarse_relative_errors=coarse_max,maximum_fine_relative_errors=fine_max,
@@ -168,5 +178,6 @@ if __name__=='__main__':
     for name in ('coarse','fine','output'):p.add_argument(name,type=Path)
     p.add_argument('--source-archive',type=Path)
     p.add_argument('--references',type=Path,help='separately frozen reference directory; physical/source bindings remain mandatory')
+    p.add_argument('--reference-inputs',type=Path,help='exact original independent inputs; only numerical candidate settings may differ')
     a=p.parse_args();verify(a.coarse.resolve(),a.fine.resolve(),a.output.resolve(),a.source_archive.resolve() if a.source_archive else None,
-        a.references.resolve() if a.references else None)
+        a.references.resolve() if a.references else None,a.reference_inputs.resolve() if a.reference_inputs else None)
