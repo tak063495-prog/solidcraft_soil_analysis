@@ -1,5 +1,33 @@
 # SolidCraft内の解析属性とネイティブSTEP受渡し
 
+## 後続62ファイル版のMCC積分法選択（2026-10-27）
+
+MCC材料を含む地盤を読み込んだ後、Soil AnalysisのConstructionタブにある「MCC integration」で次を選び、Saveする。
+
+|選択|保存内容と動作|
+|---|---|
+|Use material settings|施工側の上書きを省略し、各MCC材料の積分法を使う。未指定材料は従来の後退Euler|
+|Backward Euler|`stages.settings.mcc_integration = "backward_euler"`|
+|Midpoint (second order)|`stages.settings.mcc_integration = "midpoint"`|
+
+上書きは解析内に複製したMCC材料へ適用する。元の材料入力やK0/OCR・先行圧密圧力・間隙比を変更しない。材料積分と施工の荷重刻みは別々に細分化する。沈下の収束を選択欄だけで保証するものではない。[材料積分の仕様と理論照合](MCC_MIDPOINT.ja.md)を参照。
+
+MCCのないモデルに明示上書きする場合、不明な方式名や文字列以外を渡す場合は保存を拒否し、元の設計とUndo履歴を保つ。CAD変更の未確認状態では入力取得を拒否するため、ボディ対応を確認しReview current CADを実行してSaveする。古い編集内容による上書きもハッシュ照合で拒否する。
+
+実アプリで選択・Save・再表示・設計ファイルへの保存・Undo/Redoによる入力の完全復元を確認した。同じ版から実CAD掘削の保存/別ワーカー再開と公式結果表示までを検証した。記録は `runs/native-mcc-integration-20261027-v1/gui-acceptance.json`。固定上流への62ファイル差分は、公開済みの60ファイル版へ追加適用する形式ではない。クリーンな固定上流への全差分として扱う。62ファイル版の総合CIと新規配置の受入は継続中である。
+
+固定上流のビルド依存環境を用意し、対応する全差分を適用したチェックアウトでは、プロジェクトのルートから次のようにビルドした実行ファイルを明示して起動する。`Start-SolidCraftSoil.ps1`の省略時のパスはdebug版であり、ciプロファイルの実行ファイルを自動選択しない。
+
+```powershell
+cargo build --release --locked
+cargo build --manifest-path external/solidcraft-soil-fem/Cargo.toml --target-dir external/solidcraft-soil-fem/target --locked --profile ci -p solidcraft
+pwsh -NoProfile -File scripts/Start-SolidCraftSoil.ps1 -SolidCraftPath external/solidcraft-soil-fem/target/ci/solidcraft.exe -SolverPath target/release/soil-fem-3d.exe
+```
+
+上記は開発環境での起動手順であり、新規PCへの配布受入の代わりにはしない。版ごとの実行ファイルとソースの対応は検証記録のSHA256で確認する。
+
+以下は初回版の記録である。
+
 2026-10-24。専用作業ツリー`external/solidcraft-soil-fem`で実装中。**保存/改名/Undo・実GUI出力・実STEP→MCCまで限定検証したが、P5全体の完了を認定した記録ではない。** [実ネイティブ検証と修正版](SOLIDCRAFT_NATIVE_VERIFICATION.ja.md)を参照。engine6試験、取込の当初5試験と静的品質検査は[初回時点の記録](../runs/solidcraft-analysis-quality-progress-20261024-v2.json)を保持する。現在は取込6件・表示受渡し7件に加え、UI3試験・clippy・書式・WASMと実画面の小数表示を確認済み。[外部ジョブワーカー](SOLIDCRAFT_JOBS.ja.md)は5試験と実ジョブの成功/停止を限定検証した。WASMの未変更3ファイルには警告がある。nativeのジョブ/結果UIは引き続き未完。
 
 ## 保存するものと実行境界

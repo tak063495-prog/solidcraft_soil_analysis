@@ -135,6 +135,39 @@ def volume(mesh,ei,independent=False,independent_order=5):
     return {'natural':r,'position':p[0]+shape@(p-p[0]),'weight':w*determinants,'shape':shape,'b':b,'nodes':cell}
 
 
+class Geometry:
+    """A local mesh snapshot for repeated audits; no global mutable-mesh cache.
+
+    Coordinates, connectivity and quadrature settings are captured once. Rule
+    generation is shared within this context; returned arrays remain isolated
+    from later calls. The element arithmetic matches the standalone `volume`.
+    """
+    def __init__(self,mesh):
+        self._xyz=np.asarray(mesh['nodes']).copy();self._cells=cells(mesh).copy()
+        self._xyz.flags.writeable=False;self._cells.flags.writeable=False
+        quadratic=mesh.get('tetrahedra10')
+        self._rule_mesh=dict(tetrahedra10=[()] if quadratic is not None and len(quadratic) else None,
+                            quadrature_order=mesh.get('quadrature_order',3))
+        self._rules={}
+
+    def volume(self,ei,independent=False,independent_order=5):
+        cell=self._cells[ei];p=self._xyz[cell];key=(independent,independent_order,len(cell))
+        if key not in self._rules:
+            r,w=volume_rule(self._rule_mesh,independent,independent_order)
+            shape,gradient=basis(r,len(cell)==10)
+            self._rules[key]=(r,w,shape,gradient)
+        r,w,shape,gradient=self._rules[key]
+        j=np.einsum('ai,qaj->qij',p-p[0],gradient)
+        determinants=np.linalg.det(j);assert np.all(determinants>0)
+        g=np.einsum('qai,qij->qaj',gradient,np.linalg.inv(j));b=np.zeros((len(r),6,3*len(cell)))
+        for i in range(len(cell)):
+            gx,gy,gz=g[:,i].T;k=3*i
+            b[:,0,k]=gx;b[:,1,k+1]=gy;b[:,2,k+2]=gz
+            b[:,3,k]=gy;b[:,3,k+1]=gx;b[:,4,k+1]=gz;b[:,4,k+2]=gy;b[:,5,k]=gz;b[:,5,k+2]=gx
+        return {'natural':r.copy(),'position':p[0]+shape@(p-p[0]),'weight':w*determinants,
+                'shape':shape.copy(),'b':b,'nodes':cell.copy()}
+
+
 def topology(mesh):
     result={}
     for ei,tet in enumerate(mesh['tetrahedra']):

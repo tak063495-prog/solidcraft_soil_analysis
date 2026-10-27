@@ -25,14 +25,21 @@ def advance_rk4(self,state,displacement,force_rate,count,progress=None):
         _,_,potential,_=self.rate(candidate,force_rate,plastic)
         crossed=(~plastic)&(yf>1e-9)&(potential>1e-12);unloaded=plastic&(potential<-1e-11);next_plastic=plastic.copy()
         if np.any(crossed)|np.any(unloaded):
-            lo=0.;hi=h
-            for _ in range(28):
-                mid=(lo+hi)/2;local,_=trial(mid)
+            from scipy.optimize import brentq
+            def margin(length):
+                local,_=trial(length)
                 fy=terms(local,self.parameters)[0]
                 _,_,ld,_=self.rate(local,force_rate,plastic)
-                if np.any((~plastic)&(fy>1e-9)&(ld>1e-12)) or np.any(plastic&(ld<-1e-11)):hi=mid
-                else:lo=mid
-            h=hi;candidate,du=trial(h)
+                # min implements AND, max implements OR; the zero set is
+                # the exact existing event predicate with unchanged units/limits.
+                score=np.full(len(local),-np.inf)
+                score[~plastic]=np.minimum(fy[~plastic]-1e-9,ld[~plastic]-1e-12)
+                score[plastic]=-ld[plastic]-1e-11
+                return float(np.max(score))
+            left=margin(0.);right=margin(h)
+            if not left<=0<right:raise ValueError('independent RK4 event bracket is inconsistent')
+            h=brentq(margin,0.,h,xtol=min(1e-12,h/2**28),rtol=4*np.finfo(float).eps,maxiter=80)
+            candidate,du=trial(h)
             fy=terms(candidate,self.parameters)[0];_,_,ld,_=self.rate(candidate,force_rate,plastic)
             next_plastic|=(~plastic)&(fy>=0.999e-9);next_plastic&=ld>=-0.999e-11
             events+=1
@@ -46,6 +53,6 @@ def advance_rk4(self,state,displacement,force_rate,count,progress=None):
         if h<1e-11:raise ValueError('independent RK4 event integration stalled')
         state=candidate;u+=du;plastic=next_plastic;t+=h;accepted+=1;minimum_step=min(minimum_step,h);maximum_drift=max(maximum_drift,drift)
         if progress is not None and accepted%100==0:progress(t,accepted,events)
-    return state,u,dict(integration_method='rk4',accepted_steps=accepted,events=events,
+    return state,u,dict(integration_method='rk4',event_localizer='brentq_continuous_original_margins',accepted_steps=accepted,events=events,
         maximum_normalized_yield_drift=maximum_drift,minimum_progress_step=minimum_step,
         rate_assemblies=self.calls,independent_pcg_iterations=self.linear_iterations,dense_fallbacks=self.dense_fallbacks)

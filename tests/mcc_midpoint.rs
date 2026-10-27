@@ -390,9 +390,11 @@ fn hydrostatic_tet10(
     Ok((mesh, ground, serde_json::from_value(case)?))
 }
 #[test]
-fn both_global_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms() -> Result<()> {
+fn global_displacement_and_both_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms()
+-> Result<()> {
     use soil_fem_3d::stages;
     for schema in [
+        "soil-fem-stages/1",
         "soil-fem-mixed-mcc-stages/1",
         "soil-fem-projected-mcc-stages/1",
     ] {

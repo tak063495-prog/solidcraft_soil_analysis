@@ -128,6 +128,16 @@ def solve(mesh_file, ground_file, case_file, identity_file, initial_file, output
             frame(stage['name'], previous, dict(accepted_steps=0, events=0, physical_state_unchanged=True))
             assert np.array_equal(state, old_state)
             continue
+        # A load hold is the identity operation. Reintegrating the previous
+        # frame's roundoff force defect creates an artificial tiny strain;
+        # its relative compatibility error can then dominate a zero load path.
+        # Keep the accepted state and re-audit with the original frame gates.
+        unchanged_load = ((stage['kind'] == 'pressure' and stage['target_pressure_kpa'] == pressure)
+                          or (stage['kind'] == 'boundary' and stage['target_factor'] == factor))
+        if unchanged_load:
+            frame(stage['name'], previous, dict(accepted_steps=0, events=0, physical_state_unchanged=True))
+            assert np.array_equal(state, old_state) and np.array_equal(u, previous)
+            continue
         if stage['kind'] == 'pressure':
             pressure = stage['target_pressure_kpa']
         elif stage['kind'] == 'boundary':

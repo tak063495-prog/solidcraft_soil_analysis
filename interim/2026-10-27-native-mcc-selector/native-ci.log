@@ -1,0 +1,150 @@
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.22s
+     Running `target\debug\xtask.exe ci`
+$ cargo fmt --check
+assets: 458 files, all attributed
+$ UI icon standards (Python 3.11+)
+icons: 289 masters, palette, naming and element rules ok
+$ UI icon standards (Python 3.11+)
+314 discovered icon ids · 314 with artwork · 0 missing · 419 assigned commands.
+$ UI icon standards (Python 3.11+)
+...D:\Work\soil-fem-3d\external\solidcraft-soil-fem\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpvqyeqg8l\\lf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+D:\Work\soil-fem-3d\external\solidcraft-soil-fem\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpvqyeqg8l\\crlf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..............
+----------------------------------------------------------------------
+Ran 17 tests in 10.801s
+
+OK
+licences: THIRD-PARTY-LICENSES.txt is up to date
+lists: message catalogs are sorted
+Dependency layering (plan/architecture.md §3)
+
+crate                        layer          workspace deps
+solidcraft                   exempt         engine, space-mouse, ui-egui, 3dx-client
+solidcraft-3dx-client        L0 standalone  
+solidcraft-cli               exempt         engine, gpu, mcp
+solidcraft-derive            L0 standalone  
+solidcraft-doc               L2             derive, geom, kernel, render, sketch
+solidcraft-engine            L4             doc, geom, io, kernel, render, sketch, sketch (dev)
+solidcraft-geom              L0             
+solidcraft-gpu               L5             geom, render, engine (dev), kernel (dev)
+solidcraft-io                L3             doc, geom, kernel
+solidcraft-kernel            L1             geom
+solidcraft-mcp               L5             engine, gpu (dev)
+solidcraft-render            L1             geom
+solidcraft-sketch            L1             geom
+solidcraft-space-mouse       L0             
+solidcraft-ui-egui           L5             engine, gpu, space-mouse
+solidcraft-web               exempt         engine, ui-egui
+xtask                        exempt         
+
+OK: 17 crates, no layering violations.
+ui-containers: all outer hosts use the shared API
+$ cargo clippy -D warnings
+    Checking solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\crates\ui-egui)
+   Compiling ring v0.17.14
+   Compiling rustls v0.23.46
+    Checking rustls-webpki v0.103.15
+    Checking rustls-platform-verifier v0.7.1
+    Checking ureq v3.4.2
+    Checking solidcraft v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\apps\solidcraft)
+    Checking solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\apps\solidcraft-web)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 1m 01s
+$ cargo test --workspace --profile ci --no-run
+   Compiling solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\crates\ui-egui)
+   Compiling ring v0.17.14
+   Compiling rustls-webpki v0.103.15
+   Compiling rustls v0.23.46
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling ureq v3.4.2
+   Compiling solidcraft v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\apps\solidcraft)
+   Compiling solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\apps\solidcraft-web)
+   Compiling solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\external\solidcraft-soil-fem\apps\solidcraft-cli)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 11m 37s
+test: 1 concurrent binaries (SOLIDCRAFT_TEST_JOBS)
+ok    kernel test tess_loop_fill                      0.2s  ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    wasm32-unknown-unknown check (12 crates)       25.7s  
+ok    doc tests                                      17.0s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    kernel test boolean_props                      86.3s  ok. 14 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 86.30s
+ok    kernel test shell_barrel                        7.3s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.95s
+ok    kernel test revolve_on_axis                    12.3s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.00s
+ok    kernel test trimmed_spline_projection           0.1s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+ok    kernel lib solidcraft_kernel                  950.6s  ok. 872 passed; 0 failed; 28 ignored; 0 measured; 0 filtered out; finished in 950.03s
+ok    kernel test chamfer_curved_holder              43.0s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 42.66s
+ok    kernel test tess_include_equivalence            0.9s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s
+ok    kernel test mesh_collision_equivalence          0.1s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    ui-egui test window_widths                      5.5s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.82s
+ok    ui-egui test coincident_lines                   1.0s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+ok    ui-egui test point_constraint_preselection      1.7s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.01s
+ok    solidcraft bin solidcraft                       3.4s  ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.68s
+ok    ui-egui test parameter_order                    1.0s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+ok    ui-egui test constraint_preselection            1.8s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s
+ok    ui-egui test assistant_render                   3.5s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.97s
+ok    ui-egui test icon_audit                        69.6s  ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 68.93s
+ok    ui-egui test dialog_chip_hover                  0.9s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+ok    ui-egui test popup_owner_capture                5.6s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.92s
+ok    ui-egui test popup_regressions                  6.6s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.87s
+ok    ui-egui test scenarios                         76.2s  ok. 122 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 75.48s
+ok    ui-egui test disclosure_render                  2.3s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.56s
+ok    ui-egui test stand_up_offer                     1.4s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+ok    solidcraft-web bin solidcraft-web               0.2s  ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    ui-egui test projection_preselection            1.0s  ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+ok    ui-egui test point_alignment                    2.6s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.95s
+ok    ui-egui test parameter_enter                    1.4s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+ok    ui-egui test ui_layout                         20.8s  ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.11s
+ok    xtask bin xtask                                 6.7s  ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.51s
+ok    solidcraft-cli test commands_output             0.8s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+ok    solidcraft-cli test run_results                 3.3s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.17s
+ok    solidcraft-cli test run_strict                  0.5s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+ok    solidcraft-cli test script_roundtrip            6.0s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.95s
+ok    solidcraft-cli test oracle_cases                0.0s  ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    solidcraft-cli test snapshot_appearance         3.9s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.85s
+ok    solidcraft-cli bin solidcraft-cli               9.5s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.49s
+ok    solidcraft-cli test design_corpus              21.2s  ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 21.11s
+ok    solidcraft-cli test straight_edges_after_cuts    0.3s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+ok    solidcraft-cli test model_cache                34.0s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.92s
+ok    solidcraft-cli test mcp_connect                 2.6s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.56s
+ok    solidcraft-cli test help_output                 0.3s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+ok    solidcraft-cli test kill_mid_save               9.2s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.16s
+ok    solidcraft-cli test legacy_alias                0.3s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+ok    solidcraft-cli test action_matrix             678.2s  ok. 22 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 678.13s
+ok    solidcraft-cli test bracket_example             1.1s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.10s
+ok    solidcraft-cli test json_out                    0.5s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s
+ok    solidcraft-cli test snapshot_camera            12.0s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.84s
+ok    solidcraft-cli test fuzz_range                  1.1s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
+ok    solidcraft-cli bin solvecraft-cli               0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    solidcraft-cli test rebuild_topology           48.2s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 47.53s
+ok    solidcraft-cli test mcp_param_check             0.6s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+ok    gpu test thin_lines                             1.2s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+ok    mcp lib solidcraft_mcp                          5.8s  ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.98s
+ok    gpu test depth                                  1.8s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.92s
+ok    gpu test capture                                1.5s  ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+ok    gpu lib solidcraft_gpu                          5.1s  ok. 20 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 4.38s
+ok    engine test shell_opening_regressions           0.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+ok    engine test step_export_regressions            75.5s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 74.97s
+ok    engine test mesh_export_regressions             9.4s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.67s
+ok    engine test atomic_commands                   631.8s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 631.17s
+ok    engine test save_as_cache                       0.5s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+ok    engine test sketch_drag_target                  0.5s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    engine test sketch_analysis                     0.5s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+ok    engine test pleat_regressions                  89.2s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 88.71s
+ok    engine test step_merge_regressions              2.0s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.48s
+ok    engine test shell_regressions                   0.6s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    engine lib solidcraft_engine                 3298.7s  ok. 2030 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 3298.13s
+ok    io lib solidcraft_io                           13.7s  ok. 117 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 12.99s
+ok    doc lib solidcraft_doc                         59.7s  ok. 285 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 59.02s
+ok    render lib solidcraft_render                    1.0s  ok. 117 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.59s
+ok    sketch test analysis_levels                     0.2s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    sketch test cursor_target                       0.2s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+ok    sketch lib solidcraft_sketch                   80.8s  ok. 242 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 80.46s
+ok    geom lib solidcraft_geom                        6.8s  ok. 145 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.56s
+ok    space-mouse lib solidcraft_space_mouse          0.2s  ok. 63 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+ok    derive proc-macro solidcraft_derive             0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    threedx-client lib solidcraft_3dx_client        0.2s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    ui-egui lib solidcraft_ui_egui                616.6s  ok. 1908 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 615.64s
+test: 78 binaries in 7051.5s
+web-offline-test: skipped (no Chrome; set CHROME to its executable)
+ci: all gates passed

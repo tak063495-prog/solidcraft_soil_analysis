@@ -1,0 +1,1478 @@
+{
+  "format": "solidcraft/32",
+  "format_pending": [
+    "soil-fem-analysis",
+    "soil-fem-mcc-integration"
+  ],
+  "name": "source.solidcraft",
+  "units": "mm",
+  "metadata": {
+    "org.solidcraft.soil-fem": {
+      "bindings": [
+        {
+          "analysis_body": "LowerLeft",
+          "cad_body": "LowerLeft",
+          "component": 0,
+          "creator_feature": 1,
+          "producer_outputs": [
+            "LowerLeft"
+          ]
+        },
+        {
+          "analysis_body": "LowerRight",
+          "cad_body": "LowerRight",
+          "component": 0,
+          "creator_feature": 2,
+          "producer_outputs": [
+            "LowerRight"
+          ]
+        },
+        {
+          "analysis_body": "Pit",
+          "cad_body": "Pit",
+          "component": 0,
+          "creator_feature": 4,
+          "producer_outputs": [
+            "Pit"
+          ]
+        },
+        {
+          "analysis_body": "UpperRetained",
+          "cad_body": "UpperRetained",
+          "component": 0,
+          "creator_feature": 3,
+          "producer_outputs": [
+            "UpperRetained"
+          ]
+        }
+      ],
+      "ground": {
+        "bodies": [
+          {
+            "body": "LowerLeft",
+            "material_id": 2
+          },
+          {
+            "body": "LowerRight",
+            "material_id": 2
+          },
+          {
+            "body": "Pit",
+            "material_id": 1
+          },
+          {
+            "body": "UpperRetained",
+            "material_id": 1
+          }
+        ],
+        "initialization": {
+          "geostatic": {
+            "initial_boundary_factor": 0.0,
+            "maximum_initial_engineering_strain": 0.05,
+            "relative_volume_tolerance": 1e-8,
+            "seed": {
+              "fields": [
+                {
+                  "body": "LowerLeft",
+                  "effective_stress_at_reference_compression_positive_kpa": [
+                    60.0,
+                    60.0,
+                    100.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "effective_stress_gradient_kpa_per_m": [
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -20.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "pc_over_mean_effective": 2.4,
+                  "reference_position_m": [
+                    0.0,
+                    0.0,
+                    6.0
+                  ],
+                  "void_ratio": {
+                    "mode": "from_mcc_reference"
+                  }
+                },
+                {
+                  "body": "LowerRight",
+                  "effective_stress_at_reference_compression_positive_kpa": [
+                    60.0,
+                    60.0,
+                    100.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "effective_stress_gradient_kpa_per_m": [
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -20.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "pc_over_mean_effective": 2.4,
+                  "reference_position_m": [
+                    0.0,
+                    0.0,
+                    6.0
+                  ],
+                  "void_ratio": {
+                    "mode": "from_mcc_reference"
+                  }
+                },
+                {
+                  "body": "Pit",
+                  "effective_stress_at_reference_compression_positive_kpa": [
+                    60.0,
+                    60.0,
+                    100.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "effective_stress_gradient_kpa_per_m": [
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -20.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "pc_over_mean_effective": 1.8,
+                  "reference_position_m": [
+                    0.0,
+                    0.0,
+                    6.0
+                  ],
+                  "void_ratio": {
+                    "mode": "from_mcc_reference"
+                  }
+                },
+                {
+                  "body": "UpperRetained",
+                  "effective_stress_at_reference_compression_positive_kpa": [
+                    60.0,
+                    60.0,
+                    100.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "effective_stress_gradient_kpa_per_m": [
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -12.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      -20.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "pc_over_mean_effective": 1.8,
+                  "reference_position_m": [
+                    0.0,
+                    0.0,
+                    6.0
+                  ],
+                  "void_ratio": {
+                    "mode": "from_mcc_reference"
+                  }
+                }
+              ],
+              "kind": "mcc_affine_fields"
+            },
+            "verification_reject_once": true
+          },
+          "method": "equilibrate",
+          "relative_equilibrium_tolerance": 1e-9,
+          "surface_surcharge_kpa": 100.0,
+          "water_level_m": null,
+          "water_unit_weight_kn_m3": 9.80665
+        },
+        "materials": [
+          {
+            "id": 1,
+            "mcc": {
+              "critical_state_m": 1.4,
+              "kappa": 0.025,
+              "lambda": 0.12,
+              "poisson": 0.2,
+              "reference_pressure_kpa": 1.0,
+              "specific_volume_ncl_at_reference": 3.0
+            },
+            "name": "Synthetic upper MCC clay",
+            "unit_weight_kn_m3": 20.0
+          },
+          {
+            "id": 2,
+            "mcc": {
+              "critical_state_m": 1.55,
+              "kappa": 0.018,
+              "lambda": 0.1,
+              "poisson": 0.22,
+              "reference_pressure_kpa": 1.0,
+              "specific_volume_ncl_at_reference": 2.85
+            },
+            "name": "Synthetic lower overconsolidated MCC clay",
+            "unit_weight_kn_m3": 20.0
+          }
+        ],
+        "schema": "soil-fem-ground/1",
+        "units": "m-kN-kPa"
+      },
+      "reviewed_cad_sha256": "d0548781d303bb4c504540661f9bc837dbb3597fa0596ddad3ecc825cf7f3d20",
+      "schema": "solidcraft-soil-analysis/1",
+      "stages": {
+        "beam_system": {
+          "maximum_condensed_dofs": 3000,
+          "members": [],
+          "nodes": [
+            {
+              "id": "plate_mesh_node_6",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                4.0,
+                3.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_207",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                3.0,
+                3.75
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_32",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                2.0,
+                3.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_205",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                2.0,
+                4.5
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_206",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                1.0,
+                3.75
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_4",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                0.0,
+                3.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_58",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                0.0,
+                4.5
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_208",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                1.0,
+                5.25
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_13",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                0.0,
+                6.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_15",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                4.0,
+                6.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_209",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                3.0,
+                5.25
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_61",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                4.0,
+                4.5
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_65",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                2.0,
+                6.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_1",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_21",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                2.0,
+                0.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_99",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                1.0,
+                0.75
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_2",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                4.0,
+                0.0
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_98",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                3.0,
+                0.75
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_97",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                2.0,
+                1.5
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_26",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                0.0,
+                1.5
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_100",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                1.0,
+                2.25
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_31",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                4.0,
+                1.5
+              ],
+              "soil_node_set": null
+            },
+            {
+              "id": "plate_mesh_node_101",
+              "match_soil_node": true,
+              "position_m": [
+                5.0,
+                3.0,
+                2.25
+              ],
+              "soil_node_set": null
+            }
+          ],
+          "plate_sections": [
+            {
+              "drilling_factor": 0.0001,
+              "id": "concrete_wall",
+              "poisson": 0.2,
+              "thickness_m": 0.2,
+              "unit_weight_kn_m3": 24.0,
+              "young_kpa": 30000000.0
+            }
+          ],
+          "plates": [
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face0_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_6",
+                "plate_mesh_node_207",
+                "plate_mesh_node_32"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face0_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_207",
+                "plate_mesh_node_205",
+                "plate_mesh_node_206"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face0_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_32",
+                "plate_mesh_node_206",
+                "plate_mesh_node_4"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face0_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_207",
+                "plate_mesh_node_206",
+                "plate_mesh_node_32"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face1_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_4",
+                "plate_mesh_node_206",
+                "plate_mesh_node_58"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face1_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_206",
+                "plate_mesh_node_205",
+                "plate_mesh_node_208"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face1_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_58",
+                "plate_mesh_node_208",
+                "plate_mesh_node_13"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face1_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_206",
+                "plate_mesh_node_208",
+                "plate_mesh_node_58"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face2_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_15",
+                "plate_mesh_node_209",
+                "plate_mesh_node_61"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face2_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_209",
+                "plate_mesh_node_205",
+                "plate_mesh_node_207"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face2_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_61",
+                "plate_mesh_node_207",
+                "plate_mesh_node_6"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face2_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_209",
+                "plate_mesh_node_207",
+                "plate_mesh_node_61"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face3_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_13",
+                "plate_mesh_node_208",
+                "plate_mesh_node_65"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face3_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_208",
+                "plate_mesh_node_205",
+                "plate_mesh_node_209"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face3_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_65",
+                "plate_mesh_node_209",
+                "plate_mesh_node_15"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_upper_face3_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_208",
+                "plate_mesh_node_209",
+                "plate_mesh_node_65"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face0_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_1",
+                "plate_mesh_node_21",
+                "plate_mesh_node_99"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face0_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_21",
+                "plate_mesh_node_2",
+                "plate_mesh_node_98"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face0_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_99",
+                "plate_mesh_node_98",
+                "plate_mesh_node_97"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face0_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_21",
+                "plate_mesh_node_98",
+                "plate_mesh_node_99"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face1_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_1",
+                "plate_mesh_node_99",
+                "plate_mesh_node_26"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face1_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_99",
+                "plate_mesh_node_97",
+                "plate_mesh_node_100"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face1_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_26",
+                "plate_mesh_node_100",
+                "plate_mesh_node_4"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face1_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_99",
+                "plate_mesh_node_100",
+                "plate_mesh_node_26"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face2_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_2",
+                "plate_mesh_node_31",
+                "plate_mesh_node_98"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face2_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_31",
+                "plate_mesh_node_6",
+                "plate_mesh_node_101"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face2_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_98",
+                "plate_mesh_node_101",
+                "plate_mesh_node_97"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face2_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_31",
+                "plate_mesh_node_101",
+                "plate_mesh_node_98"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face3_part0",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_6",
+                "plate_mesh_node_32",
+                "plate_mesh_node_101"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face3_part1",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_32",
+                "plate_mesh_node_4",
+                "plate_mesh_node_100"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face3_part2",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_101",
+                "plate_mesh_node_100",
+                "plate_mesh_node_97"
+              ],
+              "section_id": "concrete_wall"
+            },
+            {
+              "boundary_traction_kpa": [
+                5.0,
+                0.0,
+                0.0
+              ],
+              "constant_traction_kpa": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "id": "wall_lower_face3_part3",
+              "initially_active": false,
+              "nodes": [
+                "plate_mesh_node_32",
+                "plate_mesh_node_100",
+                "plate_mesh_node_101"
+              ],
+              "section_id": "concrete_wall"
+            }
+          ],
+          "rotation_length_scale_m": 1.0,
+          "schema": "soil-fem-structures/1",
+          "sections": []
+        },
+        "boundary": {
+          "constraints": [
+            {
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "node_set": "bottom",
+              "value_m": 0.0
+            },
+            {
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "node_set": "bottom",
+              "value_m": 0.0
+            },
+            {
+              "direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "node_set": "bottom",
+              "value_m": 0.0
+            },
+            {
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "node_set": "xmin",
+              "value_m": 0.0
+            },
+            {
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "node_set": "xmax",
+              "value_m": 0.0
+            },
+            {
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "node_set": "ymin",
+              "value_m": 0.0
+            },
+            {
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "node_set": "ymax",
+              "value_m": 0.0
+            }
+          ]
+        },
+        "monitor_sets": {
+          "excavation_floor": "body:LowerRight:zmax",
+          "surrounding_surface": "body:UpperRetained:zmax",
+          "wall_lower": "body:LowerLeft:xmax",
+          "wall_upper": "body:UpperRetained:xmax"
+        },
+        "monitors": {},
+        "pressure_on_original_surface_only": true,
+        "schema": "soil-fem-projected-mcc-stages/1",
+        "settings": {
+          "initial_increment": 0.0625,
+          "kinematics": "explicit",
+          "linear_solver": {
+            "method": "sparse_gmres_ilu0",
+            "options": {
+              "maximum_iterations": 3000,
+              "pivot_tolerance": 1e-14,
+              "restart": 60
+            }
+          },
+          "material_maximum_substep": 0.0001,
+          "maximum_free_dofs": 100000,
+          "maximum_newton_iterations": 45,
+          "mcc_integration": "midpoint",
+          "minimum_increment": 0.0001220703125,
+          "relative_force_tolerance": 1e-8,
+          "relative_linear_tolerance": 1e-10,
+          "tangent_perturbation": 1e-7
+        },
+        "stages": [
+          {
+            "kind": "pressure",
+            "name": "preload_180",
+            "target_pressure_kpa": 180.0
+          },
+          {
+            "kind": "install_structures",
+            "members": [
+              "wall_upper_face0_part0",
+              "wall_upper_face0_part1",
+              "wall_upper_face0_part2",
+              "wall_upper_face0_part3",
+              "wall_upper_face1_part0",
+              "wall_upper_face1_part1",
+              "wall_upper_face1_part2",
+              "wall_upper_face1_part3",
+              "wall_upper_face2_part0",
+              "wall_upper_face2_part1",
+              "wall_upper_face2_part2",
+              "wall_upper_face2_part3",
+              "wall_upper_face3_part0",
+              "wall_upper_face3_part1",
+              "wall_upper_face3_part2",
+              "wall_upper_face3_part3",
+              "wall_lower_face0_part0",
+              "wall_lower_face0_part1",
+              "wall_lower_face0_part2",
+              "wall_lower_face0_part3",
+              "wall_lower_face1_part0",
+              "wall_lower_face1_part1",
+              "wall_lower_face1_part2",
+              "wall_lower_face1_part3",
+              "wall_lower_face2_part0",
+              "wall_lower_face2_part1",
+              "wall_lower_face2_part2",
+              "wall_lower_face2_part3",
+              "wall_lower_face3_part0",
+              "wall_lower_face3_part1",
+              "wall_lower_face3_part2",
+              "wall_lower_face3_part3"
+            ],
+            "name": "install_wall",
+            "placement": "cad_new_nodes"
+          },
+          {
+            "kind": "pressure",
+            "name": "unload_before_excavation",
+            "target_pressure_kpa": 100.0
+          },
+          {
+            "bodies": [
+              "Pit"
+            ],
+            "kind": "excavate",
+            "name": "excavate_pit",
+            "remaining_surface_pressure_kpa": 100.0
+          }
+        ],
+        "verification_reject_once_stages": [
+          "install_wall",
+          "excavate_pit",
+          "unload_before_excavation"
+        ]
+      }
+    }
+  },
+  "params": [],
+  "features": [
+    {
+      "id": 1,
+      "name": "Box1",
+      "suppressed": false,
+      "body_names": [
+        "LowerLeft"
+      ],
+      "param_names": [
+        "d1",
+        "d2",
+        "d3"
+      ],
+      "type": "box",
+      "corner": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "length": "5000",
+      "width": "4000",
+      "height": "3000",
+      "operation": "new_body"
+    },
+    {
+      "id": 2,
+      "name": "Box2",
+      "suppressed": false,
+      "body_names": [
+        "LowerRight"
+      ],
+      "param_names": [
+        "d4",
+        "d5",
+        "d6"
+      ],
+      "type": "box",
+      "corner": [
+        5000.0,
+        0.0,
+        0.0
+      ],
+      "length": "5000",
+      "width": "4000",
+      "height": "3000",
+      "operation": "new_body"
+    },
+    {
+      "id": 3,
+      "name": "Box3",
+      "suppressed": false,
+      "body_names": [
+        "UpperRetained"
+      ],
+      "param_names": [
+        "d7",
+        "d8",
+        "d9"
+      ],
+      "type": "box",
+      "corner": [
+        0.0,
+        0.0,
+        3000.0
+      ],
+      "length": "5000",
+      "width": "4000",
+      "height": "3000",
+      "operation": "new_body"
+    },
+    {
+      "id": 4,
+      "name": "Box4",
+      "suppressed": false,
+      "body_names": [
+        "Pit"
+      ],
+      "param_names": [
+        "d10",
+        "d11",
+        "d12"
+      ],
+      "type": "box",
+      "corner": [
+        5000.0,
+        0.0,
+        3000.0
+      ],
+      "length": "5000",
+      "width": "4000",
+      "height": "3000",
+      "operation": "new_body"
+    }
+  ],
+  "next_id": 5
+}

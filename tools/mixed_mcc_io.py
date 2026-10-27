@@ -28,7 +28,7 @@ def array(value,shape,name):
     return result
 
 
-def frame_fields(mesh,result,frame,check_geometry=False):
+def frame_fields(mesh,result,frame,check_geometry=False,*,_geometry=None):
     layout=result['integration_points'];ng=len(layout);ne=len(mesh['tetrahedra'])
     state=frame['state'];mixed=state.get('mixed_mcc')
     if any(state.get(k) is not None for k in ('pore_pressure_kpa','hydrostatic_water_level_m','joint_water','joints','anchors')):
@@ -82,8 +82,9 @@ def frame_fields(mesh,result,frame,check_geometry=False):
     gp_pressure=np.full(ng,np.nan);kinematic=np.empty((ng,6));volume=np.zeros(len(keys));scale=np.zeros(len(keys));measure=0.
     weak_pressure=np.zeros(len(keys));pressure_scale=np.zeros(len(keys));mean=stress[:,:3].mean(axis=1)
     owner=np.empty(ng,dtype=int);cursor=0
+    geometry=ref.Geometry(mesh) if _geometry is None else _geometry
     for e,tet in enumerate(mesh['tetrahedra']):
-        q=ref.volume(mesh,e);nq=len(q['weight']);indices=np.arange(cursor,cursor+nq)
+        q=geometry.volume(e);nq=len(q['weight']);indices=np.arange(cursor,cursor+nq)
         if cursor+nq>ng:raise ValueError('mixed quadrature inventory too short')
         owner[indices]=e
         for local,i in enumerate(indices):
@@ -158,14 +159,15 @@ def frame_fields(mesh,result,frame,check_geometry=False):
     if projected:
         out.update(projected_volume_dofs=nodal_theta,projected_compatibility_offsets=offsets)
     if projected or structural:
-        out['metrics'].update(projected_force_audit(mesh,result,frame,work_stress if projected else stress))
+        out['metrics'].update(projected_force_audit(mesh,result,frame,work_stress if projected else stress,_geometry=geometry))
     return out
 
 
-def projected_force_audit(mesh,result,frame,work_stress):
+def projected_force_audit(mesh,result,frame,work_stress,*,_geometry=None):
     state=frame['state'];active=np.asarray(state['active_elements']);internal=np.zeros((len(mesh['nodes']),3));cursor=0
+    geometry=ref.Geometry(mesh) if _geometry is None else _geometry
     for e in range(len(mesh['tetrahedra'])):
-        q=ref.volume(mesh,e);nq=len(q['weight'])
+        q=geometry.volume(e);nq=len(q['weight'])
         if active[e]:
             local=-np.einsum('qai,qa,q->i',q['b'],work_stress[cursor:cursor+nq],q['weight']).reshape(-1,3)
             np.add.at(internal,q['nodes'],local)
@@ -205,11 +207,12 @@ def projected_force_audit(mesh,result,frame,work_stress):
         support_reaction_maximum_error_kn=float(abs(support-frame['support_reaction_kn']).max()))
 
 
-def projected_offsets(mesh,state,active,keys):
+def projected_offsets(mesh,state,active,keys,*,_geometry=None):
     lookup=dict(zip(keys,range(len(keys))));out=np.zeros(len(keys));cursor=0
     u=np.asarray(state['displacement_m']);theta=np.asarray(state['mixed_mcc']['cumulative_volume_strain_compression_positive'])
+    geometry=ref.Geometry(mesh) if _geometry is None else _geometry
     for e,tet in enumerate(mesh['tetrahedra']):
-        q=ref.volume(mesh,e);nq=len(q['weight'])
+        q=geometry.volume(e);nq=len(q['weight'])
         if active[e]:
             div=np.einsum('qai,i->qa',q['b'],u[q['nodes']].reshape(-1))[:,:3].sum(axis=1)
             l=np.column_stack((1-q['natural'].sum(axis=1),q['natural']))
@@ -233,16 +236,17 @@ def validate(mesh,result):
         raise ValueError('mixed dry material/mesh units or water policy mismatch')
     cells=np.asarray(mesh['tetrahedra10']);tet=np.asarray(mesh['tetrahedra'])
     if cells.shape!=(len(tet),10) or not np.array_equal(cells[:,:4],tet):raise ValueError('mixed Tet10 corners differ')
+    geometry=ref.Geometry(mesh)
     previous=None
     method=result['frames'][0]['state'].get('mixed_mcc',{}).get('tangent_method',LEGACY_TANGENT)
     for i,frame in enumerate(result['frames']):
         if structural and frame.get('beam_results') is None:raise ValueError('missing mixed beam/plate result report')
-        fields=frame_fields(mesh,result,frame,check_geometry=i==0)
+        fields=frame_fields(mesh,result,frame,check_geometry=i==0,_geometry=geometry)
         if projected:
             if previous is None:
                 expected=np.zeros(len(fields['keys']))
             elif previous['active_elements']!=frame['state']['active_elements']:
-                expected=projected_offsets(mesh,previous,fields['active'],fields['keys'])
+                expected=projected_offsets(mesh,previous,fields['active'],fields['keys'],_geometry=geometry)
             else:
                 old={(d['node_index'],d['material_id']):d['integral_m3'] for d in previous['mixed_mcc']['projected_volume']['compatibility_offsets']}
                 expected=np.asarray([old[k] for k in fields['keys']])

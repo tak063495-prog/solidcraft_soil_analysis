@@ -10,6 +10,25 @@ index bdd869ea8072ef3d9427104078dfe8d350a9b492..8cca88fa3c2c994665eafe18796030dd
   "solidcraft-doc",
   "solidcraft-geom",
   "solidcraft-io",
+diff --git a/ROADMAP.md b/ROADMAP.md
+index e2dcd216a8702c8c45a90f5adce56d16478807d4..52594d4abf7d7395e94999ce22971e4720e3319f 100644
+--- a/ROADMAP.md
++++ b/ROADMAP.md
+@@ -3,6 +3,14 @@
+ Status as of **2026-10-14**. SolidCraft supports parametric modelling (sketch →
+ features → parametric timeline) as an open, pure-Rust, agent-drivable application.
+ 
++The local external-soil-FEM integration adds an MCC integration selector to
++Construction settings: material settings, backward Euler or second-order
++midpoint. The choice is saved with the analysis inputs and participates in
++their fingerprint and undo history. The external solver validates the full
++model before analysis; construction-increment refinement remains separate
++from material integration. This extension does not complete the general CAD
++milestones or certify convergence of a soil model.
++
+ ## At a glance
+ 
+ | Question | Answer |
 diff --git a/apps/solidcraft/src/main.rs b/apps/solidcraft/src/main.rs
 index 1eec426ed757937944cdfcf4105a8615755358ae..68d73874221f616160205cc515c5e453332fd43b 100644
 --- a/apps/solidcraft/src/main.rs
@@ -521,7 +540,7 @@ index d22d4aab72d61fca6a0a4ad7b56f003fec5f9777..b5e481679dd8a605aa7494c2f442810b
    "cmd.inspect_center_of_mass": "Centre of Mass",
    "cmd.sketch_arc_center_point": "Centre Point Arc",
 diff --git a/assets/locales/en.json b/assets/locales/en.json
-index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..632ee5015fd3ad7a087bcbf9349ad392a0016bec 100644
+index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..ef599bc9bc3accfd5fe89e096adda62c1e48b335 100644
 --- a/assets/locales/en.json
 +++ b/assets/locales/en.json
 @@ -86,6 +86,7 @@
@@ -671,11 +690,12 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..632ee5015fd3ad7a087bcbf9349ad392
    "cmd.appearance_assign": "Appearance",
    "cmd.appearance_library": "Appearance Library",
    "cmd.appearance_list": "List Appearances",
-@@ -1392,6 +1419,72 @@
+@@ -1392,6 +1419,77 @@
    "sketch_text.path_clear": "Take the text off its curve",
    "sketch_text.path_hint": "A curve of the sketch the text follows: click here, then the curve",
    "sketch_text.use_font_file": "Use the font file {path}",
 +  "soil_fem.analysis_body_label": "Analysis body label",
++  "soil_fem.backward_euler": "Backward Euler",
 +  "soil_fem.cad_bodies": "CAD bodies",
 +  "soil_fem.choose_cad_body": "Choose CAD body",
 +  "soil_fem.compression_slope": "Compression slope λ",
@@ -708,8 +728,10 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..632ee5015fd3ad7a087bcbf9349ad392
 +  "soil_fem.material_volume_strain_p1": "Material volume strain (P1)",
 +  "soil_fem.material_volumetric_strain": "Material volumetric strain",
 +  "soil_fem.materials": "Materials",
++  "soil_fem.mcc_integration": "MCC integration",
 +  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC: Tet10 displacement + P1 pressure/volume",
 +  "soil_fem.mean_effective_stress_p": "Mean effective stress p",
++  "soil_fem.midpoint_second_order": "Midpoint (second order)",
 +  "soil_fem.node": "Node",
 +  "soil_fem.poisson_ratio": "Poisson ratio",
 +  "soil_fem.preconsolidation_pressure_pc": "Preconsolidation pressure pc",
@@ -733,6 +755,8 @@ index 988594742f6c8ed57ccb5ab83fd7176b5608fd07..632ee5015fd3ad7a087bcbf9349ad392
 +  "soil_fem.swelling_slope": "Swelling slope κ",
 +  "soil_fem.total_from_seed": "Total from seed",
 +  "soil_fem.unit_weight_kn_m": "Unit weight (kN/m³)",
++  "soil_fem.unsupported_mcc_integration": "Unsupported MCC integration",
++  "soil_fem.use_material_settings": "Use material settings",
 +  "soil_fem.vertical_displacement": "Vertical displacement",
 +  "soil_fem.void_ratio": "Void ratio",
 +  "soil_fem.volumetric_plastic_strain": "Volumetric plastic strain",
@@ -1639,7 +1663,7 @@ index 6278c49aab9c7d0b1a1465b30f98614ca8131548..9bcc7df990b3bb19d0b8c02aea2f487d
    "cmd.appearance_library": "Libreria degli aspetti",
    "cmd.appearance_list": "Elenca aspetti",
 diff --git a/assets/locales/ja.json b/assets/locales/ja.json
-index cbd221816eb75db2c5856be40c9859d163a8a045..c2d9dc74d7a87dfc9d5f7296d8787e0247f50ea6 100644
+index cbd221816eb75db2c5856be40c9859d163a8a045..a7003e4865cbda21132ed45e0f8689c800ad245d 100644
 --- a/assets/locales/ja.json
 +++ b/assets/locales/ja.json
 @@ -86,6 +86,7 @@
@@ -1789,11 +1813,12 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..c2d9dc74d7a87dfc9d5f7296d8787e02
    "cmd.appearance_assign": "外観",
    "cmd.appearance_library": "外観ライブラリ",
    "cmd.appearance_list": "外観を一覧表示",
-@@ -1392,6 +1419,72 @@
+@@ -1392,6 +1419,77 @@
    "sketch_text.path_clear": "文字を曲線から外す",
    "sketch_text.path_hint": "文字が沿うスケッチの曲線: ここをクリックしてから曲線をクリック",
    "sketch_text.use_font_file": "フォント ファイル {path} を使用",
 +  "soil_fem.analysis_body_label": "解析ボディ名",
++  "soil_fem.backward_euler": "後退オイラー法",
 +  "soil_fem.cad_bodies": "CADボディ",
 +  "soil_fem.choose_cad_body": "CADボディを選択",
 +  "soil_fem.compression_slope": "圧縮指数 λ",
@@ -1826,8 +1851,10 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..c2d9dc74d7a87dfc9d5f7296d8787e02
 +  "soil_fem.material_volume_strain_p1": "材料体積ひずみ (P1)",
 +  "soil_fem.material_volumetric_strain": "材料の体積ひずみ",
 +  "soil_fem.materials": "材料",
++  "soil_fem.mcc_integration": "MCC積分法",
 +  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC：Tet10変位＋P1圧力・体積",
 +  "soil_fem.mean_effective_stress_p": "平均有効応力 p",
++  "soil_fem.midpoint_second_order": "中点法（二次精度）",
 +  "soil_fem.node": "節点",
 +  "soil_fem.poisson_ratio": "ポアソン比",
 +  "soil_fem.preconsolidation_pressure_pc": "先行圧密圧力 pc",
@@ -1851,6 +1878,8 @@ index cbd221816eb75db2c5856be40c9859d163a8a045..c2d9dc74d7a87dfc9d5f7296d8787e02
 +  "soil_fem.swelling_slope": "膨潤指数 κ",
 +  "soil_fem.total_from_seed": "初期種状態からの総変位",
 +  "soil_fem.unit_weight_kn_m": "単位体積重量 (kN/m³)",
++  "soil_fem.unsupported_mcc_integration": "未対応のMCC積分法",
++  "soil_fem.use_material_settings": "材料設定を使用",
 +  "soil_fem.vertical_displacement": "鉛直変位",
 +  "soil_fem.void_ratio": "間隙比",
 +  "soil_fem.volumetric_plastic_strain": "体積塑性ひずみ",
@@ -3651,7 +3680,7 @@ index 8723cc9cf825127f008222a73b9f116223356dec..b25bbc6679b6897d08de6f9c9e9c45a4
    "cmd.appearance_library": "外觀庫",
    "cmd.appearance_list": "列出外觀",
 diff --git a/assets/locales/zh.json b/assets/locales/zh.json
-index cdc703e30419f7feba96abcc165b82a83c7821a5..4a1c1675a38a7ac4a2b30498affc8e081f6056b0 100644
+index cdc703e30419f7feba96abcc165b82a83c7821a5..10ecfc25f2644847213fd5e78f61de6d006d7056 100644
 --- a/assets/locales/zh.json
 +++ b/assets/locales/zh.json
 @@ -86,6 +86,7 @@
@@ -3801,11 +3830,12 @@ index cdc703e30419f7feba96abcc165b82a83c7821a5..4a1c1675a38a7ac4a2b30498affc8e08
    "cmd.appearance_assign": "外观",
    "cmd.appearance_library": "外观库",
    "cmd.appearance_list": "列出外观",
-@@ -1392,6 +1419,72 @@
+@@ -1392,6 +1419,77 @@
    "sketch_text.path_clear": "将文字移离其曲线",
    "sketch_text.path_hint": "文字所跟随的草图曲线：先单击此处，再选择曲线",
    "sketch_text.use_font_file": "使用字体文件 {path}",
 +  "soil_fem.analysis_body_label": "分析体标签",
++  "soil_fem.backward_euler": "后向欧拉法",
 +  "soil_fem.cad_bodies": "CAD 实体",
 +  "soil_fem.choose_cad_body": "选择 CAD 实体",
 +  "soil_fem.compression_slope": "压缩线斜率 λ",
@@ -3838,8 +3868,10 @@ index cdc703e30419f7feba96abcc165b82a83c7821a5..4a1c1675a38a7ac4a2b30498affc8e08
 +  "soil_fem.material_volume_strain_p1": "材料体积应变（P1）",
 +  "soil_fem.material_volumetric_strain": "材料体积应变",
 +  "soil_fem.materials": "材料",
++  "soil_fem.mcc_integration": "MCC 积分方法",
 +  "soil_fem.mcc_tet10_displacement_p1_pressure_volume": "MCC：Tet10 位移 + P1 压力/体积",
 +  "soil_fem.mean_effective_stress_p": "平均有效应力 p",
++  "soil_fem.midpoint_second_order": "中点法（二阶精度）",
 +  "soil_fem.node": "节点",
 +  "soil_fem.poisson_ratio": "泊松比",
 +  "soil_fem.preconsolidation_pressure_pc": "先期固结压力 pc",
@@ -3863,6 +3895,8 @@ index cdc703e30419f7feba96abcc165b82a83c7821a5..4a1c1675a38a7ac4a2b30498affc8e08
 +  "soil_fem.swelling_slope": "回弹线斜率 κ",
 +  "soil_fem.total_from_seed": "相对于种子状态的总量",
 +  "soil_fem.unit_weight_kn_m": "重度（kN/m³）",
++  "soil_fem.unsupported_mcc_integration": "不支持的MCC积分方法",
++  "soil_fem.use_material_settings": "使用材料设置",
 +  "soil_fem.vertical_displacement": "竖向位移",
 +  "soil_fem.void_ratio": "孔隙比",
 +  "soil_fem.volumetric_plastic_strain": "塑性体积应变",
@@ -3886,6 +3920,15 @@ index 0000000000000000000000000000000000000000..9a40ce87d35e138f0592332dc8140c64
 +//! designs have no analysis; no migration invents materials or body identities.
 +//! The last release refuses the newer design format rather than silently dropping
 +//! analysis attributes. Running jobs and results are not stored as design data.
+diff --git a/crates/doc/src/format/pending/soil-fem-mcc-integration.rs b/crates/doc/src/format/pending/soil-fem-mcc-integration.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..ac6ed6c911b933bcaeff343dfa9edace3c3af345
+--- /dev/null
++++ b/crates/doc/src/format/pending/soil-fem-mcc-integration.rs
+@@ -0,0 +1,3 @@
++//! Construction inputs may persist an optional MCC integration override in the
++//! existing soil-analysis metadata. Absence retains the material's own setting;
++//! no older design data is rewritten. The external FEM validates the full law.
 diff --git a/crates/engine/Cargo.toml b/crates/engine/Cargo.toml
 index 1c5ec0fae7195ac871cedbc469e06b43ce167983..eab73f72b6a750be7e1ca0641d5f9cafc374e968 100644
 --- a/crates/engine/Cargo.toml
@@ -4059,10 +4102,10 @@ index 942e6b385f0a170b277d3946ff009929b63e1e39..ea7a4e3bdbaff2eddec965a27e898e18
              evaluations: 0,
 diff --git a/crates/engine/src/soil_fem.rs b/crates/engine/src/soil_fem.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..ed7673c68566ec6e7e32e069fbbede82ae8b1ce8
+index 0000000000000000000000000000000000000000..62bb371d3feae153ace8e0f142e7780791af25a3
 --- /dev/null
 +++ b/crates/engine/src/soil_fem.rs
-@@ -0,0 +1,637 @@
+@@ -0,0 +1,695 @@
 +//! Persistent analysis attributes and input-only snapshots. The FEM remains an
 +//! external process; appearance, density and display meshes never supply soil data.
 +use crate::params::bad;
@@ -4175,6 +4218,14 @@ index 0000000000000000000000000000000000000000..ed7673c68566ec6e7e32e069fbbede82
 +    let materials = ground.get("materials").and_then(Value::as_array).ok_or_else(|| bad(CMD, "materials are required"))?;
 +    if materials.is_empty() || materials.len() > LIMIT {
 +        return Err(bad(CMD, "expected 1..256 materials"));
++    }
++    if let Some(integration) = stages.pointer("/settings/mcc_integration").filter(|v| !v.is_null()) {
++        if !matches!(integration.as_str(), Some("backward_euler" | "midpoint")) {
++            return Err(bad(CMD, "MCC integration must be backward_euler or midpoint, or omitted to use material settings"));
++        }
++        if !materials.iter().any(|m| m.get("mcc").is_some_and(Value::is_object)) {
++            return Err(bad(CMD, "an MCC integration override requires at least one MCC material"));
++        }
 +    }
 +    if projected
 +        && (materials.iter().any(|m| !m.get("mcc").is_some_and(Value::is_object))
@@ -4665,6 +4716,56 @@ index 0000000000000000000000000000000000000000..ed7673c68566ec6e7e32e069fbbede82
 +        assert!(s.execute("analysis.soil.export", &p).is_err());
 +        let unchanged = std::fs::read(output.join("capture.json")).unwrap();
 +        assert!(!unchanged.is_empty());
++    }
++
++    #[test]
++    fn mcc_integration_choice_changes_identity_persists_and_has_atomic_undo() {
++        for method in ["backward_euler", "midpoint"] {
++            let mut s = fixture();
++            let mut initial = request(&s);
++            initial["ground"]["materials"] = json!([{"id":1,"mcc":{}}]);
++            initial["stages"]["settings"] = json!({"kinematics":"side_rollers"});
++            s.execute("analysis.soil.configure", &initial).unwrap();
++            let before = s.execute("analysis.soil.snapshot", &json!({})).unwrap();
++            assert!(before.pointer("/snapshot/stages/settings/mcc_integration").is_none());
++            let mut changed = request(&s);
++            changed["ground"] = initial["ground"].clone();
++            changed["stages"] = initial["stages"].clone();
++            changed["stages"]["settings"]["mcc_integration"] = json!(method);
++            let undo = s.undo.len();
++            s.execute("analysis.soil.configure", &changed).unwrap();
++            assert_eq!(s.undo.len(), undo + 1);
++            let after = s.execute("analysis.soil.snapshot", &json!({})).unwrap();
++            assert_ne!(before["input_sha256"], after["input_sha256"]);
++            assert_eq!(after["snapshot"]["stages"]["settings"]["mcc_integration"], method);
++            let doc = solidcraft_doc::Document::from_json(&s.doc.to_json()).unwrap();
++            let mut restored = Session::new(doc);
++            assert_eq!(restored.execute("analysis.soil.snapshot", &json!({})).unwrap(), after);
++            s.execute("edit.undo", &json!({})).unwrap();
++            assert_eq!(s.execute("analysis.soil.snapshot", &json!({})).unwrap(), before);
++            s.execute("edit.redo", &json!({})).unwrap();
++            assert_eq!(s.execute("analysis.soil.snapshot", &json!({})).unwrap(), after);
++        }
++    }
++
++    #[test]
++    fn invalid_or_unrelated_mcc_integration_never_changes_the_design() {
++        let mut s = fixture();
++        let before = s.doc.to_json();
++        let undo = s.undo.len();
++        for method in [json!(true), json!(3), json!({}), json!([]), json!("other")] {
++            let mut invalid = request(&s);
++            invalid["ground"]["materials"] = json!([{"id":1,"mcc":{}}]);
++            invalid["stages"]["settings"] = json!({"mcc_integration":method});
++            assert!(s.execute("analysis.soil.configure", &invalid).is_err());
++            assert_eq!(s.doc.to_json(), before);
++            assert_eq!(s.undo.len(), undo);
++        }
++        let mut unrelated = request(&s);
++        unrelated["stages"]["settings"] = json!({"mcc_integration":"midpoint"});
++        assert!(s.execute("analysis.soil.configure", &unrelated).is_err());
++        assert_eq!(s.doc.to_json(), before);
++        assert_eq!(s.undo.len(), undo);
 +    }
 +
 +    #[test]
@@ -9411,10 +9512,10 @@ index 23408069ad21e7de31939d604c98ca70682bddfb..2568819343f32deb5eea61af3103b856
  fn opaque_pbr_product_gpu_and_cpu_share_color_and_material_semantics() {
 diff --git a/crates/ui-egui/src/soil_analysis.rs b/crates/ui-egui/src/soil_analysis.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..6a043157969d18ce051cb5f18ed019d91f996a0d
+index 0000000000000000000000000000000000000000..298a45eb1b300b075ba2b1a568fd7730620a60c0
 --- /dev/null
 +++ b/crates/ui-egui/src/soil_analysis.rs
-@@ -0,0 +1,529 @@
+@@ -0,0 +1,668 @@
 +//! A thin editor over analysis.soil.*. Drafts live here; saved attributes,
 +//! identity resolution, source checks and native STEP captures belong to L4.
 +use crate::{SolveApp, ui_kit};
@@ -9666,6 +9767,66 @@ index 0000000000000000000000000000000000000000..6a043157969d18ce051cb5f18ed019d9
 +    false
 +}
 +
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++enum MccIntegration {
++    Material,
++    BackwardEuler,
++    Midpoint,
++    Unsupported,
++}
++
++impl MccIntegration {
++    fn read(stages: &Value) -> Self {
++        match stages.pointer("/settings/mcc_integration") {
++            None | Some(Value::Null) => Self::Material,
++            Some(Value::String(v)) if v == "backward_euler" => Self::BackwardEuler,
++            Some(Value::String(v)) if v == "midpoint" => Self::Midpoint,
++            _ => Self::Unsupported,
++        }
++    }
++
++    fn label(self) -> &'static str {
++        match self {
++            Self::Material => "Use material settings",
++            Self::BackwardEuler => "Backward Euler",
++            Self::Midpoint => "Midpoint (second order)",
++            Self::Unsupported => "Unsupported MCC integration",
++        }
++    }
++
++    fn write(self, stages: &mut Value) -> bool {
++        let Some(root) = stages.as_object_mut() else { return false };
++        if self == Self::Material {
++            return root.get_mut("settings").and_then(Value::as_object_mut).and_then(|settings| settings.remove("mcc_integration")).is_some();
++        }
++        let name = match self {
++            Self::BackwardEuler => "backward_euler",
++            Self::Midpoint => "midpoint",
++            Self::Material | Self::Unsupported => return false,
++        };
++        let Some(settings) = root.entry("settings").or_insert_with(|| json!({})).as_object_mut() else { return false };
++        let desired = json!(name);
++        if settings.get("mcc_integration") == Some(&desired) {
++            return false;
++        }
++        settings.insert("mcc_integration".into(), desired);
++        true
++    }
++}
++
++fn mcc_integration(ui: &mut egui::Ui, stages: &mut Value) -> bool {
++    let mut selected = MccIntegration::read(stages);
++    let previous = selected;
++    ui_kit::row(ui, "MCC integration", |ui| {
++        ui_kit::dropdown_menu(ui, "soil_mcc_integration", crate::i18n::tr_label(selected.label()), |ui| {
++            choose(ui, &mut selected, MccIntegration::Material, MccIntegration::Material.label());
++            choose(ui, &mut selected, MccIntegration::BackwardEuler, MccIntegration::BackwardEuler.label());
++            choose(ui, &mut selected, MccIntegration::Midpoint, MccIntegration::Midpoint.label());
++        });
++    });
++    previous != selected && selected.write(stages)
++}
++
 +fn field_label(key: &str) -> &str {
 +    match key {
 +        "materials" => "Materials",
@@ -9739,7 +9900,12 @@ index 0000000000000000000000000000000000000000..6a043157969d18ce051cb5f18ed019d9
 +                    ui_kit::row(ui,"Continuum formulation",|ui|{ui_kit::dropdown_menu(ui,"soil_formulation",crate::i18n::tr_label(if projected{"MCC: Tet10 displacement + P1 pressure/volume"}else{"Displacement formulation"}),|ui|{let changed=choose(ui, &mut projected, false, "Displacement formulation")
 +                            | choose(ui, &mut projected, true, "MCC: Tet10 displacement + P1 pressure/volume");
 +                            if changed && let Some(object)=v.as_object_mut() {object.insert("schema".into(),json!(if projected{"soil-fem-projected-mcc-stages/1"}else{"soil-fem-stages/1"}));d.dirty=true;}});});
-+                    if projected {ui_kit::text(ui,"Dry MCC with Tet10 only. Material GP stress, primary pressure and work-conjugate stress remain distinct. Water, members and contact are not connected to this formulation.",ui_kit::Text::Note("soil_projected_scope"));}
++                    let has_mcc=d.ground.as_ref().and_then(|g|g.get("materials")).and_then(Value::as_array).is_some_and(|materials|materials.iter().any(|m|m.get("mcc").is_some_and(Value::is_object)));
++                    if has_mcc || v.pointer("/settings/mcc_integration").is_some() {
++                        d.dirty|=mcc_integration(ui,v);
++                        ui_kit::text(ui,"This choice applies to all MCC materials. Refine construction increments separately from material integration.",ui_kit::Text::Note("soil_mcc_integration_scope"));
++                    }
++                    if projected {ui_kit::text(ui,"Dry MCC with Tet10 only. Material GP stress, primary pressure and work-conjugate stress remain distinct. Linear frames and plates are supported; water, anchors and contact need another formulation.",ui_kit::Text::Note("soil_projected_scope"));}
 +                    d.dirty|=properties(ui,"soil_stages",v,0,&mut 512);
 +                }else{ui.label("Load construction inputs to begin.");},
 +                2=>{
@@ -9828,6 +9994,80 @@ index 0000000000000000000000000000000000000000..6a043157969d18ce051cb5f18ed019d9
 +mod tests {
 +    use super::*;
 +    use crate::scenario::Harness;
++    #[test]
++    fn mcc_integration_editor_preserves_defaults_and_rejects_malformed_settings() {
++        let original = json!({"settings":{"kinematics":"explicit","initial_increment":0.0625},"stages":[]});
++        let mut value = original.clone();
++        assert_eq!(MccIntegration::read(&value), MccIntegration::Material);
++        assert!(!MccIntegration::Material.write(&mut value));
++        assert_eq!(value, original);
++        assert!(MccIntegration::Midpoint.write(&mut value));
++        assert_eq!(MccIntegration::read(&value), MccIntegration::Midpoint);
++        assert!(!MccIntegration::Midpoint.write(&mut value));
++        assert!(MccIntegration::BackwardEuler.write(&mut value));
++        assert_eq!(MccIntegration::read(&value), MccIntegration::BackwardEuler);
++        assert!(MccIntegration::Material.write(&mut value));
++        assert_eq!(value, original);
++        let unknown = json!({"settings":{"mcc_integration":"future"}});
++        assert_eq!(MccIntegration::read(&unknown), MccIntegration::Unsupported);
++        for mut invalid in [Value::Null, json!([]), json!({"settings":null}), json!({"settings":[]})] {
++            let before = invalid.clone();
++            assert!(!MccIntegration::Midpoint.write(&mut invalid));
++            assert_eq!(invalid, before);
++        }
++    }
++
++    #[test]
++    fn mcc_integration_picker_saves_only_on_command_and_undo_restores_the_input() {
++        for (language, label, choice) in [
++            ("en", "MCC integration", "Midpoint (second order)"),
++            ("ja", "MCC積分法", "中点法（二次精度）"),
++            ("zh", "MCC 积分方法", "中点法（二阶精度）"),
++        ] {
++            let mut h = configured();
++            h.app.preferences.language = language.into();
++            let translated = |text: &str| {
++                let _language = crate::i18n::scope(language);
++                crate::i18n::tr_label(text).to_string()
++            };
++            let save = translated("Save");
++            let close = translated("Close");
++            let material = translated("Use material settings");
++            h.step(&json!({"start":"analysis.soil.model"})).unwrap();
++            {
++                let draft = h.app.soil_analysis.as_mut().unwrap();
++                draft.ground.as_mut().unwrap()["materials"] = json!([{"id":1,"mcc":{}}]);
++                draft.stages.as_mut().unwrap()["settings"] = json!({"kinematics":"side_rollers"});
++            }
++            h.frames(2);
++            h.step(&json!({"widget":save})).unwrap();
++            assert!(h.app.soil_analysis.as_ref().unwrap().error.is_none());
++            let before = h.app.run("analysis.soil.snapshot", json!({})).unwrap();
++            let undo = h.app.session.undo.len();
++            // Segmented controls currently paint their raw option labels (see i18n's guard).
++            h.step(&json!({"widget":"Construction"})).unwrap();
++            assert!(h.widget(label).is_some(), "the MCC field label must be translated in {language}");
++            h.step(&json!({"widget":material})).unwrap();
++            assert!(h.widget(choice).is_some(), "the MCC choice must be translated in {language}");
++            h.step(&json!({"widget":choice})).unwrap();
++            assert_eq!(h.app.soil_analysis.as_ref().unwrap().stages.as_ref().unwrap()["settings"]["mcc_integration"], "midpoint");
++            assert_eq!(h.app.run("analysis.soil.snapshot", json!({})).unwrap(), before);
++            h.frames(2);
++            h.step(&json!({"widget":save})).unwrap();
++            assert!(h.app.soil_analysis.as_ref().unwrap().error.is_none());
++            assert_eq!(h.app.session.undo.len(), undo + 1);
++            let saved = h.app.run("analysis.soil.snapshot", json!({})).unwrap();
++            assert_ne!(saved["input_sha256"], before["input_sha256"]);
++            assert_eq!(saved["snapshot"]["stages"]["settings"]["mcc_integration"], "midpoint");
++            h.step(&json!({"widget":close})).unwrap();
++            h.step(&json!({"start":"analysis.soil.model"})).unwrap();
++            assert_eq!(MccIntegration::read(h.app.soil_analysis.as_ref().unwrap().stages.as_ref().unwrap()), MccIntegration::Midpoint);
++            h.step(&json!({"widget":close})).unwrap();
++            h.app.run("edit.undo", json!({})).unwrap();
++            assert_eq!(h.app.run("analysis.soil.snapshot", json!({})).unwrap(), before);
++        }
++    }
++
 +    #[test]
 +    fn kit_numeric_display_preserves_exact_ids_and_small_material_values() {
 +        for original in [json!(u64::MAX), json!(i64::MIN), json!(1.25e-12), json!(5.125e12)] {

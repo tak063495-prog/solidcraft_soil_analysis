@@ -334,13 +334,16 @@ class GlobalReference(unittest.TestCase):
     def test_unloading_from_permitted_positive_yield_drift_does_not_retrigger_loading(self):
         mesh,ground,case,_=self.specimen(True,False)
         p0=100.*(1.+1e-7);p1=p0-1e-6
-        for cached in (False,True):
+        for cached in (False,True,'rk4'):
             with self.subTest(cached=cached):
                 system=System(mesh,ground,[True],case)
                 state=np.zeros((system.weight.size,14));state[:,:3]=p0;state[:,6:8]=np.log([100.,2.])
                 trial=state.copy();trial[:,:3]=p1
                 force=system.force(trial)-system.force(state)
-                method=system.advance if cached else system.advance_uncached
+                if cached=='rk4':
+                    method=lambda state,u,force,steps:advance_rk4(system,state,u,force,steps)
+                else:
+                    method=system.advance if cached else system.advance_uncached
                 result,u,diagnostics=method(state,np.zeros(system.xyz.size),force,1024)
                 np.testing.assert_allclose(result[:,:3],p1,rtol=0.,atol=2e-10)
                 np.testing.assert_array_equal(result[:,6],state[:,6]);np.testing.assert_array_equal(result[:,8:],0.)
