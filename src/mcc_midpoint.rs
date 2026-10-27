@@ -253,12 +253,12 @@ fn equations<const N: usize>(
     r[7] = (q2 + p1 * (p1 - pc1) * m2) / (pc1.square() * m2);
     (r, flow)
 }
-fn plastic(
+fn plastic<const N: usize>(
     p: &mcc::Parameters,
-    old: &Tracked<6>,
-    de: [D<6>; 6],
+    old: &Tracked<N>,
+    de: [D<N>; 6],
     tangent: bool,
-) -> Result<Tracked<6>> {
+) -> Result<Tracked<N>> {
     let old8 = Tracked::<8>::from_state(&old.values());
     let strain8 = de.map(|x| D::<8>::c(x.v));
     let trial = elastic(p, &old8, strain8)?;
@@ -306,10 +306,10 @@ fn plastic(
     }
     let (x, jac) =
         solution.ok_or_else(|| Error::Material("midpoint local iteration limit".into()))?;
-    let mut variables = std::array::from_fn(|i| D::<6>::c(x[i]));
+    let mut variables = std::array::from_fn(|i| D::<N>::c(x[i]));
     if tangent {
         let residual = equations(p, old, de, variables).0;
-        let rhs = SMatrix::<f64, 8, 6>::from_fn(|i, j| -residual[i].g[j]);
+        let rhs = SMatrix::<f64, 8, N>::from_fn(|i, j| -residual[i].g[j]);
         let derivative = jac
             .lu()
             .solve(&rhs)
@@ -339,18 +339,24 @@ fn plastic(
     p.validate_state(&next.values())?;
     Ok(next)
 }
-fn lift(x: D<6>) -> D<7> {
+fn lift<const N: usize>(x: D<N>) -> D<7> {
     D {
         v: x.v,
-        g: std::array::from_fn(|i| if i == 0 { 0. } else { x.g[i - 1] }),
+        g: std::array::from_fn(|i| {
+            if i == 0 {
+                0.
+            } else {
+                x.g.get(i - 1).copied().unwrap_or(0.)
+            }
+        }),
     }
 }
-fn step(
+fn step<const N: usize>(
     p: &mcc::Parameters,
-    old: &Tracked<6>,
-    de: [D<6>; 6],
+    old: &Tracked<N>,
+    de: [D<N>; 6],
     tangent: bool,
-) -> Result<(Tracked<6>, bool)> {
+) -> Result<(Tracked<N>, bool)> {
     let trial = elastic(p, old, de)?;
     let f0 = yield_value(p, old).v;
     let f1 = yield_value(p, &trial).v;
@@ -409,7 +415,7 @@ fn step(
         if !(0. ..=1.).contains(&fraction) {
             return Err(Error::Material("invalid elastic yield fraction".into()));
         }
-        let mut t = D::<6>::c(fraction);
+        let mut t = D::<N>::c(fraction);
         if tangent {
             let old7 = Tracked {
                 pc_reference: old.pc_reference,
@@ -441,7 +447,7 @@ fn step(
     }
     Ok((plastic(p, old, de, tangent)?, true))
 }
-pub fn integrate(
+fn integrate_tracked<const N: usize>(
     p: &mcc::Parameters,
     committed: &mcc::State,
     strain: [f64; 6],
@@ -452,11 +458,11 @@ pub fn integrate(
     if steps == 0 || steps > 100_000 || !strain.iter().all(|x| x.is_finite()) {
         return Err(Error::Input("invalid midpoint fixed partition".into()));
     }
-    let mut state = Tracked::<6>::from_state(committed);
+    let mut state = Tracked::<N>::from_state(committed);
     let de = std::array::from_fn(|i| {
         let mut x = D::c(strain[i] / steps as f64);
-        if tangent {
-            x.g[i] = 1. / steps as f64;
+        if tangent && let Some(gradient) = x.g.get_mut(i) {
+            *gradient = 1. / steps as f64;
         }
         x
     });
@@ -468,7 +474,8 @@ pub fn integrate(
     }
     let final_state = state.values();
     p.validate_state(&final_state)?;
-    let tensor = crate::elastic::Tensor::from_fn(|i, j| state.stress[i].g[j]);
+    let tensor =
+        crate::elastic::Tensor::from_fn(|i, j| state.stress[i].g.get(j).copied().unwrap_or(0.));
     if !tensor.iter().all(|x| x.is_finite()) {
         return Err(Error::Material(
             "nonfinite midpoint fixed partition tangent".into(),
@@ -482,4 +489,19 @@ pub fn integrate(
         },
         tensor,
     ))
+}
+
+/// State-only trials retain the same primal map without six unused sensitivities.
+pub fn integrate(
+    p: &mcc::Parameters,
+    committed: &mcc::State,
+    strain: [f64; 6],
+    steps: usize,
+    tangent: bool,
+) -> Result<(mcc::Update, crate::elastic::Tensor)> {
+    if tangent {
+        integrate_tracked::<6>(p, committed, strain, steps, true)
+    } else {
+        integrate_tracked::<0>(p, committed, strain, steps, false)
+    }
 }

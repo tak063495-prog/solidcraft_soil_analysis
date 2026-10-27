@@ -16,7 +16,7 @@ import fem_reference as ref
 
 def attach(mesh, case, specification):
     version=specification.get('schema')
-    if version not in ('soil-fem-plate-surfaces/1','soil-fem-plate-surfaces/2'):
+    if version not in ('soil-fem-plate-surfaces/1','soil-fem-plate-surfaces/2','soil-fem-plate-surfaces/3'):
         raise ValueError('plate surface specification schema required')
     surfaces=specification.get('surfaces',[])
     if not surfaces or len(surfaces)>20:raise ValueError('require 1 to20 plate surfaces')
@@ -72,15 +72,32 @@ def attach(mesh, case, specification):
         if surface['section_id'] not in section_ids:raise ValueError('unknown plate surface section')
         if not isinstance(surface['initially_active'],bool):raise ValueError('explicit initial plate activity required')
         attachment=surface.get('attachment','exterior')
-        if attachment not in ('exterior','shared_interface'):
+        if attachment not in ('exterior','shared_interface','shared_excavation_interface'):
             raise ValueError('unknown plate surface attachment')
-        if attachment=='shared_interface' and version!='soil-fem-plate-surfaces/2':
+        if attachment=='shared_interface' and version not in ('soil-fem-plate-surfaces/2','soil-fem-plate-surfaces/3'):
             raise ValueError('shared-interface plate attachment requires surface schema /2')
+        selector=surface.get('opposite_excavation_set')
+        cut=None
+        if attachment=='shared_excavation_interface':
+            if version!='soil-fem-plate-surfaces/3':
+                raise ValueError('excavation-selector plate attachment requires surface schema /3')
+            if not isinstance(selector,str) or not selector:
+                raise ValueError('explicit opposite excavation set required')
+            elements=mesh.get('excavation_sets',{}).get(selector)
+            if (not isinstance(elements,list) or not elements
+                or any(not isinstance(e,int) or isinstance(e,bool) or e<0 or e>=len(mesh['tetrahedra']) for e in elements)
+                or len(set(elements))!=len(elements)):
+                raise ValueError('unknown, empty or invalid opposite excavation set')
+            cut=set(elements)
+        elif selector is not None:
+            raise ValueError('opposite excavation set requires selector attachment')
         opposite=surface.get('opposite_body')
         if attachment=='shared_interface' and (not isinstance(opposite,str) or not opposite or opposite==surface['owner_body']):
             raise ValueError('shared interface requires a distinct opposite body')
         if attachment=='exterior' and opposite is not None:
             raise ValueError('an exterior plate surface cannot declare an opposite body')
+        if attachment=='shared_excavation_interface' and opposite is not None:
+            raise ValueError('selector attachment cannot also declare an opposite body')
         faces=mesh.get('face_sets',{}).get(surface['face_set'],[])
         if not faces:raise ValueError('unknown or empty plate face set')
         cells=[];total_area=0.;source_area=0.;groups[name]=[];owner_pairs=[]
@@ -89,13 +106,18 @@ def attach(mesh, case, specification):
             selected.add(key);owners=topology.get(key,[])
             owned=[e for e in owners if regions[mesh['region_ids'][e]]==surface['owner_body']]
             other=[e for e in owners if regions[mesh['region_ids'][e]]==opposite]
+            if cut is not None:
+                owned=[e for e in owned if e not in cut]
+                other=[e for e in owners if e in cut]
             if attachment=='exterior':
                 if len(owners)!=1 or len(owned)!=1:
                     raise ValueError('plate surface must be exterior to its declared owner body')
+            elif cut is not None and (len(owners)!=2 or len(owned)!=1 or len(other)!=1):
+                raise ValueError('selector interface requires one declared retained owner and one excavated owner')
             elif len(owners)!=2 or len(owned)!=1 or len(other)!=1:
                 raise ValueError('plate interface must have exactly its two declared body owners')
             q=ref.face(mesh,owned[0],key);nodes=q['nodes'];points=xyz[nodes]
-            if attachment=='shared_interface':
+            if attachment in ('shared_interface','shared_excavation_interface'):
                 opposing=ref.face(mesh,other[0],key)
                 if set(map(int,nodes))!=set(map(int,opposing['nodes'])):
                     raise ValueError('shared plate interface has nonconforming trace nodes')
@@ -133,8 +155,9 @@ def attach(mesh, case, specification):
         records.append(dict(id=name,face_set=surface['face_set'],owner_body=surface['owner_body'],source_faces=len(faces),
             plate_triangles=len(cells),shared_soil_nodes=len(used),area_m2=total_area,source_area_m2=source_area,
             outward_orientation_checked=True,all_quadratic_trace_nodes_retained=True))
-        if version=='soil-fem-plate-surfaces/2':
+        if version in ('soil-fem-plate-surfaces/2','soil-fem-plate-surfaces/3'):
             records[-1].update(attachment=attachment,opposite_body=opposite,owner_pairs=owner_pairs)
+            if cut is not None:records[-1]['opposite_excavation_set']=selector
     if len(cfg['nodes'])>500 or len(cfg['members'])+len(cfg['plates'])>2000:
         raise ValueError('surface plate system exceeds declared Rust structural budget; no truncation')
     for stage in result_case['stages']:
@@ -146,8 +169,8 @@ def attach(mesh, case, specification):
         geometry_and_connectivity_changed=False,soil_plate_coupling='Exact shared nodal translations; structural rotations shared by node ID',
         interpolation_limitation='Tri6 soil trace and four Tri3 plate traces agree at all six nodes, not pointwise between nodes',
         geometry_scope='Straight exterior Tri3/Tri6 faces; no persistent CAD face ID claim',goal_complete=False,p6_complete=False)
-    if version=='soil-fem-plate-surfaces/2':
-        binding.update(schema='soil-fem-plate-surface-binding/2',
+    if version in ('soil-fem-plate-surfaces/2','soil-fem-plate-surfaces/3'):
+        binding.update(schema='soil-fem-plate-surface-binding/'+version.rsplit('/',1)[1],
             geometry_scope='Straight exterior or explicitly declared conforming shared-interface faces; no persistent CAD face ID claim',
             interface_limitation='Shared soil translations on both sides before excavation; no opening, slip or JOINT introduced. Owner-side orientation is explicit; retaining-wall mechanics and pointwise trace identity require separate verification.')
     return result_mesh,result_case,binding

@@ -71,6 +71,83 @@ class PlateSurfaces(unittest.TestCase):
         spec['surfaces'][0].update(attachment='shared_interface',owner_body='LowerClay',opposite_body='UpperClay')
         return mesh,case,spec
 
+    def selector_fixture(self,reverse=False):
+        mesh,case,spec=self.interface_fixture()
+        old_regions={r['id']:r['body'] for r in mesh['regions']}
+        cut=[e for e,rid in enumerate(mesh['region_ids']) if old_regions[rid]==('LowerClay' if reverse else 'UpperClay')]
+        region=copy.deepcopy(mesh['regions'][0]);region['body']='Soil'
+        region['volume_m3']=sum(r['volume_m3'] for r in mesh['regions'])
+        xyz=np.asarray(mesh['nodes']);region['bounds_m']=[xyz.min(axis=0).tolist(),xyz.max(axis=0).tolist()]
+        mesh['regions']=[region];mesh['region_ids']=[region['id']]*len(mesh['tetrahedra'])
+        mesh['material_ids']=[region['material_id']]*len(mesh['tetrahedra'])
+        mesh['excavation_sets']={'Cut':cut}
+        spec['schema']='soil-fem-plate-surfaces/3';surface=spec['surfaces'][0]
+        surface.pop('opposite_body');surface.update(attachment='shared_excavation_interface',owner_body='Soil',opposite_excavation_set='Cut')
+        return mesh,case,spec
+
+    def test_selector_interface_retains_quadratic_trace_inside_one_material_body(self):
+        mesh,case,spec=self.selector_fixture();before=copy.deepcopy((mesh,case,spec))
+        output,result,binding=attach(mesh,case,spec)
+        self.assertEqual((mesh,case,spec),before)
+        self.assertEqual(binding['schema'],'soil-fem-plate-surface-binding/3')
+        self.assertEqual({k:v for k,v in output.items() if k!='node_sets'},{k:v for k,v in mesh.items() if k!='node_sets'})
+        record=binding['surfaces'][0];self.assertEqual(record['opposite_excavation_set'],'Cut')
+        self.assertAlmostEqual(record['area_m2'],1.,places=12)
+        cut=set(mesh['excavation_sets']['Cut']);retained_nodes=set()
+        for pair in record['owner_pairs']:
+            self.assertNotIn(pair['owner_element'],cut);self.assertIn(pair['opposite_element'],cut)
+            self.assertEqual(mesh['region_ids'][pair['owner_element']],mesh['region_ids'][pair['opposite_element']])
+            retained_nodes.update(mesh['tetrahedra10'][pair['owner_element']])
+        self.assertTrue(set(map(int,binding['soil_node_to_structure_id']))<=retained_nodes)
+        self.assertEqual(result['stages'][0]['members'],binding['member_groups']['wall'])
+        by_id={n['id']:n for n in result['beam_system']['nodes']}
+        for plate in result['beam_system']['plates']:
+            points=np.array([by_id[n]['position_m'] for n in plate['nodes']])
+            self.assertGreater(np.cross(points[1]-points[0],points[2]-points[0])[2],0.)
+
+    def test_selector_complement_reverses_retained_orientation_without_body_renaming(self):
+        mesh,case,spec=self.selector_fixture(reverse=True)
+        _,result,binding=attach(mesh,case,spec)
+        cut=set(mesh['excavation_sets']['Cut']);by_id={n['id']:n for n in result['beam_system']['nodes']}
+        for pair in binding['surfaces'][0]['owner_pairs']:
+            self.assertNotIn(pair['owner_element'],cut);self.assertIn(pair['opposite_element'],cut)
+        for plate in result['beam_system']['plates']:
+            points=np.array([by_id[n]['position_m'] for n in plate['nodes']])
+            self.assertLess(np.cross(points[1]-points[0],points[2]-points[0])[2],0.)
+
+    def test_selector_requires_valid_set_and_exactly_one_retained_side(self):
+        for failure in ('legacy','missing','unknown','empty','duplicate','boolean','fractional','out_of_range','both_cut','neither_cut','wrong_owner','ambiguous_opposite','body_mode'):
+            with self.subTest(failure=failure):
+                mesh,case,spec=self.selector_fixture();surface=spec['surfaces'][0];cut=mesh['excavation_sets']['Cut']
+                if failure=='legacy':spec['schema']='soil-fem-plate-surfaces/2'
+                if failure=='missing':surface.pop('opposite_excavation_set')
+                if failure=='unknown':surface['opposite_excavation_set']='Missing'
+                if failure=='empty':cut.clear()
+                if failure=='duplicate':cut.append(cut[0])
+                if failure=='boolean':cut[0]=True
+                if failure=='fractional':cut[0]=float(cut[0])
+                if failure=='out_of_range':cut[0]=len(mesh['tetrahedra'])
+                if failure=='both_cut':mesh['excavation_sets']['Cut']=list(range(len(mesh['tetrahedra'])))
+                if failure=='neither_cut':
+                    owners={e for pair in ref.topology(mesh).items() if list(pair[0]) in mesh['face_sets']['wall'] for e in pair[1]}
+                    mesh['excavation_sets']['Cut']=[e for e in range(len(mesh['tetrahedra'])) if e not in owners]
+                if failure=='wrong_owner':surface['owner_body']='Missing'
+                if failure=='ambiguous_opposite':surface['opposite_body']='Soil'
+                if failure=='body_mode':surface.update(attachment='shared_interface',opposite_body='Other')
+                before=copy.deepcopy((mesh,case,spec))
+                with self.assertRaises(ValueError):attach(mesh,case,spec)
+                self.assertEqual((mesh,case,spec),before)
+
+    def test_selector_interface_rejects_nonconforming_midnodes_on_cut_side(self):
+        mesh,case,spec=self.selector_fixture();face=mesh['face_sets']['wall'][0]
+        owners=ref.topology(mesh)[tuple(sorted(face))];cut=set(mesh['excavation_sets']['Cut'])
+        opposite=next(e for e in owners if e in cut);mid=int(ref.face_nodes(mesh,opposite,face)[3])
+        new=len(mesh['nodes']);mesh['nodes'].append(copy.deepcopy(mesh['nodes'][mid]))
+        cell=mesh['tetrahedra10'][opposite];cell[cell.index(mid)]=new
+        before=copy.deepcopy((mesh,case,spec))
+        with self.assertRaisesRegex(ValueError,'nonconforming'):attach(mesh,case,spec)
+        self.assertEqual((mesh,case,spec),before)
+
     def test_shared_interface_keeps_both_soil_traces_and_support_after_opposite_body_removal(self):
         mesh,case,spec=self.interface_fixture();before=copy.deepcopy((mesh,case,spec))
         output,result,binding=attach(mesh,case,spec)
