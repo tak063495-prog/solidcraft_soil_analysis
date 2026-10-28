@@ -1,0 +1,19 @@
+{
+  "all_mathematical_functions_AST_identical": true,
+  "source_sha256": "1cba2b0f4f95489a5923b5521f13f050ae1fd4c6b7d0c9b454072fe4e639d94a",
+  "adapted_sha256": "3a4c57816a2944760c30a12fd1498e428e05d4e8a990821d65181df5075ffadf",
+  "changes": {
+    "p=Path(__file__).resolve().parent;root=p.parents[1];sys.path.insert(0,str(root/'tools'))": "work=Path(__file__).resolve().parent;root=work.parents[1];p=root/'runs/native-mcc-finite-pit-reference-rust-pair-20261028-v1';sys.path.insert(0,str(root/'tools'))",
+    "accepted=read(p/'independent-verification.json')": "accepted=read(work/'default32-64-original-verification.json')",
+    "native=[read(p/str(n)/'analysis/stage-results.json') for n in [16,32]]": "native=[read(p/'32/analysis/stage-results.json'),read(work/'default64/analysis/stage-results.json')]",
+    "case=read(p/'16/analysis/stages.json');assert physical_case(json.loads(json.dumps(case)))==physical_case(read(p/'32/analysis/stages.json'))": "case=read(p/'32/analysis/stages.json');assert physical_case(json.loads(json.dumps(case)))==physical_case(read(work/'default64/analysis/stages.json'))",
+    "(p/'member-units-verification.json')": "(work/'default32-64-member-units-verification.json')"
+  },
+  "actual_coarse_increment": 0.03125,
+  "actual_fine_increment": 0.015625,
+  "p6_complete": false,
+  "_publication_evidence": {
+    "original_path": "runs/native-mcc-finite-pit-increment-residual-sensitivity-20261028-v1/member-path-adapter.json",
+    "report_sha256": "a714a25a0f1f3075c4ee5533194f1e817b6c8a509908423ad564dfba678b3995"
+  }
+}

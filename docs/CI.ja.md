@@ -1,6 +1,6 @@
 # FEM本体の新規Windows環境での検査
 
-公開4ed9f40389417559e575ad1877e6d84765a9915aの[Windows CI 40432737477](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40432737477)は成功し、artifact12703816413のZIP SHA・598ソース・Rust263件・Python128件を照合しました。後続600ソースのRust265件・Python135件はローカルで合格しています。新しい公開版のCI、Nativeの総合CI、実GPU受入はそれぞれ別に記録します。
+公開7b6f3e1650bba94db9c466c07b8e159f687b8fdfの[Windows CI40643394162](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40643394162)は成功し、artifact12797471087のZIP SHA・600ソース・Rust265件・Python137件・固定依存とRust1.99.1を照合しました。174ファイルはバイト一致、426ファイルはcheckoutのCRLF化だけで一致します。初回ea3126の8.3短縮パス比較1件の失敗と修正を別記録に保持しています。後続607ソースの公開f7aaa1fも[CI40645436331](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40645436331)が成功し、artifact12799530192のZIP SHA・607ソース・Rust265件・Python159件・固定依存とRust1.99.1を照合しました。178ソースはバイト一致、429ソースはcheckoutのCRLF化だけで一致します。Native総合CI6327件と実GPUの限定受入はFEM専用CIと別に記録します。
 
 以下は過去版の記録です。
 
