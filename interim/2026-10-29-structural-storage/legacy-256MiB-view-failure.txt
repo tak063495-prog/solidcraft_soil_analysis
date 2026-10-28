@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\Work\soil-fem-3d\runs\mcc-large-structures-development-20261028-v1\large-case\runtime\tools\export_solidcraft_view.py", line 298, in <module>
+    p=argparse.ArgumentParser();p.add_argument('job',type=Path);p.add_argument('output',type=Path);a=p.parse_args();export(a.job,a.output)
+                                                                                                                    ~~~~~~^^^^^^^^^^^^^^^^
+  File "D:\Work\soil-fem-3d\runs\mcc-large-structures-development-20261028-v1\large-case\runtime\tools\export_solidcraft_view.py", line 185, in export
+    accepted=read(accepted_path);run=read(result_path);mesh=read(mesh_path)
+                                     ~~~~^^^^^^^^^^^^^
+  File "D:\Work\soil-fem-3d\runs\mcc-large-structures-development-20261028-v1\large-case\runtime\tools\export_solidcraft_view.py", line 23, in read
+    if path.stat().st_size>MAX_FILE:raise ValueError('viewer input exceeds 256 MiB limit')
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: viewer input exceeds 256 MiB limit

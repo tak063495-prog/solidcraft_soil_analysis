@@ -50,6 +50,8 @@ def physical_case(case):
     numerical={'relative_force_tolerance','relative_linear_tolerance','maximum_newton_iterations','initial_increment','minimum_increment','material_maximum_substep','tangent_perturbation','maximum_free_dofs','linear_solver','mcc_integration'}
     out={k:v for k,v in normalized.items() if k not in ('settings','verification_reject_once_stages')}
     out['physical_settings']={k:v for k,v in normalized['settings'].items() if k not in numerical}
+    if out.get('beam_system') is not None:
+        out['beam_system']={k:v for k,v in out['beam_system'].items() if k!='storage_budget'}
     out['stages']=[{k:v for k,v in stage.items() if k!='initial_increment'} for stage in normalized['stages']]
     return out
 

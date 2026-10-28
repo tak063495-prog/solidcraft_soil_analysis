@@ -85,44 +85,83 @@ fn cantilever_axial_biaxial_bending_torsion_and_scaling_match_closed_forms() -> 
     let mesh = mesh()?;
     let active = vec![true; mesh.nodes.len()];
     let u = vec![[0.; 3]; mesh.nodes.len()];
-    for timo in [false, true] {
-        for scaling in [0.5, 2., 10.] {
-            let mut c = configuration([0.; 3], [2., 0., 0.], timo)?;
-            c.rotation_length_scale_m = scaling;
-            let model = beams::Model::new(&mesh, c)?;
-            let result = model.evaluate(&model.initial_state(), &u, &active, 0.)?;
-            let s = section(timo);
-            let g = s.young_kpa / (2. * (1. + s.poisson));
-            let d = result.state.node_displacement_m[1];
-            let r = result.state.node_rotation_rad[1];
-            let shear = if timo {
-                [2. * 2. / (g * 0.016), 3. * 2. / (g * 0.014)]
-            } else {
-                [0., 0.]
-            };
-            let expected = [
-                1. * 2. / (s.young_kpa * s.area_m2),
-                2. * 8. / (3. * s.young_kpa * s.iz_m4) + shear[0],
-                3. * 8. / (3. * s.young_kpa * s.iy_m4) + shear[1],
-            ];
-            for a in 0..3 {
-                assert!(
-                    (d[a] - expected[a]).abs() < 1e-10 * expected[a].abs().max(1e-10),
-                    "{d:?} != {expected:?}"
-                );
+    for bounded in [false, true] {
+        for timo in [false, true] {
+            for scaling in [0.5, 2., 10.] {
+                let mut c = configuration([0.; 3], [2., 0., 0.], timo)?;
+                c.rotation_length_scale_m = scaling;
+                if bounded {
+                    c.storage_budget = Some(beams::StorageBudget {
+                        maximum_nodes: 500,
+                        maximum_compilation_mib: 64,
+                        maximum_cached_mib: 0,
+                    });
+                }
+                let model = beams::Model::new(&mesh, c)?;
+                let result = model.evaluate(&model.initial_state(), &u, &active, 0.)?;
+                let s = section(timo);
+                let g = s.young_kpa / (2. * (1. + s.poisson));
+                let d = result.state.node_displacement_m[1];
+                let r = result.state.node_rotation_rad[1];
+                let shear = if timo {
+                    [2. * 2. / (g * 0.016), 3. * 2. / (g * 0.014)]
+                } else {
+                    [0., 0.]
+                };
+                let expected = [
+                    1. * 2. / (s.young_kpa * s.area_m2),
+                    2. * 8. / (3. * s.young_kpa * s.iz_m4) + shear[0],
+                    3. * 8. / (3. * s.young_kpa * s.iy_m4) + shear[1],
+                ];
+                for a in 0..3 {
+                    assert!(
+                        (d[a] - expected[a]).abs() < 1e-10 * expected[a].abs().max(1e-10),
+                        "{d:?} != {expected:?}"
+                    );
+                }
+                assert!((r[0] - 4. * 2. / (g * s.torsion_j_m4)).abs() < 1e-12);
+                assert!((r[1] + 3. * 4. / (2. * s.young_kpa * s.iy_m4)).abs() < 1e-12);
+                assert!((r[2] - 2. * 4. / (2. * s.young_kpa * s.iz_m4)).abs() < 1e-12);
+                assert!(result.report.true_relative_interior_residual < 1e-11);
+                for a in 0..3 {
+                    assert!((result.interface_internal_kn[a] + [1., 2., 3.][a]).abs() < 1e-8);
+                }
+                let applied = Vector3::from(result.report.external_moment_origin_kn_m)
+                    + Vector3::from(result.report.support_moment_origin_kn_m);
+                assert!(applied.norm() < 1e-8);
             }
-            assert!((r[0] - 4. * 2. / (g * s.torsion_j_m4)).abs() < 1e-12);
-            assert!((r[1] + 3. * 4. / (2. * s.young_kpa * s.iy_m4)).abs() < 1e-12);
-            assert!((r[2] - 2. * 4. / (2. * s.young_kpa * s.iz_m4)).abs() < 1e-12);
-            assert!(result.report.true_relative_interior_residual < 1e-11);
-            for a in 0..3 {
-                assert!((result.interface_internal_kn[a] + [1., 2., 3.][a]).abs() < 1e-8);
-            }
-            let applied = Vector3::from(result.report.external_moment_origin_kn_m)
-                + Vector3::from(result.report.support_moment_origin_kn_m);
-            assert!(applied.norm() < 1e-8);
         }
     }
+    Ok(())
+}
+
+#[test]
+fn explicit_storage_keeps_default500_limit_and_rejects_before_large_allocation() -> Result<()> {
+    let mesh = mesh()?;
+    let mut cfg = configuration([0.; 3], [2., 0., 0.], false)?;
+    assert!(serde_json::to_value(&cfg)?.get("storage_budget").is_none());
+    for i in 2..501 {
+        cfg.nodes.push(serde_json::from_value(
+            json!({"id":format!("unused{i}"),"position_m":[0.,0.,0.],"soil_node_set":"BeamBase"}),
+        )?);
+    }
+    assert!(beams::Model::new(&mesh, cfg.clone()).is_err());
+    cfg.storage_budget = Some(beams::StorageBudget {
+        maximum_nodes: 750,
+        maximum_compilation_mib: 1,
+        maximum_cached_mib: 0,
+    });
+    let model = beams::Model::new(&mesh, cfg)?;
+    let error = model
+        .evaluate(
+            &model.initial_state(),
+            &vec![[0.; 3]; mesh.nodes.len()],
+            &vec![true; mesh.nodes.len()],
+            0.,
+        )
+        .err()
+        .unwrap();
+    assert!(error.to_string().contains("before allocation"));
     Ok(())
 }
 

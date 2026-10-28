@@ -181,33 +181,35 @@ fn thin_cantilever_plate_matches_closed_form_without_shear_locking_or_drilling_d
 
 #[test]
 fn plate_is_coupled_to_mc_mcc_and_mixed_forms_with_cutback_and_checkpoint_history() -> Result<()> {
-    for formulation in ["mc", "mcc", "mixed", "projected"] {
-        let mcc = formulation != "mc";
-        let mut mesh: Mesh = serde_json::from_str(include_str!("../examples/mc-column-mesh.json"))?;
-        let base = mesh.nodes.iter().position(|p| *p == [0., 0., 1.]).unwrap();
-        mesh.node_sets.insert("PlateBase".into(), vec![base]);
-        let top = soil_fem_3d::boundary::surface_owners(&mesh)
-            .into_iter()
-            .filter(|(face, owners)| {
-                owners.len() == 1 && face.iter().all(|&n| mesh.nodes[n][2] == 1.)
-            })
-            .map(|(face, _)| face)
-            .collect();
-        mesh.face_sets.insert("top".into(), top);
-        let mesh = mesh.elevate_straight()?;
-        let ground: Ground = serde_json::from_str(if mcc {
-            include_str!("../examples/ground-geostatic-mcc-column.json")
-        } else {
-            include_str!("../examples/ground-geostatic-mc-column.json")
-        })?;
-        let mut case: StageCase =
-            serde_json::from_str(include_str!("../examples/stages-geostatic-column.json"))?;
-        if formulation == "mixed" {
-            case.schema = "soil-fem-mixed-mcc-stages/1".into();
-        } else if formulation == "projected" {
-            case.schema = "soil-fem-projected-mcc-stages/1".into();
-        }
-        let c = json!({"schema":"soil-fem-structures/1","nodes":[
+    for cache in [None, Some(0), Some(64)] {
+        for formulation in ["mc", "mcc", "mixed", "projected"] {
+            let mcc = formulation != "mc";
+            let mut mesh: Mesh =
+                serde_json::from_str(include_str!("../examples/mc-column-mesh.json"))?;
+            let base = mesh.nodes.iter().position(|p| *p == [0., 0., 1.]).unwrap();
+            mesh.node_sets.insert("PlateBase".into(), vec![base]);
+            let top = soil_fem_3d::boundary::surface_owners(&mesh)
+                .into_iter()
+                .filter(|(face, owners)| {
+                    owners.len() == 1 && face.iter().all(|&n| mesh.nodes[n][2] == 1.)
+                })
+                .map(|(face, _)| face)
+                .collect();
+            mesh.face_sets.insert("top".into(), top);
+            let mesh = mesh.elevate_straight()?;
+            let ground: Ground = serde_json::from_str(if mcc {
+                include_str!("../examples/ground-geostatic-mcc-column.json")
+            } else {
+                include_str!("../examples/ground-geostatic-mc-column.json")
+            })?;
+            let mut case: StageCase =
+                serde_json::from_str(include_str!("../examples/stages-geostatic-column.json"))?;
+            if formulation == "mixed" {
+                case.schema = "soil-fem-mixed-mcc-stages/1".into();
+            } else if formulation == "projected" {
+                case.schema = "soil-fem-projected-mcc-stages/1".into();
+            }
+            let c = json!({"schema":"soil-fem-structures/1","nodes":[
             {"id":"a","position_m":[0.,0.,1.],"soil_node_set":"PlateBase"},
             {"id":"b","position_m":[2.,0.,1.],"soil_node_set":null},
             {"id":"c","position_m":[2.,1.,1.],"soil_node_set":null}],
@@ -216,66 +218,74 @@ fn plate_is_coupled_to_mc_mcc_and_mixed_forms_with_cutback_and_checkpoint_histor
             "rotation_length_scale_m":2.,"maximum_condensed_dofs":30,
             "rotation_constraints":[{"node_id":"a","direction":[1.,0.,0.],"value":0.},{"node_id":"a","direction":[0.,1.,0.],"value":0.},{"node_id":"a","direction":[0.,0.,1.],"value":0.}],
             "nodal_loads":[{"node_id":"b","boundary_force_kn":[0.,0.,-5.]}]});
-        case.beam_system = Some(serde_json::from_value(c)?);
-        case.settings.initial_increment = 0.25;
-        case.stages = serde_json::from_value(json!([
+            case.beam_system = Some(serde_json::from_value(c)?);
+            if let Some(cache) = cache {
+                case.beam_system.as_mut().unwrap().storage_budget = Some(beams::StorageBudget {
+                    maximum_nodes: 500,
+                    maximum_compilation_mib: 64,
+                    maximum_cached_mib: cache,
+                });
+            }
+            case.settings.initial_increment = 0.25;
+            case.stages = serde_json::from_value(json!([
             {"kind":"install_structures","name":"install","members":["wall"],"placement":"cad_new_nodes"},
             {"kind":"boundary","name":"load_plate","target_factor":1.},
             {"kind":"boundary","name":"unload_plate","target_factor":0.},
             {"kind":"remove_structures","name":"remove","members":["wall"]}]))?;
-        case.verification_reject_once_stages = vec!["install".into(), "load_plate".into()];
-        let full = stages::solve(&mesh, ground.clone(), case.clone())?;
-        assert!(full.complete, "{formulation}: {:?}", full.failure_reason);
-        assert_eq!(
-            full.schema,
-            match formulation {
-                "mixed" => "soil-fem-mixed-mcc-stage-result/2",
-                "projected" => "soil-fem-projected-mcc-stage-result/2",
-                _ => "soil-fem-stage-result/14",
+            case.verification_reject_once_stages = vec!["install".into(), "load_plate".into()];
+            let full = stages::solve(&mesh, ground.clone(), case.clone())?;
+            assert!(full.complete, "{formulation}: {:?}", full.failure_reason);
+            assert_eq!(
+                full.schema,
+                match formulation {
+                    "mixed" => "soil-fem-mixed-mcc-stage-result/2",
+                    "projected" => "soil-fem-projected-mcc-stage-result/2",
+                    _ => "soil-fem-stage-result/14",
+                }
+            );
+            for frame in &full.frames {
+                assert!(frame.force_balance_error_kn.iter().all(|v| v.abs() < 1e-6));
+                assert!(
+                    frame
+                        .global_moment_balance_error_kn_m
+                        .unwrap()
+                        .iter()
+                        .all(|v| v.abs() < 1e-6)
+                );
             }
-        );
-        for frame in &full.frames {
-            assert!(frame.force_balance_error_kn.iter().all(|v| v.abs() < 1e-6));
-            assert!(
-                frame
-                    .global_moment_balance_error_kn_m
-                    .unwrap()
-                    .iter()
-                    .all(|v| v.abs() < 1e-6)
-            );
+            let loaded = &full.frames[2].beam_results.as_ref().unwrap().plates[0];
+            assert!(loaded.bending_energy_kn_m > 0.);
+            assert!(full.attempts.iter().any(|a| !a.accepted
+                && a.rejected_trial_structure_changed
+                && a.committed_state_unchanged_on_rejection));
+            let initial = full
+                .geostatic
+                .as_ref()
+                .unwrap()
+                .attempts
+                .iter()
+                .filter(|a| a.accepted)
+                .count();
+            for count in [initial + 1, initial + 2] {
+                let checkpoint = Checkpoint::seal(
+                    &mesh,
+                    stages::solve_until(&mesh, ground.clone(), case.clone(), count)?,
+                )?;
+                let resumed = checkpoint.resume(&mesh, ground.clone(), case.clone(), None)?;
+                assert_eq!(
+                    serde_json::to_value(&full.last_committed)?,
+                    serde_json::to_value(&resumed.last_committed)?
+                );
+                assert_eq!(
+                    serde_json::to_value(&full.frames)?,
+                    serde_json::to_value(&resumed.frames)?
+                );
+            }
+            let mut invalid = full.last_committed.beams.as_ref().unwrap().clone();
+            invalid.plate_reference_global_kinematics.clear();
+            let model = beams::Model::new(&mesh, case.beam_system.unwrap())?;
+            assert!(model.validate_state(&invalid).is_err());
         }
-        let loaded = &full.frames[2].beam_results.as_ref().unwrap().plates[0];
-        assert!(loaded.bending_energy_kn_m > 0.);
-        assert!(full.attempts.iter().any(|a| !a.accepted
-            && a.rejected_trial_structure_changed
-            && a.committed_state_unchanged_on_rejection));
-        let initial = full
-            .geostatic
-            .as_ref()
-            .unwrap()
-            .attempts
-            .iter()
-            .filter(|a| a.accepted)
-            .count();
-        for count in [initial + 1, initial + 2] {
-            let checkpoint = Checkpoint::seal(
-                &mesh,
-                stages::solve_until(&mesh, ground.clone(), case.clone(), count)?,
-            )?;
-            let resumed = checkpoint.resume(&mesh, ground.clone(), case.clone(), None)?;
-            assert_eq!(
-                serde_json::to_value(&full.last_committed)?,
-                serde_json::to_value(&resumed.last_committed)?
-            );
-            assert_eq!(
-                serde_json::to_value(&full.frames)?,
-                serde_json::to_value(&resumed.frames)?
-            );
-        }
-        let mut invalid = full.last_committed.beams.as_ref().unwrap().clone();
-        invalid.plate_reference_global_kinematics.clear();
-        let model = beams::Model::new(&mesh, case.beam_system.unwrap())?;
-        assert!(model.validate_state(&invalid).is_err());
     }
     Ok(())
 }

@@ -27,6 +27,22 @@ def attach(mesh, case, specification):
         result_case['beam_system']=dict(schema='soil-fem-structures/1',nodes=[],sections=[],members=[],
             plate_sections=[],plates=[],rotation_length_scale_m=1.,maximum_condensed_dofs=3000)
     cfg=result_case['beam_system']
+    if 'storage_budget' in specification:
+        proposed=copy.deepcopy(specification['storage_budget'])
+        if cfg.get('storage_budget') is not None and cfg['storage_budget']!=proposed:
+            raise ValueError('conflicting structural storage budgets')
+        cfg['storage_budget']=proposed
+    budget=cfg.get('storage_budget')
+    maximum_nodes=500
+    if budget is not None:
+        if not isinstance(budget,dict) or set(budget)!={'maximum_nodes','maximum_compilation_mib','maximum_cached_mib'}:
+            raise ValueError('explicit structural storage budget requires exactly three integer limits')
+        for name,lower,upper in [('maximum_nodes',1,1000),('maximum_compilation_mib',1,2048),('maximum_cached_mib',0,1024)]:
+            if type(budget[name]) is not int or not lower<=budget[name]<=upper:
+                raise ValueError('invalid explicit structural storage budget')
+        maximum_nodes=budget['maximum_nodes']
+    elif 'storage_budget' in specification:
+        raise ValueError('explicit structural storage budget must be an object')
     if cfg['schema'] not in ('soil-fem-structures/1','soil-fem-beams/1'):raise ValueError('unsupported structure schema')
     cfg['schema']='soil-fem-structures/1';cfg.setdefault('plate_sections',[]);cfg.setdefault('plates',[])
     section_ids={s['id'] for s in cfg['plate_sections']}
@@ -158,7 +174,7 @@ def attach(mesh, case, specification):
         if version in ('soil-fem-plate-surfaces/2','soil-fem-plate-surfaces/3'):
             records[-1].update(attachment=attachment,opposite_body=opposite,owner_pairs=owner_pairs)
             if cut is not None:records[-1]['opposite_excavation_set']=selector
-    if len(cfg['nodes'])>500 or len(cfg['members'])+len(cfg['plates'])>2000:
+    if len(cfg['nodes'])>maximum_nodes or len(cfg['members'])+len(cfg['plates'])>2000:
         raise ValueError('surface plate system exceeds declared Rust structural budget; no truncation')
     for stage in result_case['stages']:
         if stage['kind'] in ('install_structures','remove_structures','install_beams','remove_beams'):

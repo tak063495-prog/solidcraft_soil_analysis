@@ -11,6 +11,9 @@ use std::{
 type M12 = SMatrix<f64, 12, 12>;
 type V12 = SVector<f64, 12>;
 
+mod storage;
+pub use storage::StorageBudget;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Node {
@@ -88,6 +91,8 @@ pub struct Configuration {
     pub members: Vec<Member>,
     pub rotation_length_scale_m: f64,
     pub maximum_condensed_dofs: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub storage_budget: Option<StorageBudget>,
     #[serde(default)]
     pub rotation_constraints: Vec<Constraint>,
     #[serde(default)]
@@ -403,6 +408,7 @@ struct Compiled {
     kc: DMatrix<f64>,
     interface_dofs: Vec<usize>,
     normals: Vec<(usize, Vector3<f64>)>,
+    matrix_storage_bytes: usize,
 }
 pub struct Model {
     pub configuration: Configuration,
@@ -457,9 +463,15 @@ fn basis(eqs: &[(Vector3<f64>, f64)]) -> Result<ConstraintBasis> {
 
 impl Model {
     pub fn new(mesh: &Mesh, c: Configuration) -> Result<Self> {
+        let maximum_nodes = if let Some(budget) = &c.storage_budget {
+            budget.validate()?;
+            budget.maximum_nodes
+        } else {
+            500
+        };
         if !["soil-fem-beams/1", "soil-fem-structures/1"].contains(&c.schema.as_str())
             || c.nodes.is_empty()
-            || c.nodes.len() > 500
+            || c.nodes.len() > maximum_nodes
             || (c.members.is_empty() && c.plates.is_empty())
             || (!c.members.is_empty() && c.sections.is_empty())
             || (!c.plates.is_empty() && c.plate_sections.is_empty())
@@ -803,6 +815,9 @@ impl Model {
         if let Some(c) = self.cache.borrow().get(&key) {
             return Ok(c.clone());
         }
+        if self.configuration.storage_budget.is_some() {
+            return self.compiled_bounded(state, key);
+        }
         let n = self.positions.len();
         let nd = 6 * n;
         let mut active_nodes = vec![false; n];
@@ -939,12 +954,12 @@ impl Model {
             kc,
             interface_dofs,
             normals,
+            matrix_storage_bytes: 0,
         });
         self.cache.borrow_mut().insert(key, value.clone());
         Ok(value)
     }
-    fn loads(&self, s: &State, factor: f64) -> Result<AssembledLoads> {
-        let c = self.compiled(s)?;
+    fn loads(&self, s: &State, factor: f64, c: &Compiled) -> Result<AssembledLoads> {
         let mut loads = DVector::zeros(6 * self.positions.len());
         let mut rest = DVector::zeros(loads.len());
         let mut lines = vec![[0.; 3]; self.members.len()];
@@ -1013,7 +1028,7 @@ impl Model {
     pub fn attached_load(&self, s: &State, factor: f64) -> Result<Vec<(usize, f64)>> {
         self.validate_state(s)?;
         let c = self.compiled(s)?;
-        let (load, _, _) = self.loads(s, factor)?;
+        let (load, _, _) = self.loads(s, factor, &c)?;
         let f = c.t.transpose() * load;
         Ok(c.interface_dofs
             .iter()
@@ -1033,7 +1048,7 @@ impl Model {
         if c.interface_dofs.iter().any(|g| !soil_active_nodes[g / 3]) {
             return Err(Error::Input("active beam attachment lost its soil node; remove or explicitly detach the member before soil excavation".into()));
         }
-        let (loads, rest, lines) = self.loads(s, factor)?;
+        let (loads, rest, lines) = self.loads(s, factor, &c)?;
         let u = DVector::from_iterator(
             c.interface_dofs.len(),
             c.interface_dofs.iter().map(|g| soil_u[g / 3][g % 3]),
