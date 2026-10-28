@@ -24,6 +24,28 @@ fn invalid(message: &str) -> LinearError {
     }
 }
 
+/// Exact symbolic clique for a condensed structural interface. Splitting the
+/// bookkeeping into bounded blocks leaves every nonlocal attachment coupling
+/// present while retaining the per-connectivity and total assembly budgets.
+pub(crate) fn dense_block_connectivity(
+    mut indices: Vec<usize>,
+) -> impl Iterator<Item = Vec<usize>> {
+    indices.sort_unstable();
+    indices.dedup();
+    let blocks: Arc<Vec<Vec<usize>>> =
+        Arc::new(indices.chunks(128).map(<[usize]>::to_vec).collect());
+    (0..blocks.len()).flat_map(move |i| {
+        let blocks = Arc::clone(&blocks);
+        (i..blocks.len()).map(move |j| {
+            let mut rows = blocks[i].clone();
+            if i != j {
+                rows.extend_from_slice(&blocks[j]);
+            }
+            rows
+        })
+    })
+}
+
 #[derive(Debug, Clone)]
 pub struct CsrPattern {
     n: usize,
@@ -565,6 +587,43 @@ mod tests {
             }
         }
         Ok(matrix)
+    }
+
+    #[test]
+    fn condensed_interface_above_256_preserves_full_unsymmetric_operator() -> LinearResult<()> {
+        let n = 400;
+        assert!(CsrPattern::from_connectivity(n, [(0..n).collect()]).is_err());
+        let indices = (0..n).rev().chain(0..n).collect();
+        let pattern = CsrPattern::from_connectivity(n, dense_block_connectivity(indices))?;
+        assert_eq!(pattern.nonzeros(), n * n);
+        let mut actual = CsrMatrix::zeros(pattern);
+        let dense = DMatrix::from_fn(n, n, |i, j| (3 * i + j + 1) as f64 / 8.);
+        for i in 0..n {
+            for j in 0..n {
+                actual.add(i, j, dense[(i, j)])?;
+            }
+        }
+        let x: Vec<_> = (0..n).map(|i| (i % 7) as f64 - 3.).collect();
+        let expected = &dense * DVector::from_column_slice(&x);
+        assert_eq!(actual.matvec(&x)?, expected.as_slice());
+        Ok(())
+    }
+
+    #[test]
+    fn condensed_symbolic_blocks_match_legacy_boundaries_without_filling_elsewhere()
+    -> LinearResult<()> {
+        for n in [1, 127, 128, 129, 255, 256] {
+            let indices: Vec<_> = (0..n).collect();
+            let a = CsrPattern::from_connectivity(n + 1, [indices.clone()])?;
+            let b = CsrPattern::from_connectivity(n + 1, dense_block_connectivity(indices))?;
+            assert_eq!(a.row_ptr, b.row_ptr);
+            assert_eq!(a.columns, b.columns);
+            assert_eq!(a.diagonal, b.diagonal);
+        }
+        let empty = CsrPattern::from_connectivity(3, dense_block_connectivity(vec![]))?;
+        assert_eq!(empty.nonzeros(), 3);
+        assert!(CsrPattern::from_connectivity(2, dense_block_connectivity(vec![2])).is_err());
+        Ok(())
     }
 
     #[test]

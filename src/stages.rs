@@ -1528,7 +1528,7 @@ impl<'a> Model<'a> {
                                 .flat_map(|&g| rows[g].iter().map(|&(r, _)| r))
                                 .collect()
                         })
-                        .chain(std::iter::once(beam_rows))
+                        .chain(linalg::dense_block_connectivity(beam_rows))
                         .chain(anchor_rows),
                 )?)
             } else {
@@ -1607,7 +1607,7 @@ impl<'a> Model<'a> {
                     .enumerate()
                     .filter(|(i, _)| active[*i])
                     .map(|(_, e)| e.dofs.iter().filter_map(|&g| map[g]).collect())
-                    .chain(std::iter::once(beam_rows))
+                    .chain(linalg::dense_block_connectivity(beam_rows))
                     .chain(anchor_rows),
             )?)
         };

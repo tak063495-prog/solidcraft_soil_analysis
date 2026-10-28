@@ -4803,10 +4803,10 @@ index 0000000000000000000000000000000000000000..62bb371d3feae153ace8e0f142e77807
 +}
 diff --git a/crates/engine/src/soil_jobs.rs b/crates/engine/src/soil_jobs.rs
 new file mode 100644
-index 0000000000000000000000000000000000000000..984eddc484da55014690de14d9aef065b17f5767
+index 0000000000000000000000000000000000000000..8b7e866c01c250db0943da6a78ef1879d2df341b
 --- /dev/null
 +++ b/crates/engine/src/soil_jobs.rs
-@@ -0,0 +1,910 @@
+@@ -0,0 +1,926 @@
 +//! Transient, host-owned external FEM jobs. Neither executable paths nor process
 +//! ownership are read from a design. Scratch sessions have no execution host.
 +use crate::{Result, Session, params::bad};
@@ -4822,7 +4822,9 @@ index 0000000000000000000000000000000000000000..984eddc484da55014690de14d9aef065
 +        Some("soil-fem-projected-mcc-stages/1") => Ok("soil-fem-solidcraft-view/2"),
 +        _ => Err(bad(CMD, "unsupported captured construction family")),
 +    }?;
-+    Ok(if snapshot.pointer("/snapshot/stages/beam_system").is_some_and(Value::is_object) { "soil-fem-solidcraft-view/3" } else { standard })
++    let structural =
++        ["beam_system", "plate_surfaces"].iter().any(|name| snapshot.pointer(&format!("/snapshot/stages/{name}")).is_some_and(Value::is_object));
++    Ok(if structural { "soil-fem-solidcraft-view/3" } else { standard })
 +}
 +
 +#[derive(Deserialize)]
@@ -5455,6 +5457,20 @@ index 0000000000000000000000000000000000000000..984eddc484da55014690de14d9aef065
 +            assert!(!out.exists());
 +            s.replace_design(Session::default());
 +            assert_eq!(s.soil_jobs.host().unwrap().root, root);
++        }
++
++        #[test]
++        fn compact_plate_declaration_requires_structural_view_family() {
++            for family in ["soil-fem-stages/1", "soil-fem-projected-mcc-stages/1"] {
++                let snapshot = json!({"snapshot":{"stages":{"schema":family,"plate_surfaces":{"schema":"soil-fem-plate-surfaces/3","surfaces":[]}}}});
++                assert_eq!(expected_view_schema(&snapshot).unwrap(), "soil-fem-solidcraft-view/3");
++                for malformed in [Value::Null, json!([]), json!("plates")] {
++                    let mut invalid = snapshot.clone();
++                    invalid["snapshot"]["stages"]["plate_surfaces"] = malformed;
++                    let standard = if family == "soil-fem-stages/1" { "soil-fem-solidcraft-view/1" } else { "soil-fem-solidcraft-view/2" };
++                    assert_eq!(expected_view_schema(&invalid).unwrap(), standard);
++                }
++            }
 +        }
 +
 +        #[test]

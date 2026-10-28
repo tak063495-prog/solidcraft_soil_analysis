@@ -1,5 +1,10 @@
 # 外部解析ジョブの起動・状態・停止
 
+Nativeの所有ジョブは、起動時のCADに `beam_system` またはオブジェクト形式の `plate_surfaces` があれば構造結果形式 `/3` を要求します。簡略宣言の認識を追加した後続62ファイル差分が必要です。旧差分ではワーカーの数値・表示監査が成功しても、所有ジョブが形式不一致として結果を拒否します。入力SHA・実行ソルバー・表示manifest・監査のハッシュ照合は維持します。
+
+
+コンパクト板宣言経路では、`Invoke-SolidCraftCapture.ps1` がGmsh生成後に `tools/prepare_native_plates.py` を呼ぶ。元の `workflow/conformal` にあるNativeのground/stages・STEP・入力SHAは保持し、板を加えたmesh/stages・対応表・展開の証拠を `workflow/plate-bound` の別の準備インベントリーへ保存する。解析と再開はその固定インベントリーを複製する。`plate-expansion.json` は元mesh/stages/captureと実装のSHA、生成データの指紋を保持し、表示出力前に元のCAD宣言からmesh・case・板対応を再生成して全内容を照合する。節点・材料剛性・対応表・証拠の改変は拒否する。Rustへ直接渡す場合は展開後のstages.jsonを使用する。現時点でJOINT分離/アンカーとの同時宣言展開は未検証として明示拒否し、既存の非宣言経路を保持する。
+
 拡張版SolidCraftのAnalysisタブから、外部FEMワーカーの起動・監視・停止とCAD変更後の結果失効を実装し、実GUIと実MCC解析で限定検証した。Python/Gmsh/PowerShellは外部解析側に置き、SolidCraftアプリへ組み込まない。P5全体は未完了である。
 
 ## 2026-10-25：協調ワーカーと再開の接続

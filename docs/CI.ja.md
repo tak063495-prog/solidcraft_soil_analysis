@@ -1,5 +1,10 @@
 # FEM本体の新規Windows環境での検査
 
+公開4ed9f40389417559e575ad1877e6d84765a9915aの[Windows CI 40432737477](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40432737477)は成功し、artifact12703816413のZIP SHA・598ソース・Rust263件・Python128件を照合しました。後続600ソースのRust265件・Python135件はローカルで合格しています。新しい公開版のCI、Nativeの総合CI、実GPU受入はそれぞれ別に記録します。
+
+以下は過去版の記録です。
+
+
 後続公開b4fb3d1312f98536e3cace51842d33fbfbf83947の[Windows実行40427004281](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40427004281)は成功した。artifact12701391682のZIP SHA、598ソース、Rust263件・Python124件（無視0）、Rust1.99.1と固定Python依存を照合済み。170ファイルはバイト一致、428ファイルはcheckoutのCRLF化だけで一致した。記録は `runs/fem-ci-b4fb3d-success-20261027-v1/verification.json`。後続q6のMCC試行・板対応/3はローカル263/128件と新バイナリの独立200→400比較を通過しているが、新公開コミットのリモートCIとは区別する。Native総合CIと実GPU受入は別報告に保持する。
 
 公開dfb7c29のWindows実行40304406676は、Rust249件・fmt/clippy・CLI buildが合格し、Python94件のうち履歴参照再開の1件が失敗した。元ログとartifactは `runs/fem-ci-dfb7-failure-20261026-v1` に保持する。履歴ソースのパスを文字列だけで照合する処理を、実ファイルの正規化したパス＋変更しないバイトSHAへ修正し、別表記の同一ファイルを検査する回帰試験を追加した。修正f962806の[Windows CI40309767151](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40309767151)は成功した。ダウンロードしたartifactのRust249件・Python94件（無視0）、Rust1.99.1とPython固定依存、ソース578件を公開時の原本と照合した。157件はバイト一致、421件はcheckoutのCRLF化だけで一致する。記録は `runs/fem-ci-f962-success-20261026-v1/verification.json`。後続のローカルPython・native構造部材表示の変更はこの実行の対象外であり、SolidCraft総合CIの未達も保持する。

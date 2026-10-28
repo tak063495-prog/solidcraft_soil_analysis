@@ -193,7 +193,7 @@ impl Layout {
                         rows.extend(dofs.rows[3 * node + axis].iter().map(|&(r, _)| nt + r));
                     }
                 }
-                connectivity.push(rows);
+                connectivity.extend(linalg::dense_block_connectivity(rows));
             }
             Some(CsrPattern::from_connectivity(count, connectivity)?)
         };

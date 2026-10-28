@@ -177,7 +177,7 @@ def _scene_frame(mesh,run,index,*,validated_mixed=False):
 
 def export(job,output):
     job=job.resolve();output=output.resolve();analysis=job/'analysis';prepared=analysis/'ground';conformal=job/'conformal'
-    capture,ground,stages,_=validate(conformal,manifest_name='native-capture.json')
+    capture,ground,captured_stages,_=validate(conformal,manifest_name='native-capture.json')
     link=read(conformal/'native-capture-import.json')
     if link.get('passed') is not True or link.get('input_sha256')!=capture['input_sha256'] or link.get('source_capture_sha256')!=sha(conformal/'native-capture.json'):
         raise ValueError('native capture import linkage mismatch')
@@ -207,7 +207,10 @@ def export(job,output):
     if len(names)!=4 or set(names)!=set(inputs):raise ValueError('invalid accepted job file inventory')
     for name,digest in recorded.items():
         if sha(inputs[name.replace('\\','/').rsplit('/',1)[-1]])!=digest:raise ValueError('accepted job input/result hash mismatch')
-    if not equal(read(inputs['ground.json']),ground) or not equal(read(inputs['stages.json']),stages):raise ValueError('job inputs differ from native capture')
+    if not equal(read(inputs['ground.json']),ground):raise ValueError('job ground differs from native capture')
+    from prepare_native_plates import verify as verify_plate_expansion
+    stages=read(inputs['stages.json'])
+    verify_plate_expansion(conformal, prepared, mesh, stages, captured_stages)
     solver=analysis/'solver/soil-fem-3d.exe';solver_hash=sha(solver)
     if accepted.get('solver_binary_sha256')!=solver_hash or run.get('provenance',{}).get('solver_binary_sha256')!=solver_hash:raise ValueError('job solver fingerprint mismatch')
     if run.get('complete') is not True or run.get('failure_reason') is not None:raise ValueError('incomplete analysis cannot be displayed as accepted')

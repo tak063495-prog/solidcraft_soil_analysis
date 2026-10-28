@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest import mock
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from export_solidcraft_view import EDGES,boundary,export,scene_frame
@@ -67,6 +68,40 @@ def job_fixture(root, specimen=None):
 
 
 class SolidCraftView(unittest.TestCase):
+    def test_projected_export_audits_expanded_case_after_verifying_compact_cad_linkage(self):
+        # Transport-contract regression. The numerical audit is a separate gate;
+        # stop exactly at its boundary after checking which inputs it receives.
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)/'job';job_fixture(root)
+            analysis=root/'analysis';conformal=root/'conformal'
+            expanded=json.loads((analysis/'stages.json').read_text())
+            declared=copy.deepcopy(expanded)
+            declared['plate_surfaces']={'schema':'soil-fem-plate-surfaces/3','surfaces':[]}
+            run=json.loads((analysis/'stage-results.json').read_text())
+            run.update(schema='soil-fem-projected-mcc-stage-result/1',case=expanded)
+            write(analysis/'stage-results.json',run)
+            accepted=json.loads((analysis/'accepted-stage-run.json').read_text())
+            accepted['inputs_and_results_sha256'][str(analysis/'stage-results.json')]=sha(analysis/'stage-results.json')
+            write(analysis/'accepted-stage-run.json',accepted)
+            capture=json.loads((conformal/'native-capture.json').read_text())
+            ground=json.loads((conformal/'ground.json').read_text())
+            def linkage(folder,prepared,mesh,case,captured):
+                self.assertEqual(folder,conformal)
+                self.assertEqual(case,expanded)
+                self.assertEqual(captured,declared)
+                return {'linked':True}
+            def audited(mesh,actual_ground,case,result):
+                self.assertEqual(actual_ground,ground)
+                self.assertEqual(case,expanded)
+                self.assertEqual(result['case'],expanded)
+                raise RuntimeError('numerical audit boundary reached')
+            with mock.patch('export_solidcraft_view.validate',return_value=(capture,ground,declared,{})), \
+                 mock.patch('prepare_native_plates.verify',side_effect=linkage), \
+                 mock.patch('verify_projected_stage_package.audit',side_effect=audited):
+                with self.assertRaisesRegex(RuntimeError,'numerical audit boundary reached'):
+                    export(root,root/'view')
+            self.assertFalse((root/'view').exists())
+
     def test_weighted_cell_values_remain_separate_from_raw_points_and_removed_cells(self):
         mesh,run=fixture();view,points=scene_frame(mesh,run,1)
         self.assertEqual(view['active_element_ids'],[0]);self.assertEqual(len(view['boundary_faces']),4)

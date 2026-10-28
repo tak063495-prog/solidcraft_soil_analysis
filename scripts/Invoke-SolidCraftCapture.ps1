@@ -43,7 +43,15 @@ try {
         if($LASTEXITCODE -ne 0){throw 'JOINT displacement-node split failed'}
         $prepared="$runDir\split"
     }
-    & "$PSScriptRoot\Invoke-Stages.ps1" -PreparedModel $prepared -GroundFile "$runDir\conformal\ground.json" -StageFile "$runDir\conformal\stages.json" -SolverPath $SolverPath -OutputDirectory "$runDir\analysis" -PythonPath $python -PrepareOnly:$PrepareOnly
+    $stageFile="$runDir\conformal\stages.json"
+    if($null -ne $stages.PSObject.Properties['plate_surfaces']){
+        if($SplitFile){throw 'Compact plate declarations with JOINT splitting require separate verification'}
+        & $python tools\prepare_native_plates.py $prepared "$runDir\plate-bound"
+        if($LASTEXITCODE -ne 0){throw 'Native plate declaration expansion failed'}
+        $prepared="$runDir\plate-bound"
+        $stageFile="$prepared\stages.json"
+    }
+    & "$PSScriptRoot\Invoke-Stages.ps1" -PreparedModel $prepared -GroundFile "$runDir\conformal\ground.json" -StageFile $stageFile -SolverPath $SolverPath -OutputDirectory "$runDir\analysis" -PythonPath $python -PrepareOnly:$PrepareOnly
     if($PrepareOnly){
         if(-not (Test-Path -LiteralPath "$runDir\analysis\prepared-stage-input.json")){throw 'Prepared-stage input receipt was not created'}
         Write-Host "Native capture prepared for owned staged analysis: $runDir"
