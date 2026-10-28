@@ -72,7 +72,9 @@ class SolidCraftView(unittest.TestCase):
         # Transport-contract regression. The numerical audit is a separate gate;
         # stop exactly at its boundary after checking which inputs it receives.
         with tempfile.TemporaryDirectory() as temp:
-            root=Path(temp)/'job';job_fixture(root)
+            # Hosted Windows TEMP may use an8.3 user alias. Match the exporter's
+            # canonical path while preserving the directory-identity assertion.
+            root=Path(temp).resolve()/'job';job_fixture(root)
             analysis=root/'analysis';conformal=root/'conformal'
             expanded=json.loads((analysis/'stages.json').read_text())
             declared=copy.deepcopy(expanded)
