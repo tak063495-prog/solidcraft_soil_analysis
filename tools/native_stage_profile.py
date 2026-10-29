@@ -81,6 +81,89 @@ def previous(folder, solver_digest, sources, expected_input=None):
     return owner, receipt
 
 
+def recoverable(folder, solver_digest, sources, expected_input=None):
+    """Select a bound accepted snapshot. A saved PID never establishes liveness.
+
+    This is an explicit fork, including when the parent is still running. It
+    never cancels, signals, changes or takes ownership of the original job.
+    Rust performs the full checkpoint/material-history validation at prepare.
+    """
+    owner = read(folder/'job.json', 256*1024)
+    if owner.get('schema') != 'soil-fem-native-job/2' or owner.get('profile') != 'cooperative_staged':
+        raise ValueError('periodic cooperative native job required for recovery')
+    interval = owner.get('checkpoint_interval')
+    if type(interval) is not int or not 1 <= interval <= 4096:
+        raise ValueError('saved job has no valid periodic checkpoint interval')
+    if owner.get('solver_sha256') != solver_digest or owner.get('tool_sources_sha256') != sources:
+        raise ValueError('recovery requires the same installed solver and workflow version')
+    verify(folder/'runtime', sources)
+    captured, _, _, _ = validate(folder/'capture')
+    if captured['input_sha256'] != owner.get('input_sha256') or (expected_input is not None and expected_input != captured['input_sha256']):
+        raise ValueError('saved job differs from the current input snapshot')
+    job = folder/'workflow/analysis/solver-job'
+    manifest = read(job/'job.json', 256*1024)
+    binding = manifest.get('binding', {})
+    files = binding.get('files_sha256', {})
+    required = {'inputs/mesh.json', 'inputs/ground.json', 'inputs/case.json', 'solver/soil-fem-3d.exe'}
+    if (manifest.get('schema') != 'soil-fem-stages-job/1' or not isinstance(files, dict)
+            or set(files) not in (required, required | {'inputs/checkpoint.json'})
+            or binding.get('checkpoint_interval') != interval
+            or files.get('solver/soil-fem-3d.exe') != solver_digest):
+        raise ValueError('periodic solver manifest differs from the native job')
+    pointer = read(job/'recovery.json', 8192)
+    generation = pointer.get('generation')
+    if (pointer.get('schema') != 'soil-fem-stages-recovery/1'
+            or pointer.get('job_id') != manifest.get('job_id')
+            or type(generation) is not int or not 1 <= generation <= 2**64-1
+            or pointer.get('checkpoint') != 'recovery-checkpoint-'+str(generation % 2)+'.json'):
+        raise ValueError('recovery pointer identity or path differs')
+    for name in ('checkpoint_sha256', 'run_sha256'):
+        digest = pointer.get(name)
+        if not isinstance(digest, str) or len(digest) != 64 or any(c not in '0123456789abcdef' for c in digest):
+            raise ValueError('invalid recovery snapshot digest')
+    for name, digest in files.items():
+        if sha(job/name) != digest:
+            raise ValueError('saved solver input changed: '+name)
+    for inner, outer in [('inputs/mesh.json', 'ground/mesh.json'),
+                         ('inputs/ground.json', 'ground/ground.json'), ('inputs/case.json', 'stages.json')]:
+        if sha(folder/'workflow/analysis'/outer) != files[inner]:
+            raise ValueError('native and solver analysis inputs differ: '+outer)
+    if sha(job/pointer['checkpoint']) != pointer['checkpoint_sha256']:
+        raise ValueError('recovery checkpoint file checksum differs')
+    receipt = dict(kind='durable_snapshot', generation=generation, pointer=pointer,
+                   pointer_sha256=sha(job/'recovery.json'), solver_manifest_sha256=sha(job/'job.json'),
+                   solver_files_sha256=files, files_sha256={name: sha(folder/name) for name in INPUT_FILES})
+    # Reject an advancing pointer instead of silently choosing a different state.
+    if read(job/'recovery.json', 8192) != pointer:
+        raise ValueError('recovery pointer advanced during selection; retry explicitly')
+    return owner, receipt
+
+
+def freeze_recovery_source(previous_folder, folder, receipt):
+    """Copy selected data with before/after hashes, then use that immutable copy.
+
+    The original alternates two slots and may advance while a fork is being
+    prepared. Never pass those live slot paths to the Rust prepare command.
+    """
+    old = previous_folder/'workflow/analysis/solver-job'
+    source = folder/'recovery-source'
+    source.mkdir()
+    for name, digest in receipt['solver_files_sha256'].items():
+        target = source/name; target.parent.mkdir(parents=True, exist_ok=True)
+        copy_file(old/name, target, digest)
+    copy_file(old/'job.json', source/'job.json', receipt['solver_manifest_sha256'])
+    pointer = receipt['pointer']
+    copy_file(old/pointer['checkpoint'], source/pointer['checkpoint'], pointer['checkpoint_sha256'])
+    copy_file(old/'recovery.json', source/'recovery.json', receipt['pointer_sha256'])
+    if read(source/'recovery.json', 8192) != pointer or sha(old/'recovery.json') != receipt['pointer_sha256']:
+        raise ValueError('recovery pointer advanced while copying; retry in a new folder')
+    for name, digest in receipt['files_sha256'].items():
+        if sha(previous_folder/name) != digest or sha(folder/name) != digest:
+            raise ValueError('native recovery context changed: '+name)
+    atomic(folder/'recovery-receipt.json', receipt)
+    return source
+
+
 def clone_context(previous_folder, folder, solver, owner):
     workflow = folder/'workflow'
     conformal = workflow/'conformal'
@@ -203,7 +286,11 @@ def execute(folder, runtime, solver, owner, publish, cancelled, stop_child, *, p
         if interval is not None and (type(interval) is not int or not 1 <= interval <= 4096):
             raise ValueError('invalid periodic checkpoint interval in owned job')
         if previous_folder is not None:
-            args=[str(solver), 'prepare-stages-resume', str(previous_folder/'workflow/analysis/solver-job'), str(solver_job)]
+            if receipt['kind'] == 'durable_snapshot':
+                source = freeze_recovery_source(previous_folder, folder, receipt)
+                args=[str(solver), 'prepare-stages-recovery', str(source), str(solver_job)]
+            else:
+                args=[str(solver), 'prepare-stages-resume', str(previous_folder/'workflow/analysis/solver-job'), str(solver_job)]
         else:
             args=[str(solver), 'prepare-durable-stages-job' if interval is not None else 'prepare-stages-job', str(mesh), str(ground), str(case)]
             if interval is not None:args.append(str(interval))

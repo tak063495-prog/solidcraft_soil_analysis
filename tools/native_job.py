@@ -119,7 +119,14 @@ def phase(folder):
     return 'importing_geometry'
 
 
-def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=None,expected_input=None,host_disconnected=None,host_token=None,cooperative=False,resume_from=None,checkpoint_interval=None):
+def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=None,expected_input=None,host_disconnected=None,host_token=None,cooperative=False,resume_from=None,checkpoint_interval=None,recover_from=None):
+    if recover_from is not None and resume_from is not None:
+        raise ValueError('choose either a saved checkpoint resume or a periodic snapshot recovery')
+    recovering = recover_from is not None
+    if recovering:
+        resume_from = recover_from.resolve()
+        if folder.resolve().is_relative_to(resume_from):
+            raise ValueError('recovery output must be outside the original job')
     if checkpoint_interval is not None:
         if type(checkpoint_interval) is not int or not 1 <= checkpoint_interval <= 4096:
             raise ValueError('checkpoint interval must be an integer from 1 to 4096')
@@ -143,7 +150,8 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
     if resume_from is not None:
         import native_stage_profile
         resume_from=resume_from.resolve();cooperative=True
-        previous_owner,receipt=native_stage_profile.previous(resume_from,solver_digest,source_hashes,expected_input)
+        inspect = native_stage_profile.recoverable if recovering else native_stage_profile.previous
+        previous_owner,receipt=inspect(resume_from,solver_digest,source_hashes,expected_input)
         if recorded['input_sha256']!=previous_owner['input_sha256']:raise ValueError('resume capture differs')
         checkpoint_interval=previous_owner.get('checkpoint_interval')
         mesh_size,order,quadrature=(previous_owner[k] for k in ('mesh_size_m','element_order','quadrature_order'))
@@ -156,6 +164,7 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
         workflow_sources='runtime',profile='cooperative_staged' if cooperative else 'legacy_process',
         parent_job_id=previous_owner['job_id'] if previous_owner else None)
     if checkpoint_interval is not None:owner['checkpoint_interval']=checkpoint_interval
+    if recovering:owner['recovered_generation']=receipt['generation']
     atomic(folder/'job.json',owner)
     current=dict(schema='soil-fem-native-job-status/2' if cooperative else 'soil-fem-native-job-status/1',job_id=job_id,input_sha256=owner['input_sha256'],
         host_token=host_token,
@@ -247,8 +256,13 @@ if __name__=='__main__':
     resume=commands.add_parser('resume');resume.add_argument('previous',type=Path);resume.add_argument('job',type=Path)
     resume.add_argument('--solver',type=Path);resume.add_argument('--expected-input-sha256');resume.add_argument('--host-token')
     resume.add_argument('--watch-stdin',action='store_true')
+    recover=commands.add_parser('recover',help='explicitly fork a verified periodic snapshot; does not stop or modify the original job')
+    recover.add_argument('previous',type=Path);recover.add_argument('job',type=Path)
+    recover.add_argument('--solver',type=Path);recover.add_argument('--expected-input-sha256');recover.add_argument('--host-token')
+    recover.add_argument('--watch-stdin',action='store_true')
     for name in ('status','cancel'):commands.add_parser(name).add_argument('job',type=Path)
     args=parser.parse_args()
     if args.command=='run':sys.exit(run(args.capture,args.job,solver=args.solver,mesh_size=args.mesh_size_m,order=args.order,quadrature=args.quadrature,split=args.split,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=args.cooperative,checkpoint_interval=args.checkpoint_interval if args.checkpoint_interval is not None else (configured_interval(os.environ.get('SOLIDCRAFT_SOIL_FEM_CHECKPOINT_INTERVAL')) if args.cooperative else None)))
     if args.command=='resume':sys.exit(run(args.previous/'capture',args.job,solver=args.solver,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=True,resume_from=args.previous))
+    if args.command=='recover':sys.exit(run(args.previous/'capture',args.job,solver=args.solver,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=True,recover_from=args.previous))
     print(json.dumps(request_cancel(args.job) if args.command=='cancel' else status(args.job),ensure_ascii=False))

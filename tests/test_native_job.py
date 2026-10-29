@@ -14,6 +14,96 @@ from verify_acceptance_packet import sha
 
 
 class NativeJob(unittest.TestCase):
+    def recovery_fixture(self, folder):
+        import native_stage_profile as profile
+        owner,report=self.saved_fixture(folder)
+        owner.update(profile='cooperative_staged',checkpoint_interval=4,tool_sources_sha256={})
+        (folder/'runtime').mkdir()
+        inner=folder/'workflow/analysis/solver-job'
+        (inner/'inputs').mkdir();(inner/'solver').mkdir()
+        for source,dest in [('ground/mesh.json','mesh.json'),('ground/ground.json','ground.json'),('stages.json','case.json')]:
+            shutil.copyfile(folder/'workflow/analysis'/source,inner/'inputs'/dest)
+        (inner/'solver/soil-fem-3d.exe').write_bytes(b'not executed; trusted test identity')
+        owner['solver_sha256']=sha(inner/'solver/soil-fem-3d.exe')
+        atomic(folder/'job.json',owner)
+        files={n:sha(inner/n) for n in ['inputs/mesh.json','inputs/ground.json','inputs/case.json','solver/soil-fem-3d.exe']}
+        atomic(inner/'job.json',dict(schema='soil-fem-stages-job/1',job_id='c'*64,binding=dict(files_sha256=files,checkpoint_interval=4)))
+        (inner/'recovery-checkpoint-1.json').write_bytes(b'accepted snapshot; deep validation is performed by Rust')
+        pointer=dict(schema='soil-fem-stages-recovery/1',job_id='c'*64,generation=3,checkpoint='recovery-checkpoint-1.json',
+                     checkpoint_sha256=sha(inner/'recovery-checkpoint-1.json'),run_sha256='d'*64)
+        atomic(inner/'recovery.json',pointer)
+        return owner,pointer
+
+    def test_recovery_explicitly_forks_and_does_not_infer_process_death_from_saved_status(self):
+        import native_stage_profile as profile
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);owner,pointer=self.recovery_fixture(folder)
+            for report in [dict(state='running',worker_pid=os.getpid()),dict(state='failed',worker_pid=1),dict(state='succeeded')]:
+                atomic(folder/'status.json',report)
+                before={p.relative_to(folder).as_posix():sha(p) for p in folder.rglob('*') if p.is_file()}
+                actual,receipt=profile.recoverable(folder,owner['solver_sha256'],{},owner['input_sha256'])
+                self.assertEqual(actual,owner);self.assertEqual(receipt['pointer'],pointer)
+                self.assertEqual(before,{p.relative_to(folder).as_posix():sha(p) for p in folder.rglob('*') if p.is_file()})
+            (folder/'status.json').unlink()  # A crash may never write a terminal report.
+            self.assertEqual(profile.recoverable(folder,owner['solver_sha256'],{})[1]['generation'],3)
+            for solver,sources,cad in [('e'*64,{},owner['input_sha256']),
+                                       (owner['solver_sha256'],{'tools/foreign.py':'e'*64},owner['input_sha256']),
+                                       (owner['solver_sha256'],{},'e'*64)]:
+                with self.subTest(solver=solver,sources=sources,cad=cad),self.assertRaises(ValueError):
+                    profile.recoverable(folder,solver,sources,cad)
+
+    def test_recovery_refuses_pointer_paths_generation_checksum_and_mismatched_native_inputs(self):
+        import native_stage_profile as profile
+        cases=[('generation',True),('generation',0),('generation',2**64),('checkpoint','../checkpoint.json'),
+               ('checkpoint','recovery-checkpoint-0.json'),('job_id','f'*64),('run_sha256','NaN'),('checkpoint_sha256','e'*64)]
+        for key,value in cases:
+            with self.subTest(key=key,value=value),tempfile.TemporaryDirectory() as tmp:
+                folder=Path(tmp);owner,pointer=self.recovery_fixture(folder)
+                atomic(folder/'workflow/analysis/solver-job/recovery.json',{**pointer,key:value})
+                with self.assertRaises(ValueError):profile.recoverable(folder,owner['solver_sha256'],{})
+        for name in ['workflow/analysis/ground/mesh.json','workflow/analysis/stages.json',
+                     'workflow/analysis/solver-job/inputs/case.json','workflow/analysis/solver-job/recovery-checkpoint-1.json']:
+            with self.subTest(name=name),tempfile.TemporaryDirectory() as tmp:
+                folder=Path(tmp);owner,_=self.recovery_fixture(folder)
+                with (folder/name).open('ab') as f:f.write(b' changed')
+                with self.assertRaises(ValueError):profile.recoverable(folder,owner['solver_sha256'],{})
+
+    def test_recovery_freezes_selected_snapshot_and_refuses_an_advancing_parent_during_copy(self):
+        from unittest.mock import patch
+        import native_stage_profile as profile
+        for advance in [False,True]:
+            with self.subTest(advance=advance),tempfile.TemporaryDirectory() as tmp:
+                base=Path(tmp);old=base/'original';old.mkdir();owner,pointer=self.recovery_fixture(old)
+                _,receipt=profile.recoverable(old,owner['solver_sha256'],{})
+                new=base/'fork';new.mkdir()
+                for name in profile.INPUT_FILES:
+                    target=new/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(old/name,target)
+                real=profile.copy_file
+                def copy(source,target,digest):
+                    real(source,target,digest)
+                    if advance and source.name==pointer['checkpoint']:
+                        atomic(old/'workflow/analysis/solver-job/recovery.json',{**pointer,'generation':5})
+                with patch.object(profile,'copy_file',side_effect=copy):
+                    if advance:
+                        with self.assertRaises(ValueError):profile.freeze_recovery_source(old,new,receipt)
+                        self.assertFalse((new/'recovery-receipt.json').exists())
+                    else:
+                        frozen=profile.freeze_recovery_source(old,new,receipt)
+                        data=(frozen/pointer['checkpoint']).read_bytes()
+                        (old/'workflow/analysis/solver-job'/pointer['checkpoint']).write_bytes(b'new parent generation')
+                        self.assertEqual((frozen/pointer['checkpoint']).read_bytes(),data)
+                        self.assertEqual(sha(frozen/pointer['checkpoint']),pointer['checkpoint_sha256'])
+
+    def test_recovery_requires_distinct_output_and_exclusive_mode_before_output_claim(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base=Path(tmp);old=base/'original';target=old/'fork'
+            with self.assertRaisesRegex(ValueError,'outside'):
+                run(old/'capture',target,recover_from=old)
+            self.assertFalse(target.exists())
+            with self.assertRaisesRegex(ValueError,'either'):
+                run(old/'capture',base/'fork',recover_from=old,resume_from=old)
+            self.assertFalse((base/'fork').exists())
+
     def test_completed_solver_report_replaces_last_running_sample_before_postprocessing(self):
         from unittest.mock import patch
         import native_stage_profile as profile
