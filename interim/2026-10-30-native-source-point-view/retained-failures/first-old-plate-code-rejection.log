@@ -1,0 +1,14 @@
+PASS real8061 complete provenance reassembled without resealing receipts
+Traceback (most recent call last):
+  File "D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\export-real8061.py", line 63, in <module>
+    if __name__=='__main__':worker() if sys.argv[1:]==['worker'] else driver()
+                            ~~~~~~^^
+  File "D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\export-real8061.py", line 43, in worker
+    start=time.monotonic();export(workflow,workflow/'view',source_points=True)
+                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\runtime\tools\export_solidcraft_view.py", line 233, in export
+    verify_plate_expansion(conformal, prepared, mesh, stages, captured_stages)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\runtime\tools\prepare_native_plates.py", line 139, in verify
+    raise ValueError('native plate expansion source/implementation linkage differs')
+ValueError: native plate expansion source/implementation linkage differs

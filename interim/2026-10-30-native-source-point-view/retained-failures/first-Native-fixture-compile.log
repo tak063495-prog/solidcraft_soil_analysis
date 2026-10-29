@@ -1,0 +1,20 @@
+    Checking solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\io)
+    Checking solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\engine)
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> crates\engine\src\soil_results\tests.rs:814:23
+    |
+814 |     let mut session = Session::new();
+    |                       ^^^^^^^^^^^^-- argument #1 of type `solidcraft_doc::Document` is missing
+    |
+note: associated function defined here
+   --> crates\engine\src\lib.rs:397:12
+    |
+397 |     pub fn new(doc: Document) -> Self {
+    |            ^^^ -------------
+help: provide the argument
+    |
+814 |     let mut session = Session::new(/* Document */);
+    |                                    ++++++++++++++
+
+For more information about this error, try `rustc --explain E0061`.
+error: could not compile `solidcraft-engine` (lib test) due to 1 previous error
