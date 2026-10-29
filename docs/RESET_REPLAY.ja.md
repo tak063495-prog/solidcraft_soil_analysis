@@ -59,8 +59,20 @@ MATSETと同様に、置換直後・平衡増分前の状態、仮保持荷重�
 
 生のCLIは`replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json`。未完了・材料エラー・不正方針はそれぞれ区別して保存し、CLIは終了コード1を返す。数値未完了で得た最後の確定状態は診断用に保持する。不正なパラメータ方針では実行されていない調整材料や解析結果を作らない。
 
+## 施工工程の終点を指定する
+
+```text
+soil-fem-3d replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json
+```
+
+THROUGH_STAGESは元CASEの施工工程数までの整数で、0は初期平衡のみ、1は最初の施工、最大値は全施工です。元の完全なCASEとそのidentity、要求工程数、実際に再生した部分CASEをsoil-fem-replay-stage-gate/1へ区別して保存します。除外した後半工程の診断用棄却注入は実行せず、元CASEには保持します。
+
+各係数は低減済みの材料で初期平衡前から独立再生します。無低減の施工状態を一度作り、そこから強度だけを落とす機能ではありません。仕様は既存soil-fem-replay/1で、MCC等は拒否します。不正な工程数は計算前に拒否し、既存出力を上書きしません。全試行が終点へ到達した場合だけ終了0とし、数値未完了・入力棄却・材料/求解エラーは区別して報告します。
+
+終点到達は安全率の認定ではありません。stability_classificationはnot_evaluatedのままで、Fs探索・Fs_reqの途中施工ゲートは後続要件です。選択した工程終点と、SRMの物理的合否判定を混同しないでください。
+
 ## SRMの残り
 
-この再生機能はSRMの基盤で、Fs探索・施工途中ゲート・物理的上端候補の判定はまだ行わない。出力の`stability_classification`は`not_evaluated`。完了はFEMの収束を意味し、安全の認定ではない。非収束・線形求解失敗・入力棄却から崩壊やFs上端を生成しない。
+この再生機能はSRMの基盤で、Fs探索・Fs_reqの施工途中ゲート・物理的上端候補の判定はまだ行わない。出力の`stability_classification`は`not_evaluated`。完了はFEMの収束を意味し、安全の認定ではない。非収束・線形求解失敗・入力棄却から崩壊やFs上端を生成しない。
 
 確定した途中起点からの再生選択、2D版の変形後基準座標RESETとの互換、Fs探索と独立な破壊基準・粗密/奥行き検証は後続要件として保持する。[検証記録](RESET_REPLAY_VERIFICATION.ja.md)／[P6一覧](P6_STATUS.ja.md)

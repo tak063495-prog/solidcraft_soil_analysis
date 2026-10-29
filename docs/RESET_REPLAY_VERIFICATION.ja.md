@@ -47,3 +47,14 @@
 斜面MC/MCC初期平衡、自由斜面MCC、斜面上掘削、各独立比較/再開を現exeで再実行。既存水平MCC Tet10掘削の確定状態と全フレームは旧基準版に完全一致。CAD 5試験、整形、Clippy警告ゼロ、releaseビルドも合格。
 
 2D互換RESET_U/RESET_STRESSの変位/応力初期化と変形後基準座標、選択した途中起点からの再生、Fs探索・物理的な上端候補・途中ゲート、構造/接触/水理への拡張は未完。[P6受入要件](P6_STATUS.ja.md)の未達を保持する。
+
+
+## 2026-10-29：工程終点指定の限定受入
+
+新しいreplay-through-stageを、全277 release Rust試験・171 Python試験、fmt/clippy、実CLIの0/最初/最終工程と不正工程数・出力保護から受け入れました。塑性MCでは係数順に依存しない履歴、係数1の元解析との部分一致、数値未完了時の棄却復元も検査しています。
+
+保存済みの実SolidCraft施工モデル（146 Tet10、BIRTH・MATSET・表示/状態RESET・撤去/再誕生）を、11終点×3係数で計算しました。全ての部分履歴が全施工の対応部分に完全一致し、別組立てのGL/Duffy積分・SVDによる3D弾性履歴との198フレーム比較が原基準内でした。実CADの後者は弾性範囲で、一般3D塑性やFsの独立検証を代用しません。
+
+本体へ4ファイルを移し、非Markdownソースの候補との完全一致、新しい本体ビルドのMC全/部分CLI結果、MCC274要素の全5工程・全8群・VTU/力監査を確認しました。試験コードが内部専用APIを呼んだ初回のコンパイル失敗も保存しています。[同じ入力・ソース・検証記録](../interim/2026-10-29-stage-endpoints-and-105k/README.ja.md)。新本体のWindows CIは別ゲートです。
+
+Fs探索、物理的上端、無低減の確定起点からの強度低減は未実装です。通常のMATSETは置換材料で旧応力の降伏整合を検査するため、強度低下で旧応力が降伏面外になる一般経路へそのまま転用できません。既存検査は緩和していません。参考の[Itasca強度低減手順](https://docs.itascacg.com/itasca900/common/docproject/source/manual/program_guide/methodology/factorofsafety/strengthreduction.html)は保存起点へ各試行を戻し、時間進行で運動/平衡を識別します。この静的Newton FEMでは、同じ閾値の転用で物理的上端を認定しません。

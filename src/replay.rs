@@ -203,3 +203,59 @@ pub fn run(
         trials,
     })
 }
+
+/// A construction endpoint for independent reduced-strength replays. This is
+/// not reduction applied after an unreduced endpoint, nor an Fs classification.
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StageGateReport {
+    pub schema: String,
+    pub source_identity: Identity,
+    pub original_case: StageCase,
+    pub requested_through_construction_stages: usize,
+    pub strength_applied_from: String,
+    pub stability_classification: String,
+    pub replay: Report,
+}
+
+pub fn run_through_stage(
+    mesh: &Mesh,
+    source: Ground,
+    case: StageCase,
+    specification: Specification,
+    through_stages: usize,
+) -> Result<StageGateReport> {
+    mesh.validate()?;
+    source.validate()?;
+    case.validate()?;
+    specification.validate(&source)?;
+    if through_stages > case.stages.len() {
+        return Err(Error::Input(
+            "replay stage gate exceeds the original construction stages".into(),
+        ));
+    }
+    let source_identity = Identity::current(mesh, &source, &case)?;
+    let mut prefix = case.clone();
+    prefix.stages.truncate(through_stages);
+    let names: BTreeSet<_> = prefix
+        .stages
+        .iter()
+        .map(|stage| stage.name().to_owned())
+        .collect();
+    // A discarded suffix's diagnostic injection is unexecuted, rather than an
+    // unknown stage in the effective prefix. Keep the original case in full.
+    prefix
+        .verification_reject_once_stages
+        .retain(|name| names.contains(name));
+    prefix.validate()?;
+    let replay = run(mesh, source, prefix, specification)?;
+    Ok(StageGateReport {
+        schema: "soil-fem-replay-stage-gate/1".into(),
+        source_identity,
+        original_case: case,
+        requested_through_construction_stages: through_stages,
+        strength_applied_from: "original_inputs_before_initial_equilibration".into(),
+        stability_classification: "not_evaluated".into(),
+        replay,
+    })
+}

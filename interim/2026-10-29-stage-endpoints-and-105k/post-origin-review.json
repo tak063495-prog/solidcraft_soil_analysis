@@ -1,0 +1,43 @@
+{
+  "schema": "soil-fem-post-origin-strength-reduction-review/1",
+  "reviewed_utc": "2026-10-29T05:03:39.305414+00:00",
+  "implemented": false,
+  "production_modified": false,
+  "existing_gate": "Independent factor replays truncated at a construction endpoint; strength already reduced before initial equilibration.",
+  "source_findings": [
+    {
+      "file": "src/stages.rs",
+      "sha256": "1f43a732f28f65dcf28bdfc1d6b25b29f789e7e3afb441dff8b5858c9d445fa1",
+      "finding": "MaterialSet Preserve retains material states but prepare_transition_mode validates them against the replacement model."
+    },
+    {
+      "file": "src/mc.rs",
+      "sha256": "3edbf11e249fd1e2d3acec86ace93f6174bcf6503b99f7ee1fd8a22cea71878d",
+      "finding": "validate_state rejects normalized yield exceedance; a reduced envelope can reject an originally admissible stressed state before return mapping."
+    }
+  ],
+  "inference": "Appending ordinary MaterialSet is not a general implementation of weakening a loaded equilibrium. Existing input and checkpoint validators must remain strict.",
+  "proposed_next_implementation": [
+    "Create and seal an unreduced, accepted endpoint with exact active geometry, loads, displacement/reference, material/contact/member histories and fixed accepted pore pressure.",
+    "Use an explicitly scoped parameter-continuation update: validate committed stress/history with the accepted old parameters; return-map the new-strength trial without resetting cumulative plastic history; commit new parameters and history together only at accepted global equilibrium.",
+    "Every factor starts from the same immutable unreduced origin. No reuse of another factor’s weakened state; no relabelling input hashes or changing checkpoint identity to bypass verification.",
+    "Keep numerical incompleteness, inadmissible input, constitutive failure, verified equilibrium and independently supported mechanism evidence separate. A Newton or linear-solver failure alone cannot update the physical upper bracket.",
+    "Initial scope must explicitly reject unsupported MCC/IDH reduction and any unsupported member/contact/fluid reduction policy."
+  ],
+  "required_tests": [
+    "Material point weakening at zero total strain with an independent active-set solution; preserve accumulated plastic strain and plastic work.",
+    "F=1 exact same origin and history; forward/reverse factor order independence; every rejected parameter/load step restores state and parameters byte-exactly.",
+    "Force-controlled and displacement-controlled one-element/column solutions, nonassociated flow, Rankine/edge/apex transitions, selected/unselected material IDs.",
+    "Frozen water-pressure/load field and construction origin; then independent3D and fixed2D slope comparisons with separate mesh/depth/increment studies.",
+    "Typed Fs interval/Fs_req gates accept only qualified physical evidence; injected numerical errors leave the interval unknown."
+  ],
+  "primary_references": [
+    {
+      "url": "https://docs.itascacg.com/itasca900/common/docproject/source/manual/program_guide/methodology/factorofsafety/strengthreduction.html",
+      "facts": "Each trial restores a saved initial state; the documented procedure uses time-marching motion/equilibrium evidence and fixed flow during strength reduction.",
+      "fem_inference": "The time-marching response-block constants do not supply a physical upper-bracket classifier for this static Newton FEM."
+    }
+  ],
+  "fs_search_or_upper_classifier_implemented": false,
+  "p6_complete": false
+}

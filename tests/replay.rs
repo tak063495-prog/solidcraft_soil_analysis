@@ -164,3 +164,147 @@ fn policy_errors_and_numerical_incompleteness_do_not_produce_stability_bounds() 
     assert_eq!(report.stability_classification, "not_evaluated");
     Ok(())
 }
+
+#[test]
+fn stage_gate_prefix_factor_one_and_factor_order_preserve_independent_histories() -> Result<()> {
+    let (mesh, ground, case) = fixture()?;
+    let full = stages::solve(&mesh, ground.clone(), case.clone())?;
+    assert!(full.complete);
+    for through in [0, 1, case.stages.len()] {
+        let gate = replay::run_through_stage(&mesh, ground.clone(), case.clone(), spec(), through)?;
+        assert_eq!(gate.requested_through_construction_stages, through);
+        assert_eq!(gate.original_case.stages.len(), case.stages.len());
+        assert_eq!(gate.replay.case.stages.len(), through);
+        assert_eq!(
+            gate.strength_applied_from,
+            "original_inputs_before_initial_equilibration"
+        );
+        assert_eq!(gate.stability_classification, "not_evaluated");
+        assert!(
+            gate.replay
+                .trials
+                .iter()
+                .all(|t| t.outcome == Outcome::Completed)
+        );
+        let unit = gate.replay.trials[0].run.as_ref().unwrap();
+        assert_eq!(
+            serde_json::to_vec(&unit.frames)?,
+            serde_json::to_vec(&full.frames[..through + 1])?
+        );
+        assert_eq!(
+            serde_json::to_vec(&unit.last_committed)?,
+            serde_json::to_vec(&full.frames[through].state)?
+        );
+        let mut reverse = spec();
+        reverse.factors.reverse();
+        let other =
+            replay::run_through_stage(&mesh, ground.clone(), case.clone(), reverse, through)?;
+        for a in &gate.replay.trials {
+            let b = other
+                .replay
+                .trials
+                .iter()
+                .find(|b| b.factor == a.factor)
+                .unwrap();
+            assert_eq!(
+                serde_json::to_vec(&a.run.as_ref().unwrap().frames)?,
+                serde_json::to_vec(&b.run.as_ref().unwrap().frames)?
+            );
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn stage_gate_validates_bounds_and_keeps_original_suffix_diagnostics_and_policy_errors()
+-> Result<()> {
+    let (mesh, ground, mut case) = fixture()?;
+    assert!(
+        replay::run_through_stage(
+            &mesh,
+            ground.clone(),
+            case.clone(),
+            spec(),
+            case.stages.len() + 1
+        )
+        .is_err()
+    );
+    assert!(
+        replay::run_through_stage(&mesh, ground.clone(), case.clone(), spec(), usize::MAX).is_err()
+    );
+    case.verification_reject_once_stages = vec!["small_unload".into()];
+    let report = replay::run_through_stage(&mesh, ground.clone(), case.clone(), spec(), 1)?;
+    assert_eq!(
+        report.original_case.verification_reject_once_stages,
+        case.verification_reject_once_stages
+    );
+    assert!(
+        report
+            .replay
+            .case
+            .verification_reject_once_stages
+            .is_empty()
+    );
+    assert_eq!(
+        report.source_identity.mesh_sha256,
+        soil_fem_3d::checkpoint::hash_json(&mesh)?
+    );
+    assert_eq!(
+        report.source_identity.ground_sha256,
+        soil_fem_3d::checkpoint::hash_json(&ground)?
+    );
+    assert_eq!(
+        report.source_identity.case_sha256,
+        soil_fem_3d::checkpoint::hash_json(&case)?
+    );
+    assert_ne!(
+        report.source_identity.case_sha256,
+        report.replay.source_identity.case_sha256
+    );
+    let mut request = spec();
+    request.factors = vec![100.];
+    let bad = replay::run_through_stage(&mesh, ground.clone(), case.clone(), request, 1)?;
+    assert_eq!(bad.replay.trials[0].outcome, Outcome::RejectedInput);
+    assert!(bad.replay.trials[0].run.is_none());
+    let mcc: Ground =
+        serde_json::from_str(include_str!("../examples/ground-geostatic-mcc-column.json"))?;
+    assert!(
+        replay::run_through_stage(&mesh, mcc, case, spec(), 0)
+            .unwrap_err()
+            .to_string()
+            .contains("MCC")
+    );
+    Ok(())
+}
+
+#[test]
+fn stage_gate_numeric_incompleteness_preserves_rejected_history_without_stability_bounds()
+-> Result<()> {
+    let (mesh, mut ground, mut case) = fixture()?;
+    ground
+        .initialization
+        .geostatic
+        .as_mut()
+        .unwrap()
+        .verification_reject_once = false;
+    case.settings.maximum_newton_iterations = 1;
+    case.settings.initial_increment = 1.;
+    case.settings.minimum_increment = 1.;
+    let mut request = spec();
+    request.factors = vec![1.];
+    let gate = replay::run_through_stage(&mesh, ground, case, request, 1)?;
+    assert_eq!(gate.replay.trials[0].outcome, Outcome::Incomplete);
+    let run = gate.replay.trials[0].run.as_ref().unwrap();
+    assert!(!run.complete && run.frames.is_empty());
+    assert!(
+        run.geostatic
+            .as_ref()
+            .unwrap()
+            .attempts
+            .iter()
+            .all(|a| !a.accepted && a.committed_state_unchanged_on_rejection)
+    );
+    assert_eq!(gate.stability_classification, "not_evaluated");
+    assert_eq!(gate.replay.stability_classification, "not_evaluated");
+    Ok(())
+}

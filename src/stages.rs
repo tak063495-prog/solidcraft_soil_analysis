@@ -172,7 +172,7 @@ impl Stage {
                 | Self::RemoveAnchors { .. }
         )
     }
-    fn name(&self) -> &str {
+    pub(crate) fn name(&self) -> &str {
         match self {
             Self::Pressure { name, .. }
             | Self::SteadySeepage { name, .. }
