@@ -115,12 +115,101 @@ impl CsrPattern {
     }
 }
 
+/// Pattern-bound offsets in the original numerical contribution order.
+/// The cursor still checks each row/column, finite input and finite sum.
+pub(crate) struct CsrAssemblyPlan {
+    pattern: Arc<CsrPattern>,
+    slots: Vec<usize>,
+}
+
+impl CsrPattern {
+    pub(crate) fn compile_assembly(
+        self: &Arc<Self>,
+        entries: &[(usize, usize)],
+    ) -> LinearResult<CsrAssemblyPlan> {
+        let mut slots = Vec::with_capacity(entries.len());
+        for &(row, col) in entries {
+            if row >= self.n || col >= self.n {
+                return Err(invalid("out-of-range compiled assembly contribution"));
+            }
+            let start = self.row_ptr[row];
+            let end = self.row_ptr[row + 1];
+            let offset = self.columns[start..end]
+                .binary_search(&col)
+                .map_err(|_| invalid("compiled assembly contribution outside symbolic pattern"))?;
+            slots.push(start + offset);
+        }
+        Ok(CsrAssemblyPlan {
+            pattern: Arc::clone(self),
+            slots,
+        })
+    }
+}
+
+pub(crate) struct CsrAssemblyCursor<'a> {
+    matrix: &'a mut CsrMatrix,
+    plan: &'a CsrAssemblyPlan,
+    position: usize,
+}
+
+impl CsrAssemblyCursor<'_> {
+    pub(crate) fn add(&mut self, row: usize, col: usize, value: f64) -> LinearResult<()> {
+        let p = &self.matrix.pattern;
+        if row >= p.n || col >= p.n || !value.is_finite() {
+            return Err(invalid("out-of-range/non-finite assembly contribution"));
+        }
+        let index = *self
+            .plan
+            .slots
+            .get(self.position)
+            .ok_or_else(|| invalid("compiled assembly has extra contributions"))?;
+        if index < p.row_ptr[row]
+            || index >= p.row_ptr[row + 1]
+            || p.columns.get(index) != Some(&col)
+        {
+            return Err(invalid("compiled assembly row/column sequence changed"));
+        }
+        let current = self
+            .matrix
+            .values
+            .get_mut(index)
+            .ok_or_else(|| invalid("compiled assembly offset out of range"))?;
+        let next = *current + value;
+        if !next.is_finite() {
+            return Err(invalid("non-finite assembled value"));
+        }
+        *current = next;
+        self.position += 1;
+        Ok(())
+    }
+
+    pub(crate) fn finish(self) -> LinearResult<()> {
+        if self.position != self.plan.slots.len() {
+            return Err(invalid("compiled assembly has missing contributions"));
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct CsrMatrix {
     pattern: Arc<CsrPattern>,
     values: Vec<f64>,
 }
 impl CsrMatrix {
+    pub(crate) fn assembly_cursor<'a>(
+        &'a mut self,
+        plan: &'a CsrAssemblyPlan,
+    ) -> LinearResult<CsrAssemblyCursor<'a>> {
+        if !Arc::ptr_eq(&self.pattern, &plan.pattern) {
+            return Err(invalid("compiled assembly belongs to another pattern"));
+        }
+        Ok(CsrAssemblyCursor {
+            matrix: self,
+            plan,
+            position: 0,
+        })
+    }
     pub fn zeros(pattern: Arc<CsrPattern>) -> Self {
         let values = vec![0.; pattern.nonzeros()];
         Self { pattern, values }
@@ -623,6 +712,65 @@ mod tests {
         let empty = CsrPattern::from_connectivity(3, dense_block_connectivity(vec![]))?;
         assert_eq!(empty.nonzeros(), 3);
         assert!(CsrPattern::from_connectivity(2, dense_block_connectivity(vec![2])).is_err());
+        Ok(())
+    }
+
+    #[test]
+    fn compiled_scatter_preserves_duplicate_order_cancellation_and_unsymmetric_values()
+    -> LinearResult<()> {
+        let p = CsrPattern::from_connectivity(3, [vec![0, 1], vec![1, 2]])?;
+        let entries = [
+            (0, 0, 1e16),
+            (0, 1, 2.),
+            (0, 0, 1.),
+            (1, 0, -3.),
+            (0, 0, -1e16),
+            (2, 1, 4.),
+            (1, 2, -7.),
+        ];
+        let plan =
+            p.compile_assembly(&entries.iter().map(|&(r, c, _)| (r, c)).collect::<Vec<_>>())?;
+        let mut expected = CsrMatrix::zeros(p.clone());
+        let mut actual = CsrMatrix::zeros(p);
+        for _ in 0..3 {
+            let mut cursor = actual.assembly_cursor(&plan)?;
+            for &(r, c, v) in &entries {
+                expected.add(r, c, v)?;
+                cursor.add(r, c, v)?;
+            }
+            cursor.finish()?;
+        }
+        assert_eq!(expected.values(), actual.values());
+        assert_eq!(
+            actual.matvec(&[1., 2., 3.])?,
+            expected.matvec(&[1., 2., 3.])?
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn compiled_scatter_rejects_foreign_pattern_sequence_counts_and_nonfinite_values()
+    -> LinearResult<()> {
+        let p = CsrPattern::from_connectivity(2, [vec![0, 1]])?;
+        assert!(p.compile_assembly(&[(0, 2)]).is_err());
+        let diagonal = CsrPattern::from_connectivity(2, [])?;
+        assert!(diagonal.compile_assembly(&[(0, 1)]).is_err());
+        let plan = p.compile_assembly(&[(0, 1)])?;
+        let mut foreign = CsrMatrix::zeros(CsrPattern::from_connectivity(2, [vec![0, 1]])?);
+        assert!(foreign.assembly_cursor(&plan).is_err());
+        let mut a = CsrMatrix::zeros(p);
+        assert!(a.assembly_cursor(&plan)?.add(1, 0, 2.).is_err());
+        assert!(a.assembly_cursor(&plan)?.finish().is_err());
+        for value in [f64::NAN, f64::INFINITY] {
+            assert!(a.assembly_cursor(&plan)?.add(0, 1, value).is_err());
+        }
+        let mut cursor = a.assembly_cursor(&plan)?;
+        cursor.add(0, 1, 1.)?;
+        assert!(cursor.add(0, 1, 2.).is_err());
+        cursor.finish()?;
+        a.add(0, 1, f64::MAX)?;
+        assert!(a.assembly_cursor(&plan)?.add(0, 1, f64::MAX).is_err());
+        assert_eq!(a.values()[1], f64::MAX);
         Ok(())
     }
 

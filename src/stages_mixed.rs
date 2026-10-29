@@ -112,6 +112,7 @@ struct Layout {
     count: usize,
     pattern: Option<Arc<CsrPattern>>,
     ordering: Option<ordering::Ordering>,
+    assembly_plans: Vec<Option<linalg::CsrAssemblyPlan>>,
 }
 
 impl Layout {
@@ -201,7 +202,38 @@ impl Layout {
             .as_ref()
             .map(|p| ordering::Ordering::new(p.clone(), nt))
             .transpose()?;
+        // Cache only the projected element pattern, shared by all its GPs.
+        // Never cache a global GP-by-entry stream. Above64 MiB, retain the
+        // original checked binary-search assembly for the remaining elements.
+        let mut remaining = (64usize << 20) / size_of::<usize>();
+        let mut assembly_plans = Vec::with_capacity(m.elements.len());
+        for (ei, e) in m.elements.iter().enumerate() {
+            let plan = if projected && active[ei] {
+                if let Some(pattern) = &pattern {
+                    let rows: Vec<_> = m.mesh.tetrahedra[ei]
+                        .iter()
+                        .map(|&n| pressure[&(n, m.mesh.material_ids[ei])])
+                        .collect();
+                    let pi = m.mesh.tetrahedra[ei]
+                        .map(|n| nt + dofs.count + pressure[&(n, m.mesh.material_ids[ei])]);
+                    let contributions =
+                        projected_scatter_entries(&dofs, &e.dofs, nt, &rows, pi, remaining);
+                    if let Some(entries) = contributions {
+                        remaining -= entries.len();
+                        Some(pattern.compile_assembly(&entries)?)
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            };
+            assembly_plans.push(plan);
+        }
         Ok(Self {
+            assembly_plans,
             dofs,
             pressure,
             theta,
@@ -221,6 +253,93 @@ impl Layout {
             || Tangent::Dense(DMatrix::zeros(self.count, self.count)),
             |p| Tangent::Sparse(CsrMatrix::zeros(p.clone())),
         )
+    }
+}
+
+/// Same contribution order as the numerical tangent below, including ties.
+fn projected_scatter_entries(
+    dofs: &Dofs,
+    element_dofs: &[usize],
+    nt: usize,
+    theta: &[usize],
+    pi: [usize; 4],
+    limit: usize,
+) -> Option<Vec<(usize, usize)>> {
+    let n = element_dofs
+        .iter()
+        .try_fold(0usize, |sum, &g| sum.checked_add(dofs.rows.get(g)?.len()))?;
+    let count = theta
+        .len()
+        .checked_mul(theta.len())?
+        .checked_add(
+            n.checked_mul(
+                2usize
+                    .checked_mul(theta.len())?
+                    .checked_add(n)?
+                    .checked_add(8)?,
+            )?,
+        )?
+        .checked_add(8usize.checked_mul(theta.len())?)?;
+    if count > limit {
+        return None;
+    }
+    let mut entries = Vec::with_capacity(count);
+    for &ti in theta {
+        for &tj in theta {
+            entries.push((ti, tj));
+        }
+    }
+    for &g in element_dofs {
+        for &(r, _) in &dofs.rows[g] {
+            let r = nt + r;
+            for &ti in theta {
+                entries.push((r, ti));
+                entries.push((ti, r));
+            }
+            for &h in element_dofs {
+                for &(c, _) in &dofs.rows[h] {
+                    entries.push((r, nt + c));
+                }
+            }
+            for pr in pi {
+                entries.push((r, pr));
+                entries.push((pr, r));
+            }
+        }
+    }
+    for pr in pi {
+        for &ti in theta {
+            entries.push((ti, pr));
+            entries.push((pr, ti));
+        }
+    }
+    Some(entries)
+}
+
+enum Assembly<'a> {
+    Original(&'a mut Tangent),
+    Compiled(linalg::CsrAssemblyCursor<'a>),
+}
+impl<'a> Assembly<'a> {
+    fn new(matrix: &'a mut Tangent, plan: Option<&'a linalg::CsrAssemblyPlan>) -> Result<Self> {
+        match (matrix, plan) {
+            (Tangent::Sparse(sparse), Some(plan)) => {
+                Ok(Self::Compiled(sparse.assembly_cursor(plan)?))
+            }
+            (matrix, _) => Ok(Self::Original(matrix)),
+        }
+    }
+    fn add(&mut self, row: usize, col: usize, value: f64) -> Result<()> {
+        match self {
+            Self::Original(m) => m.add(row, col, value),
+            Self::Compiled(c) => Ok(c.add(row, col, value)?),
+        }
+    }
+    fn finish(self) -> Result<()> {
+        match self {
+            Self::Original(_) => Ok(()),
+            Self::Compiled(c) => Ok(c.finish()?),
+        }
     }
 }
 
@@ -879,6 +998,10 @@ fn evaluate(
                 scale[pi[a]] += q.weight_m3 * l[a] * (total_div.abs() + total_theta.abs());
             }
             if let (Some(matrix), Some(t)) = (&mut matrix, t) {
+                let mut matrix = Assembly::new(
+                    matrix,
+                    layout.assembly_plans.get(ei).and_then(Option::as_ref),
+                )?;
                 let ke = q.weight_m3 * q.b.transpose() * t.deviatoric_by_deviatoric * &q.b;
                 for &(ti, wi) in theta_rows {
                     for &(tj, wj) in theta_rows {
@@ -920,6 +1043,7 @@ fn evaluate(
                         matrix.add(pr, ti, -q.weight_m3 * l[a] * wi)?;
                     }
                 }
+                matrix.finish()?;
             }
         }
     }
@@ -1349,25 +1473,35 @@ mod tests {
 
     #[test]
     fn full_three_field_jacobian_matches_residual_directional_differences() -> Result<()> {
-        check_jacobian(false, false)
+        check_jacobian(false, false, false)
     }
 
     #[test]
     fn projected_three_field_jacobian_matches_all_residual_blocks() -> Result<()> {
-        check_jacobian(true, false)
+        check_jacobian(true, false, false)
     }
 
     #[test]
     fn mixed_beam_plate_jacobian_includes_nonlocal_structural_tangent() -> Result<()> {
-        check_jacobian(false, true)
+        check_jacobian(false, true, false)
     }
 
     #[test]
     fn projected_beam_plate_jacobian_includes_nonlocal_structural_tangent() -> Result<()> {
-        check_jacobian(true, true)
+        check_jacobian(true, true, false)
     }
 
-    fn check_jacobian(projected: bool, structures: bool) -> Result<()> {
+    #[test]
+    fn compiled_projected_soil_scatter_is_bit_exact_to_original_and_matches_residual_jacobian()
+    -> Result<()> {
+        check_jacobian(true, false, true)
+    }
+    #[test]
+    fn compiled_projected_structure_scatter_is_bit_exact_to_original_and_matches_residual_jacobian()
+    -> Result<()> {
+        check_jacobian(true, true, true)
+    }
+    fn check_jacobian(projected: bool, structures: bool, compiled: bool) -> Result<()> {
         let mesh: Mesh =
             serde_json::from_str(include_str!("../examples/hardening-column-tet10-mesh.json"))?;
         let ground: Ground =
@@ -1396,6 +1530,11 @@ mod tests {
                     {"node_id":"a","direction":[0.,1.,0.],"value":0.},
                     {"node_id":"a","direction":[0.,0.,1.],"value":0.}]
             }))?);
+        }
+        if compiled {
+            case.settings.linear_solver = LinearSolver::SparseGmresIlu0 {
+                options: linalg::GmresOptions::default(),
+            };
         }
         case.stages.clear();
         let initial = solve(&mesh, ground.clone(), case.clone())?;
@@ -1433,6 +1572,32 @@ mod tests {
         };
         let partitions = vec![128; m.point_count];
         let mut e = evaluate(&m, &old, &target, &layout, &x, &partitions, true)?;
+        if compiled {
+            assert!(layout.assembly_plans.iter().any(Option::is_some));
+            let mut original = Layout::new(&m, &old.active_elements, &case.settings, 0.)?;
+            original.assembly_plans.iter_mut().for_each(|p| *p = None);
+            let other = evaluate(&m, &old, &target, &original, &x, &partitions, true)?;
+            assert_eq!(e.residual, other.residual);
+            match (e.matrix.as_ref(), other.matrix.as_ref()) {
+                (Some(Tangent::Sparse(a)), Some(Tangent::Sparse(b))) => {
+                    assert_eq!(a.values(), b.values())
+                }
+                _ => panic!("sparse fixture missing"),
+            }
+            // A zero cache budget falls back before allocating a contribution stream.
+            assert!(
+                projected_scatter_entries(
+                    &layout.dofs,
+                    &m.elements[0].dofs,
+                    layout.nt,
+                    &[0, 1, 2, 3],
+                    [0, 1, 2, 3],
+                    0
+                )
+                .is_none()
+            );
+        }
+
         let direction = DVector::from_fn(layout.count, |i, _| {
             if i < layout.nt {
                 0.001 * (1. + (i % 7) as f64 / 10.)
