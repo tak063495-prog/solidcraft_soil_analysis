@@ -1,0 +1,36 @@
+   Compiling matext4cgmath v0.1.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\matext4cgmath)
+   Compiling solidcraft-geom v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\geom)
+   Compiling truck-base v0.5.0
+   Compiling truck-geotrait v0.4.0
+   Compiling truck-geometry v0.5.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-geometry)
+   Compiling truck-polymesh v0.6.0
+   Compiling truck-topology v0.6.0
+   Compiling truck-modeling v0.6.0
+   Compiling truck-meshalgo v0.4.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-meshalgo)
+   Compiling truck-stepio v0.3.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-stepio)
+   Compiling truck-shapeops v0.4.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-shapeops)
+   Compiling solidcraft-render v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\render)
+   Compiling solidcraft-kernel v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\kernel)
+   Compiling solidcraft-sketch v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\sketch)
+   Compiling solidcraft-doc v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\doc)
+   Compiling solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\io)
+   Compiling solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\engine)
+error[E0308]: mismatched types
+   --> crates\engine\src\soil_jobs.rs:648:52
+    |
+648 |             let frozen = crate::soil_fem::snapshot(&s, &json!({})).unwrap();
+    |                          ------------------------- ^^ types differ in mutability
+    |                          |
+    |                          arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut Session`
+                       found reference `&Session`
+note: function defined here
+   --> crates\engine\src\soil_fem.rs:372:8
+    |
+372 | pub fn snapshot(s: &mut Session, _: &Value) -> Result<Value> {
+    |        ^^^^^^^^ ---------------
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `solidcraft-engine` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
