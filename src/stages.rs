@@ -497,6 +497,115 @@ struct Element {
     dofs: Vec<usize>,
     material: usize,
 }
+
+/// Immutable material work. The solver's observer, structures and global
+/// matrices never cross a thread boundary. Results retain the original GP order.
+struct MaterialWork {
+    point: usize,
+    material: usize,
+    strain: [f64; 6],
+    partition: Option<usize>,
+}
+type MaterialResponse = (soil::Update, Option<crate::elastic::Tensor>);
+
+fn material_work_chunk(
+    models: &[soil::Model],
+    states: &[soil::State],
+    work: &[MaterialWork],
+    tangent: bool,
+    perturbation: f64,
+    maximum_substep: f64,
+) -> Result<Vec<MaterialResponse>> {
+    work.iter()
+        .map(|item| {
+            let material = models
+                .get(item.material)
+                .ok_or_else(|| Error::Input("material work model missing".into()))?;
+            let old = states
+                .get(item.point)
+                .ok_or_else(|| Error::Input("material work history missing".into()))?;
+            if tangent {
+                let (update, tensor) = material.stress_tangent_partition(
+                    old,
+                    item.strain,
+                    item.partition.unwrap_or(1),
+                    perturbation,
+                )?;
+                Ok((update, Some(tensor)))
+            } else {
+                let update = if let Some(partition) = item.partition {
+                    material.integrate_partition(old, item.strain, partition)?
+                } else {
+                    material.integrate(old, item.strain, maximum_substep)?
+                };
+                Ok((update, None))
+            }
+        })
+        .collect()
+}
+
+fn material_work_batch(
+    models: &[soil::Model],
+    states: &[soil::State],
+    work: &[MaterialWork],
+    mode: (bool, f64, f64),
+    workers: usize,
+) -> Result<Vec<MaterialResponse>> {
+    if !(1..=4).contains(&workers) {
+        return Err(Error::Input("material worker count must be1..4".into()));
+    }
+    let (tangent, perturbation, maximum_substep) = mode;
+    if workers == 1 || work.len() < 64 {
+        return material_work_chunk(models, states, work, tangent, perturbation, maximum_substep);
+    }
+    let chunk_size = work.len().div_ceil(workers);
+    std::thread::scope(|scope| {
+        let mut handles = Vec::new();
+        let mut failure = None;
+        for (index, chunk) in work.chunks(chunk_size).enumerate() {
+            let builder = std::thread::Builder::new().name(format!("soil-material-{index}"));
+            match builder.spawn_scoped(scope, move || {
+                material_work_chunk(
+                    models,
+                    states,
+                    chunk,
+                    tangent,
+                    perturbation,
+                    maximum_substep,
+                )
+            }) {
+                Ok(handle) => handles.push(handle),
+                Err(error) => {
+                    failure = Some(Error::Control(format!(
+                        "material worker creation failed: {error}"
+                    )));
+                    break;
+                }
+            }
+        }
+        let mut ordered = Vec::with_capacity(work.len());
+        // Join every owned worker, including after an error. The first failed
+        // GP in input order wins; no thread can commit any material history.
+        for handle in handles {
+            match handle.join() {
+                Ok(Ok(values)) if failure.is_none() => ordered.extend(values),
+                Ok(Err(error)) if failure.is_none() => failure = Some(error),
+                Err(_) if failure.is_none() => {
+                    failure = Some(Error::Control(
+                        "material worker failed without committing history".into(),
+                    ))
+                }
+                _ => {}
+            }
+        }
+        if let Some(error) = failure {
+            Err(error)
+        } else {
+            Ok(ordered)
+        }
+    })
+}
+
 struct Model<'a> {
     material_models: Vec<soil::Model>,
     observer: Option<&'a dyn crate::stage_control::Observer>,
@@ -1998,73 +2107,95 @@ impl<'a> Model<'a> {
         } else {
             None
         };
-        for (ei, e) in self.elements.iter().enumerate() {
-            if active[ei] {
-                let du = DVector::from_fn(e.dofs.len(), |i, _| {
-                    let g = e.dofs[i];
-                    u[g / 3][g % 3] - committed.displacement_m[g / 3][g % 3]
-                });
-                for (qi, q) in e.points.iter().enumerate() {
-                    let point = e.point_start + qi;
-                    let de = -&q.b * &du;
-                    let strain = std::array::from_fn(|i| de[i]);
-                    let material = &self.material_models
-                        [self.material_index(&committed.element_material_ids, ei)?];
-                    let (update, d) = if mode.tangent {
-                        let (a, d) = material.stress_tangent_partition(
-                            &committed.material_states[point],
-                            strain,
-                            mode.partitions.map_or(1, |p| p[point]),
-                            settings.tangent_perturbation,
-                        )?;
-                        (a, Some(d))
-                    } else {
-                        (
-                            if let Some(partitions) = mode.partitions {
-                                material.integrate_partition(
-                                    &committed.material_states[point],
-                                    strain,
-                                    partitions[point],
-                                )?
-                            } else {
-                                material.integrate(
-                                    &committed.material_states[point],
-                                    strain,
-                                    settings.material_maximum_substep,
-                                )?
-                            },
-                            None,
-                        )
-                    };
-                    states[point] = update.state;
-                    let mut total = *states[point].stress();
-                    if let Some(pressure) = &projected_pressure {
-                        let mean = total.iter().take(3).sum::<f64>() / 3.;
-                        for value in total.iter_mut().take(3) {
-                            *value += pressure[point] - mean;
+        // Bound transient responses to about4096 material points per batch.
+        // Geometry and global accumulation remain in their original serial order.
+        let max_points = self
+            .elements
+            .iter()
+            .map(|e| e.points.len())
+            .max()
+            .unwrap_or(1)
+            .max(1);
+        let batch_elements = (4096 / max_points).max(1);
+        for first in (0..self.elements.len()).step_by(batch_elements) {
+            let last = (first + batch_elements).min(self.elements.len());
+            let mut work = Vec::new();
+            for (offset, e) in self.elements[first..last].iter().enumerate() {
+                let ei = first + offset;
+                if active[ei] {
+                    let material = self.material_index(&committed.element_material_ids, ei)?;
+                    let du = DVector::from_fn(e.dofs.len(), |i, _| {
+                        let g = e.dofs[i];
+                        u[g / 3][g % 3] - committed.displacement_m[g / 3][g % 3]
+                    });
+                    for (qi, q) in e.points.iter().enumerate() {
+                        let point = e.point_start + qi;
+                        let de = -&q.b * &du;
+                        work.push(MaterialWork {
+                            point,
+                            material,
+                            strain: std::array::from_fn(|i| de[i]),
+                            partition: mode.partitions.map(|p| p[point]),
+                        });
+                    }
+                }
+            }
+            let updates = material_work_batch(
+                &self.material_models,
+                &committed.material_states,
+                &work,
+                (
+                    mode.tangent,
+                    settings.tangent_perturbation,
+                    settings.material_maximum_substep,
+                ),
+                4,
+            )?;
+            let mut updates = updates.into_iter();
+            for (offset, e) in self.elements[first..last].iter().enumerate() {
+                let ei = first + offset;
+                if active[ei] {
+                    for (qi, q) in e.points.iter().enumerate() {
+                        let point = e.point_start + qi;
+                        let (update, d) = updates.next().ok_or_else(|| {
+                            Error::Control("material response count differs".into())
+                        })?;
+                        states[point] = update.state;
+                        let mut total = *states[point].stress();
+                        if let Some(pressure) = &projected_pressure {
+                            let mean = total.iter().take(3).sum::<f64>() / 3.;
+                            for value in total.iter_mut().take(3) {
+                                *value += pressure[point] - mean;
+                            }
                         }
-                    }
-                    for s in total.iter_mut().take(3) {
-                        *s += self.point_pore(committed, point, q.position[2]);
-                    }
-                    let force =
-                        -q.weight_m3 * q.b.transpose() * SVector::<f64, 6>::from_row_slice(&total);
-                    for i in 0..e.dofs.len() {
-                        internal[e.dofs[i]] += force[i];
-                    }
-                    if let (Some(matrix), Some(d)) = (&mut global, d) {
-                        let ke = q.weight_m3 * q.b.transpose() * d * &q.b;
+                        for s in total.iter_mut().take(3) {
+                            *s += self.point_pore(committed, point, q.position[2]);
+                        }
+                        let force = -q.weight_m3
+                            * q.b.transpose()
+                            * SVector::<f64, 6>::from_row_slice(&total);
                         for i in 0..e.dofs.len() {
-                            for &(gi, ci) in &dofs.rows[e.dofs[i]] {
-                                for j in 0..e.dofs.len() {
-                                    for &(gj, cj) in &dofs.rows[e.dofs[j]] {
-                                        matrix.add(gi, gj, ci * cj * ke[(i, j)])?;
+                            internal[e.dofs[i]] += force[i];
+                        }
+                        if let (Some(matrix), Some(d)) = (&mut global, d) {
+                            let ke = q.weight_m3 * q.b.transpose() * d * &q.b;
+                            for i in 0..e.dofs.len() {
+                                for &(gi, ci) in &dofs.rows[e.dofs[i]] {
+                                    for j in 0..e.dofs.len() {
+                                        for &(gj, cj) in &dofs.rows[e.dofs[j]] {
+                                            matrix.add(gi, gj, ci * cj * ke[(i, j)])?;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
+            if updates.next().is_some() {
+                return Err(Error::Control(
+                    "material response count exceeds work".into(),
+                ));
             }
         }
         let anchors = if let Some(model) = self.anchors.as_ref().filter(|_| mode.structures) {
@@ -5263,6 +5394,104 @@ fn validate_committed(model: &Model<'_>, state: &Committed, case: &StageCase) ->
 #[cfg(test)]
 mod predictor_tests {
     use super::*;
+    fn material_fixture() -> Result<(Vec<soil::Model>, Vec<soil::State>, Vec<MaterialWork>)> {
+        let mut parameters = crate::mcc::Parameters {
+            critical_state_m: 1.2,
+            lambda: 0.2,
+            kappa: 0.04,
+            poisson: 0.3,
+            reference_pressure_kpa: 1.,
+            specific_volume_ncl_at_reference: 2.7,
+            integration: crate::mcc::Integration::Midpoint,
+        };
+        let midpoint = parameters.clone();
+        parameters.integration = crate::mcc::Integration::BackwardEuler;
+        let models = vec![
+            soil::Model::Mcc(midpoint),
+            soil::Model::Mcc(parameters.clone()),
+        ];
+        let state = crate::mcc::State {
+            effective_stress_compression_positive_kpa: [100., 100., 100., 0., 0., 0.],
+            void_ratio: parameters.reference_void_ratio(100., 120.)?,
+            preconsolidation_pressure_kpa: 120.,
+            plastic_strain_compression_positive: [0.; 6],
+        };
+        let states = (0..128).map(|_| soil::State::Mcc(state.clone())).collect();
+        let work = (0..128)
+            .map(|i| MaterialWork {
+                point: i,
+                material: i % 2,
+                partition: Some(32),
+                strain: match i % 4 {
+                    0 => [1e-5, -2e-6, 3e-6, 4e-6, 0., 0.],
+                    1 => [0.003, 0.003, 0.003, 0., 0., 0.],
+                    2 => [0.0001, -0.00005, -0.00005, 0.001, 0., 0.],
+                    _ => [0.00003, 0., 0., 0., 0., 0.],
+                },
+            })
+            .collect();
+        Ok((models, states, work))
+    }
+
+    #[test]
+    fn parallel_material_states_tangents_partitions_and_order_match_serial_without_history_mutation()
+    -> Result<()> {
+        let (models, states, work) = material_fixture()?;
+        let before = serde_json::to_value(&states)?;
+        for tangent in [false, true] {
+            let serial = material_work_batch(&models, &states, &work, (tangent, 1e-7, 5e-5), 1)?;
+            let parallel = material_work_batch(&models, &states, &work, (tangent, 1e-7, 5e-5), 4)?;
+            assert_eq!(serial.len(), 128);
+            assert_eq!(parallel.len(), serial.len());
+            for ((a, ta), (b, tb)) in serial.iter().zip(&parallel) {
+                assert_eq!(
+                    serde_json::to_value(&a.state)?,
+                    serde_json::to_value(&b.state)?
+                );
+                assert_eq!(
+                    (a.substeps, a.plastic_substeps),
+                    (b.substeps, b.plastic_substeps)
+                );
+                assert_eq!(ta, tb);
+            }
+            assert_eq!(serde_json::to_value(&states)?, before);
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn parallel_material_errors_choose_first_input_failure_and_leave_all_committed_histories_unchanged()
+    -> Result<()> {
+        let (models, states, mut work) = material_fixture()?;
+        let before = serde_json::to_value(&states)?;
+        work[10].partition = Some(0);
+        work[100].material = usize::MAX;
+        let message = |result: Result<Vec<MaterialResponse>>| match result {
+            Err(error) => error.to_string(),
+            Ok(_) => panic!("invalid material work accepted"),
+        };
+        let serial = message(material_work_batch(
+            &models,
+            &states,
+            &work,
+            (true, 1e-7, 5e-5),
+            1,
+        ));
+        let parallel = message(material_work_batch(
+            &models,
+            &states,
+            &work,
+            (true, 1e-7, 5e-5),
+            4,
+        ));
+        assert_eq!(serial, parallel);
+        assert!(serial.contains("partition"));
+        assert_eq!(serde_json::to_value(&states)?, before);
+        assert!(material_work_batch(&models, &states, &work, (true, 1e-7, 5e-5), 0).is_err());
+        assert!(material_work_batch(&models, &states, &work, (true, 1e-7, 5e-5), 5).is_err());
+        Ok(())
+    }
+
     #[test]
     fn temporary_sparse_and_dense_gauges_do_not_certify_the_original_equations() -> Result<()> {
         for sparse in [false, true] {
