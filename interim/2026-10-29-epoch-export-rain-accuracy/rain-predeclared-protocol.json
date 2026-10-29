@@ -1,0 +1,82 @@
+{
+  "schema": "soil-fem-local-rain-refinement/1",
+  "parent": "richards-local-rain-3d-20261029-v1",
+  "parent_failed_checks": [
+    {
+      "name": "rain finest head RMS",
+      "actual": 0.0046205475457005325,
+      "upper_bound": 0.003,
+      "passed": false
+    },
+    {
+      "name": "rain native_space difference ratio",
+      "actual": 1.348244318335049,
+      "upper_bound": 0.8,
+      "passed": false
+    },
+    {
+      "name": "pause native_space difference ratio",
+      "actual": 0.998450823613834,
+      "upper_bound": 0.8,
+      "passed": false
+    },
+    {
+      "name": "rain_again finest head RMS",
+      "actual": 0.0038863726982864173,
+      "upper_bound": 0.003,
+      "passed": false
+    },
+    {
+      "name": "rain_again finest storage",
+      "actual": 0.00014219441327791016,
+      "upper_bound": 0.0001,
+      "passed": false
+    }
+  ],
+  "physics_periods_and_materials_and_boundaries_unchanged": true,
+  "solver_sha256": "d55ffe42c3b61e0891fec513489c9f5881830733ac9e003a01a0cf69f495905d",
+  "original_failures_and_thresholds_preserved": true,
+  "native_space_window": [
+    8,
+    16,
+    24
+  ],
+  "reference_space_window": [
+    16,
+    32,
+    64
+  ],
+  "dt_s": 100,
+  "planned_native_time_subdivisions": 16,
+  "planned_reference_time_subdivisions": 32,
+  "planned_time_step_s": [
+    100,
+    50,
+    25
+  ],
+  "gates": {
+    "finest_head_rms_m": 0.003,
+    "finest_storage_error_m3": 0.0001,
+    "successive_space_and_time_difference_ratio": 0.8,
+    "independent_global_mass_error_m3": 1e-09
+  },
+  "additional_finest_time_difference_rms_gate_m": 0.0005,
+  "phase1": [
+    "Native24 first accepted checkpoint then fresh-process remaining transient solve",
+    "Independent FV64/dt100 and FV32/dt50,25"
+  ],
+  "phase2": [
+    "Independent complete discrete audit; any faster audit implementation must first match the original on retained controls",
+    "Native16 time refinements",
+    "Full space/time and independent PDE comparisons under unchanged original thresholds"
+  ],
+  "native_elements": 82944,
+  "native_nodes": 15625,
+  "total_mesh_faces": 169344,
+  "existing_default_maximum_free_faces": 300000,
+  "raw_output_estimate_bytes": 2887086159,
+  "raw_audit_memory_and_runtime_require_separate_review": true,
+  "phase1_raw_completion_is_not_physical_acceptance": true,
+  "mechanics_or_stability_certification": false,
+  "p6_complete": false
+}

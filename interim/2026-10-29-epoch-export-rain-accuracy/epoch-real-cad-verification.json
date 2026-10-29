@@ -1,0 +1,131 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "factor1",
+      "passed": true,
+      "complete": true,
+      "progress": 1.0,
+      "stop_reason": null,
+      "active_elements": 146,
+      "active_gp": 3942,
+      "maximum_equivalent_plastic_strain": 0.0,
+      "raw_field_and_increment_exact": true,
+      "source_all_files_unchanged": true,
+      "elapsed_seconds": 1.9301829999312758,
+      "job": "D:\\Work\\soil-fem-3d\\runs\\mc-epoch-cli-development-20261029-v1\\cad-cphi-paths\\factor1.0\\continuous",
+      "source_inventory_sha256": "319311842190e844f0090b5093cdd5e38e6db09a0fb9585d74246c4dd989d1bc"
+    },
+    {
+      "name": "factor1.5",
+      "passed": true,
+      "complete": true,
+      "progress": 1.0,
+      "stop_reason": null,
+      "active_elements": 146,
+      "active_gp": 3942,
+      "maximum_equivalent_plastic_strain": 0.00013306082147137105,
+      "raw_field_and_increment_exact": true,
+      "source_all_files_unchanged": true,
+      "elapsed_seconds": 1.895348200108856,
+      "job": "D:\\Work\\soil-fem-3d\\runs\\mc-epoch-cli-development-20261029-v1\\cad-cphi-paths\\factor1.5\\continuous",
+      "source_inventory_sha256": "d64a2ea7aa47ec1d2c1a43d239766889969c0346f307a6e7dcc916a1d340e0a1"
+    },
+    {
+      "name": "plastic-pause",
+      "passed": true,
+      "complete": false,
+      "progress": 0.625,
+      "stop_reason": null,
+      "active_elements": 146,
+      "active_gp": 3942,
+      "maximum_equivalent_plastic_strain": 6.2079691344648785e-06,
+      "raw_field_and_increment_exact": true,
+      "source_all_files_unchanged": true,
+      "elapsed_seconds": 1.8127364998217672,
+      "job": "D:\\Work\\soil-fem-3d\\runs\\mc-epoch-cli-development-20261029-v1\\cad-cphi-paths\\factor1.5\\paused",
+      "source_inventory_sha256": "03f0db5327f7d292f6683e740148b913528de7caf6f60b5df79eaef355d51350"
+    },
+    {
+      "name": "plastic-recovered",
+      "passed": true,
+      "complete": true,
+      "progress": 1.0,
+      "stop_reason": null,
+      "active_elements": 146,
+      "active_gp": 3942,
+      "maximum_equivalent_plastic_strain": 0.00013306082147137105,
+      "raw_field_and_increment_exact": true,
+      "source_all_files_unchanged": true,
+      "elapsed_seconds": 2.0870499000884593,
+      "job": "D:\\Work\\soil-fem-3d\\runs\\mc-epoch-cli-development-20261029-v1\\cad-cphi-paths\\factor1.5\\recovered",
+      "source_inventory_sha256": "0f45a0e7df61b0959a0e4ad111c0c47c66329b5cc05a5b54dac4eb34afae13a9"
+    },
+    {
+      "name": "state-reset-and-rebirth",
+      "passed": true,
+      "complete": true,
+      "progress": 1.0,
+      "stop_reason": null,
+      "active_elements": 146,
+      "active_gp": 3942,
+      "maximum_equivalent_plastic_strain": 0.0,
+      "raw_field_and_increment_exact": true,
+      "source_all_files_unchanged": true,
+      "elapsed_seconds": 2.5653475001454353,
+      "job": "D:\\Work\\soil-fem-3d\\runs\\mc-epoch-cli-development-20261029-v1\\cad-controls\\gate10\\job",
+      "source_inventory_sha256": "1a83c08e5c55be8bee2675aa26435bedcc6a262fc684ad6b2a4502ed2c5faef1"
+    },
+    {
+      "name": "incomplete-path",
+      "passed": true,
+      "complete": false,
+      "progress": 0.5849609375,
+      "stop_reason": "cutback_exhausted",
+      "active_elements": 146,
+      "active_gp": 3942,
+      "maximum_equivalent_plastic_strain": 0.0014558544325843196,
+      "raw_field_and_increment_exact": true,
+      "source_all_files_unchanged": true,
+      "elapsed_seconds": 1.9950780000071973,
+      "job": "D:\\Work\\soil-fem-3d\\runs\\mc-epoch-cli-development-20261029-v1\\cad-controls\\plastic-preload\\continuous",
+      "source_inventory_sha256": "e0d6f0494e70d42ba74bd7188048a936d1b12fe8e972593bb0a203aa7c6b475c"
+    }
+  ],
+  "rejected": [
+    {
+      "mode": "mesh-checksum",
+      "reason": "MC immutable input checksum mismatch",
+      "no_export_created": true
+    },
+    {
+      "mode": "solver-checksum",
+      "reason": "MC frozen executable checksum mismatch",
+      "no_export_created": true
+    },
+    {
+      "mode": "snapshot-checksum",
+      "reason": "MC accepted snapshot checksum mismatch",
+      "no_export_created": true
+    },
+    {
+      "mode": "pointer-traversal",
+      "reason": "MC recovery pointer identity/path mismatch",
+      "no_export_created": true
+    },
+    {
+      "mode": "forged-state-and-file-checksum",
+      "reason": "MC mechanical checkpoint verification failed: invalid input: MC path checkpoint seal mismatch\n",
+      "no_export_created": true
+    }
+  ],
+  "source_files_sha256": {
+    "tools\\export_mc_epoch.py": "66d0adc882b9efd64dfae7874e018b37f7a7a586ff809aeb386e066ebc7ab9a0",
+    "tests\\test_mc_epoch_export.py": "9f8842757ae77c8921deac68aa9e93d27a70efd52116c2803d535578803bfdf7"
+  },
+  "accepted_only": true,
+  "ordinary_run_not_forged": true,
+  "native_reader_pending": true,
+  "goal_complete": false,
+  "p6_complete": false
+}
