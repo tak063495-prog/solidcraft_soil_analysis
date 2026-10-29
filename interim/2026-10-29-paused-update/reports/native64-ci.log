@@ -1,0 +1,72 @@
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.99s
+     Running `target\debug\xtask.exe ci`
+$ cargo fmt --check
+assets: 458 files, all attributed
+$ UI icon standards (Python 3.11+)
+icons: 289 masters, palette, naming and element rules ok
+$ UI icon standards (Python 3.11+)
+314 discovered icon ids · 314 with artwork · 0 missing · 419 assigned commands.
+$ UI icon standards (Python 3.11+)
+...D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpp8vd0360\\lf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpp8vd0360\\crlf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..............
+----------------------------------------------------------------------
+Ran 17 tests in 10.726s
+
+OK
+licences: THIRD-PARTY-LICENSES.txt is up to date
+lists: message catalogs are sorted
+Dependency layering (plan/architecture.md §3)
+
+crate                        layer          workspace deps
+solidcraft                   exempt         engine, space-mouse, ui-egui, 3dx-client
+solidcraft-3dx-client        L0 standalone  
+solidcraft-cli               exempt         engine, gpu, mcp
+solidcraft-derive            L0 standalone  
+solidcraft-doc               L2             derive, geom, kernel, render, sketch
+solidcraft-engine            L4             doc, geom, io, kernel, render, sketch, sketch (dev)
+solidcraft-geom              L0             
+solidcraft-gpu               L5             geom, render, engine (dev), kernel (dev)
+solidcraft-io                L3             doc, geom, kernel
+solidcraft-kernel            L1             geom
+solidcraft-mcp               L5             engine, gpu (dev)
+solidcraft-render            L1             geom
+solidcraft-sketch            L1             geom
+solidcraft-space-mouse       L0             
+solidcraft-ui-egui           L5             engine, gpu, space-mouse
+solidcraft-web               exempt         engine, ui-egui
+xtask                        exempt         
+
+OK: 17 crates, no layering violations.
+ui-containers: all outer hosts use the shared API
+$ cargo clippy -D warnings
+    Checking solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\engine)
+   Compiling ring v0.17.14
+   Compiling rustls v0.23.46
+    Checking rustls-webpki v0.103.15
+    Checking rustls-platform-verifier v0.7.1
+    Checking ureq v3.4.2
+    Checking solidcraft-mcp v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\mcp)
+    Checking solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\ui-egui)
+    Checking solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\apps\solidcraft-cli)
+    Checking solidcraft-gpu v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\gpu)
+    Checking solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\apps\solidcraft-web)
+    Checking solidcraft v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\apps\solidcraft)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 1m 07s
+$ cargo test --workspace --profile ci --no-run
+   Compiling solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\engine)
+   Compiling ring v0.17.14
+   Compiling rustls-webpki v0.103.15
+   Compiling rustls v0.23.46
+   Compiling solidcraft-mcp v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\mcp)
+   Compiling solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\ui-egui)
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling ureq v3.4.2
+   Compiling solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\apps\solidcraft-cli)
+   Compiling solidcraft-gpu v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\crates\gpu)
+   Compiling solidcraft v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\apps\solidcraft)
+   Compiling solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\apps\solidcraft-web)
