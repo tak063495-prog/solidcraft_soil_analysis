@@ -1,0 +1,23 @@
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.37s
+     Running `target\debug\xtask.exe web-offline-test`
+ok    online: build v1 starts and is kept for offline use (0.2s)
+ok    offline: build v1 starts from the kept copy (0.0s)
+ok    another copy at another path keeps its own build; offline, v1 still starts here (0.0s)
+ok    flaky: build v2 can't be downloaded whole, so v1 starts (0.0s)
+ok    flaky again: build v3 neither, so v1 starts; v2's unfinished download is dropped (0.1s)
+ok    one file fails at once, others are still coming: v1 starts; v2's isn't left in progress (0.1s)
+ok    deployed mid-download: v4's page doesn't fit v3's files, so v1 starts (0.1s)
+ok    update: build v3 starts on the first launch; only it stays kept (0.1s)
+ok    offline: build v3 starts from the kept copy (0.1s)
+ok    slow network: build v3 starts from the kept copy (4.1s)
+ok    update in another tab: the kept v3 still starts; its copy is retired, not deleted (4.0s)
+ok    no open page uses them any more: the retired copies are deleted; v4 starts (0.1s)
+ok    overlapping downloads: v6 starts; v5's worker still finishes its own; v6 takes over (0.1s)
+ok    two failed updates with no launch: the second's install drops the first's leftovers (0.4s)
+ok    app removed (no build.json): the site's page starts from the network (0.1s)
+ok    nothing deployed (every file 404): v6 starts from the kept copy (0.1s)
+ok    offline: build v6 still starts from the kept copy (0.0s)
+ok    sign-in in front of the app: the launch shows the sign-in, not the kept v6 (0.1s)
+ok    development build deployed: it starts while the worker retires and drops what it kept (0.1s)
+ok    development build: starts from the network (0.0s)
+web-offline-test: passed
