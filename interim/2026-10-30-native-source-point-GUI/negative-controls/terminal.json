@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "all4_deliberately_forged_copies_rejected": true,
+  "records": [
+    {
+      "case": "resealed-active-count",
+      "expected_rejection": true,
+      "exit_code": 1,
+      "expected_message_fragment": "source-point descriptor differs",
+      "elapsed_seconds": 17.06027189991437,
+      "deliberately_forged_receipt_for_negative_control": true,
+      "accepted_analysis_packet": false
+    },
+    {
+      "case": "duplicate-last-value-wins",
+      "expected_rejection": true,
+      "exit_code": 1,
+      "expected_message_fragment": "duplicate field",
+      "elapsed_seconds": 16.762373900040984,
+      "deliberately_forged_receipt_for_negative_control": true,
+      "accepted_analysis_packet": false
+    },
+    {
+      "case": "descriptor-over8KiB",
+      "expected_rejection": true,
+      "exit_code": 1,
+      "expected_message_fragment": "file too large",
+      "original_harness_only_expected_the_wrong_word_limit": true,
+      "original_failed_result_and_log_unchanged": true,
+      "no_product_code_or_size_budget_changed": true,
+      "accepted_analysis_packet": false
+    },
+    {
+      "case": "valid-JSON-source-byte-change",
+      "expected_rejection": true,
+      "exit_code": 1,
+      "JSON_whitespace_only_changed": true,
+      "expected_message_fragment": "source changed",
+      "elapsed_seconds": 20.500009200070053,
+      "accepted_analysis_packet": false
+    }
+  ],
+  "original_accepted_packet_and_source_and_binary_unchanged": true,
+  "positive_public_all5_control_preserved": true,
+  "initial_harness_message_failure_preserved_and_explained": true,
+  "p6_complete": false
+}
