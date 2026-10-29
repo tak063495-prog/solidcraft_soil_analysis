@@ -1,6 +1,6 @@
 # SolidCraft → Rust 3D地盤FEM
 
-**2026-10-29：試作NativeでMC材料継続の選択状態・凡例表示を修正し、535.7 MBのMCC元結果を読んで局所掘削の隆起・壁曲げ・断面を実画面で確認しました。検証済み67ファイルのNative差分と623ファイルのPython試作ソースを公開しています。正式採用・Native全体CI・空間／境界独立性などP6全体は未完です。14,909要素の追加解析は開始済みで、結果未判定です。** [成果・再現方法・残件](interim/2026-10-29-native-v4-large-mcc-prototype/README.ja.md)
+**2026-10-29：大容量MCC元結果の型付きNative読取と、Python分割キャッシュ・重複出力を避ける参照形式の試作を公開しました。535.7 MBの実データ全5段階のNative読取、1.459 GBの全データ保存比較・既存力学監査、Python 202件が合格しています。新参照形式のNative側接続・実出力・実画面、Native全体CIの再実行、14,909要素解析、空間／境界独立性などP6は未完です。** [途中成果・再現条件・残件](interim/2026-10-29-typed-source-and-chunked-export-prototype/README.ja.md)
 
 [施工後MCの材料継続・中断/再開CLI](docs/MC_EPOCH_JOBS.ja.md)は、完成した未低減施工Runから独立に開始します。対象は乾燥・全MCで、既施工の荷重・境界・活動領域を固定します。
 

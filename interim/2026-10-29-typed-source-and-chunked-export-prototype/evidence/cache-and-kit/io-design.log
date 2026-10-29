@@ -1,0 +1,64 @@
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling cgmath v0.18.0
+   Compiling matext4cgmath v0.1.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\vendor\matext4cgmath)
+   Compiling truck-base v0.5.0
+   Compiling truck-geotrait v0.4.0
+   Compiling truck-polymesh v0.6.0
+   Compiling cadmpeg-core v0.6.1
+   Compiling truck-topology v0.6.0
+   Compiling truck-geometry v0.5.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\vendor\truck-geometry)
+   Compiling serde-value v0.7.0
+   Compiling truck-modeling v0.6.0
+   Compiling cadmpeg-ir v0.6.1
+   Compiling cadmpeg-container v0.6.1
+   Compiling solidcraft-geom v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\geom)
+   Compiling truck-meshalgo v0.4.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\vendor\truck-meshalgo)
+   Compiling truck-stepio v0.3.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\vendor\truck-stepio)
+   Compiling truck-shapeops v0.4.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\vendor\truck-shapeops)
+   Compiling solidcraft-render v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\render)
+   Compiling cadmpeg-codec-step v0.6.1
+   Compiling cadmpeg-codec-rhino v0.6.1
+   Compiling cadmpeg-codec-freecad v0.6.1
+   Compiling solidcraft-sketch v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\sketch)
+   Compiling solidcraft-kernel v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\kernel)
+   Compiling gltf-json v1.4.1
+   Compiling solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\io)
+   Compiling gltf v1.4.1
+   Compiling solidcraft-doc v0.20.0 (D:\Work\soil-fem-3d\runs\native-typed-source-integration-20261029-v1\native\crates\doc)
+   Compiling cadmpeg-registry v0.6.1
+    Finished `ci` profile [optimized + debuginfo] target(s) in 12m 41s
+     Running unittests src\lib.rs (target\ci\deps\solidcraft_io-b69b9bd910b7ebc2.exe)
+
+running 28 tests
+test design::tests::benchmark_design_storage ... ignored, manual IO performance measurement
+test design::tests::benchmark_step_storage ... ignored, manual IO performance measurement
+test design::tests::a_model_cache_too_big_for_the_file_is_left_out_not_a_failed_save ... ok
+test design::tests::designs_with_uncompressed_step_sources_still_open ... ok
+test design::tests::deterministic_archive_mutations_never_panic ... ok
+test design::tests::draft_container_marker_remains_readable ... ok
+test design::tests::file_reader_refuses_nonfiles_before_notifying_preview ... ok
+test design::tests::hostile_archive_paths_versions_and_truncations_are_errors ... ok
+test design::tests::metadata_round_trip_preserves_new_and_existing_fields ... ok
+test design::tests::metadata_snapshot_survives_in_place_changes_after_preview ... ok
+test design::tests::model_cache_stores_repeated_parts_once_and_keeps_placed_copies ... ok
+test design::tests::native_cache_mismatch_is_only_a_cache_miss ... ok
+test design::tests::decompression_bomb_is_refused_without_expanding_it ... ok
+test design::tests::native_cache_prefixes_and_mutations_never_panic ... ok
+test design::tests::optional_preview_is_bounded_keyed_and_never_authoritative ... ok
+test design::tests::portable_thumbnail_is_keyed_bounded_and_does_not_read_sources ... ok
+test design::tests::refuses_hostile_mesh_lengths_numbers_indices_and_versions ... ok
+test design::tests::rejects_duplicate_entries_and_declared_expansion_before_reading_payloads ... ok
+test design::tests::rejects_invalid_references_and_repeated_payload_expansion ... ok
+test design::tests::required_blobs_must_exist_and_match_hashes ... ok
+test design::tests::round_trip_deduplicates_and_preserves_binary_precision ... ok
+test design::tests::native_cache_round_trip_and_preview_defer_original_sources ... ok
+test design::tests::seekable_reader_rejects_oversized_source_before_reading ... ok
+test design::tests::seekable_reader_validates_required_blobs_after_preview ... ok
+test design::tests::seekable_reader_without_preview_preserves_authoritative_document ... ok
+test design::tests::seekable_preview_defers_large_source_blob_until_document_read ... ok
+test design::tests::step_over_the_part_limit_imports_saves_compressed_and_reopens ... ok
+test design::tests::step_that_cannot_be_saved_even_compressed_is_refused_at_import ... ok
+
+test result: ok. 26 passed; 0 failed; 2 ignored; 0 measured; 93 filtered out; finished in 6.83s
+
