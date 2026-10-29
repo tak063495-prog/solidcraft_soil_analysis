@@ -85,6 +85,157 @@ fn no_time(mut v: Value) -> Value {
     v
 }
 
+fn prepare_durable_case(folder: &Path, interval: usize, case: &Path) {
+    cli(
+        &[
+            cmd("prepare-durable-stages-job"),
+            &root().join("examples/hardening-column-tet10-mesh.json"),
+            &root().join("examples/ground-mixed-mcc.json"),
+            case,
+            Path::new(&interval.to_string()),
+            folder,
+        ],
+        0,
+    );
+}
+
+#[test]
+fn durable_slots_and_snapshot_fork_preserve_all_non_time_result_fields() {
+    let job = directory("durable-complete");
+    prepare_durable_case(&job, 2, &root().join("examples/stages-mixed-mcc.json"));
+    cli(&[cmd("run-stages-job"), &job], 0);
+    assert_eq!(status(&job).state, State::Succeeded);
+    let pointer = read(&job.join("recovery.json"));
+    assert!(pointer["generation"].as_u64().unwrap() >= 2);
+    assert!(job.join("recovery-checkpoint-0.json").is_file());
+    assert!(job.join("recovery-checkpoint-1.json").is_file());
+    assert!(
+        !fs::read_dir(&job).unwrap().any(|q| q
+            .unwrap()
+            .path()
+            .extension()
+            .is_some_and(|e| e == "part"))
+    );
+    let control = directory("durable-control.json");
+    cli(
+        &[
+            cmd("solve-stages"),
+            &job.join("inputs/mesh.json"),
+            &job.join("inputs/ground.json"),
+            &job.join("inputs/case.json"),
+            &control,
+        ],
+        0,
+    );
+    assert!(no_time(read(&control)) == no_time(read(&job.join("result.json"))));
+    let fork = directory("durable-fork");
+    cli(&[cmd("prepare-stages-recovery"), &job, &fork], 0);
+    assert_eq!(
+        read(&fork.join("job.json"))["binding"]["checkpoint_interval"],
+        2
+    );
+    cli(&[cmd("run-stages-job"), &fork], 0);
+    assert!(no_time(read(&control)) == no_time(read(&fork.join("result.json"))));
+    assert_eq!(status(&job).state, State::Succeeded);
+}
+
+#[test]
+fn durable_interval_and_recovery_tampering_are_rejected_without_claiming_an_output() {
+    for interval in ["0", "4097"] {
+        let destination = directory("invalid-durable-interval");
+        cli(
+            &[
+                cmd("prepare-durable-stages-job"),
+                &root().join("examples/hardening-column-tet10-mesh.json"),
+                &root().join("examples/ground-mixed-mcc.json"),
+                &root().join("examples/stages-mixed-mcc.json"),
+                cmd(interval),
+                &destination,
+            ],
+            1,
+        );
+        assert!(!destination.exists());
+    }
+    let job = directory("durable-tamper");
+    prepare_durable_case(&job, 2, &root().join("examples/stages-mixed-mcc.json"));
+    cli(&[cmd("run-stages-job"), &job], 0);
+    let pointer_path = job.join("recovery.json");
+    let bytes = fs::read(&pointer_path).unwrap();
+    let mut pointer = read(&pointer_path);
+    pointer["checkpoint"] = json!("../outside.json");
+    fs::write(&pointer_path, serde_json::to_vec(&pointer).unwrap()).unwrap();
+    let destination = directory("durable-path-rejected");
+    cli(&[cmd("prepare-stages-recovery"), &job, &destination], 1);
+    assert!(!destination.exists());
+    fs::write(&pointer_path, &bytes).unwrap();
+    let pointer = read(&pointer_path);
+    let slot = job.join(pointer["checkpoint"].as_str().unwrap());
+    let original = fs::read(&slot).unwrap();
+    let mut changed = original.clone();
+    changed.push(b' ');
+    fs::write(&slot, changed).unwrap();
+    let destination = directory("durable-checksum-rejected");
+    cli(&[cmd("prepare-stages-recovery"), &job, &destination], 1);
+    assert!(!destination.exists());
+    fs::write(&slot, original).unwrap();
+    let mut pointer = read(&pointer_path);
+    pointer["job_id"] = json!("another-job");
+    fs::write(&pointer_path, serde_json::to_vec(&pointer).unwrap()).unwrap();
+    let destination = directory("durable-id-rejected");
+    cli(&[cmd("prepare-stages-recovery"), &job, &destination], 1);
+    assert!(!destination.exists());
+    fs::write(pointer_path, bytes).unwrap();
+}
+
+#[test]
+fn durable_checkpoint_survives_abrupt_owned_child_exit_and_recovers_exact_history() {
+    use std::time::{Duration, Instant};
+    let mut case = read(&root().join("examples/stages-mixed-mcc.json"));
+    case["settings"]["initial_increment"] = json!(1. / 64.);
+    let case_path = directory("durable-slow-case.json");
+    fs::write(&case_path, serde_json::to_vec(&case).unwrap()).unwrap();
+    let job = directory("durable-abrupt");
+    prepare_durable_case(&job, 2, &case_path);
+    let mut child = Command::new(job.join("solver/soil-fem-3d.exe"))
+        .args([cmd("run-stages-job"), &job])
+        .spawn()
+        .unwrap();
+    let started = Instant::now();
+    loop {
+        assert!(
+            child.try_wait().unwrap().is_none(),
+            "child finished before abrupt-exit observation"
+        );
+        if job.join("recovery.json").exists() {
+            break;
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(60),
+            "no durable snapshot produced"
+        );
+        std::thread::sleep(Duration::from_millis(2));
+    }
+    child.kill().unwrap();
+    child.wait().unwrap();
+    assert_eq!(status(&job).state, State::Running);
+    assert!(!job.join("checkpoint.json").exists());
+    let recovered = directory("durable-after-abrupt");
+    cli(&[cmd("prepare-stages-recovery"), &job, &recovered], 0);
+    cli(&[cmd("run-stages-job"), &recovered], 0);
+    let control = directory("durable-abrupt-control.json");
+    cli(
+        &[
+            cmd("solve-stages"),
+            &job.join("inputs/mesh.json"),
+            &job.join("inputs/ground.json"),
+            &job.join("inputs/case.json"),
+            &control,
+        ],
+        0,
+    );
+    assert!(no_time(read(&control)) == no_time(read(&recovered.join("result.json"))));
+}
+
 #[test]
 fn cli_pause_and_separate_process_resume_preserve_every_non_time_result_field() {
     let job = directory("pause");

@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import meshio
 import numpy as np
-from export_solidcraft_view import read
+from export_solidcraft_view import read,read_result
 from verify_acceptance_packet import sha
 
 
@@ -24,7 +24,7 @@ def verify(job,packet,output):
             path=(base/name).resolve()
             if not path.is_relative_to(base) or sha(path)!=digest:raise ValueError('view packet/source file hash mismatch')
     geometry=read(packet/manifest['geometry']);xyz=np.asarray(geometry['nodes_m']);cells=np.asarray(geometry['cells'])
-    structural_source=(read(job/'analysis/ground/mesh.json'),read(job/'analysis/stage-results.json')) if structural else None
+    structural_source=(read(job/'analysis/ground/mesh.json'),read_result(job/'analysis/stage-results.json')) if structural else None
     results=job/'analysis/results';reports=[]
     for frame in manifest['frames']:
         i=frame['index'];view=read(packet/frame['frame']);points=read(packet/frame['integration_points'])

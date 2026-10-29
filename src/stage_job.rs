@@ -22,6 +22,8 @@ use std::{
     time::{Instant, SystemTime, UNIX_EPOCH},
 };
 
+mod recovery;
+
 const MESH: &str = "inputs/mesh.json";
 const GROUND: &str = "inputs/ground.json";
 const CASE: &str = "inputs/case.json";
@@ -36,6 +38,8 @@ pub struct Binding {
     pub files_sha256: BTreeMap<String, String>,
     pub nonce: String,
     pub parent_job_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub checkpoint_interval: Option<usize>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -168,6 +172,7 @@ fn load(folder: &Path) -> Result<(Manifest, Mesh, Ground, StageCase)> {
     let mesh: Mesh = read(&folder.join(MESH))?;
     let ground: Ground = read(&folder.join(GROUND))?;
     let case: StageCase = read(&folder.join(CASE))?;
+    validate_interval(manifest.binding.checkpoint_interval)?;
     let identity = &manifest.binding.identity;
     if identity.mesh_sha256 != checkpoint::hash_json(&mesh)?
         || identity.ground_sha256 != checkpoint::hash_json(&ground)?
@@ -186,7 +191,9 @@ fn prepare_impl(
     case_file: &Path,
     output: &Path,
     parent: Option<(&str, &Path)>,
+    checkpoint_interval: Option<usize>,
 ) -> Result<Manifest> {
+    validate_interval(checkpoint_interval)?;
     let mesh: Mesh = read(mesh_file)?;
     let ground: Ground = read(ground_file)?;
     let case: StageCase = read(case_file)?;
@@ -222,6 +229,7 @@ fn prepare_impl(
             TOKENS.fetch_add(1, Ordering::Relaxed)
         ),
         parent_job_id: parent.map(|(id, _)| id.into()),
+        checkpoint_interval,
     };
     let manifest = Manifest {
         schema: "soil-fem-stages-job/1".into(),
@@ -248,7 +256,7 @@ fn prepare_impl(
     Ok(manifest)
 }
 pub fn prepare(mesh: &Path, ground: &Path, case: &Path, output: &Path) -> Result<Manifest> {
-    prepare_impl(mesh, ground, case, output, None)
+    prepare_impl(mesh, ground, case, output, None, None)
 }
 pub fn prepare_resume(previous: &Path, output: &Path) -> Result<Manifest> {
     let (manifest, mesh, ground, case) = load(previous)?;
@@ -266,8 +274,46 @@ pub fn prepare_resume(previous: &Path, output: &Path) -> Result<Manifest> {
         &previous.join(CASE),
         output,
         Some((&manifest.job_id, &saved)),
+        manifest.binding.checkpoint_interval,
     )
 }
+fn validate_interval(interval: Option<usize>) -> Result<()> {
+    if interval.is_some_and(|n| !(1..=4096).contains(&n)) {
+        return Err(Error::Input(
+            "checkpoint interval must be1..4096 accepted increments".into(),
+        ));
+    }
+    Ok(())
+}
+pub fn prepare_durable(
+    mesh: &Path,
+    ground: &Path,
+    case: &Path,
+    interval: usize,
+    output: &Path,
+) -> Result<Manifest> {
+    prepare_impl(mesh, ground, case, output, None, Some(interval))
+}
+/// Fork a verified accepted snapshot into a new immutable job. This does not
+/// stop its parent or infer liveness from a stored status/PID.
+pub fn prepare_recovery(previous: &Path, output: &Path) -> Result<Manifest> {
+    let (manifest, mesh, ground, case) = load(previous)?;
+    if manifest.binding.identity != Identity::current(&mesh, &ground, &case)? {
+        return Err(Error::Input(
+            "recover with the frozen solver executable".into(),
+        ));
+    }
+    let saved = recovery::saved_path(previous, &manifest, &mesh, &ground, &case)?;
+    prepare_impl(
+        &previous.join(MESH),
+        &previous.join(GROUND),
+        &previous.join(CASE),
+        output,
+        Some((&manifest.job_id, &saved)),
+        manifest.binding.checkpoint_interval,
+    )
+}
+
 pub fn status(folder: &Path) -> Result<Status> {
     let manifest: Manifest = read_small(&folder.join("job.json"), 256 * 1024)?;
     let status: Status = read_small(&folder.join("status.json"), 256 * 1024)?;
@@ -311,13 +357,22 @@ struct TraceState {
     events: BufWriter<File>,
     sequence: u64,
     last_status: Instant,
+    accepted_since_checkpoint: usize,
 }
 struct FileObserver {
     folder: PathBuf,
     job_id: String,
     trace: Mutex<TraceState>,
+    checkpoint_interval: Option<usize>,
 }
 impl FileObserver {
+    fn reset_checkpoint_count(&self) -> Result<()> {
+        self.trace
+            .lock()
+            .map_err(|e| Error::Control(e.to_string()))?
+            .accepted_since_checkpoint = 0;
+        Ok(())
+    }
     fn requested(&self) -> bool {
         read_small::<StopRequest>(&self.folder.join("stop-request.json"), 4096)
             .is_ok_and(|r| r.schema == "soil-fem-stages-job-stop/1" && r.job_id == self.job_id)
@@ -352,6 +407,9 @@ impl Observer for FileObserver {
         )?;
         trace.events.write_all(b"\n")?;
         trace.events.flush()?;
+        if matches!(progress.kind, crate::stage_control::Kind::Accepted) {
+            trace.accepted_since_checkpoint += 1;
+        }
         trace.status.progress_events = sequence;
         trace.status.last_progress = Some(progress.clone());
         trace.status.stop_requested = self.requested();
@@ -367,7 +425,12 @@ impl Observer for FileObserver {
         Ok(())
     }
     fn stop_requested(&self) -> Result<bool> {
-        Ok(self.requested())
+        let accepted = self
+            .trace
+            .lock()
+            .map_err(|e| Error::Control(e.to_string()))?
+            .accepted_since_checkpoint;
+        Ok(self.requested() || self.checkpoint_interval.is_some_and(|n| accepted >= n))
     }
 }
 
@@ -386,6 +449,9 @@ pub fn run(folder: &Path) -> Result<Outcome> {
             "checkpoint.json",
             "incomplete.json",
             "progress.jsonl",
+            "recovery.json",
+            "recovery-checkpoint-0.json",
+            "recovery-checkpoint-1.json",
         ]
         .iter()
         .any(|name| folder.join(name).exists())
@@ -404,6 +470,7 @@ pub fn run(folder: &Path) -> Result<Outcome> {
     let observer = FileObserver {
         job_id: manifest.job_id,
         folder: folder.clone(),
+        checkpoint_interval: manifest.binding.checkpoint_interval,
         trace: Mutex::new(TraceState {
             status: state,
             events: BufWriter::new(
@@ -414,30 +481,52 @@ pub fn run(folder: &Path) -> Result<Outcome> {
             ),
             sequence: 0,
             last_status: Instant::now(),
+            accepted_since_checkpoint: 0,
         }),
     };
     let result: Result<Outcome> = (|| {
-        let result = if manifest.binding.parent_job_id.is_some() {
-            let saved: Checkpoint = read(&folder.join(SAVED))?;
-            saved.resume_observed(&mesh, ground, case, &observer)?
+        let mut continuation = if manifest.binding.parent_job_id.is_some() {
+            Some(read::<Checkpoint>(&folder.join(SAVED))?)
         } else {
-            stages::solve_observed(&mesh, ground, case, &observer)?
+            None
         };
-        load(&folder)?; // Do not publish after a changed input/solver snapshot.
-        if result.complete {
-            write_new(&folder.join("result.json"), &result)?;
-            observer.finish(State::Succeeded, Some("result.json"), None)?;
-            Ok(Outcome::Succeeded)
-        } else if result.failure_reason.as_deref() == Some("checkpoint_requested") {
-            let saved = Checkpoint::seal(&mesh, result)?;
-            write_new(&folder.join("checkpoint.json"), &saved)?;
-            observer.finish(State::Checkpointed, Some("checkpoint.json"), None)?;
-            Ok(Outcome::Checkpointed)
-        } else {
-            let reason = result.failure_reason.clone();
-            write_new(&folder.join("incomplete.json"), &result)?;
-            observer.finish(State::Failed, Some("incomplete.json"), reason)?;
-            Ok(Outcome::Failed)
+        let mut generation = 0_u64;
+        loop {
+            observer.reset_checkpoint_count()?;
+            let result = if let Some(saved) = continuation.take() {
+                saved.resume_observed(&mesh, ground.clone(), case.clone(), &observer)?
+            } else {
+                stages::solve_observed(&mesh, ground.clone(), case.clone(), &observer)?
+            };
+            load(&folder)?;
+            if result.complete {
+                write_new(&folder.join("result.json"), &result)?;
+                observer.finish(State::Succeeded, Some("result.json"), None)?;
+                return Ok(Outcome::Succeeded);
+            }
+            if result.failure_reason.as_deref() == Some("checkpoint_requested") {
+                let saved = Checkpoint::seal(&mesh, result)?;
+                if observer.requested() {
+                    write_new(&folder.join("checkpoint.json"), &saved)?;
+                    observer.finish(State::Checkpointed, Some("checkpoint.json"), None)?;
+                    return Ok(Outcome::Checkpointed);
+                }
+                if manifest.binding.checkpoint_interval.is_none() {
+                    return Err(Error::Control(
+                        "unexpected internal checkpoint without a durable policy".into(),
+                    ));
+                }
+                generation = generation
+                    .checked_add(1)
+                    .ok_or_else(|| Error::Control("recovery generation overflow".into()))?;
+                recovery::save(&folder, &observer.job_id, generation, &saved)?;
+                continuation = Some(saved);
+            } else {
+                let reason = result.failure_reason.clone();
+                write_new(&folder.join("incomplete.json"), &result)?;
+                observer.finish(State::Failed, Some("incomplete.json"), reason)?;
+                return Ok(Outcome::Failed);
+            }
         }
     })();
     if let Err(error) = &result {

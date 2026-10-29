@@ -2,7 +2,8 @@ param(
     [string]$Design,
     [int]$Port = 7894,
     [string]$SolidCraftPath,
-    [string]$SolverPath
+    [string]$SolverPath,
+    [ValidateRange(0,4096)][int]$CheckpointInterval = 8
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
@@ -28,6 +29,6 @@ if ($Design) {
 }
 # Interactive CAD requested by the user. Only this child's environment is changed.
 $cadProcess = Start-Process -FilePath $SolidCraftPath -ArgumentList $arguments -WorkingDirectory $projectRoot `
-    -Environment @{ SOLIDCRAFT_SOIL_FEM_ROOT = $projectRoot; SOLIDCRAFT_SOIL_FEM_SOLVER = $SolverPath } -PassThru
+    -Environment @{ SOLIDCRAFT_SOIL_FEM_ROOT = $projectRoot; SOLIDCRAFT_SOIL_FEM_SOLVER = $SolverPath; SOLIDCRAFT_SOIL_FEM_CHECKPOINT_INTERVAL = $(if ($CheckpointInterval) { [string]$CheckpointInterval } else { '' }) } -PassThru
 Write-Host "SolidCraft soil host PID=$($cadProcess.Id), control=127.0.0.1:$Port"
 Write-Host 'Open Soil Analysis > Analysis to start a job in a new output folder.'

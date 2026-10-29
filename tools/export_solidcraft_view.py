@@ -17,16 +17,21 @@ FACES=((1,2,3),(0,3,2),(0,1,3),(0,2,1))
 EDGES=((0,1),(1,2),(2,0),(0,3),(1,3),(2,3))
 MAX_FILE=256*1024**2
 MAX_TOTAL=512*1024**2
+MAX_SOURCE_RESULT=1024*1024**2
 
 
-def read(path):
-    if path.stat().st_size>MAX_FILE:raise ValueError('viewer input exceeds 256 MiB limit')
+def read(path,maximum=MAX_FILE):
+    if path.stat().st_size>maximum:raise ValueError('viewer input exceeds 256 MiB limit' if maximum==MAX_FILE else 'authoritative result exceeds1GiB source limit')
     def reject(value):raise ValueError('non-finite JSON: '+value)
     def real(value):
         number=float(value)
         if not math.isfinite(number):reject(value)
         return number
     return json.loads(path.read_text(encoding='utf-8'),parse_constant=reject,parse_float=real)
+
+
+def read_result(path):
+    return read(path,maximum=MAX_SOURCE_RESULT)
 
 
 def clean(value):
@@ -182,7 +187,7 @@ def export(job,output):
     if link.get('passed') is not True or link.get('input_sha256')!=capture['input_sha256'] or link.get('source_capture_sha256')!=sha(conformal/'native-capture.json'):
         raise ValueError('native capture import linkage mismatch')
     result_path=analysis/'stage-results.json';mesh_path=prepared/'mesh.json';accepted_path=analysis/'accepted-stage-run.json'
-    accepted=read(accepted_path);run=read(result_path);mesh=read(mesh_path)
+    accepted=read(accepted_path);run=read_result(result_path);mesh=read(mesh_path)
     imported=read(prepared/'model-input-package.json');original=imported.get('original_inventory',{})
     if imported.get('schema')!='soil-fem-prepared-model-import/1' or original.get('schema')!='soil-fem-prepared-model/1':raise ValueError('prepared geometry import record required')
     inventory=original.get('files_sha256',{})

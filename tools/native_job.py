@@ -47,6 +47,16 @@ def watch_host(stream):
 def utc():return datetime.now(timezone.utc).isoformat()
 
 
+def configured_interval(value):
+    """Trusted host configuration only; never read this from the CAD capture."""
+    if value is None or value == '':return None
+    if not isinstance(value,str) or not value.isascii() or not value.isdecimal():
+        raise ValueError('host checkpoint interval must be an integer from 1 to 4096')
+    number=int(value)
+    if not 1 <= number <= 4096:raise ValueError('host checkpoint interval must be an integer from 1 to 4096')
+    return number
+
+
 def frozen_profile(runtime):
     """Load later phases from the captured workflow, never a newly edited file."""
     spec=importlib.util.spec_from_file_location('_soil_native_staged_profile',runtime/'tools/native_stage_profile.py')
@@ -109,7 +119,12 @@ def phase(folder):
     return 'importing_geometry'
 
 
-def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=None,expected_input=None,host_disconnected=None,host_token=None,cooperative=False,resume_from=None):
+def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=None,expected_input=None,host_disconnected=None,host_token=None,cooperative=False,resume_from=None,checkpoint_interval=None):
+    if checkpoint_interval is not None:
+        if type(checkpoint_interval) is not int or not 1 <= checkpoint_interval <= 4096:
+            raise ValueError('checkpoint interval must be an integer from 1 to 4096')
+        if not cooperative or resume_from is not None:
+            raise ValueError('checkpoint interval is for a new cooperative job only')
     capture=capture.resolve();folder=folder.resolve()
     if folder.is_relative_to(capture):raise ValueError('job output must be outside the source capture')
     if not math.isfinite(mesh_size) or mesh_size<=0 or order not in (1,2) or quadrature not in (3,4,5):raise ValueError('invalid mesh settings')
@@ -130,6 +145,7 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
         resume_from=resume_from.resolve();cooperative=True
         previous_owner,receipt=native_stage_profile.previous(resume_from,solver_digest,source_hashes,expected_input)
         if recorded['input_sha256']!=previous_owner['input_sha256']:raise ValueError('resume capture differs')
+        checkpoint_interval=previous_owner.get('checkpoint_interval')
         mesh_size,order,quadrature=(previous_owner[k] for k in ('mesh_size_m','element_order','quadrature_order'))
     folder.mkdir(parents=True,exist_ok=False)
     job_id=uuid.uuid4().hex;started=time.monotonic()
@@ -139,6 +155,7 @@ def run(capture,folder,*,solver=None,mesh_size=2.,order=2,quadrature=3,split=Non
         mesh_size_m=mesh_size,element_order=order,quadrature_order=quadrature,tool_sources_sha256=source_hashes,
         workflow_sources='runtime',profile='cooperative_staged' if cooperative else 'legacy_process',
         parent_job_id=previous_owner['job_id'] if previous_owner else None)
+    if checkpoint_interval is not None:owner['checkpoint_interval']=checkpoint_interval
     atomic(folder/'job.json',owner)
     current=dict(schema='soil-fem-native-job-status/2' if cooperative else 'soil-fem-native-job-status/1',job_id=job_id,input_sha256=owner['input_sha256'],
         host_token=host_token,
@@ -226,11 +243,12 @@ if __name__=='__main__':
     runner.add_argument('--watch-stdin',action='store_true',help='native host pipe: EOF requests owned-process cleanup')
     runner.add_argument('--host-token',help='opaque identity supplied by the native process owner, never a PID to signal')
     runner.add_argument('--cooperative',action='store_true',help='save solver checkpoints at accepted increments; requires staged-job CLI support')
+    runner.add_argument('--checkpoint-interval',type=int,choices=range(1,4097),metavar='1..4096',help='periodically save accepted increments; requires durable staged-job CLI support')
     resume=commands.add_parser('resume');resume.add_argument('previous',type=Path);resume.add_argument('job',type=Path)
     resume.add_argument('--solver',type=Path);resume.add_argument('--expected-input-sha256');resume.add_argument('--host-token')
     resume.add_argument('--watch-stdin',action='store_true')
     for name in ('status','cancel'):commands.add_parser(name).add_argument('job',type=Path)
     args=parser.parse_args()
-    if args.command=='run':sys.exit(run(args.capture,args.job,solver=args.solver,mesh_size=args.mesh_size_m,order=args.order,quadrature=args.quadrature,split=args.split,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=args.cooperative))
+    if args.command=='run':sys.exit(run(args.capture,args.job,solver=args.solver,mesh_size=args.mesh_size_m,order=args.order,quadrature=args.quadrature,split=args.split,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=args.cooperative,checkpoint_interval=args.checkpoint_interval if args.checkpoint_interval is not None else (configured_interval(os.environ.get('SOLIDCRAFT_SOIL_FEM_CHECKPOINT_INTERVAL')) if args.cooperative else None)))
     if args.command=='resume':sys.exit(run(args.previous/'capture',args.job,solver=args.solver,expected_input=args.expected_input_sha256,host_disconnected=watch_host(sys.stdin.buffer) if args.watch_stdin else None,host_token=args.host_token,cooperative=True,resume_from=args.previous))
     print(json.dumps(request_cancel(args.job) if args.command=='cancel' else status(args.job),ensure_ascii=False))

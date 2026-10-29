@@ -1,5 +1,48 @@
 # 外部解析ジョブの起動・状態・停止
 
+## 2026-10-29：SolidCraft外部ワーカーへの定期保存の接続
+
+本体611ソースへ外部ワーカーと大容量の元結果読込みを統合しました。Rust全ソースは272件合格版から不変で、Python全167件が合格しました。実CADから新規メッシュを生成し、通常・定期保存ワーカーの5工程、結果パッケージと表示監査、従来610結果との物理8群一致を確認しました。結合候補でも本体の新しいCLIを用いて定期保存経路を再実行し、最終ソルバー報告が`succeeded`になることを確認しています。初回の新しい進捗試験での出力フォルダー作成不足は試験側だけの失敗として保存し、修正版の全167件を確認しました。
+
+```powershell
+# SolidCraftのGUIから使う。新しい611ソルバーが必要。
+pwsh -File scripts\Start-SolidCraftSoil.ps1 -SolidCraftPath PATH_TO_SOIL_HOST.exe -CheckpointInterval 8
+
+# 外部ワーカーを直接起動する場合。
+.venv\Scripts\python.exe tools\native_job.py run CAPTURE NEW_JOB --cooperative --checkpoint-interval 8 --mesh-size-m 4
+```
+
+起動スクリプトは定期保存間隔8を、この子アプリの環境だけへ渡します。GUIの協調実行が有効な新規ジョブで適用します。`-CheckpointInterval 0`で定期保存の設定を外し、従来の協調停止・再開を使えます。旧ソルバーを明示指定する場合も0を指定してください。CLIではフラグ省略時の従来経路を保持し、協調実行に限り信頼したホスト環境`SOLIDCRAFT_SOIL_FEM_CHECKPOINT_INTERVAL`も読めます。入力CADや保存ジョブから実行プログラムを選びません。不正な間隔は出力先作成前に拒否します。
+
+再開は保存したワーカー・ソルバーと同じインストール版を必要とし、保存時の定期保存間隔を継承します。今回の接続は通常のStop／Resumeの仕様を保持するものです。異常終了後に定期保存点からNative GUIで復旧する操作は未実装であり、下記Rust CLIの明示的な`prepare-stages-recovery`とは区別してください。
+
+生の`stage-results.json`だけに1 GiBの読込み上限を設け、既存の表示ファイル256 MiB・表示パケット合計512 MiBは維持します。非有限数も拒否します。Python側は全JSONをメモリーへ読むため、選択工程だけを保持するNative64の方式とは異なります。535,711,781バイトの既存結果に対する全5工程のVTU照合で使った2ファイルとバイト一致し、その3容量・非有限数試験を全体試験へ組み込みました。大容量結果のNative表示には別途受入中の64ファイル版が必要です。
+
+計算完了後の内部進捗欄に古い`running`が残る問題も修正しました。最終ソルバー報告と成果物ハッシュの検査後、後処理を始める前にその確定報告を公開します。数値計算・材料履歴・切戻しのアルゴリズムは変更していません。
+
+検証記録は`runs/native-durable-worker-development-20261029-v1/acceptance.json`、`runs/native-large-worker-combined-20261029-v2/{quality/terminal,acceptance,promotion}.json`です。総合Native CI、release版の大容量実画面、所有ジョブのViewerボタン経路と新PCの受入は別の確認です。
+
+## 2026-10-29：確定増分の定期保存・明示的な復旧CLI
+
+本体611ソースへ定期保存・復旧CLIを取り込みました。Rust272件・Python162件、fmt/clippy/buildに合格した候補と、Markdown以外の全ソースが一致します。本体から新しくビルドしたCLIでも、実CAD由来274要素・5工程の通常計算と定期保存計算が、旧610結果・候補の両経路と物理8群で完全一致しました。各群の時間記録だけを比較から除外しています。記録は`runs/durable-root-promotion-20261029-v1/acceptance.json`です。SolidCraft外部ワーカーへの接続は別候補として検証中であり、このCLIの合格と区別します。
+
+```powershell
+$solver = '.\target\release\soil-fem-3d.exe'
+# 受理済み通知8回ごとに保存する新規ジョブ。間隔は1〜4096。
+& $solver prepare-durable-stages-job MESH.json GROUND.json STAGES.json 8 NEW_JOB
+& '.\NEW_JOB\solver\soil-fem-3d.exe' run-stages-job NEW_JOB
+
+# 最後に正常公開された受理状態から、別の新規ジョブを作る。
+& '.\NEW_JOB\solver\soil-fem-3d.exe' prepare-stages-recovery NEW_JOB NEW_RECOVERED
+& '.\NEW_RECOVERED\solver\soil-fem-3d.exe' run-stages-job NEW_RECOVERED
+```
+
+`prepare-stages-job`は従来の形式と動作を維持します。定期保存では二つの`recovery-checkpoint-{0,1}.json`を交互に使用し、完全な書込み・flush・sync_allと置換を経てから、SHA付き`recovery.json`ポインターを更新します。次の保存が未完でも、直前のポインターが指すスロットを先に上書きしない順序です。すべての電源断に対する記憶装置の保証ではありません。保存IOの失敗を数値的な切戻しとして隠しません。
+
+復旧時にはジョブID、許可したスロット名、世代、入力・実行ファイル・保存点・全材料履歴のハッシュを照合します。実際の所有子プロセスの強制終了後からの復旧と連続計算の一致、改変・不正パス・異なるジョブの拒否もRust試験で確認しています。保存済みPIDや`running`だけで旧プロセスの生死は判断しません。実行中の計算の受理状態を明示的に分岐することもでき、旧計算を自動停止しません。
+
+外部停止要求では、従来どおり`checkpoint.json`を保存して中断終了します。内部の定期保存は同じプロセスで計算を継続します。過去に保存点なしで終了した計算には遡って保存点を作れません。Nativeの通常ジョブやGUIでの異常終了後の復旧を、このCLIだけで受入済みとは扱いません。
+
 Nativeの所有ジョブは、起動時のCADに `beam_system` またはオブジェクト形式の `plate_surfaces` があれば構造結果形式 `/3` を要求します。簡略宣言の認識を追加した後続62ファイル差分が必要です。旧差分ではワーカーの数値・表示監査が成功しても、所有ジョブが形式不一致として結果を拒否します。入力SHA・実行ソルバー・表示manifest・監査のハッシュ照合は維持します。
 
 

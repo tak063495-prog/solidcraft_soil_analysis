@@ -199,8 +199,15 @@ def execute(folder, runtime, solver, owner, publish, cancelled, stop_child, *, p
     if previous_folder is not None and receipt['kind'] == 'completed_solver_result':
         copy_file(previous_folder/'workflow/analysis/stage-results.json', complete, receipt['artifact_sha256'])
     else:
-        args = ([str(solver), 'prepare-stages-resume', str(previous_folder/'workflow/analysis/solver-job'), str(solver_job)]
-                if previous_folder is not None else [str(solver), 'prepare-stages-job', str(mesh), str(ground), str(case), str(solver_job)])
+        interval=owner.get('checkpoint_interval')
+        if interval is not None and (type(interval) is not int or not 1 <= interval <= 4096):
+            raise ValueError('invalid periodic checkpoint interval in owned job')
+        if previous_folder is not None:
+            args=[str(solver), 'prepare-stages-resume', str(previous_folder/'workflow/analysis/solver-job'), str(solver_job)]
+        else:
+            args=[str(solver), 'prepare-durable-stages-job' if interval is not None else 'prepare-stages-job', str(mesh), str(ground), str(case)]
+            if interval is not None:args.append(str(interval))
+            args.append(str(solver_job))
         code, stopped = command(args, runtime, folder/'solver-prepare.log', publish, cancelled, stop_child, phase='preparing_solver')
         if stopped:
             publish(state='cancelled', phase='preparing_solver', exit_code=2)
@@ -221,6 +228,7 @@ def execute(folder, runtime, solver, owner, publish, cancelled, stop_child, *, p
         artifact = solver_job/('checkpoint.json' if status.get('state') == 'checkpointed' else 'result.json')
         if status.get('artifact_sha256') != sha(artifact):
             raise ValueError('staged solver artifact changed')
+        publish(solver_report=status)
         if status.get('state') == 'checkpointed' and code == 2:
             verify(runtime, owner['tool_sources_sha256'])
             return saved(folder, owner, 'solver_checkpoint', artifact, publish, status)

@@ -9,6 +9,15 @@ use std::{env, fs, path::Path};
 fn run() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [command,mesh,ground,case,interval,output] if command=="prepare-durable-stages-job" => {
+            let interval:usize=interval.parse().map_err(|_|Error::Input("checkpoint interval must be a positive integer".into()))?;
+            let manifest=soil_fem_3d::stage_job::prepare_durable(Path::new(mesh),Path::new(ground),Path::new(case),interval,Path::new(output))?;
+            println!("Prepared durable staged mechanics job {}",manifest.job_id);
+        }
+        [command,previous,output] if command=="prepare-stages-recovery" => {
+            let manifest=soil_fem_3d::stage_job::prepare_recovery(Path::new(previous),Path::new(output))?;
+            println!("Prepared accepted-snapshot recovery {}",manifest.job_id);
+        }
         [command,mesh,ground,case,output] if command=="prepare-stages-job" => {
             let manifest=soil_fem_3d::stage_job::prepare(Path::new(mesh),Path::new(ground),Path::new(case),Path::new(output))?;
             println!("Prepared staged mechanics job {}",manifest.job_id);
@@ -241,7 +250,7 @@ fn run() -> Result<()> {
             write_new(out,&result)?;
             println!("iterations={} true_relative_residual={:.3e} equilibrium_error_kn={:?}",result.iterations,result.true_relative_residual,result.equilibrium_error_kn);
         }
-        _ => return Err(Error::Input("usage: soil-fem-3d solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
+        _ => return Err(Error::Input("usage: soil-fem-3d prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
     }
     Ok(())
 }

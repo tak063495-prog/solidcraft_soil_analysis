@@ -14,6 +14,51 @@ from verify_acceptance_packet import sha
 
 
 class NativeJob(unittest.TestCase):
+    def test_completed_solver_report_replaces_last_running_sample_before_postprocessing(self):
+        from unittest.mock import patch
+        import native_stage_profile as profile
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);analysis=folder/'workflow/analysis';analysis.mkdir(parents=True)
+            owner=dict(solver_sha256=sha(ROOT/'tools/native_stage_profile.py'),input_sha256='a'*64,tool_sources_sha256={})
+            authoritative={};published=dict(solver_report=dict(state='running',last_progress=dict(progress=1.)))
+            def command(args,runtime,log,publish,cancelled,stop_child,*,phase,solver_job=None,solver=None):
+                if phase=='preparing_solver':
+                    job=analysis/'solver-job';(job/'solver').mkdir(parents=True)
+                    shutil.copyfile(ROOT/'tools/native_stage_profile.py',job/'solver/soil-fem-3d.exe')
+                    atomic(job/'job.json',dict(job_id='owned-final'))
+                    (job/'result.json').write_bytes(b'{"complete":true}')
+                    authoritative.update(schema='soil-fem-stages-job-status/1',job_id='owned-final',state='succeeded',artifact_sha256=sha(job/'result.json'))
+                    atomic(job/'status.json',authoritative)
+                if phase=='checking_view':
+                    view=folder/'workflow/view/view-manifest.json'
+                    view.parent.mkdir()
+                    atomic(view,dict(complete=True,input_sha256=owner['input_sha256'],solver_binary_sha256=owner['solver_sha256']))
+                    atomic(folder/'workflow/view-verification.json',dict(passed=True,view_manifest_sha256=sha(view)))
+                if phase in ('exporting','checking_result','preparing_view','checking_view'):
+                    self.assertEqual(published['solver_report'],authoritative)
+                return 0,False
+            with patch.object(profile,'command',side_effect=command),patch.object(profile,'verify'):
+                code=profile.execute(folder,ROOT,ROOT/'tools/native_stage_profile.py',owner,
+                    lambda **changes:published.update(changes),lambda:False,lambda _:self.fail('no child to terminate'))
+            self.assertEqual(code,0);self.assertEqual(published['state'],'succeeded')
+            self.assertEqual(published['solver_report'],authoritative)
+
+    def test_periodic_interval_rejects_invalid_host_configuration_before_output_claim(self):
+        from native_job import configured_interval
+        self.assertIsNone(configured_interval(None));self.assertIsNone(configured_interval(''))
+        self.assertEqual(configured_interval('1'),1);self.assertEqual(configured_interval('4096'),4096)
+        for value in ('0','4097','-1','1.5','NaN','１',' 8',True,8):
+            with self.subTest(value=value),self.assertRaises(ValueError):configured_interval(value)
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)
+            for value in (0,4097,True,1.5):
+                with self.subTest(value=value),self.assertRaisesRegex(ValueError,'interval'):
+                    run(p/'missing-capture',p/'unclaimed',cooperative=True,checkpoint_interval=value)
+                self.assertFalse((p/'unclaimed').exists())
+            with self.assertRaisesRegex(ValueError,'cooperative'):
+                run(p/'missing-capture',p/'unclaimed',checkpoint_interval=8)
+            self.assertFalse((p/'unclaimed').exists())
+
     def test_live_solver_survives_transient_status_read_denials(self):
         from unittest.mock import patch
         import native_stage_profile as profile

@@ -10,6 +10,7 @@ from unittest import mock
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from export_solidcraft_view import EDGES,boundary,export,scene_frame
+import export_solidcraft_view as view
 from verify_acceptance_packet import sha
 
 
@@ -185,6 +186,31 @@ class SolidCraftView(unittest.TestCase):
             path=job/'analysis/accepted-stage-run.json';a=json.loads(path.read_text());a['inputs_and_results_sha256'][str(mesh)]=sha(mesh);write(path,a)
             with self.assertRaisesRegex(ValueError,'prepared geometry file hash mismatch'):export(job,root/'rejected')
             self.assertFalse((root/'rejected').exists())
+
+
+class SourceBudget(unittest.TestCase):
+ def test_only_explicit_result_reader_accepts_a_larger_source(self):
+  with tempfile.TemporaryDirectory() as folder:
+   path=Path(folder)/'result.json';value=dict(material_history=list(range(100)));path.write_text(json.dumps(value),encoding='utf-8')
+   # Bind small test budgets without constructing a giant test artifact.
+   with self.assertRaises(ValueError):view.read(path,maximum=32)
+   self.assertEqual(view.read_result(path),value)
+ def test_source_limit_is_independent_of_packet_limits(self):
+  old=view.MAX_SOURCE_RESULT
+  try:
+   view.MAX_SOURCE_RESULT=16
+   with tempfile.TemporaryDirectory() as folder:
+    path=Path(folder)/'source.json';path.write_text(json.dumps(dict(history=[1]*100)),encoding='utf-8')
+    with self.assertRaisesRegex(ValueError,'source limit'):view.read_result(path)
+    self.assertEqual(view.read(path),dict(history=[1]*100))
+  finally:view.MAX_SOURCE_RESULT=old
+  self.assertEqual(view.MAX_FILE,256<<20);self.assertEqual(view.MAX_TOTAL,512<<20)
+ def test_nonfinite_source_numbers_remain_rejected(self):
+  with tempfile.TemporaryDirectory() as folder:
+   path=Path(folder)/'bad.json'
+   for raw in ['{"a":NaN}','{"a":1e999}']:
+    path.write_text(raw,encoding='utf-8')
+    with self.assertRaises(ValueError):view.read_result(path)
 
 
 if __name__=='__main__':unittest.main()
