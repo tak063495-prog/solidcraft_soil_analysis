@@ -9,6 +9,30 @@ use std::{env, fs, path::Path};
 fn run() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [command,mesh,origin,spec,output] if command=="prepare-mc-epoch-job" => {
+            let m=soil_fem_3d::mc_epoch_job::prepare(Path::new(mesh),Path::new(origin),Path::new(spec),Path::new(output))?;
+            println!("Prepared material continuation job {}",m.job_id);
+        }
+        [command,previous,output] if command=="prepare-mc-epoch-recovery" => {
+            let m=soil_fem_3d::mc_epoch_job::prepare_recovery(Path::new(previous),Path::new(output))?;
+            println!("Prepared material continuation recovery {}",m.job_id);
+        }
+        [command,folder] if command=="run-mc-epoch-job" => {
+            mc_epoch_outcome(soil_fem_3d::mc_epoch_job::run(Path::new(folder),None)?)?;
+        }
+        [command,folder,budget] if command=="run-mc-epoch-job" => {
+            let budget:usize=budget.parse().map_err(|_|Error::Input("MC attempt budget must be a positive integer".into()))?;
+            mc_epoch_outcome(soil_fem_3d::mc_epoch_job::run(Path::new(folder),Some(budget))?)?;
+        }
+        [command,folder] if command=="stop-mc-epoch-job" => {
+            println!("Cooperative material continuation stop requested: {}",soil_fem_3d::mc_epoch_job::request_stop(Path::new(folder))?);
+        }
+        [command,folder] if command=="mc-epoch-job-status" => {
+            println!("{}",serde_json::to_string_pretty(&soil_fem_3d::mc_epoch_job::status(Path::new(folder))?)?);
+        }
+        [command,folder] if command=="verify-mc-epoch-job" => {
+            println!("{}",serde_json::to_string_pretty(&soil_fem_3d::mc_epoch_job::verify_snapshot(Path::new(folder))?)?);
+        }
         [command,mesh,ground,case,interval,output] if command=="prepare-durable-stages-job" => {
             let interval:usize=interval.parse().map_err(|_|Error::Input("checkpoint interval must be a positive integer".into()))?;
             let manifest=soil_fem_3d::stage_job::prepare_durable(Path::new(mesh),Path::new(ground),Path::new(case),interval,Path::new(output))?;
@@ -261,7 +285,28 @@ fn run() -> Result<()> {
             write_new(out,&result)?;
             println!("iterations={} true_relative_residual={:.3e} equilibrium_error_kn={:?}",result.iterations,result.true_relative_residual,result.equilibrium_error_kn);
         }
-        _ => return Err(Error::Input("usage: soil-fem-3d prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
+        _ => return Err(Error::Input("usage: soil-fem-3d prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
+    }
+    Ok(())
+}
+fn mc_epoch_outcome(outcome: soil_fem_3d::mc_epoch_job::Outcome) -> Result<()> {
+    use soil_fem_3d::mc_epoch_job::Outcome;
+    match outcome {
+        Outcome::Succeeded => println!("Material continuation completed; stability not evaluated"),
+        Outcome::Paused => {
+            println!("Material continuation paused; accepted epoch and next increment saved");
+            std::io::Write::flush(&mut std::io::stdout())?;
+            std::process::exit(2);
+        }
+        Outcome::Incomplete => return Err(Error::Solve(
+            "material continuation incomplete; inspect report.json; no stability bound inferred"
+                .into(),
+        )),
+        Outcome::Failed => {
+            return Err(Error::Control(
+                "material continuation failed; previous accepted recovery snapshot retained".into(),
+            ));
+        }
     }
     Ok(())
 }

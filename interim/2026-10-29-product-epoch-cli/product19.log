@@ -1,0 +1,89 @@
+   Compiling autocfg v1.5.1
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling num-traits v0.2.19
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+   Compiling typenum v1.20.1
+   Compiling syn v3.0.9
+   Compiling serde_core v1.0.229
+   Compiling paste v1.0.15
+   Compiling bytemuck v1.25.2
+   Compiling safe_arch v0.7.4
+   Compiling matrixmultiply v0.3.11
+   Compiling zmij v1.0.23
+   Compiling wide v0.7.33
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling num-integer v0.1.47
+   Compiling num-complex v0.4.6
+   Compiling approx v0.5.1
+   Compiling syn v2.0.119
+   Compiling serde v1.0.229
+   Compiling thiserror v2.0.21
+   Compiling serde_json v1.0.154
+   Compiling rawpointer v0.2.1
+   Compiling nalgebra-macros v0.3.0
+   Compiling simba v0.9.1
+   Compiling num-rational v0.4.2
+   Compiling digest v0.10.7
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling itoa v1.0.18
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling memchr v2.8.3
+   Compiling sha2 v0.10.9
+   Compiling nalgebra v0.34.2
+   Compiling soil-fem-3d v0.1.0 (D:\Work\soil-fem-3d\runs\mc-epoch-cli-development-20261029-v1\runtime)
+    Finished `release` profile [optimized] target(s) in 2m 44s
+     Running tests\mc_epoch_checkpoint.rs (target\release\deps\mc_epoch_checkpoint-f7d340fcb004b5a7.exe)
+
+running 3 tests
+test genuine_global_material_failure_preserves_both_history_and_parameter_epoch ... ok
+test accepted_plastic_epoch_roundtrip_and_later_continuation_are_exact ... ok
+test tampering_and_resealed_wrong_material_load_origin_or_constraints_are_rejected ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests\mc_epoch_cli.rs (target\release\deps\mc_epoch_cli-ce8e483f42353fc3.exe)
+
+running 4 tests
+test material_failure_rejected_prefix_recovers_without_inventing_stability_bounds ... ok
+test product_cli_pause_recovery_and_durable_checkpoint_match_continuous ... ok
+test owned_abrupt_exit_recovers_the_last_complete_plastic_epoch ... ok
+test stop_before_run_one_shot_immutable_inputs_and_pointer_paths_are_guarded ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.45s
+
+     Running tests\mc_epoch_path.rs (target\release\deps\mc_epoch_path-253df61b6ff92ee0.exe)
+
+running 4 tests
+test attempt_limit_and_invalid_controls_do_not_produce_stability_bounds ... ok
+test actual_material_failures_cut_back_restore_parameters_and_resume_prefix_exactly ... ok
+test feasible_plastic_path_and_resume_match_exactly_and_closed_form ... ok
+test resealed_progress_increment_target_and_history_chain_tampering_are_rejected ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running tests\mc_parameter_global.rs (target\release\deps\mc_parameter_global-0569bb3018ef4679.exe)
+
+running 3 tests
+test invalid_epoch_retains_parameters_and_history_and_rejects_wrong_origin ... ok
+test post_load_tresca_weakening_matches_confined_compression_closed_form ... ok
+test unit_epoch_preserves_loaded_plastic_origin_and_independent_controllers ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+     Running tests\mc_parameter_transition.rs (target\release\deps\mc_parameter_transition-0636ff2b5cde1c53.exe)
+
+running 5 tests
+test invalid_origins_parameter_switches_and_genuine_no_solution_leave_inputs_unchanged ... ok
+test nonassociated_face_rotation_and_algorithmic_tangent_match_independent_formulas ... ok
+test rankine_tension_parameter_jump_matches_uniaxial_multiplier_without_clearing_history ... ok
+test unchanged_parameters_match_ordinary_updates_and_davis_matches_explicit_effective_model ... ok
+test zero_strain_tresca_weakening_matches_closed_form_and_preserves_prior_history ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

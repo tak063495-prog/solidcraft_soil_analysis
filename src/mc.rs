@@ -313,6 +313,87 @@ impl Parameters {
         }
         Err(Error::Material("MC return has no admissible nonnegative active-set solution (including zero-dilation pure-MC tension/apex paths); no stress clipping was applied".into()))
     }
+    /// A parameter jump followed by the prescribed strain subdivision. The
+    /// committed state must be admissible under `from`; only this explicit
+    /// transition may begin outside the new yield surface. Elastic constants
+    /// and flow family are held fixed; no history is cleared or relabelled.
+    pub fn integrate_transition_partition(
+        &self,
+        from: &Self,
+        old: &State,
+        de: [f64; 6],
+        steps: usize,
+    ) -> Result<Update> {
+        from.validate_state(old)?;
+        self.validate()?;
+        if self.young_kpa != from.young_kpa
+            || self.poisson != from.poisson
+            || self.flow != from.flow
+        {
+            return Err(Error::Input(
+                "MC parameter transition requires unchanged elastic constants and flow family"
+                    .into(),
+            ));
+        }
+        if steps == 0 || steps > 100_000 || !de.iter().all(|v| v.is_finite()) {
+            return Err(Error::Input(
+                "invalid MC transition partition/strain".into(),
+            ));
+        }
+        let mut state = old.clone();
+        let mut plastic = 0;
+        for _ in 0..steps {
+            state = self.substep(&state, de.map(|v| v / steps as f64))?;
+            self.validate_state(&state)?;
+            plastic += usize::from(state.last_return != Return::Elastic);
+        }
+        Ok(Update {
+            state,
+            substeps: steps,
+            plastic_substeps: plastic,
+        })
+    }
+    /// Tangent of the same old-state/new-parameter map used for every trial.
+    /// It never reuses a previous Newton perturbation's plastic history.
+    pub fn stress_tangent_transition_partition(
+        &self,
+        from: &Self,
+        old: &State,
+        de: [f64; 6],
+        steps: usize,
+        h: f64,
+    ) -> Result<(Update, elastic::Tensor)> {
+        if !h.is_finite() || !(1e-9..=1e-5).contains(&h) {
+            return Err(Error::Input(
+                "invalid MC transition tangent perturbation".into(),
+            ));
+        }
+        let update = self.integrate_transition_partition(from, old, de, steps)?;
+        let mut d = elastic::Tensor::zeros();
+        for j in 0..6 {
+            let mut a = de;
+            let mut b = de;
+            a[j] += h;
+            b[j] -= h;
+            let a = self
+                .integrate_transition_partition(from, old, a, steps)?
+                .state;
+            let b = self
+                .integrate_transition_partition(from, old, b, steps)?
+                .state;
+            for i in 0..6 {
+                d[(i, j)] = (a.effective_stress_compression_positive_kpa[i]
+                    - b.effective_stress_compression_positive_kpa[i])
+                    / (2. * h);
+            }
+        }
+        if !d.iter().all(|v| v.is_finite()) {
+            return Err(Error::Material(
+                "nonfinite MC parameter transition tangent".into(),
+            ));
+        }
+        Ok((update, d))
+    }
     pub fn integrate_partition(&self, old: &State, de: [f64; 6], steps: usize) -> Result<Update> {
         self.validate_state(old)?;
         if steps == 0 || steps > 100_000 || !de.iter().all(|v| v.is_finite()) {

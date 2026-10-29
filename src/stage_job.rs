@@ -87,7 +87,7 @@ pub enum Outcome {
 fn read<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T> {
     Ok(serde_json::from_reader(BufReader::new(File::open(path)?))?)
 }
-fn read_small<T: serde::de::DeserializeOwned>(path: &Path, limit: u64) -> Result<T> {
+pub(crate) fn read_small<T: serde::de::DeserializeOwned>(path: &Path, limit: u64) -> Result<T> {
     let file = File::open(path)?;
     let mut data = Vec::new();
     file.take(limit + 1).read_to_end(&mut data)?;
@@ -109,7 +109,7 @@ fn atomic_status(folder: &Path, status: &Status, sequence: u64) -> Result<()> {
     let target = folder.join("status.json");
     replace_status(&temporary, &target)
 }
-fn replace_status(temporary: &Path, target: &Path) -> Result<()> {
+pub(crate) fn replace_status(temporary: &Path, target: &Path) -> Result<()> {
     // Windows observers/scanners may hold the destination without delete
     // sharing for longer than 40 ms. Back off for at most 630 ms, retrying
     // exactly this already complete owned temporary. Never reserialize a
@@ -129,7 +129,7 @@ fn replace_status(temporary: &Path, target: &Path) -> Result<()> {
         }
     }
 }
-fn copy_checked(source: &Path, target: &Path) -> Result<String> {
+pub(crate) fn copy_checked(source: &Path, target: &Path) -> Result<String> {
     let digest = checkpoint::hash_file(source)?;
     let mut incoming = File::open(source)?;
     let mut outgoing = OpenOptions::new()

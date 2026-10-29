@@ -510,6 +510,7 @@ type MaterialResponse = (soil::Update, Option<crate::elastic::Tensor>);
 
 fn material_work_chunk(
     models: &[soil::Model],
+    previous: Option<&[soil::Model]>,
     states: &[soil::State],
     work: &[MaterialWork],
     tangent: bool,
@@ -524,6 +525,49 @@ fn material_work_chunk(
             let old = states
                 .get(item.point)
                 .ok_or_else(|| Error::Input("material work history missing".into()))?;
+            if let Some(previous) = previous {
+                let from = previous
+                    .get(item.material)
+                    .ok_or_else(|| Error::Input("previous MC material missing".into()))?;
+                let (
+                    soil::Model::MohrCoulomb(to),
+                    soil::Model::MohrCoulomb(from),
+                    soil::State::MohrCoulomb(old),
+                ) = (material, from, old)
+                else {
+                    return Err(Error::Input(
+                        "material transition requires MC history and models".into(),
+                    ));
+                };
+                let steps = item.partition.unwrap_or_else(|| {
+                    (item.strain.iter().map(|x| x.abs()).fold(0., f64::max) / maximum_substep)
+                        .ceil()
+                        .max(1.) as usize
+                });
+                let (update, tensor) = if tangent {
+                    let (u, d) = to.stress_tangent_transition_partition(
+                        from,
+                        old,
+                        item.strain,
+                        steps,
+                        perturbation,
+                    )?;
+                    (u, Some(d))
+                } else {
+                    (
+                        to.integrate_transition_partition(from, old, item.strain, steps)?,
+                        None,
+                    )
+                };
+                return Ok((
+                    soil::Update {
+                        state: soil::State::MohrCoulomb(update.state),
+                        substeps: update.substeps,
+                        plastic_substeps: update.plastic_substeps,
+                    },
+                    tensor,
+                ));
+            }
             if tangent {
                 let (update, tensor) = material.stress_tangent_partition(
                     old,
@@ -546,6 +590,7 @@ fn material_work_chunk(
 
 fn material_work_batch(
     models: &[soil::Model],
+    previous: Option<&[soil::Model]>,
     states: &[soil::State],
     work: &[MaterialWork],
     mode: (bool, f64, f64),
@@ -556,7 +601,15 @@ fn material_work_batch(
     }
     let (tangent, perturbation, maximum_substep) = mode;
     if workers == 1 || work.len() < 64 {
-        return material_work_chunk(models, states, work, tangent, perturbation, maximum_substep);
+        return material_work_chunk(
+            models,
+            previous,
+            states,
+            work,
+            tangent,
+            perturbation,
+            maximum_substep,
+        );
     }
     let chunk_size = work.len().div_ceil(workers);
     std::thread::scope(|scope| {
@@ -567,6 +620,7 @@ fn material_work_batch(
             match builder.spawn_scoped(scope, move || {
                 material_work_chunk(
                     models,
+                    previous,
                     states,
                     chunk,
                     tangent,
@@ -608,6 +662,7 @@ fn material_work_batch(
 
 struct Model<'a> {
     material_models: Vec<soil::Model>,
+    material_transition_from: Option<Vec<soil::Model>>,
     observer: Option<&'a dyn crate::stage_control::Observer>,
     wet_joints: Option<crate::joint_water::Model>,
     soil_points: Vec<bool>,
@@ -1534,6 +1589,7 @@ impl<'a> Model<'a> {
         }
         Ok(Self {
             material_models,
+            material_transition_from: None,
             wet_joints,
             observer: None,
             soil_points,
@@ -2142,6 +2198,7 @@ impl<'a> Model<'a> {
             }
             let updates = material_work_batch(
                 &self.material_models,
+                self.material_transition_from.as_deref(),
                 &committed.material_states,
                 &work,
                 (
@@ -3289,6 +3346,322 @@ impl<'a> Model<'a> {
             }
         }
         Ok(active)
+    }
+}
+
+/// Explicit material epochs after a completed, unreduced construction run.
+/// This experimental kernel performs equilibrium trials, not stability or Fs classification.
+/// Each independent strength factor must construct its own controller from the same origin.
+pub struct McParameterMechanics<'a> {
+    observer: Option<&'a dyn crate::stage_control::Observer>,
+    mesh: &'a Mesh,
+    origin: &'a Run,
+    parameters: Vec<crate::mc::Parameters>,
+    committed: Committed,
+    origin_sha256: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct McParameterStep {
+    pub schema: String,
+    pub origin_sha256: String,
+    /// Material table order is exactly the original Ground material table order.
+    pub parameters: Vec<crate::mc::Parameters>,
+    pub frame: Frame,
+    pub iterations: usize,
+    pub linear_solves: Vec<LinearReport>,
+}
+
+/// Dedicated material-epoch checkpoint. It references the immutable original
+/// completed Run by full hash, rather than rewriting a normal Ground/Checkpoint.
+/// The original Run must be retained alongside this checkpoint for resumption.
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct McEpochCheckpoint {
+    pub schema: String,
+    pub payload_sha256: String,
+    pub payload: McEpochPayload,
+}
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct McEpochPayload {
+    pub identity: crate::checkpoint::Identity,
+    pub origin_run_sha256: String,
+    pub origin_state_sha256: String,
+    pub parameters: Vec<crate::mc::Parameters>,
+    pub committed: Committed,
+}
+
+pub(crate) fn validate_mc_epoch_parameters(
+    from: &[crate::mc::Parameters],
+    to: &[crate::mc::Parameters],
+) -> Result<()> {
+    if from.len() != to.len() {
+        return Err(Error::Input(
+            "MC transition material table length differs".into(),
+        ));
+    }
+    for (from, to) in from.iter().zip(to) {
+        to.validate()?;
+        if from.young_kpa != to.young_kpa || from.poisson != to.poisson || from.flow != to.flow {
+            return Err(Error::Input(
+                "MC continuation holds elastic constants and flow family fixed".into(),
+            ));
+        }
+    }
+    Ok(())
+}
+
+impl<'a> McParameterMechanics<'a> {
+    pub fn new(mesh: &'a Mesh, origin: &'a Run) -> Result<Self> {
+        mesh.validate()?;
+        origin.ground.validate()?;
+        origin.case.validate()?;
+        if (!origin.reference_displacement_m.is_empty()
+            && origin.reference_displacement_m.len() != mesh.nodes.len())
+            || !origin
+                .reference_displacement_m
+                .iter()
+                .flatten()
+                .all(|v| v.is_finite())
+        {
+            return Err(Error::Input(
+                "invalid MC origin displacement reference".into(),
+            ));
+        }
+        if !origin.complete
+            || origin.failure_reason.is_some()
+            || origin.continuation.is_some()
+            || origin.case.is_mixed_mcc()
+            || origin.case.joint_system.is_some()
+            || origin.case.beam_system.is_some()
+            || origin.case.anchor_system.is_some()
+            || origin.case.has_seepage()
+            || origin.case.has_staged_water()
+            || origin.ground.initialization.water_level_m.is_some()
+            || origin.provenance
+                != crate::checkpoint::Identity::current(mesh, &origin.ground, &origin.case)?
+        {
+            return Err(Error::Input("MC continuation requires a complete dry, all-MC construction origin from this exact solver; structures and flow are not enabled".into()));
+        }
+        let parameters = origin
+            .ground
+            .materials
+            .iter()
+            .map(|m| match &m.model {
+                soil::Model::MohrCoulomb(p) => Ok(p.clone()),
+                _ => Err(Error::Input(
+                    "MC continuation never converts MCC/IDH materials".into(),
+                )),
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let model = Model::new(mesh, &origin.ground, &origin.case)?;
+        validate_committed(&model, &origin.last_committed, &origin.case)?;
+        Ok(Self {
+            observer: None,
+            mesh,
+            origin,
+            parameters,
+            committed: origin.last_committed.clone(),
+            origin_sha256: crate::checkpoint::hash_json(&origin.last_committed)?,
+        })
+    }
+    pub fn committed(&self) -> &Committed {
+        &self.committed
+    }
+    pub fn parameters(&self) -> &[crate::mc::Parameters] {
+        &self.parameters
+    }
+    pub fn set_observer(&mut self, observer: &'a dyn crate::stage_control::Observer) {
+        self.observer = Some(observer);
+    }
+
+    /// Only private accepted state is serialised; no failed Newton iterate is reachable.
+    pub fn checkpoint(&self) -> Result<McEpochCheckpoint> {
+        let payload = McEpochPayload {
+            identity: self.origin.provenance.clone(),
+            origin_run_sha256: crate::checkpoint::hash_json(self.origin)?,
+            origin_state_sha256: self.origin_sha256.clone(),
+            parameters: self.parameters.clone(),
+            committed: self.committed.clone(),
+        };
+        Ok(McEpochCheckpoint {
+            schema: "soil-fem-mc-epoch-checkpoint/1".into(),
+            payload_sha256: crate::checkpoint::hash_json(&payload)?,
+            payload,
+        })
+    }
+
+    /// Validate the original run, exact executable, seal, frozen construction
+    /// data, current material admissibility and current global equilibrium.
+    pub fn resume(mesh: &'a Mesh, origin: &'a Run, checkpoint: &McEpochCheckpoint) -> Result<Self> {
+        let mut controller = Self::new(mesh, origin)?;
+        let payload = &checkpoint.payload;
+        if checkpoint.schema != "soil-fem-mc-epoch-checkpoint/1"
+            || checkpoint.payload_sha256 != crate::checkpoint::hash_json(payload)?
+            || payload.identity != origin.provenance
+            || payload.origin_run_sha256 != crate::checkpoint::hash_json(origin)?
+            || payload.origin_state_sha256 != controller.origin_sha256
+        {
+            return Err(Error::Input(
+                "MC epoch checkpoint seal/origin/executable mismatch".into(),
+            ));
+        }
+        validate_mc_epoch_parameters(&controller.parameters, &payload.parameters)?;
+        let state = &payload.committed;
+        if state.displacement_m.len() != mesh.nodes.len()
+            || state.material_states.len() != origin.last_committed.material_states.len()
+            || !state.displacement_m.iter().flatten().all(|v| v.is_finite())
+        {
+            return Err(Error::Input(
+                "invalid MC epoch checkpoint state dimensions/nonfinite displacement".into(),
+            ));
+        }
+        let permitted = Committed {
+            displacement_m: state.displacement_m.clone(),
+            material_states: state.material_states.clone(),
+            ..origin.last_committed.clone()
+        };
+        if crate::checkpoint::hash_json(&permitted)? != crate::checkpoint::hash_json(state)? {
+            return Err(Error::Input(
+                "MC epoch checkpoint changed frozen construction data".into(),
+            ));
+        }
+        let mut model = Model::new(mesh, &origin.ground, &origin.case)?;
+        model.reference_displacement_m = origin.reference_displacement_m.clone();
+        model.material_models = payload
+            .parameters
+            .iter()
+            .cloned()
+            .map(soil::Model::MohrCoulomb)
+            .collect();
+        for (ei, element) in model.elements.iter().enumerate() {
+            let material = model.material_index(&state.element_material_ids, ei)?;
+            for offset in 0..element.points.len() {
+                let point = element.point_start + offset;
+                let now = &state.material_states[point];
+                let seed = &origin.last_committed.material_states[point];
+                if !state.active_elements[ei] {
+                    // Removed material retains its original dormant epoch; this
+                    // controller never performs later reactivation/construction.
+                    if crate::checkpoint::hash_json(now)? != crate::checkpoint::hash_json(seed)? {
+                        return Err(Error::Input(
+                            "MC epoch checkpoint changed dormant material history".into(),
+                        ));
+                    }
+                    continue;
+                }
+                model.material_models[material].validate_state(now)?;
+                let (soil::State::MohrCoulomb(now), soil::State::MohrCoulomb(seed)) = (now, seed)
+                else {
+                    return Err(Error::Input(
+                        "MC epoch checkpoint history family differs".into(),
+                    ));
+                };
+                if now.equivalent_plastic_strain + 1e-12 < seed.equivalent_plastic_strain {
+                    return Err(Error::Input(
+                        "MC epoch checkpoint lost cumulative plastic history".into(),
+                    ));
+                }
+            }
+        }
+        let audit = model.frame(
+            "mc_epoch_resume_audit".into(),
+            state,
+            &origin.last_committed,
+            &origin.case,
+        )?;
+        if !audit.relative_force_residual.is_finite()
+            || audit.relative_force_residual > origin.case.settings.relative_force_tolerance
+            || !audit.maximum_normalized_yield.is_finite()
+            || audit.maximum_normalized_yield > 1e-8
+            || !audit.maximum_constraint_error_m.is_finite()
+            || audit.maximum_constraint_error_m > 1e-10
+        {
+            return Err(Error::Input(
+                "MC epoch checkpoint failed current-material equilibrium/yield/constraint audit"
+                    .into(),
+            ));
+        }
+        controller.parameters = payload.parameters.clone();
+        controller.committed = payload.committed.clone();
+        Ok(controller)
+    }
+
+    /// Immutable Newton trials use the accepted old material and history together.
+    /// Only a converged, audited trial replaces BOTH; every error retains both.
+    pub fn try_parameters(
+        &mut self,
+        parameters: Vec<crate::mc::Parameters>,
+    ) -> Result<McParameterStep> {
+        validate_mc_epoch_parameters(&self.parameters, &parameters)?;
+        let mut model = Model::new(self.mesh, &self.origin.ground, &self.origin.case)?;
+        model.observer = self.observer;
+        model.reference_displacement_m = self.origin.reference_displacement_m.clone();
+        model.material_models = parameters
+            .iter()
+            .cloned()
+            .map(soil::Model::MohrCoulomb)
+            .collect();
+        model.material_transition_from = Some(
+            self.parameters
+                .iter()
+                .cloned()
+                .map(soil::Model::MohrCoulomb)
+                .collect(),
+        );
+        let old = &self.committed;
+        let trial = model.trial(
+            old,
+            Target {
+                joint_water: old.joint_water.clone(),
+                pore_pressure_kpa: old.pore_pressure_kpa.clone(),
+                water_level: old.hydrostatic_water_level_m,
+                anchor_control: None,
+                active: old.active_elements.clone(),
+                load: old.applied_nodal_load_kn.clone(),
+                release: old.excavation_release_load_kn.clone(),
+                pressure: old.surface_pressure_kpa,
+                boundary_factor: old.boundary_factor,
+                stage: old.stage_index,
+                progress: old.stage_progress,
+            },
+            &self.origin.case.settings,
+        )?;
+        // Strength continuation is NOT another construction/load stage.
+        // All construction bookkeeping and external data stay byte-for-byte frozen.
+        let accepted = Committed {
+            displacement_m: trial.state.displacement_m,
+            material_states: trial.state.material_states,
+            ..old.clone()
+        };
+        model.material_transition_from = None;
+        let frame = model.frame(
+            "mc_parameter_epoch".into(),
+            &accepted,
+            &self.origin.last_committed,
+            &self.origin.case,
+        )?;
+        if frame.relative_force_residual > self.origin.case.settings.relative_force_tolerance
+            || !frame.relative_force_residual.is_finite()
+            || frame.maximum_normalized_yield > 1e-8
+        {
+            return Err(Error::Solve(
+                "MC parameter epoch failed accepted-state force/yield audit".into(),
+            ));
+        }
+        let result = McParameterStep {
+            schema: "soil-fem-mc-parameter-step/1".into(),
+            origin_sha256: self.origin_sha256.clone(),
+            parameters: parameters.clone(),
+            frame,
+            iterations: trial.iterations,
+            linear_solves: trial.linear_solves,
+        };
+        self.committed = result.frame.state.clone();
+        self.parameters = parameters;
+        Ok(result)
     }
 }
 
@@ -5439,8 +5812,10 @@ mod predictor_tests {
         let (models, states, work) = material_fixture()?;
         let before = serde_json::to_value(&states)?;
         for tangent in [false, true] {
-            let serial = material_work_batch(&models, &states, &work, (tangent, 1e-7, 5e-5), 1)?;
-            let parallel = material_work_batch(&models, &states, &work, (tangent, 1e-7, 5e-5), 4)?;
+            let serial =
+                material_work_batch(&models, None, &states, &work, (tangent, 1e-7, 5e-5), 1)?;
+            let parallel =
+                material_work_batch(&models, None, &states, &work, (tangent, 1e-7, 5e-5), 4)?;
             assert_eq!(serial.len(), 128);
             assert_eq!(parallel.len(), serial.len());
             for ((a, ta), (b, tb)) in serial.iter().zip(&parallel) {
@@ -5472,6 +5847,7 @@ mod predictor_tests {
         };
         let serial = message(material_work_batch(
             &models,
+            None,
             &states,
             &work,
             (true, 1e-7, 5e-5),
@@ -5479,6 +5855,7 @@ mod predictor_tests {
         ));
         let parallel = message(material_work_batch(
             &models,
+            None,
             &states,
             &work,
             (true, 1e-7, 5e-5),
@@ -5487,8 +5864,8 @@ mod predictor_tests {
         assert_eq!(serial, parallel);
         assert!(serial.contains("partition"));
         assert_eq!(serde_json::to_value(&states)?, before);
-        assert!(material_work_batch(&models, &states, &work, (true, 1e-7, 5e-5), 0).is_err());
-        assert!(material_work_batch(&models, &states, &work, (true, 1e-7, 5e-5), 5).is_err());
+        assert!(material_work_batch(&models, None, &states, &work, (true, 1e-7, 5e-5), 0).is_err());
+        assert!(material_work_batch(&models, None, &states, &work, (true, 1e-7, 5e-5), 5).is_err());
         Ok(())
     }
 

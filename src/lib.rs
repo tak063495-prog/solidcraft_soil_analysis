@@ -18,6 +18,8 @@ pub mod joint_water;
 pub mod joints;
 pub mod linalg;
 pub mod mc;
+pub mod mc_epoch_job;
+pub mod mc_epoch_path;
 pub mod mcc;
 pub mod mcc_split;
 pub mod mechanics;
