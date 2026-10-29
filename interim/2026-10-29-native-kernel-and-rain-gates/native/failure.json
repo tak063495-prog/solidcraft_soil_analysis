@@ -1,0 +1,39 @@
+{
+  "native_full_ci_passed": false,
+  "ci_elapsed_seconds": 9880.297461499926,
+  "engine2038_tests_passed": true,
+  "failing_binary": "kernel test boolean_props",
+  "test": "identity_on_grid",
+  "kernel_production_sources_unchanged_from_official_base": true,
+  "input_mm": {
+    "cylinder": {
+      "base": [
+        25.0,
+        0.0,
+        0.0
+      ],
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "radius": 15.0,
+      "height": 20.0
+    },
+    "sphere": {
+      "centre": [
+        27.5,
+        0.0,
+        0.0
+      ],
+      "radius": 12.5
+    }
+  },
+  "seed": "fe2e0b403aaded8bea37c9f5429ac422c96c7a1d9c012771b25d5a3a093e94ff",
+  "expected_intersection": "Upper hemisphere: sphere radial offset2.5+radius12.5 equals cylinder radius15, and base plane bisects sphere; top20 exceeds sphere extent12.5.",
+  "error": "Intersect no result; exact fallback supports planar faces but cylinder/sphere have curved faces; nudged retry also failed.",
+  "production_code_not_modified": true,
+  "full_ci_not_rerun": true,
+  "fresh_install_release_gpu_gui_recovery_waiters_aborted_before_start": true,
+  "p6_complete": false
+}

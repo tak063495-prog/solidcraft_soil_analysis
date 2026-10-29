@@ -1,0 +1,115 @@
+{
+  "schema": "soil-fem-local-rain-study/1",
+  "source_files": 611,
+  "solver_sha256": "d55ffe42c3b61e0891fec513489c9f5881830733ac9e003a01a0cf69f495905d",
+  "rain_patch_m": [
+    [
+      0.25,
+      0.75
+    ],
+    [
+      0.25,
+      0.75
+    ]
+  ],
+  "rain_area_m2": 0.25,
+  "geometry": "1m cube, bottom H=0, sides no-flow, top atmosphere with a central square rain patch",
+  "physical_periods": [
+    {
+      "name": "rain",
+      "end_time_s": 3600.0,
+      "boundaries": [
+        {
+          "face_set": "bottom",
+          "condition": {
+            "kind": "head",
+            "value": {
+              "head_m": 0.0
+            }
+          }
+        },
+        {
+          "face_set": "top",
+          "condition": {
+            "kind": "atmospheric_no_ponding",
+            "rainfall_vertical_m_s": 3e-06
+          }
+        }
+      ]
+    },
+    {
+      "name": "pause",
+      "end_time_s": 7200.0,
+      "boundaries": [
+        {
+          "face_set": "bottom",
+          "condition": {
+            "kind": "head",
+            "value": {
+              "head_m": 0.0
+            }
+          }
+        },
+        {
+          "face_set": "top",
+          "condition": {
+            "kind": "atmospheric_no_ponding",
+            "rainfall_vertical_m_s": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "rain_again",
+      "end_time_s": 10800.0,
+      "boundaries": [
+        {
+          "face_set": "bottom",
+          "condition": {
+            "kind": "head",
+            "value": {
+              "head_m": 0.0
+            }
+          }
+        },
+        {
+          "face_set": "top",
+          "condition": {
+            "kind": "atmospheric_no_ponding",
+            "rainfall_vertical_m_s": 3e-06
+          }
+        }
+      ]
+    }
+  ],
+  "native_subdivisions": [
+    4,
+    8,
+    16
+  ],
+  "native_time_step_s": [
+    100,
+    50,
+    25
+  ],
+  "independent_subdivisions": [
+    8,
+    16,
+    32
+  ],
+  "independent_time_step_s": [
+    100,
+    50,
+    25
+  ],
+  "predeclared_gates": {
+    "finest_head_rms_m": 0.003,
+    "finest_storage_error_m3": 0.0001,
+    "successive_space_and_time_difference_ratio": 0.8,
+    "independent_global_mass_error_m3": 1e-09
+  },
+  "mechanics": false,
+  "surface_storage_or_runoff_dynamics": false,
+  "current_p6_complete": false,
+  "limits": "Homogeneous/isotropic transient water-only benchmark; no arbitrary geology, plastic settlement or rainfall stability certification."
+}

@@ -1,0 +1,265 @@
+   Compiling xtask v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\xtask)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 25.93s
+     Running `D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\target\debug\xtask.exe ci`
+$ cargo fmt --check
+assets: 458 files, all attributed
+$ UI icon standards (Python 3.11+)
+icons: 289 masters, palette, naming and element rules ok
+$ UI icon standards (Python 3.11+)
+314 discovered icon ids · 314 with artwork · 0 missing · 419 assigned commands.
+$ UI icon standards (Python 3.11+)
+...D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpflh4yhpa\\lf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpflh4yhpa\\crlf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..............
+----------------------------------------------------------------------
+Ran 17 tests in 11.060s
+
+OK
+licences: THIRD-PARTY-LICENSES.txt is up to date
+lists: message catalogs are sorted
+Dependency layering (plan/architecture.md §3)
+
+crate                        layer          workspace deps
+solidcraft                   exempt         engine, space-mouse, ui-egui, 3dx-client
+solidcraft-3dx-client        L0 standalone  
+solidcraft-cli               exempt         engine, gpu, mcp
+solidcraft-derive            L0 standalone  
+solidcraft-doc               L2             derive, geom, kernel, render, sketch
+solidcraft-engine            L4             doc, geom, io, kernel, render, sketch, sketch (dev)
+solidcraft-geom              L0             
+solidcraft-gpu               L5             geom, render, engine (dev), kernel (dev)
+solidcraft-io                L3             doc, geom, kernel
+solidcraft-kernel            L1             geom
+solidcraft-mcp               L5             engine, gpu (dev)
+solidcraft-render            L1             geom
+solidcraft-sketch            L1             geom
+solidcraft-space-mouse       L0             
+solidcraft-ui-egui           L5             engine, gpu, space-mouse
+solidcraft-web               exempt         engine, ui-egui
+xtask                        exempt         
+
+OK: 17 crates, no layering violations.
+ui-containers: all outer hosts use the shared API
+$ cargo clippy -D warnings
+    Checking matext4cgmath v0.1.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\matext4cgmath)
+    Checking solidcraft-geom v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\geom)
+    Checking truck-base v0.5.0
+    Checking truck-geotrait v0.4.0
+    Checking truck-polymesh v0.6.0
+    Checking truck-topology v0.6.0
+    Checking truck-geometry v0.5.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-geometry)
+    Checking truck-modeling v0.6.0
+    Checking truck-meshalgo v0.4.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-meshalgo)
+    Checking truck-stepio v0.3.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-stepio)
+    Checking solidcraft-sketch v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\sketch)
+    Checking truck-shapeops v0.4.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-shapeops)
+    Checking solidcraft-kernel v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\kernel)
+    Checking solidcraft-render v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\render)
+   Compiling solidcraft-doc v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\doc)
+   Compiling solidcraft-derive v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\derive)
+   Compiling solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\io)
+    Checking solidcraft-gpu v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\gpu)
+    Checking egui-wgpu v0.36.2 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\egui-wgpu)
+   Compiling solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\ui-egui)
+    Checking solidcraft-space-mouse v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\space-mouse)
+   Compiling ring v0.17.14
+   Compiling rustls v0.23.46
+    Checking rustls-webpki v0.103.15
+   Compiling solidcraft v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\apps\solidcraft)
+    Checking rustls-platform-verifier v0.7.1
+    Checking ureq v3.4.2
+    Checking eframe v0.36.2
+    Checking solidcraft-3dx-client v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\threedx-client)
+    Checking solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\engine)
+    Checking solidcraft-mcp v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\mcp)
+    Checking solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\apps\solidcraft-web)
+    Checking solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\apps\solidcraft-cli)
+    Checking xtask v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\xtask)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 2m 19s
+$ cargo test --workspace --profile ci --no-run
+   Compiling solidcraft-geom v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\geom)
+   Compiling matext4cgmath v0.1.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\matext4cgmath)
+   Compiling truck-base v0.5.0
+   Compiling truck-geotrait v0.4.0
+   Compiling truck-polymesh v0.6.0
+   Compiling truck-topology v0.6.0
+   Compiling truck-geometry v0.5.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-geometry)
+   Compiling truck-modeling v0.6.0
+   Compiling truck-meshalgo v0.4.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-meshalgo)
+   Compiling truck-stepio v0.3.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-stepio)
+   Compiling truck-shapeops v0.4.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\truck-shapeops)
+   Compiling solidcraft-kernel v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\kernel)
+   Compiling solidcraft-sketch v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\sketch)
+   Compiling solidcraft-render v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\render)
+   Compiling solidcraft-derive v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\derive)
+   Compiling solidcraft-doc v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\doc)
+   Compiling solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\io)
+   Compiling solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\engine)
+   Compiling solidcraft-gpu v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\gpu)
+   Compiling solidcraft-mcp v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\mcp)
+   Compiling egui-wgpu v0.36.2 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\vendor\egui-wgpu)
+   Compiling solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\ui-egui)
+   Compiling solidcraft-space-mouse v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\space-mouse)
+   Compiling ring v0.17.14
+   Compiling rustls-webpki v0.103.15
+   Compiling rustls v0.23.46
+   Compiling solidcraft v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\apps\solidcraft)
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling solidcraft-3dx-client v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\threedx-client)
+   Compiling eframe v0.36.2
+   Compiling ureq v3.4.2
+   Compiling solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\apps\solidcraft-web)
+   Compiling xtask v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\xtask)
+   Compiling solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\apps\solidcraft-cli)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 37m 53s
+test: 1 concurrent binaries (SOLIDCRAFT_TEST_JOBS)
+ok    kernel test tess_loop_fill                      0.2s  ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    kernel test chamfer_curved_holder              47.9s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 47.23s
+ok    kernel test trimmed_spline_projection           0.2s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+ok    kernel test tess_include_equivalence            0.9s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+ok    wasm32-unknown-unknown check (12 crates)       67.1s  
+ok    doc tests                                      15.3s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+FAIL  kernel test boolean_props                    1146.8s
+
+running 15 tests
+test crossing_cylinders_union_moved_far ... ignored, kernel bug, #1649
+test box_box_exact ... ok
+test edge_only_box_join_is_refused_in_both_orders ... ok
+test face_touching_boxes_fuse ... ok
+test edge_only_box_contact_is_scale_invariant ... ok
+test generic_box_cylinder_intersect ... ok
+test grid_small_sphere_thin_box_union_is_sound ... ok
+test grid_sphere_box_union_is_sound ... ok
+test deterministic ... ok
+test commutative has been running for over 60 seconds
+test identity_generic has been running for over 60 seconds
+test identity_on_grid has been running for over 60 seconds
+test scale_invariant has been running for over 60 seconds
+test commutative ... ok
+test identity_generic ... ok
+test self_operations ... ok
+test scale_invariant ... ok
+test translation_invariant has been running for over 60 seconds
+test translation_invariant ... ok
+test identity_on_grid ... FAILED
+
+failures:
+
+---- identity_on_grid stdout ----
+proptest: Saving this and future failures in D:\Work\soil-fem-3d\runs\native-snapshot-recovery-development-20261029-v1\validation-checkout\crates\kernel/tests/boolean_props.proptest-regressions
+proptest: If this test was run on a CI system, you may wish to add the following line to your copy of the file.
+cc fe2e0b403aaded8bea37c9f5429ac422c96c7a1d9c012771b25d5a3a093e94ff
+
+thread 'identity_on_grid' (10976) panicked at crates\kernel\tests\boolean_props.rs:155:1:
+Test failed: Intersect returned an error: the operation failed: boolean Intersect: the operation failed: no result; the operation failed: not supported yet: the exact fallback for where the bodies meet (faces that touch, or cross at a shallow angle) takes planar faces only, and the target has 2 curved faces (cylinder) and the tool has 6 curved faces (sphere); nudged: the operation failed: boolean Intersect: the operation failed: no result; the operation failed: not supported yet: the exact fallback for where the bodies meet (faces that touch, or cross at a shallow angle) takes planar faces only, and the target has 2 curved faces (cylinder) and the tool has 6 curved faces (sphere).
+minimal failing input: a = Cyl {
+    at: [
+        25.0,
+        0.0,
+        0.0,
+    ],
+    axis: 2,
+    r: 15.0,
+    h: 20.0,
+}, b = Sph {
+    at: [
+        27.5,
+        0.0,
+        0.0,
+    ],
+    r: 12.5,
+}
+	successes: 2
+	local rejects: 0
+	global rejects: 0
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    identity_on_grid
+
+test result: FAILED. 13 passed; 1 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1146.54s
+
+
+(exit code: 101)
+ok    kernel test mesh_collision_equivalence          0.2s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+ok    kernel test shell_barrel                        7.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.79s
+ok    kernel test revolve_on_axis                    12.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.16s
+ok    solidcraft-web bin solidcraft-web               0.1s  ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    ui-egui test point_constraint_preselection      1.3s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+ok    ui-egui test window_widths                      3.3s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.74s
+ok    ui-egui test assistant_render                   2.6s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.01s
+ok    ui-egui test dialog_chip_hover                  0.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+ok    ui-egui test popup_owner_capture                4.1s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.64s
+ok    ui-egui test disclosure_render                  1.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+ok    ui-egui test parameter_enter                    0.9s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+ok    ui-egui test scenarios                         64.7s  ok. 122 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 64.12s
+ok    ui-egui test parameter_order                    0.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+ok    ui-egui test stand_up_offer                     1.1s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+ok    ui-egui test popup_regressions                  5.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.72s
+ok    ui-egui test ui_layout                         16.3s  ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.61s
+ok    ui-egui test icon_audit                        53.9s  ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 53.23s
+ok    ui-egui test constraint_preselection            1.4s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.81s
+ok    ui-egui test coincident_lines                   0.9s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+ok    solidcraft bin solidcraft                       3.5s  ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.82s
+ok    ui-egui test point_alignment                    1.7s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.09s
+ok    ui-egui test projection_preselection            1.0s  ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+ok    kernel lib solidcraft_kernel                  949.4s  ok. 872 passed; 0 failed; 28 ignored; 0 measured; 0 filtered out; finished in 947.91s
+ok    xtask bin xtask                                 5.1s  ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.86s
+ok    gpu test capture                                1.2s  ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+ok    engine test step_export_regressions            74.1s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 73.63s
+ok    solidcraft-cli test run_results                 3.4s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.88s
+ok    solidcraft-cli test snapshot_appearance         3.3s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.12s
+ok    solidcraft-cli test mcp_connect                 2.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.55s
+ok    solidcraft-cli test model_cache                30.4s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.89s
+ok    solidcraft-cli test rebuild_topology           43.5s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 42.99s
+ok    engine test atomic_commands                   575.8s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 575.27s
+ok    solidcraft-cli test fuzz_range                  0.3s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+ok    solidcraft-cli test snapshot_camera             9.7s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.96s
+ok    solidcraft-cli test bracket_example             1.4s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.82s
+ok    solidcraft-cli test oracle_cases                0.1s  ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    engine test sketch_analysis                     0.6s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+ok    engine test mesh_export_regressions             8.4s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.78s
+ok    solidcraft-cli test script_roundtrip            5.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.84s
+ok    solidcraft-cli test action_matrix             715.4s  ok. 22 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 714.79s
+ok    gpu test depth                                  1.4s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.67s
+ok    engine test step_merge_regressions              2.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.78s
+ok    solidcraft-cli test kill_mid_save               7.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.56s
+ok    solidcraft-cli test straight_edges_after_cuts    0.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+ok    solidcraft-cli bin solidcraft-cli              11.0s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.46s
+ok    engine test save_as_cache                       0.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    mcp lib solidcraft_mcp                          4.7s  ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.94s
+ok    solidcraft-cli test legacy_alias                0.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+ok    gpu lib solidcraft_gpu                          5.2s  ok. 20 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 4.49s
+ok    engine test sketch_drag_target                  0.7s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    engine test pleat_regressions                  89.2s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 88.63s
+ok    solidcraft-cli test design_corpus              21.8s  ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 21.26s
+ok    solidcraft-cli bin solvecraft-cli               0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    solidcraft-cli test commands_output             0.2s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+ok    solidcraft-cli test mcp_param_check             0.6s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+ok    solidcraft-cli test json_out                    0.6s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+ok    gpu test thin_lines                             1.0s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+ok    engine test shell_opening_regressions           0.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+ok    engine test shell_regressions                   0.7s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    solidcraft-cli test run_strict                  0.6s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+ok    solidcraft-cli test help_output                 0.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+ok    ui-egui lib solidcraft_ui_egui                369.7s  ok. 1908 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 368.92s
+ok    doc lib solidcraft_doc                         58.6s  ok. 285 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 58.01s
+ok    io lib solidcraft_io                           12.3s  ok. 119 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 11.67s
+ok    sketch test cursor_target                       0.2s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+ok    sketch test analysis_levels                     0.2s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    render lib solidcraft_render                    0.8s  ok. 117 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+ok    sketch lib solidcraft_sketch                   82.7s  ok. 242 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 82.40s
+ok    geom lib solidcraft_geom                        7.4s  ok. 145 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 7.20s
+ok    space-mouse lib solidcraft_space_mouse          0.1s  ok. 63 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+ok    derive proc-macro solidcraft_derive             0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    threedx-client lib solidcraft_3dx_client        0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    engine lib solidcraft_engine                 2907.4s  ok. 2038 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 2906.70s
+test: 78 binaries in 7402.5s
+error: failed: kernel test boolean_props
+error: process didn't exit successfully: `D:\Work\soil-fem-3d\runs\native-large-source-stream-20261029-v1\checkout\target\debug\xtask.exe ci` (exit code: 1)
