@@ -1,0 +1,42 @@
+{
+  "initialization": {
+    "method": "horizontal_k0",
+    "relative_equilibrium_tolerance": 1e-9,
+    "surface_surcharge_kpa": 0.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665
+  },
+  "layers": [
+    {
+      "body": "Clay",
+      "consolidation": {
+        "definition": "not_applicable"
+      },
+      "k0_x": 0.5,
+      "k0_y": 0.5,
+      "material_id": 1,
+      "void_ratio": {
+        "mode": "explicit",
+        "value": 0.7
+      }
+    }
+  ],
+  "materials": [
+    {
+      "id": 1,
+      "mohr_coulomb": {
+        "cohesion_kpa": 15.0,
+        "dilation_deg": 5.0,
+        "flow": "non_associated",
+        "friction_deg": 30.0,
+        "poisson": 0.25,
+        "tension_cutoff_kpa": null,
+        "young_kpa": 100000.0
+      },
+      "name": "Native MC continuation column",
+      "unit_weight_kn_m3": 1e-8
+    }
+  ],
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa"
+}

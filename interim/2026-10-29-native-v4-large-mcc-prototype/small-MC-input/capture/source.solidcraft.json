@@ -1,0 +1,127 @@
+{
+  "format": "solidcraft/32",
+  "format_pending": [
+    "soil-fem-analysis",
+    "soil-fem-mcc-integration"
+  ],
+  "name": "design",
+  "units": "mm",
+  "metadata": {
+    "org.solidcraft.soil-fem": {
+      "bindings": [
+        {
+          "analysis_body": "Clay",
+          "cad_body": "Body1",
+          "component": 0,
+          "creator_feature": 1,
+          "producer_outputs": [
+            "Body1"
+          ]
+        }
+      ],
+      "ground": {
+        "initialization": {
+          "method": "horizontal_k0",
+          "relative_equilibrium_tolerance": 1e-9,
+          "surface_surcharge_kpa": 0.0,
+          "water_level_m": null,
+          "water_unit_weight_kn_m3": 9.80665
+        },
+        "layers": [
+          {
+            "body": "Clay",
+            "consolidation": {
+              "definition": "not_applicable"
+            },
+            "k0_x": 0.5,
+            "k0_y": 0.5,
+            "material_id": 1,
+            "void_ratio": {
+              "mode": "explicit",
+              "value": 0.7
+            }
+          }
+        ],
+        "materials": [
+          {
+            "id": 1,
+            "mohr_coulomb": {
+              "cohesion_kpa": 15.0,
+              "dilation_deg": 5.0,
+              "flow": "non_associated",
+              "friction_deg": 30.0,
+              "poisson": 0.25,
+              "tension_cutoff_kpa": null,
+              "young_kpa": 100000.0
+            },
+            "name": "Native MC continuation column",
+            "unit_weight_kn_m3": 1e-8
+          }
+        ],
+        "schema": "soil-fem-ground/1",
+        "units": "m-kN-kPa"
+      },
+      "reviewed_cad_sha256": "09b9b0c6b98bf8a7ee867696b45395a5809e3a53083b353292f432fb2e2e97b8",
+      "schema": "solidcraft-soil-analysis/1",
+      "stages": {
+        "initially_inactive_bodies": [],
+        "monitor_sets": {
+          "top": "top"
+        },
+        "monitors": {},
+        "pressure_on_original_surface_only": true,
+        "schema": "soil-fem-stages/1",
+        "settings": {
+          "initial_increment": 0.25,
+          "kinematics": "side_rollers",
+          "linear_solver": {
+            "method": "sparse_gmres_ilu0",
+            "options": {
+              "maximum_iterations": 3000,
+              "pivot_tolerance": 1e-14,
+              "restart": 60
+            }
+          },
+          "material_maximum_substep": 0.001,
+          "maximum_free_dofs": 100000,
+          "maximum_newton_iterations": 35,
+          "minimum_increment": 0.001953125,
+          "relative_force_tolerance": 1e-8,
+          "relative_linear_tolerance": 1e-10,
+          "tangent_perturbation": 1e-7
+        },
+        "stages": [
+          {
+            "kind": "pressure",
+            "name": "preload",
+            "target_pressure_kpa": 125.0
+          }
+        ]
+      }
+    }
+  },
+  "params": [],
+  "features": [
+    {
+      "id": 1,
+      "name": "Box1",
+      "suppressed": false,
+      "param_names": [
+        "d1",
+        "d2",
+        "d3"
+      ],
+      "type": "box",
+      "corner": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "length": "1000",
+      "width": "1000",
+      "height": "1000",
+      "operation": "new_body"
+    }
+  ],
+  "next_id": 2
+}
