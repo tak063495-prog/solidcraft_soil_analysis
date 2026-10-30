@@ -1,0 +1,65 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "equilibrate",
+    "surface_surcharge_kpa": 0.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-08,
+    "geostatic": {
+      "seed": {
+        "kind": "body_states",
+        "states": {
+          "GriffithsSlope": {
+            "effective_stress_compression_positive_kpa": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.8,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          }
+        }
+      },
+      "initial_boundary_factor": 0.0,
+      "maximum_initial_engineering_strain": 0.05,
+      "relative_volume_tolerance": 1e-08
+    }
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Pinned2D MC same fixed factor",
+      "unit_weight_kn_m3": 20,
+      "mohr_coulomb": {
+        "young_kpa": 100000,
+        "poisson": 0.3,
+        "cohesion_kpa": 10.0,
+        "friction_deg": 20.0,
+        "dilation_deg": 0.0,
+        "flow": "non_associated",
+        "tension_cutoff_kpa": null
+      }
+    }
+  ],
+  "bodies": [
+    {
+      "body": "GriffithsSlope",
+      "material_id": 1
+    }
+  ]
+}

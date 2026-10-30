@@ -1,0 +1,67 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.03125,
+    "minimum_increment": 0.000244140625,
+    "material_maximum_substep": 0.0001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "all",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "fixed_x",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "fixed_z",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      }
+    ]
+  },
+  "monitors": {},
+  "monitor_sets": {
+    "crest": "crest"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "boundary",
+      "name": "retain_full_gravity_state",
+      "target_factor": 0.0,
+      "initial_increment": 1.0
+    }
+  ],
+  "verification_reject_once_stages": []
+}
