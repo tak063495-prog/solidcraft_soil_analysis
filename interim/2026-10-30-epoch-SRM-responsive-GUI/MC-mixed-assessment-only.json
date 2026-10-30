@@ -1,0 +1,92 @@
+{
+  "prepared": true,
+  "assessment_only": true,
+  "utc": "2026-10-30T08:20:16.406035+00:00",
+  "source_bindings": {
+    "src/stages_mixed.rs": "96168230fa7aa9cc2e3b051bba7fcb9ac68a2332d91d12eb1e13be483b125e60",
+    "src/mcc_split.rs": "4370bdeab43c2e9a814838b66500dabe5a38b7bb5ba2fc08230af2574d70d5a3",
+    "src/mixed_mcc.rs": "e1993a9fc75c6676f022eb372180ff472311dca5565453c52c985aaee7120748",
+    "src/soil.rs": "2a93400d5131162d358a2fe21f6863fa87a1a6c741a9b12f980dd27c428a6470",
+    "src/mc.rs": "555d8abb59e07ed75bf02e2e51df89f3d83f1e307595ca32ea91b8f3d016fc6a",
+    "src/stages.rs": "78a7b8ed5b6dff102100f05d332331b9eafea14f0dea999ffea1c2730cfc968a"
+  },
+  "diagnostic_sha256": "6d09264a41467737c593c047e40b802ccd19cfd73c300225d9540ba4893f7643",
+  "observed_original_diagnostic": {
+    "passed": true,
+    "diagnostic_only": true,
+    "independent_Tet10_Vandermonde_kinematic_reconstruction_all32400_GP": true,
+    "maximum_absolute_strain_decomposition_error": 8.087131767205158e-17,
+    "maximum_absolute_3D_plastic_volumetric_strain": 1.5178830414797062e-18,
+    "maximum_absolute_2D_inferred_plastic_volumetric_strain": 1.175112524648414e-14,
+    "threeD_strain_shear_and_stress_shear_tensor_factors_explicit": true,
+    "metrics": {
+      "stress_kpa": {
+        "area_weighted_tensor_relative_L2": 0.012138822674501946
+      },
+      "total_strain": {
+        "area_weighted_tensor_relative_L2": 0.33851052173350843
+      },
+      "elastic_strain": {
+        "area_weighted_tensor_relative_L2": 0.018918109960442797
+      },
+      "plastic_strain": {
+        "area_weighted_tensor_relative_L2": 0.48761306722105735
+      }
+    },
+    "displacement_amplitude_diagnostics": [
+      {
+        "depth_m": 0.0,
+        "best_L2_scalar_native_over_reference": 0.9011821527014232,
+        "residual_after_diagnostic_scalar_fit": 0.1203715673974233,
+        "unscaled_original_relative_L2": 0.15573786046571098
+      },
+      {
+        "depth_m": 0.5,
+        "best_L2_scalar_native_over_reference": 0.9011361101809195,
+        "residual_after_diagnostic_scalar_fit": 0.12044002515807517,
+        "unscaled_original_relative_L2": 0.1558199870691725
+      },
+      {
+        "depth_m": 1.0,
+        "best_L2_scalar_native_over_reference": 0.9011212657669385,
+        "residual_after_diagnostic_scalar_fit": 0.12045849168929261,
+        "unscaled_original_relative_L2": 0.155843679062039
+      }
+    ],
+    "amplitude_fit_never_applied_to_any_result_or_acceptance": true,
+    "no_cause_or_mesh_convergence_or_new_nonlinear_solution_inferred": true,
+    "original_displacement5percent_and_maximum10percent_still_FAILED": true,
+    "all_original_inputs_results_and_limits_unchanged": true,
+    "elapsed_seconds": 6.560646099969745,
+    "p6_complete": false
+  },
+  "original_2D5percent_acceptance_remains_failed": true,
+  "current_backend_fact": "stages_mixed validates all materials as MCC and calls mcc_split with typed MCC history; MC is explicitly unsupported",
+  "hypothesis_not_a_diagnosis": "Volume-preserving plastic flow can make displacement elements too restrictive. The current displacement discrepancy alone does not prove locking or identify its cause.",
+  "primary_sources": [
+    {
+      "url": "https://pubs.cstam.org.cn/article/id/em_4169",
+      "title": "Yang, Song, Chen (2000), Volumetric locking analysis and element choice in3D elastoplastic analysis of soil, Engineering Mechanics17(6),6-13",
+      "verified_scope": "Publisher abstract analyses locking for MC soil and particular brick/enhanced elements; it does not validate our Tet10 discretization."
+    },
+    {
+      "url": "https://escholarship.org/uc/item/9dk525nw",
+      "title": "Finite element response sensitivity analysis using three-field mixed formulation: General theory and application to frame structures",
+      "verified_scope": "Indexed primary abstract discusses history-dependent constitutive stress in three-field weak equations; page returned robot verification, so no full text or implementation detail claimed."
+    }
+  ],
+  "staged_implementation_and_required_evidence": [
+    "Typed split material response: independent deviatoric engineering strain and volume; preserve original MC parameters and all MC state variants; never disguise MC as an MCC state.",
+    "Retain the existing MCC implicit update byte exactly, dispatch MC to its existing fixed-partition primal and nonsymmetric tangent; no symmetrization, bulk clipping or changed flow/dilation.",
+    "Before global wiring: independently verify elastic bulk/shear responses including near incompressibility, MC face/edges/Rankine/apex, arbitrary rotations and history, split directional Jacobians and stress work; real no-solution input must remain a failure with no history mutation.",
+    "Introduce an explicitly identified MC mixed/projected schema and matching checkpoint validation; keep current MCC schemas, outputs and numerical paths unchanged. Do not reuse MCC labels to imply an MC pressure state.",
+    "Verify weak pressure/volume equations, full assembled nonsymmetric Jacobian, force/constraint residuals, pressure nullspaces, support completeness and exact rollback/recovery on small3D elastic and plastic problems before a large slope solve.",
+    "Compare the same original fresh-history slope replay, same physical geometry/material/loading/boundary/requiredfactor and unchanged 2D5percent gates in a separate recorded discretization study. Do not substitute the accepted-origin epoch route.",
+    "Distinguish locally admissible constitutive GP stresses from stresses used in mixed equilibrium. Weak pressure consistency alone is not a pointwise admissible equilibrium certificate; SRM lower-side acceptance needs separately validated physical stress/yield/force evidence.",
+    "Run old and new complete regressions, actual CLI and independent all-GP checks; only then consider production adoption and an independently verified same-case slope comparison."
+  ],
+  "no_new_material_or_global_FEM_or_scientific_solver_started": true,
+  "does_not_establish_5percent_agreement_or_convergence_or_SRM_safety": true,
+  "all_original35_requirements_and_P6_scope_retained": true,
+  "p6_complete": false
+}
