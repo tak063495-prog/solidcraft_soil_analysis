@@ -1,0 +1,640 @@
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+   Compiling typenum v1.20.1
+   Compiling proc-macro2 v1.0.107
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling serde_json v1.0.151
+   Compiling digest v0.10.7
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling sha2 v0.10.9
+   Compiling syn v2.0.119
+   Compiling xtask v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\xtask)
+    Finished `dev` profile [optimized + debuginfo] target(s) in 1m 52s
+     Running `target\debug\xtask.exe ci`
+$ cargo fmt --check
+assets: 458 files, all attributed
+$ UI icon standards (Python 3.11+)
+icons: 289 masters, palette, naming and element rules ok
+$ UI icon standards (Python 3.11+)
+314 discovered icon ids · 314 with artwork · 0 missing · 419 assigned commands.
+$ UI icon standards (Python 3.11+)
+...D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpgnflbb_0\\lf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\assets\icons\ui\design\tools\review_state.py:26: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\link_\\AppData\\Local\\Temp\\tmpgnflbb_0\\crlf/svg\\model\\box.svg'>
+  h.update(os.path.relpath(f, d).replace(os.sep, '/').encode()); h.update(lf(open(f, 'rb').read()))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+..............
+----------------------------------------------------------------------
+Ran 17 tests in 11.132s
+
+OK
+licences: THIRD-PARTY-LICENSES.txt is up to date
+lists: message catalogs are sorted
+Dependency layering (plan/architecture.md §3)
+
+crate                        layer          workspace deps
+solidcraft                   exempt         engine, space-mouse, ui-egui, 3dx-client
+solidcraft-3dx-client        L0 standalone  
+solidcraft-cli               exempt         engine, gpu, mcp
+solidcraft-derive            L0 standalone  
+solidcraft-doc               L2             derive, geom, kernel, render, sketch
+solidcraft-engine            L4             doc, geom, io, kernel, render, sketch, sketch (dev)
+solidcraft-geom              L0             
+solidcraft-gpu               L5             geom, render, engine (dev), kernel (dev)
+solidcraft-io                L3             doc, geom, kernel
+solidcraft-kernel            L1             geom
+solidcraft-mcp               L5             engine, gpu (dev)
+solidcraft-render            L1             geom
+solidcraft-sketch            L1             geom
+solidcraft-space-mouse       L0             
+solidcraft-ui-egui           L5             engine, gpu, space-mouse
+solidcraft-web               exempt         engine, ui-egui
+xtask                        exempt         
+
+OK: 17 crates, no layering violations.
+ui-containers: all outer hosts use the shared API
+$ cargo clippy -D warnings
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling serde_derive v1.0.229
+    Checking serde v1.0.229
+   Compiling libm v0.2.16
+   Compiling num-traits v0.2.19
+   Compiling thiserror-impl v2.0.21
+    Checking thiserror v2.0.21
+   Compiling bytemuck_derive v1.12.1
+    Checking bytemuck v1.25.2
+   Compiling zerocopy v0.8.61
+   Compiling zerocopy-derive v0.8.61
+    Checking smallvec v1.16.2
+    Checking log v0.4.34
+    Checking bitflags v2.13.2
+    Checking parking_lot_core v0.9.12
+    Checking parking_lot v0.12.5
+    Checking hashbrown v0.17.1
+    Checking approx v0.4.0
+    Checking cgmath v0.18.0
+    Checking ppv-lite86 v0.2.21
+    Checking num-complex v0.4.6
+   Compiling katexit v0.1.5
+    Checking matext4cgmath v0.1.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\matext4cgmath)
+    Checking rand_chacha v0.3.1
+    Checking solidcraft-geom v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\geom)
+   Compiling thiserror-impl v1.0.69
+    Checking thiserror v1.0.69
+   Compiling truck-derivers v0.1.0
+    Checking rand v0.8.8
+    Checking truck-base v0.5.0
+    Checking truck-geotrait v0.4.0
+    Checking indexmap v2.14.2
+    Checking rand_core v0.10.1
+    Checking half v2.7.1
+   Compiling getrandom v0.4.3
+    Checking truck-polymesh v0.6.0
+   Compiling derive_more v0.99.20
+    Checking truck-topology v0.6.0
+    Checking truck-geometry v0.5.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-geometry)
+    Checking truck-modeling v0.6.0
+    Checking spade v2.15.1
+    Checking truck-meshalgo v0.4.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-meshalgo)
+    Checking chrono v0.4.45
+    Checking truck-stepio v0.3.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-stepio)
+    Checking truck-shapeops v0.4.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-shapeops)
+    Checking quick-error v2.0.1
+    Checking solidcraft-kernel v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\kernel)
+    Checking windows-sys v0.61.2
+    Checking fax v0.2.7
+    Checking color_quant v1.1.0
+    Checking gif v0.14.2
+    Checking tiff v0.11.3
+    Checking moxcms v0.8.1
+    Checking image-webp v0.2.4
+    Checking png v0.18.1
+    Checking image v0.25.10
+   Compiling cfg_aliases v0.2.2
+    Checking cadmpeg-core v0.6.1
+    Checking solidcraft-sketch v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\sketch)
+    Checking ordered-float v2.10.1
+    Checking serde-value v0.7.0
+    Checking zip v8.6.0
+    Checking unicode-ident v1.0.26
+    Checking cadmpeg-ir v0.6.1
+    Checking cadmpeg-container v0.6.1
+    Checking tempfile v3.27.0
+    Checking solidcraft-render v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\render)
+    Checking arrayvec v0.7.8
+   Compiling gltf-derive v1.4.1
+   Compiling solidcraft-derive v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\derive)
+   Compiling libc v0.2.190
+    Checking zopfli v0.8.3
+    Checking cadmpeg-codec-rhino v0.6.1
+    Checking gltf-json v1.4.1
+    Checking cadmpeg-codec-freecad v0.6.1
+    Checking cadmpeg-codec-step v0.6.1
+    Checking windows-result v0.4.1
+    Checking windows-strings v0.5.1
+   Compiling windows-interface v0.59.3
+   Compiling windows-implement v0.60.2
+    Checking gltf v1.4.1
+    Checking windows-core v0.62.2
+    Checking cadmpeg-registry v0.6.1
+    Checking zip v9.0.4
+    Checking solidcraft-doc v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\doc)
+   Compiling ref-cast-impl v1.0.27
+   Compiling serde_derive_internals v0.30.0
+   Compiling schemars_derive v1.2.3
+    Checking ref-cast v1.0.27
+    Checking schemars v1.2.3
+    Checking solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\io)
+    Checking windows-threading v0.2.1
+   Compiling khronos_api v3.1.0
+    Checking raw-window-handle v0.6.2
+    Checking windows-future v0.3.2
+    Checking windows-collections v0.3.2
+    Checking windows-numerics v0.3.1
+    Checking static_assertions v1.1.0
+    Checking windows v0.62.2
+    Checking solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\engine)
+    Checking rustc-hash v1.1.0
+   Compiling xml-rs v0.8.29
+   Compiling gl_generator v0.14.0
+    Checking naga-types v30.0.1
+   Compiling naga v30.0.1
+    Checking libloading v0.8.9
+    Checking unicode-width v0.2.2
+   Compiling ash v0.38.0+1.3.281
+    Checking profiling v1.0.18
+    Checking bit-vec v0.9.1
+    Checking bit-set v0.10.0
+    Checking codespan-reporting v0.13.1
+   Compiling glutin_wgl_sys v0.6.1
+    Checking spirv v0.4.0+sdk-1.4.341.0
+   Compiling khronos-egl v6.0.0
+    Checking wgpu-types v30.0.1
+   Compiling wgpu-hal v30.0.1
+    Checking presser v0.3.1
+    Checking gpu-allocator v0.28.0
+    Checking wgpu-naga-bridge v30.0.1
+    Checking ordered-float v5.5.0
+    Checking range-alloc v0.1.5
+    Checking renderdoc-sys v1.1.0
+    Checking glow v0.17.0
+   Compiling wgpu-core v30.0.1
+   Compiling litrs v1.0.0
+   Compiling document-features v0.2.12
+    Checking wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling wgpu v30.0.1
+    Checking pollster v0.4.0
+    Checking solidcraft-gpu v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\gpu)
+   Compiling serde_core v1.0.229
+    Checking polycool v0.4.0
+   Compiling windows_x86_64_msvc v0.52.6
+    Checking kurbo v0.13.1
+    Checking font-types v0.12.6
+    Checking color v0.3.3
+    Checking euclid v0.22.14
+   Compiling enumn v0.1.14
+    Checking uuid v1.27.0
+   Compiling windows_x86_64_msvc v0.53.1
+    Checking linebender_resource_handle v0.1.1
+    Checking peniko v0.6.1
+    Checking accesskit v0.24.1
+    Checking guillotiere v0.7.0
+    Checking read-fonts v0.41.0
+   Compiling ahash v0.8.12
+    Checking unicode-segmentation v1.13.3
+   Compiling typeid v1.0.3
+    Checking fearless_simd v0.4.1
+   Compiling unicode-general-category v1.1.0
+    Checking vello_common v0.1.0
+    Checking windows-targets v0.52.6
+   Compiling toml_datetime v1.1.2+spec-1.1.0
+   Compiling serde_spanned v1.1.2
+   Compiling winit v0.30.13
+    Checking emath v0.36.2
+    Checking tracing-core v0.1.36
+    Checking pin-project-lite v0.2.17
+    Checking tracing v0.1.44
+   Compiling toml v1.1.8+spec-1.1.0
+    Checking ecolor v0.36.2
+    Checking windows-targets v0.53.5
+    Checking windows-sys v0.52.0
+    Checking vello_cpu v0.1.0
+    Checking skrifa v0.44.0
+    Checking harfrust v0.12.0
+    Checking nohash-hasher v0.2.0
+    Checking dpi v0.1.2
+    Checking epaint_default_fonts v0.36.2
+    Checking cursor-icon v1.2.0
+    Checking self_cell v1.3.0
+    Checking smol_str v0.2.2
+    Checking epaint v0.36.2
+    Checking ron v0.12.2
+    Checking windows-sys v0.60.2
+    Checking itertools v0.15.0
+    Checking error-code v3.4.0
+   Compiling serde_json v1.0.151
+    Checking clipboard-win v5.4.1
+    Checking egui v0.36.2
+   Compiling memchr v2.8.3
+    Checking arboard v3.6.1
+    Checking proc-macro2 v1.0.107
+    Checking type-map v0.5.1
+    Checking strict-num v0.1.1
+    Checking arrayref v0.3.9
+    Checking tiny-skia-path v0.12.0
+    Checking egui-wgpu v0.36.2 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\egui-wgpu)
+    Checking quote v1.0.47
+   Compiling solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\ui-egui)
+    Checking tiny-skia v0.12.0
+    Checking solidcraft-mcp v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\mcp)
+    Checking winreg v0.56.0
+    Checking solidcraft-space-mouse v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\space-mouse)
+    Checking minisign-verify v0.3.0
+    Checking semver v1.0.28
+   Compiling synstructure v0.13.2
+   Compiling zerofrom-derive v0.1.7
+    Checking zerofrom v0.1.8
+   Compiling yoke-derive v0.8.2
+    Checking stable_deref_trait v1.2.1
+    Checking yoke v0.8.3
+   Compiling zerovec-derive v0.11.6
+    Checking zerovec v0.11.8
+   Compiling displaydoc v0.2.7
+    Checking tinystr v0.8.4
+    Checking writeable v0.6.4
+    Checking litemap v0.8.3
+    Checking icu_locale_core v2.3.0
+    Checking zerotrie v0.2.5
+    Checking potential_utf v0.1.6
+   Compiling icu_properties_data v2.3.0
+    Checking utf8_iter v1.0.4
+   Compiling icu_normalizer_data v2.3.0
+    Checking icu_collections v2.3.0
+    Checking icu_provider v2.3.1
+    Checking rand v0.10.3
+    Checking chacha20 v0.10.2
+    Checking rand_xorshift v0.5.0
+    Checking regex-syntax v0.8.11
+    Checking unarray v0.1.4
+    Checking proptest v1.12.0
+   Compiling ring v0.17.14
+    Checking icu_normalizer v2.3.0
+    Checking icu_properties v2.3.0
+   Compiling vswhom-sys v0.1.3
+    Checking zeroize v1.9.1
+    Checking percent-encoding v2.3.2
+    Checking idna_adapter v1.2.2
+    Checking untrusted v0.9.0
+    Checking idna v1.1.0
+    Checking form_urlencoded v1.2.2
+    Checking rustls-pki-types v1.15.1
+    Checking accesskit_consumer v0.35.0
+   Compiling httparse v1.10.1
+   Compiling rustls v0.23.46
+    Checking accesskit_windows v0.32.1
+    Checking rustls-webpki v0.103.15
+    Checking url v2.5.8
+   Compiling vswhom v0.1.0
+   Compiling hidapi v2.6.7
+    Checking bytes v1.12.1
+    Checking subtle v2.6.1
+    Checking http v1.5.0
+   Compiling embed-resource v3.0.12
+    Checking webbrowser v1.2.4
+    Checking accesskit_winit v0.32.2
+   Compiling rfd v0.17.2
+   Compiling getrandom v0.3.4
+    Checking ureq-proto v0.6.4
+    Checking egui-winit v0.36.2
+   Compiling solidcraft v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\apps\solidcraft)
+    Checking rustls-platform-verifier v0.7.1
+    Checking utf8-zero v0.8.1
+    Checking pollster v1.0.1
+    Checking eframe v0.36.2
+    Checking ureq v3.4.2
+    Checking keyring v3.6.3
+    Checking solidcraft-3dx-client v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\threedx-client)
+    Checking xtask v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\xtask)
+    Checking solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\apps\solidcraft-web)
+    Checking solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\apps\solidcraft-cli)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 15m 37s
+$ cargo test --workspace --profile ci --no-run
+   Compiling serde v1.0.229
+   Compiling libm v0.2.16
+   Compiling num-traits v0.2.19
+   Compiling thiserror v2.0.21
+   Compiling bytemuck v1.25.2
+   Compiling zerocopy v0.8.61
+   Compiling smallvec v1.16.2
+   Compiling log v0.4.34
+   Compiling bitflags v2.13.2
+   Compiling parking_lot_core v0.9.12
+   Compiling parking_lot v0.12.5
+   Compiling solidcraft-geom v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\geom)
+   Compiling approx v0.4.0
+   Compiling cgmath v0.18.0
+   Compiling ppv-lite86 v0.2.21
+   Compiling num-complex v0.4.6
+   Compiling matext4cgmath v0.1.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\matext4cgmath)
+   Compiling rand_chacha v0.3.1
+   Compiling hashbrown v0.17.1
+   Compiling thiserror v1.0.69
+   Compiling rand v0.8.8
+   Compiling truck-base v0.5.0
+   Compiling truck-geotrait v0.4.0
+   Compiling half v2.7.1
+   Compiling rand_core v0.10.1
+   Compiling truck-polymesh v0.6.0
+   Compiling truck-topology v0.6.0
+   Compiling truck-geometry v0.5.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-geometry)
+   Compiling indexmap v2.14.2
+   Compiling truck-modeling v0.6.0
+   Compiling spade v2.15.1
+   Compiling getrandom v0.4.3
+   Compiling truck-meshalgo v0.4.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-meshalgo)
+   Compiling chrono v0.4.45
+   Compiling truck-stepio v0.3.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-stepio)
+   Compiling truck-shapeops v0.4.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\truck-shapeops)
+   Compiling quick-error v2.0.1
+   Compiling solidcraft-kernel v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\kernel)
+   Compiling color_quant v1.1.0
+   Compiling fax v0.2.7
+   Compiling tiff v0.11.3
+   Compiling gif v0.14.2
+   Compiling image-webp v0.2.4
+   Compiling moxcms v0.8.1
+   Compiling png v0.18.1
+   Compiling image v0.25.10
+   Compiling windows-sys v0.61.2
+   Compiling solidcraft-sketch v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\sketch)
+   Compiling cadmpeg-core v0.6.1
+   Compiling ordered-float v2.10.1
+   Compiling serde-value v0.7.0
+   Compiling zip v8.6.0
+   Compiling solidcraft-render v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\render)
+   Compiling cadmpeg-ir v0.6.1
+   Compiling cadmpeg-container v0.6.1
+   Compiling solidcraft-derive v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\derive)
+   Compiling tempfile v3.27.0
+   Compiling zopfli v0.8.3
+   Compiling cadmpeg-codec-rhino v0.6.1
+   Compiling gltf-json v1.4.1
+   Compiling cadmpeg-codec-step v0.6.1
+   Compiling cadmpeg-codec-freecad v0.6.1
+   Compiling solidcraft-doc v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\doc)
+   Compiling arrayvec v0.7.8
+   Compiling gltf v1.4.1
+   Compiling cadmpeg-registry v0.6.1
+   Compiling zip v9.0.4
+   Compiling windows-strings v0.5.1
+   Compiling windows-result v0.4.1
+   Compiling ref-cast v1.0.27
+   Compiling windows-core v0.62.2
+   Compiling solidcraft-io v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\io)
+   Compiling schemars v1.2.3
+   Compiling windows-threading v0.2.1
+   Compiling raw-window-handle v0.6.2
+   Compiling windows-future v0.3.2
+   Compiling solidcraft-engine v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\engine)
+   Compiling windows-collections v0.3.2
+   Compiling windows-numerics v0.3.1
+   Compiling static_assertions v1.1.0
+   Compiling windows v0.62.2
+   Compiling rustc-hash v1.1.0
+   Compiling naga-types v30.0.1
+   Compiling libloading v0.8.9
+   Compiling bit-vec v0.9.1
+   Compiling profiling v1.0.18
+   Compiling unicode-width v0.2.2
+   Compiling codespan-reporting v0.13.1
+   Compiling bit-set v0.10.0
+   Compiling spirv v0.4.0+sdk-1.4.341.0
+   Compiling naga v30.0.1
+   Compiling ash v0.38.0+1.3.281
+   Compiling wgpu-types v30.0.1
+   Compiling presser v0.3.1
+   Compiling gpu-allocator v0.28.0
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling glutin_wgl_sys v0.6.1
+   Compiling khronos-egl v6.0.0
+   Compiling ordered-float v5.5.0
+   Compiling glow v0.17.0
+   Compiling range-alloc v0.1.5
+   Compiling renderdoc-sys v1.1.0
+   Compiling wgpu-hal v30.0.1
+   Compiling wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling wgpu-core v30.0.1
+   Compiling wgpu v30.0.1
+   Compiling pollster v0.4.0
+   Compiling solidcraft-gpu v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\gpu)
+   Compiling polycool v0.4.0
+   Compiling kurbo v0.13.1
+   Compiling color v0.3.3
+   Compiling font-types v0.12.6
+   Compiling euclid v0.22.14
+   Compiling uuid v1.27.0
+   Compiling linebender_resource_handle v0.1.1
+   Compiling peniko v0.6.1
+   Compiling accesskit v0.24.1
+   Compiling guillotiere v0.7.0
+   Compiling read-fonts v0.41.0
+   Compiling windows_x86_64_msvc v0.52.6
+   Compiling unicode-segmentation v1.13.3
+   Compiling fearless_simd v0.4.1
+   Compiling vello_common v0.1.0
+   Compiling windows-targets v0.52.6
+   Compiling windows_x86_64_msvc v0.53.1
+   Compiling emath v0.36.2
+   Compiling pin-project-lite v0.2.17
+   Compiling tracing-core v0.1.36
+   Compiling tracing v0.1.44
+   Compiling ecolor v0.36.2
+   Compiling windows-targets v0.53.5
+   Compiling windows-sys v0.52.0
+   Compiling ahash v0.8.12
+   Compiling typeid v1.0.3
+   Compiling unicode-general-category v1.1.0
+   Compiling vello_cpu v0.1.0
+   Compiling skrifa v0.44.0
+   Compiling harfrust v0.12.0
+   Compiling self_cell v1.3.0
+   Compiling nohash-hasher v0.2.0
+   Compiling epaint_default_fonts v0.36.2
+   Compiling cursor-icon v1.2.0
+   Compiling dpi v0.1.2
+   Compiling smol_str v0.2.2
+   Compiling winit v0.30.13
+   Compiling epaint v0.36.2
+   Compiling ron v0.12.2
+   Compiling windows-sys v0.60.2
+   Compiling itertools v0.15.0
+   Compiling error-code v3.4.0
+   Compiling clipboard-win v5.4.1
+   Compiling egui v0.36.2
+   Compiling arboard v3.6.1
+   Compiling solidcraft-mcp v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\mcp)
+   Compiling type-map v0.5.1
+   Compiling arrayref v0.3.9
+   Compiling strict-num v0.1.1
+   Compiling tiny-skia-path v0.12.0
+   Compiling egui-wgpu v0.36.2 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\vendor\egui-wgpu)
+   Compiling solidcraft-ui-egui v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\ui-egui)
+   Compiling solidcraft-space-mouse v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\space-mouse)
+   Compiling tiny-skia v0.12.0
+   Compiling winreg v0.56.0
+   Compiling minisign-verify v0.3.0
+   Compiling syn v2.0.119
+   Compiling zerofrom v0.1.8
+   Compiling stable_deref_trait v1.2.1
+   Compiling yoke v0.8.3
+   Compiling zerovec v0.11.8
+   Compiling tinystr v0.8.4
+   Compiling rand v0.10.3
+   Compiling chacha20 v0.10.2
+   Compiling rand_xorshift v0.5.0
+   Compiling writeable v0.6.4
+   Compiling regex-syntax v0.8.11
+   Compiling litemap v0.8.3
+   Compiling unarray v0.1.4
+   Compiling proptest v1.12.0
+   Compiling icu_locale_core v2.3.0
+   Compiling zerotrie v0.2.5
+   Compiling potential_utf v0.1.6
+   Compiling utf8_iter v1.0.4
+   Compiling icu_collections v2.3.0
+   Compiling icu_provider v2.3.1
+   Compiling icu_properties_data v2.3.0
+   Compiling icu_normalizer_data v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling icu_properties v2.3.0
+   Compiling zeroize v1.9.1
+   Compiling percent-encoding v2.3.2
+   Compiling idna_adapter v1.2.2
+   Compiling untrusted v0.9.0
+   Compiling ring v0.17.14
+   Compiling idna v1.1.0
+   Compiling form_urlencoded v1.2.2
+   Compiling rustls-pki-types v1.15.1
+   Compiling accesskit_consumer v0.35.0
+   Compiling accesskit_windows v0.32.1
+   Compiling rustls-webpki v0.103.15
+   Compiling url v2.5.8
+   Compiling subtle v2.6.1
+   Compiling bytes v1.12.1
+   Compiling http v1.5.0
+   Compiling rustls v0.23.46
+   Compiling webbrowser v1.2.4
+   Compiling accesskit_winit v0.32.2
+   Compiling httparse v1.10.1
+   Compiling ureq-proto v0.6.4
+   Compiling egui-winit v0.36.2
+   Compiling solidcraft v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\apps\solidcraft)
+   Compiling rustls-platform-verifier v0.7.1
+   Compiling pollster v1.0.1
+   Compiling solidcraft-3dx-client v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\crates\threedx-client)
+   Compiling utf8-zero v0.8.1
+   Compiling ureq v3.4.2
+   Compiling eframe v0.36.2
+   Compiling rfd v0.17.2
+   Compiling getrandom v0.3.4
+   Compiling hidapi v2.6.7
+   Compiling keyring v3.6.3
+   Compiling xtask v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\xtask)
+   Compiling solidcraft-web v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\apps\solidcraft-web)
+   Compiling solidcraft-cli v0.20.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\native-owned-v4\apps\solidcraft-cli)
+    Finished `ci` profile [optimized + debuginfo] target(s) in 105m 10s
+skip kernel test boolean_props: nightly-only property tests as in PR/main CI; --property-tests includes them
+test selection: 77/78 native binaries; property_tests=false
+test: 1 concurrent binaries (SOLIDCRAFT_TEST_JOBS)
+ok    solidcraft bin solidcraft                       3.5s  ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.73s
+ok    kernel test mesh_collision_equivalence          0.2s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+ok    wasm32-unknown-unknown check (12 crates)      659.0s  
+ok    doc tests                                      25.8s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    kernel lib solidcraft_kernel                  868.8s  ok. 872 passed; 0 failed; 28 ignored; 0 measured; 0 filtered out; finished in 868.05s
+ok    kernel test shell_barrel                        7.1s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.72s
+ok    kernel test tess_include_equivalence            0.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+ok    kernel test chamfer_curved_holder              30.8s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.48s
+ok    kernel test trimmed_spline_projection           0.2s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+ok    kernel test revolve_on_axis                    11.6s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.32s
+ok    kernel test tess_loop_fill                      0.1s  ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    ui-egui test popup_owner_capture                4.0s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.45s
+ok    ui-egui test stand_up_offer                     1.2s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+ok    ui-egui test coincident_lines                   1.0s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+ok    ui-egui test assistant_render                   2.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.17s
+ok    ui-egui test parameter_enter                    1.0s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+ok    ui-egui test parameter_order                    0.7s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+ok    ui-egui test point_constraint_preselection      1.6s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.81s
+ok    ui-egui test popup_regressions                  4.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.20s
+ok    ui-egui test window_widths                      4.0s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.39s
+ok    ui-egui test dialog_chip_hover                  0.7s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+ok    ui-egui test constraint_preselection            1.7s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+ok    ui-egui test point_alignment                    1.8s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.18s
+ok    ui-egui test ui_layout                         14.6s  ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.91s
+ok    ui-egui test scenarios                         56.9s  ok. 122 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 56.30s
+ok    ui-egui test projection_preselection            0.9s  ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+ok    ui-egui lib solidcraft_ui_egui                303.2s  ok. 1908 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 302.41s
+ok    xtask bin xtask                                 5.3s  ok. 36 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.03s
+ok    ui-egui test icon_audit                        52.8s  ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 52.22s
+ok    ui-egui test disclosure_render                  2.0s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.30s
+ok    solidcraft-web bin solidcraft-web               0.1s  ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    solidcraft-cli bin solidcraft-cli               9.7s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.03s
+ok    solidcraft-cli test script_roundtrip            5.9s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.35s
+ok    solidcraft-cli test snapshot_camera            12.4s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.70s
+ok    solidcraft-cli test design_corpus              17.8s  ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 17.27s
+ok    solidcraft-cli test snapshot_appearance         3.5s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.33s
+ok    solidcraft-cli test model_cache                26.4s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.94s
+ok    solidcraft-cli test fuzz_range                  0.3s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+ok    solidcraft-cli test action_matrix             568.0s  ok. 22 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 567.36s
+ok    solidcraft-cli test mcp_connect                 2.7s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.55s
+ok    solidcraft-cli test json_out                    0.6s  ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+ok    solidcraft-cli bin solvecraft-cli               0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    solidcraft-cli test commands_output             0.2s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+ok    solidcraft-cli test rebuild_topology           33.3s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 32.63s
+ok    solidcraft-cli test bracket_example             1.3s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.83s
+ok    solidcraft-cli test run_strict                  0.5s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+ok    solidcraft-cli test mcp_param_check             0.6s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+ok    solidcraft-cli test kill_mid_save               6.3s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.02s
+ok    solidcraft-cli test straight_edges_after_cuts    0.8s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+ok    solidcraft-cli test legacy_alias                0.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+ok    solidcraft-cli test run_results                 3.8s  ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.32s
+ok    solidcraft-cli test oracle_cases                0.1s  ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    solidcraft-cli test help_output                 0.4s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+ok    mcp lib solidcraft_mcp                          4.1s  ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.37s
+ok    gpu test depth                                  2.7s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.89s
+ok    gpu test thin_lines                             1.7s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.28s
+ok    gpu test capture                                3.0s  ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.35s
+ok    gpu lib solidcraft_gpu                          9.9s  ok. 20 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 9.12s
+ok    engine test atomic_commands                   412.6s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 412.03s
+ok    engine test step_export_regressions            56.1s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 55.56s
+ok    engine test sketch_drag_target                  0.6s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+ok    engine test save_as_cache                       0.8s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+ok    engine test mesh_export_regressions             7.4s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.72s
+ok    engine test shell_regressions                   0.6s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+ok    engine test sketch_analysis                     0.7s  ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+ok    engine test step_merge_regressions              2.1s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.39s
+ok    engine test pleat_regressions                  59.9s  ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 59.34s
+ok    engine test shell_opening_regressions           0.6s  ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+ok    engine lib solidcraft_engine                 2372.0s  ok. 2057 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 2371.22s
+ok    io lib solidcraft_io                            8.8s  ok. 119 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 8.24s
+ok    doc lib solidcraft_doc                         40.7s  ok. 285 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 40.11s
+ok    sketch test analysis_levels                     0.1s  ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    sketch test cursor_target                       0.2s  ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+ok    render lib solidcraft_render                    0.6s  ok. 117 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+ok    sketch lib solidcraft_sketch                   44.6s  ok. 242 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 44.28s
+ok    geom lib solidcraft_geom                        4.6s  ok. 145 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 4.27s
+ok    space-mouse lib solidcraft_space_mouse          0.1s  ok. 63 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    derive proc-macro solidcraft_derive             0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+ok    threedx-client lib solidcraft_3dx_client        0.1s  ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test: 77 binaries in 5114.0s
+web-offline-test: skipped (no Chrome; set CHROME to its executable)
+ci: all gates passed

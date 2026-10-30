@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "actual_original_failure_reproduced": true,
+  "original_failure_was_geostatic_verification_rejection_with_no_cutback_reserve": true,
+  "no_original_physical_upper_was_created": true,
+  "corrected_only_test_injection_and_iteration_budget": true,
+  "all_force_yield_strain_and_linear_tolerances_unchanged": true,
+  "selected_maximum_newton_iterations": 3,
+  "actual_F1_complete_and_F4_incomplete": true,
+  "rows": [
+    {
+      "label": "original-failing-origin",
+      "exit_code": 1,
+      "complete": false,
+      "failure_reason": "geostatic cutback exhausted: verification_injected_rejection_after_convergence",
+      "geostatic_complete": false,
+      "geostatic_reason": "geostatic cutback exhausted: verification_injected_rejection_after_convergence",
+      "geostatic_attempts": [
+        {
+          "accepted": false,
+          "reason": "verification_injected_rejection_after_convergence",
+          "restored": true
+        }
+      ],
+      "construction_attempts": [],
+      "elapsed_seconds": 0.12438250007107854
+    },
+    {
+      "label": "cap2-F1",
+      "exit_code": 1,
+      "complete": false,
+      "failure_reason": "load: cutback exhausted: numerical solve failed: Newton iteration limit; material force residual=5.9259259265298764e-2",
+      "geostatic_complete": true,
+      "geostatic_reason": null,
+      "geostatic_attempts": [
+        {
+          "accepted": true,
+          "reason": "converged_material_force",
+          "restored": false
+        }
+      ],
+      "construction_attempts": [
+        {
+          "accepted": false,
+          "reason": "numerical solve failed: Newton iteration limit; material force residual=5.9259259265298764e-2",
+          "restored": true
+        }
+      ],
+      "elapsed_seconds": 0.13815120002254844
+    },
+    {
+      "label": "cap2-F4",
+      "exit_code": 1,
+      "complete": false,
+      "failure_reason": "load: cutback exhausted: numerical solve failed: Newton iteration limit; material force residual=4.5925925926425265e-1",
+      "geostatic_complete": true,
+      "geostatic_reason": null,
+      "geostatic_attempts": [
+        {
+          "accepted": true,
+          "reason": "converged_material_force",
+          "restored": false
+        }
+      ],
+      "construction_attempts": [
+        {
+          "accepted": false,
+          "reason": "numerical solve failed: Newton iteration limit; material force residual=4.5925925926425265e-1",
+          "restored": true
+        }
+      ],
+      "elapsed_seconds": 0.12954410002566874
+    },
+    {
+      "label": "cap3-F1",
+      "exit_code": 0,
+      "complete": true,
+      "failure_reason": null,
+      "geostatic_complete": true,
+      "geostatic_reason": null,
+      "geostatic_attempts": [
+        {
+          "accepted": true,
+          "reason": "converged_material_force",
+          "restored": false
+        }
+      ],
+      "construction_attempts": [
+        {
+          "accepted": true,
+          "reason": "converged_material_force",
+          "restored": false
+        }
+      ],
+      "elapsed_seconds": 0.16302959993481636
+    },
+    {
+      "label": "cap3-F4",
+      "exit_code": 1,
+      "complete": false,
+      "failure_reason": "load: cutback exhausted: numerical solve failed: Newton iteration limit; material force residual=1e0",
+      "geostatic_complete": true,
+      "geostatic_reason": null,
+      "geostatic_attempts": [
+        {
+          "accepted": true,
+          "reason": "converged_material_force",
+          "restored": false
+        }
+      ],
+      "construction_attempts": [
+        {
+          "accepted": false,
+          "reason": "numerical solve failed: Newton iteration limit; material force residual=1e0",
+          "restored": true
+        }
+      ],
+      "elapsed_seconds": 0.17265060008503497
+    }
+  ],
+  "unchanged_adopted_A4_mechanics_used": true,
+  "not_an_independent_theory_validation": true,
+  "p6_complete": false
+}

@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "diagnostic_completed": true,
+  "previous_diagnostic_final_receipt_only_failed_due_str_Path_conversion": true,
+  "completed_actual_standalone_and_recovery_not_repeated": true,
+  "source_job_unchanged": true,
+  "fresh_standalone_summary": {
+    "complete": true,
+    "failure_reason": null,
+    "geostatic_complete": true,
+    "geostatic_reason": null,
+    "accepted_steps": 100,
+    "failed_attempts": []
+  },
+  "recovery_status": {
+    "schema": "soil-fem-srm-search-job-status/1",
+    "job_id": "4282d8b891c4153a0ea2cfa36936a674c618a8b85df266472ad7a8ccf1990074",
+    "state": "paused",
+    "process_id": 7796,
+    "current_factor": 1.0,
+    "completed_trials": 0,
+    "accepted_mechanical_checkpoint": true,
+    "recovery_generation": 2,
+    "progress_events": 5,
+    "last_progress": {
+      "schema": "soil-fem-stage-progress/1",
+      "kind": "accepted",
+      "stage_index": 1,
+      "stage": "load1",
+      "progress": 1.0,
+      "newton_iteration": 1,
+      "relative_force_residual": 4.3532328861569984e-12,
+      "relative_volume_residual": null,
+      "relative_pressure_residual": null,
+      "maximum_material_partitions": null,
+      "linear_solve": null,
+      "reason": "converged_material_force"
+    },
+    "requirement": null,
+    "search_stop_reason": null,
+    "report": null,
+    "report_sha256": null,
+    "reason": "advance_budget"
+  },
+  "verified_cause": "Completed geostatic report clears its old checkpoint reason; a stop between checkpoint restore and construction falls back to geostatic initialization incomplete",
+  "required_fix": "Keep previous accepted Run when stop already requested; do not rewind resumed construction at geostatic preamble; label fresh completed initialization control stop as checkpoint_requested",
+  "diagnosis_not_a_fix_or_acceptance": true,
+  "p6_complete": false
+}
