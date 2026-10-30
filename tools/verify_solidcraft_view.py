@@ -6,6 +6,7 @@ or a native GUI. Synthetic CAD fixtures remain synthetic after this audit.
 import argparse
 from collections import Counter
 import json
+import re
 from pathlib import Path
 import meshio
 import numpy as np
@@ -13,21 +14,86 @@ from export_solidcraft_view import read,read_result
 from verify_acceptance_packet import sha
 
 
+def reference_inventory(manifest):
+    """Match the native version4 relative-file contract before opening any row."""
+    frames=manifest.get('frames');files=manifest.get('files_sha256');sources=manifest.get('job_sources_sha256')
+    if not isinstance(frames,list) or not 1<=len(frames)<=257 or not isinstance(files,dict) or not isinstance(sources,dict) or not 1<=len(sources)<=1024:
+        raise ValueError('invalid source-point packet inventory')
+    names={'geometry.json'}
+    for i,frame in enumerate(frames):
+        if not isinstance(frame,dict) or set(frame)!={'index','name','frame','integration_points'} or type(frame['index']) is not int or frame['index']!=i:
+            raise ValueError('invalid source-point frame inventory')
+        if not isinstance(frame['name'],str) or not 1<=len(frame['name'].encode('utf-8'))<=256 or frame['frame']!=f'frame-{i:03}.json' or frame['integration_points']!=f'points-{i:03}.json':
+            raise ValueError('invalid source-point relative frame filename')
+        names.update((frame['frame'],frame['integration_points']))
+    if manifest.get('geometry')!='geometry.json' or set(files)!=names:raise ValueError('source-point file inventory differs from frames')
+    required={'analysis/ground/mesh.json','analysis/stage-results.json','analysis/accepted-stage-run.json',
+        'analysis/solver/soil-fem-3d.exe','analysis/ground/snapshot-canonical.json','analysis/ground/native-capture.json'}
+    if not required<=set(sources):raise ValueError('source-point authoritative source inventory is incomplete')
+    for name,digest in [*files.items(),*sources.items()]:
+        if not isinstance(name,str) or len(name)>512 or '\\' in name or ':' in name or any(part in ('','.','..') for part in name.split('/')):
+            raise ValueError('invalid source-point relative source path')
+        if not isinstance(digest,str) or re.fullmatch('[0-9a-f]{64}',digest) is None:raise ValueError('invalid source-point SHA256')
+    semantics=manifest['semantics']
+    if semantics.get('length_unit')!='m' or semantics.get('stress_unit')!='kPa' or semantics.get('stress_sign')!='compression positive' or semantics.get('stress_components')!=['xx','yy','zz','xy','yz','xz']:
+        raise ValueError('invalid source-point physical units or tensor convention')
+
+
+def modes(manifest):
+    schema=manifest.get('schema');semantics=manifest.get('semantics',{})
+    source_points=schema=='soil-fem-solidcraft-view/4'
+    if schema not in ('soil-fem-solidcraft-view/1','soil-fem-solidcraft-view/2','soil-fem-solidcraft-view/3','soil-fem-solidcraft-view/4') or manifest.get('complete') is not True:
+        raise ValueError('complete view packet required')
+    source_schema=semantics.get('source_result_schema')
+    if source_points:
+        from source_point_descriptor import RESULT_SCHEMAS,SCHEMA
+        if source_schema not in RESULT_SCHEMAS or semantics.get('raw_point_storage')!='authoritative_source' or semantics.get('source_point_descriptor_schema')!=SCHEMA:
+            raise ValueError('invalid authoritative source-point manifest semantics')
+    elif semantics.get('raw_point_storage')=='authoritative_source' or semantics.get('source_point_descriptor_schema') is not None:
+        raise ValueError('source-point storage requires manifest version4')
+    structural=schema=='soil-fem-solidcraft-view/3' or source_points and source_schema=='soil-fem-projected-mcc-stage-result/2'
+    projected=schema=='soil-fem-solidcraft-view/2' or source_points or source_schema=='soil-fem-projected-mcc-stage-result/2'
+    if projected and source_schema not in ('soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):
+        raise ValueError('projected source schema required')
+    return source_points,structural,projected
+
+
+def source_point_fields(mesh,run,index,descriptor,digest):
+    from source_point_descriptor import validate
+    from export_solidcraft_view import _scene_frame
+    validate(descriptor,run,index,digest)
+    # Values come from the complete hash-bound source, never from descriptor
+    # substitutes. Independent VTU reads below remain the display reference.
+    _,points=_scene_frame(mesh,run,index,validated_mixed=True)
+    if len(points['integration_point_ids'])!=descriptor['active_integration_point_count']:
+        raise ValueError('source-point reconstruction differs from descriptor inventory')
+    return points
+
+
 def verify(job,packet,output):
-    job=job.resolve();packet=packet.resolve();manifest=read(packet/'view-manifest.json')
-    if manifest.get('schema') not in ('soil-fem-solidcraft-view/1','soil-fem-solidcraft-view/2','soil-fem-solidcraft-view/3') or manifest.get('complete') is not True:raise ValueError('complete view packet required')
-    structural=manifest['schema']=='soil-fem-solidcraft-view/3'
-    projected=manifest['schema']=='soil-fem-solidcraft-view/2' or manifest['semantics'].get('source_result_schema')=='soil-fem-projected-mcc-stage-result/2'
-    if projected and manifest['semantics'].get('source_result_schema') not in ('soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):raise ValueError('projected source schema required')
+    from source_point_descriptor import load as strict_json
+    job=job.resolve();packet=packet.resolve();manifest=strict_json(packet/'view-manifest.json',maximum=256*1024)
+    source_points,structural,projected=modes(manifest)
+    if source_points:reference_inventory(manifest)
     for base,files in ((job,manifest['job_sources_sha256']),(packet,manifest['files_sha256'])):
         for name,digest in files.items():
             path=(base/name).resolve()
             if not path.is_relative_to(base) or sha(path)!=digest:raise ValueError('view packet/source file hash mismatch')
     geometry=read(packet/manifest['geometry']);xyz=np.asarray(geometry['nodes_m']);cells=np.asarray(geometry['cells'])
-    structural_source=(read(job/'analysis/ground/mesh.json'),read_result(job/'analysis/stage-results.json')) if structural else None
+    source_run=None;source_mesh=None
+    if source_points:
+        from streamed_source_v2 import index_source
+        source_run=index_source(job/'analysis/stage-results.json',output.with_name(output.name+'-source-cache'))
+        source_mesh=read(job/'analysis/ground/mesh.json')
+        if source_run.get('schema')!=manifest['semantics']['source_result_schema']:
+            raise ValueError('referenced result family differs from manifest')
+    structural_source=(source_mesh,source_run) if source_points and structural else (read(job/'analysis/ground/mesh.json'),read_result(job/'analysis/stage-results.json')) if structural else None
     results=job/'analysis/results';reports=[]
     for frame in manifest['frames']:
-        i=frame['index'];view=read(packet/frame['frame']);points=read(packet/frame['integration_points'])
+        i=frame['index'];view=read(packet/frame['frame'])
+        points=strict_json(packet/frame['integration_points']) if source_points else read(packet/frame['integration_points'])
+        if source_points:
+            points=source_point_fields(source_mesh,source_run,i,points,manifest['job_sources_sha256']['analysis/stage-results.json'])
         version='3' if structural else '2' if projected else '1'
         if view.get('schema')!='soil-fem-view-frame/'+version or points.get('schema')!='soil-fem-view-integration-points/'+version:raise ValueError('view frame family differs from manifest')
         vtk=meshio.read(results/f'stage-{i:03}.vtu');kind='tetra10' if geometry['cell_kind']=='tetra10' else 'tetra'
@@ -93,9 +159,15 @@ def verify(job,packet,output):
         reports.append(dict(index=i,name=view['name'],active_nodes=len(node_ids),active_elements=len(element_ids),boundary_faces=len(actual),
             raw_points=len(points['element_ids']),checked_node_fields=checked_node,checked_volume_average_fields=checked_cell,checked_raw_fields=checked_raw,
             **({'checked_structural_cells':structural_counts} if structural else {})))
+        if source_points:source_run.clear_cache()
+    if source_points:
+        source_run.verify_source()
+        for name,digest in manifest['files_sha256'].items():
+            if sha(packet/name)!=digest:raise ValueError('view packet changed during source-point verification')
     report=dict(schema='soil-fem-solidcraft-view-verification/1',passed=True,input_sha256=manifest['input_sha256'],
         view_manifest_sha256=sha(packet/'view-manifest.json'),frames=reports,
         scope='External display data compared with independently read existing VTU exports; not a native GUI or new physical reference solution.')
+    if source_points:report.update(raw_point_storage='authoritative_source',all_referenced_raw_points_compared_with_existing_VTU=True)
     with output.open('x',encoding='utf-8') as stream:json.dump(report,stream,indent=2)
     print('Viewer-data/VTU audit passed:',len(reports),'frames')
     return report

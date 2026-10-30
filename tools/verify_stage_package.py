@@ -6,12 +6,28 @@ from pathlib import Path
 import numpy as np
 
 
+def result_schema(path):
+    # Header routing must not retain a second copy of every GP history.
+    import codecs,ijson
+    from streamed_stage_source import CheckedReader
+    from ijson.common import JSONError
+    with path.open('rb') as handle:
+        if handle.read(3)!=codecs.BOM_UTF8:handle.seek(0)
+        try:
+            for prefix,event,value in ijson.parse(CheckedReader(handle,path.stat().st_size),use_float=True):
+                if prefix=='schema' and event=='string':return value
+        except JSONError as error:raise ValueError('invalid result header JSON') from error
+    raise ValueError('result schema string required')
+
+
 def verify(mesh_path,ground_path,result_path,export_dir,solver=None):
     mesh=json.loads(mesh_path.read_text(encoding="utf-8"));ground=json.loads(ground_path.read_text(encoding="utf-8"))
-    result=json.loads(result_path.read_text(encoding="utf-8"))
-    if result.get('schema') in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-mixed-mcc-stage-result/2','soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):
+    schema=result_schema(result_path)
+    if schema in ('soil-fem-mixed-mcc-stage-result/1','soil-fem-mixed-mcc-stage-result/2','soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):
         from verify_projected_stage_package import verify as verify_projected
         return verify_projected(mesh_path,ground_path,result_path,export_dir,solver=solver)
+    result=json.loads(result_path.read_text(encoding="utf-8"))
+    if result.get('schema')!=schema:raise ValueError('result schema changed or duplicated')
     if mesh.get('tetrahedra10') or result.get('case',{}).get('boundary') is not None or result.get('schema') in ('soil-fem-stage-result/3','soil-fem-stage-result/4','soil-fem-stage-result/5','soil-fem-stage-result/6','soil-fem-stage-result/7','soil-fem-stage-result/8','soil-fem-stage-result/9','soil-fem-stage-result/10','soil-fem-stage-result/11','soil-fem-stage-result/12','soil-fem-stage-result/13','soil-fem-stage-result/14'):
         from verify_high_order import verify_stages
         return verify_stages(mesh_path,ground_path,result_path,export_dir,solver=solver)

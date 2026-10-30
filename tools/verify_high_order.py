@@ -12,7 +12,8 @@ def hashfile(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def prepare(mesh,layout=None):
-    q=[ref.volume(mesh,ei) for ei in range(len(mesh['tetrahedra']))]
+    geometry=ref.Geometry(mesh)
+    q=[geometry.volume(ei) for ei in range(len(mesh['tetrahedra']))]
     offset=np.cumsum([0]+[len(v['weight']) for v in q])
     if layout is not None:
         assert len(layout)==offset[-1]

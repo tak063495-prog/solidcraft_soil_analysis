@@ -4,6 +4,7 @@ This accepts a completed numerical run, not spatial convergence or a calibrated
 soil model. Material histories and P1 work-conjugate stress stay distinct.
 """
 import copy
+import codecs
 import json
 from pathlib import Path
 import meshio
@@ -26,6 +27,7 @@ def restricted_pressure(mesh, fields, active):
     Matrix-free diagonal-preconditioned CG avoids a quadratic-size dense matrix.
     Material stress histories are inputs; no new constitutive update is made.
     """
+    geometry = ref.Geometry(mesh)
     material = mesh['material_ids']
     keys = sorted({(node,material[e]) for e,tet in enumerate(mesh['tetrahedra']) if active[e] for node in tet})
     lookup = {key:i for i,key in enumerate(keys)}
@@ -35,7 +37,7 @@ def restricted_pressure(mesh, fields, active):
     cursor = 0
     mean = fields['raw']['material_mean_effective_stress_compression_positive_kpa']
     for e,tet in enumerate(mesh['tetrahedra']):
-        q = ref.volume(mesh,e)
+        q = geometry.volume(e)
         count = len(q['weight'])
         if active[e]:
             nodes = [lookup[(node,material[e])] for node in tet]
@@ -77,7 +79,7 @@ def restricted_pressure(mesh, fields, active):
     result = np.zeros(len(fields['owner']))
     cursor = 0
     for e,tet in enumerate(mesh['tetrahedra']):
-        q = ref.volume(mesh,e)
+        q = geometry.volume(e)
         count = len(q['weight'])
         if active[e]:
             shape = np.column_stack((1-q['natural'].sum(axis=1),q['natural']))
@@ -87,6 +89,7 @@ def restricted_pressure(mesh, fields, active):
 
 
 def internal(mesh, fields, active, restrict=False):
+    geometry = ref.Geometry(mesh)
     result = np.zeros((len(mesh['nodes']), 3))
     stress = fields['raw'].get('work_conjugate_effective_stress_compression_positive_kpa',fields['material_stress'])
     if restrict and 'work_conjugate_effective_stress_compression_positive_kpa' in fields['raw']:
@@ -95,7 +98,7 @@ def internal(mesh, fields, active, restrict=False):
         stress[:,:3] += (pressure-stress[:,:3].mean(axis=1))[:,None]
     cursor = 0
     for element in range(len(active)):
-        quadrature = ref.volume(mesh, element)
+        quadrature = geometry.volume( element)
         count = len(quadrature['weight'])
         if active[element]:
             value = -np.einsum('qai,qa,q->i', quadrature['b'], stress[cursor:cursor+count], quadrature['weight']).reshape(-1, 3)
@@ -105,6 +108,7 @@ def internal(mesh, fields, active, restrict=False):
 
 
 def initial_state(mesh, ground, case, run):
+    geometry = ref.Geometry(mesh)
     first = run['frames'][0]['state']
     require(all(first['active_elements']), 'projected initial domain must be fully active')
     initialization = ground['initialization']
@@ -113,7 +117,7 @@ def initial_state(mesh, ground, case, run):
         require(not np.asarray(first['displacement_m']).any(), 'K0 initial displacement is nonzero')
         cursor = 0
         for element in range(len(mesh['tetrahedra'])):
-            q = ref.volume(mesh, element)
+            q = geometry.volume( element)
             stress, pore, material, layer = ref.initial_fields(mesh, ground, element, q['position'])
             require(not pore.any(), 'projected K0 input must be dry')
             count = len(q['weight'])
@@ -327,11 +331,26 @@ def audit(mesh, ground, case, run):
 
 
 def verify(mesh_path, ground_path, result_path, export_dir, solver=None):
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix='soil-fem-mechanical-source-') as folder:
+        return _verify(mesh_path,ground_path,result_path,export_dir,solver,Path(folder)/'parts')
+
+
+def _verify(mesh_path, ground_path, result_path, export_dir, solver, cache):
     require(not any((result_path.parent/name).exists() for name in ('stage-verification.json','accepted-stage-run.json')),
         'new projected audit receipts required; existing accepted records are never overwritten')
     paths = [mesh_path, ground_path, result_path, result_path.parent/'stages.json']
     binding = {str(p.resolve()):sha(p) for p in paths}
-    mesh, ground, run, case = [json.loads(p.read_text(encoding='utf-8-sig')) for p in paths]
+    mesh, ground, case = [json.loads(p.read_text(encoding='utf-8-sig')) for p in (mesh_path,ground_path,paths[-1])]
+    from verify_stage_package import result_schema
+    from export_solidcraft_view import read_result,MAX_SOURCE_RESULT
+    schema=result_schema(result_path)
+    with result_path.open('rb') as header:has_bom=header.read(3)==codecs.BOM_UTF8
+    if schema in mixed_mcc_io.PROJECTED_SCHEMAS and result_path.stat().st_size>MAX_SOURCE_RESULT and not has_bom:
+        run=read_result(result_path,cache=cache)
+    else:
+        run=json.loads(result_path.read_text(encoding='utf-8-sig'))
+    require(run.get('schema')==schema,'result schema changed or duplicated')
     rows = audit(mesh, ground, case, run)
     metadata = json.loads((export_dir/'export-verification.json').read_text(encoding='utf-8'))
     projected=run['schema'] in mixed_mcc_io.PROJECTED_SCHEMAS
@@ -353,6 +372,7 @@ def verify(mesh_path, ground_path, result_path, export_dir, solver=None):
             require(np.array_equal(gp.point_data[name], expected), 'exported material history differs: '+name)
     binary = solver or Path(__file__).resolve().parents[1]/'target/release/soil-fem-3d.exe'
     require(run['provenance']['solver_binary_sha256'] == sha(binary), 'result produced by a different solver')
+    if hasattr(run,'verify_source'):run.verify_source()
     require(binding == {str(p.resolve()):sha(p) for p in paths}, 'input changed during audit')
     report = dict(schema='soil-fem-stage-verification/3', frames=rows, vtu_roundtrip='passed', raw_integration_point_roundtrip='passed',
         formulation=mixed_mcc_io.PROJECTED_FORMULATION if projected else 'Tet10 / material-split P1 effective mean pressure / GP volume MCC', independent_load_and_domain_audit='passed',

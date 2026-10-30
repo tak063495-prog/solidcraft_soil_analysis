@@ -12,6 +12,8 @@ import numpy as np
 from high_order_io import state_fields
 from import_solidcraft_capture import equal,validate
 from verify_acceptance_packet import sha
+from streamed_stage_source import ChunkedRun,ChunkedList
+from streamed_source_v2 import Array as SourceBlockArray
 
 FACES=((1,2,3),(0,3,2),(0,1,3),(0,2,1))
 EDGES=((0,1),(1,2),(2,0),(0,3),(1,3),(2,3))
@@ -30,16 +32,27 @@ def read(path,maximum=MAX_FILE):
     return json.loads(path.read_text(encoding='utf-8'),parse_constant=reject,parse_float=real)
 
 
-def read_result(path):
-    return read(path,maximum=MAX_SOURCE_RESULT)
+def read_result(path,*,cache=None):
+    if path.stat().st_size<=MAX_SOURCE_RESULT:return read(path,maximum=MAX_SOURCE_RESULT)
+    if cache is None:raise ValueError('authoritative result exceeds legacy source limit; bounded source cache required')
+    from streamed_stage_source import CheckedReader
+    from streamed_source_v2 import MAX_STREAM_SOURCE as MAX_SOURCE,index_source
+    if path.stat().st_size>MAX_SOURCE:raise ValueError('authoritative result exceeds bounded source limit')
+    import ijson
+    with path.open('rb') as handle:
+        schema=next((v for prefix,event,v in ijson.parse(CheckedReader(handle,MAX_SOURCE),use_float=True)
+                     if prefix=='schema' and event=='string'),None)
+    if schema not in ('soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2'):
+        raise ValueError('large source reader supports projected MCC only')
+    return index_source(path,cache)
 
 
 def clean(value):
     # Material-specific unavailable fields (MCC pc on MC, for example) remain
     # null. They must never appear as zero-valued physical measurements.
     if isinstance(value,np.ndarray):return clean(value.tolist())
-    if isinstance(value,list):return [clean(v) for v in value]
-    if isinstance(value,dict):return {k:clean(v) for k,v in value.items()}
+    if isinstance(value,(list,ChunkedList,SourceBlockArray)):return [clean(v) for v in value]
+    if isinstance(value,(dict,ChunkedRun)):return {k:clean(v) for k,v in value.items()}
     if isinstance(value,float) and not np.isfinite(value):return None
     return value
 
@@ -180,14 +193,19 @@ def _scene_frame(mesh,run,index,*,validated_mixed=False):
     return clean(view),clean(points)
 
 
-def export(job,output):
+def export(job,output,*,source_points=False):
     job=job.resolve();output=output.resolve();analysis=job/'analysis';prepared=analysis/'ground';conformal=job/'conformal'
     capture,ground,captured_stages,_=validate(conformal,manifest_name='native-capture.json')
     link=read(conformal/'native-capture-import.json')
     if link.get('passed') is not True or link.get('input_sha256')!=capture['input_sha256'] or link.get('source_capture_sha256')!=sha(conformal/'native-capture.json'):
         raise ValueError('native capture import linkage mismatch')
     result_path=analysis/'stage-results.json';mesh_path=prepared/'mesh.json';accepted_path=analysis/'accepted-stage-run.json'
-    accepted=read(accepted_path);run=read_result(result_path);mesh=read(mesh_path)
+    source_points=source_points or result_path.stat().st_size>MAX_SOURCE_RESULT
+    accepted=read(accepted_path);mesh=read(mesh_path)
+    if source_points:
+        from streamed_source_v2 import index_source
+        run=index_source(result_path,output.with_name(output.name+'-source-cache'))
+    else:run=read_result(result_path)
     imported=read(prepared/'model-input-package.json');original=imported.get('original_inventory',{})
     if imported.get('schema')!='soil-fem-prepared-model-import/1' or original.get('schema')!='soil-fem-prepared-model/1':raise ValueError('prepared geometry import record required')
     inventory=original.get('files_sha256',{})
@@ -221,11 +239,13 @@ def export(job,output):
     if run.get('complete') is not True or run.get('failure_reason') is not None:raise ValueError('incomplete analysis cannot be displayed as accepted')
     projected=run.get('schema') in ('soil-fem-projected-mcc-stage-result/1','soil-fem-projected-mcc-stage-result/2')
     structural=isinstance(run.get('case',{}).get('beam_system'),dict)
+    if source_points and not projected:raise ValueError('source-point storage requires projected MCC')
     if not projected and run.get('schema') not in {f'soil-fem-stage-result/{i}' for i in range(1,15)}:raise ValueError('unsupported result schema for native viewer')
     if run['schema']=='soil-fem-projected-mcc-stage-result/2' and not structural:raise ValueError('structural projected source lacks members')
     if projected:
         from verify_projected_stage_package import audit
         audit(mesh,ground,stages,run)
+    if hasattr(run,'clear_cache'):run.clear_cache()
     if not 1<=len(run.get('frames',[]))<=257:raise ValueError('viewer requires 1..257 frames')
     if not equal(run['last_committed'],run['frames'][-1]['state']):raise ValueError('final frame differs from committed state')
     verification=read(analysis/'stage-verification.json');exports=read(analysis/'results/export-verification.json')
@@ -257,8 +277,15 @@ def export(job,output):
         # domain transition. Do not repeat the whole path for each extracted
         # frame (quadratic work in the number of construction stages).
         view,points=_scene_frame(mesh,run,i,validated_mixed=projected);name=f'frame-{i:03}.json';point_name=f'points-{i:03}.json'
-        write(name,view);write(point_name,points)
+        if source_points:
+            from source_point_descriptor import make
+            descriptor=make(run,i,hashes['analysis/stage-results.json'])
+            if descriptor['active_integration_point_count']!=len(points['integration_point_ids']):raise ValueError('source-point active inventory differs')
+            write(name,view);write(point_name,descriptor)
+        else:write(name,view);write(point_name,points)
         frames.append(dict(index=i,name=view['name'],frame=name,integration_points=point_name))
+        del view,points
+        if hasattr(run,'clear_cache'):run.clear_cache()
     if any(sha(job/p)!=digest for p,digest in hashes.items()):raise ValueError('job changed while exporting view packet')
     # Check the STEP/input archive again before publishing a completion marker.
     checked,_,_,_=validate(conformal,manifest_name='native-capture.json')
@@ -294,10 +321,16 @@ def export(job,output):
             structural_units='beam kN and kN m; plate membrane kN/m and bending kN m/m; rotations rad')
         manifest['omissions']=['anchor/contact result layers','water fields']
         manifest['scope']='Versioned continuum and linear frame/plate display data; native rendering and mechanical/spatial acceptance require separate evidence.'
+    if source_points:
+        from source_point_descriptor import SCHEMA,VIEW_SCHEMA
+        manifest['schema']=VIEW_SCHEMA
+        manifest['semantics'].update(source_result_schema=run['schema'],raw_point_storage='authoritative_source',source_point_descriptor_schema=SCHEMA)
+        manifest['scope']='Source-bound continuum/frame/plate values; raw GP queries refer to the complete authoritative result, with no GP duplication or averaging.'
+    if hasattr(run,'verify_source'):run.verify_source()
     write('view-manifest.json',manifest,track=False)
     print('Native viewer data:',len(frames),'frames; explicit nodal, cell-average and raw integration-point fields')
     return manifest
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('job',type=Path);p.add_argument('output',type=Path);a=p.parse_args();export(a.job,a.output)
+    p=argparse.ArgumentParser();p.add_argument('job',type=Path);p.add_argument('output',type=Path);p.add_argument('--source-points',action='store_true');a=p.parse_args();export(a.job,a.output,source_points=a.source_points)

@@ -10,6 +10,7 @@ def manifest():
     root=Path(__file__).resolve().parents[1]
     files=[root/n for n in ('Cargo.toml','Cargo.lock','rust-toolchain.toml','requirements.lock.txt','sources.lock.json','README.md')]
     if (root/'requirements-reference.lock.txt').exists():files.append(root/'requirements-reference.lock.txt')
+    if (root/'requirements-verification-win-cp313.lock.txt').exists():files.append(root/'requirements-verification-win-cp313.lock.txt')
     if (root/'.github').exists():
         files += [p for p in (root/'.github').rglob('*') if p.is_file() and p.suffix in ('.yml','.yaml')]
     files += [p for name in ('src','tests','examples','scripts','docs','tools') for p in (root/name).rglob('*')
