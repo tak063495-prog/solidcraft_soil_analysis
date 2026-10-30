@@ -1,0 +1,133 @@
+{
+  "schema": "soil-fem-mc-mean-stress-bound/1",
+  "material_id": 1,
+  "water_policy": "dry",
+  "material": {
+    "young_kpa": 100000.0,
+    "poisson": 0.3,
+    "cohesion_kpa": 6.666666666666667,
+    "friction_deg": 0.0,
+    "dilation_deg": 0.0,
+    "tension_cutoff_kpa": null,
+    "flow": "non_associated"
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "all",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "origin",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "origin",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "x",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "x",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "y",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      }
+    ],
+    "surface_loads": [
+      {
+        "kind": "traction",
+        "face_set": "face-0-0",
+        "traction_kpa": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "kind": "traction",
+        "face_set": "face-0-1",
+        "traction_kpa": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "kind": "traction",
+        "face_set": "face-1-0",
+        "traction_kpa": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "kind": "traction",
+        "face_set": "face-1-1",
+        "traction_kpa": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "kind": "traction",
+        "face_set": "face-2-0",
+        "traction_kpa": [
+          0.0,
+          0.0,
+          15.0
+        ]
+      },
+      {
+        "kind": "traction",
+        "face_set": "face-2-1",
+        "traction_kpa": [
+          0.0,
+          0.0,
+          -15.0
+        ]
+      }
+    ]
+  },
+  "body_force_kn_m3": [
+    0.0,
+    0.0,
+    0.0
+  ]
+}

@@ -1,0 +1,77 @@
+   Compiling num-traits v0.2.19
+   Compiling generic-array v0.14.7
+   Compiling serde_core v1.0.229
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling num-integer v0.1.47
+   Compiling num-complex v0.4.6
+   Compiling approx v0.5.1
+   Compiling matrixmultiply v0.3.11
+   Compiling simba v0.9.1
+   Compiling num-rational v0.4.2
+   Compiling digest v0.10.7
+   Compiling zmij v1.0.23
+   Compiling sha2 v0.10.9
+   Compiling serde_json v1.0.154
+   Compiling thiserror v2.0.21
+   Compiling serde v1.0.229
+   Compiling nalgebra v0.34.2
+   Compiling soil-fem-3d v0.1.0 (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\srm-search-development-v1\runtime)
+    Finished `release` profile [optimized] target(s) in 4m 12s
+     Running tests\srm_bound.rs (D:\Work\soil-fem-3d\runs\native-source-point-view-development-20261030-v1\srm-search-development-v1\target\release\deps\srm_bound-7d90d758c467afcb.exe)
+
+running 9 tests
+test certificate_is_rotation_translation_and_nonassociated_flow_invariant ... FAILED
+test body_weight_and_all_six_reactions_enter_the_first_moment ... FAILED
+test davis_uses_its_effective_strength_instead_of_the_untransformed_cohesion ... FAILED
+test distributed_or_singular_supports_cannot_be_misreported_as_physical_uppers ... FAILED
+test invalid_or_heterogeneous_inputs_never_become_an_upper_candidate ... FAILED
+test mean_stress_agrees_with_an_independent_elastic_global_fem_and_tet10 ... FAILED
+test rankine_exclusion_is_distinct_from_mc_and_not_an_admissibility_sufficiency_claim ... FAILED
+test uniaxial_closed_form_excludes_only_after_the_strength_limit_without_a_solver_failure ... FAILED
+test unknown_water_policy_and_overflow_do_not_create_physical_exclusion ... FAILED
+
+failures:
+
+---- certificate_is_rotation_translation_and_nonassociated_flow_invariant stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- body_weight_and_all_six_reactions_enter_the_first_moment stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- davis_uses_its_effective_strength_instead_of_the_untransformed_cohesion stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- distributed_or_singular_supports_cannot_be_misreported_as_physical_uppers stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- invalid_or_heterogeneous_inputs_never_become_an_upper_candidate stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- mean_stress_agrees_with_an_independent_elastic_global_fem_and_tet10 stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- rankine_exclusion_is_distinct_from_mc_and_not_an_admissibility_sufficiency_claim stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- uniaxial_closed_form_excludes_only_after_the_strength_limit_without_a_solver_failure stdout ----
+Error: Input("region metadata required for mesh/2")
+
+---- unknown_water_policy_and_overflow_do_not_create_physical_exclusion stdout ----
+Error: Input("region metadata required for mesh/2")
+
+
+failures:
+    body_weight_and_all_six_reactions_enter_the_first_moment
+    certificate_is_rotation_translation_and_nonassociated_flow_invariant
+    davis_uses_its_effective_strength_instead_of_the_untransformed_cohesion
+    distributed_or_singular_supports_cannot_be_misreported_as_physical_uppers
+    invalid_or_heterogeneous_inputs_never_become_an_upper_candidate
+    mean_stress_agrees_with_an_independent_elastic_global_fem_and_tet10
+    rankine_exclusion_is_distinct_from_mc_and_not_an_admissibility_sufficiency_claim
+    uniaxial_closed_form_excludes_only_after_the_strength_limit_without_a_solver_failure
+    unknown_water_policy_and_overflow_do_not_create_physical_exclusion
+
+test result: FAILED. 0 passed; 9 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test srm_bound`
