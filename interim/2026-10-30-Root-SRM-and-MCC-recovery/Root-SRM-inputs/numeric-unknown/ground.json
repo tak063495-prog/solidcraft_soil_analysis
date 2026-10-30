@@ -1,0 +1,105 @@
+{
+  "schema": "soil-fem-ground/1",
+  "units": "m-kN-kPa",
+  "initialization": {
+    "method": "equilibrate",
+    "surface_surcharge_kpa": 0.0,
+    "water_level_m": null,
+    "water_unit_weight_kn_m3": 9.80665,
+    "relative_equilibrium_tolerance": 1e-9,
+    "geostatic": {
+      "seed": {
+        "kind": "body_states",
+        "states": {
+          "LowerClay": {
+            "effective_stress_compression_positive_kpa": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.7,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          },
+          "UpperClay": {
+            "effective_stress_compression_positive_kpa": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "plastic_strain_compression_positive": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "void_ratio": 0.7,
+            "equivalent_plastic_strain": 0.0,
+            "plastic_work_kpa": 0.0,
+            "last_return": "elastic"
+          }
+        }
+      },
+      "initial_boundary_factor": 0.0,
+      "maximum_initial_engineering_strain": 0.05,
+      "relative_volume_tolerance": 1e-8
+    }
+  },
+  "materials": [
+    {
+      "id": 1,
+      "name": "Mohr-Coulomb clay1",
+      "unit_weight_kn_m3": 1e-10,
+      "mohr_coulomb": {
+        "young_kpa": 10000.0,
+        "poisson": 0.1,
+        "cohesion_kpa": 40.0,
+        "friction_deg": 0.0,
+        "dilation_deg": 0.0,
+        "tension_cutoff_kpa": null,
+        "flow": "non_associated"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Mohr-Coulomb clay2",
+      "unit_weight_kn_m3": 1e-10,
+      "mohr_coulomb": {
+        "young_kpa": 20000.0,
+        "poisson": 0.1,
+        "cohesion_kpa": 40.0,
+        "friction_deg": 0.0,
+        "dilation_deg": 0.0,
+        "tension_cutoff_kpa": null,
+        "flow": "non_associated"
+      }
+    }
+  ],
+  "bodies": [
+    {
+      "body": "LowerClay",
+      "material_id": 1
+    },
+    {
+      "body": "UpperClay",
+      "material_id": 2
+    }
+  ]
+}

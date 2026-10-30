@@ -9,6 +9,66 @@ use std::{env, fs, path::Path};
 fn run() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [command,mesh,ground,case,spec,interval,output] if command=="prepare-srm-search-job" => {
+            let interval:usize=interval.parse().map_err(|_|Error::Input("SRM accepted interval must be a positive integer".into()))?;
+            let m=soil_fem_3d::srm_search_job::prepare(Path::new(mesh),Path::new(ground),Path::new(case),Path::new(spec),interval,Path::new(output))?;
+            println!("Prepared immutable SRM search job {}",m.job_id);
+        }
+        [command,previous,output] if command=="prepare-srm-search-recovery" => {
+            let m=soil_fem_3d::srm_search_job::prepare_recovery(Path::new(previous),Path::new(output))?;
+            println!("Prepared SRM snapshot recovery {}",m.job_id);
+        }
+        [command,folder] if command=="run-srm-search-job" => {
+            match soil_fem_3d::srm_search_job::run(Path::new(folder),None)? {
+                soil_fem_3d::srm_search_job::Outcome::Completed=>println!("SRM search completed; inspect requirement and limitations separately"),
+                soil_fem_3d::srm_search_job::Outcome::Paused=>{println!("SRM search paused with verified recovery snapshot");std::process::exit(2);}
+            }
+        }
+        [command,folder,budget] if command=="run-srm-search-job" => {
+            let budget:usize=budget.parse().map_err(|_|Error::Input("SRM advance budget must be positive".into()))?;
+            match soil_fem_3d::srm_search_job::run(Path::new(folder),Some(budget))? {
+                soil_fem_3d::srm_search_job::Outcome::Completed=>println!("SRM search completed; inspect requirement and limitations separately"),
+                soil_fem_3d::srm_search_job::Outcome::Paused=>{println!("SRM search paused with verified recovery snapshot");std::process::exit(2);}
+            }
+        }
+        [command,folder] if command=="stop-srm-search-job" => {
+            println!("Cooperative SRM stop requested: {}",soil_fem_3d::srm_search_job::request_stop(Path::new(folder))?);
+        }
+        [command,folder] if command=="srm-search-job-status" => {
+            println!("{}",serde_json::to_string_pretty(&soil_fem_3d::srm_search_job::status(Path::new(folder))?)?);
+        }
+        [command,folder] if command=="verify-srm-search-job" => {
+            println!("{}",serde_json::to_string_pretty(&soil_fem_3d::srm_search_job::verify_snapshot(Path::new(folder))?)?);
+        }
+        [command,mesh,problem,output] if command=="mc-virtual-work-bound" => {
+            if Path::new(output).exists() {
+                return Err(Error::Input("virtual-work output already exists".into()));
+            }
+            let mesh: Mesh=serde_json::from_str(&fs::read_to_string(mesh)?)?;
+            let problem: soil_fem_3d::srm_virtual_work::Problem=serde_json::from_str(&fs::read_to_string(problem)?)?;
+            let report=soil_fem_3d::srm_virtual_work::audit(&mesh,&problem)?;
+            write_new(output,&report)?;
+            println!("Pointwise virtual-work assessment saved; no continuum stability certification inferred");
+        }
+        [command,mesh,ground,case,spec,output] if command=="search-mc-srm" => {
+            if Path::new(output).exists() {
+                return Err(Error::Input("SRM output already exists".into()));
+            }
+            let mesh: Mesh=serde_json::from_str(&fs::read_to_string(mesh)?)?;
+            let ground: ground::Ground=serde_json::from_str(&fs::read_to_string(ground)?)?;
+            let case: stages::StageCase=serde_json::from_str(&fs::read_to_string(case)?)?;
+            let spec: soil_fem_3d::srm_search::Specification=serde_json::from_str(&fs::read_to_string(spec)?)?;
+            let report=soil_fem_3d::srm_search::run(&mesh,ground,case,spec)?;
+            write_new(output,&report)?;
+            println!("Fresh-history SRM search saved; inspect physical interval, requirement and limitations");
+        }
+        [command,mesh,problem,output] if command=="mc-mean-stress-bound" => {
+            let mesh: Mesh=serde_json::from_str(&fs::read_to_string(mesh)?)?;
+            let problem: soil_fem_3d::srm_bound::Problem=serde_json::from_str(&fs::read_to_string(problem)?)?;
+            let assessment=soil_fem_3d::srm_bound::analyze(&mesh,&problem)?;
+            write_new(output,&assessment)?;
+            println!("Mean-stress exclusion assessment saved; no collapse or stability classification inferred");
+        }
         [command,mesh,origin,spec,output] if command=="prepare-mc-epoch-job" => {
             let m=soil_fem_3d::mc_epoch_job::prepare(Path::new(mesh),Path::new(origin),Path::new(spec),Path::new(output))?;
             println!("Prepared material continuation job {}",m.job_id);
@@ -285,7 +345,7 @@ fn run() -> Result<()> {
             write_new(out,&result)?;
             println!("iterations={} true_relative_residual={:.3e} equilibrium_error_kn={:?}",result.iterations,result.true_relative_residual,result.equilibrium_error_kn);
         }
-        _ => return Err(Error::Input("usage: soil-fem-3d prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
+        _ => return Err(Error::Input("usage: soil-fem-3d prepare-srm-search-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_INTERVAL NEW_JOB | run-srm-search-job JOB [ADVANCE_BUDGET] | prepare-srm-search-recovery PREVIOUS_JOB NEW_JOB | stop-srm-search-job JOB | srm-search-job-status JOB | verify-srm-search-job JOB | mc-virtual-work-bound MESH.json PROBLEM.json NEW_REPORT.json | search-mc-srm MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mc-mean-stress-bound MESH.json PROBLEM.json NEW_REPORT.json | prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
     }
     Ok(())
 }

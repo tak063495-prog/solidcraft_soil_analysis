@@ -18,6 +18,7 @@ use std::{sync::Arc, time::Instant};
 
 #[path = "stages_mixed.rs"]
 mod mixed;
+pub(crate) mod srm_adapter;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -4526,6 +4527,12 @@ fn solve_controlled(
             "checkpoint JOINT integration-point layout mismatch".into(),
         ));
     }
+    // A restored Run is already an accepted state. Do not replay its geostatic
+    // preamble after a stop has arrived: that would discard construction state.
+    if previous.is_some() && model.stop_requested()? {
+        return previous.ok_or_else(|| Error::Control("accepted resume state disappeared".into()));
+    }
+    let resuming_construction = previous.as_ref().is_some_and(|p| p.continuation.is_some());
     let mut active = vec![true; mesh.tetrahedra.len()];
     if !case.initially_inactive_bodies.is_empty() {
         if !ground.is_general() {
@@ -4635,7 +4642,10 @@ fn solve_controlled(
             committed.stage_progress = 0.;
             committed.geostatic_release_load_kn.clear();
         }
-        if !report.complete || stop_after.is_some_and(|n| count >= n) || model.stop_requested()? {
+        if !report.complete
+            || stop_after.is_some_and(|n| count >= n)
+            || (!resuming_construction && model.stop_requested()?)
+        {
             let frames = if report.complete {
                 vec![model.frame("initial_equilibrated".into(), &committed, &committed, &case)?]
             } else {
@@ -4644,10 +4654,16 @@ fn solve_controlled(
             let joint_integration_points = model.joint_layout();
             let layout = model.layout();
             let reference_displacement_m = model.reference_displacement_m.clone();
-            let failure_reason = report
-                .failure_reason
-                .clone()
-                .or_else(|| Some("geostatic initialization incomplete".into()));
+            let failure_reason = report.failure_reason.clone().or_else(|| {
+                Some(
+                    if report.complete {
+                        "checkpoint_requested"
+                    } else {
+                        "geostatic initialization incomplete"
+                    }
+                    .into(),
+                )
+            });
             return Ok(Run {
                 flow_audits: vec![],
                 joint_integration_points,
