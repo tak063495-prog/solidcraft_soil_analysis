@@ -1,5 +1,7 @@
 # SolidCraft連携・Rust 3D地盤弾塑性FEM 開発計画
 
+2026-10-31追補：h細分ハーネスのWindows CI41246377179（head fc980f8、Rust394件、Python220件）は合格しました。一般3D空間収束、2D変位5％基準、斜面の正確なFsは未完了のままです。詳細は[空間収束ハーネス](SPATIAL_CONVERGENCE.ja.md)です。
+
 2026-10-31追補：平滑な自重・製造解のh細分と、一様応力SRMのFs区間を[空間収束ハーネス](SPATIAL_CONVERGENCE.ja.md)へ追加しました。一般3D空間収束、2D変位5％基準、斜面の正確なFsは未完了のままです。
 
 2026-10-31追補：本体657ソースの全試験再実行とWindows CIの照合を[P6_STATUS.ja.md](P6_STATUS.ja.md)へ追記しました。空間収束、2D変位5％基準、SRMの正確なFsと後続統合は未完了のままです。

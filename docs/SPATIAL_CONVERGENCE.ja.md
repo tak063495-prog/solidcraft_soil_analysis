@@ -1,5 +1,7 @@
 # h細分による変位・応力・一様応力SRMのFs
 
+2026-10-31追補：head fc980f8の[Windows CI41246377179](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/41246377179)は成功しました。fmt、clippy、CLIビルド、Rust394件、Python220件、固定9依存が合格しています。artifact13060820487のソース指紋671件は、バイト一致175、CRLF化496、実差分0です。
+
 一般3D空間収束の認定ではない。掘削・斜面・非一様な塑性機構の粗密差は、従来の未達記録のまま残す。P6は完了にしない。数値基準、許容値、参照値、過去の失敗記録は変えていない。
 
 平滑な線形弾性は生産側の`mechanics::solve`で解き、次数とRichardson外挿を出す。一様な乾燥MCのFsは、既存のφ=0・一軸15 kPa・6個の剛体ゲージと、受理済み未低減Runを起点にするepoch探索で求める。不収束は上端にしない。
