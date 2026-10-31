@@ -9,6 +9,38 @@ use std::{env, fs, path::Path};
 fn run() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [command, profile, output] if command == "plane-strain-2d" && (profile == "ci" || profile == "user") => {
+            if Path::new(output).exists() {
+                return Err(Error::Input("plane-strain-2d output already exists".into()));
+            }
+            let profile = match profile.as_str() {
+                "ci" => soil_fem_3d::plane_strain_2d::Profile::Ci,
+                "user" => soil_fem_3d::plane_strain_2d::Profile::User,
+                _ => unreachable!(),
+            };
+            let report = soil_fem_3d::plane_strain_2d::run(profile)?;
+            write_new(output, &report)?;
+            println!(
+                "Plane-strain 2D report saved. finest_mesh_5%={:?} continuum_5%={:?} slope_closed={} p6_complete={}",
+                report.column_finest_mesh_five_percent,
+                report.column_continuum_five_percent_after_separation,
+                report.griffiths_slope_five_percent_closed,
+                report.p6_complete
+            );
+        }
+        [command, action, series, output] if command == "plane-strain-2d" && action == "judge" => {
+            if Path::new(output).exists() {
+                return Err(Error::Input("plane-strain-2d output already exists".into()));
+            }
+            let report = soil_fem_3d::plane_strain_2d::judge_series(&fs::read_to_string(series)?)?;
+            write_new(output, &report)?;
+            println!(
+                "Plane-strain series judged. nested={} continuum={:?} p6_complete={}",
+                report.nested_h_refinement,
+                report.judgment.continuum_verdict,
+                report.p6_complete
+            );
+        }
         [command, profile, output] if command == "spatial-convergence" => {
             if Path::new(output).exists() {
                 return Err(Error::Input("spatial-convergence output already exists".into()));
@@ -453,7 +485,7 @@ fn run() -> Result<()> {
             write_new(out,&result)?;
             println!("iterations={} true_relative_residual={:.3e} equilibrium_error_kn={:?}",result.iterations,result.true_relative_residual,result.equilibrium_error_kn);
         }
-        _ => return Err(Error::Input("usage: soil-fem-3d spatial-convergence ci|user NEW_REPORT.json | prepare-mc-epoch-srm-gate-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_UNITS NEW_JOB | run-mc-epoch-srm-gate-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-gate-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-gate-job JOB | mc-epoch-srm-gate-job-status JOB | verify-mc-epoch-srm-gate-job JOB | solve-mc-epoch-srm-gate MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | prepare-mc-epoch-srm-job MESH.json ORIGINAL_RUN.json SPEC.json MATERIAL_ATTEMPTS_PER_SAVE NEW_JOB | run-mc-epoch-srm-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-job JOB | mc-epoch-srm-job-status JOB | verify-mc-epoch-srm-job JOB | search-mc-epoch-srm MESH.json ORIGINAL_RUN.json SPEC.json NEW_REPORT.json | prepare-srm-search-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_INTERVAL NEW_JOB | run-srm-search-job JOB [ADVANCE_BUDGET] | prepare-srm-search-recovery PREVIOUS_JOB NEW_JOB | stop-srm-search-job JOB | srm-search-job-status JOB | verify-srm-search-job JOB | mc-virtual-work-bound MESH.json PROBLEM.json NEW_REPORT.json | search-mc-srm MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mc-mean-stress-bound MESH.json PROBLEM.json NEW_REPORT.json | prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
+        _ => return Err(Error::Input("usage: soil-fem-3d plane-strain-2d ci|user NEW_REPORT.json | plane-strain-2d judge SERIES.json NEW_REPORT.json | spatial-convergence ci|user NEW_REPORT.json | prepare-mc-epoch-srm-gate-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_UNITS NEW_JOB | run-mc-epoch-srm-gate-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-gate-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-gate-job JOB | mc-epoch-srm-gate-job-status JOB | verify-mc-epoch-srm-gate-job JOB | solve-mc-epoch-srm-gate MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | prepare-mc-epoch-srm-job MESH.json ORIGINAL_RUN.json SPEC.json MATERIAL_ATTEMPTS_PER_SAVE NEW_JOB | run-mc-epoch-srm-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-job JOB | mc-epoch-srm-job-status JOB | verify-mc-epoch-srm-job JOB | search-mc-epoch-srm MESH.json ORIGINAL_RUN.json SPEC.json NEW_REPORT.json | prepare-srm-search-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_INTERVAL NEW_JOB | run-srm-search-job JOB [ADVANCE_BUDGET] | prepare-srm-search-recovery PREVIOUS_JOB NEW_JOB | stop-srm-search-job JOB | srm-search-job-status JOB | verify-srm-search-job JOB | mc-virtual-work-bound MESH.json PROBLEM.json NEW_REPORT.json | search-mc-srm MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mc-mean-stress-bound MESH.json PROBLEM.json NEW_REPORT.json | prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
     }
     Ok(())
 }
