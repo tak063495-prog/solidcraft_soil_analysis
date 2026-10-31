@@ -394,7 +394,7 @@ fn observed_order(coarse: f64, fine: f64, ratio: f64) -> Option<f64> {
     }
 }
 
-fn extrapolate(
+pub(crate) fn extrapolate(
     quantity: &str,
     reference: f64,
     values: Vec<f64>,
@@ -455,7 +455,7 @@ fn extrapolate(
     }
 }
 
-fn richardson(mid: f64, fine: f64, ratio: f64, order: f64) -> Option<f64> {
+pub(crate) fn richardson(mid: f64, fine: f64, ratio: f64, order: f64) -> Option<f64> {
     let denom = ratio.powf(order) - 1.;
     (denom.is_finite() && denom.abs() > 1e-8).then_some(fine + (fine - mid) / denom)
 }

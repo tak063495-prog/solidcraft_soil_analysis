@@ -34,6 +34,7 @@ pub mod mixed_mcc;
 pub mod mixed_mechanics;
 pub mod one_way;
 pub mod one_way_construction;
+pub mod plane_strain_2d;
 pub mod plates;
 pub mod replay;
 pub mod retention;
