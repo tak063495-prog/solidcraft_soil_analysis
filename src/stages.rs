@@ -4047,6 +4047,40 @@ pub(crate) fn resume_observed(
     solve_controlled(mesh, ground, case, Some(previous), None, Some(observer))
 }
 
+pub(crate) fn solve_until_observed(
+    mesh: &Mesh,
+    ground: Ground,
+    case: StageCase,
+    accepted_increments: usize,
+    observer: &dyn crate::stage_control::Observer,
+) -> Result<Run> {
+    if accepted_increments == 0 {
+        return Err(Error::Input("checkpoint interval must be positive".into()));
+    }
+    solve_controlled(
+        mesh,
+        ground,
+        case,
+        None,
+        Some(accepted_increments),
+        Some(observer),
+    )
+}
+
+pub(crate) fn resume_limited_observed(
+    mesh: &Mesh,
+    ground: Ground,
+    case: StageCase,
+    previous: Run,
+    limit: Option<usize>,
+    observer: &dyn crate::stage_control::Observer,
+) -> Result<Run> {
+    if limit == Some(0) {
+        return Err(Error::Input("checkpoint interval must be positive".into()));
+    }
+    solve_controlled(mesh, ground, case, Some(previous), limit, Some(observer))
+}
+
 fn equilibrate(
     model: &Model<'_>,
     mut seed: Committed,
