@@ -42,6 +42,7 @@ pub mod richards_checkpoint;
 pub mod rigidity;
 pub mod soil;
 pub mod solver;
+pub mod spatial_convergence;
 pub mod srm_bound;
 pub mod srm_search;
 pub mod srm_search_control;
