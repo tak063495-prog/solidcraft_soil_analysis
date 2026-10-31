@@ -93,3 +93,27 @@ pub fn inspect(mesh: &Mesh, run: &Run) -> Result<Endpoint> {
         audit,
     })
 }
+
+/// Re-audit an accepted parameter epoch against the unchanged construction
+/// origin. This never converts an epoch into a normal staged Run/Checkpoint.
+pub fn inspect_epoch(mesh: &Mesh, origin: &Run, saved: &McEpochCheckpoint) -> Result<Endpoint> {
+    let validated = McParameterMechanics::resume(mesh, origin, saved)?;
+    let mut endpoint = inspect(mesh, origin)?;
+    let mut model = Model::new(mesh, &origin.ground, &origin.case)?;
+    model.reference_displacement_m = origin.reference_displacement_m.clone();
+    model.material_models = validated
+        .parameters()
+        .iter()
+        .cloned()
+        .map(crate::soil::Model::MohrCoulomb)
+        .collect();
+    // resume already validates these frozen metadata and all original force,
+    // yield and constraint limits. Keep a complete current-material Frame.
+    endpoint.audit = model.frame(
+        "independent_srm_epoch_endpoint_audit".into(),
+        validated.committed(),
+        &origin.last_committed,
+        &origin.case,
+    )?;
+    Ok(endpoint)
+}
