@@ -1,5 +1,7 @@
 # FEM本体の新規Windows環境での検査
 
+2026-10-31、公開ff72bbac52f97e375626ce2fed892627dd1e7ccbの[Windows CI41036472823](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/41036472823)は成功し、artifact12969108502（ZIP SHA-256 `9523e066840c0520a02aca09e957b4ad0bc7d8e310a9c077973cb10583035022`）の657ソース、Rust349件、Python219件（無視0）、固定9依存、Rust 1.99.1（`58cf8f9c35b355199727627d07ae34a4e2846d67`）を照合しました。175ファイルはバイト一致、482ファイルはcheckoutのCRLF化だけで一致します。統合02dc94581bb070f59d387720592c2b9750513deeの[CI41012302947](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/41012302947)は同一ソース指紋で成功し、artifact ZIPのSHA-256は`1d47a4e83cd867d3939188c200ab267a6c2e8554780f0b31ad039d1f39a80c15`です。Linuxの初回はコピーしたソルバの実行ビット不足でmc_epoch_cliの4件が失敗し、修正後のLinuxはコンパイル対象のRust347件とPython219件、fmt、clippy、CLIビルドが合格しました。Windows固有の状態置換2件は上記CIの349件に含まれます。SolidCraftの画面、実GPU、長時間の大規模計算は対象外です。P6全体の完了ではありません。
+
 公開7b6f3e1650bba94db9c466c07b8e159f687b8fdfの[Windows CI40643394162](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40643394162)は成功し、artifact12797471087のZIP SHA・600ソース・Rust265件・Python137件・固定依存とRust1.99.1を照合しました。174ファイルはバイト一致、426ファイルはcheckoutのCRLF化だけで一致します。初回ea3126の8.3短縮パス比較1件の失敗と修正を別記録に保持しています。後続607ソースの公開f7aaa1fも[CI40645436331](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/40645436331)が成功し、artifact12799530192のZIP SHA・607ソース・Rust265件・Python159件・固定依存とRust1.99.1を照合しました。178ソースはバイト一致、429ソースはcheckoutのCRLF化だけで一致します。Native総合CI6327件と実GPUの限定受入はFEM専用CIと別に記録します。
 
 以下は過去版の記録です。

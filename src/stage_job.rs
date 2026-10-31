@@ -138,10 +138,27 @@ pub(crate) fn copy_checked(source: &Path, target: &Path) -> Result<String> {
         .open(target)?;
     std::io::copy(&mut incoming, &mut outgoing)?;
     outgoing.flush()?;
+    drop(outgoing);
+    // The byte hash is unchanged. Windows executes `*.exe` without a Unix mode;
+    // other hosts must keep the source executable bits or the frozen solver cannot start.
+    #[cfg(unix)]
+    preserve_executable_bits(source, target)?;
     if checkpoint::hash_file(source)? != digest || checkpoint::hash_file(target)? != digest {
         return Err(Error::Input("job input changed while being copied".into()));
     }
     Ok(digest)
+}
+#[cfg(unix)]
+fn preserve_executable_bits(source: &Path, target: &Path) -> Result<()> {
+    use std::os::unix::fs::PermissionsExt;
+    let executable = fs::metadata(source)?.permissions().mode() & 0o111;
+    if executable == 0 {
+        return Ok(());
+    }
+    let mut perms = fs::metadata(target)?.permissions();
+    perms.set_mode((perms.mode() & 0o777) | executable);
+    fs::set_permissions(target, perms)?;
+    Ok(())
 }
 fn load(folder: &Path) -> Result<(Manifest, Mesh, Ground, StageCase)> {
     let manifest: Manifest = read_small(&folder.join("job.json"), 256 * 1024)?;

@@ -3,6 +3,7 @@ import contextlib
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -142,7 +143,7 @@ class CadExcavation(unittest.TestCase):
             self.assertTrue(any(np.linalg.norm(xyz[t[4]]-(xyz[t[0]]+xyz[t[1]])/2)>1e-5 for t in cells))
             total=sum(ref.volume(mesh,i,independent=True)['weight'].sum() for i in range(len(cells)))
             self.assertAlmostEqual(total,800.,places=8)
-            solver=Path(__file__).resolve().parents[1]/'target/release/soil-fem-3d.exe'
+            solver=Path(__file__).resolve().parents[1]/'target/release'/('soil-fem-3d.exe' if os.name=='nt' else 'soil-fem-3d')
             result=subprocess.run([str(solver),'validate',str(output)],capture_output=True,text=True)
             self.assertEqual(result.returncode,0,result.stderr)
 
