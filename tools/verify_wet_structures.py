@@ -171,6 +171,10 @@ def compare(mesh, ground, case, native, expected):
     assert native['complete'] and native['schema'] == 'soil-fem-stage-result/14'
     assert native['ground'] == ground and native['case'] == case
     assert len(native['frames']) == len(expected)
+    assert [f['name'] for f in native['frames']] == ['initial_equilibrated']+[s['name'] for s in case['stages']]
+    flow_indices = {i for i, s in enumerate(case['stages']) if s['kind'] == 'steady_seepage'}
+    assert len(native['flow_audits']) == len(flow_indices)
+    assert {a['stage_index'] for a in native['flow_audits']} == flow_indices
     water = Water(mesh, ground, case, native['joint_integration_points']); rows = []
     previous_actual = previous_ref = None
     for frame, r in zip(native['frames'], expected, strict=True):
@@ -210,6 +214,7 @@ def compare(mesh, ground, case, native, expected):
             for key, value in r['results']['members'][member['id']].items():
                 np.testing.assert_allclose(member[key], value, rtol=1e-7, atol=1e-6)
         assert len(frame['beam_results'].get('plates', [])) == len(r['results']['plates'])
+        assert {p['id'] for p in frame['beam_results'].get('plates', [])} == set(r['results']['plates'])
         for plate in frame['beam_results'].get('plates', []):
             predicted = r['results']['plates'][plate['id']]
             for key in ('area_m2', 'local_axes', 'membrane_energy_kn_m', 'bending_energy_kn_m', 'drilling_penalty_energy_kn_m'):

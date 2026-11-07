@@ -38,13 +38,15 @@ class WetStructures(unittest.TestCase):
         self.assertFalse(self.report['p3b_p4_rows_complete'])
 
     def test_wrong_physical_water_and_contact_traction_are_rejected(self):
-        for target in ('water', 'traction'):
+        for target in ('water', 'traction', 'missing_flow'):
             native = copy.deepcopy(self.native)
             state = native['frames'][4]['state']
             if target == 'water':
                 state['joint_water']['physical_pressure_kpa'][0] += 1.
-            else:
+            elif target == 'traction':
                 state['joints']['points'][0]['traction_kpa'][2] += 1.
+            else:
+                native['flow_audits'] = []
             with self.assertRaises(AssertionError):
                 wet.compare(self.mesh, self.ground, self.case, native, self.expected)
 
