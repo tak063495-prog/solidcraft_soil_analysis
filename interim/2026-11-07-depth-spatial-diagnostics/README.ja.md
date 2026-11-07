@@ -29,3 +29,5 @@ rustfmt、clippy `--locked --all-targets -- -D warnings`、releaseビルドは�
 CI追補：同じPRの古い実行のみ、新しい更新で取消する設定へ変更しました。mainの直列実行、45分のjob上限、全Rust/Python試験と物理ゲートは保持しています。`source-verification.json`のCI不変は測定時点の記録で、この追補後はconcurrencyの取消条件だけが異なります。
 
 面内粗さの別対照：`depth-*-xz4.json`、`depth-*-xz4-half.json`、`depth-*-xz4-controls.json`に、面内4固定・奥行き2/4/8の192/384/768 Tet4と全段の刻み半減対照を追加しました。`xz4-source-verification.json`が入力版/ソルバー/ドライバーを結び付けます。押出しの全変位差は0.00651015→0.00433794 mm、有限幅は0.02390373→0.00983567 mm。有限幅応力1.324517→0.946817 kPaは引き続き判定不能です。面内2固定系列とも混ぜません。
+
+ローカル検証確定：rustfmt、clippy（`--locked --all-targets -- -D warnings`）、releaseビルド、Rust398件（失敗0・無視0）、Python239件（追加10件を含む、失敗0・スキップ0）が合格しました。改行固定後のPython全試験は518.340秒で終了コード0です。`local-validation.json`と各ログに固定しました。CI対象`bb6ce108b63292b878955d508195984a9f631f7d`からRust・ツール・試験・依存・workflowのソース差分はありません。後続は測定データ・文書・検証結果の追記です。
