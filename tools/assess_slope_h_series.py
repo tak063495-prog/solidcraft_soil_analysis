@@ -12,6 +12,16 @@ from plastic_spatial_convergence import read, write, sha, richardson
 from tet10_overlap import Overlay
 
 
+def contains_input(actual, expected):
+    """Serde adds defaults to saved Run inputs; every supplied value must agree."""
+    if isinstance(expected,dict):
+        return isinstance(actual,dict) and all(k in actual and contains_input(actual[k],v) for k,v in expected.items())
+    if isinstance(expected,list):
+        return isinstance(actual,list) and len(actual)==len(expected) and all(
+            contains_input(a,b) for a,b in zip(actual,expected,strict=True))
+    return actual==expected
+
+
 def assess(folder, output, overlap=False):
     folder=Path(folder); manifest=read(folder/'preparation.json')
     if not manifest['prepared'] or manifest['material_reduction_factor'] != 1.:
@@ -28,13 +38,18 @@ def assess(folder, output, overlap=False):
         mesh=read(sub/'mesh.json'); result=read(sub/'result.json'); parents=read(sub/'parent-quads.json')
         if not result['complete']:
             raise ValueError('incomplete slope solve is not convergence or an Fs upper bound')
+        if any(not contains_input(result[name],read(sub/f'{name}.json')) for name in ('ground','case')):
+            raise ValueError('result was solved with different prepared ground or case')
         if runs and (result['ground']!=runs[0]['ground'] or result['case']!=runs[0]['case']
                      or result['provenance']['solver_binary_sha256']!=runs[0]['provenance']['solver_binary_sha256']):
             raise ValueError('physical inputs or solver differ across h series')
         frame=result['frames'][0]
         audit=[frame['relative_force_residual'],frame['maximum_normalized_yield'],
                frame['maximum_absolute_engineering_strain_from_seed']]
-        if (not np.isfinite(audit).all() or audit[0]>1e-8 or audit[1]>1e-7 or audit[2]>.05):
+        global_force=float(np.linalg.norm(frame['force_balance_error_kn'])/
+                           max(np.linalg.norm(frame['applied_force_kn']),np.finfo(float).tiny))
+        if (not np.isfinite(audit+[global_force]).all() or audit[0]>1e-8 or audit[1]>1e-7
+                or audit[2]>.05 or global_force>1e-8):
             raise ValueError('original slope physical audit gates failed')
         state=frame['state']; xyz=np.asarray(mesh['nodes'])
         if len(state['displacement_m']) != len(xyz) or len(parents)!=len(mesh['tetrahedra']):

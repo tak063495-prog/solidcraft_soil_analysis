@@ -123,6 +123,7 @@ class SlopePreparation(unittest.TestCase):
                 result=dict(complete=True,ground=convergence.read(sub/'ground.json'),case=convergence.read(sub/'case.json'),
                     provenance=dict(solver_binary_sha256='manufactured assessment, not a solver run'),
                     frames=[dict(relative_force_residual=0.,maximum_normalized_yield=0.,
+                        force_balance_error_kn=[0.,0.,0.],applied_force_kn=[0.,0.,-4400.],
                         maximum_absolute_engineering_strain_from_seed=0.,state=dict(
                             displacement_m=np.zeros_like(xyz).tolist(),active_elements=[True]*len(tet),
                             material_states=[dict(effective_stress_compression_positive_kpa=[3.,3.,3.,0.,0.,0.])]*len(tet)))],
@@ -134,6 +135,12 @@ class SlopePreparation(unittest.TestCase):
             self.assertIsNone(assessed['monitor']['estimate'])
             for pair in assessed['pairs']:
                 self.assertLess(pair['source_prism_mean_stress_rms_difference_kpa'],1e-12)
+            changed_result=out/report['levels'][0]['folder']/'result.json'
+            wrong=convergence.read(changed_result)
+            wrong['ground']['materials'][0]['mohr_coulomb']['cohesion_kpa']=11.
+            changed_result.write_text(json.dumps(wrong))
+            with self.assertRaisesRegex(ValueError,'different prepared ground or case'):
+                slope_assessment.assess(out,Path(temp)/'wrong-case.json')
             changed=out/report['levels'][0]['folder']/'case.json'
             changed.write_text('{}')
             with self.assertRaisesRegex(ValueError,'prepared input changed'):
