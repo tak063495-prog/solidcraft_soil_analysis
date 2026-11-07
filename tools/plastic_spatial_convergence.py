@@ -26,7 +26,8 @@ def read(path):
 
 
 def write(path, data):
-    with Path(path).open('x', encoding='utf-8') as stream:
+    # Canonical LF keeps input fingerprints reproducible on Windows as well.
+    with Path(path).open('x', encoding='utf-8', newline='\n') as stream:
         json.dump(data, stream, indent=2, allow_nan=False)
 
 
