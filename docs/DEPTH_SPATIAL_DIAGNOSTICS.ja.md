@@ -21,6 +21,19 @@ PR #13 の最終コミット `13c9c717f58dfa9ad5639487be9d6448e382e6cf` から�
 
 施工増分1/32・材料積分幅5e−5の同一メッシュ対照を全3段で保存した。最細の全変位RMS差は押出し4.46834e−6／有限幅8.00377e−6 mm、応力差は0.000426011／0.000966976 kPa。空間差より小さいが、全ての積分・非線形誤差が消えた証明ではない。
 
+面内分割を各4へ固定した、別の奥行き2/4/8系列（192/384/768 Tet4）も測定した。面内2固定の系列と混ぜずに保存する。
+
+|面内4固定、掘削後|2→4層のRMS差|4→8層のRMS差|条件付き次数|
+|---|---:|---:|---:|
+|押出し・全変位 mm|0.00651015|0.00433794|0.5857|
+|押出し・掘削増分変位 mm|0.00545278|0.00342788|0.6697|
+|押出し・全応力 kPa|0.514409|0.288400|0.8348|
+|有限幅・全変位 mm|0.02390373|0.00983567|1.2811|
+|有限幅・掘削増分変位 mm|0.02734924|0.01194763|1.1948|
+|有限幅・全応力 kPa|1.324517|0.946817|判定不能|
+
+全段の元の物理監査を通過した。有限幅応力はこの面内固定値でも0.7条件に届かない。全3段の刻み半減対照を保存し、最細の全変位RMS差は押出し9.46940e−6／有限幅6.37724e−6 mm、応力は0.000613357／0.000726531 kPaだった。面内固定値で変位の条件付き次数が変わる観測も、一般3D空間収束と解の一意性を認定しない理由として残す。
+
 ## 奥行き2層固定の面内系列
 
 押出しの奥行き2層固定で、面内2/4/8の48/192/768 Tet4も新しい出力先へ保存した。全変位RMS差は0.0808553→0.0582971 mm、掘削増分は0.0794616→0.0581268 mm、応力は2.839444→2.004075 kPa。いずれも元の0.7条件に届かず次数は判定不能である。元の1層24/96/384系列の0.081069→0.055366 mm／条件付き次数0.5501や、有限幅系列の既存値を置き換えない。これは別の固定奥行きでの観測であり、異なる系列の差を1本のRichardson列へ混ぜない。
@@ -70,6 +83,8 @@ PR #13 の最終コミット `13c9c717f58dfa9ad5639487be9d6448e382e6cf` から�
 cargo build --locked --release
 python tools/plastic_spatial_convergence.py runs/depth-plane-v1 --axis depth
 python tools/plastic_spatial_convergence.py runs/depth-finite-v1 --axis depth --finite-width
+python tools/plastic_spatial_convergence.py runs/depth-plane-xz4-v1 --axis depth --in-plane-divisions 4
+python tools/plastic_spatial_convergence.py runs/depth-finite-xz4-v1 --axis depth --in-plane-divisions 4 --finite-width
 python tools/plastic_spatial_convergence.py runs/plane-ny2-v1 --depth-divisions 2
 python tools/plastic_spatial_convergence.py runs/depth-plane-half-v1 --axis depth --increment 0.03125 --material-substep 0.00005 --control-baseline runs/depth-plane-v1
 python tools/plastic_spatial_convergence.py runs/depth-finite-half-v1 --axis depth --finite-width --increment 0.03125 --material-substep 0.00005 --control-baseline runs/depth-finite-v1
