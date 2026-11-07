@@ -2,7 +2,8 @@
 
 Tet4 stress is elementwise constant. Intersection-volume norms therefore compare
 the complete displacement and stress fields without GP history interpolation.
-Only x/z are refined; depth and the physical cut remain fixed.
+The default refines x/z at fixed depth. A separate depth series fixes x/z.
+The physical domain and cut stay fixed in both series.
 """
 import argparse
 import copy
@@ -62,10 +63,16 @@ def richardson(values):
     return result
 
 
-def inputs(n, finite_width=False, increment=1/16, material_substep=1e-4):
+def validate_divisions(n, ny, finite_width):
     if n < 2 or n > 64 or n & (n-1):
         raise ValueError('in-plane divisions must be a power of two in 2..64')
-    ny = 2 if finite_width else 1
+    if ny < 1 or ny > 64 or ny & (ny-1) or (finite_width and ny < 2):
+        raise ValueError('depth divisions must be a power of two in 1..64 (finite width requires >=2)')
+
+
+def inputs(n, finite_width=False, increment=1/16, material_substep=1e-4, depth_divisions=None):
+    ny = depth_divisions if depth_divisions is not None else (2 if finite_width else 1)
+    validate_divisions(n, ny, finite_width)
     nodes = [[i/n, j/ny, k/n] for k in range(n+1) for j in range(ny+1) for i in range(n+1)]
     index = lambda i, j, k: i+(n+1)*(j+(ny+1)*k)
     cells, regions = [], []
@@ -74,7 +81,7 @@ def inputs(n, finite_width=False, increment=1/16, material_substep=1e-4):
             for i in range(n):
                 c = [index(i,j,k), index(i+1,j,k), index(i+1,j+1,k), index(i,j+1,k),
                      index(i,j,k+1), index(i+1,j,k+1), index(i+1,j+1,k+1), index(i,j+1,k+1)]
-                cut = i < n//2 and k >= n//2 and (not finite_width or j == 0)
+                cut = i < n//2 and k >= n//2 and (not finite_width or j < ny//2)
                 for local in ((0,1,2,6),(0,2,3,6),(0,3,7,6),(0,7,4,6),(0,4,5,6),(0,5,1,6)):
                     tet = [c[q] for q in local]
                     xyz = np.asarray([nodes[q] for q in tet])
@@ -135,7 +142,7 @@ def lift(mesh, displacement):
     return result, u
 
 
-def compare(mesh_a, run_a, mesh_b, run_b):
+def compare(mesh_a, run_a, mesh_b, run_b, diagnostics=False):
     ma, _ = lift(mesh_a, run_a['frames'][0]['state']['displacement_m'])
     mb, _ = lift(mesh_b, run_b['frames'][0]['state']['displacement_m'])
     overlay = Overlay(ma, mb)
@@ -167,6 +174,24 @@ def compare(mesh_a, run_a, mesh_b, run_b):
             construction_displacement=overlay.compare(da,db,active_a,active_b),
             stress=dict(**coverage,rms_difference_kpa=float(np.sqrt(error/coverage['active_volume_m3'])),
                         relative_l2=float(np.sqrt(error/ref)) if ref > 0 else None)))
+        if diagnostics:
+            components = np.sum(weights[:,None]*delta**2*metric,axis=0)
+            pressure = np.mean(delta[:,:3],axis=1)
+            pressure_error = float(np.sum(weights*3*pressure**2))
+            deviator = delta.copy(); deviator[:,:3] -= pressure[:,None]
+            deviator_error = float(np.sum(weights*np.sum(deviator**2*metric,axis=1)))
+            pa = np.asarray([s['equivalent_plastic_strain'] > 0 for s in a['material_states']])[overlay.ea[selected]]
+            pb = np.asarray([s['equivalent_plastic_strain'] > 0 for s in b['material_states']])[overlay.eb[selected]]
+            density = np.sum(delta**2*metric,axis=1)
+            reports[-1]['stress_diagnostic'] = dict(
+                component_order=['xx','yy','zz','xy','yz','xz'],
+                tensor_weighted_component_rms_kpa=np.sqrt(components/coverage['active_volume_m3']).tolist(),
+                component_squared_integrals_kpa2_m3=components.tolist(),
+                hydrostatic_squared_integral_kpa2_m3=pressure_error,
+                deviatoric_squared_integral_kpa2_m3=deviator_error,
+                plastic_partition=[dict(region=name,volume_m3=float(weights[mask].sum()),
+                    squared_integral_kpa2_m3=float(np.sum(weights[mask]*density[mask])))
+                    for name,mask in [('both_plastic',pa & pb),('one_plastic',pa ^ pb),('both_elastic',~pa & ~pb)]])
     return dict(geometry=overlay.metadata, stages=reports)
 
 
@@ -195,16 +220,27 @@ def summarize(mesh, run):
 
 
 def run_series(folder, binary, divisions=(2,4,8), finite_width=False, increment=1/16, timeout=120,
-               material_substep=1e-4):
+               material_substep=1e-4, axis='in_plane', depth_divisions=None, in_plane_divisions=2):
+    if axis not in ('in_plane','depth'):
+        raise ValueError('axis must be in_plane or depth')
     if len(divisions)<3 or any(b!=2*a for a,b in zip(divisions,divisions[1:])):
-        raise ValueError('at least three in-plane levels with ratio two required')
+        raise ValueError('at least three levels with ratio two required')
+    if axis == 'depth' and depth_divisions is not None:
+        raise ValueError('fixed depth divisions cannot be combined with a depth series')
+    # Validate every level before creating an output directory or starting any solve.
+    for n in divisions:
+        validate_divisions(n if axis == 'in_plane' else in_plane_divisions,
+                           (depth_divisions if depth_divisions is not None else (2 if finite_width else 1))
+                           if axis == 'in_plane' else n, finite_width)
     if not 0 < increment <= 1 or not 0 < material_substep <= 1e-4 or not np.isfinite(timeout) or timeout <= 0:
         raise ValueError('positive timeout, increment in (0,1] and material substep in (0,1e-4] required')
     folder = Path(folder); folder.mkdir(parents=True,exist_ok=False)
     levels=[]; solved=[]; failures=[]
     for n in divisions:
-        sub=folder/f'n{n}'; sub.mkdir()
-        mesh,ground,case=inputs(n,finite_width,increment,material_substep)
+        sub=folder/(f'n{n}' if axis == 'in_plane' else f'ny{n}'); sub.mkdir()
+        nx = n if axis == 'in_plane' else in_plane_divisions
+        ny = (depth_divisions if depth_divisions is not None else (2 if finite_width else 1)) if axis == 'in_plane' else n
+        mesh,ground,case=inputs(nx,finite_width,increment,material_substep,ny)
         for name,value in [('mesh',mesh),('ground',ground),('case',case)]:
             write(sub/f'{name}.json',value)
         command=[str(Path(binary).resolve()),'solve-stages',str(sub/'mesh.json'),str(sub/'ground.json'),
@@ -223,7 +259,7 @@ def run_series(folder, binary, divisions=(2,4,8), finite_width=False, increment=
             break
         result=read(sub/'result.json')
         summary=summarize(mesh,result)
-        summary.update(divisions=n,h_xz_m=1/n,depth_divisions=2 if finite_width else 1,
+        summary.update(divisions=n,h_xz_m=1/nx,h_y_m=1/ny,in_plane_divisions=nx,depth_divisions=ny,
                        solver_elapsed_seconds=time.monotonic()-started,
                        files_sha256={name:sha(sub/name) for name in ('mesh.json','ground.json','case.json','result.json')})
         levels.append(summary)
@@ -238,7 +274,7 @@ def run_series(folder, binary, divisions=(2,4,8), finite_width=False, increment=
             failures.append(dict(divisions=n,reason='original_physical_audit_gate_failed'))
             break
         solved.append((mesh,result))
-    pairs=[compare(*a,*b) for a,b in zip(solved,solved[1:])]
+    pairs=[compare(*a,*b,diagnostics=True) for a,b in zip(solved,solved[1:])]
     quantities=[]
     if solved:
         for stage_index,frame in enumerate(levels[0]['frames']):
@@ -263,12 +299,13 @@ def run_series(folder, binary, divisions=(2,4,8), finite_width=False, increment=
                     conditional_estimate=True, reason='conditional_same_leading_error_field' if observable else 'indeterminate'))
     report=dict(schema='soil-fem-plastic-spatial-convergence/1',p6_complete=False,
         general_3d_spatial_convergence_demonstrated=False,griffiths_slope_five_percent_closed=False,
-        finite_width=finite_width,requested_divisions=list(divisions),levels=levels,pairs=pairs,
+        refinement_axis=axis,finite_width=finite_width,requested_divisions=list(divisions),levels=levels,pairs=pairs,
         scalar_richardson=quantities,field_difference_orders=norm_orders,
         solver_sha256=sha(binary),driver_sha256=sha(__file__),
         complete=len(solved)==len(divisions),failures=failures, fs=dict(status='not_attempted',
             reason='no independently excluded upper factor for this nonuniform cut; nonconvergence is not collapse'),
-        limitations=['Only x/z are refined; depth discretization is fixed and needs a separate study.',
+        limitations=[('Only x/z are refined; depth discretization is fixed and needs a separate study.' if axis == 'in_plane'
+                      else 'Only depth is refined; x/z discretization is fixed and needs a separate study.'),
             'Three levels give conditional orders, not a proof of the asymptotic regime.',
             'Load and material increments are fixed; run the half-increment control separately.',
             'The original Griffiths 661-node 2D displacement data is absent; its 5% comparison stays open.',
@@ -283,19 +320,23 @@ def main():
     parser.add_argument('--binary',type=Path,default=BINARY)
     parser.add_argument('--divisions',type=int,nargs='+',default=[2,4,8])
     parser.add_argument('--finite-width',action='store_true')
+    parser.add_argument('--axis',choices=['in_plane','depth'],default='in_plane')
+    parser.add_argument('--depth-divisions',type=int,help='fixed depth for an in-plane series; use a new output')
+    parser.add_argument('--in-plane-divisions',type=int,default=2,help='fixed x/z for a depth series')
     parser.add_argument('--increment',type=float,default=1/16)
     parser.add_argument('--material-substep',type=float,default=1e-4)
     parser.add_argument('--control-baseline',type=Path,help='compare each level with an existing same-mesh baseline')
     parser.add_argument('--timeout',type=float,default=120,help='per solve; workstation users may explicitly increase')
     args=parser.parse_args()
     if len(args.divisions)<3 or any(b!=2*a for a,b in zip(args.divisions,args.divisions[1:])):
-        parser.error('at least three in-plane levels with ratio two required')
+        parser.error('at least three levels with ratio two required')
     report=run_series(args.output.resolve(),args.binary,args.divisions,args.finite_width,args.increment,args.timeout,
-                      args.material_substep)
+                      args.material_substep,args.axis,args.depth_divisions,args.in_plane_divisions)
     if args.control_baseline and report['complete']:
         comparisons=[]
         for n in args.divisions:
-            a=args.control_baseline/f'n{n}'; b=args.output/f'n{n}'
+            name=f'n{n}' if args.axis == 'in_plane' else f'ny{n}'
+            a=args.control_baseline/name; b=args.output/name
             if read(a/'mesh.json')!=read(b/'mesh.json') or read(a/'ground.json')!=read(b/'ground.json'):
                 raise ValueError('control requires identical mesh and ground')
             comparisons.append(dict(divisions=n,**compare(read(a/'mesh.json'),read(a/'result.json'),

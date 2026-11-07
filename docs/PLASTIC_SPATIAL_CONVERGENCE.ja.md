@@ -100,3 +100,7 @@ python tools/assess_slope_h_series.py runs/griffiths-inplane runs/griffiths-inpl
 実測JSONは [2026-11-07の記録](../interim/2026-11-07-plastic-spatial-convergence/README.ja.md) に保存する。Rust本体、従来の検証コード、依存定義は変更していない。全既存試験と新規試験の件数、Windows CIの結果は同記録に追記する。
 
 未達は、細分化で次数が維持されるか、奥行き差、非一意性・局所化、押出しの応力と振動する掘削モニター、Griffiths斜面の実h系列求解・元2D変位5％、正確なFs、既存のMCC掘削274〜14,909要素の空間差、構造・水・JOINTとの統合、一般3D空間収束、P6全体である。
+
+## 奥行き差と追加診断の追補
+
+元の数値と判定は保持し、[奥行き別系列・押出しの追加診断・MCC記録の分離](DEPTH_SPATIAL_DIAGNOSTICS.ja.md)を別に追加した。固定奥行き2層の押出し面内系列も新しい出力先に保存し、元の1層系列へ混ぜない。一般3D空間収束とP6は引き続き未達である。
