@@ -1,7 +1,8 @@
 """Prepare only: pinned Griffiths geometry, fixed-depth in-plane Tet10 h series.
 
-No 2D displacements are included or inferred. No slope solve runs on import or
-preparation. The material is unreduced F=1, not the archived critical run.
+No 2D displacements are inferred. No slope solve runs on import or preparation.
+Default material is unreduced F=1. An explicit pinned reference file prepares
+a separate series at the archived fixed reduction factor, never an Fs claim.
 """
 import argparse
 from collections import Counter
@@ -70,8 +71,16 @@ def slope_mesh(geometry, divisions, depth_divisions=1):
     return mesh,parent_quads
 
 
-def prepare(output, depth_divisions=1):
+def prepare(output, depth_divisions=1, reference_path=None):
+    reference = None
+    if reference_path is not None:
+        from griffiths_2d import load_reference
+        reference = load_reference(reference_path)
     geometry=read(GEOMETRY); output=Path(output); output.mkdir(parents=True,exist_ok=False)
+    if reference is not None:
+        from griffiths_2d import digest, GEOMETRY_DIGEST
+        if digest(geometry) != GEOMETRY_DIGEST:
+            raise ValueError('pinned slope corner geometry changed')
     _,ground,case=inputs(2)
     zero=ground['initialization']['geostatic']['seed']['states']['Soil']
     ground['initialization']['geostatic']['seed']['states']={'Slope':zero}
@@ -79,6 +88,11 @@ def prepare(output, depth_divisions=1):
     material=ground['materials'][0]['mohr_coulomb']
     material.update(young_kpa=100000.,poisson=.3,cohesion_kpa=10.,friction_deg=20.)
     ground['materials'][0]['name']='Griffiths unreduced F=1; no critical 2D displacement comparison'
+    if reference is not None:
+        material.update({k:v for k,v in reference['material'].items() if k!='unit_weight_kn_m3'})
+        ground['materials'][0]['unit_weight_kn_m3']=reference['material']['unit_weight_kn_m3']
+        ground['materials'][0]['name']='Pinned Griffiths 2D reference at archived fixed reduction factor'
+        zero['void_ratio']=.8
     case['boundary']=dict(constraints=[dict(node_set=name,direction=np.eye(3)[axis].tolist(),value_m=0.)
         for name,axis in [('all',1),('fixed_x',0),('fixed_z',2)]])
     case['settings']['initial_increment']=1/32
@@ -89,13 +103,25 @@ def prepare(output, depth_divisions=1):
         mesh,parents=slope_mesh(geometry,n,depth_divisions)
         for name,value in [('mesh',mesh),('ground',ground),('case',case),('parent-quads',parents)]:
             write(folder/f'{name}.json',value)
+        names=['mesh.json','ground.json','case.json','parent-quads.json']
+        if reference is not None:
+            from griffiths_2d import sample_nodes
+            write(folder/'reference-map.json',sample_nodes(mesh,reference))
+            # Existing full mechanics verifier reads this established filename.
+            write(folder/'stages.json',case)
+            names+=['reference-map.json','stages.json']
         records.append(dict(folder=folder.name,elements=len(mesh['tetrahedra']),nodes=len(mesh['nodes']),
                             relative_h_xz=1/n,depth_divisions=depth_divisions,
-                            files_sha256={name:sha(folder/name) for name in ('mesh.json','ground.json','case.json','parent-quads.json')}))
+                            files_sha256={name:sha(folder/name) for name in names}))
     report=dict(schema='soil-fem-griffiths-in-plane-preparation/1',prepared=True,solved=False,
         p6_complete=False,griffiths_slope_five_percent_closed=False,material_reduction_factor=1.,
         source_geometry_sha256=sha(GEOMETRY),levels=records,
-        note='Geometry/support data only. No 661-node reference displacement. All ny are identical; this is not the archived F~1.35 material.')
+        note='No reference supplied: F=1 only. All ny are identical; this is not the archived F~1.35 material.')
+    if reference is not None:
+        from griffiths_2d import REFERENCE_DIGEST
+        report.update(material_reduction_factor=reference['material_reduction_factor'],
+            reference_2d_content_sha256=REFERENCE_DIGEST,
+            note='Pinned original 661-node data supplied. Matching fixed reduced material; no solve or 5% verdict yet.')
     write(output/'preparation.json',report)
     return report
 
@@ -104,5 +130,6 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output',type=Path)
     parser.add_argument('--depth-divisions',type=int,default=1)
+    parser.add_argument('--reference-2d',type=Path)
     args=parser.parse_args()
-    prepare(args.output,args.depth_divisions)
+    prepare(args.output,args.depth_divisions,args.reference_2d)

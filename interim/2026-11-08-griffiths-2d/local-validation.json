@@ -1,0 +1,56 @@
+{
+  "fmt": {
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.8754854129999785
+  },
+  "clippy": {
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "seconds": 4.683533540999974
+  },
+  "release-build": {
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "seconds": 0.09079799599999205
+  },
+  "rust-tests": {
+    "status": "running_not_yet_claimed_passed",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ]
+  },
+  "python-tests": {
+    "command": "python -m unittest discover -s tests -p test_*.py -v",
+    "exit_code": 0,
+    "seconds": 209.829192369,
+    "tests": 260,
+    "new_tests": 21,
+    "failures": 0,
+    "skipped": 0
+  },
+  "windows_ci": {
+    "status": "not_yet_run_for_this_implementation"
+  }
+}
