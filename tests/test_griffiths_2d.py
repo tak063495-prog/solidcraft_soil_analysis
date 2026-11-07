@@ -293,11 +293,21 @@ class UserPcPreparation(unittest.TestCase):
             if change == 'nonfinite': bad['geostatic']['last_committed']['displacement_m'][0][0] = float('nan')
             if change == 'wrong_binary': bad['provenance']['solver_binary_sha256'] = 'changed'
             if change == 'wrong_material': bad['ground']['materials'][0]['mohr_coulomb']['cohesion_kpa'] = 10.
-            if change == 'wrong_frame': bad['frames'][0]['state'] = {}
+            if change == 'wrong_frame':
+                bad['frames'][0]['state'] = copy.deepcopy(bad['frames'][0]['state'])
+                bad['frames'][0]['state']['displacement_m'][0][0] += .001
             if change == 'inactive': bad['geostatic']['last_committed']['active_elements'][0] = False
             if change == 'rejected_history': bad['geostatic']['attempts'] = [dict(accepted=False, committed_state_unchanged_on_rejection=False)]
             with self.subTest(change=change), self.assertRaises(ValueError):
                 comparison.validate_run(bad, self.mesh, self.ground, self.case, 'synthetic-unit-test')
+
+    def test_initial_frame_bookkeeping_reset_preserves_the_total_displacement(self):
+        run = self.manufactured_run()
+        run['frames'][0]['state'] = copy.deepcopy(run['geostatic']['last_committed'])
+        run['geostatic']['last_committed'].update(stage_progress=1., geostatic_release_load_kn=[0., 0., 0.])
+        run['frames'][0]['state'].update(stage_progress=0., geostatic_release_load_kn=[])
+        self.assertEqual(comparison.validate_run(run, self.mesh, self.ground, self.case, 'synthetic-unit-test').shape,
+                         (len(self.mesh['nodes']), 3))
 
 
 if __name__ == '__main__': unittest.main()

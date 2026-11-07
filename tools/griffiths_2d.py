@@ -163,7 +163,9 @@ def validate_run(run, mesh, ground, case, solver_digest):
     if run.get('provenance', {}).get('solver_binary_sha256') != solver_digest:
         raise ValueError('producing solver binary changed or missing')
     geo = run['geostatic']; frame = run['frames'][0]
-    if geo['last_committed'] != frame['state']:
+    # The production solver resets stage_progress and release-load bookkeeping
+    # after initialization. Compare the total displacement, not that metadata.
+    if geo['last_committed']['displacement_m'] != frame['state']['displacement_m']:
         raise ValueError('geostatic total displacement differs from initial frame')
     u = np.asarray(geo['last_committed']['displacement_m'], float)
     if u.shape != (len(mesh['nodes']), 3) or not np.isfinite(u).all() or np.any(u[:, 1] != 0.):
