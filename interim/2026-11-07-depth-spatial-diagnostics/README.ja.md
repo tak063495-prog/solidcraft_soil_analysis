@@ -25,3 +25,5 @@ rustfmt、clippy `--locked --all-targets -- -D warnings`、releaseビルドは�
 固定した面内粗分割での奥行き差と3段階の条件付き次数を、一般3D空間収束へ読み替えません。有限幅奥行き応力、押出し応力・振動モニター、PCでの細分化継続、MCC空間差、Griffiths実求解・661節点5%・正確なFs・実断面SRM、Native UI、構造/水/JOINT、別PC/GPU、完成配布、P6は未達または対象外のままです。不収束や判定不能を破壊側上端にしません。
 
 追補：入力JSONの書込み改行をLFへ明示し、Windowsでも既存の入力SHAを再現できるようにしました。Linux測定時のバイト列と数値は同じです。`portable-writer-verification.json`で測定時ドライバーのコミット/SHAと、改行指定以外の構文木一致を保存し、元の測定の結合先を保持します。
+
+CI追補：同じPRの古い実行のみ、新しい更新で取消する設定へ変更しました。mainの直列実行、45分のjob上限、全Rust/Python試験と物理ゲートは保持しています。`source-verification.json`のCI不変は測定時点の記録で、この追補後はconcurrencyの取消条件だけが異なります。
