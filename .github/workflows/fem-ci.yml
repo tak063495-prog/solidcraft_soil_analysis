@@ -67,6 +67,12 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tests.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tools -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tools-tests.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify small wet JOINT plate beam integration
+        run: |
+          python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/wet-structures 2>&1 | Tee-Object -FilePath runs/ci/wet-structures.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Save source fingerprints and verification logs
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -75,5 +81,10 @@ jobs:
           path: |
             runs/ci/*.json
             runs/ci/*.log
+            runs/ci/wet-structures/verification.json
+            runs/ci/wet-structures/stage-results.json
+            runs/ci/wet-structures/mesh.json
+            runs/ci/wet-structures/ground.json
+            runs/ci/wet-structures/stages.json
           if-no-files-found: warn
           retention-days: 14
