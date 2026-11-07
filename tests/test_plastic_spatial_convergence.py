@@ -26,6 +26,8 @@ class ReferenceFreeOrders(unittest.TestCase):
         self.assertAlmostEqual(report['finest_discretization_component'],.015625)
 
     def test_oscillation_growth_floor_and_two_levels_do_not_invent_limits(self):
+        self.assertTrue(slope_assessment.contains_input({'settings':{}},{'settings':{},'layers':[]}))
+        self.assertFalse(slope_assessment.contains_input({'settings':{}},{'settings':{},'layers':[1]}))
         for values in ([1.,2.,1.9],[1.,2.,4.],[1.,1.,1.],[1.,1.+1e-12,1.+1.25e-12],[1.,1.5]):
             with self.subTest(values=values):
                 self.assertIsNone(convergence.richardson(values)['estimate'])

@@ -15,7 +15,8 @@ from tet10_overlap import Overlay
 def contains_input(actual, expected):
     """Serde adds defaults to saved Run inputs; every supplied value must agree."""
     if isinstance(expected,dict):
-        return isinstance(actual,dict) and all(k in actual and contains_input(actual[k],v) for k,v in expected.items())
+        return isinstance(actual,dict) and all(
+            contains_input(actual[k],v) if k in actual else v in ([],{}) for k,v in expected.items())
     if isinstance(expected,list):
         return isinstance(actual,list) and len(actual)==len(expected) and all(
             contains_input(a,b) for a,b in zip(actual,expected,strict=True))
