@@ -13,6 +13,7 @@ pub mod epoch_srm_gate;
 pub mod epoch_srm_gate_job;
 pub mod epoch_srm_job;
 pub mod epoch_srm_search;
+pub mod exact_fs;
 pub mod geostatic;
 pub mod ground;
 pub mod hardening;
