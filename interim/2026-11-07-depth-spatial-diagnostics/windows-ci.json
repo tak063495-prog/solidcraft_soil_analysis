@@ -1,0 +1,39 @@
+{
+  "run_id": 42376553235,
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42376553235",
+  "status": "success",
+  "observed_at_utc": "2026-11-07T14:01:58.539600+00:00",
+  "implementation_commit": "bb6ce108b63292b878955d508195984a9f631f7d",
+  "public_page_title": "Add plastic excavation h-refinement and fixed-depth Griffiths inputs \u00b7 tak063495-prog/solidcraft_soil_analysis@bb6ce10 \u00b7 GitHub",
+  "head_identification": "Public run title short SHA resolved against the pushed Git commit",
+  "public_summary_sha256": "b5ac3dc13926c779f2e754f766bfff1394becfcb77987006b9cfa327920dbfe2",
+  "evidence": "Public GitHub run summary; detailed Windows test logs were not downloaded",
+  "source_workflow": ".github/workflows/fem-ci.yml",
+  "workflow_sha256": "e9417887073977c5b0199365d5c64b7bd86ecc9e5cc491c71302ad5a8f8249a4",
+  "successful_workflow_checks": [
+    "rustfmt",
+    "clippy --locked --all-targets -- -D warnings",
+    "cargo test --locked --release",
+    "cargo build --locked --release",
+    "python -m unittest discover -s tests -p 'test_*.py' -v"
+  ],
+  "local_validation": "local-validation.json",
+  "local_rust_passed": 398,
+  "local_python_passed": 239,
+  "new_python_tests": 10,
+  "later_changes": "measurement data, Japanese documentation and verification records only",
+  "numerical_tool_test_and_dependency_sources_unchanged_since_ci_commit": true,
+  "prior_ci": {
+    "run_id": 42368053150,
+    "head_commit": "13c9c717f58dfa9ad5639487be9d6448e382e6cf",
+    "status": "success",
+    "replaced": false
+  },
+  "superseded_runs_cancelled": [
+    42376206280,
+    42376228956,
+    42376365815
+  ],
+  "p6_complete": false,
+  "general_3d_spatial_convergence_demonstrated": false
+}
