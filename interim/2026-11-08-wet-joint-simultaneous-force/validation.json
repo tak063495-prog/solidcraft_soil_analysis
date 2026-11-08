@@ -1,0 +1,66 @@
+{
+  "schema": "soil-fem-wet-joint-simultaneous-validation/1",
+  "checks": [
+    {
+      "log": "new-tests-corrected.log",
+      "tests": 5,
+      "unittest_reported_seconds": 1.798,
+      "passed": true,
+      "failures": 0,
+      "skips": 0
+    },
+    {
+      "log": "cut-history-tests.log",
+      "tests": 4,
+      "unittest_reported_seconds": 0.719,
+      "passed": true,
+      "failures": 0,
+      "skips": 0
+    },
+    {
+      "log": "volume-tests.log",
+      "tests": 5,
+      "unittest_reported_seconds": 0.725,
+      "passed": true,
+      "failures": 0,
+      "skips": 0
+    },
+    {
+      "log": "nc-guards-tests.log",
+      "tests": 4,
+      "unittest_reported_seconds": 0.019,
+      "passed": true,
+      "failures": 0,
+      "skips": 0
+    }
+  ],
+  "python_tests": 18,
+  "software_checks_passed": true,
+  "numerical_acceptance_passed": false,
+  "rust_build_rerun": false,
+  "rust_tests_rerun": false,
+  "python_full_suite_rerun": false,
+  "production_source_changed": false,
+  "windows_ci": "unverified",
+  "prevalidation_errors": [
+    {
+      "log": "new-tests.log",
+      "reason": "Test fixture attribute run shadowed unittest.TestCase.run; fixed to native_run.",
+      "tests_completed": 0
+    },
+    {
+      "log": "new-tests-final.log",
+      "reason": "Same fixture error before correction.",
+      "tests_completed": 0
+    },
+    {
+      "log": "remeasure-initial-error.log",
+      "reason": "NumPy array equality against JSON lists was ambiguous; compare serializable fields instead. No solver rerun."
+    }
+  ],
+  "pc_finer_local_solve_executed": false,
+  "saved_evidence_remeasurement_exact": true,
+  "archive_entries_sha256_checked": 15,
+  "python_syntax_check_passed": true,
+  "pc_helper_help_check_passed": true
+}
