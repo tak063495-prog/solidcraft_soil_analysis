@@ -20,6 +20,7 @@ import numpy as np
 import fem_reference as fem
 from beam_reference import System
 from joint_water_reference import Water
+import darcy_reference
 from verify_checkpoint import invoke
 from verify_high_order import physical
 
@@ -54,16 +55,26 @@ def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
     assert case['settings']['kinematics'] == 'explicit'
     assert all(c['value_m'] == 0 and not np.asarray(c['gradient']).any()
                for c in case['boundary']['constraints'])
-    assert set(water_modes) <= {'continuous', 'prescribed'}
+    assert set(water_modes) <= {'continuous', 'prescribed', 'soil'}
     assert all(j['water']['kind'] in water_modes
                for j in case['joint_system']['joints']), 'water mode requires explicit reference scope'
     assert all(j['water'].get('level_m') is None for j in case['joint_system']['joints']
                if j['water']['kind'] == 'prescribed'), 'fixed prescribed head requires separate reference'
-    assert not case['joint_system'].get('structure_bodies')
+    roles = set(case['joint_system'].get('structure_bodies', []))
+    if roles:
+        assert set(water_modes) == {'soil'}, 'structure roles require explicit SOIL scope'
+        assert roles <= {r['body'] for r in mesh['regions']}, 'unknown structure body'
+    else:
+        assert 'soil' not in water_modes, 'SOIL requires an impermeable structure role'
     xyz = np.asarray(mesh['nodes']); ndof = xyz.size
     assert ndof <= 6500, 'small direct reference only'
     active = np.ones(len(mesh['tetrahedra']), dtype=bool)
     water = Water(mesh, ground, case); contact = water.contact
+    for point in water.faces:
+        policy = water.definitions[point['joint_id']]['water']
+        if policy['kind'] == 'soil':
+            side = policy['soil_side']; other = 'b' if side == 'a' else 'a'
+            assert water.soil[point['owner_'+side]] and not water.soil[point['owner_'+other]], 'SOIL side/role mismatch'
     beams = System(mesh, case['beam_system']); state = beams.initial_state()
     materials = {m['id']: m['mohr_coulomb'] for m in ground['materials']}
     regions = {r['id']: r['body'] for r in mesh['regions']}
@@ -92,6 +103,7 @@ def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
     u = np.zeros_like(xyz); factor = 0.; level = ground['initialization']['water_level_m']
     gamma = water.gamma; field = None; frames = []
     for stage in [None]+case['stages']:
+        darcy = None
         if stage is not None:
             kind = stage['kind']
             if kind in ('install_beams', 'remove_beams'):
@@ -102,11 +114,14 @@ def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
                 level = stage['target_level_m']; field = None
             else:
                 level = stage['exterior_water_level_m']
-                field = water.steady(stage['flow'], active, mesh['material_ids'], level)['field']
+                darcy = water.steady(stage['flow'], active, mesh['material_ids'], level)
+                field = darcy['field']
         interface = water.hydrostatic(active, level) if field is None else water.from_heads(active, field, level)
         seed_force = np.zeros(ndof)
-        for q, dofs, _, s0, _ in operators:
-            if field is None:
+        for ei, (q, dofs, _, s0, _) in enumerate(operators):
+            if not water.soil[ei]:
+                pore = np.zeros(len(q['weight']))
+            elif field is None:
                 assert level >= xyz[:, 2].max(), 'partial volume wetting requires separate quadrature convergence'
                 pore = gamma*(level-q['position'][:, 2])
             else:
@@ -148,7 +163,9 @@ def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
             s = s0-strain@d.T
             assert np.max(normalized_yield(materials[mesh['material_ids'][ei]], s)) < 0
             stress.extend(s); void.extend((1+e0)*np.exp(strain[:, :3].sum(axis=1))-1)
-            if field is None:
+            if not water.soil[ei]:
+                pore_values.extend(np.zeros(len(q['weight'])))
+            elif field is None:
                 pore_values.extend(gamma*(level-q['position'][:, 2]))
             else:
                 h = field['relative_head'][q['nodes']]
@@ -164,7 +181,7 @@ def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
         frames.append(dict(u=u.copy(), beams=copy.deepcopy(state), results=br,
                            stress=np.asarray(stress), void=np.asarray(void), traction=traction,
                            pore=np.asarray(pore_values),
-                           pressure=pressure, interface=interface, head=field, load=load,
+                           pressure=pressure, interface=interface, head=field, darcy=darcy, load=load,
                            support=support.sum(axis=0)+br['support_force'], moment=moment,
                            residual=residual))
     return frames
@@ -229,7 +246,15 @@ def compare(mesh, ground, case, native, expected):
                          relative_increment_error=increment,relative_stress_error=ds,
                          reference_true_residual=r['residual'],minimum_effective_contact_pressure_kpa=float(r['pressure'].min())))
     for flow in native['flow_audits']:
-        field = expected[flow['stage_index']+1]['head']
+        ref = expected[flow['stage_index']+1]
+        field = ref['head']
+        np.testing.assert_array_equal(flow['joint_flow']['original_field']['defined_nodes'], field['defined'])
+        if set(case['joint_system'].get('structure_bodies', [])):
+            np.testing.assert_array_equal(flow['solution']['active_elements'], water.soil)
+            hydraulic = ref['darcy']
+            assert len(flow['solution']['points']) == sum(len(q['weight']) for q in hydraulic['solution']['quadrature'].values())
+            rows[flow['stage_index']+1]['independent_darcy'] = darcy_reference.verify(
+                hydraulic['hydraulic_mesh'], hydraulic['case'], flow['solution'], mesh['material_ids'])
         np.testing.assert_allclose(flow['joint_flow']['original_field']['head_m'], field['head'], rtol=0, atol=1e-8)
     return rows
 
@@ -241,14 +266,24 @@ def run(solver, output, water_mode=None):
                       ('ground-wet-plate-beam.json', 'ground.json'), ('stages-wet-plate-beam.json', 'stages.json')]:
         path = output/dest; shutil.copyfile(ROOT/'examples'/src, path); inputs.append(path)
     water_modes = ('continuous',) if water_mode is None else (water_mode,)
-    assert water_mode is None or water_mode == 'prescribed'
+    assert water_mode in (None, 'prescribed', 'soil')
     policy_source = None
     if water_mode is not None:
         policy_source = ROOT/'examples'/('stages-joint-water-'+water_mode+'.json')
-        policy = read(policy_source)['joint_system']['joints'][0]['water']
+        source_case = read(policy_source)
+        policy = source_case['joint_system']['joints'][0]['water']
         case_input = read(inputs[2])
         assert len(case_input['joint_system']['joints']) == 1
         case_input['joint_system']['joints'][0]['water'] = policy
+        if water_mode == 'soil':
+            # Carry the existing SOIL continuum role AND its single soil-side
+            # bottom-head flow boundary; the structural top is not an aquifer.
+            case_input['joint_system']['structure_bodies'] = source_case['joint_system']['structure_bodies']
+            flow_source = next(s for s in source_case['stages'] if s['kind'] == 'steady_seepage')
+            for stage in case_input['stages']:
+                if stage['kind'] == 'steady_seepage':
+                    stage['flow'] = copy.deepcopy(flow_source['flow'])
+                    stage['exterior_water_level_m'] = flow_source['exterior_water_level_m']
         inputs[2].write_text(json.dumps(case_input, indent=2)+'\n', encoding='utf-8')
     sources = [ROOT/'tools'/n for n in ('verify_wet_structures.py', 'beam_reference.py', 'plate_reference.py',
                'joint_water_reference.py', 'joint_reference.py', 'fem_reference.py', 'darcy_reference.py',
@@ -268,6 +303,17 @@ def run(solver, output, water_mode=None):
     assert exported['result_sha256'] == sha(rp) and exported['mesh_sha256'] == sha(inputs[0])
     assert all(exported[key] == 'passed' for key in ('vtu_roundtrip', 'integration_point_roundtrip',
                'joint_point_roundtrip', 'plate_sample_roundtrip'))
+    if water_mode == 'soil':
+        import meshio
+        point_soil = np.asarray([Water(mesh, ground, case).soil[p['element_index']]
+                                 for p in native['integration_points']])
+        for index, ref in enumerate(expected):
+            gp = meshio.read(output/'exports'/f'integration-points-{index:03}.vtu').point_data
+            ids = gp['integration_point_id']
+            np.testing.assert_array_equal(gp['material_stress_reference'], (~point_soil[ids]).astype(np.uint8))
+            np.testing.assert_allclose(gp['pore_pressure_kpa'], ref['pore'][ids], rtol=1e-10, atol=1e-8)
+            total = ref['stress'][ids].copy(); total[:, :3] += ref['pore'][ids, None]
+            np.testing.assert_allclose(gp['total_stress_compression_positive_kpa'], total, rtol=1e-7, atol=1e-7)
     fine = reference(mesh, ground, case, order=7, water_modes=water_modes)
     refinement = max(float(np.linalg.norm(a['u']-b['u'])/max(np.linalg.norm(b['u']), 1e-12)) for a, b in zip(expected, fine, strict=True))
     assert refinement < 1e-7
@@ -320,6 +366,6 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--solver', required=True, type=Path)
     p.add_argument('--output', required=True, type=Path)
-    p.add_argument('--water-mode', choices=('prescribed',))
+    p.add_argument('--water-mode', choices=('prescribed', 'soil'))
     a = p.parse_args()
     print(json.dumps(run(a.solver.resolve(), a.output.resolve(), a.water_mode), indent=2))

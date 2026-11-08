@@ -1,0 +1,101 @@
+{
+  "schema": "soil-fem-nc-retained-iterate-soil-measurements/1",
+  "starting_commit": "9cd1b719e8dbb65f6d4dafc2f53df2df90679075",
+  "passed": false,
+  "low_preload_nc": {
+    "passed": false,
+    "target": 1.0,
+    "previous_highest_progress": 0.9512960910797119,
+    "complete": false,
+    "failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: true linear residual 2.2719550405006375e-10",
+    "numerical_method": "retain current Newton iterate after enlarged fixed partition; at most 8 monotone LU residual refinement corrections; original true-residual gate",
+    "force_tolerance": 1e-08,
+    "true_linear_tolerance": 1e-10,
+    "final_rejected_true_linear_residual": 2.2719550405006375e-10,
+    "full_release": false,
+    "independent_plastic_3d_complete": false,
+    "both_implementation_step_sensitivity_complete": false,
+    "restart_through_completion": false,
+    "production_adopted": false,
+    "destruction_judgement": false,
+    "accepted_increments": 261,
+    "completed_frames": [
+      "initial_equilibrated",
+      "load",
+      "unload"
+    ],
+    "stage_index": 3,
+    "stage_progress": 0.9512958526611328,
+    "geostatic_progress": 1.0,
+    "pc_range_kpa": [
+      68.98034212036164,
+      172.52976255415317
+    ],
+    "plastic_points": 324,
+    "rejections": 18,
+    "rejected_plastic_trial_changed": true,
+    "rejected_contact_trial_changed": true,
+    "all_rejections_preserve_committed_state": true,
+    "stored_stress_force_checks": [
+      {
+        "frame": "initial_equilibrated",
+        "relative_force_residual": 1.478753103968099e-13,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 6.202845124519819e-13
+      },
+      {
+        "frame": "load",
+        "relative_force_residual": 1.1845652600329366e-15,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 4.827465517089588e-13
+      },
+      {
+        "frame": "unload",
+        "relative_force_residual": 2.172866067196381e-12,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": -0.016687482179995664
+      }
+    ],
+    "last_committed_force_check": {
+      "relative_force_residual": 1.2420529790311404e-09,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": 3.209071621578081e-14
+    },
+    "independent_plastic_3d_displacement": false,
+    "zero_release_check": {
+      "relative_force_residual": 1.5244191234979123e-12,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": -0.018801158098909077
+    },
+    "fully_released_and_frozen": false,
+    "removed_joint_and_material_history_frozen": true
+  },
+  "limited_soil": {
+    "passed": true,
+    "frames": 8,
+    "checkpoints": 8,
+    "maximum_relative_displacement_error": 2.521224214760812e-11,
+    "maximum_relative_increment_error": 3.3529909900857026e-11,
+    "maximum_relative_stress_error": 3.6343001709696405e-12,
+    "independent_gl5_to_gl7_relative_difference": 1.1311530276725194e-14,
+    "independent_darcy": {
+      "maximum_head_error_m": 0.0,
+      "maximum_flux_error_m_s": 0.0,
+      "maximum_pressure_head_error_m": 2.220446049250313e-16,
+      "independent_water_balance": 0.0
+    },
+    "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('soil',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance.",
+    "darcy_scope": "Inherited single bottom head 2 m, no source: constant soil head and zero flow. Nonzero SOIL through-flow is not verified.",
+    "nonzero_soil_flow_verified": false
+  },
+  "export_regression": {
+    "schema": "soil-fem-stage-result/14",
+    "before_structure_pore_max_kpa": 4.964701844302226,
+    "before_material_stress_reference_present": false,
+    "after_all_8_frames_checked_against_independent_reference": true
+  },
+  "p3b_p4_rows_complete": false,
+  "structure_water_joint_complete": false,
+  "p6_complete": false,
+  "windows_ci": "unconfirmed"
+}

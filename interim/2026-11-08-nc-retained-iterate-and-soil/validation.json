@@ -1,0 +1,143 @@
+{
+  "schema": "soil-fem-nc-soil-validation/1",
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6653844669999671
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.175733286999957
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.07560435900001039
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 243.31941402999996,
+      "count": 294,
+      "ok": true,
+      "skip_lines": []
+    },
+    {
+      "name": "python-tools-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.09932192700000542,
+      "count": 2,
+      "ok": true,
+      "skip_lines": []
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1154.223283804,
+      "counts": {
+        "passed": 408,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      }
+    },
+    {
+      "name": "diagnostic-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--example",
+        "nc_newton_trace",
+        "--example",
+        "nc_material_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.52791762999982
+    }
+  ],
+  "all_software_checks_passed": true,
+  "source_file_count": 720,
+  "sources_unchanged_after_tests": true,
+  "new_tests": {
+    "rust": 0,
+    "python": 4
+  },
+  "windows_ci": "unconfirmed",
+  "low_preload_nc_passed": false,
+  "p6_complete": false,
+  "p3b_p4_rows_complete": false,
+  "rust": {
+    "passed": 408,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0
+  },
+  "python": {
+    "passed": 294,
+    "failed": 0,
+    "skipped": 0
+  },
+  "python_tools": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "limited_soil_joint_passed": true,
+  "platform": "Linux x86_64"
+}
