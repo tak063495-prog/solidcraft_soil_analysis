@@ -1,7 +1,8 @@
 """Bounded observation of the existing 5 kPa NC free-contact case.
 
 This is a diagnostic driver, not a plastic 3D reference or an acceptance tool.
-It never changes the production solver or the generated numerical settings.
+It never changes the production solver. Explicit refinement controls are
+checked against the generator; physical inputs and force tolerances stay fixed.
 """
 import argparse
 import hashlib
@@ -34,13 +35,33 @@ def write(path, value):
         json.dump(value, stream, indent=2, ensure_ascii=False, allow_nan=False)
 
 
-def expected_inputs():
-    return make(mcc=True, pc=100., preload_kpa=5., force=(1., .5, 0.))
+def expected_inputs(excavation_increment=None, maximum_newton_iterations=None, minimum_increment=None, dense_lu=False):
+    inputs = make(mcc=True, pc=100., preload_kpa=5., force=(1., .5, 0.))
+    case = inputs[2]
+    if type(dense_lu) is not bool:
+        raise ValueError('dense_lu must be boolean')
+    if dense_lu:
+        case['settings']['linear_solver'] = {'method': 'dense_lu'}
+        case['settings']['maximum_free_dofs'] = len(inputs[0]['nodes'])*3
+    if minimum_increment is not None:
+        if not math.isfinite(minimum_increment) or not 0 < minimum_increment <= case['settings']['minimum_increment']:
+            raise ValueError('minimum increment must refine the existing positive minimum')
+        case['settings']['minimum_increment'] = minimum_increment
+    if excavation_increment is not None:
+        if (not math.isfinite(excavation_increment) or
+                not case['settings']['minimum_increment'] <= excavation_increment <= .5):
+            raise ValueError('excavation increment must refine the existing step within its minimum')
+        case['stages'][2]['initial_increment'] = excavation_increment
+    if maximum_newton_iterations is not None:
+        if type(maximum_newton_iterations) is not int or not 1 <= maximum_newton_iterations <= 60:
+            raise ValueError('Newton limit must be an integer in the existing 1..60 range')
+        case['settings']['maximum_newton_iterations'] = maximum_newton_iterations
+    return inputs
 
 
-def check_inputs(folder, job=False):
+def check_inputs(folder, job=False, **controls):
     paths = [folder/('case.json' if job and n == 'stages' else n+'.json') for n in NAMES]
-    for name, path, expected in zip(NAMES, paths, expected_inputs()):
+    for name, path, expected in zip(NAMES, paths, expected_inputs(**controls)):
         if read(path) != expected:
             raise ValueError('5 kPa NC input mismatch: '+name)
     return {p.name: sha(p) for p in paths}
@@ -181,20 +202,25 @@ def invoke(command, log):
         raise ValueError('control command failed: '+str(log))
 
 
-def probe(solver, output, budget_seconds=60., grace_seconds=15., resume_from=None, stop_after_accepted=None):
+def probe(solver, output, budget_seconds=60., grace_seconds=15., resume_from=None, stop_after_accepted=None,
+          excavation_increment=None, maximum_newton_iterations=None, minimum_increment=None, dense_lu=False):
     if not math.isfinite(budget_seconds) or not 0 < budget_seconds <= 600:
         raise ValueError('budget must be finite, positive and <= 600 seconds')
     if not math.isfinite(grace_seconds) or not 0 < grace_seconds <= 60:
         raise ValueError('grace must be finite, positive and <= 60 seconds')
     if stop_after_accepted is not None and stop_after_accepted < 1:
         raise ValueError('accepted count must be positive')
+    controls = dict(excavation_increment=excavation_increment,
+                    maximum_newton_iterations=maximum_newton_iterations, minimum_increment=minimum_increment,
+                    dense_lu=dense_lu)
+    expected = expected_inputs(**controls)
     if resume_from:
-        check_inputs(resume_from/'inputs', job=True)
+        check_inputs(resume_from/'inputs', job=True, **controls)
     output.mkdir(parents=True, exist_ok=False)
     inputs = output/'input'; inputs.mkdir()
-    for name, value in zip(NAMES, expected_inputs()):
+    for name, value in zip(NAMES, expected):
         write(inputs/(name+'.json'), value)
-    fingerprints = check_inputs(inputs)
+    fingerprints = check_inputs(inputs, **controls)
     solver_sha = sha(solver)
     job = output/'job'
     resume_command = None
@@ -249,16 +275,18 @@ def probe(solver, output, budget_seconds=60., grace_seconds=15., resume_from=Non
         resume_command=resume_command,
         solver_sha256=solver_sha, input_sha256=fingerprints,
         input_condition=dict(seed_p_kpa=100., seed_pc_kpa=100., preload_kpa=5., force_kn=[1., .5, 0.]),
+        numerical_controls=controls,
         missing_acceptance_evidence=['独立塑性3D全場', '両実装の刻み感度', '全工程途中再開の連続経路一致'],
         observation=None)
     if run is not None:
-        report['observation'] = inspect_run(*expected_inputs(), run)
+        report['observation'] = inspect_run(*expected, run)
+        report['solver_failure_reason'] = run['failure_reason']
         write(output/'observed-run.json', run)
         if not run['complete']:
             report['missing_acceptance_evidence'].insert(0, '全上部撤去の完了・全解放')
     else:
         report['missing_acceptance_evidence'].insert(0, '受理済み保存点')
-    if sha(solver) != solver_sha or check_inputs(inputs) != fingerprints:
+    if sha(solver) != solver_sha or check_inputs(inputs, **controls) != fingerprints:
         raise ValueError('solver/input changed during observation')
     report['evidence_sha256'] = {p.relative_to(output).as_posix(): sha(p) for p in output.rglob('*')
                                  if p.is_file() and p != frozen}
@@ -274,9 +302,14 @@ if __name__ == '__main__':
     parser.add_argument('--grace-seconds', type=float, default=15.)
     parser.add_argument('--resume-from', type=Path)
     parser.add_argument('--stop-after-accepted', type=int)
+    parser.add_argument('--excavation-increment', type=float)
+    parser.add_argument('--maximum-newton-iterations', type=int)
+    parser.add_argument('--minimum-increment', type=float)
+    parser.add_argument('--dense-lu', action='store_true')
     args = parser.parse_args()
     result = probe(args.solver.resolve(), args.output.resolve(), args.budget_seconds,
                    args.grace_seconds, args.resume_from.resolve() if args.resume_from else None,
-                   args.stop_after_accepted)
+                   args.stop_after_accepted, args.excavation_increment, args.maximum_newton_iterations,
+                   args.minimum_increment, args.dense_lu)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     # Successful observation is deliberately distinct from numerical acceptance.

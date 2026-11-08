@@ -1,0 +1,46 @@
+{
+  "schema": "soil-fem-low-preload-all-phase-partial-restarts/1",
+  "passed": false,
+  "partial_restart_comparisons_exact": true,
+  "comparisons": [
+    {
+      "phase": "geostatic",
+      "stage_index": 0,
+      "starting_progress": 0.5,
+      "accepted_before": 4,
+      "accepted_after": 5,
+      "exact_entire_run_except_elapsed_seconds": true
+    },
+    {
+      "phase": "load",
+      "stage_index": 1,
+      "starting_progress": 0.25,
+      "accepted_before": 9,
+      "accepted_after": 10,
+      "exact_entire_run_except_elapsed_seconds": true
+    },
+    {
+      "phase": "unload",
+      "stage_index": 2,
+      "starting_progress": 0.5,
+      "accepted_before": 13,
+      "accepted_after": 14,
+      "exact_entire_run_except_elapsed_seconds": true
+    },
+    {
+      "phase": "excavate_upper",
+      "stage_index": 3,
+      "starting_progress": 0.25,
+      "accepted_before": 15,
+      "accepted_after": 16,
+      "exact_entire_run_except_elapsed_seconds": true
+    }
+  ],
+  "solver_sha256": "afc5b3f542bd2bd68b9520f5a392780cb23fbf8cdc630f689f71a6ca57dd260e",
+  "excluded_recursive_fields": [
+    "elapsed_seconds"
+  ],
+  "limitations": [
+    "各工程途中から次の受理点までの一致。全撤去完了への再開一致は未確認"
+  ]
+}
