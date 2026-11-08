@@ -55,7 +55,16 @@ def discrete_volume_reference(mesh, ground, case, steps=32, contact_steps=20):
     return _reference(mesh, ground, case, steps, contact_steps, mesh.get('quadrature_order', 3), True)
 
 
-def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume):
+def cut_volume_reference(mesh, ground, case, steps=32, contact_steps=20, order=5):
+    """Affine-cell exact hydrostatic force; retain the existing GL bulk rule.
+
+    Only the pore-volume term changes. This is a verification reference, not
+    production adoption or a certificate of contact-history convergence.
+    """
+    return _reference(mesh, ground, case, steps, contact_steps, order, False, True)
+
+
+def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False):
     assert isinstance(steps, int) and steps >= 2
     assert isinstance(contact_steps, int) and contact_steps >= 1
     assert order >= 3
@@ -87,8 +96,14 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume)
         ids = (3*q['nodes'][:, None]+np.arange(3)).ravel()
         k[np.ix_(ids, ids)] += np.einsum('qai,ab,qbj,q->ij', q['b'], d, q['b'], q['weight'], optimize=True)
         pore = gamma*np.maximum(level-q['position'][:, 2], 0)
-        total = np.broadcast_to(s0, (len(pore), 6)).copy(); total[:, :3] += pore[:, None]
+        total = np.broadcast_to(s0, (len(pore), 6)).copy()
+        if not cut_volume:
+            total[:, :3] += pore[:, None]
         seed_force[ids] -= np.einsum('qai,qa,q->i', q['b'], total, q['weight'])
+        if cut_volume:
+            from hydrostatic_cut_volume_reference import force
+            # Replace just the pressure term. Material/contact rules stay intact.
+            seed_force[ids] += force(mesh, ei, level, gamma)['force'].ravel()
         operators.append((fem.volume(mesh, ei), ids, d, s0, seed, mat))
     basis, error = fem.staged_constraint_space(mesh, case, dict(
         active_elements=active, boundary_factor=0., displacement_m=np.zeros_like(xyz)))
@@ -190,7 +205,8 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume)
         origin = stage['target_factor']; frame(stage['name'], base+origin*boundary)
     return dict(frames=frames, path=path, steps=steps, contact_steps=contact_steps,
                 volume_order=order, maximum_relative_force_residual=maximum_residual,
-                volume_rule='input_gauss_jacobi' if discrete_volume else 'independent_gauss_legendre',
+                volume_rule=('affine_cut_hydrostatic' if cut_volume else
+                             'input_gauss_jacobi' if discrete_volume else 'independent_gauss_legendre'),
                 reference_uses_native_results=False)
 
 
