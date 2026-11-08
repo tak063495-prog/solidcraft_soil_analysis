@@ -1,0 +1,47 @@
+{
+  "physical_inputs_equal_to_generator": true,
+  "profile": "existing probe_nc_midpoint.inputs midpoint",
+  "changes": [
+    {
+      "path": "/settings/linear_solver/method",
+      "generator": "sparse_gmres_ilu0",
+      "existing_profile": "dense_lu"
+    },
+    {
+      "path": "/settings/linear_solver/options",
+      "generator": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      },
+      "existing_profile": null
+    },
+    {
+      "path": "/settings/maximum_free_dofs",
+      "generator": 100000,
+      "existing_profile": 162
+    },
+    {
+      "path": "/settings/mcc_integration",
+      "generator": null,
+      "existing_profile": "midpoint"
+    },
+    {
+      "path": "/settings/minimum_increment",
+      "generator": 0.001953125,
+      "existing_profile": 2.384185791015625e-07
+    },
+    {
+      "path": "/settings/tangent_perturbation",
+      "generator": 1e-07,
+      "existing_profile": 1e-09
+    },
+    {
+      "path": "/stages/2/initial_increment",
+      "generator": 0.5,
+      "existing_profile": 0.0078125
+    }
+  ],
+  "tolerances_relaxed": false,
+  "newton_limit_relaxed": false
+}

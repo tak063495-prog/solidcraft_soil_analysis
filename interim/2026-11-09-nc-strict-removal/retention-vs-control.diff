@@ -1,0 +1,24 @@
+diff --git a/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/control/src/stages.rs b/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/retain/src/stages.rs
+index fee6997..21a5b20 100644
+--- a/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/control/src/stages.rs
++++ b/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/retain/src/stages.rs
+@@ -2597,7 +2597,6 @@ impl<'a> Model<'a> {
+                 }
+             }
+         }
+-        let constrained_start = u.clone();
+         let mut partitions =
+             vec![1; self.point_count + self.joints.as_ref().map_or(0, |j| j.point_count())];
+         if let Some(joints) = &self.joints {
+@@ -3048,7 +3047,10 @@ impl<'a> Model<'a> {
+                     if let Some(i) = predictor_index {
+                         contact_predictors[i].repartitioned = true;
+                     }
+-                    u = constrained_start.clone();
++                    // Experimental only: reevaluate the CURRENT iterate using
++                    // the larger fixed partition at the next Newton iteration.
++                    // Constitutive history still starts from immutable old.
++                    // Do not accept the unevaluated candidate or reuse its residual.
+                     break;
+                 }
+                 let candidate_evaluation = self.evaluate(
