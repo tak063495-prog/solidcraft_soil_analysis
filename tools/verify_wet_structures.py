@@ -42,7 +42,7 @@ def without_time(value):
     return value
 
 
-def reference(mesh, ground, case, order=5):
+def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
     """Generate every reference frame exclusively from the three inputs."""
     allowed = {'install_beams', 'remove_beams', 'boundary',
                'hydrostatic_water', 'steady_seepage'}
@@ -54,8 +54,11 @@ def reference(mesh, ground, case, order=5):
     assert case['settings']['kinematics'] == 'explicit'
     assert all(c['value_m'] == 0 and not np.asarray(c['gradient']).any()
                for c in case['boundary']['constraints'])
-    assert all(j['water']['kind'] == 'continuous'
-               for j in case['joint_system']['joints'])
+    assert set(water_modes) <= {'continuous', 'prescribed'}
+    assert all(j['water']['kind'] in water_modes
+               for j in case['joint_system']['joints']), 'water mode requires explicit reference scope'
+    assert all(j['water'].get('level_m') is None for j in case['joint_system']['joints']
+               if j['water']['kind'] == 'prescribed'), 'fixed prescribed head requires separate reference'
     assert not case['joint_system'].get('structure_bodies')
     xyz = np.asarray(mesh['nodes']); ndof = xyz.size
     assert ndof <= 6500, 'small direct reference only'
@@ -231,29 +234,41 @@ def compare(mesh, ground, case, native, expected):
     return rows
 
 
-def run(solver, output):
+def run(solver, output, water_mode=None):
     output.mkdir(parents=True, exist_ok=False)
     inputs = []
     for src, dest in [('joint-water-column-tet10-mesh.json', 'mesh.json'),
                       ('ground-wet-plate-beam.json', 'ground.json'), ('stages-wet-plate-beam.json', 'stages.json')]:
         path = output/dest; shutil.copyfile(ROOT/'examples'/src, path); inputs.append(path)
+    water_modes = ('continuous',) if water_mode is None else (water_mode,)
+    assert water_mode is None or water_mode == 'prescribed'
+    policy_source = None
+    if water_mode is not None:
+        policy_source = ROOT/'examples'/('stages-joint-water-'+water_mode+'.json')
+        policy = read(policy_source)['joint_system']['joints'][0]['water']
+        case_input = read(inputs[2])
+        assert len(case_input['joint_system']['joints']) == 1
+        case_input['joint_system']['joints'][0]['water'] = policy
+        inputs[2].write_text(json.dumps(case_input, indent=2)+'\n', encoding='utf-8')
     sources = [ROOT/'tools'/n for n in ('verify_wet_structures.py', 'beam_reference.py', 'plate_reference.py',
                'joint_water_reference.py', 'joint_reference.py', 'fem_reference.py', 'darcy_reference.py',
                'hydrostatic_reference.py', 'verify_high_order.py', 'mc_reference.py', 'verify_checkpoint.py',
                'export_stages.py', 'high_order_io.py', 'beam_io.py', 'plate_io.py', 'joint_io.py')]
+    if policy_source is not None:
+        sources.append(policy_source)
     fingerprints = {str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p): sha(p) for p in [solver]+inputs+sources}
     rp = output/'stage-results.json'
     invoke([str(solver), 'solve-stages', *map(str, inputs), str(rp)], output/'solve.log')
     mesh = read(inputs[0]); ground = fem.normalize_ground(read(inputs[1])); case = fem.normalize_stage_case(read(inputs[2])); native = read(rp)
     assert native['provenance']['solver_binary_sha256'] == sha(solver)
-    expected = reference(mesh, ground, case); rows = compare(mesh, ground, case, native, expected)
+    expected = reference(mesh, ground, case, water_modes=water_modes); rows = compare(mesh, ground, case, native, expected)
     from export_stages import export
     export(inputs[0], rp, output/'exports')
     exported = read(output/'exports/export-verification.json')
     assert exported['result_sha256'] == sha(rp) and exported['mesh_sha256'] == sha(inputs[0])
     assert all(exported[key] == 'passed' for key in ('vtu_roundtrip', 'integration_point_roundtrip',
                'joint_point_roundtrip', 'plate_sample_roundtrip'))
-    fine = reference(mesh, ground, case, order=7)
+    fine = reference(mesh, ground, case, order=7, water_modes=water_modes)
     refinement = max(float(np.linalg.norm(a['u']-b['u'])/max(np.linalg.norm(b['u']), 1e-12)) for a, b in zip(expected, fine, strict=True))
     assert refinement < 1e-7
     # Fresh clean accepted path catches leakage from the deliberate rejections.
@@ -295,7 +310,8 @@ def run(solver, output):
                   independent_gl5_to_gl7_relative_difference=refinement,
                   clean_rejected_path_exact=True, checkpoints=checkpoints, inputs_sources_solver_sha256=fingerprints,
                   result_sha256=sha(rp), output_roundtrip=exported, p6_complete=False, p3b_p4_rows_complete=False,
-                  scope='12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy CONTINUOUS JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance.')
+                  water_modes=list(water_modes),
+                  scope='12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy '+str(water_modes)+' JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance.')
     (output/'verification.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     return report
 
@@ -304,5 +320,6 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--solver', required=True, type=Path)
     p.add_argument('--output', required=True, type=Path)
+    p.add_argument('--water-mode', choices=('prescribed',))
     a = p.parse_args()
-    print(json.dumps(run(a.solver.resolve(), a.output.resolve()), indent=2))
+    print(json.dumps(run(a.solver.resolve(), a.output.resolve(), a.water_mode), indent=2))

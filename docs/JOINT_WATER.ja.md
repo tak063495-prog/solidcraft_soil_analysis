@@ -109,3 +109,9 @@ Richardsの水頭トレースと湿潤接合の接続、有限の透水抵抗・
 ## 2026-11-08の小規模統合追補
 
 既存の固定版記録を保持したまま、静水圧・定常Darcy CONTINUOUS JOINTと12 Tet10・板2枚・梁1本の独立3D弾性対照を追加した。[既存証拠の棚卸し・限定範囲・残件・ユーザーPC手順](STRUCTURE_WATER_JOINT_REMAINDERS.ja.md)を参照。弾性・閉鎖固着の範囲であり、板/地盤の節点間補間整合、一般塑性・Richards湿潤接触、接触BIRTHやP3b/P4/P6全体の完了ではない。
+
+## PRESCRIBED追従水位と既存小部材の限定統合（2026-11-08）
+
+PR #13指定先端813b751から、既存の湿潤柱12 Tet10・板2枚・梁1本だけで、`PRESCRIBED level_m=null` の静水圧/定常Darcyを独立3D全場と比較した。物理水圧/両側面荷重/有効接触力、全構造回転と設置基準、地盤GP・梁力・板生評価点、GL5→7、8地点の別CLI途中再開、棄却なし対照、VTU/CSV再読込を検査した。生証拠と元の基準による限定判定は [interim](../interim/2026-11-08-nc-newton-and-prescribed-joint/README.ja.md) を参照する。
+
+既定CONTINUOUS参照の受入範囲は維持し、新条件には `--water-mode prescribed` が必要。固定水頭PRESCRIBEDとSOIL＋部材は拒否/未検証のまま。一般塑性・開離/滑り、Richards、接触BIRTH、部分亀裂先端や一般空間収束の完成証拠ではない。P3b/P4各行、構造・水・JOINT全体、P6全体を完了にしない。旧CONTINUOUS保護値2.6845491097390954e-11と全既存記録は変更しない。新先端Windows CIは未確認。

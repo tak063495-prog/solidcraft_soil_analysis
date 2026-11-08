@@ -22,6 +22,71 @@ fn rows(t: &Tensor) -> Vec<Vec<f64>> {
         .map(|i| (0..6).map(|j| t[(i, j)]).collect())
         .collect()
 }
+// Reconstruct the existing backward-Euler local equations from each exact
+// substep return. This is a residual audit, not a second constitutive model.
+fn local_residuals(r: &Request) -> Result<serde_json::Value> {
+    if r.parameters.integration != mcc::Integration::BackwardEuler {
+        return Err(soil_fem_3d::Error::Input(
+            "local residual audit requires backward Euler".into(),
+        ));
+    }
+    let mut old = r.state.clone();
+    let de = r.strain.map(|v| v / r.partitions as f64);
+    let mut records = Vec::new();
+    for _ in 0..r.partitions {
+        let update = r.parameters.integrate_partition(&old, de, 1)?;
+        let (k, g) = r.parameters.moduli(&old)?;
+        let ev = de[..3].iter().sum::<f64>();
+        let mut trial = old.effective_stress_compression_positive_kpa;
+        for i in 0..3 {
+            trial[i] += k * ev + 2. * g * (de[i] - ev / 3.);
+        }
+        for i in 3..6 {
+            trial[i] += g * de[i];
+        }
+        let (pt, qt) = mcc::invariants(&trial);
+        let (p, q) = mcc::invariants(&update.state.effective_stress_compression_positive_kpa);
+        let c = update.state.preconsolidation_pressure_kpa;
+        let scale = old.preconsolidation_pressure_kpa.max(pt).max(qt);
+        let m2 = r.parameters.critical_state_m.powi(2);
+        let pn = p / scale;
+        let qn = q / scale;
+        let cn = c / scale;
+        let h = m2 * (2. * pn - cn);
+        let kn = k / scale;
+        let gn = g / scale;
+        // Least-squares reconstruction avoids division by h at critical state.
+        let a = kn * h;
+        let b = 6. * gn * qn;
+        let l = if update.plastic_substeps > 0 {
+            (a * (pt - p) / scale + b * (qt - q) / scale) / (a * a + b * b)
+        } else {
+            0.
+        };
+        let hardening = (1. + old.void_ratio) / (r.parameters.lambda - r.parameters.kappa);
+        let residual = if update.plastic_substeps > 0 {
+            vec![
+                pn - pt / scale + kn * l * h,
+                qn - qt / scale + 6. * gn * l * qn,
+                (cn / (old.preconsolidation_pressure_kpa / scale)).ln() - hardening * l * h,
+                qn * qn + m2 * pn * (pn - cn),
+            ]
+        } else {
+            vec![0.; 4]
+        };
+        records.push(serde_json::json!({"plastic": update.plastic_substeps > 0,
+            "normalized_yield": r.parameters.normalized_yield(&update.state),
+            "reconstructed_local_residual_norm": residual.iter().map(|x| x*x).sum::<f64>().sqrt(),
+            "local_equations": residual,
+            "specific_volume_error": (1.+update.state.void_ratio)-(1.+old.void_ratio)*(-ev).exp(),
+        }));
+        old = update.state;
+    }
+    Ok(
+        serde_json::json!({"substeps": records, "replayed_state": old,
+        "residual_kind": "four existing BE equations; multiplier reconstructed by least squares"}),
+    )
+}
 fn measure(r: &Request) -> Result<serde_json::Value> {
     let before = serde_json::to_value(&r.state)?;
     let (implicit, tangent) =
@@ -65,6 +130,7 @@ fn measure(r: &Request) -> Result<serde_json::Value> {
         "plastic_substeps": primal.plastic_substeps,
         "normalized_yield": r.parameters.normalized_yield(&primal.state),
         "updated_state": primal.state,
+        "local_residuals": local_residuals(r)?,
     }))
 }
 fn main() -> Result<()> {
@@ -120,6 +186,14 @@ mod tests {
             Some(3)
         );
         assert!(result["plastic_substeps"].as_u64().is_some_and(|n| n > 0));
+        assert_eq!(
+            result["local_residuals"]["replayed_state"],
+            result["updated_state"]
+        );
+        for step in result["local_residuals"]["substeps"].as_array().unwrap() {
+            assert!(step["reconstructed_local_residual_norm"].as_f64().unwrap() < 1e-11);
+            assert_eq!(step["specific_volume_error"], 0.);
+        }
         Ok(())
     }
 }

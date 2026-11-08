@@ -2578,6 +2578,14 @@ impl<'a> Model<'a> {
                 }
             }
         }
+        let diagnostic = self
+            .observer
+            .filter(|o| o.diagnostic_enabled(stage, progress));
+        if diagnostic.is_some() && (self.point_count > 512 || dofs.count > 256) {
+            return Err(Error::Control(
+                "Newton diagnostics limited to 512 GP / 256 DOF".into(),
+            ));
+        }
         let mut linear_solves = Vec::new();
         let mut contact_predictors = Vec::new();
         for iteration in 0..=settings.maximum_newton_iterations {
@@ -2596,6 +2604,32 @@ impl<'a> Model<'a> {
                 .collect();
             let reduced = self.reduce(&residual, &dofs);
             let relative = reduced.norm() / scale;
+            if let Some(o) = diagnostic {
+                let mut strains = vec![[0.; 6]; self.point_count];
+                for (ei, e) in self.elements.iter().enumerate() {
+                    if active[ei] {
+                        let du = DVector::from_fn(e.dofs.len(), |i, _| {
+                            let g = e.dofs[i];
+                            u[g / 3][g % 3] - old.displacement_m[g / 3][g % 3]
+                        });
+                        for (qi, q) in e.points.iter().enumerate() {
+                            let de = -&q.b * &du;
+                            strains[e.point_start + qi] = std::array::from_fn(|i| de[i]);
+                        }
+                    }
+                }
+                o.on_diagnostic(&serde_json::json!({
+                    "strain_increment": strains,
+                    "kind": "iterate", "stage": stage, "progress": progress,
+                    "iteration": iteration, "projected_load": projected_load,
+                    "committed": old, "displacement_m": u, "active": active,
+                    "partitions": partitions, "states": eval.states,
+                    "internal": eval.internal, "target": target,
+                    "reduced_residual": reduced.as_slice(), "scale": scale,
+                    "relative_force_residual": relative,
+                }))
+                .map_err(|e| Error::Control(e.to_string()))?;
+            }
             self.notify(|| {
                 let mut event = self.progress(crate::stage_control::Kind::Newton, stage, progress);
                 event.newton_iteration = Some(iteration);
@@ -2686,6 +2720,22 @@ impl<'a> Model<'a> {
                 .tangent
                 .take()
                 .ok_or_else(|| Error::Solve("missing global tangent".into()))?;
+            if let Some(o) = diagnostic {
+                let rows: Vec<Vec<f64>> = (0..dofs.count)
+                    .map(|i| {
+                        let mut basis = DVector::zeros(dofs.count);
+                        basis[i] = 1.;
+                        matrix.action(&basis).map(|v| v.as_slice().to_vec())
+                    })
+                    .collect::<Result<_>>()?;
+                o.on_diagnostic(&serde_json::json!({
+                    "kind": "tangent", "stage": stage, "progress": progress,
+                    "iteration": iteration, "projected_load": projected_load,
+                    "matrix_columns": rows, "dof_rows": dofs.rows,
+                    "reduced_residual": reduced.as_slice(),
+                }))
+                .map_err(|e| Error::Control(e.to_string()))?;
+            }
             let gauges = if let Some(geometry) = &rigid_geometry {
                 let space = self.joint_support_space(geometry, &active, &dofs, &eval)?;
                 if space.full() {
@@ -2927,13 +2977,20 @@ impl<'a> Model<'a> {
                     }
                 }
                 if repartition {
+                    if let Some(o) = diagnostic {
+                        o.on_diagnostic(&serde_json::json!({
+                            "kind": "repartition", "iteration": iteration, "alpha": alpha,
+                            "partitions": partitions, "displacement_m": candidate,
+                        }))
+                        .map_err(|e| Error::Control(e.to_string()))?;
+                    }
                     if let Some(i) = predictor_index {
                         contact_predictors[i].repartitioned = true;
                     }
                     u = constrained_start.clone();
                     break;
                 }
-                if let Ok(trial) = self.evaluate(
+                let candidate_evaluation = self.evaluate(
                     old,
                     &candidate,
                     &active,
@@ -2946,7 +3003,29 @@ impl<'a> Model<'a> {
                         partitions: Some(&partitions),
                         factor: Some(boundary_factor),
                     },
-                ) {
+                );
+                if let Some(o) = diagnostic {
+                    let value = match &candidate_evaluation {
+                        Ok(trial) => {
+                            let r: Vec<_> = target
+                                .iter()
+                                .zip(&trial.internal)
+                                .map(|(a, b)| a - b)
+                                .collect();
+                            let candidate_relative = self.reduce(&r, &dofs).norm() / scale;
+                            serde_json::json!({"kind": "line_search", "iteration": iteration,
+                                "alpha": alpha, "displacement_m": candidate, "states": trial.states,
+                                "partitions": partitions, "relative_force_residual": candidate_relative,
+                                "armijo_accepted": candidate_relative < relative * (1. - 1e-4 * alpha)})
+                        }
+                        Err(e) => serde_json::json!({"kind": "line_search", "iteration": iteration,
+                            "alpha": alpha, "displacement_m": candidate, "partitions": partitions,
+                            "error": e.to_string()}),
+                    };
+                    o.on_diagnostic(&value)
+                        .map_err(|e| Error::Control(e.to_string()))?;
+                }
+                if let Ok(trial) = candidate_evaluation {
                     let r: Vec<_> = target
                         .iter()
                         .zip(&trial.internal)
