@@ -52,6 +52,36 @@ class SoilSourceWetStructures(unittest.TestCase):
         self.assertTrue(self.report['clean_rejected_path_exact'])
         self.assertFalse(self.report['p6_complete'] or self.report['p3b_p4_rows_complete'])
 
+    def test_open_or_slip_label_with_unchanged_fields_is_not_elastic_acceptance(self):
+        # The old force/energy checks accepted both contradictory labels.
+        # Visit every saved frame and every contact point, not just one sample.
+        for frame in self.native['frames']:
+            wet.require_closed_stick_history(frame['state'])
+            for index, _ in enumerate(frame['state']['joints']['points']):
+                for status in ('open', 'slip'):
+                    state = copy.deepcopy(frame['state'])
+                    state['joints']['points'][index]['status'] = status
+                    with self.assertRaisesRegex(AssertionError, 'non-stick status'):
+                        wet.require_closed_stick_history(state)
+        for status in ('open', 'slip'):
+            native = copy.deepcopy(self.native)
+            native['frames'][4]['state']['joints']['points'][0]['status'] = status
+            with self.assertRaisesRegex(AssertionError, 'non-stick status'):
+                wet.compare(self.mesh, self.ground, self.case, native, self.expected)
+
+    def test_tiny_or_nonfinite_plastic_history_cannot_be_hidden_by_work_tolerance(self):
+        for key, value in (('plastic_slip_m', [1e-14, 0., 0.]),
+                           ('plastic_slip_m', [float('nan'), 0., 0.]),
+                           ('accumulated_plastic_slip_m', 1e-14),
+                           ('accumulated_plastic_slip_m', -1e-14),
+                           ('plastic_dissipation_kpa_m', 1e-12),
+                           ('plastic_dissipation_kpa_m', float('inf'))):
+            with self.subTest(field=key, value=value):
+                native = copy.deepcopy(self.native)
+                native['frames'][4]['state']['joints']['points'][0][key] = value
+                with self.assertRaises(AssertionError):
+                    wet.compare(self.mesh, self.ground, self.case, native, self.expected)
+
     def test_flux_head_pressure_and_balance_corruption_are_rejected(self):
         for target in ('flux', 'head', 'pressure', 'source_balance', 'outflow'):
             with self.subTest(target=target):

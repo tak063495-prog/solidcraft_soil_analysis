@@ -43,6 +43,20 @@ def without_time(value):
     return value
 
 
+def require_closed_stick_history(state):
+    """The elastic reference has no plastic contact history to certify.
+
+    These are exact branch invariants, not fitted numerical tolerances. Work
+    balance alone cannot establish a status or exclude a small false history.
+    """
+    for point in state['joints']['points']:
+        assert point['status'] == 'stick', 'non-stick status outside elastic wet reference'
+        np.testing.assert_array_equal(point['plastic_slip_m'], np.zeros(3),
+                                      err_msg='plastic slip outside elastic wet reference')
+        assert point['accumulated_plastic_slip_m'] == 0, 'plastic history outside elastic wet reference'
+        assert point['plastic_dissipation_kpa_m'] == 0, 'plastic dissipation outside elastic wet reference'
+
+
 def reference(mesh, ground, case, order=5, water_modes=('continuous',), fixed_prescribed=False):
     """Generate every reference frame exclusively from the three inputs."""
     allowed = {'install_beams', 'remove_beams', 'boundary',
@@ -207,6 +221,7 @@ def compare(mesh, ground, case, native, expected):
     previous_actual = previous_ref = None
     for frame, r in zip(native['frames'], expected, strict=True):
         s = frame['state']; actual = np.asarray(s['displacement_m'])
+        require_closed_stick_history(s)
         du = float(np.linalg.norm(actual-r['u'])/max(np.linalg.norm(r['u']), 1e-12))
         assert du < 1e-7
         increment = 0.
