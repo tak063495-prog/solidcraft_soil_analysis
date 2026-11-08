@@ -19,6 +19,7 @@ pub mod ground;
 pub mod hardening;
 pub mod hydraulic_transition;
 pub mod hydrostatic;
+pub mod hydrostatic_volume;
 pub mod joint_law;
 pub mod joint_water;
 pub mod joints;

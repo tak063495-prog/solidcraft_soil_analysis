@@ -1,0 +1,90 @@
+{
+  "software_checks_passed": true,
+  "passed": false,
+  "history_converged": false,
+  "rust": {
+    "command": "cargo test --locked --release",
+    "exit_code": 0,
+    "tests_passed": 410,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "includes_new_integration_tests": 3,
+    "all_existing_rust_tests_executed": true,
+    "reported_targets": 62,
+    "log": "raw/rust-tests.log"
+  },
+  "python": {
+    "existing_allowed_tests_passed": 338,
+    "new_tests_passed": 5,
+    "tools_tests_passed": 2,
+    "total_distinct_tests_passed": 345,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "excluded_not_executed": [
+      "test_low_preload_nc.LowPreloadNC.test_100_kpa_preload_cannot_replace_5_kpa_original",
+      "test_low_preload_nc.LowPreloadNC.test_actual_nc_plastic_checkpoint_and_separate_process_prefix_match",
+      "test_low_preload_nc.LowPreloadNC.test_actual_wall_time_stop_never_becomes_collapse_or_acceptance",
+      "test_low_preload_nc.LowPreloadNC.test_corrupt_material_contact_and_displacement_cannot_pass_prefix",
+      "test_low_preload_nc.LowPreloadNC.test_nonfinite_and_unbounded_runtime_budgets_are_rejected",
+      "test_low_preload_nc.LowPreloadNC.test_partial_solver_and_restart_are_not_full_excavation_acceptance",
+      "test_low_preload_nc_followup.LowNCFollowup.test_real_separate_process_restarts_inside_every_phase"
+    ],
+    "all_existing_python_tests_executed": false,
+    "reason": "User explicitly prohibits another low-preload NC run without new verified improvement; this test class launches that case."
+  },
+  "all_allowed_existing_tests_passed": true,
+  "all_existing_tests_executed": false,
+  "integration_probe": {
+    "requests": 301,
+    "maximum_absolute_difference_kn": 3.197442310920451e-14,
+    "software_check_passed": true,
+    "not_counted_as_301_unittest_tests": true
+  },
+  "formatting": {
+    "command": "cargo fmt --all --check",
+    "exit_code": 0
+  },
+  "clippy": {
+    "command": "cargo clippy --locked --release --all-targets -- -D warnings",
+    "exit_code": 0
+  },
+  "new_rust_tests_repeated_after_style_fix": {
+    "command": "cargo test --locked --release --test hydrostatic_volume",
+    "tests_passed": 3,
+    "exit_code": 0,
+    "not_added_twice_to_unique_count": true
+  },
+  "initial_attempts": {
+    "clippy_initial": "two needless_range_loop warnings in newly added tests; fixed, final all-targets check succeeds",
+    "python_initial": "interrupted early to also exclude the NC follow-up restart method before reaching any low-preload NC run; owned small MC child stopped; not credited as a completed suite",
+    "evidence_readback_initial": "All SHA checks completed; comparison raised NumPy ambiguous-array ValueError. Fixed by serializable() before JSON equality. No numerical solver rerun; original failure log retained."
+  },
+  "numerical_solves": {
+    "production_paths": 4,
+    "frames_per_path": 7,
+    "separate_process_restarts": 7,
+    "all_same_binary_seals_verified": true,
+    "force_tolerance": 1e-08,
+    "true_linear_tolerance": 1e-10
+  },
+  "unexecuted": [
+    "7 Python tests that would launch low-preload NC",
+    "Windows numerical reproduction",
+    "new-tip Windows CI",
+    "Griffiths 1200/4800/19200 Tet10",
+    "MCC 274 through 14909",
+    "large slope SRM",
+    "82944 rain",
+    "105456 performance",
+    "real CAD",
+    "long Richards",
+    "independent 3D full-history acceptance of general hydraulic changes/excavation/structures"
+  ],
+  "windows_ci": "unverified",
+  "nc_retried": false,
+  "p3b_p4_rows_complete": false,
+  "structure_water_joint_complete": false,
+  "p6_complete": false
+}

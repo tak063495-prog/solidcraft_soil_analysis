@@ -420,6 +420,9 @@ pub struct Frame {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Run {
+    /// Absent in historical runs, which used the material GP water rule.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hydrostatic_volume_integration: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub flow_audits: Vec<FlowAudit>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -2213,6 +2216,48 @@ impl<'a> Model<'a> {
             for (offset, e) in self.elements[first..last].iter().enumerate() {
                 let ei = first + offset;
                 if active[ei] {
+                    // Hydrostatic max(H-z,0) is not polynomial across a water
+                    // table. Keep effective material stress/GP display on the
+                    // original rule, but integrate this affine cut separately.
+                    // Explicit seepage/ONE_WAY GP fields retain their own rule.
+                    let cut_pore = if committed.pore_pressure_kpa.is_none()
+                        && self.soil_points[e.point_start]
+                    {
+                        if let Some(level) = committed
+                            .hydrostatic_water_level_m
+                            .or(self.ground.initialization.water_level_m)
+                        {
+                            let points: Vec<_> = self
+                                .mesh
+                                .cell_nodes(ei)
+                                .iter()
+                                .map(|&n| self.mesh.nodes[n])
+                                .collect();
+                            let lo = points
+                                .iter()
+                                .take(4)
+                                .map(|p| p[2])
+                                .fold(f64::INFINITY, f64::min);
+                            let hi = points
+                                .iter()
+                                .take(4)
+                                .map(|p| p[2])
+                                .fold(f64::NEG_INFINITY, f64::max);
+                            if lo < level && level < hi {
+                                crate::hydrostatic_volume::affine_load(
+                                    &points,
+                                    level,
+                                    self.ground.initialization.water_unit_weight_kn_m3,
+                                )?
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    };
                     for (qi, q) in e.points.iter().enumerate() {
                         let point = e.point_start + qi;
                         let (update, d) = updates.next().ok_or_else(|| {
@@ -2226,8 +2271,10 @@ impl<'a> Model<'a> {
                                 *value += pressure[point] - mean;
                             }
                         }
-                        for s in total.iter_mut().take(3) {
-                            *s += self.point_pore(committed, point, q.position[2]);
+                        if cut_pore.is_none() {
+                            for s in total.iter_mut().take(3) {
+                                *s += self.point_pore(committed, point, q.position[2]);
+                            }
                         }
                         let force = -q.weight_m3
                             * q.b.transpose()
@@ -2246,6 +2293,11 @@ impl<'a> Model<'a> {
                                     }
                                 }
                             }
+                        }
+                    }
+                    if let Some(force) = cut_pore {
+                        for (i, f) in force.iter().flatten().enumerate() {
+                            internal[e.dofs[i]] += f;
                         }
                     }
                 }
@@ -4600,6 +4652,7 @@ fn solve_controlled(
     let provenance = crate::checkpoint::Identity::current(mesh, &ground, &case)?;
     if let Some(p) = &previous {
         if p.schema != result_schema(mesh, &ground, &case)
+            || p.hydrostatic_volume_integration.as_deref() != Some("affine_cut_partial")
             || p.complete
             || p.provenance != provenance
             || p.failure_reason.as_deref() != Some("checkpoint_requested")
@@ -4778,6 +4831,7 @@ fn solve_controlled(
                 )
             });
             return Ok(Run {
+                hydrostatic_volume_integration: Some("affine_cut_partial".into()),
                 flow_audits: vec![],
                 joint_integration_points,
                 schema: result_schema(mesh, &ground, &case).into(),
@@ -5666,6 +5720,7 @@ fn solve_controlled(
     let integration_points = model.layout();
     let reference_displacement_m = model.reference_displacement_m.clone();
     Ok(Run {
+        hydrostatic_volume_integration: Some("affine_cut_partial".into()),
         flow_audits,
         joint_integration_points,
         provenance,
