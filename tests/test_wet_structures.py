@@ -75,6 +75,22 @@ class WetStructures(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'sliding reference refused'):
             wet.reference(self.mesh, self.ground, case)
 
+    def test_soil_and_prescribed_with_members_are_not_continuous_acceptance(self):
+        for name in ('soil', 'prescribed'):
+            with self.subTest(water=name):
+                source = wet.read(ROOT/'examples'/('stages-joint-water-'+name+'.json'))
+                case = copy.deepcopy(self.case)
+                case['joint_system']['joints'][0]['water'] = source['joint_system']['joints'][0]['water']
+                with self.assertRaises(AssertionError):
+                    wet.reference(self.mesh, self.ground, case)
+
+    def test_plastic_seed_cannot_be_certified_by_elastic_member_reference(self):
+        ground = copy.deepcopy(self.ground)
+        seed = ground['initialization']['geostatic']['seed']['states']
+        next(iter(seed.values()))['equivalent_plastic_strain'] = .001
+        with self.assertRaises(AssertionError):
+            wet.reference(self.mesh, ground, self.case)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -35,9 +35,14 @@ def write(path, value):
         json.dump(value, stream, indent=2, ensure_ascii=False, allow_nan=False)
 
 
-def expected_inputs(excavation_increment=None, maximum_newton_iterations=None, minimum_increment=None, dense_lu=False):
+def expected_inputs(excavation_increment=None, maximum_newton_iterations=None, minimum_increment=None, dense_lu=False,
+                    tangent_perturbation=None):
     inputs = make(mcc=True, pc=100., preload_kpa=5., force=(1., .5, 0.))
     case = inputs[2]
+    if tangent_perturbation is not None:
+        if not math.isfinite(tangent_perturbation) or not 1e-9 <= tangent_perturbation <= 1e-7:
+            raise ValueError('tangent perturbation must refine the existing width within 1e-9..1e-7')
+        case['settings']['tangent_perturbation'] = tangent_perturbation
     if type(dense_lu) is not bool:
         raise ValueError('dense_lu must be boolean')
     if dense_lu:
@@ -203,7 +208,8 @@ def invoke(command, log):
 
 
 def probe(solver, output, budget_seconds=60., grace_seconds=15., resume_from=None, stop_after_accepted=None,
-          excavation_increment=None, maximum_newton_iterations=None, minimum_increment=None, dense_lu=False):
+          excavation_increment=None, maximum_newton_iterations=None, minimum_increment=None, dense_lu=False,
+          tangent_perturbation=None):
     if not math.isfinite(budget_seconds) or not 0 < budget_seconds <= 600:
         raise ValueError('budget must be finite, positive and <= 600 seconds')
     if not math.isfinite(grace_seconds) or not 0 < grace_seconds <= 60:
@@ -212,7 +218,7 @@ def probe(solver, output, budget_seconds=60., grace_seconds=15., resume_from=Non
         raise ValueError('accepted count must be positive')
     controls = dict(excavation_increment=excavation_increment,
                     maximum_newton_iterations=maximum_newton_iterations, minimum_increment=minimum_increment,
-                    dense_lu=dense_lu)
+                    dense_lu=dense_lu, tangent_perturbation=tangent_perturbation)
     expected = expected_inputs(**controls)
     if resume_from:
         check_inputs(resume_from/'inputs', job=True, **controls)
@@ -306,10 +312,11 @@ if __name__ == '__main__':
     parser.add_argument('--maximum-newton-iterations', type=int)
     parser.add_argument('--minimum-increment', type=float)
     parser.add_argument('--dense-lu', action='store_true')
+    parser.add_argument('--tangent-perturbation', type=float)
     args = parser.parse_args()
     result = probe(args.solver.resolve(), args.output.resolve(), args.budget_seconds,
                    args.grace_seconds, args.resume_from.resolve() if args.resume_from else None,
                    args.stop_after_accepted, args.excavation_increment, args.maximum_newton_iterations,
-                   args.minimum_increment, args.dense_lu)
+                   args.minimum_increment, args.dense_lu, args.tangent_perturbation)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     # Successful observation is deliberately distinct from numerical acceptance.
