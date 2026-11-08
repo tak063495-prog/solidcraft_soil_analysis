@@ -276,9 +276,9 @@ def run(solver, output, water_mode=None):
                       ('ground-wet-plate-beam.json', 'ground.json'), ('stages-wet-plate-beam.json', 'stages.json')]:
         path = output/dest; shutil.copyfile(ROOT/'examples'/src, path); inputs.append(path)
     fixed_prescribed = water_mode == 'prescribed-fixed'
-    policy_mode = 'prescribed' if fixed_prescribed else water_mode
+    policy_mode = 'prescribed' if fixed_prescribed else ('soil' if water_mode == 'soil-source' else water_mode)
     water_modes = ('continuous',) if policy_mode is None else (policy_mode,)
-    assert water_mode in (None, 'prescribed', 'prescribed-fixed', 'soil')
+    assert water_mode in (None, 'prescribed', 'prescribed-fixed', 'soil', 'soil-source')
     policy_source = None
     if water_mode is not None:
         policy_source = ROOT/'examples'/('stages-joint-water-'+policy_mode+'.json')
@@ -294,7 +294,7 @@ def run(solver, output, water_mode=None):
             policy['level_m'] = level
             case_input['stages'] = [s for s in case_input['stages']
                                    if s['kind'] != 'hydrostatic_water' or s['target_level_m'] == level]
-        if water_mode == 'soil':
+        if policy_mode == 'soil':
             # Carry the existing SOIL continuum role AND its single soil-side
             # bottom-head flow boundary; the structural top is not an aquifer.
             case_input['joint_system']['structure_bodies'] = source_case['joint_system']['structure_bodies']
@@ -303,6 +303,11 @@ def run(solver, output, water_mode=None):
                 if stage['kind'] == 'steady_seepage':
                     stage['flow'] = copy.deepcopy(flow_source['flow'])
                     stage['exterior_water_level_m'] = flow_source['exterior_water_level_m']
+                    if water_mode == 'soil-source':
+                        # Existing Darcy source law (tests/darcy.rs quadratic control),
+                        # with the inherited SOIL material conductivity. No new geometry/BC.
+                        for material in stage['flow']['materials']:
+                            material['volume_source_per_s'] = 2*material['hydraulic_conductivity_m_s'][2][2]
         inputs[2].write_text(json.dumps(case_input, indent=2)+'\n', encoding='utf-8')
     sources = [ROOT/'tools'/n for n in ('verify_wet_structures.py', 'beam_reference.py', 'plate_reference.py',
                'joint_water_reference.py', 'joint_reference.py', 'fem_reference.py', 'darcy_reference.py',
@@ -310,6 +315,8 @@ def run(solver, output, water_mode=None):
                'export_stages.py', 'high_order_io.py', 'beam_io.py', 'plate_io.py', 'joint_io.py')]
     if policy_source is not None:
         sources.append(policy_source)
+    if water_mode == 'soil-source':
+        sources.append(ROOT/'tools/verify_soil_source_column.py')
     fingerprints = {str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p): sha(p) for p in [solver]+inputs+sources}
     rp = output/'stage-results.json'
     invoke([str(solver), 'solve-stages', *map(str, inputs), str(rp)], output/'solve.log')
@@ -322,7 +329,7 @@ def run(solver, output, water_mode=None):
     assert exported['result_sha256'] == sha(rp) and exported['mesh_sha256'] == sha(inputs[0])
     assert all(exported[key] == 'passed' for key in ('vtu_roundtrip', 'integration_point_roundtrip',
                'joint_point_roundtrip', 'plate_sample_roundtrip'))
-    if water_mode == 'soil':
+    if policy_mode == 'soil':
         import meshio
         point_soil = np.asarray([Water(mesh, ground, case).soil[p['element_index']]
                                  for p in native['integration_points']])
@@ -376,7 +383,11 @@ def run(solver, output, water_mode=None):
                   clean_rejected_path_exact=True, checkpoints=checkpoints, inputs_sources_solver_sha256=fingerprints,
                   result_sha256=sha(rp), output_roundtrip=exported, p6_complete=False, p3b_p4_rows_complete=False,
                   water_modes=list(water_modes), fixed_prescribed=fixed_prescribed,
+                  soil_volume_source=water_mode == 'soil-source',
                   scope='12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy '+str(water_modes)+' JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance.')
+    if water_mode == 'soil-source':
+        from verify_soil_source_column import audit
+        report['analytic_soil_source'] = audit(mesh, ground, case, native)
     (output/'verification.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     return report
 
@@ -385,6 +396,6 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--solver', required=True, type=Path)
     p.add_argument('--output', required=True, type=Path)
-    p.add_argument('--water-mode', choices=('prescribed', 'prescribed-fixed', 'soil'))
+    p.add_argument('--water-mode', choices=('prescribed', 'prescribed-fixed', 'soil', 'soil-source'))
     a = p.parse_args()
     print(json.dumps(run(a.solver.resolve(), a.output.resolve(), a.water_mode), indent=2))

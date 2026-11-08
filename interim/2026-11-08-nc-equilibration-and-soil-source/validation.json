@@ -1,0 +1,109 @@
+{
+  "schema": "soil-fem-nc-soil-source-validation/1",
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6462478309999824
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.333638886000017
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.07332458400003361
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 313.50162303800005,
+      "count": 304,
+      "ok": true,
+      "skip_lines": []
+    },
+    {
+      "name": "python-tools-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.12776191099999323,
+      "count": 2,
+      "ok": true,
+      "skip_lines": []
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1184.774885395,
+      "counts": {
+        "passed": 408,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      }
+    }
+  ],
+  "all_software_checks_passed": true,
+  "source_file_count": 724,
+  "sources_unchanged_after_tests": true,
+  "new_tests": {
+    "rust": 0,
+    "python": 5
+  },
+  "windows_ci": "unconfirmed",
+  "low_preload_nc_passed": false,
+  "p6_complete": false,
+  "p3b_p4_rows_complete": false
+}
