@@ -1,0 +1,378 @@
+{
+  "passed": false,
+  "history_converged": false,
+  "physical_acceptance": false,
+  "software_checks_succeeded": true,
+  "rust": {
+    "total_executed": 23,
+    "groups": {
+      "root_linalg": {
+        "passed_count": 8,
+        "failed_count": 0,
+        "ignored_count": 0,
+        "measured_count": 0,
+        "filtered_count": 52
+      },
+      "root_free_contact": {
+        "passed_count": 2,
+        "failed_count": 0,
+        "ignored_count": 0,
+        "measured_count": 0,
+        "filtered_count": 0
+      },
+      "root_mcc_midpoint": {
+        "passed_count": 10,
+        "failed_count": 0,
+        "ignored_count": 0,
+        "measured_count": 0,
+        "filtered_count": 0
+      },
+      "isolated_linear_experiment": {
+        "passed_count": 3,
+        "failed_count": 0,
+        "ignored_count": 0,
+        "measured_count": 0,
+        "filtered_count": 0
+      }
+    },
+    "root_lib_filtered_out": 52,
+    "unexecuted_integration_targets": [
+      "anchors",
+      "beams",
+      "construction",
+      "darcy",
+      "embedding",
+      "epoch_srm_gate",
+      "epoch_srm_gate_job",
+      "epoch_srm_job",
+      "epoch_srm_search",
+      "exact_fs",
+      "geostatic",
+      "geostatic_affine",
+      "ground_initialization",
+      "hardening_fem",
+      "hardening_material",
+      "hydrostatic",
+      "hydrostatic_volume",
+      "joint_law",
+      "joint_water",
+      "joints",
+      "local_excavation",
+      "mc_epoch_checkpoint",
+      "mc_epoch_cli",
+      "mc_epoch_path",
+      "mc_fem",
+      "mc_material",
+      "mc_parameter_global",
+      "mc_parameter_transition",
+      "mcc_sensitivity",
+      "mcc_split",
+      "mcc_stop_boundaries",
+      "mechanics",
+      "mixed_mcc",
+      "mixed_mechanics",
+      "newton_diagnostics",
+      "one_way",
+      "one_way_construction",
+      "one_way_lifecycle",
+      "plates",
+      "projected_mcc",
+      "replay",
+      "reset",
+      "richards",
+      "rigidity",
+      "seepage_stages",
+      "srm_bound",
+      "srm_search",
+      "srm_search_control",
+      "srm_search_job",
+      "srm_virtual_work",
+      "stage_control",
+      "stage_job",
+      "stages_fem",
+      "surface_projection",
+      "tet10",
+      "water_stages",
+      "wet_structures"
+    ],
+    "all_rust_suite_executed": false
+  },
+  "python": {
+    "total_executed": 17,
+    "groups": {
+      "python-midpoint": {
+        "passed_count": 4,
+        "failed_count": 0,
+        "skipped_count": 0
+      },
+      "python-diagnosis": {
+        "passed_count": 3,
+        "failed_count": 0,
+        "skipped_count": 0
+      },
+      "python-trace": {
+        "passed_count": 2,
+        "failed_count": 0,
+        "skipped_count": 0
+      },
+      "python-linear-audit": {
+        "passed_count": 3,
+        "failed_count": 0,
+        "skipped_count": 0
+      },
+      "python-diagnostic-guards": {
+        "passed_count": 5,
+        "failed_count": 0,
+        "skipped_count": 0
+      }
+    },
+    "all_python_suite_executed": false,
+    "unexecuted_root_test_modules": [
+      "test_cad_excavation",
+      "test_cut_volume_history",
+      "test_depth_spatial_diagnostics",
+      "test_exact_fs",
+      "test_fixed_prescribed_wet_structures",
+      "test_griffiths_2d",
+      "test_hydrostatic_cut_volume",
+      "test_hydrostatic_volume_audit",
+      "test_joint_split",
+      "test_joint_water_reference",
+      "test_low_preload_nc",
+      "test_low_preload_nc_followup",
+      "test_mc_epoch_export",
+      "test_mc_epoch_view",
+      "test_mcc_acoustic",
+      "test_mcc_acoustic_cli",
+      "test_mcc_acoustic_exact",
+      "test_mcc_factor_reference",
+      "test_mcc_rate_fem",
+      "test_mcc_seed_audit",
+      "test_mcc_structural_binding",
+      "test_mcc_structural_initial",
+      "test_mcc_structural_reference",
+      "test_mixed_structure_io",
+      "test_native_capture",
+      "test_native_job",
+      "test_native_plate_expansion",
+      "test_plane_strain_2d",
+      "test_plastic_spatial_convergence",
+      "test_plate_reference",
+      "test_plate_surfaces",
+      "test_prescribed_wet_structures",
+      "test_projected_audit_dispatch",
+      "test_projected_reference_runner",
+      "test_reference_geometry",
+      "test_reference_resume",
+      "test_richards_dam_reference",
+      "test_soil_source_wet_structures",
+      "test_soil_wet_structures",
+      "test_solidcraft_structure_fields",
+      "test_solidcraft_view",
+      "test_source_point_descriptor",
+      "test_spatial_convergence",
+      "test_streamed_export_source",
+      "test_streamed_source_v2",
+      "test_streamed_stage_source",
+      "test_structural_storage",
+      "test_wet_joint_cycle",
+      "test_wet_joint_finer_full_history",
+      "test_wet_joint_separated",
+      "test_wet_joint_simultaneous",
+      "test_wet_structures"
+    ],
+    "tools_suite_executed": false
+  },
+  "processes": {
+    "rust-check-processes.json": [
+      {
+        "name": "root-fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.6657086430000163
+      },
+      {
+        "name": "rust-linalg",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--lib",
+          "linalg::tests"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 45.16588510999998
+      },
+      {
+        "name": "rust-free-contact",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--test",
+          "free_contact"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 106.53024238900002
+      },
+      {
+        "name": "rust-mcc-midpoint",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--test",
+          "mcc_midpoint"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 16.528402383999946
+      }
+    ],
+    "python-check-processes.json": [
+      {
+        "name": "python-midpoint",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_nc_midpoint_resume.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.2145032570000467
+      },
+      {
+        "name": "python-diagnosis",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_low_preload_nc_diagnosis.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.3147074780000594
+      },
+      {
+        "name": "python-trace",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_nc_newton_trace.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.16459620299997368
+      },
+      {
+        "name": "python-linear-audit",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/interim/2026-11-08-nc-compensated-linear-replay/test_linear_audit.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.06411718800006838
+      },
+      {
+        "name": "python-diagnostic-guards",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "interim/2026-11-08-nc-midpoint-stop-diagnosis/test_diagnosis.py",
+          "--probe",
+          "work/nc-linear/candidate/target/release/examples/nc_stop_probe",
+          "--prior",
+          "work/nc-linear/evidence/prior",
+          "--traces",
+          "work/nc-linear/evidence/diagnostic",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.3649509399999715
+      }
+    ],
+    "clippy-process.json": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "work/nc-linear/candidate/Cargo.toml",
+        "--example",
+        "linear_probe",
+        "--example",
+        "nc_stop_probe",
+        "--test",
+        "nc_linear_experiment",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 15.786477988000001
+    }
+  },
+  "isolated_builds": {
+    "baseline_exit_code": 0,
+    "candidate_exit_code": 0,
+    "build_logs": [
+      "logs/build-baseline.log",
+      "logs/build-candidate.log"
+    ],
+    "exact_wall_clock_seconds": null,
+    "timing_note": "full subprocess wall time was not separately captured for these builds; cargo-reported duration is in each log"
+  },
+  "isolated_test_exit_code": 0,
+  "isolated_test_log": "logs/experimental-rust-tests.log",
+  "source_reproduction": {
+    "src/stages.rs": true,
+    "src/lib.rs": true,
+    "src/nc_linear_refinement.rs": true,
+    "examples/nc_stop_probe.rs": true,
+    "examples/linear_probe.rs": true
+  },
+  "independent_linear_checks": {
+    "saved_systems": 19,
+    "candidate_trial_systems": 60,
+    "decimal_digits": 80,
+    "all_original_and_independent_gates_satisfied": true
+  },
+  "fresh_archive_remeasurement": {
+    "passed": false,
+    "history_converged": false,
+    "solver_executed": false,
+    "material_map_executed": false,
+    "archive_entry_hashes_verified": 89,
+    "exact_saved_json_matches": {
+      "linear-audit.json": true,
+      "candidate-linear-audit.json": true,
+      "trial-measurements.json": true,
+      "material-history.json": true
+    },
+    "windows_ci": "unverified"
+  },
+  "windows_ci": "unverified",
+  "large_prohibited_calculations_executed": false
+}
