@@ -1,0 +1,62 @@
+{
+  "scope": "selected related targets only; full Rust/Python suites and Windows not run",
+  "rust": {
+    "passed": 12,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "new_tests": 0,
+    "targets": {
+      "mcc_midpoint": 10,
+      "free_contact": 2
+    },
+    "command": "cargo test --locked --offline --release --test mcc_midpoint --test free_contact",
+    "exit_code": 0
+  },
+  "python": {
+    "passed": 24,
+    "new_tests": 12,
+    "modified_existing_tests": 0,
+    "failed": 0,
+    "skipped": 0,
+    "groups": [
+      {
+        "log": "final-python-tests.log",
+        "passed": 12,
+        "exit_code": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "log": "prior-tests-final.log",
+        "passed": 12,
+        "exit_code": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "fmt": {
+    "command": "cargo fmt --all --check",
+    "exit_code": 0
+  },
+  "observer_build": {
+    "locked": true,
+    "offline": true,
+    "release": true,
+    "exit_code": 0,
+    "unchanged_source_files": 69
+  },
+  "windows": {
+    "executed_locally": false,
+    "new_head_ci": "unconfirmed",
+    "new_interim_python_tests_in_existing_ci": false
+  },
+  "initial_nonfinal_attempt": {
+    "log": "prior-tests.log",
+    "equation_tests_run": 4,
+    "setup_errors": 1,
+    "reason": "NC_ARC_MEASUREMENTS environment variable omitted; corrected final run passed all 12",
+    "included_in_final_counts": false
+  }
+}
