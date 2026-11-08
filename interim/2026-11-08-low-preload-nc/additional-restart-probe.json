@@ -1,0 +1,108 @@
+{
+  "schema": "soil-fem-low-preload-nc-probe/1",
+  "passed": false,
+  "classification": "未検証",
+  "p3b04_complete": false,
+  "p6_complete": false,
+  "solver_complete": false,
+  "stop_reason": "wall_time_budget",
+  "owned_child_terminated": true,
+  "exit_code": -15,
+  "elapsed_seconds": 125.08387420100007,
+  "job_state": "running",
+  "snapshot": "inputs/checkpoint.json",
+  "resume_command": "prepare-stages-recovery",
+  "solver_sha256": "afc5b3f542bd2bd68b9520f5a392780cb23fbf8cdc630f689f71a6ca57dd260e",
+  "input_sha256": {
+    "mesh.json": "73360b7e5718089aec5391f99d13c3b1c42579440589430e3618cfa69e225fd2",
+    "ground.json": "4b055d60fb99d3e750b086079485f93dd92eeafed0926f29f922d74c4be2a701",
+    "stages.json": "a69b6e08d93775d9c9bc67503ace9fd9a17627b1e12145744e79167a5483ead2"
+  },
+  "input_condition": {
+    "seed_p_kpa": 100.0,
+    "seed_pc_kpa": 100.0,
+    "preload_kpa": 5.0,
+    "force_kn": [
+      1.0,
+      0.5,
+      0.0
+    ]
+  },
+  "missing_acceptance_evidence": [
+    "全上部撤去の完了・全解放",
+    "独立塑性3D全場",
+    "両実装の刻み感度",
+    "全工程途中再開の連続経路一致"
+  ],
+  "observation": {
+    "accepted_increments": 18,
+    "completed_frames": [
+      "initial_equilibrated",
+      "load",
+      "unload"
+    ],
+    "stage_index": 3,
+    "stage_progress": 0.875,
+    "geostatic_progress": 1.0,
+    "pc_range_kpa": [
+      101.82526050681295,
+      121.04129818142636
+    ],
+    "plastic_points": 324,
+    "rejections": 4,
+    "rejected_plastic_trial_changed": true,
+    "rejected_contact_trial_changed": true,
+    "all_rejections_preserve_committed_state": true,
+    "stored_stress_force_checks": [
+      {
+        "frame": "initial_equilibrated",
+        "relative_force_residual": 1.4805773938066018e-13,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 6.20368179221492e-13
+      },
+      {
+        "frame": "load",
+        "relative_force_residual": 1.2165745439510796e-15,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 4.828308121081868e-13
+      },
+      {
+        "frame": "unload",
+        "relative_force_residual": 5.289872788757447e-13,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": -0.016687482180963546
+      }
+    ],
+    "last_committed_force_check": {
+      "relative_force_residual": 2.442028274979164e-11,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": 6.383746186866726e-13
+    },
+    "independent_plastic_3d_displacement": false,
+    "zero_release_check": {
+      "relative_force_residual": 3.8035929133263025e-13,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": -0.01880115809897424
+    },
+    "fully_released_and_frozen": false,
+    "removed_joint_and_material_history_frozen": true
+  },
+  "evidence_sha256": {
+    "solve.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "observed-run.json": "b9aa8b563c27367bbd9dbe7e705e861c05f800c6cfc2717e0777894e2658e4b8",
+    "stop.log": "c69a2ac7af38609346e0f738f1b0fa16896e529bb655d845870581f476dc3b9e",
+    "prepare.log": "76796cc0eec95118fd2e70b7c76207982cce7a43065bafdd9df7ec0ed7686abe",
+    "job/progress.jsonl": "4b95b1416b1a981710e4b59d11eca717164f46fe3ad4703efa093a8a19b299bf",
+    "job/run.claim": "86bf6079255db1b1626db5f884cb07c7e3fca70b69cb45e7e6847eb3362c0ba0",
+    "job/stop-request.json": "239310b9c0aa3574d34c5a2cb433df688781a1935b3b1d516a71c89072c3c634",
+    "job/job.json": "a70f4367a56d055bee87777faf5bb95949f57ea1967f36812d2eb8e936a95984",
+    "job/status.json": "aca9efed5c63795ba85e0869f965a0380d3224bfd3ee4c3804691a73667a00f6",
+    "input/stages.json": "a69b6e08d93775d9c9bc67503ace9fd9a17627b1e12145744e79167a5483ead2",
+    "input/mesh.json": "73360b7e5718089aec5391f99d13c3b1c42579440589430e3618cfa69e225fd2",
+    "input/ground.json": "4b055d60fb99d3e750b086079485f93dd92eeafed0926f29f922d74c4be2a701",
+    "job/inputs/mesh.json": "73360b7e5718089aec5391f99d13c3b1c42579440589430e3618cfa69e225fd2",
+    "job/inputs/checkpoint.json": "ee65f20ccf1651529adc1bc1021bbd1cf632339f51c3f17546a765b6e8a27849",
+    "job/inputs/case.json": "a69b6e08d93775d9c9bc67503ace9fd9a17627b1e12145744e79167a5483ead2",
+    "job/inputs/ground.json": "4b055d60fb99d3e750b086079485f93dd92eeafed0926f29f922d74c4be2a701"
+  }
+}

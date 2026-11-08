@@ -31,12 +31,19 @@
 `checkpoint-comparison.json`に比較範囲を記録した。全確定状態・全フレーム・地圧/施工試行・監査・表示基準を比較し、再帰的除外は実測時間`elapsed_seconds`だけ。
 1地点の途中比較であり、撤去途中を含む全工程再開合格へ拡張しない。
 
+追加で先行0.875保存点から120秒＋猶予5秒（実測125.08387420100007秒）だけ再開したが、新規受理はなく18増分・0.875のままだった。
+`additional-restart-probe.json`と別ZIPにその入力保存点・進捗・未受理試行を保存する。
+既存の独立支持SVDで初期平衡/載荷/除荷の3フレーム（2成分・12剛体モード）と撤去0.875（残存1成分・6モード）を再組立し、いずれも未拘束0を確認した。
+3フレームは本体の支持記録とも一致する。この運動学の確認を塑性変位や破壊判定へ一般化しない。
+
 ## 生証拠と保存照合
 
 |ファイル|内容|
 |---|---|
 |`small-evidence.zip`|131ファイル、展開時37,043,071 bytes。先行・時間制限・再開・最終版観測・直接経路比較の生入力、封印保存点、全試行、進捗、ステータスとログ。バイナリ自体は含めずSHAを保持|
 |`archive-sha256.json`|ZIP全エントリーのSHA256。`probe.json`内の相対ファイルSHAも対応する実行フォルダ内で照合できる|
+|`additional-restart.zip` / `additional-restart-sha256.json` / `additional-restart-probe.json`|0.875からの追加125秒観測。新規受理なし、未検証のまま|
+|`support-inspection.json`|保存状態からの独立支持SVD。3フレームと撤去途中で未拘束0|
 |`pilot-inspection.json`|最高受理点0.875の事後再組立。全解放/独立塑性変位はfalse|
 |`bounded-probe.json` / `resumed-probe.json`|最終版ドライバの時間制限・再開の診断。両方`passed: false`・`classification: 未検証`|
 |`checkpoint-comparison.json`|載荷途中1地点・受理9→10増分と直接計算の完全一致|
