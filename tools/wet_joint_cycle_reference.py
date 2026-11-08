@@ -43,6 +43,19 @@ def contact_work(system, old_jump, old_q, target, count):
 
 
 def reference(mesh, ground, case, steps=32, contact_steps=20, order=5):
+    return _reference(mesh, ground, case, steps, contact_steps, order, False)
+
+
+def discrete_volume_reference(mesh, ground, case, steps=32, contact_steps=20):
+    """Input-only reference for the specified Gauss-Jacobi volume discretization.
+
+    This isolates path integration from partial-wetting quadrature error. It
+    is not a continuum-volume reference or a new acceptance criterion.
+    """
+    return _reference(mesh, ground, case, steps, contact_steps, mesh.get('quadrature_order', 3), True)
+
+
+def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume):
     assert isinstance(steps, int) and steps >= 2
     assert isinstance(contact_steps, int) and contact_steps >= 1
     assert order >= 3
@@ -70,7 +83,7 @@ def reference(mesh, ground, case, steps=32, contact_steps=20, order=5):
         assert seed['equivalent_plastic_strain'] == seed['plastic_work_kpa'] == 0
         assert not np.asarray(seed['plastic_strain_compression_positive']).any()
         s0 = np.asarray(seed['effective_stress_compression_positive_kpa'])
-        q = fem.volume(mesh, ei, independent=True, independent_order=order)
+        q = fem.volume(mesh, ei, independent=not discrete_volume, independent_order=order)
         ids = (3*q['nodes'][:, None]+np.arange(3)).ravel()
         k[np.ix_(ids, ids)] += np.einsum('qai,ab,qbj,q->ij', q['b'], d, q['b'], q['weight'], optimize=True)
         pore = gamma*np.maximum(level-q['position'][:, 2], 0)
@@ -177,6 +190,7 @@ def reference(mesh, ground, case, steps=32, contact_steps=20, order=5):
         origin = stage['target_factor']; frame(stage['name'], base+origin*boundary)
     return dict(frames=frames, path=path, steps=steps, contact_steps=contact_steps,
                 volume_order=order, maximum_relative_force_residual=maximum_residual,
+                volume_rule='input_gauss_jacobi' if discrete_volume else 'independent_gauss_legendre',
                 reference_uses_native_results=False)
 
 

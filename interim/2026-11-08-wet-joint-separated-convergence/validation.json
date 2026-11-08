@@ -1,0 +1,43 @@
+{
+  "starting_commit": "a4f515636292be61069f5b2abc4279c1263d06be",
+  "commands": {
+    "fmt": "cargo fmt --all --check",
+    "clippy": "cargo clippy --locked --all-targets -- -D warnings",
+    "build": "cargo build --locked --release",
+    "rust": "cargo test --locked --release --all-targets",
+    "python": "python -m unittest discover -s tests -p 'test_*.py' -v",
+    "tools": "python -m unittest discover -s tools -p 'test_*.py' -v"
+  },
+  "fmt_exit_code": 0,
+  "clippy_exit_code": 0,
+  "build_exit_code": 0,
+  "rust": {
+    "passed": 408,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "exit_code": 0
+  },
+  "python": {
+    "passed": 319,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 450.672,
+    "exit_code": 0
+  },
+  "tools": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 0.005,
+    "exit_code": 0
+  },
+  "final_source_snapshot_count": 730,
+  "source_check": "all identical",
+  "snapshot_timing": "during Rust run, before final Python run; all Rust sources unchanged from starting commit",
+  "numerical_acceptance": false,
+  "windows_ci": "not yet observed for the pushed commit",
+  "new_python_tests": 6,
+  "solver_sha256": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6"
+}
