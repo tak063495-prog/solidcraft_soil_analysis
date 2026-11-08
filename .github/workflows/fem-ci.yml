@@ -77,6 +77,10 @@ jobs:
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-wet-structures --water-mode soil 2>&1 | Tee-Object -FilePath runs/ci/soil-wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify fixed PRESCRIBED reservoir and small members
+        run: |
+          python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record bounded low preload NC diagnosis (not acceptance)
         run: |
           python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc --budget-seconds 20 --grace-seconds 5 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc.log
@@ -105,6 +109,7 @@ jobs:
             runs/ci/wet-structures/ground.json
             runs/ci/wet-structures/stages.json
             runs/ci/soil-wet-structures/**
+            runs/ci/fixed-prescribed-wet-structures/**
             runs/ci/low-preload-nc/**
             !runs/ci/low-preload-nc/job/solver/**
             runs/ci/low-preload-nc-step32/**

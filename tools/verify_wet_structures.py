@@ -43,7 +43,7 @@ def without_time(value):
     return value
 
 
-def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
+def reference(mesh, ground, case, order=5, water_modes=('continuous',), fixed_prescribed=False):
     """Generate every reference frame exclusively from the three inputs."""
     allowed = {'install_beams', 'remove_beams', 'boundary',
                'hydrostatic_water', 'steady_seepage'}
@@ -58,8 +58,16 @@ def reference(mesh, ground, case, order=5, water_modes=('continuous',)):
     assert set(water_modes) <= {'continuous', 'prescribed', 'soil'}
     assert all(j['water']['kind'] in water_modes
                for j in case['joint_system']['joints']), 'water mode requires explicit reference scope'
-    assert all(j['water'].get('level_m') is None for j in case['joint_system']['joints']
-               if j['water']['kind'] == 'prescribed'), 'fixed prescribed head requires separate reference'
+    if fixed_prescribed:
+        assert water_modes == ('prescribed',), 'fixed head requires explicit PRESCRIBED scope'
+        level = ground['initialization']['water_level_m']
+        assert level is not None
+        assert all(j['water'].get('level_m') == level for j in case['joint_system']['joints']), 'fixed head differs from initial reservoir'
+        assert all(s['target_level_m'] == level for s in case['stages']
+                   if s['kind'] == 'hydrostatic_water'), 'hydrostatic level conflicts with fixed reservoir'
+    else:
+        assert all(j['water'].get('level_m') is None for j in case['joint_system']['joints']
+                   if j['water']['kind'] == 'prescribed'), 'fixed prescribed head requires separate reference'
     roles = set(case['joint_system'].get('structure_bodies', []))
     if roles:
         assert set(water_modes) == {'soil'}, 'structure roles require explicit SOIL scope'
@@ -249,7 +257,9 @@ def compare(mesh, ground, case, native, expected):
         ref = expected[flow['stage_index']+1]
         field = ref['head']
         np.testing.assert_array_equal(flow['joint_flow']['original_field']['defined_nodes'], field['defined'])
-        if set(case['joint_system'].get('structure_bodies', [])):
+        if set(case['joint_system'].get('structure_bodies', [])) or any(
+                j['water']['kind'] == 'prescribed' and j['water'].get('level_m') is not None
+                for j in case['joint_system']['joints']):
             np.testing.assert_array_equal(flow['solution']['active_elements'], water.soil)
             hydraulic = ref['darcy']
             assert len(flow['solution']['points']) == sum(len(q['weight']) for q in hydraulic['solution']['quadrature'].values())
@@ -265,16 +275,25 @@ def run(solver, output, water_mode=None):
     for src, dest in [('joint-water-column-tet10-mesh.json', 'mesh.json'),
                       ('ground-wet-plate-beam.json', 'ground.json'), ('stages-wet-plate-beam.json', 'stages.json')]:
         path = output/dest; shutil.copyfile(ROOT/'examples'/src, path); inputs.append(path)
-    water_modes = ('continuous',) if water_mode is None else (water_mode,)
-    assert water_mode in (None, 'prescribed', 'soil')
+    fixed_prescribed = water_mode == 'prescribed-fixed'
+    policy_mode = 'prescribed' if fixed_prescribed else water_mode
+    water_modes = ('continuous',) if policy_mode is None else (policy_mode,)
+    assert water_mode in (None, 'prescribed', 'prescribed-fixed', 'soil')
     policy_source = None
     if water_mode is not None:
-        policy_source = ROOT/'examples'/('stages-joint-water-'+water_mode+'.json')
+        policy_source = ROOT/'examples'/('stages-joint-water-'+policy_mode+'.json')
         source_case = read(policy_source)
         policy = source_case['joint_system']['joints'][0]['water']
         case_input = read(inputs[2])
         assert len(case_input['joint_system']['joints']) == 1
         case_input['joint_system']['joints'][0]['water'] = policy
+        if fixed_prescribed:
+            # Existing initial reservoir is held fixed; the incompatible rise
+            # is omitted, not reinterpreted as a new hydraulic policy.
+            level = read(inputs[1])['initialization']['water_level_m']
+            policy['level_m'] = level
+            case_input['stages'] = [s for s in case_input['stages']
+                                   if s['kind'] != 'hydrostatic_water' or s['target_level_m'] == level]
         if water_mode == 'soil':
             # Carry the existing SOIL continuum role AND its single soil-side
             # bottom-head flow boundary; the structural top is not an aquifer.
@@ -296,7 +315,7 @@ def run(solver, output, water_mode=None):
     invoke([str(solver), 'solve-stages', *map(str, inputs), str(rp)], output/'solve.log')
     mesh = read(inputs[0]); ground = fem.normalize_ground(read(inputs[1])); case = fem.normalize_stage_case(read(inputs[2])); native = read(rp)
     assert native['provenance']['solver_binary_sha256'] == sha(solver)
-    expected = reference(mesh, ground, case, water_modes=water_modes); rows = compare(mesh, ground, case, native, expected)
+    expected = reference(mesh, ground, case, water_modes=water_modes, fixed_prescribed=fixed_prescribed); rows = compare(mesh, ground, case, native, expected)
     from export_stages import export
     export(inputs[0], rp, output/'exports')
     exported = read(output/'exports/export-verification.json')
@@ -314,7 +333,7 @@ def run(solver, output, water_mode=None):
             np.testing.assert_allclose(gp['pore_pressure_kpa'], ref['pore'][ids], rtol=1e-10, atol=1e-8)
             total = ref['stress'][ids].copy(); total[:, :3] += ref['pore'][ids, None]
             np.testing.assert_allclose(gp['total_stress_compression_positive_kpa'], total, rtol=1e-7, atol=1e-7)
-    fine = reference(mesh, ground, case, order=7, water_modes=water_modes)
+    fine = reference(mesh, ground, case, order=7, water_modes=water_modes, fixed_prescribed=fixed_prescribed)
     refinement = max(float(np.linalg.norm(a['u']-b['u'])/max(np.linalg.norm(b['u']), 1e-12)) for a, b in zip(expected, fine, strict=True))
     assert refinement < 1e-7
     # Fresh clean accepted path catches leakage from the deliberate rejections.
@@ -356,7 +375,7 @@ def run(solver, output, water_mode=None):
                   independent_gl5_to_gl7_relative_difference=refinement,
                   clean_rejected_path_exact=True, checkpoints=checkpoints, inputs_sources_solver_sha256=fingerprints,
                   result_sha256=sha(rp), output_roundtrip=exported, p6_complete=False, p3b_p4_rows_complete=False,
-                  water_modes=list(water_modes),
+                  water_modes=list(water_modes), fixed_prescribed=fixed_prescribed,
                   scope='12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy '+str(water_modes)+' JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance.')
     (output/'verification.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     return report
@@ -366,6 +385,6 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--solver', required=True, type=Path)
     p.add_argument('--output', required=True, type=Path)
-    p.add_argument('--water-mode', choices=('prescribed', 'soil'))
+    p.add_argument('--water-mode', choices=('prescribed', 'prescribed-fixed', 'soil'))
     a = p.parse_args()
     print(json.dumps(run(a.solver.resolve(), a.output.resolve(), a.water_mode), indent=2))
