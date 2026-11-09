@@ -14,8 +14,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  windows-fem:
-    name: Rust and Python on Windows
+  windows-checks:
+    name: ${{ matrix.group }} on Windows
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [rust-core, rust-integration-0, rust-integration-1, python, verification]
     runs-on: windows-2025
     timeout-minutes: 45
     defaults:
@@ -54,42 +58,53 @@ jobs:
           rustc --version --verbose | Out-File runs/ci/rust-version.log
           python -m pip freeze | Out-File runs/ci/python-packages.log
       - name: Check formatting
+        if: matrix.group == 'rust-core'
         run: cargo fmt --all --check
       - name: Check all Rust targets
+        if: matrix.group == 'rust-core'
         run: cargo clippy --locked --all-targets -- -D warnings
-      - name: Run all Rust tests
+      - name: Run discovered Rust test group
+        if: startsWith(matrix.group, 'rust-')
         run: |
-          cargo test --locked --release 2>&1 | Tee-Object -FilePath runs/ci/rust-tests.log
+          python tools/run_ci_rust_tests.py --group ${{ matrix.group }} --output runs/ci
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build the CLI used by geometry tests
+        if: matrix.group == 'python' || matrix.group == 'verification'
         run: cargo build --locked --release
       - name: Run all Python tests
+        if: matrix.group == 'python'
         run: |
           python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tests.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tools -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tools-tests.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify small wet JOINT plate beam integration
+        if: matrix.group == 'verification'
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/wet-structures 2>&1 | Tee-Object -FilePath runs/ci/wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify inherited SOIL water role and small members
+        if: matrix.group == 'verification'
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-wet-structures --water-mode soil 2>&1 | Tee-Object -FilePath runs/ci/soil-wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify nonzero SOIL volume source flow and small members
+        if: matrix.group == 'verification'
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-source-wet-structures --water-mode soil-source 2>&1 | Tee-Object -FilePath runs/ci/soil-source-wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify fixed PRESCRIBED reservoir and small members
+        if: matrix.group == 'verification'
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record bounded low preload NC diagnosis (not acceptance)
+        if: matrix.group == 'verification'
         run: |
           python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc --budget-seconds 20 --grace-seconds 5 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Measure refined low preload NC and independent plastic fields (not acceptance)
+        if: matrix.group == 'verification'
         run: |
           python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step32 --budget-seconds 60 --grace-seconds 5 --excavation-increment .03125 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step32.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -103,7 +118,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: fem-windows-${{ github.sha }}
+          name: fem-windows-${{ matrix.group }}-${{ github.sha }}
           path: |
             runs/ci/*.json
             runs/ci/*.log
@@ -125,3 +140,19 @@ jobs:
             runs/ci/low-preload-nc-reference256/**
           if-no-files-found: warn
           retention-days: 14
+
+  windows-fem:
+    name: Rust and Python on Windows
+    needs: windows-checks
+    if: always()
+    runs-on: windows-2025
+    timeout-minutes: 5
+    steps:
+      - name: Require every verification group
+        shell: pwsh
+        env:
+          GROUP_RESULT: ${{ needs.windows-checks.result }}
+        run: |
+          if ($env:GROUP_RESULT -ne 'success') {
+            throw "Windows verification group result: $env:GROUP_RESULT"
+          }
