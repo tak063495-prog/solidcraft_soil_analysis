@@ -45,3 +45,19 @@ python -m unittest discover -s tools -p 'test_*.py' -v
 ```
 
 追加の湿潤4種・有界NCの同一コマンド、同一予算、ログ出力先は `.github/workflows/fem-ci.yml` の `verification` 群を参照。出力先は毎回未存在のフォルダにする。再実行のために封印済みjobを上書きしない。
+
+## 修正コミットの実Windows結果
+
+分割修正コミット `91c8859568d7cfe75762aabcd506974f88053821` の [run 42625462227](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42625462227) は、5群と旧名の集約チェックがすべて成功した。
+
+| 群 | 実ログ先頭〜末尾の実測秒 | 結果 |
+|---|---:|---|
+| Rust core | 599.212 | 成功 |
+| Rust integration 0 | 1414.387 | 成功 |
+| Rust integration 1 | 1087.767 | 成功 |
+| 全Python | 812.041 | 成功 |
+| 既存湿潤4種・NC計測 | 478.798 | 成功 |
+
+最長は約23分34秒で、45分を超えなかった。Rust全412件、Python tests 361件とtools 2件が成功。Rustの失敗・無視・名前除外はいずれも0。元のRust全412件を維持しており、NC診断・独立参照の予算も変更していない。
+LinuxのRustは既存Windows専用2試験を含まないため410件。新規interimの証拠試験8件はWindowsの標準discoverには含まれず、別のLinux検証記録とする。
+[実測JSON](ci-split-result.json)はこの修正コミットだけの証拠であり、NC追補を追加した最終先端のCIへそのまま転用しない。最終先端の実行状態は別に確認する。
