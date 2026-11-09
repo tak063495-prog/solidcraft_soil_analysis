@@ -89,3 +89,11 @@ Windows CIは既存の5群と集約を維持する。新規Rust/Python試験は�
 P3b/P4各行、構造・水・JOINT全体、P6全体は未完。一般塑性/水理/部材/開離・滑りの同時経路、部分亀裂先端、BIRTH、Richards等の既存残件を今回の診断で完了にしない。
 
 [ユーザーPCでの再現手順](REPRODUCE.ja.md) を参照する。
+
+## 最初の先端Windows CIの起動障害
+
+`be8f323a39c70d9b707b2c297b2e6e2c12051165` をpushした [CI 42671380565](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42671380565) は、ジョブ生成前にfailureとなった。全試行のジョブAPIは0件。5群と集約は未実行で、Windows試験失敗とも成功とも判定しない。
+
+GitHubの注記は `Internal server error. Correlation ID: 541bb4da-2c8b-4df0-99fd-658fb3822824`。失敗ジョブ再実行APIも403 `This workflow run cannot be retried` を返した。[取得した状態・注記・API応答](windows-ci-attempt1.json) を残す。テスト用merge `eea1390e9918ad595f8d049d80c78ee88c2af586` と当該先端のツリーは一致する。
+
+この実測記録だけを追記して同じブランチへpushし、CIを起動し直す。623検証ソースのSHAは不変で、数値・試験・workflowを変更していない。再起動した実先端の結果は最終報告で確認する。ここで旧先端のWindows成功を転用しない。
