@@ -2,6 +2,41 @@
 from pathlib import Path
 import argparse, ctypes, ctypes.wintypes as w, datetime, hashlib, json, subprocess, sys, time
 
+def process_identity(records, pid):
+    """A PID without a parseable snapshot identity is never ownership evidence."""
+    try:
+        record = records[pid]
+        if (type(pid) is not int or pid <= 0 or type(record['ProcessId']) is not int or
+                record['ProcessId'] != pid or not isinstance(record['ExecutablePath'], str) or
+                not record['ExecutablePath'].strip()):
+            return None
+        created = datetime.datetime.fromisoformat(record['Created'])
+        if created.tzinfo is None or created.utcoffset() is None:
+            return None
+        return (record['ExecutablePath'], created)
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return None
+
+
+def valid_edge(records, parent_pid, child_pid):
+    parent = process_identity(records, parent_pid)
+    child = process_identity(records, child_pid)
+    return (parent is not None and child is not None and parent_pid != child_pid and
+            type(records[child_pid].get('ParentProcessId')) is int and
+            records[child_pid]['ParentProcessId'] == parent_pid and parent[1] <= child[1])
+
+
+def expand_owned(records, seeds, excluded):
+    owned = {pid for pid in seeds if pid not in excluded and process_identity(records, pid) is not None}
+    while True:
+        expanded = owned | {pid for pid,record in records.items() if pid not in excluded and
+                            type(record.get('ParentProcessId')) is int and record['ParentProcessId'] in owned and
+                            valid_edge(records, record['ParentProcessId'], pid)}
+        if expanded == owned:
+            return owned
+        owned = expanded
+
+
 p = Path(__file__).resolve().parent
 root = p.parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
@@ -139,20 +174,17 @@ for folder in folders:
                     if actual!=expected_image:continue
                 elif Path(actual).stem!=Path(expected_image).stem:continue
             elif not (evidence.get('script') and norm(evidence['script']) in norm(r.get('CommandLine') or '')):continue
+            if process_identity(records, pid) is None:continue
             owned.add(pid);seed_evidence.append(dict(pid=pid,receipt=str(path)))
             child=r
             while child['ParentProcessId'] in records:
                 parent=records[child['ParentProcessId']]
                 if parent['ProcessId'] in excluded or not scoped(parent):break
-                if datetime.datetime.fromisoformat(parent['Created'])>datetime.datetime.fromisoformat(child['Created']):break
+                if not valid_edge(records, parent['ProcessId'], child['ProcessId']):break
                 owned.add(parent['ProcessId']);child=parent
         except (OSError,ValueError,KeyError,TypeError):continue
-# Only descendants of an explicitly scoped process are added. Never traverse upward.
-while True:
-    expanded = (owned | {pid for pid,r in records.items() if r['ParentProcessId'] in owned})-excluded
-    if expanded == owned:
-        break
-    owned = expanded
+# Each downward edge must belong to these snapshot identities in creation order.
+owned = expand_owned(records, owned, excluded)
 plan = [records[pid] for pid in sorted(owned)]
 if not args.execute:
     print(json.dumps(dict(inspect_only=True, usage_threshold_percent=80, threshold_comparison='strictly_greater_than', pause_at_next_safe_milestone=True, ownership_seed_receipts=seed_evidence, own_process_and_ancestors_excluded=True, owned_processes=plan), indent=2))

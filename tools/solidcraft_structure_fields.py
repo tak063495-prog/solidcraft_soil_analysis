@@ -45,7 +45,7 @@ def fields(mesh,run,index):
     model=System(mesh,cfg)
     soil_u=finite(state['displacement_m'],(len(mesh['nodes']),3),'soil displacement')
     try:verified=verify_state(model,history,report,soil_u,state['boundary_factor'])
-    except (AssertionError,IndexError,KeyError,np.linalg.LinAlgError) as error:
+    except (ValueError,AssertionError,IndexError,KeyError,np.linalg.LinAlgError) as error:
         raise ValueError('structural report/history fails independent member equilibrium') from error
     for key,values in (('node_positions_m',model.positions),('node_displacement_m',displacement),('node_rotation_rad',rotation)):
         actual=finite(report.get(key),(n,3),key)

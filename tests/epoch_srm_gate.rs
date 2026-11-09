@@ -430,3 +430,260 @@ fn malformed_stage_list_and_fixed_through_stages_are_refused_before_solving() ->
     assert!(epoch_srm_gate::run(&mesh, &ground, &case, &spec).is_err());
     Ok(())
 }
+
+// Issue #11: a valid payload from B must not borrow A's outside identity.
+fn p2_reseal(raw: &mut serde_json::Value) -> Result<epoch_srm_gate::Snapshot> {
+    use sha2::{Digest, Sha256};
+    let typed: epoch_srm_gate::Snapshot = serde_json::from_value(raw.clone())?;
+    let serialized = serde_json::to_string(&typed)?;
+    let start = serialized.find("\"payload\":").unwrap() + "\"payload\":".len();
+    raw["payload_sha256"] = json!(format!(
+        "{:x}",
+        Sha256::digest(&serialized.as_bytes()[start..serialized.len() - 1])
+    ));
+    Ok(serde_json::from_value(raw.clone())?)
+}
+fn p2_case_factor(case: &StageCase, factor: f64) -> Result<StageCase> {
+    let mut raw = serde_json::to_value(case)?;
+    raw["stages"][0]["target_factor"] = json!(factor);
+    Ok(serde_json::from_value(raw)?)
+}
+fn p2_completed_record(
+    mesh: &Mesh,
+    ground: &Ground,
+    case: &StageCase,
+    spec: &Specification,
+) -> Result<serde_json::Value> {
+    let mut snapshot = epoch_srm_gate::Snapshot::new(mesh, ground, case, spec)?;
+    for _ in 0..100_000 {
+        let raw = serde_json::to_value(&snapshot)?;
+        if !raw["payload"]["records"].as_array().unwrap().is_empty() {
+            return Ok(raw);
+        }
+        snapshot = snapshot.advance(mesh, ground, case, spec, 1, None)?;
+    }
+    panic!("fixture did not complete its first gate")
+}
+
+fn p2_saved_job_rejects(
+    mesh: &Mesh,
+    ground: &Ground,
+    case: &StageCase,
+    spec: &Specification,
+    mixed: &epoch_srm_gate::Snapshot,
+) -> Result<()> {
+    use soil_fem_3d::{checkpoint, epoch_srm_gate_job as job};
+    use std::{
+        fs,
+        time::{SystemTime, UNIX_EPOCH},
+    };
+    let folder = std::env::temp_dir().join(format!(
+        "soil-p2-finish-{}-{}",
+        std::process::id(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir(&folder)?;
+    for (name, value) in [
+        ("mesh", serde_json::to_value(mesh)?),
+        ("ground", serde_json::to_value(ground)?),
+        ("case", serde_json::to_value(case)?),
+        ("spec", serde_json::to_value(spec)?),
+    ] {
+        fs::write(
+            folder.join(format!("{name}.json")),
+            serde_json::to_vec(&value)?,
+        )?;
+    }
+    let saved = folder.join("job");
+    job::prepare(
+        &folder.join("mesh.json"),
+        &folder.join("ground.json"),
+        &folder.join("case.json"),
+        &folder.join("spec.json"),
+        1,
+        &saved,
+    )?;
+    let pointer_path = saved.join("recovery.json");
+    let mut pointer: serde_json::Value = serde_json::from_slice(&fs::read(&pointer_path)?)?;
+    let snapshot_path = saved.join(pointer["checkpoint"].as_str().unwrap());
+    let stored = json!({"schema":"soil-fem-epoch-srm-stage-gate-snapshot/1","job_id":pointer["job_id"],"generation":pointer["generation"],"checkpoint":mixed});
+    fs::write(&snapshot_path, serde_json::to_vec(&stored)?)?;
+    pointer["checkpoint_sha256"] = json!(checkpoint::hash_file(&snapshot_path)?);
+    pointer["payload_sha256"] = json!(checkpoint::hash_json(mixed)?);
+    fs::write(&pointer_path, serde_json::to_vec(&pointer)?)?;
+    assert!(
+        job::verify_snapshot(&saved)
+            .unwrap_err()
+            .to_string()
+            .contains("unreduced prefix")
+    );
+    assert!(
+        job::prepare_recovery(&saved, &folder.join("recovered"))
+            .unwrap_err()
+            .to_string()
+            .contains("unreduced prefix")
+    );
+    assert!(!folder.join("recovered").exists());
+    fs::remove_dir_all(folder)?;
+    Ok(())
+}
+
+#[test]
+fn p2_foreign_completed_origin_cannot_borrow_target_identity_at_finish() -> Result<()> {
+    let (mesh, ground, a, mut search) = column(two_stages())?;
+    search.required_factor = 1.6;
+    search.maximum_factor = 2.;
+    let spec = gate(search, vec![1], 128, 20);
+    let b = p2_case_factor(&a, 0.5)?;
+    let mut raw = p2_completed_record(&mesh, &ground, &b, &spec)?;
+    assert!(raw["payload"]["phase"]["finish"]["checkpoint"].is_null());
+    let valid: epoch_srm_gate::Snapshot = serde_json::from_value(raw.clone())?;
+    valid.verify(&mesh, &ground, &b, &spec)?;
+    assert!(epoch_srm_gate::run(&mesh, &ground, &a, &spec)?.decision == Decision::StoppedExcluded);
+    for changed_ground in [false, true] {
+        let mut ground_raw = serde_json::to_value(&ground)?;
+        if changed_ground {
+            ground_raw["materials"][0]["mohr_coulomb"]["cohesion_kpa"] = json!(21.);
+        }
+        let target_ground: Ground = serde_json::from_value(ground_raw)?;
+        let target_case = if changed_ground { &b } else { &a };
+        raw["identity"] = serde_json::to_value(epoch_srm_gate::Snapshot::new(
+            &mesh,
+            &target_ground,
+            target_case,
+            &spec,
+        )?)?["identity"]
+            .clone();
+        let mixed = p2_reseal(&mut raw)?;
+        assert!(
+            mixed
+                .verify(&mesh, &target_ground, target_case, &spec)
+                .is_err(),
+            "B gate accepted under A identity"
+        );
+        p2_saved_job_rejects(&mesh, &target_ground, target_case, &spec, &mixed)?;
+        assert!(
+            mixed
+                .advance(&mesh, &target_ground, target_case, &spec, 1, None)
+                .is_err()
+        );
+    }
+    Ok(())
+}
+
+#[test]
+fn p2_foreign_record_is_rejected_in_all_phases_and_saved_job_recovery() -> Result<()> {
+    use soil_fem_3d::{checkpoint, epoch_srm_gate_job as job};
+    use std::fs;
+    let stages = json!([
+        {"kind":"boundary","name":"load","target_factor":1.,"initial_increment":1.},
+        {"kind":"boundary","name":"reload","target_factor":0.9,"initial_increment":0.25},
+        {"kind":"boundary","name":"finish","target_factor":0.8,"initial_increment":0.05}
+    ]);
+    let (mesh, ground, a, mut search) = column(stages)?;
+    search.required_factor = 1.1;
+    search.maximum_factor = 1.2;
+    let spec = gate(search, vec![1, 2], 128, 20);
+    let b = p2_case_factor(&a, 0.5)?;
+    let foreign = p2_completed_record(&mesh, &ground, &b, &spec)?["payload"]["records"][0].clone();
+    let mut target = epoch_srm_gate::Snapshot::new(&mesh, &ground, &a, &spec)?;
+    let mut seen = std::collections::BTreeSet::new();
+    let folder = std::env::temp_dir().join(format!(
+        "soil-p2-gate-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir_all(&folder)?;
+    for (name, value) in [
+        ("mesh", serde_json::to_value(&mesh)?),
+        ("ground", serde_json::to_value(&ground)?),
+        ("case", serde_json::to_value(&a)?),
+        ("spec", serde_json::to_value(&spec)?),
+    ] {
+        fs::write(
+            folder.join(format!("{name}.json")),
+            serde_json::to_vec(&value)?,
+        )?;
+    }
+    let saved_job = folder.join("job");
+    job::prepare(
+        &folder.join("mesh.json"),
+        &folder.join("ground.json"),
+        &folder.join("case.json"),
+        &folder.join("spec.json"),
+        1,
+        &saved_job,
+    )?;
+    let pointer_path = saved_job.join("recovery.json");
+    let original_pointer: serde_json::Value = serde_json::from_slice(&fs::read(&pointer_path)?)?;
+    for _ in 0..100_000 {
+        target.verify(&mesh, &ground, &a, &spec)?;
+        let mut raw = serde_json::to_value(&target)?;
+        if !raw["payload"]["records"].as_array().unwrap().is_empty() {
+            let phase = target.phase_label();
+            let label = if phase == "finish" {
+                format!(
+                    "finish_{}",
+                    !raw["payload"]["phase"]["finish"]["checkpoint"].is_null()
+                )
+            } else {
+                phase.to_string()
+            };
+            if seen.insert(label.clone()) {
+                raw["payload"]["records"][0] = foreign.clone();
+                if phase == "done" {
+                    let report = &mut raw["payload"]["report"]["gates"][0];
+                    report["search"] = foreign["search"]["payload"]["report"].clone();
+                }
+                let mixed = p2_reseal(&mut raw)?;
+                // The expected rejection must be the prefix binding, not a stale seal.
+                let error = mixed
+                    .verify(&mesh, &ground, &a, &spec)
+                    .expect_err(&label)
+                    .to_string();
+                assert!(error.contains("unreduced prefix"), "{label}: {error}");
+                assert!(
+                    reload(&mixed)?
+                        .advance(&mesh, &ground, &a, &spec, 1, None)
+                        .is_err()
+                );
+                let mut pointer = original_pointer.clone();
+                let snapshot_path = saved_job.join(pointer["checkpoint"].as_str().unwrap());
+                let stored = json!({"schema":"soil-fem-epoch-srm-stage-gate-snapshot/1","job_id":pointer["job_id"],"generation":pointer["generation"],"checkpoint":mixed});
+                fs::write(&snapshot_path, serde_json::to_vec(&stored)?)?;
+                pointer["checkpoint_sha256"] = json!(checkpoint::hash_file(&snapshot_path)?);
+                pointer["payload_sha256"] = json!(checkpoint::hash_json(&mixed)?);
+                fs::write(&pointer_path, serde_json::to_vec(&pointer)?)?;
+                assert!(job::verify_snapshot(&saved_job).is_err(), "{label}");
+                let recovered = folder.join(format!("recovered-{label}"));
+                assert!(
+                    job::prepare_recovery(&saved_job, &recovered).is_err(),
+                    "{label}"
+                );
+                assert!(!recovered.exists());
+            }
+        }
+        if target.is_complete() {
+            break;
+        }
+        target = reload(&target)?.advance(&mesh, &ground, &a, &spec, 1, None)?;
+    }
+    assert_eq!(
+        seen,
+        std::collections::BTreeSet::from([
+            "construct".into(),
+            "search".into(),
+            "finish_false".into(),
+            "finish_true".into(),
+            "done".into()
+        ])
+    );
+    fs::remove_dir_all(folder)?;
+    Ok(())
+}

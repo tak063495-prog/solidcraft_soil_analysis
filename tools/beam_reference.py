@@ -4,6 +4,12 @@ Unlike Rust's closed nodal matrix and Schur complement, this implementation
 keeps all frame translations/rotations and released end rotations in a dense
 system. Soil bindings are imposed by a kinematic transformation.
 """
+
+
+def _require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
 import numpy as np
 
 
@@ -12,7 +18,7 @@ def constraint_space(constraints,node):
     if not eq:return np.zeros(3),np.eye(3),np.zeros((3,0))
     a=np.asarray([c['direction'] for c in eq],float);b=np.asarray([c['value'] for c in eq]);_,s,vh=np.linalg.svd(a,full_matrices=True)
     rank=int((s>1e-10*max(s.max(),1.)).sum());offset=np.linalg.lstsq(a,b,rcond=None)[0]
-    assert np.max(np.abs(a@offset-b))<1e-10
+    _require(np.max(np.abs(a@offset-b))<1e-10, 'external validation failed: np.max(np.abs(a@offset-b))<1e-10')
     return offset,vh[rank:].T,vh[:rank].T
 
 
@@ -48,9 +54,9 @@ class System:
         self.attach=[];self.positions=[]
         for n in self.nodes:
             if n.get('match_soil_node'):
-                found=np.flatnonzero(np.linalg.norm(np.asarray(mesh['nodes'])-n['position_m'],axis=1)<=1e-8);assert len(found)==1;node=int(found[0])
+                found=np.flatnonzero(np.linalg.norm(np.asarray(mesh['nodes'])-n['position_m'],axis=1)<=1e-8);_require(len(found)==1, 'external validation failed: len(found)==1');node=int(found[0])
             elif n.get('soil_node_set') is not None:
-                selected=mesh['node_sets'][n['soil_node_set']];assert len(selected)==1;node=selected[0]
+                selected=mesh['node_sets'][n['soil_node_set']];_require(len(selected)==1, 'external validation failed: len(selected)==1');node=selected[0]
             else:node=None
             self.attach.append(node);self.positions.append(n['position_m'] if node is None else mesh['nodes'][node])
         self.positions=np.asarray(self.positions);self.data=[];self.released={};self.size=6*len(self.nodes);sections={s['id']:s for s in cfg['sections']}
@@ -88,7 +94,7 @@ class System:
         for name in stage['members']:
             found=[i for i,p in enumerate(self.plates) if p['id']==name]
             if found:
-                i=found[0];assert state['active_plates'][i]!=install;result['active_plates'][i]=install
+                i=found[0];_require(state['active_plates'][i]!=install, "external validation failed: state['active_plates'][i]!=install");result['active_plates'][i]=install
                 if install:
                     for end,n in enumerate(self.plate_data[i][0]):
                         if self.attach[n] is not None:result['node_displacement_m'][n]=list(soil_u[self.attach[n]])
@@ -96,7 +102,7 @@ class System:
                         if stage['placement']=='cad_new_nodes' and not old[n]:result['node_rotation_rad'][n]=[0.]*3
                         result['plate_reference_global_kinematics'][i][6*end:6*end+6]=result['node_displacement_m'][n]+result['node_rotation_rad'][n]
                 continue
-            mi=next(i for i,m in enumerate(self.members) if m['id']==name);assert state['active_members'][mi]!=install;result['active_members'][mi]=install
+            mi=next(i for i,m in enumerate(self.members) if m['id']==name);_require(state['active_members'][mi]!=install, "external validation failed: state['active_members'][mi]!=install");result['active_members'][mi]=install
             if install:
                 ends=self.data[mi][0]
                 for end,n in enumerate(ends):
@@ -141,7 +147,7 @@ class System:
                 external_m+=np.cross(self.positions[n],f)
         active=self.active_nodes(state)
         for d in self.cfg.get('nodal_loads',[]):
-            n=self.node_ids[d['node_id']];f=np.asarray(d.get('constant_force_kn',[0.]*3))+factor*np.asarray(d.get('boundary_force_kn',[0.]*3));m=np.asarray(d.get('constant_moment_kn_m',[0.]*3))+factor*np.asarray(d.get('boundary_moment_kn_m',[0.]*3));assert active[n] or not np.r_[f,m].any()
+            n=self.node_ids[d['node_id']];f=np.asarray(d.get('constant_force_kn',[0.]*3))+factor*np.asarray(d.get('boundary_force_kn',[0.]*3));m=np.asarray(d.get('constant_moment_kn_m',[0.]*3))+factor*np.asarray(d.get('boundary_moment_kn_m',[0.]*3));_require(active[n] or not np.r_[f,m].any(), 'external validation failed: active[n] or not np.r_[f,m].any()')
             load[6*n:6*n+3]+=f;load[6*n+3:6*n+6]+=m;effective[n]+=f;external_f+=f;external_m+=np.cross(self.positions[n],f)+m
         return k,rest,load,effective,external_f,external_m,info
 
@@ -200,23 +206,30 @@ class System:
 
 def verify_state(system,native,report,soil_u,factor):
     reference=system.solve_interface(native,soil_u,factor)
-    assert np.allclose(reference['state']['node_displacement_m'],native['node_displacement_m'],atol=1e-10,rtol=1e-8)
-    assert np.allclose(reference['state']['node_rotation_rad'],native['node_rotation_rad'],atol=1e-10,rtol=1e-8)
-    for name,key in (('external_force_kn','external_force'),('external_moment_origin_kn_m','external_moment'),('support_force_kn','support_force'),('support_moment_origin_kn_m','support_moment')):assert np.allclose(report[name],reference[key],atol=1e-6,rtol=1e-8),(name,report[name],reference[key])
-    assert {m['id'] for m in report['members']}==set(reference['members'])
-    assert np.array_equal(report['node_active'],reference['node_active'])
-    assert np.allclose(report['node_positions_m'],reference['positions'],atol=1e-12,rtol=1e-12)
+    def close(actual, expected, atol, rtol, name):
+        actual=np.asarray(actual,float);expected=np.asarray(expected,float)
+        if (actual.shape!=expected.shape or not np.isfinite(actual).all() or
+                not np.isfinite(expected).all() or not np.allclose(actual,expected,atol=atol,rtol=rtol)):
+            raise ValueError('independent structural mismatch: '+str(name))
+    close(reference['state']['node_displacement_m'],native['node_displacement_m'],1e-10,1e-8,'displacement')
+    close(reference['state']['node_rotation_rad'],native['node_rotation_rad'],1e-10,1e-8,'rotation')
+    for name,key in (('external_force_kn','external_force'),('external_moment_origin_kn_m','external_moment'),('support_force_kn','support_force'),('support_moment_origin_kn_m','support_moment')):
+        close(report[name],reference[key],1e-6,1e-8,name)
+    _require({m['id'] for m in report['members']}==set(reference['members']), 'member inventory mismatch')
+    _require(np.array_equal(report['node_active'],reference['node_active']), 'node activation mismatch')
+    close(report['node_positions_m'],reference['positions'],1e-12,1e-12,'positions')
     for member in report['members']:
         expected=reference['members'][member['id']]
-        for key in ('local_end_actions','local_end_relative_rotation_rad','section_forces_at_start_mid_end','local_axes','length_m'):assert np.allclose(member[key],expected[key],atol=1e-7,rtol=1e-8),(member['id'],key)
+        for key in ('local_end_actions','local_end_relative_rotation_rad','section_forces_at_start_mid_end','local_axes','length_m'):
+            close(member[key],expected[key],1e-7,1e-8,(member['id'],key))
     if system.plates:
-        assert {p['id'] for p in report.get('plates',[])}==set(reference['plates'])
+        _require({p['id'] for p in report.get('plates',[])}==set(reference['plates']), 'plate inventory mismatch')
         for p in report.get('plates',[]):
             expected=reference['plates'][p['id']]
             for key in ('area_m2','local_axes','membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m'):
-                assert np.allclose(p[key],expected[key],atol=1e-8,rtol=1e-8),(p['id'],key)
+                close(p[key],expected[key],1e-8,1e-8,(p['id'],key))
             for actual,wanted in zip(p['samples'],expected['samples'],strict=True):
-                for key in wanted:assert np.allclose(actual[key],wanted[key],atol=1e-8,rtol=1e-8),(p['id'],key)
+                for key in wanted:close(actual[key],wanted[key],1e-8,1e-8,(p['id'],key))
     return reference
 
 

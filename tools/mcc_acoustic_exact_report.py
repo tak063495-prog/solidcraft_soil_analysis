@@ -1,42 +1,50 @@
 """All-direction continuum MCC report from an immutable sampled diagnostic."""
 
+
+def _require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
 def main():
     """Recheck a bound sampled report with the all-direction continuum criterion."""
     from pathlib import Path
     import argparse,hashlib,json,os
     for key in ['OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','OMP_NUM_THREADS']:os.environ[key]='1'
     import numpy as np
-    from mcc_acoustic_diagnostic import branch,scan_batch,directions
+    from mcc_acoustic_diagnostic import branch,scan_batch,directions,element_materials
     import mcc_acoustic_diagnostic
     from mcc_acoustic_exact import criterion
     import mcc_acoustic_exact
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('sampled_report',type=Path);parser.add_argument('output',type=Path);args=parser.parse_args()
-    assert not args.output.exists();sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+    _require(not args.output.exists(), 'external validation failed: not args.output.exists()');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
     sampled=json.loads(args.sampled_report.read_text(encoding='utf-8-sig'));sources={str(q.resolve()):sha(q) for q in [args.sampled_report,Path(__file__),Path(mcc_acoustic_diagnostic.__file__),Path(mcc_acoustic_exact.__file__)]}
-    assert sampled['diagnostic_only'] and sampled['implementation_sha256']==sha(Path(mcc_acoustic_diagnostic.__file__))
-    assert len(sampled['inputs_sha256'])==3
+    _require(sampled['diagnostic_only'] and sampled['implementation_sha256']==sha(Path(mcc_acoustic_diagnostic.__file__)), "external validation failed: sampled['diagnostic_only'] and sampled['implementation_sha256']==sha(Path(mcc_acoustic_diagnostic.__file__))")
+    _require(len(sampled['inputs_sha256'])==3, "external validation failed: len(sampled['inputs_sha256'])==3")
     parsed={}
     for name,digest in sampled['inputs_sha256'].items():
-     path=Path(name);assert path.stat().st_size<=1024**3
-     raw=path.read_bytes();assert hashlib.sha256(raw).hexdigest()==digest
+     path=Path(name);_require(path.stat().st_size<=1024**3, 'external validation failed: path.stat().st_size<=1024**3')
+     raw=path.read_bytes();_require(hashlib.sha256(raw).hexdigest()==digest, 'external validation failed: hashlib.sha256(raw).hexdigest()==digest')
      value=json.loads(raw)
      if 'tetrahedra' in value and 'nodes' in value:kind='mesh'
      elif 'materials' in value:kind='ground'
      elif 'frames' in value and 'integration_points' in value:kind='result'
      else:raise ValueError('unrecognized bound diagnostic input')
-     assert kind not in parsed;parsed[kind]=value
+     _require(kind not in parsed, 'external validation failed: kind not in parsed');parsed[kind]=value
     mesh,ground,result=[parsed[k] for k in ['mesh','ground','result']]
-    assert result['complete'] and result['frames'][-1]['name']==sampled['frames'][-1]['stage']
+    _require(result['complete'] and result['frames'][-1]['name']==sampled['frames'][-1]['stage'], "external validation failed: result['complete'] and result['frames'][-1]['name']==sampled['frames'][-1]['stage']")
     layout=result['integration_points'];owners=np.asarray([q['element_index'] for q in layout]);weights=np.asarray([q['weight_m3'] for q in layout])
-    state=result['frames'][-1]['state'];assert len(state['material_states'])==len(layout)
-    assert (owners>=0).all() and (owners<len(mesh['tetrahedra'])).all() and np.isfinite(weights).all() and (weights>0).all()
-    active=np.asarray(state['active_elements']);assert active.dtype==bool and len(active)==len(mesh['tetrahedra'])
-    materials={m['id']:m['mcc'] for m in ground['materials']};regions={r['id']:r['body'] for r in mesh['regions']}
+    state=result['frames'][-1]['state'];_require(len(state['material_states'])==len(layout), "external validation failed: len(state['material_states'])==len(layout)")
+    _require(owners.shape==(len(layout),) and owners.dtype.kind in 'iu' and weights.shape==(len(layout),) and (owners>=0).all() and (owners<len(mesh['tetrahedra'])).all() and np.isfinite(weights).all() and (weights>0).all(), "external validation failed: (owners>=0).all() and (owners<len(mesh['tetrahedra'])).all() and np.isfinite(weights).all() and (weights>0).all()")
+    active=np.asarray(state['active_elements']);_require(active.dtype==bool and active.shape==(len(mesh['tetrahedra']),), "external validation failed: active.dtype==bool and active.shape==(len(mesh['tetrahedra']),)")
+    materials=element_materials(mesh,ground,state);regions={r['id']:r['body'] for r in mesh['regions']}
+    tolerance=sampled['normalized_yield_tolerance']
+    _require(np.isfinite(tolerance) and 0 < tolerance <= 1e-3, 'invalid sampled yield tolerance')
     ids=[];data=[]
     for i in np.flatnonzero(active[owners]):
-     s=state['material_states'][i];d=branch(s['effective_stress_compression_positive_kpa'],s['preconsolidation_pressure_kpa'],s['void_ratio'],materials[mesh['material_ids'][owners[i]]])
+     s=state['material_states'][i];d=branch(s['effective_stress_compression_positive_kpa'],s['preconsolidation_pressure_kpa'],s['void_ratio'],materials[owners[i]])
      if abs(d['normalized_yield'])<=sampled['normalized_yield_tolerance']:ids.append(int(i));data.append(d)
-    assert len(ids)==sampled['frames'][-1]['near_yield_candidates']
+    _require(len(ids)==sampled['frames'][-1]['near_yield_candidates'], "external validation failed: len(ids)==sampled['frames'][-1]['near_yield_candidates']")
     scanned=scan_batch(data,directions());exact=[criterion(d) for d in data];groups={};negative=[];sample_negative=[]
     for i,d,s,r in zip(ids,data,scanned,exact,strict=True):
      body=regions[mesh['region_ids'][owners[i]]]
@@ -46,12 +54,12 @@ def main():
       row['negative_candidates']+=1;row['negative_volume_m3']+=float(weights[i]);negative.append(i)
      if r['decision']=='near_boundary_indeterminate':row['indeterminate_candidates']+=1
      if s is not None and s['normalized_by_shear'] < -1e-8:
-      assert r['decision']=='negative_continuum_candidate';row['sampled_negative_candidates']+=1;sample_negative.append(i)
-    last=sampled['frames'][-1];assert len(sample_negative)==last['sampled_negative_acoustic_candidates']
-    assert abs(float(weights[sample_negative].sum())-last['sampled_negative_volume_m3'])<1e-12
+      _require(r['decision']=='negative_continuum_candidate', "external validation failed: r['decision']=='negative_continuum_candidate'");row['sampled_negative_candidates']+=1;sample_negative.append(i)
+    last=sampled['frames'][-1];_require(len(sample_negative)==last['sampled_negative_acoustic_candidates'], "external validation failed: len(sample_negative)==last['sampled_negative_acoustic_candidates']")
+    _require(abs(float(weights[sample_negative].sum())-last['sampled_negative_volume_m3'])<1e-12, "external validation failed: abs(float(weights[sample_negative].sum())-last['sampled_negative_volume_m3'])<1e-12")
     maximum=max(range(len(exact)),key=lambda i:exact[i]['maximum_rank_one_ratio']) if exact else None
     witness=None if maximum is None else dict(global_gp=ids[maximum],position_m=layout[ids[maximum]]['position_m'],**exact[maximum])
-    assert all(sha(Path(n))==h for n,h in {**sources,**sampled['inputs_sha256']}.items())
+    _require(all(sha(Path(n))==h for n,h in {**sources,**sampled['inputs_sha256']}.items()), "external validation failed: all(sha(Path(n))==h for n,h in {**sources,**sampled['inputs_sha256']}.items())")
     report=dict(diagnostic_only=True,stage=last['stage'],elements=len(mesh['tetrahedra']),near_yield_candidates=len(ids),
                 sampled_negative_candidates=len(sample_negative),all_direction_negative_candidates=len(negative),
                 additional_candidates_not_detected_by577_directions=len(set(negative)-set(sample_negative)),
