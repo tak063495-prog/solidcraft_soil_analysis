@@ -1,0 +1,12 @@
+--- existing mcc_rate_rk4.py
++++ diagnostic mcc_rate_event_floor.py
+@@ -1 +1 @@
+-"""Fourth-order alternative for the independent MCC reference, without projection.
++"""Diagnostic RK4 event-floor variant of mcc_rate_rk4, without projection.
+@@ -10 +10,2 @@
+-def advance_rk4(self,state,displacement,force_rate,count,progress=None,accepted_callback=None):
++def advance_rk4(self,state,displacement,force_rate,count,progress=None,accepted_callback=None,minimum_event_step=1e-14):
++    if not 0 < minimum_event_step <= 1e-11:raise ValueError('invalid diagnostic event floor')
+@@ -53 +54 @@
+-        if h<1e-11:raise ValueError('independent RK4 event integration stalled')
++        if h<minimum_event_step:raise ValueError('independent RK4 event integration stalled')
