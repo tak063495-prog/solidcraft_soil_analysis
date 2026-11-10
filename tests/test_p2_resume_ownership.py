@@ -15,23 +15,76 @@ def sleeper(folder):
     snapshot=resume.read(folder/'source-snapshot.json');snapshot['tools/'+script.name]=resume.sha(script)
     (folder/'source-snapshot.json').write_text(json.dumps(snapshot))
 def alive(pid):
+    if os.name=='nt':
+        import ctypes
+        kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+        kernel.OpenProcess.restype=ctypes.c_void_p
+        kernel.OpenProcess.argtypes=[ctypes.c_uint32,ctypes.c_int,ctypes.c_uint32]
+        kernel.WaitForSingleObject.argtypes=[ctypes.c_void_p,ctypes.c_uint32]
+        kernel.CloseHandle.argtypes=[ctypes.c_void_p]
+        handle=kernel.OpenProcess(0x100000,False,pid)
+        if not handle:
+            if ctypes.get_last_error()==87:return False
+            raise ctypes.WinError(ctypes.get_last_error())
+        try:
+            result=kernel.WaitForSingleObject(handle,0)
+            if result not in (0,258):raise ctypes.WinError(ctypes.get_last_error())
+            return result==258
+        finally:kernel.CloseHandle(handle)
     try:
         os.kill(pid,0)
         stat=Path('/proc')/str(pid)/'stat'
         return not stat.exists() or stat.read_text().split()[2]!='Z'
     except ProcessLookupError:return False
 
+# Windows cannot send POSIX parent-only SIGTERM with os.kill: it hard-terminates
+# the target. Run the same CLI and handlers, delivering a real CRT signal in the
+# parent's main thread just before its owned-child wait. The child gets no signal.
+WINDOWS_PARENT=r"""import pathlib,runpy,signal,sys,time
+script,folder,number=sys.argv[1:]
+folder=pathlib.Path(folder)
+number=int(number)
+def trace(frame,event,arg):
+    if (event=='line' and frame.f_code.co_name=='run'
+            and frame.f_code.co_filename==script
+            and (frame.f_locals.get('progress') or {}).get('child_pid')):
+        sys.settrace(None)
+        deadline=time.monotonic()+10
+        while not (folder/'deliver-parent-signal').exists():
+            if time.monotonic()>deadline:raise RuntimeError('signal handshake timeout')
+            time.sleep(.01)
+        (folder/'parent-signal-delivered').write_text(str(number))
+        signal.raise_signal(number)
+    return trace
+sys.argv=[script,str(folder)]
+sys.settrace(trace)
+runpy.run_path(script,run_name='__main__')
+"""
+
 class OwnedChild(unittest.TestCase):
-    def parent_signal(self, parent_signal):
+    def parent_signal(self, parent_signal, cooperative=False):
+        cooperative=cooperative or os.name=='nt'
         with tempfile.TemporaryDirectory() as d:
             folder=Path(d);sleeper(folder);child=None
-            parent=subprocess.Popen([sys.executable,str(ROOT/'tools/resume_projected_sparse_study.py'),str(folder)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            script=str(ROOT/'tools/resume_projected_sparse_study.py')
+            command=([sys.executable,'-c',WINDOWS_PARENT,script,str(folder),str(int(parent_signal))]
+                     if cooperative else [sys.executable,script,str(folder)])
+            parent=subprocess.Popen(command,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
             try:
                 deadline=time.monotonic()+10
                 while not (folder/'worker-pid').exists() and time.monotonic()<deadline:time.sleep(.02)
                 self.assertTrue((folder/'worker-pid').exists());child=int((folder/'worker-pid').read_text())
                 self.assertTrue((folder/'.reference-resume.lock').exists())
-                os.kill(parent.pid,parent_signal);parent.wait(timeout=15)
+                if cooperative:(folder/'deliver-parent-signal').write_text(str(int(parent_signal)))
+                else:os.kill(parent.pid,parent_signal)
+                parent.wait(timeout=15)
+                self.assertNotEqual(parent.returncode,0)
+                if cooperative:
+                    self.assertEqual((folder/'parent-signal-delivered').read_text(),str(int(parent_signal)))
+                progress=resume.read(Path(resume.read(folder/'latest-resume.json')['attempt'])/'progress.json')
+                self.assertTrue(progress['interrupted'])
+                self.assertTrue(progress['child_exit_confirmed'])
+                self.assertEqual(progress['child_pid'],child)
                 self.assertFalse(alive(child),'owned child survives parent SIGINT')
                 self.assertFalse((folder/'.reference-resume.lock').exists())
                 # Replace only this temporary study's worker with the short normal fixture.
@@ -41,13 +94,16 @@ class OwnedChild(unittest.TestCase):
                 self.assertEqual(resume.run(folder),0)
             finally:
                 if parent.poll() is None:parent.kill();parent.wait()
-                if child and alive(child):os.kill(child,signal.SIGKILL)
-    @unittest.skipUnless(os.name=='posix','parent-only signals are POSIX regressions')
+                if child and alive(child):os.kill(child,signal.SIGTERM if os.name=='nt' else signal.SIGKILL)
     def test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry(self):
         self.parent_signal(signal.SIGINT)
-    @unittest.skipUnless(os.name=='posix','parent-only signals are POSIX regressions')
     def test_parent_only_sigterm_reaps_child_before_unlock_and_allows_safe_retry(self):
         self.parent_signal(signal.SIGTERM)
+
+    def test_main_thread_runtime_sigint_reaps_real_child(self):
+        self.parent_signal(signal.SIGINT,cooperative=True)
+    def test_main_thread_runtime_sigterm_reaps_real_child(self):
+        self.parent_signal(signal.SIGTERM,cooperative=True)
 
     def test_interrupt_during_launch_retains_the_handle_for_cleanup(self):
         with tempfile.TemporaryDirectory() as d:
