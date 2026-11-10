@@ -100,6 +100,13 @@ jobs:
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify dedicated contact BIRTH and fresh generations
+        if: matrix.group == 'verification'
+        run: |
+          cargo build --locked --release --example joint_birth_points
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/verify_joint_birth.py --solver target/release/soil-fem-3d.exe --point-driver target/release/examples/joint_birth_points.exe --output runs/ci/joint-birth
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify declared Tet10 crack tips
         if: matrix.group == 'verification'
         run: |

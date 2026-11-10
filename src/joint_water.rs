@@ -351,6 +351,20 @@ impl Model {
         Ok(())
     }
 
+    /// A born face must be integrated again from its declared pressure source.
+    /// `retain` only zeros disappearing faces and cannot create a face load.
+    pub fn regenerate_birth(
+        &self,
+        active: &[bool],
+        current_level: Option<f64>,
+        heads: Option<&darcy::HeadField>,
+    ) -> Result<Field> {
+        match heads {
+            Some(field) => self.from_heads(active, field, current_level),
+            None => self.hydrostatic(active, current_level),
+        }
+    }
+
     pub fn retain(&self, field: &Field, active: &[bool]) -> Result<Field> {
         self.soil_domain(active)?;
         let checked = self.field(

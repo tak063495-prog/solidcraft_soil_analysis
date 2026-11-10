@@ -51,6 +51,19 @@ pub struct Settings {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Stage {
+    /// Convert an exact pre-birth tie into unilateral effective contact.
+    JointBirth {
+        name: String,
+        joints: Vec<String>,
+        #[serde(default)]
+        initial_increment: Option<f64>,
+    },
+    JointDeath {
+        name: String,
+        joints: Vec<String>,
+        #[serde(default)]
+        initial_increment: Option<f64>,
+    },
     /// ONE_WAY: solve steady flow on the current active geometry, then apply
     /// its pore pressure to mechanics. Exterior water is specified separately.
     SteadySeepage {
@@ -165,6 +178,8 @@ impl Stage {
         matches!(
             self,
             Self::Birth { .. }
+                | Self::JointBirth { .. }
+                | Self::JointDeath { .. }
                 | Self::MaterialSet { .. }
                 | Self::ResetState { .. }
                 | Self::InstallBeams { .. }
@@ -175,7 +190,9 @@ impl Stage {
     }
     pub(crate) fn name(&self) -> &str {
         match self {
-            Self::Pressure { name, .. }
+            Self::JointBirth { name, .. }
+            | Self::JointDeath { name, .. }
+            | Self::Pressure { name, .. }
             | Self::SteadySeepage { name, .. }
             | Self::HydrostaticWater { name, .. }
             | Self::Excavate { name, .. }
@@ -193,7 +210,13 @@ impl Stage {
     fn step(&self, settings: &Settings) -> f64 {
         match self {
             Self::ResetDisplay { .. } => 1.,
-            Self::Pressure {
+            Self::JointBirth {
+                initial_increment, ..
+            }
+            | Self::JointDeath {
+                initial_increment, ..
+            }
+            | Self::Pressure {
                 initial_increment, ..
             }
             | Self::HydrostaticWater {
@@ -244,7 +267,9 @@ impl Stage {
                 remaining_surface_pressure_kpa,
                 ..
             } => *remaining_surface_pressure_kpa,
-            Self::Boundary { .. }
+            Self::JointBirth { .. }
+            | Self::JointDeath { .. }
+            | Self::Boundary { .. }
             | Self::SteadySeepage { .. }
             | Self::HydrostaticWater { .. }
             | Self::Birth { .. }
@@ -911,6 +936,25 @@ impl StageCase {
     }
     pub fn validate(&self) -> Result<()> {
         let s = &self.settings;
+        for stage in &self.stages {
+            if let Stage::JointBirth { joints, .. } | Stage::JointDeath { joints, .. } = stage {
+                let c = self.joint_system.as_ref().ok_or_else(|| {
+                    Error::Input("JOINT BIRTH/DEATH requires a joint system".into())
+                })?;
+                if joints.is_empty()
+                    || joints.iter().collect::<BTreeSet<_>>().len() != joints.len()
+                    || joints.iter().any(|id| {
+                        !c.joints
+                            .iter()
+                            .any(|d| &d.id == id && d.birth_policy.is_some())
+                    })
+                {
+                    return Err(Error::Input(
+                        "JOINT BIRTH/DEATH requires unique ids and an explicit birth_policy".into(),
+                    ));
+                }
+            }
+        }
         if let Some(c) = &self.joint_system
             && self.has_staged_water()
             && !c.joints.iter().any(|d| d.water.is_some())
@@ -922,7 +966,11 @@ impl StageCase {
         if self.joint_system.is_some()
             && (matches!(s.kinematics, Kinematics::Oedometer)
                 || !self.pressure_on_original_surface_only
-                || self.stages.iter().any(|s| matches!(s, Stage::Birth { .. })))
+                || (self.stages.iter().any(|s| matches!(s, Stage::Birth { .. }))
+                    && self
+                        .joint_system
+                        .as_ref()
+                        .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_none()))))
         {
             return Err(Error::Input("JOINT requires independent displacements and original-surface surcharge; BIRTH reactivation requires an explicit interface history policy".into()));
         }
@@ -1310,6 +1358,62 @@ impl<'a> Model<'a> {
         stage: &Stage,
         external_fluid: bool,
     ) -> Result<(Committed, Vec<usize>)> {
+        if let Stage::JointBirth { joints: ids, .. } | Stage::JointDeath { joints: ids, .. } = stage
+        {
+            if external_fluid {
+                return Err(Error::Input(
+                    "Richards wet JOINT BIRTH/DEATH is unsupported".into(),
+                ));
+            }
+            let j = self
+                .joints
+                .as_ref()
+                .ok_or_else(|| Error::Input("missing JOINT model".into()))?;
+            let state = origin
+                .joints
+                .as_ref()
+                .ok_or_else(|| Error::Input("missing JOINT history".into()))?;
+            let mut prepared = origin.clone();
+            prepared.joints = Some(if matches!(stage, Stage::JointDeath { .. }) {
+                j.death(state, ids)?
+            } else {
+                // Recover only effective contact transfer: physical water is
+                // already present once on the RHS and pore stress in I_pore.
+                let mut untied = state.clone();
+                for l in &mut untied.lifecycle {
+                    l.tied = false;
+                }
+                let dofs = self.dofs(
+                    &origin.active_elements,
+                    &self.case.settings,
+                    origin.boundary_factor,
+                    Some(&untied),
+                )?;
+                let evaluated = self.evaluate(
+                    origin,
+                    &origin.displacement_m,
+                    &origin.active_elements,
+                    &dofs,
+                    &self.case.settings,
+                    EvaluationMode::plain(),
+                )?;
+                let residual: Vec<_> = origin
+                    .applied_nodal_load_kn
+                    .iter()
+                    .zip(&evaluated.internal)
+                    .map(|(f, i)| f - i)
+                    .collect();
+                j.birth(
+                    state,
+                    &origin.displacement_m,
+                    &origin.active_elements,
+                    ids,
+                    &residual,
+                    &dofs.rows,
+                )?
+            });
+            return Ok((prepared, vec![]));
+        }
         if matches!(stage, Stage::Birth { .. })
             && origin.pore_pressure_kpa.is_some()
             && !external_fluid
@@ -1477,6 +1581,26 @@ impl<'a> Model<'a> {
                 prepared.active_elements[ei] = true;
             }
         }
+        if birth && let (Some(j), Some(state)) = (&self.joints, &origin.joints) {
+            let history =
+                j.prepare_body_birth(state, &origin.active_elements, &prepared.active_elements)?;
+            let mut existing = vec![false; self.mesh.nodes.len()];
+            for (ei, &enabled) in origin.active_elements.iter().enumerate() {
+                if enabled {
+                    for n in self.mesh.cell_nodes(ei) {
+                        existing[n] = true;
+                    }
+                }
+            }
+            for [a, b] in j.tied_pairs(&history, &prepared.active_elements)? {
+                if existing[a] && !existing[b] {
+                    prepared.displacement_m[b] = prepared.displacement_m[a];
+                } else if existing[b] && !existing[a] {
+                    prepared.displacement_m[a] = prepared.displacement_m[b];
+                }
+            }
+            prepared.joints = Some(history);
+        }
         self.ensure_supported(&prepared.active_elements)?;
         if birth && !prepared.display_reference_displacement_m.is_empty() {
             let mut existing = vec![false; self.mesh.nodes.len()];
@@ -1634,7 +1758,13 @@ impl<'a> Model<'a> {
         })
     }
 
-    fn dofs(&self, active: &[bool], settings: &Settings, factor: f64) -> Result<Dofs> {
+    fn dofs(
+        &self,
+        active: &[bool],
+        settings: &Settings,
+        factor: f64,
+        joint_state: Option<&crate::joints::State>,
+    ) -> Result<Dofs> {
         let mut active_nodes = vec![false; self.mesh.nodes.len()];
         for (i, &enabled) in active.iter().enumerate() {
             if enabled {
@@ -1645,8 +1775,19 @@ impl<'a> Model<'a> {
         }
         let mut map = vec![None; self.mesh.nodes.len() * 3];
         let mut count = 0;
-        if let Some(boundary) = &self.case.boundary {
-            let mut constraints = boundary.constraints.clone();
+        if self.case.boundary.is_some()
+            || self.joints.as_ref().is_some_and(|j| {
+                j.configuration
+                    .joints
+                    .iter()
+                    .any(|d| d.birth_policy.is_some())
+            })
+        {
+            let mut constraints = self
+                .case
+                .boundary
+                .as_ref()
+                .map_or_else(Vec::new, |b| b.constraints.clone());
             for c in &mut constraints {
                 c.value_m *= factor;
                 for g in &mut c.gradient {
@@ -1672,7 +1813,13 @@ impl<'a> Model<'a> {
                     }
                 }
             }
-            let transform = if self.joints.is_some() {
+            let pairs = match (&self.joints, joint_state) {
+                (Some(j), Some(state)) => j.tied_pairs(state, active)?,
+                _ => vec![],
+            };
+            let transform = if !pairs.is_empty() {
+                Transform::with_node_pairs(self.mesh, &constraints, active.to_vec(), extra, &pairs)?
+            } else if self.joints.is_some() {
                 Transform::with_interfaces(self.mesh, &constraints, active.to_vec(), extra)?
             } else {
                 Transform::with_extra(self.mesh, &constraints, active.to_vec(), extra)?
@@ -1917,6 +2064,40 @@ impl<'a> Model<'a> {
             .ok_or_else(|| Error::Input("missing committed JOINT water field".into()))?;
         if let Some(target) = flow {
             return Ok(Some(wet.interpolate(old, target, active, progress)?));
+        }
+        if matches!(stage, Stage::JointBirth { .. } | Stage::Birth { .. }) {
+            let level = self
+                .stage_water(origin, stage, progress)
+                .or(self.ground.initialization.water_level_m);
+            let previous_water = self
+                .case
+                .stages
+                .iter()
+                .take(origin.stage_index)
+                .rev()
+                .find(|s| {
+                    matches!(
+                        s,
+                        Stage::SteadySeepage { .. } | Stage::HydrostaticWater { .. }
+                    )
+                });
+            if origin.pore_pressure_kpa.is_some()
+                && let Some(Stage::SteadySeepage { flow, .. }) = previous_water
+            {
+                let solved =
+                    wet.solve_steady(flow, active, Some(&origin.element_material_ids), level)?;
+                if !solved.solution.complete {
+                    return Err(Error::Solve(
+                        "JOINT BIRTH hydraulic reconstruction did not complete".into(),
+                    ));
+                }
+                return Ok(Some(wet.regenerate_birth(
+                    active,
+                    level,
+                    Some(&solved.original_field),
+                )?));
+            }
+            return Ok(Some(wet.regenerate_birth(active, level, None)?));
         }
         if matches!(stage, Stage::HydrostaticWater { .. }) {
             if origin.pore_pressure_kpa.is_some() {
@@ -2582,7 +2763,7 @@ impl<'a> Model<'a> {
         } else {
             old
         };
-        let dofs = self.dofs(&active, settings, boundary_factor)?;
+        let dofs = self.dofs(&active, settings, boundary_factor, old.joints.as_ref())?;
         let rigid_geometry = self
             .joints
             .as_ref()
@@ -3146,6 +3327,7 @@ impl<'a> Model<'a> {
             &state.active_elements,
             &case.settings,
             state.boundary_factor,
+            state.joints.as_ref(),
         )?;
         let eval = self.evaluate(
             state,
@@ -3941,6 +4123,7 @@ impl<'a> ExternalMechanics<'a> {
             &prepared.active_elements,
             &self.model.case.settings,
             prepared.boundary_factor,
+            prepared.joints.as_ref(),
         )?;
         let mut holding = internal
             .iter()
@@ -3992,6 +4175,7 @@ impl<'a> ExternalMechanics<'a> {
             &state.active_elements,
             &m.case.settings,
             state.boundary_factor,
+            state.joints.as_ref(),
         )?;
         Ok(m.evaluate(
             state,
@@ -4029,7 +4213,12 @@ impl<'a> ExternalMechanics<'a> {
         rhs: &[f64],
     ) -> Result<(Vec<f64>, f64)> {
         let m = &self.model;
-        let dofs = m.dofs(active, &m.case.settings, old.boundary_factor)?;
+        let dofs = m.dofs(
+            active,
+            &m.case.settings,
+            old.boundary_factor,
+            old.joints.as_ref(),
+        )?;
         let removed = old
             .active_elements
             .iter()
@@ -4248,7 +4437,7 @@ fn equilibrate(
     settings.relative_force_tolerance = settings
         .relative_force_tolerance
         .min(model.ground.initialization.relative_equilibrium_tolerance);
-    let dofs = model.dofs(&seed.active_elements, &settings, 0.)?;
+    let dofs = model.dofs(&seed.active_elements, &settings, 0., seed.joints.as_ref())?;
     let internal = model
         .evaluate(
             &seed,
@@ -4584,6 +4773,13 @@ fn equilibrate(
 }
 
 fn result_schema(mesh: &Mesh, ground: &Ground, case: &StageCase) -> &'static str {
+    if case
+        .joint_system
+        .as_ref()
+        .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_some()))
+    {
+        return "soil-fem-stage-result/15";
+    }
     if case.is_projected_mcc() {
         return if case.beam_system.is_some() {
             "soil-fem-projected-mcc-stage-result/2"
@@ -4795,7 +4991,12 @@ fn solve_controlled(
         mixed::initialize(&model, &mut committed)?;
     }
     if let Some(model_beams) = &model.beams {
-        let dofs = model.dofs(&committed.active_elements, &case.settings, 0.)?;
+        let dofs = model.dofs(
+            &committed.active_elements,
+            &case.settings,
+            0.,
+            committed.joints.as_ref(),
+        )?;
         committed.beams = Some(
             model_beams
                 .evaluate(
@@ -4920,6 +5121,7 @@ fn solve_controlled(
             &geometry_check.active_elements,
             &case.settings,
             geometry_check.boundary_factor,
+            geometry_check.joints.as_ref(),
         )?;
         model.physical_load(
             &geometry_check.active_elements,
@@ -5053,7 +5255,9 @@ fn solve_controlled(
             | Stage::Boundary { .. }
             | Stage::ResetDisplay { .. }
             | Stage::JackAnchors { .. } => origin.active_elements.clone(),
-            Stage::Birth { .. }
+            Stage::JointBirth { .. }
+            | Stage::JointDeath { .. }
+            | Stage::Birth { .. }
             | Stage::MaterialSet { .. }
             | Stage::ResetState { .. }
             | Stage::InstallBeams { .. }
@@ -5151,10 +5355,22 @@ fn solve_controlled(
         };
         let end_joint_water =
             model.stage_joint_water(&origin, stage, &active, joint_flow_target.as_ref(), 1.)?;
-        let endload = if matches!(stage, Stage::ResetDisplay { .. }) {
-            // Display RESET owns no physical load update. The last pressure
-            // increment may differ from a fresh assembly by a few ulps; retain
-            // its exact committed load, including in checkpoint reconstruction.
+        let force_preserving_joint_birth = match stage {
+            Stage::JointBirth { joints, .. } => case.joint_system.as_ref().is_some_and(|c| {
+                joints.iter().all(|id| {
+                    c.joints.iter().any(|d| {
+                        &d.id == id
+                            && d.birth_policy == Some(crate::joints::BirthPolicy::TransferForce)
+                    })
+                })
+            }),
+            _ => false,
+        };
+        let endload = if force_preserving_joint_birth || matches!(stage, Stage::ResetDisplay { .. })
+        {
+            // RESET and mode A retain the exact physical load vector. A
+            // fresh assembly may differ by a few ulps; neither operation
+            // introduces a load increment, including during continuation.
             origin.applied_nodal_load_kn.clone()
         } else {
             model.physical_load(
@@ -5168,11 +5384,21 @@ fn solve_controlled(
                 end_joint_water.as_ref(),
             )?
         };
-        let mut release = if matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc() {
+        let mut release = if force_preserving_joint_birth {
+            // Mode A already reproduces the full nodal transfer at the same
+            // displacement. It needs no artificial construction holding load,
+            // including at prescribed support DOFs.
+            vec![0.; endload.len()]
+        } else if matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc() {
             // Projection is domain-dependent: full minus removed work forces
             // need not equal the restricted-domain work force. Reconstruct
             // the retained force without changing any GP material history.
-            let dofs = model.dofs(&active, &case.settings, end_factor)?;
+            let dofs = model.dofs(
+                &active,
+                &case.settings,
+                end_factor,
+                prepared.joints.as_ref(),
+            )?;
             model
                 .evaluate(
                     &origin,
@@ -5194,7 +5420,12 @@ fn solve_controlled(
                 .zip(&active)
                 .map(|(a, b)| *a && !*b)
                 .collect();
-            let dofs = model.dofs(&active, &case.settings, end_factor)?;
+            let dofs = model.dofs(
+                &active,
+                &case.settings,
+                end_factor,
+                prepared.joints.as_ref(),
+            )?;
             let removed_force = model
                 .evaluate(
                     &origin,
@@ -5216,7 +5447,12 @@ fn solve_controlled(
                 .map(|((a, b), f)| a - b - f)
                 .collect::<Vec<_>>()
         } else if stage.is_transition() {
-            let dofs = model.dofs(&active, &case.settings, end_factor)?;
+            let dofs = model.dofs(
+                &active,
+                &case.settings,
+                end_factor,
+                prepared.joints.as_ref(),
+            )?;
             let retained = model.evaluate(
                 &prepared,
                 &prepared.displacement_m,
@@ -5262,7 +5498,12 @@ fn solve_controlled(
                 *h -= a - b;
             }
         }
-        let active_dofs = model.dofs(&active, &case.settings, end_factor)?;
+        let active_dofs = model.dofs(
+            &active,
+            &case.settings,
+            end_factor,
+            prepared.joints.as_ref(),
+        )?;
         for (i, r) in release.iter_mut().enumerate() {
             if !active_dofs.active_nodes[i / 3] {
                 *r = 0.;
@@ -5848,6 +6089,7 @@ fn validate_committed(model: &Model<'_>, state: &Committed, case: &StageCase) ->
         &state.active_elements,
         &case.settings,
         state.boundary_factor,
+        state.joints.as_ref(),
     )?;
     match (&model.joints, &state.joints) {
         (None, None) => {}

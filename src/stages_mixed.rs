@@ -117,7 +117,7 @@ struct Layout {
 
 impl Layout {
     fn new(m: &Model<'_>, active: &[bool], settings: &Settings, factor: f64) -> Result<Self> {
-        let dofs = m.dofs(active, settings, factor)?;
+        let dofs = m.dofs(active, settings, factor, None)?;
         let mut theta = vec![None; m.point_count];
         let mut nt = 0;
         let mut keys = BTreeSet::new();

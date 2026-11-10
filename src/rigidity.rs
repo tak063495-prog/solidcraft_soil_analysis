@@ -186,9 +186,82 @@ impl Geometry {
         }
         Ok(row)
     }
+    fn constrained_nonlocal(&self, rows: &[Vec<(usize, f64)>]) -> Result<Space<'_>> {
+        if rows.len() != 3 * self.positions.len() {
+            return Err(Error::Input("rigid constraint transform mismatch".into()));
+        }
+        // Validate global orthonormality. Equal-displacement classes may
+        // share a column across nodes; normalization belongs to the class.
+        let mut gram = BTreeMap::<(usize, usize), f64>::new();
+        let mut projected = BTreeMap::<usize, DVector<f64>>::new();
+        for (g, terms) in rows.iter().enumerate() {
+            let mut seen = BTreeSet::new();
+            for &(i, c) in terms {
+                if i >= rows.len() || !c.is_finite() || !seen.insert(i) {
+                    return Err(Error::Input("invalid rigid constraint transform".into()));
+                }
+                *projected
+                    .entry(i)
+                    .or_insert_with(|| DVector::zeros(self.dimension())) +=
+                    self.node_row(g / 3, g % 3) * c;
+                for &(j, d) in terms {
+                    *gram.entry((i, j)).or_default() += c * d;
+                }
+            }
+        }
+        if gram
+            .iter()
+            .any(|(&(i, j), &v)| (v - f64::from(i == j)).abs() > 1e-12)
+        {
+            return Err(Error::Input(
+                "rigid audit requires globally orthonormal constraint columns".into(),
+            ));
+        }
+        let mut space = Space {
+            geometry: self,
+            basis: Vec::new(),
+            weak_rows: Vec::new(),
+            weak_basis: Vec::new(),
+        };
+        for (n, component) in self.primary.iter().enumerate() {
+            if component.is_none() {
+                continue;
+            }
+            for a in 0..3 {
+                let mut r = self.node_row(n, a);
+                for &(i, c) in &rows[3 * n + a] {
+                    r -= &projected[&i] * c;
+                }
+                space.add(r)?;
+            }
+        }
+        for &(node, a, b) in &self.ties {
+            // These are kinematic equalities, independent of contact pressure.
+            // Never replace a shared edge by a face-connected six-mode union.
+            let ma = self.motion(a, self.positions[node]);
+            let mb = self.motion(b, self.positions[node]);
+            for axis in 0..3 {
+                let mut r = DVector::zeros(self.dimension());
+                for k in 0..6 {
+                    r[6 * a + k] -= ma[(axis, k)];
+                    r[6 * b + k] += mb[(axis, k)];
+                }
+                space.add(r)?;
+            }
+        }
+        Ok(space)
+    }
     pub fn constrained(&self, rows: &[Vec<(usize, f64)>]) -> Result<Space<'_>> {
         if rows.len() != 3 * self.positions.len() {
             return Err(Error::Input("rigid constraint transform mismatch".into()));
+        }
+        let mut column_nodes = BTreeMap::new();
+        let nonlocal = rows.iter().enumerate().any(|(g, row)| {
+            row.iter()
+                .any(|&(i, _)| column_nodes.insert(i, g / 3).is_some_and(|n| n != g / 3))
+        });
+        if nonlocal {
+            return self.constrained_nonlocal(rows);
         }
         // This projector is valid for node-local orthonormal nullspaces.
         // A nonlocal/tied-coordinate transform needs a different reduction.

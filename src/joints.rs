@@ -7,6 +7,8 @@ use crate::{
 use nalgebra::{DMatrix, DVector, Matrix3, Vector3};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+#[path = "joints_birth.rs"]
+mod birth;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -15,6 +17,8 @@ pub struct Definition {
     pub side_a: String,
     pub side_b: String,
     pub material: Material,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub birth_policy: Option<BirthPolicy>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub water: Option<crate::joint_water::Policy>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -298,9 +302,33 @@ pub struct Configuration {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub structure_bodies: Vec<String>,
 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BirthPolicy {
+    TransferForce,
+    StressFree,
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Generation {
+    pub generation: u64,
+    pub points: Vec<(usize, PointState)>,
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Lifecycle {
+    pub joint_id: String,
+    pub policy: Option<BirthPolicy>,
+    pub active: bool,
+    pub tied: bool,
+    pub generation: u64,
+    pub archived: Vec<Generation>,
+}
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct State {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub lifecycle: Vec<Lifecycle>,
     pub points: Vec<PointState>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -401,6 +429,13 @@ impl Model {
         }
         if tip_degree.values().any(|&degree| degree > 2) {
             return Err(Error::Input("branching crack tip across JOINTs".into()));
+        }
+        if c.joints.iter().any(|d| d.birth_policy.is_some())
+            && c.joints.iter().any(|d| d.crack_tip.is_some())
+        {
+            return Err(Error::Input(
+                "JOINT BIRTH with declared crack tips is unverified".into(),
+            ));
         }
         let owners = boundary::surface_owners(mesh);
         let mut ids = BTreeSet::new();
@@ -604,6 +639,7 @@ impl Model {
                 "JOINT history/displacement/active layout mismatch".into(),
             ));
         }
+        self.validate_lifecycle(state)?;
         Ok(())
     }
     pub fn layout(&self) -> Vec<PointInfo> {
@@ -611,6 +647,27 @@ impl Model {
     }
     pub fn initial_state(&self) -> Result<State> {
         Ok(State {
+            lifecycle: if self
+                .configuration
+                .joints
+                .iter()
+                .any(|d| d.birth_policy.is_some())
+            {
+                self.configuration
+                    .joints
+                    .iter()
+                    .map(|d| Lifecycle {
+                        joint_id: d.id.clone(),
+                        policy: d.birth_policy,
+                        active: d.birth_policy.is_none(),
+                        tied: d.birth_policy.is_some(),
+                        generation: 0,
+                        archived: vec![],
+                    })
+                    .collect()
+            } else {
+                vec![]
+            },
             points: self
                 .points
                 .iter()
@@ -633,6 +690,9 @@ impl Model {
             })
             .collect()
     }
+    fn contact_active(&self, state: &State, p: &Point, active: &[bool]) -> bool {
+        Self::active(p, active) && state.lifecycle.get(p.material).is_none_or(|l| l.active)
+    }
     fn active(p: &Point, active: &[bool]) -> bool {
         active[p.info.owner_a] && active[p.info.owner_b]
     }
@@ -652,7 +712,7 @@ impl Model {
             .iter()
             .zip(&state.points)
             .map(|(p, s)| {
-                if Self::active(p, active) {
+                if self.contact_active(state, p, active) {
                     self.configuration.joints[p.material].material.partition(
                         s,
                         Self::jump(p, u).into(),
@@ -666,15 +726,13 @@ impl Model {
     }
     pub fn validate_state(&self, state: &State, u: &[[f64; 3]], active: &[bool]) -> Result<()> {
         self.validate_layout(state, u, active)?;
-        if state.points.len() != self.points.len() || u.len() != self.positions.len() {
-            return Err(Error::Input("JOINT cache count mismatch".into()));
-        }
+        self.validate_lifecycle(state)?;
         for (p, s) in self.points.iter().zip(&state.points) {
             self.configuration.joints[p.material]
                 .material
                 .validate_state(s)?;
             if (Vector3::from(s.normal) - Vector3::from(p.info.normal)).norm() > 1e-10
-                || (Self::active(p, active)
+                || (self.contact_active(state, p, active)
                     && (Self::jump(p, u) - Vector3::from(s.jump_m)).norm() > 1e-10)
             {
                 return Err(Error::Input("JOINT geometry/jump cache mismatch".into()));
@@ -702,7 +760,7 @@ impl Model {
             if space.full() {
                 break;
             }
-            if !Self::active(p, active) {
+            if !self.contact_active(state, p, active) {
                 continue;
             }
             let n = Vector3::from(p.info.normal);
@@ -783,7 +841,7 @@ impl Model {
         }
         let mut matrix = DMatrix::zeros(rhs.len(), rhs.len());
         for (i, p) in self.points.iter().enumerate() {
-            if !Self::active(p, active) {
+            if !self.contact_active(current, p, active) {
                 continue;
             }
             let n = Vector3::from(p.info.normal);
@@ -791,8 +849,8 @@ impl Model {
             let o = &old.points[i];
             let jump = Vector3::from(s.jump_m);
             let old_jump = Vector3::from(o.jump_m);
-            let gap = n.dot(&jump);
-            let old_gap = n.dot(&old_jump);
+            let gap = n.dot(&s.elastic_jump());
+            let old_gap = n.dot(&o.elastic_jump());
             if gap > 0. {
                 continue;
             }
@@ -856,9 +914,9 @@ impl Model {
         }
         let mut found = false;
         for (p, s) in self.points.iter().zip(&state.points) {
-            if Self::active(p, active) {
+            if self.contact_active(state, p, active) {
                 found = true;
-                if s.jump_m != [0.; 3] || s.traction_kpa != [0.; 3] {
+                if s.elastic_jump() != Vector3::zeros() || s.traction_kpa != [0.; 3] {
                     return Ok(None);
                 }
             }
@@ -868,7 +926,7 @@ impl Model {
         }
         let mut matrix = Vec::new();
         for p in &self.points {
-            if !Self::active(p, active) {
+            if !self.contact_active(state, p, active) {
                 continue;
             }
             let material = &self.configuration.joints[p.material].material;
@@ -915,7 +973,7 @@ impl Model {
         let mut numerical = 0.;
         let mut work = 0.;
         for (i, p) in self.points.iter().enumerate() {
-            let is_active = Self::active(p, active);
+            let is_active = self.contact_active(state, p, active);
             let material = &self.configuration.joints[p.material].material;
             let old = &state.points[i];
             // Removed-side histories remain archived and must still be valid.
@@ -961,7 +1019,7 @@ impl Model {
             let s = &next.points[i];
             let n = Vector3::from(p.info.normal);
             let q = Vector3::from(s.traction_kpa);
-            let gn = Vector3::from(s.jump_m).dot(&n);
+            let gn = s.elastic_jump().dot(&n);
             let normal = q.dot(&n);
             let tau = q - normal * n;
             let elastic = material.energy(s);

@@ -1,5 +1,12 @@
 # BIRTH・MATSET・再盛土の検証記録
 
+## 案2 接触BIRTHの追加試験
+
+土のBIRTHと接合のJointBirthを別工程とし、方針省略時・古い材料履歴・活動中の土・未定義湿潤BIRTHの既存拒否を保つ。新規 `tests/joint_birth.rs`、`tests/joint_birth_law.rs`、`tests/test_joint_birth.py` と独立ドライバで、厳密な等変位、A/Bの誕生基準・全節点力・初期エネルギー、旧世代の凍結、乾燥新設土と接合の別BIRTH、湿潤面荷重の再積分、受理地点からの別CLI再開、外側ハッシュを再計算した改変の拒否を検証する。
+
+[測定値・全試験件数・保持した不合格](../interim/2026-11-12-joint-birth/README.ja.md) を参照する。新しい独立参照は既存のwet-structure参照と分離し、既存参照が未対応のBIRTHを拒否する試験も保持する。許容値、参照値、過去の未達は変更していない。
+
+
 2026-10-24、Windows x64、Rust 1.99.1。盛土の有効化・材料交換を、全体非線形FEMと保存再開へ接続した。P3aのRESET/SRM施工再生、P6全体は未完。
 
 最終統合実行は`runs/construction-test-20261024-010601-facc3ce8/`。`verification.json`と`final-validation.json`が合格の受入記録。スクリプトは`scripts/Test-Construction.ps1 -SkipChecks -MccBaseline runs/tet10-boundary-test-20261023-224400-66dd339e/flat/stage-results.json`。別途同じソースで行った全Rust試験、Clippy、整形は`runs/construction-placement-final-{rust,clippy,format}-20261024.log`に保存する。
