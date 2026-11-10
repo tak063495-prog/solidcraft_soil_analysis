@@ -55,5 +55,32 @@ class JointSplit(unittest.TestCase):
         mesh['region_ids'][6]=3;bad=copy.deepcopy(spec);bad['interfaces'][0]['body_b']='Patch'
         with self.assertRaisesRegex(ValueError,'tied crack fronts'):split(mesh,bad)
 
+    def test_explicit_legal_tet10_tip_of_the_old_partial_patch_is_separated(self):
+        root=Path(__file__).resolve().parents[1]
+        mesh=json.loads((root/'examples/mc-column-mesh.json').read_text())
+        edges={};cells=[]
+        for tet in mesh['tetrahedra']:
+            cell=tet.copy()
+            for i,j in ref.EDGES:
+                edge=tuple(sorted((tet[i],tet[j])))
+                if edge not in edges:
+                    edges[edge]=len(mesh['nodes'])
+                    mesh['nodes'].append(((np.asarray(mesh['nodes'][edge[0]])+mesh['nodes'][edge[1]])/2).tolist())
+                cell.append(edges[edge])
+            cells.append(cell)
+        mesh.update(schema='soil-fem-mesh/3',tetrahedra10=cells,quadrature_order=3)
+        mesh['regions'].append({**mesh['regions'][1],'id':3,'body':'Patch'})
+        mesh['region_ids'][6]=3
+        face,owners=next((f,o) for f,o in ref.topology(mesh).items()
+                         if len(o)==2 and 6 in o and mesh['region_ids'][next(e for e in o if e!=6)]==1)
+        a=next(e for e in owners if e!=6)
+        spec={'schema':'soil-fem-joint-split/1','interfaces':[{'id':'Patch',
+            'body_a':'LowerClay','body_b':'Patch','faces':[{'nodes':list(face),'owner_a':a,'owner_b':6}],
+            'tip_edges':[[4,7,edges[4,7]]]}]}
+        result,summary=split(mesh,spec)
+        self.assertEqual(summary['added_displacement_nodes'],3)
+        self.assertEqual(summary['crack_tip_declarations']['Patch']['edges'],[[4,7,edges[4,7]]])
+        np.testing.assert_array_equal(np.asarray(result['nodes'])[ref.cells(result)],np.asarray(mesh['nodes'])[ref.cells(mesh)])
+
 
 if __name__=='__main__':unittest.main()

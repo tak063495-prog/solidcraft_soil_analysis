@@ -110,6 +110,9 @@ impl Geometry {
                 return Err(Error::Input("degenerate rigid-component radius".into()));
             }
             for &n in &nodes {
+                // Include Tet10 intermediate nodes as real equality DOFs.
+                // Three collinear crack-tip nodes impose five relative rigid
+                // constraints, retaining the rotation about the shared edge.
                 if let Some(first) = primary[n] {
                     ties.push((n, first, index));
                 } else {
@@ -249,6 +252,8 @@ impl Geometry {
             }
         }
         for &(node, a, b) in &self.ties {
+            // These are kinematic equalities, independent of contact pressure.
+            // Never replace a shared edge by a face-connected six-mode union.
             let ma = self.motion(a, self.positions[node]);
             let mb = self.motion(b, self.positions[node]);
             for axis in 0..3 {

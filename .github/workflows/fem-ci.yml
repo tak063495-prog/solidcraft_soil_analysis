@@ -100,6 +100,17 @@ jobs:
         run: |
           python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify declared Tet10 crack tips
+        if: matrix.group == 'verification'
+        run: |
+          python tools/verify_joint_crack_tip.py --solver target/release/soil-fem-3d.exe --output runs/ci/crack-tip
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($mode in @('continuous', 'soil', 'prescribed')) {
+            python tools/verify_joint_crack_tip_water.py --solver target/release/soil-fem-3d.exe --output "runs/ci/crack-tip-water-$mode" --mode $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          python tools/verify_joint_crack_tip_refinement.py --solver target/release/soil-fem-3d.exe --output runs/ci/crack-tip-local-h
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Record bounded low preload NC diagnosis (not acceptance)
         if: matrix.group == 'verification'
         run: |
@@ -132,6 +143,7 @@ jobs:
             runs/ci/soil-wet-structures/**
             runs/ci/soil-source-wet-structures/**
             runs/ci/fixed-prescribed-wet-structures/**
+            runs/ci/crack-tip*/**
             runs/ci/low-preload-nc/**
             !runs/ci/low-preload-nc/job/solver/**
             runs/ci/low-preload-nc-step32/**

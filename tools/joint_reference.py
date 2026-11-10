@@ -7,20 +7,107 @@ import numpy as np
 import fem_reference as ref
 
 
+def declared_tip(mesh, definition, owners):
+    """Independent combinatorial certificate, never inferred from coincidence."""
+    declaration = definition.get('crack_tip')
+    if declaration is None:
+        return set(), {}
+    assert mesh.get('tetrahedra10') and declaration['edges']
+    faces = declaration['faces']
+    a = [tuple(sorted(f['face_a'])) for f in faces]
+    b = [tuple(sorted(f['face_b'])) for f in faces]
+    assert len(a) == len(set(a)) and len(b) == len(set(b))
+    assert set(a) == {tuple(sorted(f)) for f in mesh['face_sets'][definition['side_a']]}
+    assert set(b) == {tuple(sorted(f)) for f in mesh['face_sets'][definition['side_b']]}
+    correspondence = {}
+    surface = {}
+    for f, fa, fb in zip(faces, a, b):
+        oa, ob = f['owner_a'], f['owner_b']
+        assert oa != ob and owners[fa] == [oa] and owners[fb] == [ob]
+        correspondence[fa] = (fb, oa, ob)
+        nodes = ref.face_nodes(mesh, oa, fa)
+        for k, (i, j) in enumerate(((0, 1), (1, 2), (2, 0))):
+            edge = tuple(sorted((int(nodes[i]), int(nodes[j]))))
+            surface.setdefault(edge, []).append(int(nodes[k+3]))
+    assert all(len(m) <= 2 and len(set(m)) == 1 for m in surface.values())
+    allowed, unique, degree = set(), set(), {}
+    cells = ref.cells(mesh)
+    for v, w, mid in declaration['edges']:
+        edge = tuple(sorted((v, w)))
+        assert len({v, w, mid}) == 3 and edge not in unique and surface.get(edge) == [mid]
+        unique.add(edge)
+        allowed.update((v, w, mid))
+        for n in (v, w):
+            degree[n] = degree.get(n, 0) + 1
+        star = {e for e, cell in enumerate(cells) if v in cell[:4] and w in cell[:4]}
+        links = {e: set() for e in star}
+        for face, os in owners.items():
+            if v in face and w in face and len(os) == 2:
+                x, y = os
+                links[x].add(y)
+                links[y].add(x)
+        for f in faces:
+            if v in f['face_a'] and w in f['face_a']:
+                assert v in f['face_b'] and w in f['face_b']
+                x, y = f['owner_a'], f['owner_b']
+                links[x].add(y)
+                links[y].add(x)
+        visited, pending = set(), [min(star)]
+        while pending:
+            e = pending.pop()
+            if e not in visited:
+                visited.add(e)
+                pending.extend(links[e])
+        assert visited == star and all(len(s) <= 2 for s in links.values())
+    assert all(d <= 2 for d in degree.values())
+    return allowed, correspondence
+
+
 class System:
     def __init__(self,mesh,configuration,layout=None):
         self.mesh=mesh;self.configuration=configuration;xyz=np.asarray(mesh['nodes']);owners=ref.topology(mesh)
+        front_edges, front_degree = set(), {}
+        for d in configuration['joints']:
+            for v, w, _ in (d.get('crack_tip') or {}).get('edges', []):
+                edge = tuple(sorted((v, w)))
+                assert edge not in front_edges, 'duplicate crack-tip edge across joints'
+                front_edges.add(edge)
+                for n in edge:front_degree[n] = front_degree.get(n, 0) + 1
+        assert all(degree <= 2 for degree in front_degree.values()), 'branching crack tip across joints'
+        assert all(len(os) <= 2 for os in owners.values())
+        if any(d.get('crack_tip') is not None for d in configuration['joints']):
+            cells = ref.cells(mesh); corners = set(cells[:, :4].flat)
+            edges, middles = {}, {}
+            assert cells.shape[1] == 10
+            for cell in cells:
+                assert len(set(cell)) == 10
+                for k, (i, j) in enumerate(ref.EDGES):
+                    edge = tuple(sorted((int(cell[i]), int(cell[j])))); mid = int(cell[k+4])
+                    assert mid not in corners and edges.get(edge, mid) == mid and middles.get(mid, edge) == edge
+                    edges[edge] = mid; middles[mid] = edge
         self.points=[];self.counterparts={};used=set()
         for d in configuration['joints']:
+            allowed, correspondence = declared_tip(mesh, d, owners)
             for fi,face in enumerate(mesh['face_sets'][d['side_a']]):
                 fa=tuple(sorted(face));oa,=owners[fa];na=ref.face_nodes(mesh,oa,fa);pa=xyz[na];matches=[]
                 for fb in mesh['face_sets'][d['side_b']]:
                     fb=tuple(sorted(fb));ob,=owners[fb];nb=ref.face_nodes(mesh,ob,fb)
                     if len(na)!=len(nb):continue
                     distance=np.linalg.norm(pa[:,None]-xyz[nb][None,:],axis=2);permutation=distance.argmin(axis=1)
-                    if np.max(distance[np.arange(len(na)),permutation])<=configuration['geometric_tolerance_m'] and len(set(permutation))==len(na):matches.append((fb,ob,nb[permutation]))
+                    if np.max(distance[np.arange(len(na)),permutation])<=configuration['geometric_tolerance_m'] and len(set(permutation))==len(na):
+                        if d.get('crack_tip') is not None:
+                            assert np.all(permutation[:3] < 3)
+                            assert sum(permutation[i] > permutation[j] for i in range(3) for j in range(i+1,3)) % 2 == 1
+                            for k, (i, j) in enumerate(((0,1),(1,2),(2,0))):
+                                edge = next(e for e,(v,w) in enumerate(((0,1),(1,2),(2,0))) if {v,w}=={int(permutation[i]),int(permutation[j])})
+                                assert permutation[k+3] == edge+3
+                        matches.append((fb,ob,nb[permutation]))
                 assert len(matches)==1;fb,ob,nb=matches[0];assert fa not in used and fb not in used;used.update((fa,fb))
-                assert not np.any(na==nb);self.counterparts[fa]=ob;self.counterparts[fb]=oa
+                shared = set(int(n) for n in na[na == nb])
+                assert shared == set(int(n) for n in na) & allowed and not np.all(na == nb)
+                if correspondence:
+                    assert correspondence[fa] == (fb, oa, ob)
+                self.counterparts[fa]=ob;self.counterparts[fb]=oa
                 if len(na)==3:rule=[(np.array(r),1/6) for r in ((1/6,1/6),(2/3,1/6),(1/6,2/3))]
                 else:rule=[(np.array([u,(1-u)*v]),wu*wv) for u,wu in zip(*ref.jacobi(4,1)) for v,wv in zip(*ref.jacobi(4,0))]
                 for r,w in rule:
@@ -38,6 +125,9 @@ class System:
         for i,p in enumerate(self.points):
             for a,b,w in zip(p['nodes_a'],p['nodes_b'],p['shape']):
                 for k in range(3):self.c[i,k,3*a+k]-=w;self.c[i,k,3*b+k]+=w
+        for p, c in zip(self.points, self.c):
+            for node in set(p['nodes_a']) & set(p['nodes_b']):
+                assert np.array_equal(c[:, 3*node:3*node+3], np.zeros((3, 3)))
         if layout is not None:
             assert len(layout)==len(self.points)
             for expected,actual in zip(self.points,layout):

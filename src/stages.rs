@@ -1251,6 +1251,21 @@ impl<'a> Model<'a> {
                     adjacency[b].push(a);
                 }
             }
+            // Reachability only: an actual shared tip DOF can connect retained
+            // solids after a partial DEATH. It does not certify their rotational
+            // support. Geometry::constrained imposes the shared-node equalities;
+            // joint_support_space adds only sustained compressive contact rows.
+            for node in joints.shared_tip_nodes() {
+                let incident: Vec<_> = (0..active.len())
+                    .filter(|&e| active[e] && self.mesh.cell_nodes(e).contains(&node))
+                    .collect();
+                if let Some(&first) = incident.first() {
+                    for &other in &incident[1..] {
+                        adjacency[first].push(other);
+                        adjacency[other].push(first);
+                    }
+                }
+            }
         }
         for (face, owners) in &self.faces {
             if owners.len() == 2 && active[owners[0]] && active[owners[1]] {
