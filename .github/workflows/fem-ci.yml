@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [rust-core, rust-integration-0, rust-integration-1, python, verification]
+        group: [rust-core, rust-integration-0, rust-integration-1, python-core-0, python-core-1, python-mean-evidence, python-spatial-evidence, verification]
     runs-on: windows-2025
     timeout-minutes: 45
     defaults:
@@ -69,14 +69,12 @@ jobs:
           python tools/run_ci_rust_tests.py --group ${{ matrix.group }} --output runs/ci
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build the CLI used by geometry tests
-        if: matrix.group == 'python' || matrix.group == 'verification'
+        if: startsWith(matrix.group, 'python-') || matrix.group == 'verification'
         run: cargo build --locked --release
       - name: Run all Python tests
-        if: matrix.group == 'python'
+        if: startsWith(matrix.group, 'python-')
         run: |
-          python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tests.log
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m unittest discover -s tools -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tools-tests.log
+          python tools/run_ci_python_tests.py --group ${{ matrix.group }} --output runs/ci
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify small wet JOINT plate beam integration
         if: matrix.group == 'verification'

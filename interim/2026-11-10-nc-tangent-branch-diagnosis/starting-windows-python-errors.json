@@ -1,0 +1,25 @@
+{
+  "commit": "113d83b8a37b3b68ce46eb00b6664f042334eae0",
+  "run_id": 42727298926,
+  "job_id": 129536089082,
+  "job_conclusion": "cancelled",
+  "aggregate_conclusion": "failure",
+  "elapsed_seconds": 2705,
+  "configured_timeout_minutes": 45,
+  "earlier_observed_error": {
+    "timestamp_utc": "2026-11-10T01:03:06Z",
+    "test": "test_nc_mean_stress_evidence.MeanStressEvidence.setUpClass",
+    "exception": "UnicodeDecodeError",
+    "codec": "cp1252",
+    "byte_hex": "0x9d",
+    "file": "sealed prepared/reference*/reference.json",
+    "stack": "sealed measure.py -> prehistory -> read -> Path.read_text"
+  },
+  "fixes": [
+    "retain -I isolation and explicitly pass -X utf8 to the historical child interpreter",
+    "partition every discovered test exactly once by whole module into four Python jobs"
+  ],
+  "assertions_or_numerical_tolerances_weakened": false,
+  "new_windows_success_confirmed": false,
+  "decoded_log_storage": "API text, CRLF normalized to LF, ANSI sequences preserved"
+}

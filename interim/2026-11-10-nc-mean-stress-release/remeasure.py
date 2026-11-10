@@ -18,6 +18,13 @@ measure = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(measure)
 
 
+def isolated_command(*arguments):
+    # -I deliberately ignores PYTHONUTF8/PYTHONIOENCODING. The archived JSON
+    # is UTF-8, including historical diagnostic text; retain isolation and
+    # select the codec explicitly instead of using the Windows ANSI locale.
+    return [sys.executable, '-I', '-X', 'utf8', *map(str, arguments)]
+
+
 class PartsReader:
     """Sequential tar input without a second full-size joined archive."""
     def __init__(self, paths):
@@ -105,7 +112,7 @@ spec=importlib.util.spec_from_file_location('sealed_nc_measure',script)
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 output.write_text(json.dumps(module.measure(evidence,bool(int(sys.argv[4]))),indent=2,allow_nan=False)+'\\n',encoding='utf-8')
 """
-    subprocess.run([sys.executable,'-I','-c',child_code,str(script),str(evidence),str(out/'measurements.json'),str(int(allow_platform_float_differences))],cwd=snapshot,check=True)
+    subprocess.run(isolated_command('-c',child_code,script,evidence,out/'measurements.json',int(allow_platform_float_differences)),cwd=snapshot,check=True)
     actual=(out/'measurements.json').read_bytes()
     expected=(HERE/'measurements.json').read_bytes();identical=actual==expected;differences=[]
     def structure(a,b,path=''):
