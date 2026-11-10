@@ -88,6 +88,7 @@ impl Transition {
                 bodies: bodies.clone(),
                 states: states.clone(),
                 placement: placement.clone(),
+                hydraulic_initialization: None,
                 initial_increment: self.initial_increment,
             },
             Action::MaterialSet {

@@ -1,0 +1,72 @@
+{
+  "schema": "soil-fem-joint-ext-acceptance/1",
+  "passed": true,
+  "scope": "Only the bounded combinations below; not all requested combinations or P6",
+  "requested_all_combinations_passed": false,
+  "combination_1": {
+    "passed": true,
+    "accepted": "single dry declared-tip matching Tri6 interface, A/B, all owners active, joint_death/rebirth",
+    "rejected": [
+      "wet declared-tip BIRTH",
+      "multiple JOINTs",
+      "structural-member combination",
+      "body BIRTH across tip",
+      "partially active interface rebirth"
+    ],
+    "shared_tip_zero_rows_checked": true,
+    "balanced_unreproducible_tip_force_rejected": true
+  },
+  "combination_2": {
+    "passed": true,
+    "accepted": "one fully submerged fresh MC body; cad_new_nodes; explicit matching hydrostatic level; one all-soil CONTINUOUS mode-B joint",
+    "coupling": "prescribed hydrostatic ONE_WAY",
+    "rejected": [
+      "undefined hydraulic state",
+      "aged material history",
+      "already active body",
+      "steady SOIL/CONTINUOUS/PRESCRIBED BIRTH",
+      "partial submergence",
+      "new MCC",
+      "other placement",
+      "tip/structure combinations"
+    ]
+  },
+  "combination_3": {
+    "passed": false,
+    "accepted": false,
+    "one_way_rejected": true,
+    "two_way_rejected": true,
+    "reason": "Richards head/interface/time/generation coupling and independent coupled mass balance/time refinement are unimplemented and unverified",
+    "coupled_mass_balance_verified": false,
+    "time_refinement_verified": false,
+    "hydraulic_head_difference_m": null
+  },
+  "existing_features_and_defaults_retained": true,
+  "existing_tolerances_relaxed": false,
+  "reference_values_rewritten": false,
+  "past_failures_removed": false,
+  "rejected_nc_tuning_performed": false,
+  "p6_complete": false,
+  "remaining": [
+    "low-preload NC full upper-soil removal",
+    "general wet JOINT plastic-slip full-history convergence",
+    "steady wet-soil BIRTH policies",
+    "Richards wet JOINT",
+    "large CAD and GUI/GPU verification"
+  ],
+  "tolerances": {
+    "reassembly": 1e-10,
+    "nonlinear_equilibrium": 1e-08,
+    "linear_residual": 1e-10,
+    "independent_elastic_relative": 1e-07,
+    "structural_translation_rotation_absolute": 1e-09,
+    "plate_absolute": 1e-08,
+    "plate_relative": 1e-07,
+    "head_m": 1e-08,
+    "constraint_m": 1e-10,
+    "contact_work_absolute": 1e-10
+  },
+  "validation_sha256": "d80ba832dfacac1ba34a8674729c0d5a93d07e44dfce531afd49cad0a27d27ef",
+  "artifact_manifest_sha256": "0ba390d2c7c7b8ae3c822ac064b3ae13ad7988ce9f6c0e972a97a69a39c2a880",
+  "windows_ci_after_push": "unconfirmed"
+}

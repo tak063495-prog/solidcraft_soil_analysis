@@ -1,5 +1,14 @@
 # 乾燥した履歴JOINTの3D接続・検証記録
 
+## 範囲拡張(a)：先端接合と静水圧の新設土
+
+[限定受入と証拠](../interim/2026-11-13-joint-ext-combos/README.ja.md)。乾燥・単一の先端宣言付きTri6 JOINTについて、A/B、接合専用DEATH→再誕生を追加した。共有先端は一つの物理節点であり、力回収の節点対未知数から除く。全節点力の厳密再現、非一様GP初期力、Bの実際の誕生時ジャンプ、すべり後の旧世代凍結、別CLI再開と再ハッシュ改変拒否を専用参照で検査する。先端を跨ぐボディBIRTH・部分活動面の再誕生・湿潤先端BIRTH・構造部材との複合は拒否する。
+
+湿潤土BIRTHは、完全水没の新規MC土1ボディ、`cad_new_nodes`、明示した同一静水位、両側が土の単一CONTINUOUS JOINT・モードBに限定する。`hydraulic_initialization: {kind: hydrostatic, level_m: ...}` と新規の有効応力・材料状態を必須とし、静水圧を体積内部力と面荷重へそれぞれ一度だけ組み立てる。SOIL/CONTINUOUS/PRESCRIBEDの定常流後BIRTHとRichards湿潤JOINTは未受入で拒否を維持する。独立参照は `joint_ext_reference.py` であり、既存verifyの許可リストと `joint_birth_reference.py` は変更しない。
+
+この追補は以下の過去記録の受入範囲を変更しない。低プレロードNC全上部撤去、湿潤JOINT塑性すべり全履歴の刻み収束、P6全体、大規模実CAD・GUI/GPUは未達のままである。Windows CIの今回の成否はLinux結果から確定しない。
+
+
 ## 案2 接触BIRTHの限定受入
 
 `JointBirth` を土のBIRTHと別工程として追加した。`birth_policy` を明示したJOINTだけが誕生前の厳密な節点対等変位から切り替わる。Aは拘束伝達力を先に回収し、GP初期力で全物理節点成分を絶対1e-10 kN以内に再現でき、引張なし・Coulomb円内の場合だけ受理する。Bは誕生時相対変位を基準とし接触力0から開始する。新世代のすべり・散逸・仕事は0、旧世代は凍結保存する。大きなばね定数を等変位の代用にしない。

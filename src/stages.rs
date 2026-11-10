@@ -128,6 +128,10 @@ pub enum Stage {
         bodies: Vec<String>,
         states: BTreeMap<String, soil::State>,
         placement: BirthPlacement,
+        /// Explicit initial pore field for newly placed soil. Omission keeps
+        /// the existing dry, stress-free BIRTH contract.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        hydraulic_initialization: Option<BirthHydraulicState>,
         #[serde(default)]
         initial_increment: Option<f64>,
     },
@@ -172,6 +176,12 @@ pub enum MaterialHistory {
 pub enum BirthPlacement {
     CurrentDisplacement,
     CadNewNodes,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum BirthHydraulicState {
+    /// ONE_WAY, prescribed hydrostatic field, fully submerged fresh MC soil.
+    Hydrostatic { level_m: f64 },
 }
 impl Stage {
     fn is_transition(&self) -> bool {
@@ -956,6 +966,16 @@ impl StageCase {
             }
         }
         if let Some(c) = &self.joint_system
+            && c.joints
+                .iter()
+                .any(|d| d.crack_tip.is_some() && d.birth_policy.is_some())
+            && (self.beam_system.is_some() || self.anchor_system.is_some())
+        {
+            return Err(Error::Input(
+                "declared-tip JOINT BIRTH with structural members is unverified".into(),
+            ));
+        }
+        if let Some(c) = &self.joint_system
             && self.has_staged_water()
             && !c.joints.iter().any(|d| d.water.is_some())
         {
@@ -1494,6 +1514,51 @@ impl<'a> Model<'a> {
             ));
         }
         let selected = self.selected_bodies(bodies)?;
+        let birth_hydraulic = match stage {
+            Stage::Birth {
+                hydraulic_initialization,
+                ..
+            } => hydraulic_initialization.as_ref(),
+            _ => None,
+        };
+        if let Some(BirthHydraulicState::Hydrostatic { level_m }) = birth_hydraulic
+            && (external_fluid
+                || bodies.len() != 1
+                || !matches!(
+                    stage,
+                    Stage::Birth {
+                        placement: BirthPlacement::CadNewNodes,
+                        ..
+                    }
+                )
+                || self.case.beam_system.is_some()
+                || self.case.anchor_system.is_some()
+                || self.case.joint_system.as_ref().is_none_or(|c| {
+                    c.joints.len() != 1
+                        || !c.structure_bodies.is_empty()
+                        || c.joints[0].crack_tip.is_some()
+                        || c.joints[0].birth_policy != Some(crate::joints::BirthPolicy::StressFree)
+                        || !matches!(
+                            c.joints[0].water,
+                            Some(crate::joint_water::Policy::Continuous)
+                        )
+                })
+                || !level_m.is_finite()
+                || Some(*level_m)
+                    != origin
+                        .hydrostatic_water_level_m
+                        .or(self.ground.initialization.water_level_m)
+                || selected.iter().any(|&e| {
+                    !self.soil_points[self.elements[e].point_start]
+                        || self
+                            .mesh
+                            .cell_nodes(e)
+                            .iter()
+                            .any(|&n| self.mesh.nodes[n][2] > *level_m)
+                }))
+        {
+            return Err(Error::Input("wet BIRTH requires one fully submerged fresh soil body, cad_new_nodes, explicit matching hydrostatic level, and one mode-B CONTINUOUS all-soil interface; flow/Richards/structural combinations are unverified".into()));
+        }
         let mut prepared = origin.clone();
         if matches!(
             stage,
@@ -1553,12 +1618,10 @@ impl<'a> Model<'a> {
                     {
                         return Err(Error::Input("stress-free BIRTH requires a zero-stress-admissible model; MCC has zero bulk stiffness at p=0".into()));
                     }
-                    if self.pore(origin.hydrostatic_water_level_m, q.position[2]) != 0.
-                        || state
-                            .stress()
-                            .iter()
-                            .chain(state.plastic_strain())
-                            .any(|v| *v != 0.)
+                    if (birth_hydraulic.is_none()
+                        && (self.pore(origin.hydrostatic_water_level_m, q.position[2]) != 0.
+                            || state.stress().iter().any(|v| *v != 0.)))
+                        || state.plastic_strain().iter().any(|v| *v != 0.)
                     {
                         return Err(Error::Input(
                             "stress-free BIRTH requires dry, zero-stress, fresh material states"

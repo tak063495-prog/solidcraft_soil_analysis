@@ -432,9 +432,10 @@ impl Model {
         }
         if c.joints.iter().any(|d| d.birth_policy.is_some())
             && c.joints.iter().any(|d| d.crack_tip.is_some())
+            && (c.joints.len() != 1 || c.joints[0].water.is_some())
         {
             return Err(Error::Input(
-                "JOINT BIRTH with declared crack tips is unverified".into(),
+                "declared-tip JOINT BIRTH is limited to one dry interface".into(),
             ));
         }
         let owners = boundary::surface_owners(mesh);

@@ -1,0 +1,22 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/joint-ext-work)
+    Finished `release` profile [optimized] target(s) in 16.26s
+     Running tests/joint_ext_combos.rs (target/release/deps/joint_ext_combos-7c5528d3d6b4d9fd)
+
+running 1 test
+test tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer ... FAILED
+
+failures:
+
+---- tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer stdout ----
+
+thread 'tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer' (1432651) panicked at tests/joint_ext_combos.rs:81:5:
+unreproducible shared-tip residual must not be discarded
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test joint_ext_combos`

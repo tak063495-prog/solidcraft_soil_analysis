@@ -528,8 +528,7 @@ fn body_death_then_dry_rebirth_keeps_the_removed_slip_generation_frozen() -> Res
     Ok(())
 }
 #[test]
-fn omitted_policy_active_soil_birth_and_declared_crack_tip_combinations_stay_rejected() -> Result<()>
-{
+fn omitted_policy_active_soil_birth_and_wet_crack_tip_combinations_stay_rejected() -> Result<()> {
     let (mesh, ground, case) = fixture("stress_free", true)?;
     let mut missing = case.clone();
     missing.joint_system.as_mut().unwrap().joints[0].birth_policy = None;
@@ -540,6 +539,8 @@ fn omitted_policy_active_soil_birth_and_declared_crack_tip_combinations_stay_rej
         serde_json::from_str(include_str!("../examples/joint-crack-tip-mesh.json"))?;
     tip_case.joint_system.as_mut().unwrap().joints[0].birth_policy =
         Some(soil_fem_3d::joints::BirthPolicy::StressFree);
+    tip_case.joint_system.as_mut().unwrap().joints[0].water =
+        Some(soil_fem_3d::joint_water::Policy::Continuous);
     assert!(soil_fem_3d::joints::Model::new(&tip_mesh, tip_case.joint_system.unwrap()).is_err());
     let mut value = serde_json::to_value(case)?;
     value["stages"] = json!([{"kind":"birth","name":"bad","bodies":["UpperClay"],"states":{},"placement":"cad_new_nodes"}]);

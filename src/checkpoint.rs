@@ -114,6 +114,15 @@ impl Checkpoint {
             .joint_system
             .as_ref()
             .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_some()))
+            || case.stages.iter().any(|s| {
+                matches!(
+                    s,
+                    stages::Stage::Birth {
+                        hydraulic_initialization: Some(_),
+                        ..
+                    }
+                )
+            })
         {
             // A checksum can be recomputed by an editor. Replay the accepted
             // path from immutable inputs to authenticate generation, reference,

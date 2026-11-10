@@ -159,6 +159,11 @@ impl Model {
                 .iter()
                 .any(|p| p.material == di && !Self::active(p, before) && Self::active(p, after));
             if changes {
+                if self.configuration.joints[di].crack_tip.is_some() {
+                    return Err(Error::Input(
+                        "body BIRTH across a declared crack tip is unverified".into(),
+                    ));
+                }
                 if self.configuration.joints[di].birth_policy.is_none() {
                     return Err(Error::Input(
                         "body BIRTH requires explicit JOINT birth_policy".into(),
@@ -245,7 +250,17 @@ impl Model {
             // The second solve then checks ALL physical nodal components.
             let nodes: BTreeSet<_> = transfer
                 .iter()
-                .flat_map(|&i| self.points[i].coefficients.iter().map(|&(n, _)| n))
+                // Keep shared tip DOFs as zero contact-force rows. Removing
+                // their zero coefficients from connectivity must not remove
+                // their free residual from the exact recovery/rejection gate.
+                .flat_map(|&i| {
+                    self.points[i]
+                        .info
+                        .nodes_a
+                        .iter()
+                        .chain(&self.points[i].info.nodes_b)
+                        .copied()
+                })
                 .collect();
             let physical: BTreeMap<_, _> = nodes
                 .iter()
@@ -267,6 +282,9 @@ impl Model {
                         .nodes_a
                         .iter()
                         .zip(&self.points[i].info.nodes_b)
+                        // A shared tip is one physical node, not a tie
+                        // multiplier. Its jump and contact force cancel exactly.
+                        .filter(|(a, b)| a != b)
                         .map(|(&a, &b)| [a, b])
                 })
                 .collect();

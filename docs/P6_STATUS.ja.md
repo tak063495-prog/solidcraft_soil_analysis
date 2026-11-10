@@ -1,5 +1,14 @@
 # P6までの受入要件と現在の証拠
 
+## 範囲拡張(a)：先端接合と静水圧の新設土
+
+[限定受入と証拠](../interim/2026-11-13-joint-ext-combos/README.ja.md)。乾燥・単一の先端宣言付きTri6 JOINTについて、A/B、接合専用DEATH→再誕生を追加した。共有先端は一つの物理節点であり、力回収の節点対未知数から除く。全節点力の厳密再現、非一様GP初期力、Bの実際の誕生時ジャンプ、すべり後の旧世代凍結、別CLI再開と再ハッシュ改変拒否を専用参照で検査する。先端を跨ぐボディBIRTH・部分活動面の再誕生・湿潤先端BIRTH・構造部材との複合は拒否する。
+
+湿潤土BIRTHは、完全水没の新規MC土1ボディ、`cad_new_nodes`、明示した同一静水位、両側が土の単一CONTINUOUS JOINT・モードBに限定する。`hydraulic_initialization: {kind: hydrostatic, level_m: ...}` と新規の有効応力・材料状態を必須とし、静水圧を体積内部力と面荷重へそれぞれ一度だけ組み立てる。SOIL/CONTINUOUS/PRESCRIBEDの定常流後BIRTHとRichards湿潤JOINTは未受入で拒否を維持する。独立参照は `joint_ext_reference.py` であり、既存verifyの許可リストと `joint_birth_reference.py` は変更しない。
+
+この追補は以下の過去記録の受入範囲を変更しない。低プレロードNC全上部撤去、湿潤JOINT塑性すべり全履歴の刻み収束、P6全体、大規模実CAD・GUI/GPUは未達のままである。Windows CIの今回の成否はLinux結果から確定しない。
+
+
 案2「接触BIRTH」追補：小型の適合Tet4/Tet10面について、土のBIRTHと別のJointBirth、誕生前の厳密等変位、A/B、初期力・エネルギー・世代、静水圧/定常CONTINUOUS/SOIL/PRESCRIBED、水圧面荷重再生成、保存・再開・改変拒否を追加した。[受入の範囲と実測JSON](../interim/2026-11-12-joint-birth/README.ja.md)。先端宣言＋BIRTH・湿潤土BIRTH・Richards湿潤JOINT・大規模実CAD/GUI/GPUは含めない。案1・案3の既存証拠を保持し、低プレロードNC全上部撤去・湿潤JOINT塑性すべり全履歴収束・P6全体は未達のままである。案4は [将来オプション文書](JOINT_WEAK_COUPLING_FUTURE.ja.md) のみで未実装。
 
 

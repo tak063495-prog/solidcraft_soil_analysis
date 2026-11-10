@@ -1,5 +1,8 @@
 # 盛土の無応力誕生と材料変更
 
+静水圧の湿潤土BIRTHの限定拡張は [範囲拡張(a)](../interim/2026-11-13-joint-ext-combos/README.ja.md) を参照する。従来の乾燥BIRTHは変更せず、明示した新設水理状態がない湿潤BIRTH、古い履歴、活動中の土、MCCの無応力BIRTHは引き続き拒否する。定常流後およびRichardsの湿潤JOINT/BIRTHは未受入である。以下は従来の入力・検証記録である。
+
+
 ## 接合だけの誕生（案2）
 
 土を置く `birth` と、接合則を活動させる `joint_birth` を分離する。JOINT定義に `birth_policy: transfer_force`（伝達力継承）または `stress_free`（無応力）を明示し、工程の `joints` に接合IDを指定する。方針を省略したJOINT＋土BIRTHの拒否、既に活動中の土・古い材料履歴・未定義湿潤BIRTHの拒否を維持する。
