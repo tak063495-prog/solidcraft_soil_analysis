@@ -72,12 +72,18 @@ class System:
             sections={s['id']:s for s in cfg['plate_sections']}
             for p in self.plates:
                 nodes=[self.node_ids[n] for n in p['nodes']];section=sections[p['section_id']]
-                self.plate_data.append((nodes,section,Element(self.positions[nodes],section)))
+                kind=p.get('formulation','cst_dkt')
+                if kind=='mindlin_tri6':
+                    from plate6_reference import Element as Mindlin
+                    kernel=Mindlin(self.positions[nodes],section)
+                elif kind=='cst_dkt' and len(nodes)==3:kernel=Element(self.positions[nodes],section)
+                else:raise ValueError('plate formulation/node count mismatch')
+                self.plate_data.append((nodes,section,kernel))
 
     def initial_state(self):
         state={'active_members':[m['initially_active'] for m in self.members],'reference_global_kinematics':[[0.]*12 for _ in self.members],
             'node_displacement_m':[[0.]*3 for _ in self.nodes],'node_rotation_rad':[[0.]*3 for _ in self.nodes]}
-        if self.plates:state.update(active_plates=[p['initially_active'] for p in self.plates],plate_reference_global_kinematics=[[0.]*18 for _ in self.plates])
+        if self.plates:state.update(active_plates=[p['initially_active'] for p in self.plates],plate_reference_global_kinematics=[[0.]*(6*len(p['nodes'])) for p in self.plates])
         return state
 
     def active_nodes(self,state):
@@ -226,7 +232,7 @@ def verify_state(system,native,report,soil_u,factor):
         _require({p['id'] for p in report.get('plates',[])}==set(reference['plates']), 'plate inventory mismatch')
         for p in report.get('plates',[]):
             expected=reference['plates'][p['id']]
-            for key in ('area_m2','local_axes','membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m'):
+            for key in ('area_m2','local_axes','membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m')+ (('transverse_shear_energy_kn_m',) if 'transverse_shear_energy_kn_m' in expected else ()):
                 close(p[key],expected[key],1e-8,1e-8,(p['id'],key))
             for actual,wanted in zip(p['samples'],expected['samples'],strict=True):
                 for key in wanted:close(actual[key],wanted[key],1e-8,1e-8,(p['id'],key))

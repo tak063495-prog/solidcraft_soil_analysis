@@ -1,0 +1,32 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis/work/check)
+    Finished `release` profile [optimized] target(s) in 1m 08s
+     Running tests/plates6.rs (/workspace/solidcraft_soil_analysis/target/release/deps/plates6-e1e9970f68eb87f9)
+
+running 7 tests
+test mindlin_rejects_curved_nonplanar_and_implicit_six_node_inputs ... ok
+test mindlin_membrane_curvature_zero_shear_and_constant_shear_patches ... ok
+test mindlin_six_rigid_modes_rank_and_coordinate_objectivity ... ok
+test mindlin_consistent_traction_force_moment_and_quadratic_virtual_work_reject_equal_six ... ok
+test tri6_trace_is_tet10_trace_for_all_translations_and_detects_legacy_difference ... ok
+test mindlin_pure_bending_preserves_dkt_accuracy_across_thickness ... FAILED
+test mindlin_thin_and_thick_cantilever_shear_force_converges_without_locking ... FAILED
+
+failures:
+
+---- mindlin_pure_bending_preserves_dkt_accuracy_across_thickness stdout ----
+Error: Solve("beam interior true residual exceeded tolerance")
+
+---- mindlin_thin_and_thick_cantilever_shear_force_converges_without_locking stdout ----
+
+thread 'mindlin_thin_and_thick_cantilever_shear_force_converges_without_locking' (2194) panicked at tests/plates6.rs:127:13:
+h=0.8 n=4 err=0.0000000000001461053500406706 prev=0.000000000000031530333899354446
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    mindlin_pure_bending_preserves_dkt_accuracy_across_thickness
+    mindlin_thin_and_thick_cantilever_shear_force_converges_without_locking
+
+test result: FAILED. 5 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test plates6`

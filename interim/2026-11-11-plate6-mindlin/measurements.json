@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "scope": "Straight planar same-reference-surface Tri6, small elastic soil + plate + beam. No offset, JOINT, water, soil birth, curved shell, large model or GUI/GPU acceptance.",
+  "p6_complete": false,
+  "windows_ci": "unconfirmed",
+  "kernel_tests": 7,
+  "kernel_test_log": "kernel-focused.log",
+  "thin_and_thick_cantilever": [
+    {
+      "thickness_m": 0.8,
+      "divisions": 2,
+      "relative_tip_error": 3.175237850427948e-14
+    },
+    {
+      "thickness_m": 0.8,
+      "divisions": 4,
+      "relative_tip_error": 1.4632739464559563e-13
+    },
+    {
+      "thickness_m": 0.8,
+      "divisions": 8,
+      "relative_tip_error": 1.5865087021893487e-13
+    },
+    {
+      "thickness_m": 0.02,
+      "divisions": 2,
+      "relative_tip_error": 1.4408141346677894e-11
+    },
+    {
+      "thickness_m": 0.02,
+      "divisions": 4,
+      "relative_tip_error": 1.0955047979877008e-10
+    },
+    {
+      "thickness_m": 0.02,
+      "divisions": 8,
+      "relative_tip_error": 1.1909739860982427e-10
+    },
+    {
+      "thickness_m": 0.002,
+      "divisions": 2,
+      "relative_tip_error": 1.5349634896466569e-09
+    },
+    {
+      "thickness_m": 0.002,
+      "divisions": 4,
+      "relative_tip_error": 2.9589448669042895e-09
+    },
+    {
+      "thickness_m": 0.002,
+      "divisions": 8,
+      "relative_tip_error": 7.84080866900183e-09
+    }
+  ],
+  "relative_tip_error_limit": 1e-07,
+  "coupled_model": {
+    "soil_nodes": 45,
+    "tet10": 12,
+    "plates": 2,
+    "beams": 1,
+    "soil_free_dofs": 108,
+    "retained_structural_unknowns": 33,
+    "frames": 5
+  },
+  "loaded_soil_increment_max_abs_by_component_m": [
+    0.0013146986909807956,
+    0.0004627557535002281,
+    0.002154617590538582
+  ],
+  "maximum_reassembled_relative_residual": 7.626262017267786e-11,
+  "maximum_accepted_force_residual": 7.622697523789739e-11,
+  "maximum_accepted_true_linear_residual": 5.1694364630995133e-11,
+  "maximum_relative_independent_soil_displacement_error": 5.716398347890619e-11,
+  "maximum_relative_independent_soil_stress_error": 3.5769625988536524e-11,
+  "maximum_structural_displacement_error_m": 5.995887380344511e-14,
+  "maximum_structural_rotation_error_rad": 3.820154929830332e-14,
+  "plate_maximum_absolute_errors": {
+    "area_m2": 0.0,
+    "local_axes": 0.0,
+    "membrane_energy_kn_m": 9.29343373903737e-18,
+    "bending_energy_kn_m": 8.842210817705531e-16,
+    "drilling_penalty_energy_kn_m": 3.8476695700864644e-22,
+    "transverse_shear_energy_kn_m": 4.956159180974362e-17,
+    "barycentric": 0.0,
+    "membrane_strain": 1.0848120362075275e-16,
+    "curvature_per_m": 1.3183112370848682e-14,
+    "membrane_force_kn_m": 1.3560150224911638e-10,
+    "bending_moment_kn": 1.3732404102739793e-11,
+    "transverse_shear_strain": 1.0659740234605919e-16,
+    "transverse_shear_force_kn_m": 1.1103895580788503e-10,
+    "drilling_mismatch_rad": 3.4941977973028667e-15
+  },
+  "restart_stops": [
+    1,
+    9,
+    17,
+    25,
+    29
+  ],
+  "rejected_attempts": 3,
+  "bounded_cache_mib": [
+    0,
+    64
+  ],
+  "quadratic_vtu_roundtrip": true,
+  "checkpoint_tampering_rejected": true
+}

@@ -35,10 +35,13 @@ def fields(mesh,run,index):
         raise ValueError('invalid or duplicate structural node ids')
     displacement=finite(history['node_displacement_m'],(n,3),'nodal displacement')
     rotation=finite(history['node_rotation_rad'],(n,3),'nodal rotation')
-    for name,width,inventory in (('reference_global_kinematics',12,cfg['members']),
-            ('plate_reference_global_kinematics',18,cfg.get('plates',[]))):
+    for name,width,inventory in (('reference_global_kinematics',12,cfg['members']),):
         values=history.get(name,[])
         finite(np.asarray(values).reshape((0,width)) if not inventory and values==[] else values,(len(inventory),width),name)
+    refs=history.get('plate_reference_global_kinematics',[])
+    if len(refs)!=len(cfg.get('plates',[])):raise ValueError('invalid plate reference inventory')
+    for reference,plate in zip(refs,cfg.get('plates',[]),strict=True):
+        finite(reference,(6*len(plate['nodes']),),'plate installation reference')
     for name,inventory in (('active_members',cfg['members']),('active_plates',cfg.get('plates',[]))):
         values=history.get(name,[])
         if len(values)!=len(inventory) or any(type(v) is not bool for v in values):raise ValueError('invalid structural active inventory')
@@ -63,7 +66,9 @@ def fields(mesh,run,index):
     members=inventory('members',cfg['members'],history['active_members'],history['reference_global_kinematics'])
     plates=inventory('plates',cfg.get('plates',[]),history.get('active_plates',[]),history.get('plate_reference_global_kinematics',[]))
     sections={s['id']:s for s in cfg.get('plate_sections',[])}
-    for plate in plates:plate['thickness_m']=sections[plate['section_id']]['thickness_m']
+    for plate,definition in zip(plates,cfg.get('plates',[]),strict=True):
+        plate['thickness_m']=sections[plate['section_id']]['thickness_m']
+        if definition.get('formulation')=='mindlin_tri6':plate['formulation']='mindlin_tri6'
     # Each result includes its exact local axes, beam start/mid/end sections or
     # all three DKT samples. Inactive results stay null, never fabricated zeros.
     output=dict(schema=SCHEMA,nodes=dict(ids=ids,positions_m=model.positions.tolist(),soil_node_ids=model.attach,
@@ -77,6 +82,8 @@ def fields(mesh,run,index):
             beam_samples='start, middle, end; exact local axes and end releases retained',
             plate_components=['xx','yy','xy'],plate_membrane='tension-positive kN/m',
             plate_bending='kN m/m; positive with reported local curvature; xy is engineering twist',
-            plate_samples='raw DKT barycentric locations; no nodal averaging',
+            plate_samples=('raw Mindlin Tri6 (six points) and DKT (three points) barycentric locations; no nodal averaging'
+                if any(p.get('formulation')=='mindlin_tri6' for p in cfg.get('plates',[]))
+                else 'raw DKT barycentric locations; no nodal averaging'),
             inactive='archived node kinematics and installation references retained; result null'))
     return output

@@ -1,0 +1,149 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-11-10T13:39:10.853674+00:00",
+      "elapsed_seconds": 0.7137737419998302
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-11-10T13:39:11.567688+00:00",
+      "elapsed_seconds": 14.98119450199988
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-11-10T13:39:26.549021+00:00",
+      "elapsed_seconds": 1379.387937257,
+      "passed": 421,
+      "failed": 0,
+      "ignored": 0,
+      "filtered_out": 0
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "started_utc": "2026-11-10T14:02:25.937696+00:00",
+      "elapsed_seconds": 0.07661524400009512
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "started_utc": "2026-11-10T14:02:26.014498+00:00",
+      "elapsed_seconds": 1399.9712812450002,
+      "tests": 468,
+      "skipped": 0
+    }
+  ],
+  "source_files": 657,
+  "final_python_results": {
+    "tests_passed": 468,
+    "tools_passed": 2,
+    "total_unique_passed": 470,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "initial_environment_errors": 1,
+    "recovered_test_ids": [
+      "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_recorded_256_histories_are_read_with_provenance_not_recomputed"
+    ],
+    "restored_original_archive": "interim/2026-11-08-wet-joint-separated-convergence/evidence.zip",
+    "retry_exit_code": 0,
+    "retry_tests": 1,
+    "retry_not_added_to_unique_count": true,
+    "tools_exit_code": 0,
+    "all_discovered_ids_covered": true
+  },
+  "rust_sources_unchanged_through_entire_validation": true,
+  "python_sources_fixed_before_python_test_start_and_unchanged": true,
+  "source_phase_note": "Only the four listed Python files changed while Rust checks were in progress, before any full Python tests began. All Rust/CLI/build inputs were byte-identical throughout; all Python files match the pre-test snapshot. The initial Python run had one FileNotFoundError from a sparsely omitted historical ZIP; after restoring its original Git bytes the exact failed test passed. Initial error log retained; no source/reference/tolerance change to resolve it.",
+  "python_fixes_before_full_python_tests": [
+    "tests/test_plate6.py",
+    "tools/plate6_study.py",
+    "tools/fem_reference.py",
+    "tools/solidcraft_structure_fields.py"
+  ],
+  "solver_sha256": "405fef0d127b0f02ce60aa33d376b277cfe60e743e882cc06fad3cc8d28a049b",
+  "windows_ci": "not determined",
+  "p6_complete": false,
+  "python_recovery_checks": [
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_recorded_256_histories_are_read_with_provenance_not_recomputed",
+        "-v"
+      ],
+      "environment": {
+        "PYTHONPATH": "tests:tools",
+        "OPENBLAS_NUM_THREADS": "1"
+      },
+      "exit_code": 0,
+      "log": "python-restored-archive-retry.log"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "python-tools.log"
+    }
+  ],
+  "restored_historical_archive_verified": {
+    "bytes": 14062997,
+    "sha256": "a45ab1684cf87f5a3df949c499ccf64da90b36b7f85d1f81742ffa8dee9e9651",
+    "git_blob_identity_matches_base": true
+  }
+}
