@@ -7,6 +7,7 @@ import tarfile
 import importlib.util
 import gzip
 import sys
+import subprocess
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
 from linear_evidence_codec import json_lines
 
@@ -46,7 +47,7 @@ def run(out,allow_platform_float_differences=False):
         total.update(raw); size += len(raw)
     if total.hexdigest() != manifest['archive_sha256'] or size != manifest['archive_size']:
         raise ValueError('joined archive differs')
-    evidence = out/'evidence'; seen = set(); eol_differences=[]
+    evidence = out/'evidence'; seen = set(); eol_differences=[]; checkout_differences=[]
     reader=PartsReader([HERE/p['name'] for p in manifest['parts']])
     with tarfile.open(fileobj=reader,mode='r|gz') as z:
         for ent in z:
@@ -68,11 +69,14 @@ def run(out,allow_platform_float_differences=False):
             seen.add(ent.name)
             if path.parts[0] == 'sources':
                 raw=q.read_bytes()
-                checkout=(ROOT/Path(*path.parts[1:])).read_bytes()
+                current=ROOT/Path(*path.parts[1:])
+                checkout=current.read_bytes() if current.is_file() else None
                 if raw!=checkout:
-                    if raw.replace(b'\r\n',b'\n')!=checkout.replace(b'\r\n',b'\n'):
-                        raise ValueError('diagnostic source differs: '+ent.name)
-                    eol_differences.append(dict(path=ent.name,snapshot_sha256=hashlib.sha256(raw).hexdigest(),checkout_sha256=hashlib.sha256(checkout).hexdigest(),only_CRLF_LF_differs=True))
+                    difference=dict(path=ent.name,snapshot_sha256=hashlib.sha256(raw).hexdigest(),checkout_sha256=hashlib.sha256(checkout).hexdigest() if checkout is not None else None)
+                    if checkout is not None and raw.replace(b'\r\n',b'\n')==checkout.replace(b'\r\n',b'\n'):
+                        eol_differences.append(dict(difference,only_CRLF_LF_differs=True))
+                    else:
+                        checkout_differences.append(difference)
     reader.close()
     if seen != set(manifest['entries']):
         raise ValueError('archive inventory differs')
@@ -88,8 +92,21 @@ def run(out,allow_platform_float_differences=False):
                     checksum.update(chunk);length+=len(chunk)
         if checksum.hexdigest()!=record['raw_sha256'] or length!=record['raw_size']:
             raise ValueError('compressed raw JSONL differs: '+name)
-    actual = (json.dumps(measure.measure(evidence,allow_platform_float_differences), indent=2, allow_nan=False)+'\n').encode()
-    (out/'measurements.json').write_bytes(actual)
+    # This is a historical replay, not certification of the live checkout.
+    # Execute the complete SHA-verified snapshot in a fresh interpreter, so
+    # neither newer tools nor already-imported modules can generate old fields.
+    snapshot=evidence/'sources'
+    script=snapshot/'interim/2026-11-10-nc-mean-stress-release/measure.py'
+    if not script.is_file():raise ValueError('sealed measurement source missing')
+    child_code="""import importlib.util,json,sys
+from pathlib import Path
+script,evidence,output=map(Path,sys.argv[1:4])
+spec=importlib.util.spec_from_file_location('sealed_nc_measure',script)
+module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+output.write_text(json.dumps(module.measure(evidence,bool(int(sys.argv[4]))),indent=2,allow_nan=False)+'\\n',encoding='utf-8')
+"""
+    subprocess.run([sys.executable,'-I','-c',child_code,str(script),str(evidence),str(out/'measurements.json'),str(int(allow_platform_float_differences))],cwd=snapshot,check=True)
+    actual=(out/'measurements.json').read_bytes()
     expected=(HERE/'measurements.json').read_bytes();identical=actual==expected;differences=[]
     def structure(a,b,path=''):
         if isinstance(a,float) and isinstance(b,float):
@@ -105,7 +122,7 @@ def run(out,allow_platform_float_differences=False):
     structure(json.loads(expected),json.loads(actual))
     if not identical and not allow_platform_float_differences:
         raise ValueError('remeasured JSON differs')
-    result = dict(archive_verified=True, verified_entries=len(seen), measurements_byte_identical=identical,discrete_evidence_exact=True,derived_float_differences=differences,numerical_acceptance=False,checkout_source_EOL_differences=eol_differences,jsonl_extracted_as_gzip=True,joined_archive_created=False)
+    result = dict(archive_verified=True, verified_entries=len(seen), measurements_byte_identical=identical,discrete_evidence_exact=True,derived_float_differences=differences,numerical_acceptance=False,checkout_source_EOL_differences=eol_differences,checkout_source_differences=checkout_differences,measurement_source='SHA-verified sealed archive snapshot in isolated subprocess',current_checkout_numerical_certification=False,jsonl_extracted_as_gzip=True,joined_archive_created=False)
     (out/'verification.json').write_text(json.dumps(result, indent=2)+'\n')
     return result
 

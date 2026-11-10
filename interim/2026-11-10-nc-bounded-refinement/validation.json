@@ -1,0 +1,136 @@
+{
+  "starting_commit": "5bee3b47f61878e614cae1e7268a57449d2f12d1",
+  "rust": {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    "passed": 414,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "process": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1785.056720063
+    }
+  },
+  "python": [
+    {
+      "label": "python-tests",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1649.731532969,
+      "tests_run": 420,
+      "skipped": 0,
+      "failed": 0
+    },
+    {
+      "label": "python-tools",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.0966250440001204,
+      "tests_run": 2,
+      "skipped": 0,
+      "failed": 0
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "versions": {
+    "python": "Python 3.13.17",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "longdouble_nmant": 63
+  },
+  "source_fingerprint_check": {
+    "tested_sources": 844,
+    "changed": [
+      "interim/2026-11-10-nc-bounded-refinement/measure.py"
+    ]
+  },
+  "automated_test_runtime_and_continuation_sources_unchanged": true,
+  "source_freeze_scope": "844-source snapshot: only the new manual measurement auditor changed during automated tests; it is separately verified by final archived-source replay. The outer bookkeeping wrapper returned 1 for that change; both unittest commands returned 0.",
+  "production_binary_sha256": "7598ddc6282c56221dfbd33d14554afcec3e75db1d4b4f3fe444c30af9a6be06",
+  "new_heavy_computation_added_to_default_ci": false,
+  "windows_final_head_ci": "unconfirmed before push",
+  "archive_replay": {
+    "archive_verified": true,
+    "verified_entries": 1349,
+    "measurements_byte_identical": true,
+    "numerical_acceptance": false,
+    "all_new_linear_matrices_archived": false,
+    "measurement_source": "sealed isolated source snapshot"
+  },
+  "supplementary_linear_audit": {
+    "source_sha256": "afa13f6f4041ca19a31a34fc36505c60916206de139f0f962a478a14bdd38a54",
+    "all_accepted_original_and_canonical_gate_exceedances": 0,
+    "retained_accepted_extended_gate_exceedances": 0,
+    "retained_accepted_actual_systems": 668,
+    "maximum_retained_accepted_extended_residual": 6.632084673062428e-11,
+    "scope": "Supplementary script is stored beside the archive; it was added after the sealed archive snapshot and run on its fully verified extraction."
+  },
+  "whitespace_check": {
+    "scope": "source, documentation and JSON; raw .log records retained verbatim",
+    "exit_code": 0
+  }
+}

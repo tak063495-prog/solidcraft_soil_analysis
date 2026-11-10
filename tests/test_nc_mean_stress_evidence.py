@@ -26,6 +26,8 @@ class MeanStressEvidence(unittest.TestCase):
         if sys.platform != 'win32':
             self.assertTrue(self.integrity['measurements_byte_identical'])
         self.assertFalse(self.integrity['numerical_acceptance'])
+        self.assertEqual(self.integrity['measurement_source'], 'SHA-verified sealed archive snapshot in isolated subprocess')
+        self.assertFalse(self.integrity['current_checkout_numerical_certification'])
 
     def test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate(self):
         for kind, suffix in [('native', ''), ('independent', '-rate')]:
