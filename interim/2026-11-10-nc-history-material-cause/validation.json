@@ -1,0 +1,270 @@
+{
+  "starting_commit": "744fce031c551fe2e1eee9dd69e02f39c2785a9c",
+  "linux_checks_passed": true,
+  "numerical_acceptance": false,
+  "checks": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.7990528730001643
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 11.418149426999662
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 33.12762680199967
+    }
+  ],
+  "rust": {
+    "passed": 414,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "groups": {
+      "rust-core": {
+        "passed": 60,
+        "exit_code": 0,
+        "elapsed_seconds": 305.36064903999977,
+        "commands": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--release",
+            "--lib",
+            "--bins"
+          ],
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--release",
+            "--doc"
+          ],
+          [
+            "cargo",
+            "build",
+            "--locked",
+            "--release",
+            "--examples"
+          ]
+        ]
+      },
+      "rust-integration-0": {
+        "passed": 162,
+        "exit_code": 0,
+        "elapsed_seconds": 804.697770148,
+        "commands": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--release",
+            "--test",
+            "anchors",
+            "--test",
+            "construction",
+            "--test",
+            "embedding",
+            "--test",
+            "epoch_srm_gate_job",
+            "--test",
+            "epoch_srm_search",
+            "--test",
+            "free_contact",
+            "--test",
+            "geostatic_affine",
+            "--test",
+            "hardening_fem",
+            "--test",
+            "hydrostatic",
+            "--test",
+            "joint_law",
+            "--test",
+            "joints",
+            "--test",
+            "low_preload_cut",
+            "--test",
+            "mc_epoch_cli",
+            "--test",
+            "mc_fem",
+            "--test",
+            "mc_parameter_global",
+            "--test",
+            "mcc_midpoint",
+            "--test",
+            "mcc_split",
+            "--test",
+            "mechanics",
+            "--test",
+            "mixed_mechanics",
+            "--test",
+            "one_way",
+            "--test",
+            "one_way_lifecycle",
+            "--test",
+            "projected_mcc",
+            "--test",
+            "reset",
+            "--test",
+            "rigidity",
+            "--test",
+            "srm_bound",
+            "--test",
+            "srm_search_control",
+            "--test",
+            "srm_virtual_work",
+            "--test",
+            "stage_job",
+            "--test",
+            "surface_projection",
+            "--test",
+            "water_stages"
+          ]
+        ]
+      },
+      "rust-integration-1": {
+        "passed": 192,
+        "exit_code": 0,
+        "elapsed_seconds": 520.863214939,
+        "commands": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--release",
+            "--test",
+            "beams",
+            "--test",
+            "darcy",
+            "--test",
+            "epoch_srm_gate",
+            "--test",
+            "epoch_srm_job",
+            "--test",
+            "exact_fs",
+            "--test",
+            "geostatic",
+            "--test",
+            "ground_initialization",
+            "--test",
+            "hardening_material",
+            "--test",
+            "hydrostatic_volume",
+            "--test",
+            "joint_water",
+            "--test",
+            "local_excavation",
+            "--test",
+            "mc_epoch_checkpoint",
+            "--test",
+            "mc_epoch_path",
+            "--test",
+            "mc_material",
+            "--test",
+            "mc_parameter_transition",
+            "--test",
+            "mcc_sensitivity",
+            "--test",
+            "mcc_stop_boundaries",
+            "--test",
+            "mixed_mcc",
+            "--test",
+            "newton_diagnostics",
+            "--test",
+            "one_way_construction",
+            "--test",
+            "plates",
+            "--test",
+            "replay",
+            "--test",
+            "richards",
+            "--test",
+            "seepage_stages",
+            "--test",
+            "srm_search",
+            "--test",
+            "srm_search_job",
+            "--test",
+            "stage_control",
+            "--test",
+            "stages_fem",
+            "--test",
+            "tet10",
+            "--test",
+            "wet_structures"
+          ]
+        ]
+      }
+    }
+  },
+  "python": {
+    "tests": 458,
+    "tools_tests": 2,
+    "total": 460,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "all_discovered_ids_executed_exactly_once": true,
+    "groups": {
+      "python-core-0": {
+        "tests_run": 228,
+        "exit_code": 0,
+        "elapsed_seconds": 239.99023881699986
+      },
+      "python-core-1": {
+        "tests_run": 224,
+        "exit_code": 0,
+        "elapsed_seconds": 684.91017517
+      },
+      "python-mean-evidence": {
+        "tests_run": 4,
+        "exit_code": 0,
+        "elapsed_seconds": 1078.0335662079997
+      },
+      "python-spatial-evidence": {
+        "tests_run": 4,
+        "exit_code": 0,
+        "elapsed_seconds": 202.3596594329997
+      }
+    }
+  },
+  "core_source_files": 784,
+  "core_source_bytes_unchanged_through_all_checks": true,
+  "new_python_tests_included_not_additional": 7,
+  "windows_new_pushed_head": {
+    "status": "not_yet_observed_in_this_pre_push_record",
+    "conclusion": null,
+    "scope": "Exact new SHA and current CI state will be queried after push and reported in the final response."
+  },
+  "initial_nonfinal_errors": [
+    "New unittest module initially lacked tools import path; corrected before formal source freeze.",
+    "Initial global-mode diagnostic used element-local B as a global matrix; corrected nodal expansion, remeasured, and sealed replay passed."
+  ],
+  "source_timeline": "784 core files frozen before formal checks; interim diagnostic drivers created later and verified by isolated sealed replay."
+}
