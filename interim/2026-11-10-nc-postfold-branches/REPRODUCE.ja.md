@@ -33,6 +33,14 @@ python interim/2026-11-10-nc-postfold-branches/remeasure.py --output work/NEW-po
 
 `verification.json` の `archive_verified=true`、`measurements_byte_identical=true`、`numerical_acceptance=false` を確認する。派生浮動小数の厳密なバイト一致は記録環境と同じLinux/WSLを推奨する。WindowsのBLAS等で最下位桁が変われば差を隠さず失敗する。アーカイブのSHA一致と数値合格は別である。
 
+主アーカイブ封印後の分割ラベル監査は、同じSHA照合済みの保存ベクトルだけを使う。
+
+```sh
+python interim/2026-11-10-nc-postfold-branches/supplement/audit_cartesian_groups.py --source work/NEW-postfold-replay/evidence/study --manifest interim/2026-11-10-nc-postfold-branches/archive-sha256.json --output work/NEW-cartesian-labels.json
+```
+
+旧driverの固定mean/complementラベルと、実際のCartesian群・orderを区別する。主アーカイブやcheckpointを編集・再封印しない。
+
 旧入力の全照合結果は `prepared/prior/extraction.json` に入る。新規計算では次節のprepareが旧2,034,108,934バイト・122分割・1,349エントリーをすべて照合する。今回の再監査器は新アーカイブの生証拠を再組立するもので、旧アーカイブの再取得や旧前史の再求解を行ったとはしない。
 
 ## 同じ小さいケースを新規に計算する
