@@ -95,9 +95,14 @@ def audit(mesh, ground, case, native):
         balance = solution['balances'][0]
         for key in ('source_m3_s', 'absolute_source_m3_s', 'dirichlet_reaction_outflow_m3_s', 'gradient_boundary_outflow_m3_s'):
             np.testing.assert_allclose(balance[key], total, rtol=1e-7, atol=1e-14)
-        _require(balance['neumann_outflow_m3_s'] == 0 and balance['relative_nodal_balance_error'] < 1e-9, "external validation failed: balance['neumann_outflow_m3_s'] == 0 and balance['relative_nodal_balance_error'] < 1e-9")
+        finite(balance['relative_nodal_balance_error'], (), 'relative nodal balance error')
+        _require(balance['neumann_outflow_m3_s'] == 0 and 0 <= balance['relative_nodal_balance_error'] < 1e-9, "external validation failed: balance['neumann_outflow_m3_s'] == 0 and 0 <= balance['relative_nodal_balance_error'] < 1e-9")
+        # Validate each face before max: a later NaN can otherwise disappear.
+        for face in solution['boundary_fluxes']:
+            finite(face['gradient_outflow_m3_s'], (), 'boundary outflow')
         bottom_out = sum(p['gradient_outflow_m3_s'] for p in solution['boundary_fluxes'] if p['boundary_kind'] == 'head')
         other = max(abs(p['gradient_outflow_m3_s']) for p in solution['boundary_fluxes'] if p['boundary_kind'] == 'no_flow')
+        finite([bottom_out, other], (2,), 'boundary maximum errors')
         np.testing.assert_allclose(bottom_out, total, rtol=1e-7, atol=1e-14); _require(other < 1e-12, 'external validation failed: other < 1e-12')
         rows.append(dict(stage=stage['name'], source_per_s=source, soil_volume_m3=volume,
                          source_and_bottom_outflow_m3_s=total, head_at_seam_m=float(head(z1)),

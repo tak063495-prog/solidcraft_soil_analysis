@@ -2,6 +2,9 @@
 from pathlib import Path
 import argparse, ctypes, ctypes.wintypes as w, datetime, hashlib, json, subprocess, sys, time
 
+if sys.flags.optimize:
+    raise RuntimeError('safe-pause requires Python optimization disabled; identity assertions must execute')
+
 def process_identity(records, pid):
     """A PID without a parseable snapshot identity is never ownership evidence."""
     try:
