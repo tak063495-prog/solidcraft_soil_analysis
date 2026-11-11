@@ -1,0 +1,109 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "pid": 3329,
+    "exit_code": 0,
+    "elapsed_seconds": 0.8601863779999803
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "pid": 3340,
+    "exit_code": 0,
+    "elapsed_seconds": 14.579549191999831
+  },
+  {
+    "name": "build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "pid": 3610,
+    "exit_code": 0,
+    "elapsed_seconds": 0.10023120899995774
+  },
+  {
+    "name": "rust-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    "pid": 3624,
+    "exit_code": 0,
+    "elapsed_seconds": 1483.539083957
+  },
+  {
+    "name": "python-core-0",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "tools/run_ci_python_tests.py",
+      "--group",
+      "python-core-0",
+      "--output",
+      "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-core-0"
+    ],
+    "pid": 502218,
+    "exit_code": 1,
+    "elapsed_seconds": 253.12784934499996
+  },
+  {
+    "name": "python-core-1",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "tools/run_ci_python_tests.py",
+      "--group",
+      "python-core-1",
+      "--output",
+      "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-core-1"
+    ],
+    "pid": 598342,
+    "exit_code": 0,
+    "elapsed_seconds": 271.0764852530001
+  },
+  {
+    "name": "python-mean-evidence",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "tools/run_ci_python_tests.py",
+      "--group",
+      "python-mean-evidence",
+      "--output",
+      "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-mean-evidence"
+    ],
+    "pid": 715415,
+    "exit_code": 0,
+    "elapsed_seconds": 815.3048665790002
+  },
+  {
+    "name": "python-spatial-evidence",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "tools/run_ci_python_tests.py",
+      "--group",
+      "python-spatial-evidence",
+      "--output",
+      "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-spatial-evidence"
+    ],
+    "pid": 768614,
+    "exit_code": 0,
+    "elapsed_seconds": 120.60281560599924
+  }
+]

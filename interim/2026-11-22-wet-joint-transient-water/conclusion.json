@@ -1,0 +1,69 @@
+{
+  "C04": "未達",
+  "passed": false,
+  "limited_numeric_acceptance": false,
+  "A04_complete": false,
+  "NC01_complete": false,
+  "P6_complete": false,
+  "C01_complete": false,
+  "C02_complete": false,
+  "C03_complete": false,
+  "scopes": {
+    "prescribed_hydrostatic": {
+      "policy": "CONTINUOUS",
+      "bulk": "MC elastic branch",
+      "mesh": "12 Tet4,16 nodes,12 material GP,6 contact GP",
+      "mechanical_steps_fixed": 32,
+      "water_stage_steps": [
+        8,
+        16,
+        32
+      ],
+      "fresh_paths": 6,
+      "accepted_states": 2016,
+      "full_fields": 33,
+      "hydraulic_mass_state": null
+    },
+    "Richards_VG": {
+      "hydraulic_only": true,
+      "coupled_to_joint": false,
+      "physical_dt_s": [
+        0.25,
+        0.125,
+        0.0625
+      ],
+      "fresh_paths": 6,
+      "accepted_states": 392
+    },
+    "Richards_saturated": {
+      "hydraulic_only": true,
+      "continuum_series_reference": true,
+      "fresh_paths": 6,
+      "accepted_states": 392
+    }
+  },
+  "total_formal_fresh_paths": 18,
+  "total_formal_accepted_states": 2800,
+  "restarts_not_counted_as_fresh_paths": true,
+  "real_resume": {
+    "mechanical_checkpoints": 13,
+    "mechanical_suffix_states_exact": 2704,
+    "Richards_checkpoints": 3,
+    "Richards_suffix_accepted_frames_exact": 200,
+    "all_runs_exact_except_elapsed_seconds": true
+  },
+  "archives": {
+    "parts": 5,
+    "entries": 1462,
+    "bytes": 82725393,
+    "isolated_remeasurement_exact": true
+  },
+  "outstanding": [
+    "Richards-to-JOINT native head mapping and interface physical pressure transfer",
+    "Physical-time opening/recontact/generations, coupled mechanics and mass/load balance",
+    "Joint physical/numerical work and strict stick/slip category differences; no fitted full-history acceptance tolerance",
+    "Continuum hydraulic discretization error remains; no saturation-control result transferred to nonlinear wet JOINT",
+    "General plastic bulk/space/load-step/NC/P6 acceptance remains outside this task"
+  ],
+  "Windows_CI_status": "未確定"
+}
