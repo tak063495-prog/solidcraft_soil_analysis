@@ -1,0 +1,560 @@
+{
+  "C03": "未達",
+  "passed": false,
+  "scope": {
+    "material": "MC non_associated, c=30 kPa, phi=30 deg, psi=5 deg, no tension cutoff",
+    "elements": 12,
+    "nodes": 16,
+    "material_gp": 12,
+    "contact_gp": 6,
+    "global_steps_per_stage": 32,
+    "stages": [
+      [
+        "geostatic",
+        0
+      ],
+      [
+        "shear",
+        0.04
+      ],
+      [
+        "open",
+        0.12
+      ],
+      [
+        "recontact",
+        0.0
+      ],
+      [
+        "reverse",
+        -0.1
+      ],
+      [
+        "reload",
+        0.1
+      ],
+      [
+        "return",
+        0.0
+      ]
+    ],
+    "fixed_hydrostatic_water_level_m": 0.75,
+    "water_policy": "CONTINUOUS",
+    "material_maxima": [
+      0.0001,
+      5e-05,
+      2.5e-05
+    ],
+    "contact_maxima_m": [
+      0.0001,
+      5e-05,
+      2.5e-05
+    ]
+  },
+  "limited_verified": [
+    "fresh input-only independent 3D plastic histories, all 224 points per route",
+    "all field comparisons including MC return/contact status",
+    "separate material and contact subdivisions at a fixed global schedule",
+    "seven real-file separate-PID restarts through the final stage",
+    "unobserved solve exactly matches observed run except elapsed_seconds"
+  ],
+  "remaining": [
+    "nonmonotonic plastic joint-slip sensitivity under contact subdivision",
+    "no established full-history numerical gates for all plastic/internal/work fields; existing endpoint coupling gates are distinct",
+    "original open target 1.0 still requires cutbacks or stops in retained cases; the .12 case is a separate physical input",
+    "MCC and other plastic materials, general geometries, refined-space and long-series certification are unverified"
+  ],
+  "C01": "未達（今回の対象外）",
+  "C02": "未達（今回の対象外）",
+  "C04": "未達（今回の対象外）",
+  "NC01": "未達・変更なし",
+  "P6": "未達",
+  "production_physics_tolerances_defaults_changed": false,
+  "counts": {
+    "fresh_native_routes": 6,
+    "fresh_independent_routes": 6,
+    "accepted_states_per_route": 224,
+    "accepted_states_total": 2688,
+    "material_gp_states_total": 32256,
+    "contact_gp_states_total": 16128,
+    "field_count": 23,
+    "real_file_restarts": 7,
+    "post_restart_states_exact": 784
+  },
+  "phase_plastic_audit": {
+    "native": {
+      "geostatic": {
+        "endpoint": {
+          "stage": "geostatic",
+          "progress": 1.0,
+          "plastic_material_gp": 0,
+          "maximum_equivalent_plastic_strain": 0.0,
+          "maximum_plastic_work_kpa": 0.0,
+          "volume_integrated_plastic_work_kn_m": 0.0,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0,
+          "relative_reassembled_force_residual": 6.275434215526897e-14
+        },
+        "maximum_equivalent_plastic_strain": 0.0,
+        "maximum_plastic_work_kpa": 0.0
+      },
+      "shear": {
+        "endpoint": {
+          "stage": "shear",
+          "progress": 1.0,
+          "plastic_material_gp": 0,
+          "maximum_equivalent_plastic_strain": 0.0,
+          "maximum_plastic_work_kpa": 0.0,
+          "volume_integrated_plastic_work_kn_m": 0.0,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0005509752223993314,
+          "relative_reassembled_force_residual": 2.9620364290740795e-09
+        },
+        "maximum_equivalent_plastic_strain": 0.0,
+        "maximum_plastic_work_kpa": 0.0
+      },
+      "open": {
+        "endpoint": {
+          "stage": "open",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001679201902094072,
+          "maximum_plastic_work_kpa": 0.12224324790332343,
+          "volume_integrated_plastic_work_kn_m": 0.03983007968506281,
+          "open_gp": 2,
+          "maximum_accumulated_joint_slip_m": 0.0025666961469929406,
+          "relative_reassembled_force_residual": 9.120813856434814e-14
+        },
+        "maximum_equivalent_plastic_strain": 0.001679201902094072,
+        "maximum_plastic_work_kpa": 0.12224324790332343
+      },
+      "recontact": {
+        "endpoint": {
+          "stage": "recontact",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001679201902094072,
+          "maximum_plastic_work_kpa": 0.12224324790332343,
+          "volume_integrated_plastic_work_kn_m": 0.03983007968506281,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0037857036335527086,
+          "relative_reassembled_force_residual": 2.4865052988025387e-10
+        },
+        "maximum_equivalent_plastic_strain": 0.001679201902094072,
+        "maximum_plastic_work_kpa": 0.12224324790332343
+      },
+      "reverse": {
+        "endpoint": {
+          "stage": "reverse",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001880845283084036,
+          "maximum_plastic_work_kpa": 0.17575700492288837,
+          "volume_integrated_plastic_work_kn_m": 0.04943261583589098,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.004816131568400302,
+          "relative_reassembled_force_residual": 1.6218539293630512e-12
+        },
+        "maximum_equivalent_plastic_strain": 0.001880845283084036,
+        "maximum_plastic_work_kpa": 0.17575700492288837
+      },
+      "reload": {
+        "endpoint": {
+          "stage": "reload",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001880845283084036,
+          "maximum_plastic_work_kpa": 0.17575700492288837,
+          "volume_integrated_plastic_work_kn_m": 0.04943261583589098,
+          "open_gp": 2,
+          "maximum_accumulated_joint_slip_m": 0.0064250148622032035,
+          "relative_reassembled_force_residual": 1.4058962625606655e-12
+        },
+        "maximum_equivalent_plastic_strain": 0.001880845283084036,
+        "maximum_plastic_work_kpa": 0.17575700492288837
+      },
+      "return": {
+        "endpoint": {
+          "stage": "return",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001880845283084036,
+          "maximum_plastic_work_kpa": 0.17575700492288837,
+          "volume_integrated_plastic_work_kn_m": 0.04943261583589098,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.006984336816046681,
+          "relative_reassembled_force_residual": 1.248646270073554e-10
+        },
+        "maximum_equivalent_plastic_strain": 0.001880845283084036,
+        "maximum_plastic_work_kpa": 0.17575700492288837
+      }
+    },
+    "independent": {
+      "geostatic": {
+        "endpoint": {
+          "stage": "geostatic",
+          "progress": 1.0,
+          "plastic_material_gp": 0,
+          "maximum_equivalent_plastic_strain": 0.0,
+          "maximum_plastic_work_kpa": 0.0,
+          "volume_integrated_plastic_work_kn_m": 0.0,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0,
+          "relative_reassembled_force_residual": 7.844408019993044e-14
+        },
+        "maximum_equivalent_plastic_strain": 0.0,
+        "maximum_plastic_work_kpa": 0.0
+      },
+      "shear": {
+        "endpoint": {
+          "stage": "shear",
+          "progress": 1.0,
+          "plastic_material_gp": 0,
+          "maximum_equivalent_plastic_strain": 0.0,
+          "maximum_plastic_work_kpa": 0.0,
+          "volume_integrated_plastic_work_kn_m": 0.0,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0005509752327918386,
+          "relative_reassembled_force_residual": 3.474814714624004e-16
+        },
+        "maximum_equivalent_plastic_strain": 0.0,
+        "maximum_plastic_work_kpa": 0.0
+      },
+      "open": {
+        "endpoint": {
+          "stage": "open",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001679111850517845,
+          "maximum_plastic_work_kpa": 0.12224255118347097,
+          "volume_integrated_plastic_work_kn_m": 0.039828065296813764,
+          "open_gp": 2,
+          "maximum_accumulated_joint_slip_m": 0.0025666783867850556,
+          "relative_reassembled_force_residual": 5.48808099020054e-16
+        },
+        "maximum_equivalent_plastic_strain": 0.001679111850517845,
+        "maximum_plastic_work_kpa": 0.12224255118347097
+      },
+      "recontact": {
+        "endpoint": {
+          "stage": "recontact",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.001679111850517845,
+          "maximum_plastic_work_kpa": 0.12224255118347097,
+          "volume_integrated_plastic_work_kn_m": 0.039828065296813764,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0037857110809294253,
+          "relative_reassembled_force_residual": 1.361969412511309e-15
+        },
+        "maximum_equivalent_plastic_strain": 0.001679111850517845,
+        "maximum_plastic_work_kpa": 0.12224255118347097
+      },
+      "reverse": {
+        "endpoint": {
+          "stage": "reverse",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.0018808836446052653,
+          "maximum_plastic_work_kpa": 0.1757931757962329,
+          "volume_integrated_plastic_work_kn_m": 0.04943712372763429,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.004816170042153211,
+          "relative_reassembled_force_residual": 2.6050524205938635e-15
+        },
+        "maximum_equivalent_plastic_strain": 0.0018808836446052653,
+        "maximum_plastic_work_kpa": 0.1757931757962329
+      },
+      "reload": {
+        "endpoint": {
+          "stage": "reload",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.0018808836446052653,
+          "maximum_plastic_work_kpa": 0.1757931757962329,
+          "volume_integrated_plastic_work_kn_m": 0.04943712372763429,
+          "open_gp": 2,
+          "maximum_accumulated_joint_slip_m": 0.006425081481784988,
+          "relative_reassembled_force_residual": 5.216628553542686e-16
+        },
+        "maximum_equivalent_plastic_strain": 0.0018808836446052653,
+        "maximum_plastic_work_kpa": 0.1757931757962329
+      },
+      "return": {
+        "endpoint": {
+          "stage": "return",
+          "progress": 1.0,
+          "plastic_material_gp": 4,
+          "maximum_equivalent_plastic_strain": 0.0018808836446052653,
+          "maximum_plastic_work_kpa": 0.1757931757962329,
+          "volume_integrated_plastic_work_kn_m": 0.04943712372763429,
+          "open_gp": 0,
+          "maximum_accumulated_joint_slip_m": 0.0069844302407300425,
+          "relative_reassembled_force_residual": 9.689671018050388e-16
+        },
+        "maximum_equivalent_plastic_strain": 0.0018808836446052653,
+        "maximum_plastic_work_kpa": 0.1757931757962329
+      }
+    }
+  },
+  "original_coupling_endpoint_gates": {
+    "baseline": {
+      "passed": true,
+      "u_gate": 0.005,
+      "traction_gate": 0.01,
+      "endpoint_only_not_a_full_history_certificate": true,
+      "rows": [
+        {
+          "stage": "geostatic",
+          "u": 1.6965312982998674e-12,
+          "traction": 1.238400248879727e-13
+        },
+        {
+          "stage": "shear",
+          "u": 6.1469825047266405e-09,
+          "traction": 3.6149679692722898e-09
+        },
+        {
+          "stage": "open",
+          "u": 9.686062970200252e-06,
+          "traction": 0.001129575010197635
+        },
+        {
+          "stage": "recontact",
+          "u": 5.0208826883744863e-05,
+          "traction": 1.5898710530205354e-05
+        },
+        {
+          "stage": "reverse",
+          "u": 2.8254024167622436e-05,
+          "traction": 1.1627968025385708e-05
+        },
+        {
+          "stage": "reload",
+          "u": 3.0081553596281272e-05,
+          "traction": 7.738637529700964e-05
+        },
+        {
+          "stage": "return",
+          "u": 0.00010686144587995596,
+          "traction": 1.542203457737807e-05
+        }
+      ]
+    },
+    "material-half": {
+      "passed": true,
+      "u_gate": 0.005,
+      "traction_gate": 0.01,
+      "endpoint_only_not_a_full_history_certificate": true,
+      "rows": [
+        {
+          "stage": "geostatic",
+          "u": 1.6965312982998674e-12,
+          "traction": 1.238400248879727e-13
+        },
+        {
+          "stage": "shear",
+          "u": 6.146980864114904e-09,
+          "traction": 3.6149646343977097e-09
+        },
+        {
+          "stage": "open",
+          "u": 6.545384923743689e-06,
+          "traction": 0.0008371455037319836
+        },
+        {
+          "stage": "recontact",
+          "u": 3.478896870997944e-05,
+          "traction": 1.1174874929206011e-05
+        },
+        {
+          "stage": "reverse",
+          "u": 1.9438289873682985e-05,
+          "traction": 5.284938592777643e-06
+        },
+        {
+          "stage": "reload",
+          "u": 2.1326082968808777e-05,
+          "traction": 5.847176039782667e-05
+        },
+        {
+          "stage": "return",
+          "u": 7.284267057985874e-05,
+          "traction": 7.202741983979188e-06
+        }
+      ]
+    },
+    "material-quarter": {
+      "passed": true,
+      "u_gate": 0.005,
+      "traction_gate": 0.01,
+      "endpoint_only_not_a_full_history_certificate": true,
+      "rows": [
+        {
+          "stage": "geostatic",
+          "u": 1.6965312982998674e-12,
+          "traction": 1.238400248879727e-13
+        },
+        {
+          "stage": "shear",
+          "u": 6.146982279787473e-09,
+          "traction": 3.614964953844132e-09
+        },
+        {
+          "stage": "open",
+          "u": 1.0290441677054222e-05,
+          "traction": 0.0007390969990962421
+        },
+        {
+          "stage": "recontact",
+          "u": 4.9880762878531644e-05,
+          "traction": 9.550644635945549e-06
+        },
+        {
+          "stage": "reverse",
+          "u": 2.4679723329764505e-05,
+          "traction": 5.761089766245036e-06
+        },
+        {
+          "stage": "reload",
+          "u": 2.74334149255059e-05,
+          "traction": 7.445413789511239e-05
+        },
+        {
+          "stage": "return",
+          "u": 9.168227063691602e-05,
+          "traction": 9.446216910219042e-06
+        }
+      ]
+    },
+    "contact-half": {
+      "passed": true,
+      "u_gate": 0.005,
+      "traction_gate": 0.01,
+      "endpoint_only_not_a_full_history_certificate": true,
+      "rows": [
+        {
+          "stage": "geostatic",
+          "u": 1.6965312982998674e-12,
+          "traction": 1.238400248879727e-13
+        },
+        {
+          "stage": "shear",
+          "u": 6.1469825047266405e-09,
+          "traction": 3.6149679692722898e-09
+        },
+        {
+          "stage": "open",
+          "u": 9.914697246116379e-06,
+          "traction": 0.001143079240400791
+        },
+        {
+          "stage": "recontact",
+          "u": 5.1335835833888114e-05,
+          "traction": 1.6113700909493212e-05
+        },
+        {
+          "stage": "reverse",
+          "u": 2.8468855260259064e-05,
+          "traction": 1.172018092258141e-05
+        },
+        {
+          "stage": "reload",
+          "u": 3.0142150430705592e-05,
+          "traction": 7.505707444513357e-05
+        },
+        {
+          "stage": "return",
+          "u": 0.00010746827500998681,
+          "traction": 1.565540090671139e-05
+        }
+      ]
+    },
+    "contact-quarter": {
+      "passed": true,
+      "u_gate": 0.005,
+      "traction_gate": 0.01,
+      "endpoint_only_not_a_full_history_certificate": true,
+      "rows": [
+        {
+          "stage": "geostatic",
+          "u": 1.6965312982998674e-12,
+          "traction": 1.238400248879727e-13
+        },
+        {
+          "stage": "shear",
+          "u": 1.8067952413044255e-05,
+          "traction": 9.290956344463187e-05
+        },
+        {
+          "stage": "open",
+          "u": 9.67514434308817e-06,
+          "traction": 0.0011763584454780364
+        },
+        {
+          "stage": "recontact",
+          "u": 6.331585001333076e-05,
+          "traction": 3.543501526563856e-05
+        },
+        {
+          "stage": "reverse",
+          "u": 2.8962806110927756e-05,
+          "traction": 1.1796584657961354e-05
+        },
+        {
+          "stage": "reload",
+          "u": 2.924714699366232e-05,
+          "traction": 6.405638430636581e-05
+        },
+        {
+          "stage": "return",
+          "u": 0.00012376925627108774,
+          "traction": 5.03018395953959e-05
+        }
+      ]
+    },
+    "single-partition-control": {
+      "passed": true,
+      "u_gate": 0.005,
+      "traction_gate": 0.01,
+      "endpoint_only_not_a_full_history_certificate": true,
+      "rows": [
+        {
+          "stage": "geostatic",
+          "u": 1.6965312982998674e-12,
+          "traction": 1.238400248879727e-13
+        },
+        {
+          "stage": "shear",
+          "u": 6.146982611720146e-09,
+          "traction": 3.6149686873769153e-09
+        },
+        {
+          "stage": "open",
+          "u": 5.330230007019442e-10,
+          "traction": 1.1113005627801554e-08
+        },
+        {
+          "stage": "recontact",
+          "u": 2.4170902092336534e-09,
+          "traction": 5.317742349018289e-10
+        },
+        {
+          "stage": "reverse",
+          "u": 1.8409375444155774e-09,
+          "traction": 1.0171290417908922e-09
+        },
+        {
+          "stage": "reload",
+          "u": 1.9423675578653563e-09,
+          "traction": 8.64533065395926e-09
+        },
+        {
+          "stage": "return",
+          "u": 5.573482656417246e-09,
+          "traction": 1.537002100755136e-09
+        }
+      ]
+    }
+  }
+}
