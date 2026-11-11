@@ -1,0 +1,88 @@
+test_bad_layers_rejected (__main__.ClosedForms.test_bad_layers_rejected) ... ok
+test_darcy_boundaries_and_interfaces (__main__.ClosedForms.test_darcy_boundaries_and_interfaces) ... ok
+test_hydrostatic_bottom_hand_value (__main__.ClosedForms.test_hydrostatic_bottom_hand_value) ... ok
+test_k0_is_explicit_not_empirical (__main__.ClosedForms.test_k0_is_explicit_not_empirical) ... ok
+test_no_negative_pressure_clipping (__main__.ClosedForms.test_no_negative_pressure_clipping) ... ok
+test_partial_new_layer_hand_values (__main__.ClosedForms.test_partial_new_layer_hand_values) ... ok
+test_pressure_continuity_at_water_table (__main__.ClosedForms.test_pressure_continuity_at_water_table) ... ok
+test_seepage_and_pressure_gradient (__main__.ClosedForms.test_seepage_and_pressure_gradient) ... ok
+test_top_pressure_and_surcharge (__main__.ClosedForms.test_top_pressure_and_surcharge) ... ok
+test_two_layer_resistance_hand_value (__main__.ClosedForms.test_two_layer_resistance_hand_value) ... ok
+test_csv_json_roundtrip (__main__.ExportDiagnostics.test_csv_json_roundtrip) ... ok
+test_duplicate_json_key_rejected (__main__.ExportDiagnostics.test_duplicate_json_key_rejected) ... ok
+test_duplicate_node_rejected (__main__.ExportDiagnostics.test_duplicate_node_rejected) ... ok
+test_filled_pressure_rejected (__main__.ExportDiagnostics.test_filled_pressure_rejected) ... ok
+test_invented_unsaturated_head_rejected (__main__.ExportDiagnostics.test_invented_unsaturated_head_rejected) ... ok
+test_mcc_remains_spec_undefined (__main__.ExportDiagnostics.test_mcc_remains_spec_undefined) ... ok
+test_missing_provenance_rejected (__main__.ExportDiagnostics.test_missing_provenance_rejected) ... ok
+test_nan_rejected (__main__.ExportDiagnostics.test_nan_rejected) ... ok
+test_new_aged_history_rejected (__main__.ExportDiagnostics.test_new_aged_history_rejected) ... ok
+test_nodal_cancellation_not_hidden_by_global_sum (__main__.ExportDiagnostics.test_nodal_cancellation_not_hidden_by_global_sum) ... ok
+test_old_history_rewrite_rejected (__main__.ExportDiagnostics.test_old_history_rewrite_rejected) ... ok
+test_old_history_transfer_rejected (__main__.ExportDiagnostics.test_old_history_transfer_rejected) ... ok
+test_origin_interpolation_rejected (__main__.ExportDiagnostics.test_origin_interpolation_rejected) ... ok
+test_roundtrip_never_accepted (__main__.ExportDiagnostics.test_roundtrip_never_accepted) ... ok
+test_timeout_cancelled_incomplete_rejected (__main__.ExportDiagnostics.test_timeout_cancelled_incomplete_rejected) ... ok
+test_undefined_pressure_rejected (__main__.ExportDiagnostics.test_undefined_pressure_rejected) ... ok
+test_water_imbalance_reported (__main__.ExportDiagnostics.test_water_imbalance_reported) ... ok
+test_all_node_force_identities (__main__.IndependentNumerics.test_all_node_force_identities) ... ok
+test_balanced_corruption_must_fail_all_nodes (__main__.IndependentNumerics.test_balanced_corruption_must_fail_all_nodes) ... ok
+test_buoyancy_plus_seepage (__main__.IndependentNumerics.test_buoyancy_plus_seepage) ... ok
+test_continuous_interface_before_after (__main__.IndependentNumerics.test_continuous_interface_before_after) ... FAIL
+test_fitted_is_exact_not_claimed_second_order (__main__.IndependentNumerics.test_fitted_is_exact_not_claimed_second_order) ... ok
+test_flux_conservation_unfitted_not_only_analytic (__main__.IndependentNumerics.test_flux_conservation_unfitted_not_only_analytic) ... ok
+test_near_duplicate_geometry_rejected (__main__.IndependentNumerics.test_near_duplicate_geometry_rejected) ... ok
+test_numerical_pressure_force_balance (__main__.IndependentNumerics.test_numerical_pressure_force_balance) ... ok
+test_split_waterline_quadrature_independent (__main__.IndependentNumerics.test_split_waterline_quadrature_independent) ... ok
+test_three_layer_sparse_independent (__main__.IndependentNumerics.test_three_layer_sparse_independent) ... ok
+test_unfitted_first_order (__main__.IndependentNumerics.test_unfitted_first_order) ... ok
+test_continuous_conflict_not_averaged (__main__.PolicyDiagnostics.test_continuous_conflict_not_averaged) ... ok
+test_mcc_invariant_only_no_birthing_rule (__main__.PolicyDiagnostics.test_mcc_invariant_only_no_birthing_rule) ... FAIL
+test_mcc_zero_stress_is_not_auto_initialized (__main__.PolicyDiagnostics.test_mcc_zero_stress_is_not_auto_initialized) ... ok
+test_prescribed_conflict_rejected (__main__.PolicyDiagnostics.test_prescribed_conflict_rejected) ... ok
+test_reservoir_exchange_included (__main__.PolicyDiagnostics.test_reservoir_exchange_included) ... ok
+test_soil_structure_internal_pressure_is_zero (__main__.PolicyDiagnostics.test_soil_structure_internal_pressure_is_zero) ... ok
+
+======================================================================
+FAIL: test_continuous_interface_before_after (__main__.IndependentNumerics.test_continuous_interface_before_after)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-20-py-wet-soil-birth-reference/checks.py", line 118, in test_continuous_interface_before_after
+    np.testing.assert_array_equal(m['before_old_exposed_top'], m['after_old_interface'])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 1128, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         verbose=verbose, header='Arrays are not equal',
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         strict=strict)
+                         ^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+
+Mismatched elements: 2 / 4 (50%)
+Mismatch at indices:
+ [0, 1]: -4.414500000000001 (ACTUAL), -4.414500000000002 (DESIRED)
+ [1, 1]: -4.414500000000001 (ACTUAL), -4.414500000000002 (DESIRED)
+Max absolute difference among violations: 8.8817842e-16
+Max relative difference among violations: 2.011957e-16
+ ACTUAL: array([[ 0.    , -4.4145],
+       [ 0.    , -4.4145]])
+ DESIRED: array([[ 0.    , -4.4145],
+       [ 0.    , -4.4145]])
+
+======================================================================
+FAIL: test_mcc_invariant_only_no_birthing_rule (__main__.PolicyDiagnostics.test_mcc_invariant_only_no_birthing_rule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-20-py-wet-soil-birth-reference/checks.py", line 284, in test_mcc_invariant_only_no_birthing_rule
+    self.assertEqual(row['yield_function_kpa2'], -864.)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -863.9999999999999 != -864.0
+
+----------------------------------------------------------------------
+Ran 44 tests in 1.731s
+
+FAILED (failures=2)
