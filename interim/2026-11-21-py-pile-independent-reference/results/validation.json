@@ -1,0 +1,148 @@
+{
+  "schema": "pile-independent-validation/1",
+  "measured_at_utc": "2026-11-11T20:08:54.953939+00:00",
+  "base_commit": "7ae0a2a669e0e1df93f3dd9791bbeda056334c3e",
+  "branch": "codex/py-pile-independent-reference",
+  "added_files_only": true,
+  "changed_directory": "interim/2026-11-21-py-pile-independent-reference/",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "packages": {
+    "gmsh": "4.15.2",
+    "ijson": "3.6.0",
+    "markdown-it-py": "4.2.0",
+    "mdurl": "0.1.2",
+    "meshio": "5.3.5",
+    "numpy": "2.5.4",
+    "Pygments": "2.21.0",
+    "rich": "15.0.0",
+    "scipy": "1.18.1"
+  },
+  "new_tests": {
+    "tests_run": 44,
+    "elapsed_seconds": 0.217,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "completed": true,
+    "passed": true,
+    "exit_code": 0,
+    "setup_error_classes": [],
+    "command": "python -m unittest discover -s interim/2026-11-21-py-pile-independent-reference -p checks_pile.py -v",
+    "log": "new-tests.log",
+    "log_sha256": "8dd80984ea24a26031575ec042793f35562e1aca19d90799726d60aaa22e356d"
+  },
+  "existing_python_all": {
+    "discovered_total": 543,
+    "tests_run": 535,
+    "failures": 0,
+    "errors": 2,
+    "skipped": 0,
+    "not_run_due_setup_error": [
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected",
+      "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+      "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+      "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+      "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+    ],
+    "all_discovered_tests_executed": false,
+    "passed": false,
+    "tests_directory": {
+      "tests_run": 533,
+      "elapsed_seconds": 2467.212,
+      "failures": 0,
+      "errors": 2,
+      "skipped": 0,
+      "completed": true,
+      "passed": false,
+      "exit_code": 1,
+      "setup_error_classes": [
+        "test_nc_mean_stress_evidence.MeanStressEvidence",
+        "test_nc_spatial_evidence.SpatialEvidence"
+      ],
+      "command": "python -m unittest discover -s tests -p 'test_*.py' -v",
+      "log": "existing-python-tests.log",
+      "log_sha256": "25b279a09b822bef9d00c14b4faf3b34aec31c0d453b3c309012f26c4d9428dc"
+    },
+    "tools_directory": {
+      "tests_run": 2,
+      "elapsed_seconds": 0.015,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "completed": true,
+      "passed": true,
+      "exit_code": 0,
+      "setup_error_classes": [],
+      "command": "python -m unittest discover -s tools -p 'test_*.py' -v",
+      "log": "existing-tools-tests.log",
+      "log_sha256": "0abee21172cea1a1341f4e5257f061aa1593860ff1d2b3c9549d77bbb04317f0"
+    },
+    "error_context": "Sealed historical NC mean-stress and spatial evidence audits; no new pile reference is called",
+    "existing_assertions_tolerances_and_collection_unchanged": true,
+    "setup_error_messages": {
+      "test_nc_mean_stress_evidence.MeanStressEvidence": "saved mean-stress/complement partition differs from own history",
+      "test_nc_spatial_evidence.SpatialEvidence": "remeasured JSON differs"
+    }
+  },
+  "release_cli_build": {
+    "completed": true,
+    "command": "cargo build --locked --release",
+    "log": "build-release.log",
+    "binary_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7"
+  },
+  "prerequisite_attempts": [
+    {
+      "completed": false,
+      "passed": false,
+      "exit_code": 143,
+      "log": "prerequisite-incomplete-1.log.gz",
+      "reason": "Cargo environment and cut-volume fixture missing",
+      "uncompressed_sha256": "635258b9f49c6573f3abfadd0e598a0f132337cc18cb3035c8ec9431ce480c7c",
+      "compression": "gzip; exact original bytes retained"
+    },
+    {
+      "completed": false,
+      "passed": false,
+      "exit_code": 143,
+      "log": "prerequisite-incomplete-2.log.gz",
+      "reason": "Separated-convergence fixture missing",
+      "uncompressed_sha256": "592a4cb5c4ed14dc549f434aab3046f4fc62baec94a8746fd3e99f8a8ddd9ac7",
+      "compression": "gzip; exact original bytes retained"
+    }
+  ],
+  "fixture_post_test_verification": {
+    "selected": 939,
+    "downloaded_bytes": 0,
+    "elapsed_seconds": 6.224569406000228,
+    "errors": [],
+    "all_git_blob_sha1_verified": true,
+    "source_commit": "7ae0a2a669e0e1df93f3dd9791bbeda056334c3e"
+  },
+  "old_pile_source_bindings_sha256": "0258ba9711c7764893a7a6dc02fcf5c357b37e68038df38d8b9ae2c869ee8cda",
+  "reference_implementation_sha256": {
+    "checks_pile.py": "0acc66042e61da85159bdde2868aa9d2cc94fa2ca22915a5a9a696e17d728092",
+    "compare_pile.py": "ecc45697ee1e39aadcd604c7afbd53c7ba6245262bc380c9633cb06d695dffe0",
+    "diagnose_records.py": "5d8226a391ce5a6117956033694ba22cab744346dde6181092aabfff883f506e",
+    "export_reference.py": "6fc43dac638e42f11e2afcc7c623e616cad2d7b4238a0b19b98aad372080b9d0",
+    "pile_reference.py": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d",
+    "solid_pile_reference.py": "ebf0929bf0a90456ceeb6719a3db75e91d7e970bfb7b6b4f2e0802104521cabd"
+  },
+  "small_3d_subdivisions": [
+    1,
+    2,
+    4
+  ],
+  "large_3d_cloud_run": false,
+  "windows_ci": "未確認",
+  "spatial_threshold": "未定義",
+  "accepted": null,
+  "historical_spatial_convergence_accepted": false,
+  "p6_complete": false
+}

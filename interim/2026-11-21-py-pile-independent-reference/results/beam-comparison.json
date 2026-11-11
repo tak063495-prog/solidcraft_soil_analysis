@@ -1,0 +1,89 @@
+{
+  "schema": "pile-field-difference/1",
+  "case": {
+    "id": "verification-only-beam",
+    "model": "1d-winkler-eb-free-tip",
+    "geometry": {
+      "length_m": 6.0,
+      "area_m2": 1.0,
+      "inertia_m4": 0.08333333333333333
+    },
+    "materials": {
+      "pile_young_kpa": 30000000.0,
+      "distributed_k_kn_m2": 7716.049382716049,
+      "tip_k_kn_m": 0.0
+    },
+    "loads": {
+      "head_load_kn": 10.0,
+      "head_moment_kn_m": 0.0,
+      "distributed_load": "none"
+    },
+    "boundary": "head moment zero; tip M=V=0",
+    "interface": "independent linear springs; verification parameters, NOT identified 3D mapping",
+    "water": "dry",
+    "reference_state": "load increment; no gravity increment; small strain linear"
+  },
+  "frame": "verification-only full head load relative to unloaded spring model",
+  "reference": {
+    "source": "standalone beam exact, n=not applicable",
+    "sha256": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d"
+  },
+  "actual": {
+    "source": "standalone beam fe, n=16",
+    "sha256": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d"
+  },
+  "quantities": {
+    "w": {
+      "count": 17,
+      "unit": "m",
+      "max_absolute_error": 7.301865687613096e-11,
+      "rms_error": 3.8177797833597956e-11,
+      "relative_l2": 8.444162793053934e-08,
+      "accepted": null,
+      "tolerance": "未定義"
+    },
+    "slope": {
+      "count": 17,
+      "unit": "rad",
+      "max_absolute_error": 1.8240351124052673e-11,
+      "rms_error": 1.8237544290817743e-11,
+      "relative_l2": 8.425486465577037e-08,
+      "accepted": null,
+      "tolerance": "未定義"
+    },
+    "M": {
+      "count": 17,
+      "unit": "kN*m",
+      "max_absolute_error": 0.07583295615260811,
+      "rms_error": 0.039179695853340926,
+      "relative_l2": 0.006944363378242551,
+      "accepted": null,
+      "tolerance": "未定義"
+    },
+    "V": {
+      "count": 17,
+      "unit": "kN",
+      "max_absolute_error": 1.225450779635045,
+      "rms_error": 0.6334650481642841,
+      "relative_l2": 0.16028548397006923,
+      "accepted": null,
+      "tolerance": "未定義"
+    },
+    "soil_reaction": {
+      "count": 17,
+      "unit": "kN/m",
+      "max_absolute_error": 5.634155622047388e-07,
+      "rms_error": 2.9458177333891795e-07,
+      "relative_l2": 8.444162791091144e-08,
+      "accepted": null,
+      "tolerance": "未定義"
+    }
+  },
+  "accepted": null,
+  "tolerance": "未定義",
+  "p6_complete": false,
+  "input_sha256": {
+    "interim/2026-11-21-py-pile-independent-reference/results/beam-exact.json": "3ecfe9f1d46297bb47a06a0f8bdb4c038779c0292b95d53cb61301109df9867f",
+    "interim/2026-11-21-py-pile-independent-reference/results/beam-fe.json": "1bf58b3d92499a715953d011a0507b70846524365cb61ae9ec927e4315c79365"
+  }
+}
