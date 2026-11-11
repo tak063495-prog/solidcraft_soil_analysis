@@ -1,0 +1,11 @@
+Setup attempts (not test executions; never counted as successful tests or CI):
+1. Initial unfiltered fetch and a duplicate shallow fetch were stopped while transferring large historical evidence. The final setup used a depth-1, blob-size-filtered fetch of f377e8eda41777c84c3bb849af556bf61683b4cb.
+2. A size-inspection git ls-tree -rl unexpectedly fetched promised blobs. That inspection was stopped. Its partial listing is not a size/integrity certificate.
+3. A path-limited git archive attempt eagerly fetched promised blobs from the commit. It was stopped before cargo executed. Retained terminal errors:
+   fatal: early EOF
+   tar: This does not look like a tar archive
+   tar: Exiting with failure status due to previous errors
+   exit status: 2
+4. Build input was instead extracted as exactly 71 known Git blobs with GIT_NO_LAZY_FETCH=1, without importing production code into the new reference. Cargo output is in release-build-snapshot.log. This snapshot build is preparation for the existing Python tests, not an independent-reference calculation or a Rust full-test run.
+The completed checkout/build/test statuses are reported separately in validation.json; the stopped operations above do not certify completion.
+5. A broad optional git diff --check reported the raw unittest failure log's trailing spaces and the generated CSV's standard CRLF line terminators. These original artifacts were retained, without trimming failure logs or rewriting numerical values. Source and Markdown whitespace checks were then run separately and passed. This formatting check is not a numerical test or CI result.
