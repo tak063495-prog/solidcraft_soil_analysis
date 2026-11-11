@@ -1,0 +1,108 @@
+{
+  "schema": "dry-multi-joint-validation/1",
+  "accepted": null,
+  "linux": true,
+  "new_reference_tests": {
+    "tests": 26,
+    "junit_reported_including_subtests": 36,
+    "subtests": 10,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_python": {
+    "discovered": 543,
+    "assigned_total": 543,
+    "tests_run": 535,
+    "failures": 0,
+    "errors": 2,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "methods_not_run_due_to_setup_error": 8,
+    "all_discovered_methods_executed": false,
+    "all_groups_successful": false
+  },
+  "existing_groups": {
+    "python-core-0": {
+      "assigned_total": 272,
+      "tests_run": 272,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 633.5647129370002
+    },
+    "python-core-1": {
+      "assigned_total": 263,
+      "tests_run": 263,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 708.5274645450002
+    },
+    "python-mean-evidence": {
+      "assigned_total": 4,
+      "tests_run": 0,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 1,
+      "elapsed_seconds": 1249.452922612
+    },
+    "python-spatial-evidence": {
+      "assigned_total": 4,
+      "tests_run": 0,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 1,
+      "elapsed_seconds": 348.540743387
+    }
+  },
+  "existing_inventory_unchanged": true,
+  "all_assigned_ids_unique_and_complete": true,
+  "existing_files_modified": false,
+  "skip_or_xfail_added": false,
+  "existing_release_build_exit_code": 0,
+  "existing_release_binary_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+  "rust_full_suite": "not run",
+  "windows_new_head_ci": "unconfirmed",
+  "all_checks_passed": false,
+  "unexecuted_evidence_test_ids": [
+    "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+    "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+    "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+    "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected",
+    "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+    "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+    "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+    "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+  ],
+  "blockers": [
+    {
+      "group": "python-mean-evidence",
+      "reason": "saved mean-stress/complement partition differs from own history",
+      "changed_partitions": 29,
+      "maximum_partition_difference_kn": 7.105427357601002e-15,
+      "existing_exact_gate_waived": false
+    },
+    {
+      "group": "python-spatial-evidence",
+      "reason": "remeasured JSON differs",
+      "float_differences": 49,
+      "maximum_absolute_difference": 4.440892098500626e-16,
+      "existing_exact_gate_waived": false
+    }
+  ],
+  "initial_runs_excluded_from_final_counts": true
+}
