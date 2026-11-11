@@ -915,6 +915,13 @@ fn same_anchor_basis(a: &Option<crate::anchors::State>, b: &Option<crate::anchor
 }
 
 impl StageCase {
+    pub(crate) fn has_offset_plates(&self) -> bool {
+        self.beam_system.as_ref().is_some_and(|c| {
+            c.plates
+                .iter()
+                .any(|p| p.formulation == crate::plates::Formulation::MindlinTri6Offset)
+        })
+    }
     fn is_mixed_mcc(&self) -> bool {
         self.schema == "soil-fem-mixed-mcc-stages/1" || self.is_projected_mcc()
     }
@@ -946,6 +953,21 @@ impl StageCase {
     }
     pub fn validate(&self) -> Result<()> {
         let s = &self.settings;
+        if self.has_offset_plates()
+            && (self.joint_system.is_some()
+                || self.anchor_system.is_some()
+                || !self.initially_inactive_bodies.is_empty()
+                || self.stages.iter().any(|stage| {
+                    !matches!(
+                        stage,
+                        Stage::Boundary { .. }
+                            | Stage::InstallBeams { .. }
+                            | Stage::RemoveBeams { .. }
+                    )
+                }))
+        {
+            return Err(Error::Input("offset Tri6 scope excludes JOINT, anchors, water, soil BIRTH/DEATH/MATSET and unverified stage combinations".into()));
+        }
         for stage in &self.stages {
             if let Stage::JointBirth { joints, .. } | Stage::JointDeath { joints, .. } = stage {
                 let c = self.joint_system.as_ref().ok_or_else(|| {
@@ -2626,6 +2648,16 @@ impl<'a> Model<'a> {
         } else {
             None
         };
+        if self.case.has_offset_plates()
+            && states.iter().any(|s| {
+                !matches!(s, soil::State::MohrCoulomb(m)
+            if m.equivalent_plastic_strain == 0. && m.plastic_work_kpa == 0.
+            && m.plastic_strain_compression_positive.iter().all(|v| *v == 0.)
+            && m.last_return == crate::mc::Return::Elastic)
+            })
+        {
+            return Err(Error::Input("offset Tri6 scope requires elastic MC soil; plastic history/response is unverified".into()));
+        }
         Ok(Evaluation {
             joints,
             anchors,
@@ -4914,6 +4946,19 @@ fn solve_controlled(
     observer: Option<&dyn crate::stage_control::Observer>,
 ) -> Result<Run> {
     case.validate()?;
+    if case.has_offset_plates()
+        && ground
+            .materials
+            .iter()
+            .any(|m| !matches!(m.model, soil::Model::MohrCoulomb(_)))
+    {
+        return Err(Error::Input(
+            "offset Tri6 soil scope is dry elastic MC only; MCC/IDH unverified".into(),
+        ));
+    }
+    if case.has_offset_plates() && ground.initialization.water_level_m.is_some() {
+        return Err(Error::Input("offset Tri6 with water is unverified".into()));
+    }
     let states = if ground.is_general() {
         geostatic::states(mesh, &ground)?
     } else {

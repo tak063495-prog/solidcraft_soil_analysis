@@ -110,10 +110,11 @@ impl Checkpoint {
                 "checkpoint history/load checksum mismatch".into(),
             ));
         }
-        if case
-            .joint_system
-            .as_ref()
-            .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_some()))
+        if case.has_offset_plates()
+            || case
+                .joint_system
+                .as_ref()
+                .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_some()))
             || case.stages.iter().any(|s| {
                 matches!(
                     s,
@@ -135,7 +136,7 @@ impl Checkpoint {
                     .map_or(0, |g| g.attempts.iter().filter(|a| a.accepted).count());
             if count == 0 {
                 return Err(Error::Input(
-                    "JOINT BIRTH checkpoint has no accepted path".into(),
+                    "checkpoint has no accepted path for replay".into(),
                 ));
             }
             let replay = stages::solve_until(mesh, ground.clone(), case.clone(), count)?;
@@ -161,7 +162,7 @@ impl Checkpoint {
             without_clock(&mut actual);
             if actual != expected {
                 return Err(Error::Input(
-                    "JOINT BIRTH checkpoint accepted-path replay mismatch".into(),
+                    "checkpoint accepted-path replay mismatch".into(),
                 ));
             }
         }

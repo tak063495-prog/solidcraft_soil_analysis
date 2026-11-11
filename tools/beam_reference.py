@@ -71,6 +71,7 @@ class System:
             from plate_reference import Element
             sections={s['id']:s for s in cfg['plate_sections']}
             for p in self.plates:
+                if p.get('attachment_offset_m',0.)!=0.:raise ValueError('offset plates require the separate plate6_offset_reference scope')
                 nodes=[self.node_ids[n] for n in p['nodes']];section=sections[p['section_id']]
                 kind=p.get('formulation','cst_dkt')
                 if kind=='mindlin_tri6':

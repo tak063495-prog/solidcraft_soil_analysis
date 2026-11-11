@@ -30,6 +30,9 @@ def fingerprint(value):
 
 
 def derive(mesh, captured_case):
+    if any(p.get('formulation')=='mindlin_tri6_offset' or p.get('attachment_offset_m',0.)!=0.
+           for p in (captured_case.get('beam_system') or {}).get('plates',[])):
+        raise ValueError('Native offset plate preparation/display is unverified; use the explicit CLI-only offset scope')
     if KEY not in captured_case:
         return copy.deepcopy(mesh), copy.deepcopy(captured_case), None
     specification = captured_case[KEY]

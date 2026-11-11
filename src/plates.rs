@@ -9,6 +9,7 @@ use nalgebra::{Matrix3, SMatrix, SVector, Vector2, Vector3};
 use serde::{Deserialize, Serialize};
 
 pub mod mindlin;
+pub mod offset;
 
 pub type M18 = SMatrix<f64, 18, 18>;
 pub type V18 = SVector<f64, 18>;
@@ -51,6 +52,7 @@ pub enum Formulation {
     #[default]
     CstDkt,
     MindlinTri6,
+    MindlinTri6Offset,
 }
 impl Formulation {
     fn is_legacy(&self) -> bool {
@@ -59,7 +61,7 @@ impl Formulation {
     pub fn node_count(self) -> usize {
         match self {
             Self::CstDkt => 3,
-            Self::MindlinTri6 => 6,
+            Self::MindlinTri6 | Self::MindlinTri6Offset => 6,
         }
     }
 }
@@ -71,12 +73,18 @@ pub struct Member {
     pub nodes: Vec<String>,
     #[serde(default, skip_serializing_if = "Formulation::is_legacy")]
     pub formulation: Formulation,
+    /// Signed distance from the plate neutral plane to the attachment plane.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub attachment_offset_m: f64,
     pub section_id: String,
     pub initially_active: bool,
     #[serde(default)]
     pub constant_traction_kpa: [f64; 3],
     #[serde(default)]
     pub boundary_traction_kpa: [f64; 3],
+}
+fn is_zero(value: &f64) -> bool {
+    *value == 0.
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -299,9 +307,23 @@ impl Kernel {
 pub enum Element {
     Legacy(Box<Kernel>),
     Mindlin(Box<mindlin::Kernel>),
+    Offset(Box<offset::Kernel>),
 }
 impl Element {
     pub fn new(points: &[[f64; 3]], section: &Section, kind: Formulation) -> Result<Self> {
+        Self::new_with_offset(points, section, kind, 0.)
+    }
+    pub fn new_with_offset(
+        points: &[[f64; 3]],
+        section: &Section,
+        kind: Formulation,
+        e: f64,
+    ) -> Result<Self> {
+        if !e.is_finite() || (e != 0. && kind != Formulation::MindlinTri6Offset) {
+            return Err(Error::Input(
+                "attachment_offset_m requires explicit mindlin_tri6_offset".into(),
+            ));
+        }
         if points.len() != kind.node_count() {
             return Err(Error::Input("plate formulation/node count mismatch".into()));
         }
@@ -314,24 +336,32 @@ impl Element {
                 points.try_into().unwrap(),
                 section,
             )?))),
+            Formulation::MindlinTri6Offset => Ok(Self::Offset(Box::new(offset::Kernel::new(
+                points.try_into().unwrap(),
+                section,
+                e,
+            )?))),
         }
     }
     pub fn stiffness(&self) -> nalgebra::DMatrix<f64> {
         match self {
             Self::Legacy(k) => nalgebra::DMatrix::from_column_slice(18, 18, k.stiffness.as_slice()),
             Self::Mindlin(k) => k.stiffness.clone(),
+            Self::Offset(k) => k.stiffness.clone(),
         }
     }
     pub fn uniform_load(&self, t: [f64; 3]) -> nalgebra::DVector<f64> {
         match self {
             Self::Legacy(k) => nalgebra::DVector::from_column_slice(k.uniform_load(t).as_slice()),
             Self::Mindlin(k) => k.uniform_load(t),
+            Self::Offset(k) => k.uniform_load(t),
         }
     }
     pub fn recover(&self, id: String, d: &nalgebra::DVector<f64>) -> MemberResult {
         match self {
             Self::Legacy(k) => k.recover(id, &V18::from_column_slice(d.as_slice())),
             Self::Mindlin(k) => k.recover(id, d),
+            Self::Offset(k) => k.recover(id, d),
         }
     }
 }

@@ -10,6 +10,7 @@ from beam_io import empty_frame
 def export(run,output):
     cfg=run['case']['beam_system'];nodes={n['id']:i for i,n in enumerate(cfg['nodes'])}
     plates={p['id']:i for i,p in enumerate(cfg['plates'])}
+    offset_scope=any(p.get('formulation')=='mindlin_tri6_offset' for p in cfg['plates'])
     roots=[ET.Element('VTKFile',type='Collection',version='0.1',byte_order='LittleEndian') for _ in range(2)]
     collections=[ET.SubElement(r,'Collection') for r in roots];rows=[]
     for fi,frame in enumerate(run['frames']):
@@ -24,6 +25,14 @@ def export(run,output):
             xyz=np.asarray(report['node_positions_m']);u=np.asarray(state['node_displacement_m']);rotation=np.asarray(state['node_rotation_rad'])
             points=dict(structural_node_index=used,total_displacement_from_cad_m=u[used],total_rotation_rad=rotation[used])
             fields=dict(plate_index=ids,area_m2=np.array([p['area_m2'] for p in active]))
+            if offset_scope:
+                fields['attachment_offset_m']=np.array([cfg['plates'][i].get('attachment_offset_m',0.) for i in ids])
+                neutral_xyz=xyz.copy();neutral_u=u.copy()
+                for i,p,cell in zip(ids,active,cells,strict=True):
+                    arm=np.asarray(p['local_axes'][2])*cfg['plates'][i].get('attachment_offset_m',0.)
+                    neutral_xyz[cell]=xyz[cell]-arm
+                    neutral_u[cell]=u[cell]-np.cross(rotation[cell],arm)
+                points.update(neutral_reference_position_m=neutral_xyz[used],neutral_total_displacement_m=neutral_u[used])
             for key in ('membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m'):
                 fields[key]=np.array([p[key] for p in active])
             for a,name in enumerate('xyz'):fields[f'local_axis_{name}']=np.array([p['local_axes'][a] for p in active])
@@ -45,7 +54,8 @@ def export(run,output):
                 assert len(p['samples'])==(6 if len(cell)==6 else 3)
                 for qi,sample in enumerate(p['samples']):
                     bary=np.asarray(sample['barycentric']);assert np.all(bary>=0.) and abs(bary.sum()-1.)<1e-14
-                    positions.append(bary@xyz[cell[:3]]);raw['plate_index'].append(plate_id);raw['sample_index'].append(qi)
+                    arm=np.asarray(p['local_axes'][2])*cfg['plates'][plate_id].get('attachment_offset_m',0.) if offset_scope else np.zeros(3)
+                    positions.append(bary@xyz[cell[:3]]-arm);raw['plate_index'].append(plate_id);raw['sample_index'].append(qi)
                     row=dict(stage_index=fi,stage=frame['name'],plate_id=p['id'],sample_index=qi)
                     for key in raw:
                         if key not in ('plate_index','sample_index'):raw[key].append(sample.get(key,[0.,0.]) if key.startswith('transverse_shear') else sample[key])
@@ -73,4 +83,6 @@ def export(run,output):
         roundtrip='Nonempty triangle and vertex VTU data read back exactly; empty active sets checked as zero-cell VTK XML.')
     if any(p.get('formulation')=='mindlin_tri6' for p in cfg['plates']):
         metadata.update(schema='soil-fem-plate-export/2',fields='Raw DKT (3 points) or Mindlin Tri6 (6 points) samples in local axes; transverse shear strain and force kN/m; separate shear energy. No smoothing.',geometry='Undeformed same-reference-plane triangle/triangle6 cells; offsets unsupported.')
+    if offset_scope:
+        metadata.update(schema='soil-fem-plate-export/3',geometry='triangle6 points and total displacement refer to the attachment surface; neutral reference position and displacement are explicit point fields; raw sample positions lie on the neutral plane.',fields='Six raw Mindlin points in local axes, neutral-plane strain/curvature/resultants and four energies; attachment_offset_m is signed neutral-to-surface distance.',native_gui_accepted=False)
     (output/'plate-fields.json').write_text(json.dumps(metadata,indent=2),encoding='utf-8')

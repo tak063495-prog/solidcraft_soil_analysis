@@ -605,6 +605,7 @@ impl Model {
             });
         }
         let mut plates = Vec::new();
+        let mut attachment_shifts: Vec<Option<Vector3<f64>>> = vec![None; positions.len()];
         for plate in &c.plates {
             if plate.id.is_empty()
                 || !names.insert(plate.id.clone())
@@ -632,11 +633,26 @@ impl Model {
             let section = *plate_sections
                 .get(&plate.section_id)
                 .ok_or_else(|| Error::Input("unknown plate section".into()))?;
-            let kernel = crate::plates::Element::new(
+            let kernel = crate::plates::Element::new_with_offset(
                 &nodes.iter().map(|&i| positions[i]).collect::<Vec<_>>(),
                 &c.plate_sections[section],
                 plate.formulation,
+                plate.attachment_offset_m,
             )?;
+            let p = nodes
+                .iter()
+                .map(|&i| Vector3::from(positions[i]))
+                .collect::<Vec<_>>();
+            let shift = (p[1] - p[0]).cross(&(p[2] - p[0])).normalize() * plate.attachment_offset_m;
+            for &node in &nodes {
+                if attachment_shifts[node].is_some_and(|previous| {
+                    (previous - shift).norm()
+                        > 64. * f64::EPSILON * c.plate_sections[section].thickness_m
+                }) {
+                    return Err(Error::Input("offset plates sharing a node require the same signed normal offset; folds/steps unverified".into()));
+                }
+                attachment_shifts[node] = Some(shift);
+            }
             plates.push(PlateData {
                 stiffness: kernel.stiffness(),
                 nodes,
@@ -1076,12 +1092,13 @@ impl Model {
             .chol
             .as_ref()
             .map_or_else(|| DVector::zeros(0), |chol| chol.solve(&rhs));
-        let residual_tolerance = if self
-            .configuration
-            .plates
-            .iter()
-            .any(|p| p.formulation == crate::plates::Formulation::MindlinTri6)
-        {
+        let residual_tolerance = if self.configuration.plates.iter().any(|p| {
+            matches!(
+                p.formulation,
+                crate::plates::Formulation::MindlinTri6
+                    | crate::plates::Formulation::MindlinTri6Offset
+            )
+        }) {
             1e-10
         } else {
             1e-9

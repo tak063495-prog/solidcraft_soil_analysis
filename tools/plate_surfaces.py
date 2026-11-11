@@ -85,6 +85,7 @@ def attach(mesh, case, specification):
         formulation=surface.get('formulation','cst_dkt')
         if formulation not in ('cst_dkt','mindlin_tri6'):raise ValueError('unknown plate formulation')
         if surface.get('thickness_offset_m',0.)!=0.:raise ValueError('plate thickness offset attachment unsupported')
+        if surface.get('attachment_offset_m',0.)!=0.:raise ValueError('offset scope requires explicit direct mindlin_tri6_offset members')
         if surface.get('load_distribution','consistent')!='consistent':raise ValueError('consistent surface load required; six equal forces unsupported')
         name=surface['id']
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_-]{0,79}',name) or name in groups or name in member_ids:
