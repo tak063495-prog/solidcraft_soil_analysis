@@ -1,0 +1,414 @@
+{
+  "base_commit": "702a19a7ce189f1173caed727ee2a0059298a607",
+  "recorded_date_jst": "2026-11-12",
+  "environment": {
+    "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "new_python": {
+    "tests_run": 42,
+    "passed": 42,
+    "success_ids": [
+      "darcy_reference_checks.BirthBalance.test_all_node_equilibrium",
+      "darcy_reference_checks.BirthBalance.test_buoyancy_seepage_separate_not_double_counted",
+      "darcy_reference_checks.BirthBalance.test_independent_global_total_weight",
+      "darcy_reference_checks.BirthBalance.test_policies_distinct_roles",
+      "darcy_reference_checks.BirthBalance.test_policy_conflicts_not_averaged",
+      "darcy_reference_checks.BirthBalance.test_pore_divergence_identity",
+      "darcy_reference_checks.BirthBalance.test_regenerated_faces_no_stale_exterior",
+      "darcy_reference_checks.BirthBalance.test_total_effective_pressure_identity",
+      "darcy_reference_checks.Diagnostics.test_balanced_force_corruption_visible_per_node",
+      "darcy_reference_checks.Diagnostics.test_bool_not_force",
+      "darcy_reference_checks.Diagnostics.test_clipped_pressure_refused",
+      "darcy_reference_checks.Diagnostics.test_csv_roundtrip",
+      "darcy_reference_checks.Diagnostics.test_different_mesh_refused",
+      "darcy_reference_checks.Diagnostics.test_duplicate_csv_column",
+      "darcy_reference_checks.Diagnostics.test_duplicate_id",
+      "darcy_reference_checks.Diagnostics.test_duplicate_json_key",
+      "darcy_reference_checks.Diagnostics.test_extra_id",
+      "darcy_reference_checks.Diagnostics.test_false_numeric_label_identity_refused",
+      "darcy_reference_checks.Diagnostics.test_filled_pressure_refused",
+      "darcy_reference_checks.Diagnostics.test_identity_not_acceptance",
+      "darcy_reference_checks.Diagnostics.test_incomplete_not_success",
+      "darcy_reference_checks.Diagnostics.test_interpolation_refused",
+      "darcy_reference_checks.Diagnostics.test_missing_id",
+      "darcy_reference_checks.Diagnostics.test_missing_pressure",
+      "darcy_reference_checks.Diagnostics.test_nan",
+      "darcy_reference_checks.Diagnostics.test_pressure_head_mislabeled_numerically_refused",
+      "darcy_reference_checks.Diagnostics.test_pressure_head_not_total_head",
+      "darcy_reference_checks.Diagnostics.test_water_defect_not_hidden",
+      "darcy_reference_checks.Diagnostics.test_wrong_flow_sign",
+      "darcy_reference_checks.Diagnostics.test_wrong_force_sign",
+      "darcy_reference_checks.Diagnostics.test_wrong_sign",
+      "darcy_reference_checks.Diagnostics.test_wrong_stress_type",
+      "darcy_reference_checks.Diagnostics.test_wrong_units",
+      "darcy_reference_checks.FreeBoundary.test_bad_grid",
+      "darcy_reference_checks.FreeBoundary.test_bad_material",
+      "darcy_reference_checks.FreeBoundary.test_head_convergence_separate_metric",
+      "darcy_reference_checks.FreeBoundary.test_local_and_global_conservation",
+      "darcy_reference_checks.FreeBoundary.test_no_negative_pressure_clipping_in_dry_region",
+      "darcy_reference_checks.FreeBoundary.test_pde_closed_form_independent_derivative",
+      "darcy_reference_checks.FreeBoundary.test_second_order_surface_not_roundoff",
+      "darcy_reference_checks.FreeBoundary.test_surface_boundary",
+      "darcy_reference_checks.FreeBoundary.test_unknown_surface_inside_new_body"
+    ],
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "exit_code": 0
+  },
+  "existing_python": {
+    "discovered": 568,
+    "assigned_exactly_once": true,
+    "collection_and_group_assignments_unchanged": true,
+    "group_counts": {
+      "python-core-0": 276,
+      "python-core-1": 284,
+      "python-mean-evidence": 4,
+      "python-spatial-evidence": 4
+    },
+    "unique_successes": 560,
+    "unexecuted_due_to_setup_errors": 8,
+    "unexecuted_ids": [
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected",
+      "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+      "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+      "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+      "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+    ],
+    "final_setup_errors": 2,
+    "final_failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "all_passed": false,
+    "initial_attempts": [
+      {
+        "group": "python-core-0",
+        "assigned": 276,
+        "tests_run": 270,
+        "failures": 0,
+        "errors": 3,
+        "exit_code": 1,
+        "elapsed_seconds": 573.9245298440001,
+        "unresolved_in_attempt": [
+          "test_cut_volume_history.CutVolumeHistory.test_old_256_path_is_checked_and_read_without_new_solve",
+          "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_recorded_256_histories_are_read_with_provenance_not_recomputed",
+          "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_changed_contact_field_is_rejected_even_if_chunk_is_resealed",
+          "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_contact_history_physics_are_checked_at_every_accepted_state",
+          "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_global_parameter_and_nonmonotone_failure_are_preserved",
+          "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_missing_interior_chunk_cannot_pass_integrity_or_history",
+          "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_new_spatial_and_event_metrics_cannot_override_old_acceptance",
+          "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_saved_native_path_and_input_only_reference_are_separate"
+        ]
+      },
+      {
+        "group": "python-core-1",
+        "assigned": 284,
+        "tests_run": 266,
+        "failures": 0,
+        "errors": 5,
+        "exit_code": 1,
+        "elapsed_seconds": 299.40479058499994,
+        "unresolved_in_attempt": [
+          "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_changed_free_load_is_refused_instead_of_being_named_equilibrium",
+          "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_difference_width_refines_only_existing_numerical_control",
+          "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_saved_fields_exclude_live_contact_switch_and_retain_history",
+          "test_nc_fold_stability.FoldChecks.test_native_load_reconstruction_keeps_prescribed_components_and_does_not_edit_origin",
+          "test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_archive_is_rejected_without_solving",
+          "test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_pressure_load_history_and_missing_frame_are_rejected",
+          "test_wet_joint_simultaneous.SimultaneousWetJoint.test_every_axis_keeps_all_fields_and_does_not_invent_history_gate",
+          "test_wet_joint_simultaneous.SimultaneousWetJoint.test_incomplete_or_nonfinite_new_path_does_not_enter_comparisons",
+          "test_wet_joint_simultaneous.SimultaneousWetJoint.test_pressure_trace_can_match_while_volume_equilibrium_is_rejected",
+          "test_wet_joint_small_refinement.SmallJointRefinement.test_every_refined_accepted_field_passes_existing_history_and_force_audits",
+          "test_wet_joint_small_refinement.SmallJointRefinement.test_forged_completion_flag_is_rejected",
+          "test_wet_joint_small_refinement.SmallJointRefinement.test_missing_interior_accepted_chunk_is_rejected",
+          "test_wet_joint_small_refinement.SmallJointRefinement.test_prior_16_32_measurement_is_preserved_and_no_unsampled_point_is_certified",
+          "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_all_entities_and_event_acceptance_are_retained",
+          "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_archived_sources_import_in_isolated_python",
+          "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_contact_replay_and_chord_defect_are_distinct_from_solution",
+          "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_missing_interior_field_cannot_pass_as_complete",
+          "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_real_file_checkpoints_match_all_suffix_states",
+          "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_recomputed_nonmonotone_history_is_not_accepted"
+        ]
+      }
+    ],
+    "retry_whole_modules": {
+      "whole_modules": [
+        "test_cut_volume_history",
+        "test_hydrostatic_cut_volume",
+        "test_low_preload_nc_diagnosis",
+        "test_nc_fold_stability",
+        "test_wet_joint_convergence_ablation",
+        "test_wet_joint_simultaneous",
+        "test_wet_joint_small_refinement",
+        "test_wet_joint_step_diagnosis"
+      ],
+      "selected_ids": [
+        "test_cut_volume_history.CutVolumeHistory.test_changed_schedule_missing_fields_and_nonfinite_history_are_rejected",
+        "test_cut_volume_history.CutVolumeHistory.test_corrupt_contact_energy_history_and_changed_physical_scope_are_rejected",
+        "test_cut_volume_history.CutVolumeHistory.test_existing_full_path_and_all_fields_are_checked",
+        "test_cut_volume_history.CutVolumeHistory.test_old_256_path_is_checked_and_read_without_new_solve",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_cube_analytic_moments_and_force_virtual_work",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_curved_or_nonfinite_geometry_is_outside_reference",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_dry_vertex_face_partial_and_full_wetting_tet4_and_tet10",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_only_partial_pore_term_accounts_for_initial_displacement_change",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_recorded_256_histories_are_read_with_provenance_not_recomputed",
+        "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_changed_free_load_is_refused_instead_of_being_named_equilibrium",
+        "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_difference_width_refines_only_existing_numerical_control",
+        "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_saved_fields_exclude_live_contact_switch_and_retain_history",
+        "test_nc_fold_stability.FoldChecks.test_every_load_component_including_restrained_component_is_checked",
+        "test_nc_fold_stability.FoldChecks.test_existing_moving_plane_solver_crosses_fold_and_actual_restart_matches",
+        "test_nc_fold_stability.FoldChecks.test_existing_solver_rejection_keeps_short_origin_and_acceptance_false",
+        "test_nc_fold_stability.FoldChecks.test_force_block_failure_is_visible_when_the_augmented_norm_hides_it",
+        "test_nc_fold_stability.FoldChecks.test_fresh_native_adapter_refuses_changed_physics_and_unlisted_initial_steps",
+        "test_nc_fold_stability.FoldChecks.test_invalid_arrays_scales_and_unoriented_exact_fold_are_rejected",
+        "test_nc_fold_stability.FoldChecks.test_known_fold_detected_and_regular_segment_not_detected",
+        "test_nc_fold_stability.FoldChecks.test_low_stress_captures_removed_points_and_never_floors_pressure",
+        "test_nc_fold_stability.FoldChecks.test_native_load_reconstruction_keeps_prescribed_components_and_does_not_edit_origin",
+        "test_nc_fold_stability.FoldChecks.test_new_checkpoint_binding_covers_control_scales_and_branch_payload",
+        "test_nc_fold_stability.FoldChecks.test_nontransverse_degenerate_problem_is_not_a_simple_fold",
+        "test_nc_fold_stability.FoldChecks.test_original_proportional_series_changes_only_the_declared_initial_increment",
+        "test_nc_fold_stability.FoldChecks.test_short_rejected_and_failed_force_or_linear_paths_do_not_certify",
+        "test_nc_fold_stability.FoldChecks.test_true_nonsymmetric_left_and_right_modes_at_exact_fold",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_changed_contact_field_is_rejected_even_if_chunk_is_resealed",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_contact_history_physics_are_checked_at_every_accepted_state",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_global_parameter_and_nonmonotone_failure_are_preserved",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_missing_interior_chunk_cannot_pass_integrity_or_history",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_new_spatial_and_event_metrics_cannot_override_old_acceptance",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_saved_native_path_and_input_only_reference_are_separate",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_archive_is_rejected_without_solving",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_pressure_load_history_and_missing_frame_are_rejected",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_every_axis_keeps_all_fields_and_does_not_invent_history_gate",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_incomplete_or_nonfinite_new_path_does_not_enter_comparisons",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_pressure_trace_can_match_while_volume_equilibrium_is_rejected",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_every_refined_accepted_field_passes_existing_history_and_force_audits",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_forged_completion_flag_is_rejected",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_missing_interior_accepted_chunk_is_rejected",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_prior_16_32_measurement_is_preserved_and_no_unsampled_point_is_certified",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_all_entities_and_event_acceptance_are_retained",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_archived_sources_import_in_isolated_python",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_contact_replay_and_chord_defect_are_distinct_from_solution",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_missing_interior_field_cannot_pass_as_complete",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_real_file_checkpoints_match_all_suffix_states",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_recomputed_nonmonotone_history_is_not_accepted"
+      ],
+      "tests_run": 47,
+      "success_ids": [
+        "test_cut_volume_history.CutVolumeHistory.test_changed_schedule_missing_fields_and_nonfinite_history_are_rejected",
+        "test_cut_volume_history.CutVolumeHistory.test_corrupt_contact_energy_history_and_changed_physical_scope_are_rejected",
+        "test_cut_volume_history.CutVolumeHistory.test_existing_full_path_and_all_fields_are_checked",
+        "test_cut_volume_history.CutVolumeHistory.test_old_256_path_is_checked_and_read_without_new_solve",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_cube_analytic_moments_and_force_virtual_work",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_curved_or_nonfinite_geometry_is_outside_reference",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_dry_vertex_face_partial_and_full_wetting_tet4_and_tet10",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_only_partial_pore_term_accounts_for_initial_displacement_change",
+        "test_hydrostatic_cut_volume.HydrostaticCutVolume.test_recorded_256_histories_are_read_with_provenance_not_recomputed",
+        "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_changed_free_load_is_refused_instead_of_being_named_equilibrium",
+        "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_difference_width_refines_only_existing_numerical_control",
+        "test_low_preload_nc_diagnosis.LowNCDiagnosis.test_saved_fields_exclude_live_contact_switch_and_retain_history",
+        "test_nc_fold_stability.FoldChecks.test_every_load_component_including_restrained_component_is_checked",
+        "test_nc_fold_stability.FoldChecks.test_existing_moving_plane_solver_crosses_fold_and_actual_restart_matches",
+        "test_nc_fold_stability.FoldChecks.test_existing_solver_rejection_keeps_short_origin_and_acceptance_false",
+        "test_nc_fold_stability.FoldChecks.test_force_block_failure_is_visible_when_the_augmented_norm_hides_it",
+        "test_nc_fold_stability.FoldChecks.test_fresh_native_adapter_refuses_changed_physics_and_unlisted_initial_steps",
+        "test_nc_fold_stability.FoldChecks.test_invalid_arrays_scales_and_unoriented_exact_fold_are_rejected",
+        "test_nc_fold_stability.FoldChecks.test_known_fold_detected_and_regular_segment_not_detected",
+        "test_nc_fold_stability.FoldChecks.test_low_stress_captures_removed_points_and_never_floors_pressure",
+        "test_nc_fold_stability.FoldChecks.test_native_load_reconstruction_keeps_prescribed_components_and_does_not_edit_origin",
+        "test_nc_fold_stability.FoldChecks.test_new_checkpoint_binding_covers_control_scales_and_branch_payload",
+        "test_nc_fold_stability.FoldChecks.test_nontransverse_degenerate_problem_is_not_a_simple_fold",
+        "test_nc_fold_stability.FoldChecks.test_original_proportional_series_changes_only_the_declared_initial_increment",
+        "test_nc_fold_stability.FoldChecks.test_short_rejected_and_failed_force_or_linear_paths_do_not_certify",
+        "test_nc_fold_stability.FoldChecks.test_true_nonsymmetric_left_and_right_modes_at_exact_fold",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_changed_contact_field_is_rejected_even_if_chunk_is_resealed",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_contact_history_physics_are_checked_at_every_accepted_state",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_global_parameter_and_nonmonotone_failure_are_preserved",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_missing_interior_chunk_cannot_pass_integrity_or_history",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_new_spatial_and_event_metrics_cannot_override_old_acceptance",
+        "test_wet_joint_convergence_ablation.WetJointConvergenceAblation.test_saved_native_path_and_input_only_reference_are_separate",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_archive_is_rejected_without_solving",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_pressure_load_history_and_missing_frame_are_rejected",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_every_axis_keeps_all_fields_and_does_not_invent_history_gate",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_incomplete_or_nonfinite_new_path_does_not_enter_comparisons",
+        "test_wet_joint_simultaneous.SimultaneousWetJoint.test_pressure_trace_can_match_while_volume_equilibrium_is_rejected",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_every_refined_accepted_field_passes_existing_history_and_force_audits",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_forged_completion_flag_is_rejected",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_missing_interior_accepted_chunk_is_rejected",
+        "test_wet_joint_small_refinement.SmallJointRefinement.test_prior_16_32_measurement_is_preserved_and_no_unsampled_point_is_certified",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_all_entities_and_event_acceptance_are_retained",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_archived_sources_import_in_isolated_python",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_contact_replay_and_chord_defect_are_distinct_from_solution",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_missing_interior_field_cannot_pass_as_complete",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_real_file_checkpoints_match_all_suffix_states",
+        "test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_recomputed_nonmonotone_history_is_not_accepted"
+      ],
+      "failures": [],
+      "errors": [],
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0
+    },
+    "legacy_evidence": [
+      {
+        "group": "python-mean-evidence",
+        "assigned": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "exit_code": 1,
+        "elapsed_seconds": 811.6402360290001,
+        "reason": [
+          "ValueError: saved mean-stress/complement partition differs from own history"
+        ],
+        "unexecuted_ids": [
+          "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+          "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+          "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+          "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected"
+        ]
+      },
+      {
+        "group": "python-spatial-evidence",
+        "assigned": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "exit_code": 1,
+        "elapsed_seconds": 220.088662635,
+        "reason": [
+          "ValueError: remeasured JSON differs"
+        ],
+        "unexecuted_ids": [
+          "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+          "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+          "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+          "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+        ]
+      }
+    ]
+  },
+  "cli_contract_smoke": [
+    {
+      "kind": "json",
+      "exit_code": 2,
+      "accepted": null
+    },
+    {
+      "kind": "csv",
+      "exit_code": 2,
+      "accepted": null
+    },
+    {
+      "kind": "wrong_stress_kind",
+      "exit_code": 1,
+      "accepted": false
+    }
+  ],
+  "builds": {
+    "command": "cargo build --locked --release --bins --examples",
+    "exit_code": 0,
+    "solver_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7"
+  },
+  "preservation": {
+    "base_tracked_files": 5961,
+    "all_existing_index_modes_and_blobs_unchanged": true,
+    "source_document_input_fingerprints_checked": 3627,
+    "changed": [],
+    "fingerprint_checkpoint": "recorded during initial normal-group runs; final index also checked against exact base",
+    "restored_original_evidence_files": 409,
+    "restored_original_evidence_bytes": 7527697794,
+    "restoration": "immutable base raw downloads; Git blob SHA-1 verified before original-path linking; original replay checks SHA-256",
+    "rejected_incomplete_downloads": 5
+  },
+  "new_source_sha256": {
+    "compare.py": "a389da89a1196f154bfc67bb8a39b6bf60670af72d7f5c67b619bc5367d24f06",
+    "checks.py": "2618f718357e22e49b61c8c976ae3dbf810a0b90c592e4fa9723395bbe1f24cb",
+    "reference.py": "91253784f73ae0bb564516aa6265da9fa223416b1602b613e23fff852eab1a62"
+  },
+  "logs_retained_under": "work/darcy (not committed); initial failures retained, retries not double counted",
+  "log_fingerprints": {
+    "inventory-after.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "restoration-retry.log": {
+      "bytes": 1014,
+      "sha256": "214a85a1fd4ada140ef0620a415e7920b555d64e5fc8f6c9d0caa494442723a2"
+    },
+    "restoration.log": {
+      "bytes": 95353,
+      "sha256": "bf83811201b59170dbba94e7b1b2f83eb4773d56f5025e7333fc27ecba6013b6"
+    },
+    "build.log": {
+      "bytes": 133,
+      "sha256": "6d7ef61a4d181fa5e5633c2e3fcc9cc7701ed8ed922e097e5d037ca8937e66a1"
+    },
+    "existing-retry.log": {
+      "bytes": 8640,
+      "sha256": "4de2b4c9325d83b5f94b1b5191314bd8327b6b017fd978c156adba1bde5a7a57"
+    },
+    "python-spatial-evidence.log": {
+      "bytes": 915,
+      "sha256": "c13e912f6bedc95e7088f066f3c8fa12aa1e15fe667197ef6054f1d34489cf27"
+    },
+    "inventory-before.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python-core-1-attempt1.log": {
+      "bytes": 72936,
+      "sha256": "ecdc5a78f9035dd14b1db3ba5f8c7decdc3fcb648c8a7aeebf9ed8ce09f66108"
+    },
+    "new-tests-final.log": {
+      "bytes": 4412,
+      "sha256": "0239d44575e5e09d968807a16e7b10a558ae3b8e2b8d56ee90705b65aaa30b19"
+    },
+    "python-core-0-attempt1.log": {
+      "bytes": 66591,
+      "sha256": "d63ed4eda9552923161c076f2adb0247122c7f25bdd02383fbcfbe78cda3aef8"
+    },
+    "existing-retry-process.log": {
+      "bytes": 403,
+      "sha256": "00e583d937bd28917957fef6ded740090d2a4e069d2e25d8714137480b837995"
+    },
+    "new-tests-first.log": {
+      "bytes": 3582,
+      "sha256": "6f8e23aa7ffd8791b637f294856efa9c1baab6d8655f373b789641b09c155e9e"
+    },
+    "python-mean-evidence.log": {
+      "bytes": 3132,
+      "sha256": "a536002ddc1e67422d4b8f1a6fd09bfde6b80e5e333c51a8fc864c222e33df6c"
+    },
+    "python-core-0-attempt1/python-tests.log": {
+      "bytes": 50616,
+      "sha256": "b94686d82fd00ec48d46ec7f225ea07f03e3a12d33a02d1faa9021d7db189b39"
+    },
+    "python-mean-evidence/python-tests.log": {
+      "bytes": 2124,
+      "sha256": "468d83475b24b32d5eabf41aa4b07348268df8bdbcd5f4d950e77aac884d8ea6"
+    },
+    "python-spatial-evidence/python-tests.log": {
+      "bytes": 915,
+      "sha256": "c13e912f6bedc95e7088f066f3c8fa12aa1e15fe667197ef6054f1d34489cf27"
+    },
+    "python-core-1-attempt1/python-tests.log": {
+      "bytes": 52423,
+      "sha256": "205eabc6c240e4d99bbebc192aea679ba238ad9b97b063e45228bfd00fc1b3a1"
+    }
+  },
+  "rust_full_suite": "not_run; no Rust change",
+  "windows_ci": "unconfirmed; no cancelled/timed-out run counted as success",
+  "accepted": null,
+  "a03_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false
+}
