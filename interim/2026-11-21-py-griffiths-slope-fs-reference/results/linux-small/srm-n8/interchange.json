@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "model_id": "griffiths_1999_coarse_reconstruction_D1",
+  "case_sha256": "b67f2d11385204bca1bddff90a4f787cc8d3dce3eaf97277abcd81eacd24ce96",
+  "units": {
+    "length": "m",
+    "force": "kN",
+    "stress": "kPa",
+    "displacement": "m",
+    "strain": "1",
+    "factor": "1"
+  },
+  "conventions": {
+    "x": "right",
+    "y": "up",
+    "stress": "tension_positive",
+    "displacement": "signed_global",
+    "strain": "engineering_shear",
+    "kinematics": "plane_strain",
+    "pore_pressure": "dry_zero"
+  },
+  "reduction": {
+    "cohesion": "c/F",
+    "friction": "atan(tan(phi)/F)",
+    "dilation": "fixed_zero"
+  },
+  "accepted": null,
+  "fs_tolerance": null,
+  "trials": [
+    {
+      "factor": 0.8,
+      "status": "equilibrated",
+      "reason": "all gravity increments equilibrated",
+      "relative_residual": 4.037567275436839e-13,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 1.0,
+      "failure_certified": false
+    },
+    {
+      "factor": 2.0,
+      "status": "unresolved",
+      "reason": "line search stalled",
+      "relative_residual": 0.025745008004629887,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 0.625,
+      "failure_certified": false
+    },
+    {
+      "factor": 1.4,
+      "status": "equilibrated",
+      "reason": "all gravity increments equilibrated",
+      "relative_residual": 1.8198952008283778e-12,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 1.0,
+      "failure_certified": false
+    },
+    {
+      "factor": 1.7,
+      "status": "unresolved",
+      "reason": "line search stalled",
+      "relative_residual": 0.015029978703965172,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 0.875,
+      "failure_certified": false
+    },
+    {
+      "factor": 1.5499999999999998,
+      "status": "equilibrated",
+      "reason": "all gravity increments equilibrated",
+      "relative_residual": 2.3924361735582743e-12,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 1.0,
+      "failure_certified": false
+    },
+    {
+      "factor": 1.625,
+      "status": "equilibrated",
+      "reason": "all gravity increments equilibrated",
+      "relative_residual": 1.4924372721587092e-12,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 1.0,
+      "failure_certified": false
+    },
+    {
+      "factor": 1.6625,
+      "status": "unresolved",
+      "reason": "constitutive active set unresolved (including zero-dilation apex)",
+      "relative_residual": 0.005997255855308499,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 0.875,
+      "failure_certified": false
+    },
+    {
+      "factor": 1.64375,
+      "status": "equilibrated",
+      "reason": "all gravity increments equilibrated",
+      "relative_residual": 1.5951386039631063e-08,
+      "residual_tolerance": 1e-07,
+      "gravity_fraction": 1.0,
+      "failure_certified": false
+    }
+  ],
+  "trial_count": 8,
+  "factor_interval": [
+    1.64375,
+    1.6625
+  ],
+  "endpoint_statuses": [
+    "equilibrated",
+    "unresolved"
+  ],
+  "interval_kind": "computational_unresolved",
+  "field_state": {
+    "factor": 1.64375,
+    "gravity_fraction": 1.0,
+    "reference": "stress_free_gravity_turn_on",
+    "plastic_measure": "engineering_tensor_components",
+    "nodes_csv": "nodes.csv",
+    "plastic_csv": "plastic.csv"
+  }
+}
