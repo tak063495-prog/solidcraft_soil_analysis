@@ -12,6 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'interim/2026-11-09-nc-pseudo-arclength'))
 from native_arc import Native
 from probe_nc_midpoint import inputs
+from nc_fixed_inputs import fixed_inputs_match
 from verify_high_order import prepare
 from low_preload_nc_reference import ClosedStickSystem
 
@@ -25,7 +26,7 @@ class FreshNative(Native):
         self.initial_increment=self.case['stages'][2]['initial_increment']
         if self.initial_increment not in (1/128,1/256):raise ValueError('only original 1/128 or 1/256 proportional series')
         expected=inputs('midpoint');expected[2]['stages'][2]['initial_increment']=self.initial_increment
-        if (self.mesh,self.ground,self.case)!=expected:raise ValueError('fresh proportional series changes fixed inputs')
+        if not fixed_inputs_match((self.mesh,self.ground,self.case),expected):raise ValueError('fresh proportional series changes fixed inputs')
         rows=[json.loads(line) for line in (folder/'accepted.jsonl').read_text(encoding='utf-8').splitlines()]
         if len(rows)<2 or rows[-1]['state']!=run['last_committed']:raise ValueError('fresh accepted history does not end at run state')
         self.cp=run['last_committed'];self.active=self.cp['active_elements'];self.lam0=self.cp['stage_progress']

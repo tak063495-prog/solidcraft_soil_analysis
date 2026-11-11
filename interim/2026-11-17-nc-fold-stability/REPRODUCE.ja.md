@@ -17,10 +17,12 @@ $Py = '.venv/Scripts/python.exe'
 $env:OPENBLAS_NUM_THREADS='1'
 $env:MKL_NUM_THREADS='1'
 $env:OMP_NUM_THREADS='1'
+$env:RUST_TEST_THREADS='1'
 $env:PYTHONUTF8='1'
 cargo fmt --all --check
 cargo clippy --locked --all-targets -- -D warnings
-cargo test --locked --release
+cargo test --locked --release --all-targets
+cargo test --locked --release --doc
 cargo build --locked --release
 foreach ($group in @('python-core-0','python-core-1','python-mean-evidence','python-spatial-evidence')) {
   & $Py tools/run_ci_python_tests.py --group $group --output "$TaskRun/validation/$group"
@@ -46,9 +48,16 @@ foreach ($group in @('python-core-0','python-core-1','python-mean-evidence','pyt
 
 ## 3. 新しい比例経路の初期1/128・1/256（PC専用）
 
+**2026-11-12 追記：** b069ec8 の Windows 実行では両 trace が rc=0 で終了した一方、`complete=false` / `numerical_acceptance=false` で、撤去時の線形残差が約 1.0467e-10 / 1.0273e-10 となりカットバックを使い切った。その後の FreshNative 拒否には、固定入力の保存時正規化と既定 dense_lu の省略によるスキーマ差があった。受理点 266 / 506、最終進行度 0.95140 / 0.95148 はユーザー PC の報告値であり、この追記で旧結果を受入に変更しない。
+
+**完了済み trace は再求解せず再利用できる。** [PC 再実行手順の節2](../2026-11-24-nc-pc-rerun-fix/REPRODUCE.ja.md) に従い、既存履歴を `nc_fixed_inputs.py` で読み取り検査し、観測器を新しい出力先に作り、fold_path / analyze だけを再実行する。run / accepted / checkpoint と過去の失敗出力は保存する。以下は前史から新規作成する場合の手順。
+
+
 ```powershell
 & $Py tools/prepare_nc_fold_series.py --output "$TaskRun/series"
+if ($LASTEXITCODE -ne 0) { throw '入力生成失敗' }
 cargo build --locked --release --example nc_history_trace
+if ($LASTEXITCODE -ne 0) { throw '履歴保存器のビルド失敗' }
 foreach ($denom in @(128,256)) {
   $p = "$TaskRun/series/$denom"
   & target/release/examples/nc_history_trace.exe trace "$p/mesh.json" "$p/ground.json" "$p/stages.json" "$p/history"
@@ -57,13 +66,20 @@ foreach ($denom in @(128,256)) {
   Copy-Item "$p/mesh.json" "$p/history/mesh.json" -ErrorAction Stop
 }
 & $Py tools/prepare_nc_fold_observer.py --output "$TaskRun/observer"
-$Probe = "$TaskRun/observer/target/release/examples/material_diagnostic.exe"
+if ($LASTEXITCODE -ne 0) { throw '材料観測器のビルド失敗' }
+$Probe = (Resolve-Path "$TaskRun/observer/target/release/examples/material_diagnostic.exe").Path
 foreach ($denom in @(128,256)) {
   $p = "$TaskRun/series/$denom"
+  & $Py tools/nc_fixed_inputs.py --history "$p/history" --output "$TaskRun/fixed-input-$denom.json"
+  if ($LASTEXITCODE -ne 0) { throw "固定入力不一致: $denom" }
   & $Py tools/nc_fold_path.py --map native --fresh-native "$p/history" --binary $Probe --step-size 0.00002 --count 128 --budget-seconds 1800 --output "$TaskRun/native$denom-coarse"
+  if ($LASTEXITCODE -ne 0) { throw "fold_path 異常終了: $denom （保存出力を保持）" }
   & $Py tools/nc_fold_path.py --map native --fresh-native "$p/history" --binary $Probe --step-size 0.00001 --count 256 --budget-seconds 1800 --output "$TaskRun/native$denom-fine"
+  if ($LASTEXITCODE -ne 0) { throw "fold_path 異常終了: $denom （保存出力を保持）" }
   & $Py tools/analyze_nc_fold_path.py --path "$TaskRun/native$denom-coarse" --output "$TaskRun/native$denom-coarse-audit"
+  if ($LASTEXITCODE -ne 0) { throw "analyze 異常終了: $denom （保存出力を保持）" }
   & $Py tools/analyze_nc_fold_path.py --path "$TaskRun/native$denom-fine" --output "$TaskRun/native$denom-fine-audit"
+  if ($LASTEXITCODE -ne 0) { throw "analyze 異常終了: $denom （保存出力を保持）" }
 }
 ```
 

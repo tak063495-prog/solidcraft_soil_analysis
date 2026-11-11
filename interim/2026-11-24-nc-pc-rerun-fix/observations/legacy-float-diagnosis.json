@@ -1,0 +1,1863 @@
+{
+  "diagnostic_only": true,
+  "new_nc_solve": false,
+  "full_strict_archive_replay_executed": false,
+  "strict_archive_test_success_claimed": false,
+  "platform_float_allowance_used": false,
+  "reference_values_or_snapshots_modified": false,
+  "controls_archive_entry_sha256": "cfe27ea2393ef9c318405f1412f1d730b968a22663c89c4d75f55c1c3b4c9562",
+  "original_fem_source_sha256": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+  "observations": [
+    {
+      "environment": {},
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "found": [
+              "X86_V3"
+            ],
+            "not found": [
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "OPENBLAS_CORETYPE": "Haswell"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "found": [
+              "X86_V3"
+            ],
+            "not found": [
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "OPENBLAS_CORETYPE": "Sandybridge"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "found": [
+              "X86_V3"
+            ],
+            "not found": [
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "OPENBLAS_CORETYPE": "Prescott"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "found": [
+              "X86_V3"
+            ],
+            "not found": [
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "OPENBLAS_CORETYPE": "Nehalem"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "found": [
+              "X86_V3"
+            ],
+            "not found": [
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "OPENBLAS_CORETYPE": "Zen"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "found": [
+              "X86_V3"
+            ],
+            "not found": [
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "NPY_DISABLE_CPU_FEATURES": "X86_V3"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "not found": [
+              "X86_V3",
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    },
+    {
+      "environment": {
+        "OPENBLAS_CORETYPE": "Prescott",
+        "NPY_DISABLE_CPU_FEATURES": "X86_V3"
+      },
+      "result": {
+        "B": {
+          "exact": false,
+          "changed_components": 153,
+          "maximum_absolute_difference": 4.440892098500626e-16
+        },
+        "weights": {
+          "exact": true,
+          "changed_components": 0,
+          "maximum_absolute_difference": 0.0,
+          "differences": []
+        },
+        "first": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 2.220446049250313e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.22290550351107863,
+              "remeasured": -0.22290550351107866
+            },
+            {
+              "component": 1,
+              "recorded": -0.21918088930004787,
+              "remeasured": -0.21918088930004792
+            },
+            {
+              "component": 2,
+              "recorded": -0.6323716930117103,
+              "remeasured": -0.6323716930117105
+            },
+            {
+              "component": 5,
+              "recorded": -0.15776166327366684,
+              "remeasured": -0.15776166327366678
+            },
+            {
+              "component": 6,
+              "recorded": -0.16795488194942498,
+              "remeasured": -0.16795488194942493
+            }
+          ]
+        },
+        "second": {
+          "exact": false,
+          "changed_components": 5,
+          "maximum_absolute_difference": 1.1102230246251565e-16,
+          "differences": [
+            {
+              "component": 0,
+              "recorded": -0.08915897378815747,
+              "remeasured": -0.08915897378815743
+            },
+            {
+              "component": 1,
+              "recorded": -0.07722953058805031,
+              "remeasured": -0.07722953058805025
+            },
+            {
+              "component": 2,
+              "recorded": -0.13274460345317957,
+              "remeasured": -0.13274460345317945
+            },
+            {
+              "component": 5,
+              "recorded": -0.05644516287128345,
+              "remeasured": -0.05644516287128352
+            },
+            {
+              "component": 6,
+              "recorded": -0.03690725571055638,
+              "remeasured": -0.03690725571055641
+            }
+          ]
+        },
+        "geometry_cache_equals_standalone_volume": true,
+        "source_stress_layout_checks": {
+          "C": {
+            "strides": [
+              48,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "state_stride_14": {
+            "strides": [
+              112,
+              8
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          },
+          "Fortran": {
+            "strides": [
+              8,
+              1296
+            ],
+            "maximum_partition_difference": 2.220446049250313e-16
+          }
+        },
+        "source_sha256": {
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+          "tools/mean_stress_release_control.py": "7b42a0bcee591559be1a8264b5f370d45827a1e7129323c658ee6033a846667e",
+          "tools/bounded_mean_release_control.py": "79213a6276a41fda3f029830723eb0c0d064ca762754398009bca4fcd11f47f5",
+          "tools/spatial_release_control.py": "13d6e26c70f5ecc8f00125f1f53bb88954e1529f89327b67140a3ea9f3221c34"
+        },
+        "jacobi_rules": [
+          {
+            "alpha": 2,
+            "nodes": [
+              0.07299402407314964,
+              0.3470037660383519,
+              0.7050022098884984
+            ],
+            "weights": [
+              0.15713636106488657,
+              0.146246269259866,
+              0.02995070300858069
+            ]
+          },
+          {
+            "alpha": 1,
+            "nodes": [
+              0.08858795951270387,
+              0.4094668644407347,
+              0.7876594617608472
+            ],
+            "weights": [
+              0.2009319137389595,
+              0.22924110635958633,
+              0.06982697990145421
+            ]
+          },
+          {
+            "alpha": 0,
+            "nodes": [
+              0.11270166537925835,
+              0.5,
+              0.8872983346207417
+            ],
+            "weights": [
+              0.2777777777777779,
+              0.4444444444444444,
+              0.2777777777777779
+            ]
+          }
+        ],
+        "numpy": "2.5.4",
+        "numpy_build": {
+          "Compilers": {
+            "c": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "cc"
+            },
+            "cython": {
+              "name": "cython",
+              "linker": "cython",
+              "version": "3.3.0",
+              "commands": "cython"
+            },
+            "c++": {
+              "name": "gcc",
+              "linker": "ld.bfd",
+              "version": "14.2.1",
+              "commands": "c++"
+            }
+          },
+          "Machine Information": {
+            "host": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            },
+            "build": {
+              "cpu": "x86_64",
+              "family": "x86_64",
+              "endian": "little",
+              "system": "linux"
+            }
+          },
+          "Build Dependencies": {
+            "blas": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            },
+            "lapack": {
+              "name": "scipy-openblas",
+              "found": true,
+              "version": "0.3.34.106.0",
+              "detection method": "pkgconfig",
+              "include directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/include",
+              "lib directory": "/opt/_internal/cpython-3.13.14/lib/python3.13/site-packages/scipy_openblas64/lib",
+              "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+              "pc file directory": "/project/.openblas"
+            }
+          },
+          "Python Information": {
+            "path": "/tmp/build-env-au6kdu2e/bin/python",
+            "version": "3.13"
+          },
+          "SIMD Extensions": {
+            "baseline": [
+              "X86_V2"
+            ],
+            "not found": [
+              "X86_V3",
+              "X86_V4",
+              "AVX512_ICL",
+              "AVX512_SPR"
+            ]
+          }
+        }
+      },
+      "stderr": ""
+    }
+  ]
+}

@@ -110,7 +110,7 @@ def run(args):
         model=module.Adapter(args.map,args.evidence,args.binary,args.reference,args.arc,out,args.material_steps)
     model.reference=args.reference
     final,holding=reconstructed_loads(model)
-    source_paths=[Path(__file__),ROOT/'tools/nc_fold_fresh.py',ROOT/'tools/fold_stability.py',ROOT/'interim/2026-11-09-nc-beyond-fold/continue_path.py',
+    source_paths=[Path(__file__),ROOT/'tools/nc_fold_fresh.py',ROOT/'tools/nc_fixed_inputs.py',ROOT/'tools/fold_stability.py',ROOT/'interim/2026-11-09-nc-beyond-fold/continue_path.py',
                   PRIOR/'native_arc.py',PRIOR/'independent_map_arc.py',PRIOR/'independent_branches.py',PRIOR/'independent_arc.py',
                   ROOT/'tools/mcc_rate_fem.py',ROOT/'tools/mcc_rate_rk4.py',ROOT/'tools/mcc_rate_midpoint.py',
                   ROOT/'tools/fem_reference.py',ROOT/'tools/verify_high_order.py',ROOT/'tools/joint_reference.py',

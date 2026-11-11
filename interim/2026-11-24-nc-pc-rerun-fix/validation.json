@@ -1,0 +1,159 @@
+{
+  "schema": "soil-fem-nc-pc-rerun-fix-validation/1",
+  "recorded_jst": "2026-11-12T07:29:19.093197+09:00",
+  "base": "79d839e3f89331a82d976efc1f23cbe2c848cbee",
+  "requested_linux_full_success": false,
+  "all_software_checks_passed": false,
+  "numerical_acceptance": false,
+  "NC01_complete": false,
+  "P6_complete": false,
+  "fmt": {
+    "command": "cargo fmt --all --check",
+    "exit_code": 0,
+    "rust_sources_identical_to_final_checkout": true,
+    "log": "validation/fmt.log"
+  },
+  "clippy": {
+    "command": "cargo clippy --locked --all-targets -- -D warnings",
+    "exit_code": 0,
+    "rust_sources_identical_to_final_checkout": true,
+    "log": "validation/clippy.log"
+  },
+  "rust": {
+    "source_directory": "/workspace/work/pr13-source",
+    "authoritative_checkout": "/workspace/solidcraft_soil_analysis",
+    "rust_sources_identical": true,
+    "RUST_TEST_THREADS": 1,
+    "commands": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1968.5531618530003,
+        "result_groups": 83,
+        "passed": 454,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--doc"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 4.765210323000247,
+        "result_groups": 1,
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      }
+    ]
+  },
+  "python": {
+    "discovered": 568,
+    "assigned_unique_once": true,
+    "successful_tests": 560,
+    "executed_tests": 560,
+    "unexecuted_due_to_setup_errors": 8,
+    "setup_errors": 2,
+    "failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "all_discovered_executed": false,
+    "groups": {
+      "python-core-0": {
+        "assigned_total": 276,
+        "tests_run": 276,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 672.9704249010001
+      },
+      "python-core-1": {
+        "assigned_total": 284,
+        "tests_run": 284,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 434.3629747220002
+      },
+      "python-mean-evidence": {
+        "assigned_total": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 1,
+        "elapsed_seconds": 1262.3419893810005
+      },
+      "python-spatial-evidence": {
+        "assigned_total": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 1,
+        "elapsed_seconds": 425.08070791499995
+      }
+    },
+    "unexecuted_test_ids": [
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected",
+      "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+      "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+      "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+      "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+    ]
+  },
+  "first_rust_attempt": {
+    "status": "failed",
+    "RUST_TEST_THREADS": 2,
+    "failed_tests": [
+      "killed_owned_solver_recovers_only_its_last_fully_published_accepted_snapshot",
+      "stop_during_actual_plastic_material_continuation_preserves_and_resumes_all_report_bytes"
+    ],
+    "reason": "original 30-second in-progress-history observation deadline",
+    "deadline_not_relaxed": true,
+    "concurrent_archive_io": true,
+    "log": "validation/first-tip-rust-all-targets.log",
+    "not_added_to_final_test_totals": true
+  },
+  "repeated_smokes_and_offline_systems_not_added_to_test_counts": true,
+  "changed_code_sha256": {
+    "tools/nc_fold_fresh.py": "697ae29e352065515cea59bc82bd5a10785c72d7ce5ddf7ca0654e5c19ed1a03",
+    "tools/nc_fold_path.py": "419c06f62251ed5969c498aae2b089128c2aa52ab0328bbb8de0531334bb234f",
+    "tools/nc_fixed_inputs.py": "c900ef6b99032a533a29269087e8590a1886bf90d130583893750d295cba6eb0",
+    "tools/prepare_nc_linear_observer.py": "f385d833ca3423873b47e82b2616796d4854f6cfcff7df904b6514eed70be8a2",
+    "tools/diagnose_nc_dense_lu.py": "44848e57d58c5eab2aee4ed4d72bf1ce20de7fac3fd0204b7a211ce7e07c9f1d",
+    "tools/diagnose_nc_legacy_floats.py": "6c1612092241050fa857fec59a6de3004e7650857d8ecbdd086c3c449dfb43cf",
+    "examples/nc_input_roundtrip.rs": "67b3227fee7c9b745f72002ec84b5d2b0261a30cc80ac7eeb552964dbdae47b5",
+    "examples/nc_dense_lu_diagnostic.rs": "889fc20f1e0333487ffcb2e42d370a3457edc5433832cc5b20aacd8aa148963e",
+    "tests/test_nc_pc_rerun_fix.py": "aa5e1570978fce18c32177343d5c855c4d3d6905f8720bab38420d7844ccf9de"
+  },
+  "changed_code_fixed_during_final_tests": true
+}
