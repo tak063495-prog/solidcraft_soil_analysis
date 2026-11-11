@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11",
+    "title": "[P2] 工程SRM保存点の完了済gate起点が対象入力に結び付かず、別ケースの通過結果を受理し得る",
+    "issue_number": 11,
+    "body": "## 対象・優先度\n**P2 / 保存・復旧時の完了済み工程ゲートと入力の結び付け不足（静的指摘）**\n- main `175c260f5ccc1b2c5bd6c965a91ad18b657102c0`、PR #7反映済みのproduction経路。\n- `src/epoch_srm_gate.rs` blob `74b23a8c482cb3905a090685f8739d58165b3414`。\n- 既存 #1–5、#10 と原因が異なります。\n- **通常の未編集ジョブで自然発生したという報告ではありません。別入力の有効な保存payloadと対象入力の外側identityが組み合わされた状態への意味的検証不足です。** hash自体の暗号強度や認証境界への指摘でもありません。\n\n## 根拠と到達経路\n1. [`Snapshot::verify` 408–423行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L408-L423) は外側の `identity` を呼出対象mesh/ground/caseと照合し、`payload_sha256` をpayloadと照合します。しかし両者の結び付けは、この後の意味的検査に依存します。\n2. [完了済みrecord検査 512–534行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L512-L534) は `gate.search.verify(mesh, &gate.origin, ...)` と「埋込originのhash＝search reportのorigin hash」を検査するだけで、埋込originを対象ground/caseの工程接頭部と照合しません。\n3. 必要な検査自体は [`verify_origin` 537–557行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L537-L557) にありますが、[active Search phase 438–446行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L438-L446) だけから呼ばれています。完了済みrecordには呼ばれません。\n4. [Finish phase 453–477行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L453-L477) はgate数・Continue判定・工程数を検査し、`checkpoint=None` なら対象construction保存点の検証もしません。この状態は正常なゲート通過直後にも生成されます。\n5. [`finish_unit` 793–809行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L793-L809) は呼出対象caseで残りのconstruction処理を行います。一方、[最終decision 371–385行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L371-L385) は保存された別入力のgate.effectから `Passed` を作ります。\n\nしたがって、完了済みgateが評価した施工起点と、最終reportの対象入力が異なる状態を受理する経路があります。[保存ジョブの選択検査 279–320行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate_job.rs#L279-L320) と [prepare_recovery 450–453行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate_job.rs#L450-L453) もこのverifierを利用し、完了recordの追加入力照合はありません。\n\n## 回帰用の具体的条件\n現在の単軸column fixtureと同じmesh/ground/executable、2工程（boundary荷重＋reset）、`gate_after_stages=[1]`、要求率1.6・最大率2を使います。\n- 入力A：荷重factor=1。既存試験の20/15≈1.333の排除境界から要求1.6は独立排除。\n- 入力B：荷重factor=0.5。同じモデルの境界は20/7.5≈2.667。要求1.6・最大2は釣合い側で、gateはContinue。\n- Bを最初のgateが完了した `Finish { checkpoint: None }` まで進め、その有効なpayloadを保持。\n- 外側Snapshotの `identity` だけをAのfresh Snapshotのidentityにする。他のstage数/specは同じ。**Bのpayloadとpayload_sha256は変更不要**です。\n- 現行コードでは上記検査条件をすべて満たし、Aのgateを再評価せずAのconstructionとBのContinue結果を組み合わせ得ます。\n\nディスク上の保存ジョブへこの混在状態を作る場合、外側ファイルhash等の通常の整合情報も再計算される条件です。単純なbit破損がhash検査を通るという主張ではありません。既存の意味的改変拒否テストと同様、hashが整合していても別入力の結果を受け付けないことが目的です。\n\n## 影響・修正案\n対象入力では要求率を満たしていないのに、別入力の完了gateを根拠に `Passed` として後続工程を続ける可能性があります。外側の `source_identity` が対象入力を指すため、結果と検証済みgateの対応が誤認されます。\n\n`verify_records` に対象ground/caseを渡し、**各完了recordにも** `verify_origin(mesh, ground, case, gate.through_stages, &gate.origin)` を適用してください。Search/Construct/Finish/Doneで共通に実施し、各recordを正しい未低減prefixへ結び付けます。\n\n## 回帰試験・検証状態\n- 上記A/Bの有効payload混在を `verify` / `advance` / 保存ジョブ検証・復旧で拒否する。\n- active Searchだけでなく、通過済recordを持つConstruct、Finish(checkpoint=None/Some)、Doneを確認。\n- 同一入力の正規中断/保存/復旧は連続結果との一致を維持。\n- ground変更、同じ工程数で荷重だけ変更、複数gateにも同じ拒否を確認。\n\n**2名の独立した固定ソース静的追跡で確認した指摘です。Rust回帰試験案は作成しましたが、cargo/rustcと対応CLIがないため未実行です。** 上記A/Bの実solver終了結果、実保存ファイルへの混在注入、Windows/GUI/Excelは独立実行していません。作者の試験結果を独立実行確認とは扱っていません。\n",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 1,
+    "created_at": "2026-10-31T23:46:21Z",
+    "updated_at": "2026-11-09T22:48:06Z",
+    "closed_at": "2026-11-09T22:48:06Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11",
+    "display_title": "[P2] 工程SRM保存点の完了済gate起点が対象入力に結び付かず、別ケースの通過結果を受理し得る"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11",
+  "title": "[P2] 工程SRM保存点の完了済gate起点が対象入力に結び付かず、別ケースの通過結果を受理し得る",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11",
+  "display_title": "[P2] 工程SRM保存点の完了済gate起点が対象入力に結び付かず、別ケースの通過結果を受理し得る"
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "cwd": "/workspace/work/issue-triage-code",
+    "started_at_utc": "2026-11-11T05:46:08.515856+00:00",
+    "exit_code": 0,
+    "elapsed_seconds": 1.2054884919998585
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "cwd": "/workspace/work/issue-triage-code",
+    "started_at_utc": "2026-11-11T05:46:09.721597+00:00",
+    "exit_code": 0,
+    "elapsed_seconds": 16.588404337000156
+  },
+  {
+    "name": "build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "cwd": "/workspace/work/issue-triage-code",
+    "started_at_utc": "2026-11-11T05:46:26.310247+00:00",
+    "exit_code": 0,
+    "elapsed_seconds": 106.17971484300006
+  },
+  {
+    "name": "rust-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    "cwd": "/workspace/work/issue-triage-code",
+    "started_at_utc": "2026-11-11T06:04:25.861881+00:00",
+    "retry_reason": "Exact missing archival fixtures restored; original failure retained",
+    "exit_code": 0,
+    "elapsed_seconds": 940.877418609
+  }
+]

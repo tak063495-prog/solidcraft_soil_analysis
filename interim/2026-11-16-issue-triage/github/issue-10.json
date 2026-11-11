@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10",
+    "title": "[P2] 参照なしRichardsonが振動収束を単調収束として外挿し、連続側5%を誤って合格にする",
+    "issue_number": 10,
+    "body": "## 対象・優先度\n**P2 / 数値収束の判定不整合**。main `175c260f5ccc1b2c5bd6c965a91ad18b657102c0`（PR #9反映済み）、`src/plane_strain_2d.rs` blob `6b064b0262ed9944ca7a6c49d5b9655649862010`。\n既存 #1–5 と重複しません。公開済み柱の個別計算結果が誤っていたという指摘ではなく、以下の振動収束系列を入力した場合の判定です。\n\n## 根拠\n[`reference_free_richardson` 578–589行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/plane_strain_2d.rs#L578-L589) は連続する差分を両方 `.abs()` にしてから次数を計算し、正の倍率 `2^p` を前提とするRichardson式に渡しています。差分の符号反転を検査しないため、単調収束と振動収束を区別できません。\n[公開 `judge_series` 236–268行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/plane_strain_2d.rs#L236-L268) は有限値・個数・非零参照値を確認しますが、この符号条件は検査しません。`nested_h_refinement=true` は同じ問題のh細分を意味しても、解の差分が同符号になることまでは保証しません。\n[455–477行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/plane_strain_2d.rs#L455-L477) はこの外挿値をそのまま連続側5%判定に使用します。\n\n## 発生条件・独立数値再現\n同一モニタについてh,h/2,h/4の系列を、公開judge形式で次のように与える場合です。\n```json\n{\n  \"schema\": \"soil-fem-plane-strain-2d-series/1\",\n  \"quantity\": \"signed displacement\",\n  \"reference\": -0.001,\n  \"values\": [-0.001, -0.0013, -0.00115],\n  \"nested_h_refinement\": true\n}\n```\nこの例は厳密に `u_n=-0.0012 + 0.0002*(-1/2)^n` という振動収束系列の最初の3値です。真の極限は `-0.0012`、参照に対する相対差は **20%** です。\n\n現実装の式を独立Python計算で追跡すると、\n- 差分絶対値は `0.0003, 0.00015`、比2より `p≈1`。\n- 正符号倍率を仮定した外挿値は `-0.001`。\n- 参照との差は丸め誤差程度になり、`continuum_verdict=pass` 相当の **5%合格**になります。\n\n正の変位の対応例でも同じ誤判定です。入力系列そのものは有限で、差分縮小率・次数範囲等の現行guardをすべて通ります。3点だけで一般の真の極限を認定できるという主張ではなく、**現行の単調Richardsonモデルと明らかに整合しない符号反転を除外しない**ことを示しています。\n\n## 影響・修正案\n振動するh細分結果から誤った連続推定を作り、元の2Dとの5%比較に合格を付ける可能性があります。solverの平衡計算そのもの、一般3D/P6の完了フラグとは別の問題です。\n\n少なくとも連続差分の同符号を確認し、符号反転する場合はこの単調Richardsonを使わず `Indeterminate` としてください。振動モデルを扱うなら、符号付き倍率に対応した別の外挿と妥当性条件を明示し、現在の正倍率式に混在させないでください。\n\n## 回帰試験・確認範囲\n- 上記正/負変位の振動系列を5%Passにしない。\n- 単調な既知次数系列は正しい外挿・判定を保つ。\n- 差分ゼロ、solver floor、発散、符号反転、非finite、2値しかない場合の判定。\n- 実CLI `plane-strain-2d judge SERIES.json NEW_REPORT.json` の結果を確認。\n\n**独立実行済みは上記数式のPython再計算です。Rust関数とCLI経路は固定ソースの静的確認であり、cargo/rustc/対応release実行ファイルがないためRust CLIは実行していません。** 作者のRust/Python試験・保存結果を独立実行と混同せず、実FEMメッシュでの振動例・Windows/GUI/Excelも未検証です。\n",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 1,
+    "created_at": "2026-10-31T23:45:19Z",
+    "updated_at": "2026-11-09T22:48:20Z",
+    "closed_at": "2026-11-09T22:48:20Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10",
+    "display_title": "[P2] 参照なしRichardsonが振動収束を単調収束として外挿し、連続側5%を誤って合格にする"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10",
+  "title": "[P2] 参照なしRichardsonが振動収束を単調収束として外挿し、連続側5%を誤って合格にする",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10",
+  "display_title": "[P2] 参照なしRichardsonが振動収束を単調収束として外挿し、連続側5%を誤って合格にする"
+}

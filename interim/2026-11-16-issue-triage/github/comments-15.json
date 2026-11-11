@@ -1,0 +1,30 @@
+{
+  "comments": [
+    {
+      "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15#issuecomment-6782865078",
+      "body": "修正確認の追記です。対象は PR #13 の固定SHA `cecbb39edf7359f02ca3968998532ebd8612d544` です。本Issueの「旧証拠と現行sourceの差で再計測前に停止する」経路は、確認した範囲で解消しています。\n\n- [保存sourceと現行checkoutの差は診断として記録](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L77-L101)し、archiveのhash・size・inventory検証を維持しています。\n- [検証済みの封印snapshotを `-I -X utf8` の別Pythonで実行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L102-L132)します。spatial側の不足依存も、[旧fingerprintに一致するbytesだけを補完](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-spatial-release/remeasure.py#L23-L52)しています。\n\n独立確認は Linux/Python 3.12 の小さな合成archiveです。変更していないmean/spatial両方の `run` に対し、現行側に実行すると例外になる異なるsourceを置いても封印側のUTF-8出力を正しく再計測できました。各2モードの正常対照と、part破損・entry hash不一致・封印source欠落・離散値不一致の拒否を計12条件で確認しています。別途、実装付属のUTF-8隔離2試験とspatial隔離3試験も成功しました。\n\n配布archive全体については独立手元実行ではなく、現在のGitHub CIログを確認しました。[mean-evidence](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42925852344/job/130212008674) は1314 entries・4 tests成功、[spatial-evidence](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42925852344/job/130212008516) は411 entries・4 tests成功です。CI merge `15eadcc09ea08f74dc56a335347e3b92a978f012` と対象headのtreeは `cacd659a9490ebaaf928a67f3fc1d59aa73263c5` で一致します。\n\n両ログは `discrete_evidence_exact=true` ですが、Windowsの派生float差を記録しており `measurements_byte_identical=false` です。いずれも `numerical_acceptance=false` / `current_checkout_numerical_certification=false` を維持しています。今回の確認は歴史的証拠の再計測・CI停止の修正であり、現行FEMの収束やNC目標達成の認定ではありません。実Rust求解・配布archive全体の手元再演は未実施です。",
+      "user": {
+        "login": "tak063495-prog",
+        "name": "tak063495-prog",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+        "id": 254234268
+      },
+      "id": 6782865078,
+      "pull_request_review_id": null,
+      "in_reply_to_id": null,
+      "created_at": null,
+      "updated_at": null,
+      "review": null,
+      "side": null,
+      "line": null,
+      "start_line": null,
+      "path": null,
+      "body_html": "<p dir=\"auto\">修正確認の追記です。対象は PR <a class=\"issue-link js-issue-link\" data-error-text=\"Failed to load title\" data-id=\"6258443468\" data-permission-text=\"Title is private\" data-url=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/13\" data-hovercard-type=\"pull_request\" data-hovercard-url=\"/tak063495-prog/solidcraft_soil_analysis/pull/13/hovercard\" href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13\">#13</a> の固定SHA <code class=\"notranslate\">cecbb39edf7359f02ca3968998532ebd8612d544</code> です。本Issueの「旧証拠と現行sourceの差で再計測前に停止する」経路は、確認した範囲で解消しています。</p>\n<ul dir=\"auto\">\n<li><a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L77-L101\">保存sourceと現行checkoutの差は診断として記録</a>し、archiveのhash・size・inventory検証を維持しています。</li>\n<li><a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L102-L132\">検証済みの封印snapshotを <code class=\"notranslate\">-I -X utf8</code> の別Pythonで実行</a>します。spatial側の不足依存も、<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-spatial-release/remeasure.py#L23-L52\">旧fingerprintに一致するbytesだけを補完</a>しています。</li>\n</ul>\n<p dir=\"auto\">独立確認は Linux/Python 3.12 の小さな合成archiveです。変更していないmean/spatial両方の <code class=\"notranslate\">run</code> に対し、現行側に実行すると例外になる異なるsourceを置いても封印側のUTF-8出力を正しく再計測できました。各2モードの正常対照と、part破損・entry hash不一致・封印source欠落・離散値不一致の拒否を計12条件で確認しています。別途、実装付属のUTF-8隔離2試験とspatial隔離3試験も成功しました。</p>\n<p dir=\"auto\">配布archive全体については独立手元実行ではなく、現在のGitHub CIログを確認しました。<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42925852344/job/130212008674\">mean-evidence</a> は1314 entries・4 tests成功、<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42925852344/job/130212008516\">spatial-evidence</a> は411 entries・4 tests成功です。CI merge <code class=\"notranslate\">15eadcc09ea08f74dc56a335347e3b92a978f012</code> と対象headのtreeは <code class=\"notranslate\">cacd659a9490ebaaf928a67f3fc1d59aa73263c5</code> で一致します。</p>\n<p dir=\"auto\">両ログは <code class=\"notranslate\">discrete_evidence_exact=true</code> ですが、Windowsの派生float差を記録しており <code class=\"notranslate\">measurements_byte_identical=false</code> です。いずれも <code class=\"notranslate\">numerical_acceptance=false</code> / <code class=\"notranslate\">current_checkout_numerical_certification=false</code> を維持しています。今回の確認は歴史的証拠の再計測・CI停止の修正であり、現行FEMの収束やNC目標達成の認定ではありません。実Rust求解・配布archive全体の手元再演は未実施です。</p>"
+    }
+  ],
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+  "title": "tak063495-prog/solidcraft_soil_analysis Issue #15 comments",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+  "display_title": "tak063495-prog/solidcraft_soil_analysis Issue #15 comments"
+}

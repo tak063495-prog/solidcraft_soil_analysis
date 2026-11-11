@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+    "title": "[P2] 参照計算再開ラッパーの親中断で生存子を残したままstudyロックが解除される",
+    "issue_number": 1,
+    "body": "## 概要・優先度\n**P2 / 中断・再開の排他制御**。参照計算の再開ラッパーを、実行中の子プロセスとは別に中断すると、子が生存したまま study の排他ロックが削除されます。同じ study を再開する入口の二重起動防止が失われます。Rust FEM本体の誤計算を確認した指摘ではありません。\n\n## 対象版と根拠\n- main commit: `5d4afb45234c0781e86b63cb4d0b67a3d54b33f2`\n- `tools/resume_projected_sparse_study.py` blob: `5d9733dd4d35e251f815f9073295124e2444c455`\n- [ロック取得と所有者記録 L124–130](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/resume_projected_sparse_study.py#L124-L130)\n- [子の起動・待機と無条件ロック削除 L153–166](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/resume_projected_sparse_study.py#L153-L166)\n\n`process.wait()` が `KeyboardInterrupt` 等で離脱しても、子を停止して終了確認する処理がなく、`finally: lock.unlink()` が実行されます。\n\n## 発生条件・独立再現\nLinux/Pythonで固定版のラッパーを実行して独立再現しました（作者のCI・計算結果とは別）。\n1. 既存 `tests/test_reference_resume.py` のfixtureで、一時ディレクトリに有効な凍結studyを作成。\n2. 一時fixture内の参照子プログラムだけを「自身のPIDを記録し60秒sleepする」安全な代役に置換し、fixtureのsource hashも更新。実リポジトリや実studyは変更しない。\n3. 固定版ラッパーを子プロセスとして起動し、参照子のPID記録を待つ。\n4. **ラッパーの親PIDだけ**へ `SIGINT` を送信。プロセスグループ全体へのCtrl+Cとは区別する。\n5. 結果：`parent_exit=-2, child_alive=true, lock_exists=false`。確認後、試験で起動した子だけを終了。\n\n通常完了や子を含む一斉停止を対象にした指摘ではありません。所有プロセスを個別停止する操作等で生じる中断経路です。\n\n## 影響\n長時間の参照子が残っているのに、次のラッパーが同じstudyのロックを取得できる状態になります。重複した参照計算・同じphase出力への競合の危険があります。今回、実解析結果の破損や数値値の誤りまでは実証していません。\n\n## 修正案\n- 起動済み子の所有ハンドルを保持し、割込み・例外経路で所有子の停止と `wait` による終了確認を行ってからロックを解放する。\n- 子終了を確認できない場合はロックを保持し、親/子PID・中断状態・手動確認事項を記録する。単に同名プロセスを一括終了しない。\n- 子起動直後の進捗保存失敗も同じ後始末経路へ含める。\n\n## 回帰試験・未検証範囲\n親だけへのSIGINT、待機中例外、子起動直後のstatus書込例外を注入し、(a)子が終了するまで排他が維持されること、(b)同study再起動が生存子と重ならないこと、(c)通常成功/子失敗後に正しくロック解放されることを検査してください。\n今回実行確認したのはLinuxの軽量代役子によるラッパーのプロセス管理です。Windows固有の停止、実MCC長時間計算、強制killによるOS終了、実phase出力競合は未検証です。",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 2,
+    "created_at": "2026-10-26T23:19:10Z",
+    "updated_at": "2026-11-09T22:49:28Z",
+    "closed_at": "2026-11-09T22:49:28Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+    "display_title": "[P2] 参照計算再開ラッパーの親中断で生存子を残したままstudyロックが解除される"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+  "title": "[P2] 参照計算再開ラッパーの親中断で生存子を残したままstudyロックが解除される",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+  "display_title": "[P2] 参照計算再開ラッパーの親中断で生存子を残したままstudyロックが解除される"
+}
