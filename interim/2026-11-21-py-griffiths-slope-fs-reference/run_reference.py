@@ -67,7 +67,7 @@ def main():
             folder=args.output/f'srm-n{n}';folder.mkdir();dump(folder/'raw.json',r)
             fields=write_fields(folder,r)
             trials=[dict(factor=t['factor'],status=t['status'],reason=t['reason'],relative_residual=t['relative_residual'],
-                         residual_tolerance=1e-7,gravity_fraction=1. if t['status']=='equilibrated' else t['completed_steps']/args.gravity_steps,
+                         residual_tolerance=1e-8,gravity_fraction=1. if t['status']=='equilibrated' else t['completed_steps']/args.gravity_steps,
                          failure_certified=False) for t in r['trials']]
             interval=r['computational_transition']
             interchange=dict(schema_version=1,model_id=MODEL,case_sha256=case_hash,units=UNITS,conventions=CONVENTIONS,

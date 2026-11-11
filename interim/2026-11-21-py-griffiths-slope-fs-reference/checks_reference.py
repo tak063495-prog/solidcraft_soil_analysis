@@ -130,7 +130,7 @@ class MaterialAndFEMTests(unittest.TestCase):
 
     def test_small_gravity_real_solve(self):
         r=srm.trial_solve(srm.mesh(1),.8,steps=2,seconds=3)
-        self.assertEqual(r['status'],'equilibrated');self.assertLess(r['relative_residual'],1e-7)
+        self.assertEqual(r['status'],'equilibrated');self.assertLess(r['relative_residual'],1e-8)
 
     def test_timeout_is_unknown(self):
         r=srm.trial_solve(srm.mesh(1),1,seconds=1e-12)
@@ -158,7 +158,7 @@ class ContractTests(unittest.TestCase):
     def setUp(self):
         self.m=dict(schema_version=1,model_id=compare.MODEL,case_sha256=compare.case_fingerprint(),units=compare.UNITS.copy(),
                     conventions=compare.CONVENTIONS.copy(),reduction=compare.REDUCTION.copy(),accepted=None,fs_tolerance=None,
-                    trial_count=2,trials=[dict(factor=1.,status='equilibrated',gravity_fraction=1.,relative_residual=1e-9,residual_tolerance=1e-7),
+                    trial_count=2,trials=[dict(factor=1.,status='equilibrated',gravity_fraction=1.,relative_residual=1e-9,residual_tolerance=1e-8),
                                           dict(factor=1.5,status='timeout')],factor_interval=[1.,1.5],
                     endpoint_statuses=['equilibrated','timeout'],interval_kind='computational_unresolved',field_state=None)
 
@@ -213,6 +213,10 @@ class ContractTests(unittest.TestCase):
             with self.subTest(value=v):
                 m=copy.deepcopy(self.m);m['trials'][0]['factor']=v
                 with self.assertRaises(ValueError):compare.validate(m)
+
+    def test_relaxed_force_tolerance_rejected(self):
+        self.m['trials'][0]['residual_tolerance']=1e-7
+        with self.assertRaises(ValueError):compare.validate(self.m)
 
     def test_false_equilibrium_rejected(self):
         self.m['trials'][0]['relative_residual']=1e-3

@@ -60,7 +60,7 @@ def validate(m):
         if state=='equilibrated':
             if t.get('gravity_fraction')!=1.: raise ValueError('incomplete gravity trial')
             r=number(t['relative_residual']); tol=number(t['residual_tolerance'])
-            if not 0<=r<=tol or tol<=0: raise ValueError('equilibrated without residual evidence')
+            if not 0<=r<=tol or not 0<tol<=1e-8: raise ValueError('equilibrated without residual evidence')
         elif state=='certified_failure':
             cert=t.get('failure_certificate')
             if not isinstance(cert,dict) or cert.get('independently_verified') is not True or not cert.get('artifact_sha256'):

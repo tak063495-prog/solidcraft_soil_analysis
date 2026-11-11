@@ -121,7 +121,7 @@ def trial_solve(m, factor, steps=8, iterations=35, seconds=20., psi=0.):
                 norm,r,tr,sig,dp=evaluate(du,stress,target); last_residual=norm
                 if time.monotonic()-start>seconds: raise TimeoutError('trial budget exceeded during residual evaluation')
                 history.append(dict(step=step,iteration=iteration,relative_residual=norm))
-                if norm<1e-7:
+                if norm<1e-8:
                     u+=du; stress=sig; plastic+=dp; break
                 tangent=mat.tangent(tr)
                 ke=area[:,None,None]*np.einsum('eik,eij,ejl->ekl',B,tangent,B)
@@ -146,7 +146,7 @@ def trial_solve(m, factor, steps=8, iterations=35, seconds=20., psi=0.):
     except (Unresolved,MatrixRankWarning,np.linalg.LinAlgError) as exc:
         status='iteration_limit' if 'iteration limit' in str(exc) else 'unresolved'; reason=str(exc)
     return dict(factor=float(factor),status=status,reason=reason,seconds=time.monotonic()-start,
-                relative_residual=last_residual,completed_steps=sum(1 for x in history if x['relative_residual']<1e-7),
+                relative_residual=last_residual,completed_steps=sum(1 for x in history if x['relative_residual']<1e-8),
                 history=history,displacement=u.reshape(-1,2).tolist(),stress=stress.tolist(),plastic_strain=plastic.tolist(),
                 fields_scope='last_committed_gravity_step',failure_certified=False)
 

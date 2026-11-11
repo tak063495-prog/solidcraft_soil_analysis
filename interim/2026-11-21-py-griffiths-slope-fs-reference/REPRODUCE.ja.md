@@ -85,7 +85,7 @@ $candidateFs = 'D:/計算記録/Griffiths本体/independent-comparison-manifest.
 if ($LASTEXITCODE -ne 0) { throw '比較拒否。単位/符号/状態/全試行/区間/同一点を確認する' }
 ```
 
-交換JSONは例の `schema_version/model_id/case_sha256/units/conventions/reduction/accepted/fs_tolerance/trials/trial_count/factor_interval/endpoint_statuses/interval_kind/field_state` を全て用意する。全自重の平衡試行は `gravity_fraction=1,relative_residual,residual_tolerance` が必要。未収束端はそのまま `unresolved/iteration_limit/trial_limit/timeout/cancelled/constitutive_unresolved` とする。`factor_interval` は2端点が実試行に存在する正順の計算境界だけで、`interval_kind=computational_unresolved`。物理Fsの誤差許容は未定義、`fs_tolerance=null, accepted=null`。中点・点値は渡さない。
+交換JSONは例の `schema_version/model_id/case_sha256/units/conventions/reduction/accepted/fs_tolerance/trials/trial_count/factor_interval/endpoint_statuses/interval_kind/field_state` を全て用意する。全自重の平衡試行は `gravity_fraction=1,relative_residual,residual_tolerance<=1e-8` が必要。未収束端はそのまま `unresolved/iteration_limit/trial_limit/timeout/cancelled/constitutive_unresolved` とする。`factor_interval` は2端点が実試行に存在する正順の計算境界だけで、`interval_kind=computational_unresolved`。物理Fsの誤差許容は未定義、`fs_tolerance=null, accepted=null`。中点・点値は渡さない。
 
 `field_state` は同じF、全自重完了、`reference=stress_free_gravity_turn_on`、`plastic_measure=engineering_tensor_components` と、以下の表ファイル名が必要。CSVヘッダーの順序・綴り・単位は固定。JSONの場合は `{"columns":[...],"rows":[[...],...]}`。
 
@@ -151,4 +151,10 @@ foreach ($groupFs in @('python-core-0','python-core-1','python-mean-evidence','p
 }
 ```
 
-目安10〜60分、証拠取得時間は別。全群の発見集合・割当集合・実行件数・失敗/エラー/skip/expected failure/unexpected successを確認する。新規42件は別の明示起動で、既存件数へ紛れ込ませない。新先端Windows CIは、このPC手順やLinuxの成功から成功扱いにしない。
+目安10〜60分、証拠取得時間は別。全群の発見集合・割当集合・実行件数・失敗/エラー/skip/expected failure/unexpected successを確認する。新規43件は別の明示起動で、既存件数へ紛れ込ませない。新先端Windows CIは、このPC手順やLinuxの成功から成功扱いにしない。
+
+## 今回のLinux結果に残った制限
+
+新規43件は全件成功。既存は543 IDを全てsuiteへ渡し、証拠不足の修復と該当5/6/4件の再実行後に、重複を除いて535件成功。NC平均応力/空間の封印証拠2群・計8件は `setUpClass` で厳密再計測不一致となり、試験本体は未実行。skip/expected failure/unexpected successは0だが、全件合格ではない。詳細・各ID・初回5エラー・再実行ログは [validation.json](results/validation/validation.json) と同じフォルダーに保存した。
+
+PCで同じ準備エラーが出たら、そのまま失敗・未実行を記録する。元データや期待値を再ハッシュして差し替えたり、Linuxの厳密判定へplatform差許容を追加したり、失敗をskipへ変えて合格にしない。既存NCの原因解消は本件で実装しない。新規参照の成功と、既存全件未合格を別々に報告する。
