@@ -1,0 +1,88 @@
+{
+  "used_source_sha256": "5167a77bbec30c91d37de19531487e5b95ebb9f1865863c3c5e8681e6a4057b5",
+  "used_source_binary_reproduction_exact": true,
+  "expected_used_binary_sha256": "f4e68b40c11d67b910b5ddb518ef2df90de94a7cbd36c74ae81e7bdbcda7295b",
+  "rebuilt_used_binary_sha256": "f4e68b40c11d67b910b5ddb518ef2df90de94a7cbd36c74ae81e7bdbcda7295b",
+  "current_probe_source_sha256": "b1922bf4bf9d682e8a859a0f68c0b247733417b2f4bf2abf16bad41592c0922f",
+  "current_probe_binary_sha256": "a6dbbdea3cad2e55d67bcb2787978e9cedb78fcf575a15042656aed6e19f1d9d",
+  "production_cli_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+  "commands": [
+    {
+      "name": "used-probe-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--example",
+        "wet_joint_history_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 17.21430159600004
+    },
+    {
+      "name": "current-probe-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--example",
+        "wet_joint_history_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 18.54343838099976
+    },
+    {
+      "name": "production-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.29228908000004594
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.4569242449997546
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.0608113730004334
+    },
+    {
+      "name": "probe-test-compile",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--example",
+        "wet_joint_history_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.9055384889998095
+    }
+  ],
+  "numerical_acceptance": false,
+  "physical_solver_sources_changed": false
+}
