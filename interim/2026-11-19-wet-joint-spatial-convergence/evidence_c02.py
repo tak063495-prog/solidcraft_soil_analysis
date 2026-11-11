@@ -1,0 +1,85 @@
+"""Seal new evidence only; hashes in older studies are never rewritten."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+import zipfile
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parents[1]
+PART=48*1024*1024
+
+def sha(path):
+    digest=hashlib.sha256()
+    with path.open('rb') as f:
+        while b:=f.read(1024*1024):digest.update(b)
+    return digest.hexdigest()
+def write(path,value):
+    with path.open('x',encoding='utf-8') as f:json.dump(value,f,ensure_ascii=False,indent=2,allow_nan=False);f.write('\n')
+
+def sources():
+    names=subprocess.check_output(['git','ls-files'],cwd=ROOT,text=True).splitlines()
+    codec=json.loads((ROOT/'interim/2026-11-15-wet-joint-convergence/codec-dependencies.json').read_text())
+    for name,digest in codec.items():assert sha(ROOT/name)==digest
+    extra=[p.relative_to(ROOT).as_posix() for p in HERE.glob('*.py')]+['examples/wet_joint_spatial_probe.rs','tests/test_wet_joint_spatial_points.py']
+    return {n:sha(ROOT/n) for n in sorted(set(names+extra+list(codec))) if n.endswith(('.py','.rs','.toml','.lock','.yml','.json')) and (n in codec or n.startswith(('src/','tools/','tests/','examples/','.github/')) or n in ('Cargo.toml','Cargo.lock') or (n.startswith(('interim/2026-11-15-wet-joint-convergence/','interim/2026-11-18-wet-joint-step-convergence/','interim/2026-11-19-wet-joint-spatial-convergence/')) and n.endswith('.py')))}
+
+def pack(out,measure):
+    snapshot=sources();write(HERE/'numerical-source-sha256.json',snapshot)
+    zip_path=ROOT/'work/c02-evidence.zip';entries={}
+    with zipfile.ZipFile(zip_path,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=6,allowZip64=True) as z:
+        for folder,prefix in [(out,'paths'),(measure,'measure')]:
+            for p in sorted(folder.rglob('*')):
+                if not p.is_file() or p.name in ('probe','probe.exe') or '__pycache__' in p.parts:continue
+                name=prefix+'/'+p.relative_to(folder).as_posix();z.write(p,name);entries[name]=dict(sha256=sha(p),bytes=p.stat().st_size)
+        for name,digest in snapshot.items():
+            p=ROOT/name;z.write(p,'sources/'+name);entries['sources/'+name]=dict(sha256=digest,bytes=p.stat().st_size)
+    parts=[]
+    with zip_path.open('rb') as f:
+        i=0
+        while True:
+            b=f.read(PART)
+            if not b:break
+            p=HERE/f'evidence.zip.part{i:03d}'
+            with p.open('xb') as o:o.write(b)
+            parts.append(dict(file=p.name,sha256=sha(p),bytes=len(b)));i+=1
+    write(HERE/'archive-sha256.json',dict(zip_sha256=sha(zip_path),zip_bytes=zip_path.stat().st_size,parts=parts,entries=entries,executables_archived=False))
+    assert sources()==snapshot
+    print(json.dumps(dict(parts=len(parts),entries=len(entries),bytes=zip_path.stat().st_size)),flush=True)
+
+def extract(target):
+    target.mkdir(parents=True,exist_ok=False);index=json.loads((HERE/'archive-sha256.json').read_text());archive=target/'archive.zip'
+    with archive.open('xb') as f:
+        for item in index['parts']:
+            p=HERE/item['file'];assert sha(p)==item['sha256'] and p.stat().st_size==item['bytes'];f.write(p.read_bytes())
+    assert sha(archive)==index['zip_sha256']
+    with zipfile.ZipFile(archive) as z:
+        assert set(z.namelist())==set(index['entries']) and z.testzip() is None
+        for name,v in index['entries'].items():
+            assert name.startswith(('paths/','measure/','sources/')) and '..' not in Path(name).parts
+            p=target/name;p.parent.mkdir(parents=True,exist_ok=True)
+            with z.open(name) as source,p.open('xb') as f:
+                while b:=source.read(1024*1024):f.write(b)
+            assert p.stat().st_size==v['bytes'] and sha(p)==v['sha256']
+    return index
+
+def replay(target):
+    index=extract(target)
+    script=target/'sources/interim/2026-11-19-wet-joint-spatial-convergence'
+    commands=[['measure_c02.py',str(target/'paths'),str(target/'recomputed')],['ablation_c02.py','--mode','measure','--output',str(target/'paths'),'--target',str(target/'recomputed'),'--steps','256'],['ablation_c02.py','--mode','water','--output',str(target/'paths'),'--target',str(target/'recomputed')],['audit_raw_c02.py',str(target/'paths'),str(target/'recomputed')]]
+    for args in commands:
+        r=subprocess.run([sys.executable,'-I','-X','utf8',str(script/args[0])]+args[1:],capture_output=True,text=True)
+        (target/(args[0]+'.log')).write_text(r.stdout+r.stderr);assert r.returncode==0,r.stderr
+    matches=[]
+    for p in sorted((target/'measure').glob('*.json')):
+        q=target/'recomputed'/p.name
+        if not q.exists():continue
+        assert json.loads(p.read_text())==json.loads(q.read_text()),p.name;matches.append(p.name)
+    assert len(matches)==7,matches
+    result=dict(archive_sha256_verified=True,entries_verified=len(index['entries']),sealed_sources_isolated_subprocess=True,recomputed_json_exact=matches,numerical_acceptance=False)
+    write(target/'replay-verification.json',result);print(json.dumps(result),flush=True)
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--mode',choices=['pack','replay'],required=True);p.add_argument('--input',type=Path);p.add_argument('--measure',type=Path);p.add_argument('--output',type=Path);a=p.parse_args()
+    if a.mode=='pack':pack(a.input.resolve(),a.measure.resolve())
+    else:replay(a.output.resolve())
