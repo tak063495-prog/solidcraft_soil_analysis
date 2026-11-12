@@ -123,7 +123,13 @@
     "log": "python-without-powershell.log"
   },
   "windows_compatibility": {
-    "state": "pending",
-    "note_ja": "専用CIでWindows PowerShell 5.1と7の同じ10ケースを実行する。未確認を成功へ転用しない。"
+    "state": "success",
+    "run_id": 43303337672,
+    "result": "windows-compatibility.json",
+    "initial_state": "pending at first push"
+  },
+  "post_linux_changes": {
+    "note_ja": "Linux検証後はCI起動設定だけを修正。ゲート・単体試験・PCスクリプトは検証時と同じSHA。",
+    "workflow_sha256": "743433e3e9a07885da1969cbcf392f20dcd2a3a727a1fcae3044093739ce23eb"
   }
 }

@@ -15,11 +15,11 @@ PR #13、`codex/plastic-spatial-convergence`、起点 `6b746fa05eafaef626d048270
 
 旧コードは `Read-Json` が `Get-Content -Raw -Encoding utf8 | ConvertFrom-Json` をそのまま出力し、呼出し側が `$Samples = @(Read-Json ...); $Samples.Count` としていた。**JSON配列を単一の配列オブジェクトとして出力するシェルでは、外側の `@(...)` の件数は1である。内側の実際の128件を数えず、`$Samples.Count -ne 128` だけで停止する。** JSONの中身が二重配列なのとは異なる。
 
-PowerShell 7.4.6の実測では列挙され、旧式でも128件となった。このため、提示された値だけでPowerShell 7上の停止を再現したとはしない。Windows PowerShell 5.1と7の実機比較には、[同じ旧式と新ゲートを検査するスクリプト](test-rate-arc-gate.ps1)と[専用CI](../../.github/workflows/pc-rate-arc-gate.yml)を追加した。PC-3自身のPowerShell版・生JSONを未取得なので、PC-3の実環境との最終照合はPC側の結果で行う。Windows CIの実測結果は下の検証記録へ追記する。
+Windows実機CIで **5.1.26100.33648は旧式1件、7.6.9は128件、直接代入は両版128件**を確認し、5.1で提示条件に一致する誤拒否を再現した。PowerShell 7.4.6（Linux）でも旧式は128件だった。よって原因は旧ゲートの配列列挙依存であり、生成JSONが入れ子配列だったという意味ではない。提示された値だけで7上の停止を再現したとはしない。PC-3自身のPowerShell版・生JSONは未取得なので、PC-3実環境との最終照合はPC側の結果で行う。[検査スクリプト](test-rate-arc-gate.ps1)と[専用CI](../../.github/workflows/pc-rate-arc-gate.yml)は旧式も実行してこの差を検査する。
 
 |候補|コード・試験から確認したこと|
 |---|---|
-|配列列挙と件数|旧式はシェルの出力列挙に依存する。7.4.6では128。新ゲートはPythonでトップレベル配列を直接数える|
+|配列列挙と件数|旧式は5.1実機で1、7.6.9実機/7.4.6 Linuxで128。新ゲートはPythonでトップレベル配列を直接数える|
 |生成JSONの形式|`independent_arc.py` は `frames=[]` に辞書をappendし `json.dumps` で保存。トップレベル配列と辞書行。実生成1点の試験でも確認|
 |stop_reason|停止なしはPython `None` → JSON null。文字列 `"null"`、空文字、停止文字列は拒否。キー欠落も拒否|
 |passed|生成器はPython `False` → JSON boolean false。欠落・null・数値0・文字列 `"false"` は受入にしない|
@@ -61,4 +61,15 @@ PowerShell 7.4.6の[実測JSON](powershell-7-result.json)は10ケース成功・
 
 初回の既存fold検査は **13 passed / 1 error / 0 skipped**。疎配置で元 `native-evidence.zip` が未配置だったためで、固定HEADの元blobを復元後に14件全件を再実行して成功した。`validation/initial-fold-fixture-error.log` を保持し、初回が成功だったとは記録しない。
 
-Windows PowerShell 5.1/7の専用CIは初回push時点では未確認。実機結果を確認後に追記し、旧先端のCI成功を今回の証拠へ転用しない。
+Windows専用 [CI 43303337672](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43303337672) は**成功**。対象PR先端 `e3c1ca2f2a774e90e78f938502f5f17e958a6be6`、CI用マージコミット `a8d586e6d0b469c51574a5128754b2ebff90f2f6` はGit tree `a8ec73ed776c3ccf283e4ee29d3f6eba65989215` が一致した。`windows-compatibility.json`、版別JSON、`validation/windows-powershell-*.log` に実測を保存した。版別JSONは原ログのタイムスタンプを除いてJSONとして読み直したもので、artifact ZIPの再監査とは区別する。
+
+|Windows実機|旧式件数 / 直接件数|Python単体 passed/failed/skipped|新ゲート10ケース passed/failed/skipped|
+|---|---:|---:|---:|
+|Windows PowerShell 5.1.26100.33648|1 / 128|15 / 0 / 0|10 / 0 / 0|
+|PowerShell 7.6.9|128 / 128|15 / 0 / 0|10 / 0 / 0|
+
+両版でPC-3転記条件は受入、残り9拒否ケースはすべて拒否し、ケース別rc・判定・失敗条件が完全一致した。単体試験内のシェル再呼出しと独立した10ケースの再実行を重複加算しない。物理reportのpassed=falseは維持している。
+
+初回の専用CI起動設定には `shell: ${{ matrix.shell }}` の不正な式があり、[43302939542](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43302939542)・[43303086806](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43303086806) は `Unrecognized named-value: matrix` で起動失敗した。固定pwshから対象の実行ファイルを明示起動する形へ修正後、上記CIで両版が成功した。初回失敗を削除・成功扱いにしない。起動条件も大きいPRでpathsフィルターに依存しない形にした。これらCI定義の変更だけがLinux検証後の実行関連差分で、ゲート・テスト・PCスクリプトのSHAは不変。
+
+既存の全体FEM CIは確認時点でqueuedであり、今回の全件Windows成功とはしない。最終の証拠追記コミットは文書・検証記録だけである。PC-4の大規模数値実行・NC-01/P6完了は引き続き未達。

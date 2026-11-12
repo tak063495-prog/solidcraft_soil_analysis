@@ -13,7 +13,7 @@ if ($LASTEXITCODE -ne 0) { throw 'fetch失敗' }
 $RunHead = (git rev-parse FETCH_HEAD).Trim()
 $RunHead
 # チャット最終報告のpush済みSHAと一致することを確認する。
-git worktree add --detach 'D:\Work\scsa_nc_arc_PC4' $RunHead
+git -c core.autocrlf=false worktree add --detach 'D:\Work\scsa_nc_arc_PC4' $RunHead
 if ($LASTEXITCODE -ne 0) { throw '新worktree作成失敗。既存先を上書きしない' }
 Set-Location 'D:\Work\scsa_nc_arc_PC4'
 if ((git rev-parse HEAD).Trim() -ne $RunHead) { throw 'HEAD不一致' }
@@ -31,7 +31,7 @@ $Runtime = Get-Content -LiteralPath "$Pc3\runtime-command.json" -Raw -Encoding u
 $Py = (Resolve-Path -LiteralPath $Runtime.executable).Path
 ```
 
-`$Pc2` は実際のPC-2出力場所に合わせる。新規 `.venv` が必要な場合のみ、Python 3.13と `requirements-reference.lock.txt` の固定依存で作成し、`$Py` をその実行ファイルへ変更する。新runtimeはPC-4に記録され、PC-3と同じ環境だったという主張にはしない。
+元Gitソースとのバイト照合のため、新worktree作成の呼出しだけ `core.autocrlf=false` を指定する。既存PC-3やグローバルGit設定は変更しない。`$Pc2` は実際のPC-2出力場所に合わせる。新規 `.venv` が必要な場合のみ、Python 3.13と `requirements-reference.lock.txt` の固定依存で作成し、`$Py` をその実行ファイルへ変更する。新runtimeはPC-4に記録され、PC-3と同じ環境だったという主張にはしない。
 
 疎配置の場合、新規2テスト、`tools/nc_pc_gate.py`、新スクリプト、旧arcディレクトリのPython、tools Python、examples JSON、`reference400-fixture.zip`とそのSHA JSONが必要。検査が要求する元ファイルを固定HEADから復元し、省略・別版・ダミー値で通さない。バイナリZIPはPowerShellのテキストpipeで保存しない。浅いcloneで `8342762bd714e33523ce5fef772572699fc21881` が見つからない場合は、その完全SHAを `git fetch origin <完全SHA>` で取得する。検証不能なら停止する。
 
