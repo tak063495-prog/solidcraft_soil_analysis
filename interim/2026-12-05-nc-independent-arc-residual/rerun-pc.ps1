@@ -1,12 +1,21 @@
 ﻿param(
     [string]$Python = '.venv/Scripts/python.exe',
     [string]$Output = 'runs/NEW-nc-fold-confirmation-PC-3',
-    [string]$Pc2 = 'runs/NEW-nc-fold-confirmation-PC-2'
+    [string]$Pc2 = 'runs/NEW-nc-fold-confirmation-PC-2',
+    [string]$ResumeFrom = ''
 )
 $ErrorActionPreference = 'Stop'
 $Repo = (Get-Location).Path
 if (-not (Test-Path 'tools/nc_fold_path.py')) { throw '対象worktreeのルートから実行してください' }
 if (Test-Path $Output) { throw '新しい出力先を指定してください。既存出力を削除/上書きしません' }
+$ResumeRoot = $null
+if ($ResumeFrom) {
+    $ResumeRoot = (Resolve-Path -LiteralPath $ResumeFrom).Path
+    $NewRoot = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Output)
+    if ($NewRoot -eq $ResumeRoot -or $NewRoot.StartsWith($ResumeRoot + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw 'PC-3参照元の内部には出力できません。読み取り専用で保持します'
+    }
+}
 $Py = (Resolve-Path $Python).Path
 $Pc2Root = (Resolve-Path $Pc2).Path
 New-Item -ItemType Directory -Path $Output -ErrorAction Stop | Out-Null
@@ -19,8 +28,12 @@ $Head = (git rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0) { throw 'HEAD取得失敗' }
 $Head | Out-File "$TaskRun/head.txt" -Encoding utf8
 Get-Date -Format o | Out-File "$TaskRun/start.txt" -Encoding utf8
+$PSVersionTable | ConvertTo-Json -Depth 8 | Out-File "$TaskRun/powershell-version.json" -Encoding utf8
+$CurrentStep = 'source-manifest'
+$GateDiagnostic = $null
 $Commands = @()
 function Invoke-Step([string]$Name, [string]$Exe, [string[]]$Arguments) {
+    $script:CurrentStep = $Name
     $Start = Get-Date
     $Record = [ordered]@{ name=$Name; executable=$Exe; arguments=$Arguments; head=$Head; start=$Start.ToString('o'); return_code=$null }
     $Record | ConvertTo-Json -Depth 8 | Out-File "$TaskRun/$Name-command.json" -Encoding utf8
@@ -40,6 +53,11 @@ function Invoke-Step([string]$Name, [string]$Exe, [string[]]$Arguments) {
 }
 function Read-Json([string]$Path) {
     Get-Content -LiteralPath $Path -Raw -Encoding utf8 | ConvertFrom-Json
+}
+function Write-NewJson([string]$Path, $Value) {
+    $Bytes = [System.Text.UTF8Encoding]::new($false).GetBytes(($Value | ConvertTo-Json -Depth 16))
+    $Stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write)
+    try { $Stream.Write($Bytes, 0, $Bytes.Length) } finally { $Stream.Dispose() }
 }
 function Assert-PathCount([string]$Path, [int]$Count) {
     $Report = Read-Json "$Path/report.json"
@@ -61,18 +79,30 @@ try {
     Invoke-Step 'runtime' $Py @('-c','import sys,numpy,scipy,platform; print(sys.version); print(numpy.__version__,scipy.__version__); print(platform.platform())')
     Invoke-Step 'build' 'cargo' @('build','--locked','--release')
     Invoke-Step 'focused-tests' $Py @('-m','unittest','discover','-s','tests','-p','test_nc_independent_arc_residual.py','-v')
+    Invoke-Step 'gate-tests' $Py @('-m','unittest','discover','-s','tests','-p','test_nc_pc_gate.py','-v')
+    if ($ResumeRoot) {
+        $GateDiagnostic = "$TaskRun/pc3-reuse-validation.json"
+        Invoke-Step 'pc3-reuse-validation' $Py @('tools/nc_pc_gate.py','--resume-from',$ResumeRoot,'--repo',$Repo,'--output',$GateDiagnostic)
+        $GateDiagnostic = $null
+    }
     $Reports = @($NativeReports)
     foreach ($Steps in @(400,800)) {
         $Ref = "$TaskRun/reference$Steps"; $Arc = "$TaskRun/rate-arc$Steps"
-        Invoke-Step "reference$Steps" $Py @('tools/low_preload_nc_reference.py','--output',$Ref,'--steps',"$Steps",'--method','rk4','--budget-seconds','7200')
+        if ($ResumeRoot -and $Steps -eq 400) {
+            $Ref = "$ResumeRoot/reference400"; $Arc = "$ResumeRoot/rate-arc400"
+        } else {
+            Invoke-Step "reference$Steps" $Py @('tools/low_preload_nc_reference.py','--output',$Ref,'--steps',"$Steps",'--method','rk4','--budget-seconds','7200')
+        }
         $Reference = Read-Json "$Ref/reference.json"
         # The old reference stiffness gate normally stops the input-only history.
         # Its last accepted excavate_upper state, not rc=0, is the required seed.
         if ($Reference.last_accepted.name -ne 'excavate_upper') { throw "reference$Steps に必要な撤去起点なし" }
-        Invoke-Step "rate-arc$Steps" $Py @('interim/2026-11-09-nc-pseudo-arclength/independent_arc.py','--reference',$Ref,'--output',$Arc,'--step-size','0.00002','--count','128')
-        $Rate = Read-Json "$Arc/report.json"
-        $Samples = @(Read-Json "$Arc/samples.json")
-        if ($Rate.equilibrium_samples -ne 128 -or $Samples.Count -ne 128 -or $null -ne $Rate.stop_reason -or $Rate.maximum_bordered_true_linear_residual -gt 1e-10 -or $Rate.passed -ne $false) { throw "rate-arc$Steps 不足/残差超過/停止。失敗を保存" }
+        if (-not ($ResumeRoot -and $Steps -eq 400)) {
+            Invoke-Step "rate-arc$Steps" $Py @('interim/2026-11-09-nc-pseudo-arclength/independent_arc.py','--reference',$Ref,'--output',$Arc,'--step-size','0.00002','--count','128')
+        }
+        $GateDiagnostic = "$TaskRun/rate-arc$Steps-gate.json"
+        Invoke-Step "rate-arc$Steps-gate" $Py @('tools/nc_pc_gate.py','--arc',$Arc,'--output',$GateDiagnostic)
+        $GateDiagnostic = $null
         foreach ($Spec in @(@('coarse','0.00002',64,4),@('fine','0.00001',128,4),@('material8','0.00002',64,8))) {
             $Name = "independent$Steps-$($Spec[0])"; $PathOut = "$TaskRun/$Name"
             Invoke-Step $Name $Py @('tools/nc_fold_path.py','--map','independent','--reference',$Ref,'--arc',$Arc,'--step-size',"$($Spec[1])",'--count',"$($Spec[2])",'--material-steps',"$($Spec[3])",'--budget-seconds','1800','--output',$PathOut)
@@ -113,9 +143,21 @@ print(json.dumps(dict(all_saved_fields_gp_tangents_actual_systems_and_terminal_c
     if ($Comparison.passed -ne $false -or $Comparison.nc01_complete -ne $false) { throw '比較の未達フラグを維持してください' }
     $ManifestAfter = @($NativeReports | ForEach-Object { (Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash.ToLowerInvariant() })
     for ($I=0; $I -lt $Manifest.Count; $I++) { if ($Manifest[$I].sha256 -ne $ManifestAfter[$I]) { throw 'PC-2元監査が変化' } }
+    if ($ResumeRoot) {
+        $GateDiagnostic = "$TaskRun/pc3-reuse-after.json"
+        Invoke-Step 'pc3-reuse-after' $Py @('tools/nc_pc_gate.py','--verify-reuse',"$TaskRun/pc3-reuse-validation.json",'--output',$GateDiagnostic)
+        $GateDiagnostic = $null
+    }
     'Bounded procedures finished; passed=false, NC-01 incomplete. Review every verdict and field comparison.' | Out-File "$TaskRun/procedure-ended.txt" -Encoding utf8
 } catch {
-    [ordered]@{passed=$false; nc01_complete=$false; stop_reason=$_.ToString(); head=$Head; time=(Get-Date).ToString('o')} | ConvertTo-Json -Depth 8 | Out-File "$TaskRun/pc3-failure.json" -Encoding utf8
+    $Failure = [ordered]@{passed=$false; nc01_complete=$false; p6_complete=$false; stop_reason=$_.ToString(); failure_stage=$CurrentStep; head=$Head; time=(Get-Date).ToString('o')}
+    if ($GateDiagnostic -and (Test-Path -LiteralPath $GateDiagnostic)) {
+        $Failure.gate_diagnostic_path = $GateDiagnostic
+        $Failure.gate_diagnostic = Read-Json $GateDiagnostic
+        $Failure.failed_conditions = $Failure.gate_diagnostic.failures
+    }
+    $FailureName = if ($ResumeRoot) { 'pc4-failure.json' } else { 'pc3-failure.json' }
+    Write-NewJson "$TaskRun/$FailureName" $Failure
     throw
 } finally {
     Get-Date -Format o | Out-File "$TaskRun/end.txt" -Encoding utf8
