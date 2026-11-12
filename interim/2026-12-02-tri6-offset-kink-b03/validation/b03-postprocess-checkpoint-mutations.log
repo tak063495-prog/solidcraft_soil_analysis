@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-02-tri6-offset-kink-b03/checkpoint_mutations.py", line 42, in <module>
+    p=argparse.ArgumentParser();p.add_argument('formal',type=Path);p.add_argument('output',type=Path);a=p.parse_args();run(a.formal.resolve(),a.output.resolve())
+                                                                                                                       ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-02-tri6-offset-kink-b03/checkpoint_mutations.py", line 36, in run
+    trial('saved-case-normal-e-pair',both)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-02-tri6-offset-kink-b03/checkpoint_mutations.py", line 16, in trial
+    f=out/name/label;f.mkdir(parents=True);bad=copy.deepcopy(original);fn(bad);write(f/'changed.json',bad)
+                                                                       ~~^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-02-tri6-offset-kink-b03/checkpoint_mutations.py", line 35, in both
+    normal(x);p=x['run']['case']['beam_system']['plates'][0];p['attachment_offset_m']=-p['attachment_offset_m']
+                                                                                       ~^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'attachment_offset_m'
