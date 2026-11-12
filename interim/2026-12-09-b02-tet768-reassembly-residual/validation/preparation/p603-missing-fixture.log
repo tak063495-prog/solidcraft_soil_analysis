@@ -1,0 +1,463 @@
+test_boolean_failure_cannot_be_replaced_by_zero (test_audit.P603AuditTests.test_boolean_failure_cannot_be_replaced_by_zero) ... ERROR
+test_ci_cannot_be_invented (test_audit.P603AuditTests.test_ci_cannot_be_invented) ... ERROR
+test_duplicate_target_rejected (test_audit.P603AuditTests.test_duplicate_target_rejected) ... ERROR
+test_estimate_cannot_accept_tet4 (test_audit.P603AuditTests.test_estimate_cannot_accept_tet4) ... ERROR
+test_exact_files_and_original_audit (test_audit.P603AuditTests.test_exact_files_and_original_audit) ... ERROR
+test_historical_unexecuted_preserved (test_audit.P603AuditTests.test_historical_unexecuted_preserved) ... ERROR
+test_indeterminate_scope_not_broadened (test_audit.P603AuditTests.test_indeterminate_scope_not_broadened) ... ERROR
+test_later_appendix_mutation_rejected_by_previous_audit (test_audit.P603AuditTests.test_later_appendix_mutation_rejected_by_previous_audit) ... ok
+test_legacy_monitor_cannot_be_replaced (test_audit.P603AuditTests.test_legacy_monitor_cannot_be_replaced) ... ERROR
+test_missing_ledger_row_rejected (test_audit.P603AuditTests.test_missing_ledger_row_rejected) ... ERROR
+test_old_rain_failure_cannot_be_deleted (test_audit.P603AuditTests.test_old_rain_failure_cannot_be_deleted) ... ERROR
+test_overall_completion_rejected (test_audit.P603AuditTests.test_overall_completion_rejected) ... ERROR
+test_pc_requirement_not_removed (test_audit.P603AuditTests.test_pc_requirement_not_removed) ... ERROR
+test_pile_difference_is_not_exact_error (test_audit.P603AuditTests.test_pile_difference_is_not_exact_error) ... ERROR
+test_rain_false_cannot_be_replaced (test_audit.P603AuditTests.test_rain_false_cannot_be_replaced) ... ERROR
+test_rain_strict_operator_preserved (test_audit.P603AuditTests.test_rain_strict_operator_preserved) ... ERROR
+test_rain_threshold_cannot_be_relaxed (test_audit.P603AuditTests.test_rain_threshold_cannot_be_relaxed) ... ERROR
+test_status_and_previous_ledger_agree (test_audit.P603AuditTests.test_status_and_previous_ledger_agree) ... ERROR
+test_table_matches_json (test_audit.P603AuditTests.test_table_matches_json) ... ok
+
+======================================================================
+ERROR: test_boolean_failure_cannot_be_replaced_by_zero (test_audit.P603AuditTests.test_boolean_failure_cannot_be_replaced_by_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 27, in test_boolean_failure_cannot_be_replaced_by_zero
+    self.assertIn('RAIN_ORIGINAL:1',self.codes())
+                                    ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_ci_cannot_be_invented (test_audit.P603AuditTests.test_ci_cannot_be_invented)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 43, in test_ci_cannot_be_invented
+    self.s['windows_ci']['success_claimed']=True;self.assertIn('CI_NOT_CONFIRMED',self.codes())
+                                                                                  ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_duplicate_target_rejected (test_audit.P603AuditTests.test_duplicate_target_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 39, in test_duplicate_target_rejected
+    self.s['rows'][1]=copy.deepcopy(self.s['rows'][0]);self.assertIn('COVERAGE',self.codes())
+                                                                                ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_estimate_cannot_accept_tet4 (test_audit.P603AuditTests.test_estimate_cannot_accept_tet4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 20, in test_estimate_cannot_accept_tet4
+    self.s['original_mc_column']['estimate_accepts_tet4']=True;self.assertIn('MC_SEPARATION',self.codes())
+                                                                                             ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_exact_files_and_original_audit (test_audit.P603AuditTests.test_exact_files_and_original_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 50, in test_exact_files_and_original_audit
+    def test_exact_files_and_original_audit(self):self.assertTrue(audit.audit()['integrity_ok'],audit.audit()['errors'])
+                                                                  ~~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_historical_unexecuted_preserved (test_audit.P603AuditTests.test_historical_unexecuted_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 41, in test_historical_unexecuted_preserved
+    self.s['historical_python']['p601_unexecuted']=0;self.assertIn('HISTORICAL_COUNTS',self.codes())
+                                                                                       ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_indeterminate_scope_not_broadened (test_audit.P603AuditTests.test_indeterminate_scope_not_broadened)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 35, in test_indeterminate_scope_not_broadened
+    self.s['rows'][1]['state']='限定受入';self.assertIn('ROW_STATE:extrusion-stress',self.codes())
+                                                                                     ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_legacy_monitor_cannot_be_replaced (test_audit.P603AuditTests.test_legacy_monitor_cannot_be_replaced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 49, in test_legacy_monitor_cannot_be_replaced
+    self.assertIn('REFERENCE_LEGACY_ROWS',self.codes())
+                                          ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_missing_ledger_row_rejected (test_audit.P603AuditTests.test_missing_ledger_row_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 33, in test_missing_ledger_row_rejected
+    self.s['rows'][0]['ledger'].append('missing');self.assertIn('P601_ROW:missing',self.codes())
+                                                                                   ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_old_rain_failure_cannot_be_deleted (test_audit.P603AuditTests.test_old_rain_failure_cannot_be_deleted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 22, in test_old_rain_failure_cannot_be_deleted
+    self.s['old_rainfall_five'].pop();self.assertIn('RAIN_COUNT',self.codes())
+                                                                 ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_overall_completion_rejected (test_audit.P603AuditTests.test_overall_completion_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 18, in test_overall_completion_rejected
+    self.s['p6_03_complete']=True;self.assertIn('COMPLETION:p6_03_complete',self.codes())
+                                                                            ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_pc_requirement_not_removed (test_audit.P603AuditTests.test_pc_requirement_not_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 37, in test_pc_requirement_not_removed
+    self.s['rows'][1]['pc']='';self.assertIn('PC:extrusion-stress',self.codes())
+                                                                   ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_pile_difference_is_not_exact_error (test_audit.P603AuditTests.test_pile_difference_is_not_exact_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 46, in test_pile_difference_is_not_exact_error
+    self.assertIn('PILE_METRICS',self.codes())
+                                 ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_rain_false_cannot_be_replaced (test_audit.P603AuditTests.test_rain_false_cannot_be_replaced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 31, in test_rain_false_cannot_be_replaced
+    self.s['old_rainfall_five'][0]['passed']=True;self.assertIn('RAIN_ORIGINAL:1',self.codes())
+                                                                                  ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_rain_strict_operator_preserved (test_audit.P603AuditTests.test_rain_strict_operator_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 29, in test_rain_strict_operator_preserved
+    self.s['old_rainfall_five'][0]['operator']='<=';self.assertIn('RAIN_ORIGINAL:1',self.codes())
+                                                                                    ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_rain_threshold_cannot_be_relaxed (test_audit.P603AuditTests.test_rain_threshold_cannot_be_relaxed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 24, in test_rain_threshold_cannot_be_relaxed
+    self.s['old_rainfall_five'][0]['upper_bound']=.005;self.assertIn('RAIN_ORIGINAL:1',self.codes())
+                                                                                       ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+======================================================================
+ERROR: test_status_and_previous_ledger_agree (test_audit.P603AuditTests.test_status_and_previous_ledger_agree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 16, in test_status_and_previous_ledger_agree
+    def test_status_and_previous_ledger_agree(self):self.assertEqual(self.codes(),[])
+                                                                     ~~~~~~~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/test_audit.py", line 15, in codes
+    def codes(self):return audit.audit(self.s,verify_files=False)['errors']
+                           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 37, in audit
+    oldledger=read(ROOT/'interim/2026-12-06-p6-01-status-reconciliation/ledger.json')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py", line 19, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-06-p6-01-status-reconciliation/ledger.json'
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.071s
+
+FAILED (errors=17)

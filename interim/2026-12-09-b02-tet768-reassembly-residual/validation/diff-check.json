@@ -1,0 +1,15 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check"
+  ],
+  "exit_code": 2,
+  "observations": [
+    "reference_probe.py: final blank line in byte-retained executed source",
+    "validation/rust/rust-doc.log: final blank line in original raw log",
+    "validation/rust/rust-test.log: final blank line in original raw log"
+  ],
+  "policy": "Raw logs and executed source bytes retained; separate from requested successful rustfmt/clippy/build and test outcomes."
+}
