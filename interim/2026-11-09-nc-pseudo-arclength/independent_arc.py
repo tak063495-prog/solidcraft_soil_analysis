@@ -6,7 +6,7 @@ events are the existing independent rate equations. The bordered tangent fixes
 orientation and normalizes arc speed in (u, 1 m * lambda). This is a rate trace,
 not a production equilibrium corrector or a thermodynamic stability certificate.
 """
-import argparse,json,sys,time
+import argparse,json,sys,time,math
 from pathlib import Path
 import numpy as np
 from scipy.linalg import lu_factor, lu_solve
@@ -21,15 +21,27 @@ from verify_high_order import physical
 def read(p):return json.loads(p.read_text())
 def write(p,v):p.write_text(json.dumps(v,indent=2,allow_nan=False)+'\n')
 
+def correction_precision():
+    if np.finfo(np.longdouble).eps < np.finfo(float).eps:return 'longdouble'
+    if callable(getattr(math,'sumprod',None)):return 'sumprod_extended'
+    return 'decimal50'
+
+
 def correction_residual(matrix, solution, rhs):
     """Extra precision for corrections only; the acceptance norm stays float64.
 
-    Windows longdouble can equal double. Decimal then provides the same purpose
-    without relying on a platform-specific LAPACK extended-precision solver.
+    Windows longdouble can equal double. Python 3.12+ sumprod uses extended
+    precision products/sums there. Decimal covers older Python versions.
     """
-    if np.finfo(np.longdouble).eps < np.finfo(float).eps:
+    backend=correction_precision()
+    if backend=='longdouble':
         return np.asarray(rhs.astype(np.longdouble) -
                           matrix.astype(np.longdouble) @ solution.astype(np.longdouble), dtype=float)
+    if backend=='sumprod_extended':
+        vector=solution.tolist()+[1.]
+        # Include -b in the dot product so cancellation at the constraint row
+        # is also evaluated with sumprod's extended intermediate precision.
+        return -np.array([math.sumprod(row.tolist()+[-float(b)],vector) for row,b in zip(matrix,rhs)])
     with localcontext() as context:
         context.prec = 50
         dx = [Decimal.from_float(float(x)) for x in solution]
@@ -79,7 +91,7 @@ def solve_bordered(matrix, rhs):
         pivot_swaps=int(np.sum(pivots != np.arange(len(pivots)))),
         minimum_abs_u_pivot=float(np.min(np.abs(np.diag(factor)))),
         maximum_abs_u_pivot=float(np.max(np.abs(np.diag(factor)))),
-        correction_precision=('longdouble' if np.finfo(np.longdouble).eps < np.finfo(float).eps else 'decimal50'),
+        correction_precision=correction_precision(),
         acceptance_norm='original float64 norm(A @ x - b, 2) / max(norm(b, 2), 1e-30)')
     return best, diagnostics
 

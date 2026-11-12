@@ -47,12 +47,16 @@ class IndependentArcResidual(unittest.TestCase):
         a, b = self.matrix()
         with patch.object(arc.np, 'longdouble', np.float64):
             x, diagnostics = arc.solve_bordered(a, b)
-        self.assertEqual(diagnostics['correction_precision'], 'decimal50')
+        self.assertIn(diagnostics['correction_precision'], ('sumprod_extended','decimal50'))
         self.assertLessEqual(float(np.linalg.norm(a@x-b)/np.linalg.norm(b)), 1e-10)
         # The correction residual sees cancellation that float64 A@x loses.
         with patch.object(arc.np, 'longdouble', np.float64):
             r = arc.correction_residual(np.array([[1e16, 1., -1e16]]), np.ones(3), np.zeros(1))
         self.assertEqual(r.tolist(), [-1.])
+        with patch.object(arc.np, 'longdouble', np.float64), patch.object(arc.math, 'sumprod', None, create=True):
+            x, diagnostics = arc.solve_bordered(a, b)
+            self.assertEqual(diagnostics['correction_precision'], 'decimal50')
+            self.assertLessEqual(float(np.linalg.norm(a@x-b)/np.linalg.norm(b)), 1e-10)
 
     def test_above_tolerance_is_saved_and_fails_with_zero_samples(self):
         def bad_solve(a, b):
