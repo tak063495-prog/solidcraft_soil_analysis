@@ -1,0 +1,298 @@
+{
+  "contract": "external-rainfall-reference/1",
+  "case_id": "semi-infinite-pulse-receptor",
+  "parameters": {
+    "ks": 0.0001,
+    "alpha": 1.0,
+    "theta_r": 0.08,
+    "theta_s": 0.45,
+    "initial_u": 0.2,
+    "length": 4.0,
+    "pulse_jumps": [
+      [
+        0.0,
+        2e-05
+      ],
+      [
+        300.0,
+        -2e-05
+      ]
+    ],
+    "specific_yield": 0.2,
+    "receptor_initial_level_m": 0.2,
+    "recharge_depth_m": 0.5,
+    "receptor_modulus_kpa": 10000.0,
+    "receptor_total_stress_kpa": 50.0
+  },
+  "source_kind": "independent_reference",
+  "complete": true,
+  "clock": "physical_seconds",
+  "event_trace": "right_limit_boundary_continuous_interior",
+  "interpolation": "none",
+  "quantities": {
+    "head": {
+      "unit": "m",
+      "meaning": "total_head",
+      "sign": "elevation_up"
+    },
+    "saturation": {
+      "unit": "1",
+      "meaning": "theta/theta_s",
+      "sign": "nonnegative"
+    },
+    "flux": {
+      "unit": "m/s",
+      "meaning": "instantaneous_Darcy_flux",
+      "sign": "down"
+    },
+    "infiltration": {
+      "unit": "m",
+      "meaning": "cumulative_net_top_infiltration",
+      "sign": "inward"
+    },
+    "effective_stress": {
+      "unit": "kPa",
+      "meaning": "Terzaghi_vertical",
+      "sign": "compression_positive"
+    }
+  },
+  "times_s": [
+    0.0,
+    300.0,
+    600.0
+  ],
+  "locations": {
+    "head": [
+      {
+        "id": "c0",
+        "coordinate_m": 0.125
+      },
+      {
+        "id": "c1",
+        "coordinate_m": 0.375
+      },
+      {
+        "id": "c2",
+        "coordinate_m": 0.625
+      },
+      {
+        "id": "c3",
+        "coordinate_m": 0.875
+      },
+      {
+        "id": "c4",
+        "coordinate_m": 1.125
+      },
+      {
+        "id": "c5",
+        "coordinate_m": 1.375
+      },
+      {
+        "id": "c6",
+        "coordinate_m": 1.625
+      },
+      {
+        "id": "c7",
+        "coordinate_m": 1.875
+      },
+      {
+        "id": "c8",
+        "coordinate_m": 2.125
+      },
+      {
+        "id": "c9",
+        "coordinate_m": 2.375
+      },
+      {
+        "id": "c10",
+        "coordinate_m": 2.625
+      },
+      {
+        "id": "c11",
+        "coordinate_m": 2.875
+      },
+      {
+        "id": "c12",
+        "coordinate_m": 3.125
+      },
+      {
+        "id": "c13",
+        "coordinate_m": 3.375
+      },
+      {
+        "id": "c14",
+        "coordinate_m": 3.625
+      },
+      {
+        "id": "c15",
+        "coordinate_m": 3.875
+      }
+    ],
+    "saturation": [
+      {
+        "id": "c0",
+        "coordinate_m": 0.125
+      },
+      {
+        "id": "c1",
+        "coordinate_m": 0.375
+      },
+      {
+        "id": "c2",
+        "coordinate_m": 0.625
+      },
+      {
+        "id": "c3",
+        "coordinate_m": 0.875
+      },
+      {
+        "id": "c4",
+        "coordinate_m": 1.125
+      },
+      {
+        "id": "c5",
+        "coordinate_m": 1.375
+      },
+      {
+        "id": "c6",
+        "coordinate_m": 1.625
+      },
+      {
+        "id": "c7",
+        "coordinate_m": 1.875
+      },
+      {
+        "id": "c8",
+        "coordinate_m": 2.125
+      },
+      {
+        "id": "c9",
+        "coordinate_m": 2.375
+      },
+      {
+        "id": "c10",
+        "coordinate_m": 2.625
+      },
+      {
+        "id": "c11",
+        "coordinate_m": 2.875
+      },
+      {
+        "id": "c12",
+        "coordinate_m": 3.125
+      },
+      {
+        "id": "c13",
+        "coordinate_m": 3.375
+      },
+      {
+        "id": "c14",
+        "coordinate_m": 3.625
+      },
+      {
+        "id": "c15",
+        "coordinate_m": 3.875
+      }
+    ],
+    "flux": [
+      {
+        "id": "f0",
+        "coordinate_m": 0.0
+      },
+      {
+        "id": "f1",
+        "coordinate_m": 0.25
+      },
+      {
+        "id": "f2",
+        "coordinate_m": 0.5
+      },
+      {
+        "id": "f3",
+        "coordinate_m": 0.75
+      },
+      {
+        "id": "f4",
+        "coordinate_m": 1.0
+      },
+      {
+        "id": "f5",
+        "coordinate_m": 1.25
+      },
+      {
+        "id": "f6",
+        "coordinate_m": 1.5
+      },
+      {
+        "id": "f7",
+        "coordinate_m": 1.75
+      },
+      {
+        "id": "f8",
+        "coordinate_m": 2.0
+      },
+      {
+        "id": "f9",
+        "coordinate_m": 2.25
+      },
+      {
+        "id": "f10",
+        "coordinate_m": 2.5
+      },
+      {
+        "id": "f11",
+        "coordinate_m": 2.75
+      },
+      {
+        "id": "f12",
+        "coordinate_m": 3.0
+      },
+      {
+        "id": "f13",
+        "coordinate_m": 3.25
+      },
+      {
+        "id": "f14",
+        "coordinate_m": 3.5
+      },
+      {
+        "id": "f15",
+        "coordinate_m": 3.75
+      },
+      {
+        "id": "f16",
+        "coordinate_m": 4.0
+      }
+    ],
+    "infiltration": [
+      {
+        "id": "top",
+        "coordinate_m": 0.0
+      }
+    ],
+    "effective_stress": [
+      {
+        "id": "r0",
+        "coordinate_m": 0.0
+      },
+      {
+        "id": "r1",
+        "coordinate_m": -0.25
+      },
+      {
+        "id": "r2",
+        "coordinate_m": -0.5
+      },
+      {
+        "id": "r3",
+        "coordinate_m": -0.75
+      },
+      {
+        "id": "r4",
+        "coordinate_m": -1.0
+      }
+    ]
+  },
+  "hydraulic_model": "Gardner_unsaturated_semi_infinite; depth_down; elevation=-depth",
+  "mechanical_model": "one_way_recharge_bucket; receptor_elevation_up; fixed_total_Terzaghi"
+}
