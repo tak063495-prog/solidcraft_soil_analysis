@@ -1,0 +1,114 @@
+{
+  "ledger_path": "interim/2026-12-06-p6-01-status-reconciliation/ledger.json",
+  "ledger_sha256": "a67e4f174ba920f1c3ce5fe3c92fbced9cf6e0f0e86d79e3db92678a70748875",
+  "rows": [
+    {
+      "id": "P3b-05:bounded",
+      "target": "P3b-05",
+      "state": "限定受入",
+      "scope": "単杭/杭列の適用・換算と荷重分担：有限断面1 m角×6 m、完全付着3D単杭。436/819/2279 Tet10の独立弾性全場・界面合力。小さい2メッシュの再開",
+      "reason": "有限断面1 m角×6 m、完全付着3D単杭。436/819/2279 Tet10の独立弾性全場・界面合力。小さい2メッシュの再開。既存記録の範囲の転記であり今回の新受入ではない。",
+      "evidence": [
+        "E009",
+        "E010"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "bounded"
+    },
+    {
+      "id": "P3b-05:remaining",
+      "target": "P3b-05",
+      "state": "未達",
+      "scope": "単杭/杭列の適用・換算と荷重分担：要件全体",
+      "reason": "沈下0.325217→0.348525→0.365780 mm、粗密差6.687→4.717％を保持。先端/周面分担、塑性/すべり、杭列換算・群杭は未受入",
+      "evidence": [
+        "E009",
+        "E010"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "overall"
+    },
+    {
+      "id": "P4c-02:bounded",
+      "target": "P4c-02",
+      "state": "限定受入",
+      "scope": "降雨履歴、休止/再開、湛水/流出、斜面ONE_WAY：旧384/3072/24576 Tet4の5項目未達と元しきい値を保持。後続82944 Tet4/FV64³の29水理ゲート合格は均質立方体・無湛水の別記録",
+      "reason": "旧384/3072/24576 Tet4の5項目未達と元しきい値を保持。後続82944 Tet4/FV64³の29水理ゲート合格は均質立方体・無湛水の別記録。既存記録の範囲の転記であり今回の新受入ではない。",
+      "evidence": [
+        "E021",
+        "E022"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "bounded"
+    },
+    {
+      "id": "P4c-02:remaining",
+      "target": "P4c-02",
+      "state": "未達",
+      "scope": "降雨履歴、休止/再開、湛水/流出、斜面ONE_WAY：要件全体",
+      "reason": "湛水/表面貯留/流出、一般地質・塑性変位・湿潤接触は残る。旧不合格の置換や82944再求解はしない",
+      "evidence": [
+        "E021",
+        "E022"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "overall"
+    },
+    {
+      "id": "STATUS:P6-01:bounded",
+      "target": "STATUS:P6-01",
+      "state": "限定受入",
+      "scope": "全追加モデルの理論/独立3D検証・2D版との一致：部分。各機能の限定検証に、固定領域ONE_WAYの独立3D弾性計算（水頭は受渡し）と独立1D FV＋連続弾性柱を追加。乾燥MCC/Tet4の塑性載除荷・掘削に加え、実斜面Tet10の塑性初期平衡→5 kPa載除荷→局所掘削を独立3D速度形FEMで限定受入（MCC_RATE_FEM.ja.md、MCC_GENERAL_RATE_FEM.ja.md）。有限幅274 Tet10・128板の局所掘削も独立100/200分割・全5工程の原基準と単位別の部材比較に合格した。追加の全体積・工程別増分は1/16→1/32の未達を保持し、後続1/32→1/64が原閾値で合格した。単位別部材比較も合格し、累積底面平均の追加単調半減ゲートの未達は別記録に保持する。任意曲面の塑性・非ゼロ境界、MC/IDH、全構造/接合/水理/SRMの塑性統合は未完。拘束MC柱の2D版実行照合を限定受入し、斜面・施工などの2D比較は残る。平面ひずみ柱の5％判定はPLANE_STRAIN_2D.ja.md。Tet4最細の重力場6.828％は不合格のまま残し、参照なし外挿の1.034％とTet10の合格は、この柱に限る。Griffiths斜面の約15.6％不合格と判定不能は残す。",
+      "reason": "部分。各機能の限定検証に、固定領域ONE_WAYの独立3D弾性計算（水頭は受渡し）と独立1D FV＋連続弾性柱を追加。乾燥MCC/Tet4の塑性載除荷・掘削に加え、実斜面Tet10の塑性初期平衡→5 kPa載除荷→局所掘削を独立3D速度形FEMで限定受入（MCC_RATE_FEM.ja.md、MCC_GENERAL_RATE_FEM.ja.md）。有限幅274 Tet10・128板の局所掘削も独立100/200分割・全5工程の原基準と単位別の部材比較に合格した。追加の全体積・工程別増分は1/16→1/32の未達を保持し、後続1/32→1/64が原閾値で合格した。単位別部材比較も合格し、累積底面平均の追加単調半減ゲートの未達は別記録に保持する。任意曲面の塑性・非ゼロ境界、MC/IDH、全構造/接合/水理/SRMの塑性統合は未完。拘束MC柱の2D版実行照合を限定受入し、斜面・施工などの2D比較は残る。平面ひずみ柱の5％判定はPLANE_STRAIN_2D.ja.md。Tet4最細の重力場6.828％は不合格のまま残し、参照なし外挿の1.034％とTet10の合格は、この柱に限る。Griffiths斜面の約15.6％不合格と判定不能は残す。。既存記録の範囲の転記であり今回の新受入ではない。",
+      "evidence": [
+        "E023"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "bounded"
+    },
+    {
+      "id": "STATUS:P6-02:remaining",
+      "target": "STATUS:P6-02",
+      "state": "未達",
+      "scope": "粗密・時間刻み・奥行き・拘束感度：要件全体",
+      "reason": "空間差18.1664→12.7877→9.9690％、壁を固定した2262→2865で6.368386％、新しい2865→5144で3.387772％。壁440節点832板・断面・荷重を保持し、両者の全5工程と独立K0/pc/e・荷重・撤去履歴・切戻し監査が合格。平均底面隆起6.666585→6.918421 mm。全5工程の節点・板比較を公開用抽出データから完全再現したが、材料履歴全体の再監査や別の非線形独立解ではない。空間収束・奥行き4/6/8 mの境界独立性と一般の時間/拘束感度は未完。平滑問題のh細分と一様応力SRMの区間はSPATIAL_CONVERGENCE.ja.mdに分離し、一般3D空間収束の完了には使わない。",
+      "evidence": [
+        "E024"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "overall"
+    },
+    {
+      "id": "TODO:P6-03:overall",
+      "target": "TODO:P6-03",
+      "state": "未達",
+      "scope": "既存MCC空間差・押出し応力/振動モニター/有限幅奥行き応力の判定不能、杭・降雨等の残件",
+      "reason": "元の物理条件・参照・判定を保持してユーザーPCで系列/独立監査を追加。今回これらの大規模計算を再実行したとはしない",
+      "evidence": [
+        "E044"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc",
+      "scope_kind": "overall"
+    },
+    {
+      "id": "TODO:P6-03:indeterminate",
+      "target": "TODO:P6-03",
+      "state": "判定不能",
+      "scope": "MCC/押出し応力・振動モニター・有限幅奥行き応力",
+      "reason": "元記録の判定不能を保持。不収束・試行上限・有限差・中点を連続解/正確なFsへ変えない。",
+      "evidence": [
+        "E085"
+      ],
+      "completed": false,
+      "next_work": "user_pc",
+      "scope_kind": "bounded"
+    }
+  ]
+}

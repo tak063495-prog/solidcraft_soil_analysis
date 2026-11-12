@@ -84,6 +84,18 @@ def audit(root, ledger, *, verify_git=True):
     listed = {s.get('path') for s in inventory.values()}
     for path in sorted(actual_sources - listed):
         add('SOURCE_NOT_INVENTORIED', path)
+    # Later append-only reconciliation; the historical ledger stays byte-identical.
+    later = {}
+    tail_manifest = root / 'interim/2026-12-07-p6-03-cloud-reconciliation/document-appendices.json'
+    if tail_manifest.exists():
+        raw_tail = tail_manifest.read_bytes()
+        if sha(raw_tail) != 'e82a012789159ef513706ef1377f31f0e5c3548a90aed4ce02f605c3f50207fe':
+            add('LATER_APPENDIX_MANIFEST', 'P6-03追補manifestの厳密SHAが異なる')
+        else:
+            later = json.loads(raw_tail)
+            if set(later) != {DOCS[0], DOCS[2]} or any(not isinstance(t, str) or not t for t in later.values()):
+                add('LATER_APPENDIX_SCOPE', 'P6-03追補の対象/内容が異なる')
+                later = {}
     cache = {}
     for sid, source in inventory.items():
         path = source.get('path', '')
@@ -91,6 +103,12 @@ def audit(root, ledger, *, verify_git=True):
             add('EXTERNAL_SOURCE_SCOPE', '固定Git証拠を外部snapshotへ再分類できない', evidence=[sid])
         try:
             data = safe_path(root, path).read_bytes()
+            if path in later:
+                tail = later[path].encode('utf-8')
+                if not data.endswith(tail):
+                    add('LATER_DOCUMENT_APPENDIX', path, evidence=[sid])
+                else:
+                    data = data[:-len(tail)]
             if source.get('appendix') is not None:
                 appendix = source['appendix'].encode('utf-8')
                 if not data.endswith(appendix):
@@ -134,7 +152,8 @@ def audit(root, ledger, *, verify_git=True):
     for sid, data in cache.items():
         if inventory[sid].get('kind') != 'markdown':
             continue
-        complete_document = data.decode('utf-8') + inventory[sid].get('appendix', '')
+        complete_document = (data.decode('utf-8') + inventory[sid].get('appendix', '')
+                             + later.get(inventory[sid]['path'], ''))
         for lineno, line in enumerate(complete_document.splitlines(), 1):
             # Only the status column of an identified acceptance row; negated/historical prose is not a completion claim.
             if re.search(r'(?:NC-01|P6全体|P3b/P4各行)\s*(?:は|が|[:：])\s*(?:全て|すべて)?(?:完了(?:しました|です|済み)|全体受入済み|全面合格)', line) and not re.search(r'しない|ではない|認定せず|禁止|引用|誤記', line):
