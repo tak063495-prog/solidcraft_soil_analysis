@@ -1,0 +1,66 @@
+[
+  {
+    "number": 13,
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13",
+    "title": "Preserve convergence/Fs evidence and diagnose low-preload NC contact excavation",
+    "head": "codex/plastic-spatial-convergence",
+    "head_sha": "04dd721ab82dd2c044569edf9e0b775b605cf2ef",
+    "state": "open",
+    "draft": false,
+    "merged": false,
+    "read_only": true,
+    "not_merged_or_modified": true
+  },
+  {
+    "number": 29,
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/29",
+    "title": "A-04/C-04: 独立Python Richards湿潤JOINT参照と物理時刻診断（未達維持）",
+    "head": "codex/py-richards-wet-joint-reference",
+    "head_sha": "eae93608bc6bca39d69f77f5a4a9f2e322211c02",
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "body": "現行のRichards＋JOINTは入口で拒否され、接合面の水頭写像・物理秒の開閉/世代・過渡水量の独立比較が不足しています。Rust本体・既存Pythonソルバを呼ばないNumPy/SciPyの小型参照と、将来の出力を厳密に照合する診断器を追加します。**A-04/C-04は未達、連成のaccepted=null。限定受入を宣言せず、draftのままマージしません。**\n\n指定 `79d839e3f89331a82d976efc1f23cbe2c848cbee` の直接の子 **`eae93608bc6bca39d69f77f5a4a9f2e322211c02`** をpushしました。headは `codex/py-richards-wet-joint-reference`、baseは `codex/plastic-spatial-convergence` です。\n\n- 追加は `interim/2026-11-25-py-richards-wet-joint-reference/` の新規45ファイルだけ。既存5,913パスのmode/blobを保持し、配置済み4,954ファイル・7,702,203,002 bytesを元blobと照合して差分0。既存1,059ソースの指紋も全件後に一致しました。疎checkoutで省略した959ファイルは内容再検証済みとはしません。既存ソース・試験・CI・docs・旧interimを変更しません。\n- todoのA-04/C-04、c70fb37のC-04 README/REPRODUCE、関連docsと入力JSONをSHA固定。Ks=.02 m/s、θr=.08、θs=.4117647058823529、α=1.2 /m、n=1.6、Ss=.02 /mと、CONTINUOUS/SOIL/PRESCRIBEDの役割を特定しました。A-04専用全連成入力・過渡SOIL・世代変更時の水頭/水量/初期力移送は未確認として残します。\n- 1D/2Dの保存形FVと接合部水頭未知量を自作。閉鎖時の共通トレース、開口時の有限抵抗・実薄層貯留・両側流量、PRESCRIBED水源の給排水を区別します。VGは1D/2Dとも非飽和域を含み、飽和線形と閉鎖固有モードも対照にします。力学は明示した検証用の外部ばね＋Coulomb接触で、C-04の3Dバルク/剛性入力の再現ではありません。\n- ONE_WAYは外部入力の水理開閉から水→力学だけを渡し、dry/wet力学変更で水理解がビット一致。双方向は力学開口を透水抵抗と貯留へ同時に戻します。1D同一40時刻のモード差RMSは接合Hj **.006430671 m**、a→joint流量 **.000429152 m³/s**、有効接触圧 **.0430669 kPa**。これは明示した二モデルの差の診断です。\n- 小型46経路、最大128セル、最終行列約157秒。接合Hjの共通時刻時間次数 **.931〜.964**、1D格子のセルH次数 **2.070〜2.265**、2D VG/線形 **1.383/2.070**。閉鎖固有モードの固定時間誤差を含む次数 **1.427〜1.871**もそのまま記録。全経路の最大累積水収支欠損 **3.374115e-13 m³**、両側流量・開閉ブラケット・±.0125秒介入の生差を保存しました。最細値や低次数を合格へ加工しません。\n- 将来のCSV/JSON比較器は単位・符号・全水頭種・物理秒・全ID/世代・開閉・連成方式・補間宣言を検査。欠損、黙示補間、進行度時計、ONE_WAY/双方向の取り違え、流量台帳不整合を拒否します。本体schema/exporterは追加しません。既存の流量台帳基準は維持し、全連成の受入許容値は未定義のため差ゼロでもexit 2/accepted=null。人工例を本体比較にしません。\n- 最初の飽和16セルの初期2時刻は流量台帳を最大2.375倍超過し、比較器で拒否しました。許容値を変えず、状態水頭/貯留をlongdoubleで保持する演算に改善。最終46出力は全て同じ台帳/交換契約を満たします。最初のソース・全生値・不適合と型変換不足の開発失敗も別ZIPへ保持。新旧ともA-04/C-04の受入値にしません。\n\n**Linux検証は全件成功ではありません。新規44件成功、既存562件発見・554件成功・8件未実行、setUpClassエラー2件、skip/xfail 0。**\n\n元CIの全562 IDを4群に重複/欠落なく割り当て、全群を実行しました。初回の旧証拠未配置による通常群エラーはログを残し、元blob復元後に該当8モジュール47件を全件再実行して成功。重複成功を加算していません。\n\n旧NC平均応力群は封印ソースで `saved mean-stress/complement partition differs from own history`、空間群は `remeasured JSON differs` として準備失敗し、各4件は未実行です。Linuxのplatform差許容、旧値/式/判定の変更、skip化を行っていません。全IDと各試行のログ・終了コードを保存しました。新規7ソースの検証前後SHA一致。既存CLIのlocked release buildは成功、Rust全試験/fmt/clippyと新先端Windows CIは今回の成功として主張しません。\n\n全46生JSONを損失なくZIP化し、CRC/SHAを再読込検証。C-04の既存数値・passed=false・カテゴリ不一致はそのまま診断に引用しました。SOIL過渡、双方向PRESCRIBED起動、世代変更、一般3Dバルク有効応力/水荷重、本体実比較は残件です。NC-01・P6等も未達を維持します。#16〜#27、杭参照、PR #13のNC修正へ変更・取込みを行いません。\n\nWindows PCの具体的コマンド・想定時間・出力・原基準/未定義の扱い・WSL精度差・長系列/3Dの未対応範囲はREPRODUCEに記載。新規の重い系列/3Dはクラウドで実行せず、旧成功・時間切れ・キャンセルを新CI成功へ転用しません。\n\n[出典・式・全結果・未達](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/eae93608bc6bca39d69f77f5a4a9f2e322211c02/interim/2026-11-25-py-richards-wet-joint-reference/README.ja.md) / [Windows再現](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/eae93608bc6bca39d69f77f5a4a9f2e322211c02/interim/2026-11-25-py-richards-wet-joint-reference/REPRODUCE.ja.md) / [試験全件の集計](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/eae93608bc6bca39d69f77f5a4a9f2e322211c02/interim/2026-11-25-py-richards-wet-joint-reference/results/validation/validation.json)\n",
+    "read_only": true,
+    "not_merged_or_modified": true
+  },
+  {
+    "number": 19,
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/19",
+    "title": "独立Python過渡水理参照と誤差分離診断を追加（C-04/A-04は未達）",
+    "head": "codex/py-transient-water-reference",
+    "head_sha": "dafd0371b63d52846b63d90a1869fcdc3f691208",
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "body": "変動水位・Richards湿潤JOINTの将来検証に使う、Rust・既存Pythonソルバを呼ばないNumPy/SciPy参照と診断を追加します。**C-04・A-04・NC-01・P6は未達のままです。** 固定静水圧の結果を過渡結合へ転用しません。\n\n指定起点 `2d2d54c48070581d088959b52984ceb348e0e85e` の直接の子 `dafd0371b63d52846b63d90a1869fcdc3f691208`。baseは `codex/plastic-spatial-convergence`、headは `codex/py-transient-water-reference`。マージしません。\n\n- 変更は `interim/2026-11-19-py-transient-water-reference/` 内の新規29ファイルだけです。既存ソース・テスト・CI・P6_STATUS・既存interimの変更は0件。\n- Terzaghi単排水、正弦境界水頭による固定領域の線形過渡拡散、Srivastava–Yeh均質指数型Richards問題の半解析級数を用意しました。Richardsは境界問題から再導出し、原論文(10)/(11)との整合、独立投影積分、元のPDE・連続収支で検査。原論文の最終級数式(12)全文の直接照合、二層版・掲載図の数値一致は「未確認」と明記し、推測転記していません。\n- 数値側はセル中心の保存形FD/FV。Richardsは圧力水頭と実際の含水貯留差を使う非線形Newtonで、解析側のU線形化を流用しません。固定空間で時間系列、時間誤差を制御した空間系列を分離し、水頭・面流束のRMS/最大差・次数と流入出/貯留を出力します。\n\n|参照|水頭の時間次数 / 空間次数|全系列の最大収支欠損 m|\n|---|---|---|\n|Terzaghi|1.001409 / 2.000408|5.50775e-17|\n|変動水位|0.995734 / 2.000589|6.24500e-16|\n|Richards指数型|0.994664 / 1.999308|3.43779e-12|\n\nCSV/JSON比較器は単位・水頭種・符号・瞬時流束・完了状態を検査し、水理誤差と質量収支を別欄に保存します。Terzaghi線形1Dのみ、力学経路・水頭誤差の伝播・標本積分誤差を分離。Richards/湿潤JOINTの独立3D力学は未評価です。本体比較の許容値は既存文書に適用定義がないため「未定義」、`accepted=null`、正常な診断書出力はexit 2です。人工例を本体の証拠にしません。\n\nLinuxで既存532件（530＋tools 2）と新規24件、**計556件が成功、失敗・エラー・skip・expected failure・unexpected successは0**。既存CLIのlocked release buildも成功。新規試験は `checks.py` の明示起動で、既存収集/CI件数を変えません。初回の取得未完了アーカイブによる6/1エラーのログも保持し、原Git blob取得完了後に通常2群を全件再実行しました。保存証拠2群は歴史的データの再計測であり、NCの数値受入へ転用しません。\n\nWindows用の具体的なコマンド・想定時間・出力・判定をREPRODUCEへ記載。PC用の大きめの新規系列・本体出力の実比較・新規の大規模/長時間結合求解はクラウドで実行していません。新先端Windows CIの成否は未確認で、Linux成功・旧CI成功・キャンセルを新CI成功にしません。\n\n[出典・式・限定範囲・全計測](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/dafd0371b63d52846b63d90a1869fcdc3f691208/interim/2026-11-19-py-transient-water-reference/README.ja.md) ／ [Windows再現手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/dafd0371b63d52846b63d90a1869fcdc3f691208/interim/2026-11-19-py-transient-water-reference/REPRODUCE.ja.md) ／ [全試験・同一性](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/dafd0371b63d52846b63d90a1869fcdc3f691208/interim/2026-11-19-py-transient-water-reference/results/validation.json)\n",
+    "read_only": true,
+    "not_merged_or_modified": true
+  },
+  {
+    "number": 17,
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/17",
+    "title": "C-01/C-02: 独立Python湿潤JOINT参照と収束診断（未達維持）",
+    "head": "codex/py-wetjoint-reference",
+    "head_sha": "8cd03fb8cae10f7d80224b45daffe8ace5d47619",
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "body": "湿潤JOINTの荷重刻み細分化で塑性すべりL2が再増加するため、Rust本体・既存Pythonソルバを呼ばない入力のみのNumPy/SciPy参照器と、荷重・空間系列を分離する比較/診断を追加します。C-01/C-02の全履歴精度は未認定、`passed=false`を維持します。\n\n- 指定 `5f564621c7396c2a605edbfe5451cd800cf318d3` の直接の子。追加のみで、既存5,417追跡ファイル、ソース・試験・CI・`docs/P6_STATUS.ja.md`・旧interimは変更しません。新規package初期化により、CI設定を変えずに新規試験も既存分類器が発見します。\n- 12/96 Tet10の参照、本体6経路・1,568受理点を比較。12要素64増分の本体対参照L2は変位1.35e-6、traction4.91e-5、塑性すべり3.46e-5。接触分割戦略の違いも含む比較です。参照の16/32/64/128差は0.676269→0.0366225→0.0742590、観測次数−1.088299で、旧記録を再現します。\n- 原因候補は開口に至る全体平衡経路と履歴蓄積。接触内8/16/32差は約1e-5、固定静水圧・水荷重の時間変化は0、力基準1e-10→1e-11の影響は約2.15e-11。原因の確定・本体の修正は行いません。2空間水準から次数を認定しません。\n- 新規側の小さい右辺の線形検査を真の相対残差へ厳格化（閾値1e-10は維持）。11参照経路・4,480受理点を再求解して全行・全場がビット一致し、最大の真の線形相対残差1.36e-14を確認しました。初回ソース/ログも保持します。\n- 最終Linux Python **545件（既存512＋追加33）**、失敗/error/skip/expected-failure/unexpected-success 0。発見/実行IDの欠落・重複0、固定1,110ソースの試験前後SHA一致。CLIと既存examplesのlocked release buildも成功。Windows CI成功は未主張です。\n- 13分割・125エントリーの証拠を全SHA照合し、展開後の荷重/空間/本体比較も再計測して一致。大きいメッシュ・256増分以上は実行せず、Windows PC用コマンド・時間予算・出力・合否基準をREPRODUCEへ記載しました。\n\n結果・数値表: `interim/2026-11-18-py-wetjoint-reference/README.ja.md`\n再現: `interim/2026-11-18-py-wetjoint-reference/REPRODUCE.ja.md`\n正式検証: `interim/2026-11-18-py-wetjoint-reference/validation.json`\n\nNC-01・P6および一般塑性/点ごとの空間収束は未達を維持します。許容値緩和、旧参照値の上書き、過去の失敗削除、未完了・時間切れ・キャンセルの成功扱いはしません。draftのまま、マージしません。\n",
+    "read_only": true,
+    "not_merged_or_modified": true
+  },
+  {
+    "number": 16,
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/16",
+    "title": "未達TODOの先行受入試験（strict xfail・新規追加のみ）",
+    "head": "codex/acceptance-tests-todo",
+    "head_sha": "2d24213d2a5e506da642bef54d95985cdef6648f",
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "body": "`todo.ja.md` の未達項目に対し、定義済みの受入基準を先にPython試験へ固定します。指定コミット `5f564621c7396c2a605edbfe5451cd800cf318d3` を親とし、既存ファイル5417パスのmode/blob IDを保持した追加のみの変更です。\n\n- `tests/acceptance_todo/` に71件を追加。34 pass / 37 strict xfail / skip・FAIL・ERROR・XPASS 0。既知の機能範囲拒否だけをxfailにし、入力エラー・不収束・タイムアウトは通常失敗にします。\n- 静水圧の全節点荷重/仕事、Darcy、飽和Richardsの小型参照、曲面Tri6の6剛体モード、オフセット板の解析解を用意。乾燥の複数先端JOINTは独立2組の全場参照、オフセット＋水はGL125による全場参照と既存方式のe=0極限で検査します。\n- Linuxで既存Python全512件（tests 510＋tools 2、NC証拠各4を含む）も完走。失敗・エラー・skip 0。追加前後の全512 IDとCIの4群割当（270/234/4/4）は完全一致。\n- `interim/2026-11-18-acceptance-tests/` に対応表、xfail理由、固定基準、小型参照値、Windows再現手順、未定義/未試験の範囲、全件ログと機械可読集計を保存。\n\nA-02/B-03の成功仕様、非ゼロDarcy勾配のBIRTH初期化、Richards双方向/開閉/世代、古典殻の固定入力・参照・許容差などは創作せず明記しています。相互作用する複数JOINTやB-02の水以外の複合には残る未試験範囲があります。A-02/B-03は現行拒否を維持する試験です。\n\n既存ソース・テスト・CI・`docs/P6_STATUS.ja.md`・既存interimフォルダーは変更していません。許容値・過去参照値・失敗記録は保持し、NC-01/P6等を完了にしません。大規模メッシュ・長系列の新規解析はクラウドで実行していません。Windows CIは未確認で、時間切れ・キャンセルを成功と扱いません。\n\n検証詳細: `interim/2026-11-18-acceptance-tests/validation.json`。新旧合計583件＝546 pass＋37 xfail。PRはdraftのままとし、マージしません。",
+    "read_only": true,
+    "not_merged_or_modified": true
+  }
+]
