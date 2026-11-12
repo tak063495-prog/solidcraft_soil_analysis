@@ -110,7 +110,8 @@ impl Checkpoint {
                 "checkpoint history/load checksum mismatch".into(),
             ));
         }
-        if case.has_offset_plates()
+        if case.settings.linear_solver.uses_ilut()
+            || case.has_offset_plates()
             || case
                 .joint_system
                 .as_ref()
