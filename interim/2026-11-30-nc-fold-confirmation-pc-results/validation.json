@@ -1,0 +1,142 @@
+{
+  "schema": "nc-fold-confirmation-linux-validation/1",
+  "recorded_at_utc": "2026-11-12T03:39:58.459912+00:00",
+  "source_head": "e6e4e735495951661bcc7b1d72168c14866597b6",
+  "numerical_tool_test_sources_unchanged": true,
+  "current_source_files_rechecked": 577,
+  "environment": {
+    "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "rust_test_threads": "1",
+    "blas_threads": "1",
+    "cargo_build_jobs": "2"
+  },
+  "rust_and_format_checks": {
+    "fmt": {
+      "command": "cargo fmt --all --check",
+      "exit_code": 0
+    },
+    "clippy": {
+      "command": "cargo clippy --locked --all-targets -- -D warnings",
+      "exit_code": 0
+    },
+    "rust-all-targets": {
+      "command": "cargo test --locked --release --all-targets",
+      "exit_code": 0,
+      "passed": 454,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 0,
+      "completed_groups": 87
+    },
+    "rust-doc": {
+      "command": "cargo test --locked --release --doc",
+      "exit_code": 0,
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 0,
+      "completed_groups": 1
+    },
+    "build": {
+      "command": "cargo build --locked --release",
+      "exit_code": 0
+    }
+  },
+  "python_groups": {
+    "python-core-0": {
+      "assigned_total": 300,
+      "tests_run": 300,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 372.326842596,
+      "unexecuted_assigned_tests": 0,
+      "setup_class_errors": 0,
+      "command": "python tools/run_ci_python_tests.py --group python-core-0 --output work/nc-fold-confirmation/validation/python-core-0"
+    },
+    "python-core-1": {
+      "assigned_total": 265,
+      "tests_run": 265,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 512.7545201879998,
+      "unexecuted_assigned_tests": 0,
+      "setup_class_errors": 0,
+      "command": "python tools/run_ci_python_tests.py --group python-core-1 --output work/nc-fold-confirmation/validation/python-core-1"
+    },
+    "python-mean-evidence": {
+      "assigned_total": 4,
+      "tests_run": 0,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 1,
+      "elapsed_seconds": 730.5783014659999,
+      "unexecuted_assigned_tests": 4,
+      "setup_class_errors": 1,
+      "command": "python tools/run_ci_python_tests.py --group python-mean-evidence --output work/nc-fold-confirmation/validation/python-mean-evidence"
+    },
+    "python-spatial-evidence": {
+      "assigned_total": 4,
+      "tests_run": 0,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 1,
+      "elapsed_seconds": 176.08703330700018,
+      "unexecuted_assigned_tests": 4,
+      "setup_class_errors": 1,
+      "command": "python tools/run_ci_python_tests.py --group python-spatial-evidence --output work/nc-fold-confirmation/validation/python-spatial-evidence"
+    }
+  },
+  "python_totals": {
+    "tests_run": 565,
+    "failures": 0,
+    "errors": 2,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted_assigned_tests": 8,
+    "setup_class_errors": 2,
+    "discovered": 573,
+    "assigned": 573,
+    "passed": 565,
+    "all_discovered_tests_partitioned_exactly_once": true
+  },
+  "all_rust_checks_successful": true,
+  "all_python_tests_successful": false,
+  "legacy_nc_note_ja": "今回の実数を記録し、過去のmean/spatialの準備エラー・8件未実行記録を保持する。Linuxに許容差オプションを指定せず、skipで回避しない。",
+  "retained_attempts": [
+    {
+      "path": "validation/retained-first-core-0",
+      "included_in_final_counts": false,
+      "summary": {
+        "assigned_total": 300,
+        "tests_run": 296,
+        "failures": 0,
+        "errors": 2,
+        "skipped": 0,
+        "exit_code": 1,
+        "unexecuted_assigned_tests": 4,
+        "cause": "Two missing single-ZIP fixtures; exact HEAD blobs subsequently restored; full core-0 group rerun separately"
+      }
+    }
+  ],
+  "windows_ci_after_push": "未確定。Linux結果や過去CIから成功を推定しない。",
+  "nc01_complete": false,
+  "p6_complete": false
+}
