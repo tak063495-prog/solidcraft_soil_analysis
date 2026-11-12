@@ -11,9 +11,12 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tomllib
 
 BASE = '8342762bd714e33523ce5fef772572699fc21881'
 DEST = 'interim/2026-12-06-p6-01-status-reconciliation'
+SUPPLEMENTAL_PATH = 'interim/2026-12-10-ci-p601-inventory-fix/inventory.toml'
+SUPPLEMENTAL_SHA256 = 'b52659fa8058d72c2d3906ef3f674efed73875c661aac7b61e6a1400b2f8c8c6'
 STATES = ('限定受入', '未達', '未対応（入力拒否）', '判定不能', '未確認・PC手順待ち')
 DOCS = ['docs/P6_STATUS.ja.md', 'docs/STRUCTURE_WATER_JOINT_REMAINDERS.ja.md',
         'interim/2026-11-16-issue-triage/todo.ja.md']
@@ -75,7 +78,45 @@ def audit(root, ledger, *, verify_git=True):
         findings.append(dict(code=code, severity=severity, rows=list(rows), evidence=list(evidence), message=message))
     if ledger.get('base_commit') != BASE:
         add('BASE_COMMIT', '指定起点コミットと異なる')
-    inventory = ledger.get('sources', {})
+    inventory = dict(ledger.get('sources', {}))
+    # Append new snapshots without resealing the historical BASE ledger. The
+    # manifest is pinned here; each added JSON still uses every source check.
+    supplemental_ids = set()
+    manifest = root / SUPPLEMENTAL_PATH
+    if manifest.exists() or (root / DEST / 'ledger.json').exists():
+        try:
+            raw = manifest.read_bytes()
+            if sha(raw) != SUPPLEMENTAL_SHA256:
+                raise ValueError('supplemental inventory SHA-256 differs')
+            extension = tomllib.loads(raw.decode('utf-8'))
+            if extension.get('schema') != 'p601-inventory/v1':
+                raise ValueError('unsupported supplemental inventory schema')
+            paths = {s.get('path') for s in inventory.values()}
+            pending = {}
+            for source in extension['sources']:
+                source = dict(source)
+                sid = source.pop('id')
+                path = source.get('path', '')
+                if (set(source) != {'path', 'commit', 'kind', 'sha256', 'git_blob_sha1', 'status_keys'}
+                        or not isinstance(sid, str) or not sid or sid in inventory or sid in pending
+                        or path in paths or not path.startswith('interim/')
+                        or source.get('kind') != 'json' or source.get('origin') is not None
+                        or not re.fullmatch(r'[a-f0-9]{40}', source.get('commit', ''))
+                        or not re.fullmatch(r'[a-f0-9]{64}', source.get('sha256', ''))
+                        or not re.fullmatch(r'[a-f0-9]{40}', source.get('git_blob_sha1', ''))
+                        or not source.get('status_keys')):
+                    raise ValueError('invalid or duplicate supplemental source: '+str(sid))
+                safe_path(root, path)
+                for proof in source['status_keys']:
+                    proof['value'] = json.loads(proof.pop('value_json'))
+                pending[sid] = source
+                paths.add(path)
+            if not pending:
+                raise ValueError('empty supplemental inventory')
+            inventory.update(pending)
+            supplemental_ids = set(pending)
+        except (OSError, ValueError, KeyError, TypeError) as e:
+            add('SUPPLEMENTAL_INVENTORY', str(e))
     actual_sources = set(DOCS)
     if (root / 'interim').is_dir():
         actual_sources |= {p.relative_to(root).as_posix() for p in (root/'interim').rglob('*.json')
@@ -121,14 +162,15 @@ def audit(root, ledger, *, verify_git=True):
             continue
         if sha(data) != source.get('sha256'):
             add('SOURCE_SHA256', path, evidence=[sid])
-        if source.get('origin') != 'github_snapshot' and source.get('commit') != BASE:
+        fixed_commit = source['commit'] if sid in supplemental_ids else BASE
+        if source.get('origin') != 'github_snapshot' and source.get('commit') != fixed_commit:
             add('SOURCE_COMMIT', path, evidence=[sid])
         blob = hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
         if blob != source.get('git_blob_sha1'):
             add('SOURCE_BLOB', path, evidence=[sid])
         if verify_git and source.get('origin') != 'github_snapshot':
             try:
-                fixed = git(root, 'rev-parse', '--verify', f'{BASE}:{path}').decode().strip()
+                fixed = git(root, 'rev-parse', '--verify', f'{fixed_commit}:{path}').decode().strip()
                 if fixed != blob:
                     add('BASE_BYTES', path, evidence=[sid])
             except subprocess.CalledProcessError:

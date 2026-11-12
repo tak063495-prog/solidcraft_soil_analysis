@@ -249,6 +249,88 @@ class AuditMutationTests(unittest.TestCase):
         self.assertIn('EXTERNAL_SOURCE_SCOPE', self.codes())
 
 
+    def supplemental(self, *, path='interim/new/validation.json', sid='N001',
+                     commit='a'*40, expected='false', payload=b'{"passed": false}\n'):
+        source = self.root/path
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(payload)
+        raw = ('schema = "p601-inventory/v1"\n[[sources]]\n'
+               f'id = {json.dumps(sid)}\npath = {json.dumps(path)}\n'
+               f'commit = "{commit}"\nkind = "json"\n'
+               f'sha256 = "{audit.sha(payload)}"\n'
+               f'git_blob_sha1 = "{hashlib.sha1(b"blob "+str(len(payload)).encode()+b"\0"+payload).hexdigest()}"\n'
+               '[[sources.status_keys]]\npointer = "/passed"\n'
+               f'value_json = {json.dumps(expected)}\n').encode()
+        manifest = self.root/audit.SUPPLEMENTAL_PATH
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_bytes(raw)
+        self.addCleanup(patch.stopall)
+        patch.object(audit, 'SUPPLEMENTAL_SHA256', audit.sha(raw)).start()
+        return source, manifest
+
+    def test_registered_later_snapshot_is_checked(self):
+        self.supplemental()
+        self.assertEqual(self.codes(), set())
+
+    def test_supplemental_manifest_cannot_be_resealed_without_code_review(self):
+        _, manifest = self.supplemental()
+        manifest.write_bytes(manifest.read_bytes()+b'\n')
+        self.assertIn('SUPPLEMENTAL_INVENTORY', self.codes())
+        self.assertIn('SOURCE_NOT_INVENTORIED', self.codes())
+
+    def test_supplemental_id_cannot_override_historical_source(self):
+        self.supplemental(sid='s0')
+        self.assertIn('SUPPLEMENTAL_INVENTORY', self.codes())
+
+    def test_supplemental_path_cannot_override_historical_source(self):
+        path='interim/new/validation.json'
+        self.supplemental(path=path)
+        self.ledger['sources']['original'] = dict(self.ledger['sources']['s0'], path=path)
+        self.assertIn('SUPPLEMENTAL_INVENTORY', self.codes())
+
+    def test_supplemental_commit_must_be_immutable(self):
+        self.supplemental(commit='HEAD')
+        self.assertIn('SUPPLEMENTAL_INVENTORY', self.codes())
+
+    def test_supplemental_missing_source_is_error(self):
+        source, _ = self.supplemental()
+        source.unlink()
+        self.assertIn('SOURCE_MISSING', self.codes())
+
+    def test_supplemental_changed_source_is_error(self):
+        source, _ = self.supplemental()
+        source.write_bytes(b'{"passed": true}\n')
+        self.assertTrue({'SOURCE_SHA256', 'SOURCE_BLOB', 'INVENTORY_KEY_VALUE'} <= self.codes())
+
+    def test_supplemental_boolean_cannot_be_replaced_by_zero(self):
+        self.supplemental(expected='0')
+        self.assertIn('INVENTORY_KEY_VALUE', self.codes())
+
+    def test_supplemental_updated_hashes_cannot_reseal_snapshot_bytes(self):
+        original = b'{"passed": false}\n'
+        self.supplemental(payload=b'{"passed": true}\n', expected='true')
+        def frozen_blob(root, *args):
+            path = args[-1].split(':', 1)[1]
+            data = original if path == 'interim/new/validation.json' else (self.root/path).read_bytes()
+            return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest().encode()+b'\n'
+        with patch.object(audit, 'git', side_effect=frozen_blob):
+            result = audit.audit(self.root, self.ledger)
+        self.assertIn('BASE_BYTES', {f['code'] for f in result['findings']})
+
+    def test_supplemental_cannot_claim_p6_completion(self):
+        self.supplemental(payload=b'{"passed": false, "P6_complete": true}\n')
+        self.assertIn('UNSUPPORTED_COMPLETION', self.codes())
+
+    def test_repository_requires_supplemental_manifest(self):
+        _, manifest = self.supplemental()
+        marker = self.root/audit.DEST/'ledger.json'
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text('{}')
+        manifest.unlink()
+        self.assertIn('SUPPLEMENTAL_INVENTORY', self.codes())
+        self.assertIn('SOURCE_NOT_INVENTORIED', self.codes())
+
+
 class FixedRepositoryTests(unittest.TestCase):
     def test_ledger_and_table(self):
         ledger = json.loads((HERE/'ledger.json').read_text(encoding='utf-8'))
