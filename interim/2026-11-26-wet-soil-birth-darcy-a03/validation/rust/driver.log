@@ -1,0 +1,12 @@
+start ['cargo', 'fmt', '--all', '--check']
+finish {'command': ['cargo', 'fmt', '--all', '--check'], 'exit_code': 0, 'elapsed_seconds': 0.9028580009999132, 'log': '00.log'}
+start ['cargo', 'clippy', '--locked', '--all-targets', '--', '-D', 'warnings']
+finish {'command': ['cargo', 'clippy', '--locked', '--all-targets', '--', '-D', 'warnings'], 'exit_code': 0, 'elapsed_seconds': 16.222992191999992, 'log': '01.log'}
+start ['cargo', 'test', '--locked', '--release', '--no-fail-fast']
+finish {'command': ['cargo', 'test', '--locked', '--release', '--no-fail-fast'], 'exit_code': 101, 'elapsed_seconds': 1932.470151326, 'log': '02.log'}
+start ['cargo', 'test', '--locked', '--release', '--examples', '--no-fail-fast']
+finish {'command': ['cargo', 'test', '--locked', '--release', '--examples', '--no-fail-fast'], 'exit_code': 0, 'elapsed_seconds': 2.2740022010002576, 'log': '03.log'}
+start ['cargo', 'build', '--locked', '--release', '--examples']
+finish {'command': ['cargo', 'build', '--locked', '--release', '--examples'], 'exit_code': 0, 'elapsed_seconds': 0.06865939799990883, 'log': '04.log'}
+start ['cargo', 'build', '--locked', '--release']
+finish {'command': ['cargo', 'build', '--locked', '--release'], 'exit_code': 0, 'elapsed_seconds': 0.0576729740000701, 'log': '05.log'}
