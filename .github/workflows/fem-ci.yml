@@ -34,10 +34,13 @@ jobs:
       PYTHONUTF8: '1'
       PYTHONIOENCODING: utf-8
     steps:
+      - name: Preserve exact archived source bytes
+        run: git config --global core.autocrlf false
       - name: Check out sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
