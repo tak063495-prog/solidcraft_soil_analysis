@@ -9,9 +9,39 @@ from pathlib import Path
 import numpy as np
 from independent_branches import StrainRate,ClosedStickSystem,physical,expected_inputs,read,write
 
+def read_arc_seed(arc):
+    """A missing/empty rate trace is failure, never an equilibrium origin."""
+    if arc is None or not (arc/'samples.json').is_file():
+        raise ValueError('independent arc seed unavailable: samples.json missing: '+str(arc))
+    try:
+        samples=read(arc/'samples.json')
+        report=read(arc/'report.json')
+    except (OSError,ValueError) as exc:
+        raise ValueError('independent arc seed unreadable: '+str(exc)) from exc
+    if not isinstance(report,dict):raise ValueError('independent arc report.json is not an object')
+    count=report.get('equilibrium_samples',0)
+    if not isinstance(samples,list) or not samples or type(count) is not int or count<=0:
+        raise ValueError('independent arc seed unavailable: equilibrium_samples=0 or empty samples.json')
+    if len(samples)!=report['equilibrium_samples']:
+        raise ValueError('independent arc sample count differs from report.json')
+    if report.get('diagnostic_status')=='failed':
+        raise ValueError('independent arc seed unavailable: failed trace; retain partial samples: '+str(report.get('stop_reason')))
+    return samples[0]
+
+
+def seed_failure(out,exc):
+    report=dict(passed=False,nc01_complete=False,history_converged=False,production_adopted=False,
+                equilibrium_samples=0,full_removal_reached=False,static_limit_confirmed=False,
+                diagnostic_status='failed',stop_reason=str(exc),failure_stage='independent_arc_seed')
+    write(out/'report.json',report)
+    write(out/'failure.json',report)
+    (out/'failure.log').write_text(str(exc)+'\n',encoding='utf-8')
+    return report
+
+
 class Model:
     def __init__(self,reference,arc,count):
-        self.mesh,self.ground,self.case=expected_inputs();self.seed=read(arc/'samples.json')[0]
+        self.mesh,self.ground,self.case=expected_inputs();self.seed=read_arc_seed(arc)
         self.active=np.array(read(reference/'reference.json')['last_accepted']['active_elements']);self.system=ClosedStickSystem(self.mesh,self.ground,self.active,self.case)
         self.oldfull=np.array(self.seed['material_state']);self.material=StrainRate(self.system.parameters);self.count=count;self.calls=0
         s=self.system;n=len(s.free);self.R=np.zeros((s.xyz.size,n))
@@ -39,7 +69,10 @@ class Model:
             removed_material_frozen=bool(np.array_equal(new[~self.active],self.oldfull[~self.active])),active_contact_points=0,contact_history_frozen=True)
 
 def run(reference,arc,out,ds,count,material_steps):
-    out.mkdir(parents=True,exist_ok=False);m=Model(reference,arc,material_steps);old=m.oldfull.copy();u=np.array(m.seed['displacement_m']);lam=m.seed['progress'];t=np.array(m.seed['tangent']);n=len(m.L)
+    out.mkdir(parents=True,exist_ok=False)
+    try:read_arc_seed(arc)
+    except ValueError as exc:return seed_failure(out,exc)
+    m=Model(reference,arc,material_steps);old=m.oldfull.copy();u=np.array(m.seed['displacement_m']);lam=m.seed['progress'];t=np.array(m.seed['tangent']);n=len(m.L)
     events=[];samples=[];systems=[];stop=None;started=time.monotonic()
     write(out/'controls.json',dict(input_only=True,native_fields_or_fractions_used=False,source_reference=str(reference),source_arc=str(arc),seed_sample=0,
         step_size_m=ds,count=count,material_rk4_steps=material_steps,material_fd_width=1e-8,arc_lambda_scale_m=1.,force_tolerance=1e-8,true_linear_tolerance=1e-10,arc_constraint_tolerance_m=1e-12,maximum_newton_iterations=20,production_adopted=False))
@@ -75,4 +108,6 @@ def run(reference,arc,out,ds,count,material_steps):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--reference',type=Path,required=True);p.add_argument('--arc',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--step-size',type=float,required=True);p.add_argument('--count',type=int,required=True);p.add_argument('--material-steps',type=int,choices=[4,8],default=4);a=p.parse_args()
     assert 0<a.step_size<=1e-4 and 0<a.count<=256
-    print(json.dumps(run(a.reference.resolve(),a.arc.resolve(),a.output.resolve(),a.step_size,a.count,a.material_steps),indent=2))
+    result=run(a.reference.resolve(),a.arc.resolve(),a.output.resolve(),a.step_size,a.count,a.material_steps)
+    print(json.dumps(result,indent=2))
+    sys.exit(1 if result.get('diagnostic_status')=='failed' or result['equilibrium_samples']==0 else 0)

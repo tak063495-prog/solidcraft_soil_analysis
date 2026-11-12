@@ -19,7 +19,7 @@ ROOT = HERE.parents[1]
 PRIOR = HERE.parent / '2026-11-09-nc-pseudo-arclength'
 sys.path.insert(0, str(PRIOR))
 from native_arc import Native
-from independent_map_arc import Model
+from independent_map_arc import Model, read_arc_seed, seed_failure
 
 
 def digest(value):
@@ -203,6 +203,11 @@ def run(args):
     validate_controls(args.step_size, args.count, args.budget_seconds)
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
+    if args.map == 'independent':
+        try:
+            read_arc_seed(args.arc)
+        except ValueError as exc:
+            return seed_failure(out, exc)
     model = Adapter(args.map, args.evidence, args.binary, args.reference, args.arc, out, args.material_steps)
     sources = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                for p in [Path(__file__), PRIOR/'native_arc.py', PRIOR/'independent_map_arc.py',
@@ -226,4 +231,6 @@ if __name__ == '__main__':
     p.add_argument('--count', type=int, required=True)
     p.add_argument('--material-steps', type=int, choices=[4, 8], default=4)
     p.add_argument('--budget-seconds', type=float, default=300.)
-    print(json.dumps(run(p.parse_args()), indent=2))
+    result = run(p.parse_args())
+    print(json.dumps(result, indent=2))
+    sys.exit(1 if result.get('diagnostic_status') == 'failed' or result['equilibrium_samples'] == 0 else 0)

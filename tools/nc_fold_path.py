@@ -102,6 +102,10 @@ def validate_checkpoint(path,binding):
 def run(args):
     module=load_driver();module.validate_controls(args.step_size,args.count,args.budget_seconds)
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
+    if args.map=='independent':
+        from independent_map_arc import read_arc_seed,seed_failure
+        try:read_arc_seed(args.arc)
+        except ValueError as exc:return seed_failure(out,exc)
     if getattr(args,'fresh_native',None):
         if args.map!='native':raise ValueError('fresh native history cannot seed independent reference')
         from nc_fold_fresh import Adapter
@@ -189,4 +193,6 @@ if __name__=='__main__':
     parser.add_argument('--count',type=int,required=True)
     parser.add_argument('--material-steps',type=int,choices=[4,8],default=4)
     parser.add_argument('--budget-seconds',type=float,default=60.)
-    print(json.dumps(run(parser.parse_args()),indent=2))
+    result=run(parser.parse_args())
+    print(json.dumps(result,indent=2))
+    sys.exit(1 if result.get('diagnostic_status')=='failed' or result['equilibrium_samples']==0 else 0)
