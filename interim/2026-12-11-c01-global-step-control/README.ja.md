@@ -81,4 +81,6 @@ Rustの158ソースは全件試験開始前、結合した1320ソースはcore2�
 
 push後の新先端Windows CIは未確定。Linux成功や旧先端Windows成功を新先端の結果に転用しない。
 
+最終登録は、受入・計測・互換性を `388a7a143e4da2de3cd9367dcbc399567ce8c000`、全件検証・4群の検証索引を `6bf7c100cdc728a8dff61dc09ae90bbd4773d024` に固定した N029〜N036。登録後のP6-01 **57件**・P6-03 **19件**も失敗・未実行・skip 0で再通過した（`validation/final-inventory-audit.tsv`）。この76件は全件714 IDにも含まれ、二重加算しない。`SOURCE_NOT_INVENTORIED` を回避する例外・skipは追加していない。
+
 C-01は未達、passed=false。
