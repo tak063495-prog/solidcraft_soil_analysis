@@ -19,9 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [rust-core, rust-integration-0, rust-integration-1, python-core-0, python-core-1, python-mean-evidence, python-spatial-evidence, verification]
+        group: [rust-core, rust-integration-0, rust-integration-1, python-core-0, python-core-1, python-mean-evidence, python-spatial-evidence, python-c01-switch, python-c01-path, python-c01-cause, verification]
     runs-on: windows-2025
-    timeout-minutes: 45
+    # Observed checkout outlier: 37m; retain room for the complete evidence tests.
+    # Measured budget and archive allocation: interim/2026-12-14-ci-timeout-fa22e14/README.ja.md
+    timeout-minutes: 75
     defaults:
       run:
         shell: pwsh
@@ -44,7 +46,15 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.zip*' || '/*' }}
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.tar*' || '/*' }}
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.gz' || '/*' }}
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.npz' || '/*' }}
             !/interim/2026-11-10-nc-postfold-branches/evidence.tar.gz.part*
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-cause') && '/interim/2026-12-11-c01-global-step-control/evidence.zip.part*' || '!/interim/2026-12-11-c01-global-step-control/evidence.zip.part*' }}
+            ${{ (matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*' || '!/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*' }}
+            ${{ (matrix.group == 'python-c01-cause') && '/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*' || '!/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*' }}
+            ${{ (matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip' || '!/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip' }}
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:

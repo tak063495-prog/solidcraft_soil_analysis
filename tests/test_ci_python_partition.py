@@ -13,7 +13,10 @@ class PythonCIPartition(unittest.TestCase):
         return {'test_nc_mean_stress_evidence': ['mean.Case.a', 'mean.Case.b'],
                 'test_nc_spatial_evidence': ['spatial.Case.a'],
                 'test_a': ['a.Case.a', 'a.Case.b'], 'test_b': ['b.Case.a'],
-                'test_c': ['c.Case.a']}
+                'test_c': ['c.Case.a'],
+                'test_c01_global_step_control': ['switch.Case.a'],
+                'test_c01_path_error_control': ['path.Case.a'],
+                'test_c01_cause_diagnosis': ['cause.Case.a']}
 
     def test_union_is_exact_with_no_test_repeated(self):
         modules = self.inventory()
@@ -43,6 +46,16 @@ class PythonCIPartition(unittest.TestCase):
                 modules['test_b'] = []
             with self.assertRaises(ValueError):
                 runner.partition(modules)
+
+    def test_c01_replays_have_separate_jobs_without_changing_test_ids(self):
+        modules = self.inventory()
+        shards = runner.partition(modules)
+        for module in ('test_c01_global_step_control', 'test_c01_path_error_control',
+                       'test_c01_cause_diagnosis'):
+            group = runner.HEAVY[module]
+            self.assertEqual(shards[group], modules[module])
+            self.assertNotIn(group, ('python-core-0', 'python-core-1'))
+        self.assertEqual(len({runner.HEAVY[m] for m in modules if m.startswith('test_c01')}), 3)
 
     def test_loader_failure_is_not_counted_as_a_discovered_test(self):
         suite = unittest.TestLoader().loadTestsFromName('module_that_does_not_exist_for_ci_inventory')

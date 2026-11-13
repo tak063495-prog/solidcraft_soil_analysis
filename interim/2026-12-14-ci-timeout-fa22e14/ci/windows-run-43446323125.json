@@ -1,0 +1,1279 @@
+{
+  "run_id": 43446323125,
+  "head_sha": "fa22e14701eaa5014b1d8268e768c1ab513db4a6",
+  "tested_merge_sha": "7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2",
+  "jobs": [
+    {
+      "id": 131956599602,
+      "name": "rust-core on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:57.1626212Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:58.1149964Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:01.4921341Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:02.5197166Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:52:42.9877216Z Updating files:   0% (1/7250)",
+        "2026-11-13T14:55:04.8322383Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T14:55:08.8989573Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T14:55:40.0002805Z ##[group]Run cargo fmt --all --check",
+        "2026-11-13T14:55:43.2429588Z ##[group]Run cargo clippy --locked --all-targets -- -D warnings",
+        "2026-11-13T14:56:35.3501425Z ##[group]Run python tools/run_ci_rust_tests.py --group rust-core --output runs/ci",
+        "2026-11-13T15:08:37.8527244Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600018,
+      "name": "verification on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:57.2178982Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:58.2470458Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:01.9744953Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:03.1397839Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:52:57.4960747Z Updating files:   0% (1/7250)",
+        "2026-11-13T14:55:10.0194078Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T14:55:15.2173674Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T14:55:48.8437278Z ##[group]Run cargo build --locked --release",
+        "2026-11-13T14:59:47.3262188Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/wet-structures 2>&1 | Tee-Object -FilePath runs/ci/wet-structures.log",
+        "2026-11-13T14:59:57.2215381Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-wet-structures --water-mode soil 2>&1 | Tee-Object -FilePath runs/ci/soil-wet-structures.log",
+        "2026-11-13T15:00:08.4420521Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-source-wet-structures --water-mode soil-source 2>&1 | Tee-Object -FilePath runs/ci/soil-source-wet-structures.log",
+        "2026-11-13T15:00:19.6617588Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log",
+        "2026-11-13T15:00:27.9566836Z ##[group]Run cargo build --locked --release --example joint_birth_points",
+        "2026-11-13T15:05:35.0970843Z ##[group]Run python tools/verify_joint_crack_tip.py --solver target/release/soil-fem-3d.exe --output runs/ci/crack-tip",
+        "2026-11-13T15:06:22.1530449Z ##[group]Run python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc --budget-seconds 20 --grace-seconds 5 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc.log",
+        "2026-11-13T15:06:48.3135314Z ##[group]Run python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step32 --budget-seconds 60 --grace-seconds 5 --excavation-increment .03125 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step32.log",
+        "2026-11-13T15:07:47.4144455Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600095,
+      "name": "python-mean-evidence on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:56.8333541Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:57.7948623Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:04.1186151Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:06.2915904Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:51:59.6048625Z Updating files:   0% (1/7250)",
+        "2026-11-13T14:54:29.9947799Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T14:54:36.6971242Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T14:55:13.5537324Z ##[group]Run cargo build --locked --release",
+        "2026-11-13T14:58:35.7422359Z ##[group]Run python tools/run_ci_python_tests.py --group python-mean-evidence --output runs/ci",
+        "2026-11-13T15:12:54.4781207Z Ran 4 tests in 855.516s",
+        "2026-11-13T15:12:54.7858231Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600142,
+      "name": "python-core-0 on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:57.4000563Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:58.3331269Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:01.7313278Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:02.8125577Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:53:24.0658273Z Updating files:   0% (1/7250)",
+        "2026-11-13T14:55:35.7651491Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T14:55:39.7531068Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T14:56:27.0943302Z ##[group]Run cargo build --locked --release",
+        "2026-11-13T15:00:30.0468781Z ##[group]Run python tools/run_ci_python_tests.py --group python-core-0 --output runs/ci",
+        "2026-11-13T15:10:36.4683233Z Ran 329 tests in 603.902s",
+        "2026-11-13T15:10:36.9401413Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600215,
+      "name": "python-core-1 on Windows",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:49:01.3859853Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:49:03.2622061Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:07.5965068Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:08.8776268Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T15:23:55.6151617Z Updating files:   0% (1/7250)",
+        "2026-11-13T15:26:06.5390682Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T15:26:11.8228200Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T15:26:45.4737173Z ##[group]Run cargo build --locked --release",
+        "2026-11-13T15:30:44.9017336Z ##[group]Run python tools/run_ci_python_tests.py --group python-core-1 --output runs/ci",
+        "2026-11-13T15:33:58.1519756Z KeyboardInterrupt",
+        "2026-11-13T15:33:58.6967850Z ##[error]The operation was canceled.",
+        "2026-11-13T15:33:58.9655381Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600236,
+      "name": "rust-integration-1 on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:58.5076207Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:59.4579697Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:02.8338733Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:04.1246514Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:58:49.2005058Z Updating files:   0% (1/7250)",
+        "2026-11-13T15:01:01.8489179Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T15:01:07.7425272Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T15:01:42.4666218Z ##[group]Run python tools/run_ci_rust_tests.py --group rust-integration-1 --output runs/ci",
+        "2026-11-13T15:29:54.4871061Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600253,
+      "name": "rust-integration-0 on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:57.1331905Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:58.1254880Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:01.5803429Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:02.6653915Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:52:39.0499164Z Updating files:   0% (1/7250)",
+        "2026-11-13T14:54:51.0503500Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T14:54:55.9468718Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T14:55:30.7911671Z ##[group]Run python tools/run_ci_rust_tests.py --group rust-integration-0 --output runs/ci",
+        "2026-11-13T15:17:46.3347037Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131956600259,
+      "name": "python-spatial-evidence on Windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve exact archived source bytes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install pinned dependencies and record sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check formatting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Check all Rust targets",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run discovered Rust test group",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Build the CLI used by geometry tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run all Python tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify small wet JOINT plate beam integration",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Verify inherited SOIL water role and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Verify nonzero SOIL volume source flow and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Verify fixed PRESCRIBED reservoir and small members",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Verify dedicated contact BIRTH and fresh generations",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Verify declared Tet10 crack tips",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Record bounded low preload NC diagnosis (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Measure refined low preload NC and independent plastic fields (not acceptance)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Save source fingerprints and verification logs",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Post Set up Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        },
+        {
+          "name": "Post Check out sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39
+        }
+      ],
+      "log_excerpts": [
+        "2026-11-13T14:48:58.0055794Z ##[group]Run git config --global core.autocrlf false",
+        "2026-11-13T14:48:59.0380357Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "2026-11-13T14:49:02.4610215Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +7cca3914ce9e64e7d4ae76fc3a6fcff7668e30a2:refs/remotes/pull/13/merge",
+        "2026-11-13T14:49:03.9685965Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" checkout --progress --force refs/remotes/pull/13/merge",
+        "2026-11-13T14:52:40.7452462Z Updating files:   0% (1/7250)",
+        "2026-11-13T14:54:55.6539677Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+        "2026-11-13T14:55:00.2824581Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null",
+        "2026-11-13T14:55:41.2723102Z ##[group]Run cargo build --locked --release",
+        "2026-11-13T15:00:13.4226161Z ##[group]Run python tools/run_ci_python_tests.py --group python-spatial-evidence --output runs/ci",
+        "2026-11-13T15:03:19.3980601Z Ran 4 tests in 183.154s",
+        "2026-11-13T15:03:19.7539696Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 131982892948,
+      "name": "Rust and Python on Windows",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43446323125,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Require every verification group",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ],
+      "log_excerpts": []
+    }
+  ]
+}
