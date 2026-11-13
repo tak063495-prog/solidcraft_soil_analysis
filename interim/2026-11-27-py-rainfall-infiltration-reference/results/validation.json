@@ -1,0 +1,180 @@
+{
+  "base_commit": "702a19a7ce189f1173caed727ee2a0059298a607",
+  "completed_at_jst": "2026-11-12T09:09:31.083402+09:00",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "new_tests": {
+    "discovered": 44,
+    "run": 44,
+    "successes": 44,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0
+  },
+  "existing_final": {
+    "discovered": 568,
+    "unique_successes": 560,
+    "unexecuted": 8,
+    "setUpClass_errors": 2,
+    "method_failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "all_tests_successful": false,
+    "all_groups_invoked": true,
+    "all_ids_accounted_for": true,
+    "discovered_ids_sha256": "0bb7f995aa2d509d7babcb07bd6810ae7377524c2aedbfb3e91a6f1b40361262",
+    "passed_ids_sha256": "02ce7302d8091982c9b3193fa16e20e9f388c63c1b353f980f778ef3cf2d599c",
+    "groups": {
+      "python-core-0": {
+        "count": 276,
+        "ids_sha256": "dff57d059023438de1224fed5ead0722b197c0c08b720eadb4932fea0f53d0bd"
+      },
+      "python-core-1": {
+        "count": 284,
+        "ids_sha256": "6bdf791956cd776b46f5f8f85918abb116f41f0fb3e4aa8983134da196620751"
+      },
+      "python-mean-evidence": {
+        "count": 4,
+        "ids_sha256": "af3b87ce0c8e5ddb7d44ac2c77f78ba89df740a6750e1450d45472c4dcb875ff"
+      },
+      "python-spatial-evidence": {
+        "count": 4,
+        "ids_sha256": "1e9f692c9e03d36deba9706da865dbc13998ec0bc8e9d783c4f81c3e59dc7692"
+      }
+    }
+  },
+  "initial_ordinary_attempts": [
+    {
+      "group": "python-core-0",
+      "assigned": 276,
+      "tests_run": 276,
+      "method_successes": 268,
+      "failures": 1,
+      "errors": 7,
+      "unexecuted": 0,
+      "skipped": 0,
+      "exit_code": 1,
+      "reason": "疎配置の旧証拠未配置。元Git blob復元後、該当全モジュールを再実行。",
+      "elapsed_s": 525.0976300330001
+    },
+    {
+      "group": "python-core-1",
+      "assigned": 284,
+      "tests_run": 271,
+      "method_successes": 265,
+      "failures": 0,
+      "errors": 9,
+      "unexecuted": 13,
+      "skipped": 0,
+      "exit_code": 1,
+      "reason": "疎配置の旧証拠未配置。元Git blob復元後、該当全モジュールを再実行。",
+      "elapsed_s": 271.17223387600006
+    }
+  ],
+  "recovered_module_attempts": [
+    {
+      "name": "recovered-core0",
+      "modules": [
+        "test_cut_volume_history",
+        "test_griffiths_2d",
+        "test_hydrostatic_cut_volume",
+        "test_spatial_replay_isolation"
+      ],
+      "tests_run": 34,
+      "successes": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "selected_ids_sha256": "527d6d9dae5d73a886bab9f00114d972eeb681667f2c97176c45f89dac54f497"
+    },
+    {
+      "name": "recovered-core1",
+      "modules": [
+        "test_depth_spatial_diagnostics",
+        "test_low_preload_nc_diagnosis",
+        "test_nc_fold_stability",
+        "test_wet_joint_small_refinement",
+        "test_wet_joint_step_diagnosis"
+      ],
+      "tests_run": 37,
+      "successes": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "selected_ids_sha256": "51da8df61cc51df5d05186e3fc396215c22741c3624fd2931a17751e90c0e60c"
+    }
+  ],
+  "recovered_successes_added_without_duplicates": 27,
+  "known_nc_preparation_errors": [
+    {
+      "group": "python-mean-evidence",
+      "assigned": 4,
+      "tests_run": 0,
+      "successes": 0,
+      "setUpClass_errors": 1,
+      "unexecuted_ids": [
+        "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+        "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+        "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+        "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected"
+      ],
+      "reason": "saved mean-stress/complement partition differs from own history",
+      "exit_code": 1,
+      "elapsed_s": 738.2511437409999
+    },
+    {
+      "group": "python-spatial-evidence",
+      "assigned": 4,
+      "tests_run": 0,
+      "successes": 0,
+      "setUpClass_errors": 1,
+      "unexecuted_ids": [
+        "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+        "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+        "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+        "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+      ],
+      "reason": "remeasured JSON differs",
+      "exit_code": 1,
+      "elapsed_s": 180.767993745
+    }
+  ],
+  "log_sha256": {
+    "existing-python-core-0/python-tests.log": "cffd7a235e69e7e927aad2d2cdfc2f1ccd2ec1a31ef1db1e2742276adc40f4e9",
+    "existing-python-core-1/python-tests.log": "67884eea00ce75f95be3360994f47034b3882216bfd48a288288664467173d83",
+    "recovered-core0/tests.log": "f722e1eb37f5f5b2be5ad9abc69ab6fe7353780cda7af42fb6e97b703b1ff13f",
+    "recovered-core1/tests.log": "27cedb27c9dac152c406c4db2a92067ee26c1afec02059ee011c926f400bf0d7",
+    "nc-mean-stress-driver.log": "859970ad049ce66a00ffaaa7f192d3a49e27d1afe148d4e0d4dbea7143154477",
+    "existing-python-mean-evidence/python-tests.log": "fcc0d4cf7e24e2aead17bb3a3510e5a983899221d6df592d909fdcd67872ee88",
+    "nc-spatial-driver.log": "a8c95e95c6ae11897632b8c3e1e1c7263dbf2f45f741c9e1fdd8eb49de5dcbd5",
+    "existing-python-spatial-evidence/python-tests.log": "2463f1588dea0c57ac8ee22a4199fb74b1f16d88cfc77e9a1a2964835444cdf0",
+    "rainfall-checks-final.log": "42c863fd48cf1878e4048b49592546786bf2ea5655d62ad4dfcbabbdb29a9647",
+    "release-build.log": "8ead699b40ef275c4d7d5c7e2a5ac4ee2f8dad8251b49fd68fd81585e181c533"
+  },
+  "preservation": {
+    "base_tree_entries": 5961,
+    "all_base_mode_blob_entries_preserved": true,
+    "initially_available_existing_files": 1973,
+    "initially_available_files_byte_unchanged": true,
+    "sparse_unavailable_blobs_not_claimed_as_disk_byte_reverified": true
+  },
+  "existing_release_cli_bins_examples_build": "success; --locked --release --bins --examples",
+  "new_code_hashes_unchanged": true,
+  "existing_collection_and_ci_unchanged": true,
+  "independent_3d_executed": false,
+  "new_2d_executed": "8x8, 200 s only",
+  "new_windows_ci": "未確認",
+  "accepted": null,
+  "p6_03_complete": false,
+  "nc_01_complete": false,
+  "development_notes": [
+    "全量/分割ZIPを含む取得を中断し、必要blobの並列読取へ変更。転送の中断はCI成功ではない。",
+    "指定起点配置前の最初の資料抽出はtodo未配置で失敗。配置後に同じ元ファイルから抽出成功。",
+    "初回通常群の準備失敗・ログは作業領域に保持。再実行の重複成功を件数に加算しない。"
+  ]
+}
