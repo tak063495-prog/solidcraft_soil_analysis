@@ -1,0 +1,57 @@
+test_average_normal_geometry (__main__.CandidateDiagnostics.test_average_normal_geometry) ... ok
+test_bisector_projection_geometry (__main__.CandidateDiagnostics.test_bisector_projection_geometry) ... ok
+test_flat_identical_geometry_is_control (__main__.CandidateDiagnostics.test_flat_identical_geometry_is_control) ... ok
+test_independent_rigid_arms (__main__.CandidateDiagnostics.test_independent_rigid_arms) ... ok
+test_moved_candidates_lose_original_rotations (__main__.CandidateDiagnostics.test_moved_candidates_lose_original_rotations) ... ok
+test_naive_equal_dof_negative_control (__main__.CandidateDiagnostics.test_naive_equal_dof_negative_control) ... ok
+test_opposed_average_is_undefined (__main__.CandidateDiagnostics.test_opposed_average_is_undefined) ... ok
+test_parallel_bisector_is_undefined (__main__.CandidateDiagnostics.test_parallel_bisector_is_undefined) ... ok
+test_projection_unequal_offsets_does_not_promise_merge (__main__.CandidateDiagnostics.test_projection_unequal_offsets_does_not_promise_merge) ... ok
+test_rigid_arm_work_all_basis_pairs (__main__.CandidateDiagnostics.test_rigid_arm_work_all_basis_pairs) ... ok
+test_attachment_to_neutral_sign (__main__.ClosedGeometry.test_attachment_to_neutral_sign) ... ok
+test_equal_offset_chord (__main__.ClosedGeometry.test_equal_offset_chord) ... ok
+test_kink_general_offsets (__main__.ClosedGeometry.test_kink_general_offsets) ... ok
+test_normal_and_offset_joint_flip_invariant (__main__.ClosedGeometry.test_normal_and_offset_joint_flip_invariant) ... ok
+test_parallel_gap_overlap_touch (__main__.ClosedGeometry.test_parallel_gap_overlap_touch) ... ok
+test_rotation_translation_covariance (__main__.ClosedGeometry.test_rotation_translation_covariance) ... ok
+test_signed_projections (__main__.ClosedGeometry.test_signed_projections) ... ok
+test_step_signed_vector (__main__.ClosedGeometry.test_step_signed_vector) ... ok
+test_basis_rejected (__main__.ContractChecks.test_basis_rejected) ... ok
+test_compare_cli_exit_codes (__main__.ContractChecks.test_compare_cli_exit_codes) ... ok
+test_compensated_sign_flip_rejected (__main__.ContractChecks.test_compensated_sign_flip_rejected) ... ok
+test_csv_missing_coordinate_rejected (__main__.ContractChecks.test_csv_missing_coordinate_rejected) ... ok
+test_duplicate_id_rejected (__main__.ContractChecks.test_duplicate_id_rejected) ... ok
+test_duplicate_json_key_rejected (__main__.ContractChecks.test_duplicate_json_key_rejected) ... ok
+test_even_tiny_discrepancy_not_accepted (__main__.ContractChecks.test_even_tiny_discrepancy_not_accepted) ... ERROR
+test_missing_field_rejected (__main__.ContractChecks.test_missing_field_rejected) ... ok
+test_missing_id_rejected (__main__.ContractChecks.test_missing_id_rejected) ... ok
+test_nonfinite_rejected (__main__.ContractChecks.test_nonfinite_rejected) ... ok
+test_nonpositive_t_rejected (__main__.ContractChecks.test_nonpositive_t_rejected) ... ok
+test_normal_scaling_rejected (__main__.ContractChecks.test_normal_scaling_rejected) ... ok
+test_normal_sign_metadata_rejected (__main__.ContractChecks.test_normal_sign_metadata_rejected) ... ok
+test_offset_sign_metadata_rejected (__main__.ContractChecks.test_offset_sign_metadata_rejected) ... ok
+test_orientation_without_reference_unconfirmed (__main__.ContractChecks.test_orientation_without_reference_unconfirmed) ... ok
+test_outside_e_rejected_without_slack (__main__.ContractChecks.test_outside_e_rejected_without_slack) ... ok
+test_silent_average_rejected (__main__.ContractChecks.test_silent_average_rejected) ... ok
+test_silent_clip_rejected (__main__.ContractChecks.test_silent_clip_rejected) ... ok
+test_synthetic_json_csv_roundtrips (__main__.ContractChecks.test_synthetic_json_csv_roundtrips) ... ok
+test_units_rejected (__main__.ContractChecks.test_units_rejected) ... ok
+
+======================================================================
+ERROR: test_even_tiny_discrepancy_not_accepted (__main__.ContractChecks.test_even_tiny_discrepancy_not_accepted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/b03/checks.py", line 222, in test_even_tiny_discrepancy_not_accepted
+    self.assertFalse(g.compare_documents(self.doc, bad)['contract_consistent'])
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/workspace/work/b03/geometry_reference.py", line 244, in compare_documents
+    expected_ids, actual_ids = validate_document(reference), validate_document(actual)
+                                                             ~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/workspace/work/b03/geometry_reference.py", line 187, in validate_document
+    raise ValueError("invalid/nonfinite vector: " + field)
+ValueError: invalid/nonfinite vector: attachment_m
+
+----------------------------------------------------------------------
+Ran 38 tests in 0.452s
+
+FAILED (errors=1)
