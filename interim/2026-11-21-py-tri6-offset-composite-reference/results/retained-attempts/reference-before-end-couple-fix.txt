@@ -1,0 +1,381 @@
+"""Independent small-strain planar Tri6 reference. Only NumPy/SciPy + stdlib.
+
+No production imports, subprocesses, solver output or fitted reference values.
+Conventions and derivations are in README.ja.md. Full shear integration is
+intentional: this is not a reimplementation of the production MITC element.
+"""
+import numpy as np
+from numpy.polynomial.legendre import leggauss
+from scipy.sparse import coo_matrix, csr_matrix
+from scipy.sparse.linalg import spsolve
+
+
+def validate(E, nu, t, e):
+    if not np.all(np.isfinite([E, nu, t, e])):
+        raise ValueError('nonfinite material/offset')
+    if E <= 0 or not -1 < nu < .5 or t <= 0 or abs(e) > t/2:
+        raise ValueError('material or |e|<=t/2 violated')
+
+
+def constitutive(E, nu, t):
+    validate(E, nu, t, 0.)
+    C = E/(1-nu**2)*np.array([[1., nu, 0.], [nu, 1., 0.], [0., 0., (1-nu)/2]])
+    return C*t, C*t**3/12, 5/6*E/(2*(1+nu))*t
+
+
+def transform(e):
+    """d_p=T d_s, n=+z; u_p=u_s-e*theta_y, v_p=v_s+e*theta_x."""
+    T = np.eye(36)
+    for i in range(6):
+        T[6*i, 6*i+4] = -e
+        T[6*i+1, 6*i+3] = e
+    return T
+
+
+def shapes(r, s):
+    L = np.array([1-r-s, r, s])
+    g = np.array([[-1., -1.], [1., 0.], [0., 1.]])
+    N = np.r_[L*(2*L-1), 4*L[0]*L[1], 4*L[1]*L[2], 4*L[2]*L[0]]
+    d = np.vstack(((4*L-1)[:, None]*g,
+                   4*(L[0]*g[1]+L[1]*g[0]),
+                   4*(L[1]*g[2]+L[2]*g[1]),
+                   4*(L[2]*g[0]+L[0]*g[2])))
+    return N, d
+
+
+def quadrature(order=5):
+    z, w = leggauss(order)
+    z, w = (z+1)/2, w/2
+    for a, wa in zip(z, w):
+        for b, wb in zip(z, w):
+            yield a, (1-a)*b, wa*wb*(1-a)
+
+
+def geometry(xy):
+    xy = np.asarray(xy, float)
+    if xy.shape != (6, 2) or not np.all(np.isfinite(xy)):
+        raise ValueError('six finite planar coordinates required')
+    J = np.column_stack((xy[1]-xy[0], xy[2]-xy[0]))
+    if np.linalg.det(J) <= 0:
+        raise ValueError('positive oriented straight triangle required')
+    mids = np.array([(xy[0]+xy[1])/2, (xy[1]+xy[2])/2, (xy[2]+xy[0])/2])
+    if not np.allclose(xy[3:], mids, rtol=0, atol=1e-13):
+        raise ValueError('curved/nonstraight Tri6 not in reference scope')
+    return J
+
+
+def operators(N, grad):
+    Bm, Bb, Bs, Bd = np.zeros((3, 36)), np.zeros((3, 36)), np.zeros((2, 36)), np.zeros((1, 36))
+    for i, (nx, ny) in enumerate(grad):
+        j = 6*i
+        Bm[:, j:j+2] = [[nx, 0], [0, ny], [ny, nx]]
+        Bb[:, j+3:j+5] = [[0, nx], [-ny, 0], [-nx, ny]]
+        Bs[:, j+2] = [nx, ny]
+        Bs[0, j+4], Bs[1, j+3] = N[i], -N[i]
+        Bd[0, j:j+2] = [.5*ny, -.5*nx]
+        Bd[0, j+5] = N[i]
+    return Bm, Bb, Bs, Bd
+
+
+def element(xy, E, nu, t, e, pressure=None, foundation=0., order=5):
+    validate(E, nu, t, e)
+    if not np.isfinite(foundation) or foundation < 0:
+        raise ValueError('nonnegative foundation required')
+    J = geometry(xy)
+    A, D, S = constitutive(E, nu, t)
+    K, f = np.zeros((36, 36)), np.zeros(36)
+    for r, s, weight in quadrature(order):
+        N, d = shapes(r, s)
+        Bm, Bb, Bs, Bd = operators(N, d@np.linalg.inv(J))
+        w = weight*np.linalg.det(J)
+        # Drill coefficient is a reference choice, never a production parameter.
+        K += w*(Bm.T@A@Bm+Bb.T@D@Bb+S*Bs.T@Bs+.01*S*Bd.T@Bd)
+        z = np.zeros(36); z[2::6] = N
+        K += w*foundation*np.outer(z, z)
+        if pressure is not None:
+            f += w*z*pressure(*(N@xy))
+    T = transform(e)
+    return T.T@K@T, T.T@f
+
+
+def mesh(nx, ny, L=2., H=1.):
+    if nx < 1 or ny < 1:
+        raise ValueError('positive mesh subdivisions required')
+    points = [(L*i/nx, H*j/ny) for j in range(ny+1) for i in range(nx+1)]
+    elements, midpoint = [], {}
+    def mid(a, b):
+        key = tuple(sorted((a, b)))
+        if key not in midpoint:
+            midpoint[key] = len(points)
+            points.append(tuple((np.array(points[a])+points[b])/2))
+        return midpoint[key]
+    for j in range(ny):
+        for i in range(nx):
+            a = j*(nx+1)+i; b = a+1; c = a+nx+1; d = c+1
+            for v in ((a, b, d), (a, d, c)):
+                elements.append([*v, mid(v[0], v[1]), mid(v[1], v[2]), mid(v[2], v[0])])
+    return np.array(points), np.array(elements)
+
+
+def assemble(xy, cells, E, nu, t, e, pressure=None, foundation=0., order=5):
+    rows, cols, data = [], [], []
+    f = np.zeros(6*len(xy))
+    for cell in cells:
+        dofs = (6*cell[:, None]+np.arange(6)).ravel()
+        k, load = element(xy[cell], E, nu, t, e, pressure, foundation, order)
+        rows.extend(np.repeat(dofs, 36)); cols.extend(np.tile(dofs, 36)); data.extend(k.ravel())
+        np.add.at(f, dofs, load)
+    return coo_matrix((data, (rows, cols)), shape=(len(f), len(f))).tocsr(), f
+
+
+def solve(K, f, constrained):
+    free = np.setdiff1d(np.arange(len(f)), np.unique(constrained))
+    d = np.zeros(len(f)); d[free] = spsolve(K[free][:, free], f[free])
+    reaction = K@d-f
+    relative = float(np.linalg.norm(reaction[free])/max(np.linalg.norm(f), 1e-300))
+    reaction[free] = 0.  # Never hide free-node residuals as artificial reactions.
+    return d, reaction, relative
+
+
+def diagnostics(K, f, d, reaction, xy, ground=None):
+    internal = K@d
+    support = np.asarray(reaction)
+    residual = internal-f-support
+    forces = (f+support+(0 if ground is None else ground)).reshape(-1, 6)
+    r3 = np.column_stack((xy, np.zeros(len(xy))))
+    moment = np.sum(np.cross(r3, forces[:, :3])+forces[:, 3:], axis=0)
+    energy = .5*float(d@internal)
+    return dict(strain_energy_kn_m=energy, proportional_load_work_kn_m=.5*float(d@f),
+                energy_work_absolute_kn_m=abs(energy-.5*float(d@f)),
+                all_node_force_residual_max_kn=float(np.max(abs(residual.reshape(-1, 6)[:, :3]))),
+                all_node_moment_residual_max_kn_m=float(np.max(abs(residual.reshape(-1, 6)[:, 3:]))),
+                force_sum_kn=np.sum(forces[:, :3], axis=0).tolist(), moment_sum_kn_m=moment.tolist())
+
+
+def section(xy, cell, displacement, E, nu, t, e, r=1/3, s=1/3):
+    N, grad = shapes(r, s); J = geometry(xy[cell])
+    Bm, Bb, Bs, _ = operators(N, grad@np.linalg.inv(J))
+    dp = transform(e)@displacement.reshape(-1, 6)[cell].ravel()
+    A, D, S = constitutive(E, nu, t)
+    force, moment = A@Bm@dp, D@Bb@dp
+    return np.r_[force, moment, moment-e*force, S*Bs@dp]
+
+
+def strip_exact(x, E, t, e, N, M=0., L=2., support='cantilever'):
+    """nu=0, per unit width; M is attachment-face moment resultant."""
+    A, D = E*t, E*t**3/12
+    k = (M+e*N)/D
+    eps = N/A+e*k
+    theta = k*x if support == 'cantilever' else k*(x-L/2)
+    w = -k*x*x/2 if support == 'cantilever' else k*x*(L-x)/2
+    return np.array([eps*x, 0., w, 0., theta, 0.])
+
+
+def edge_load(xy, cells, x, traction):
+    """Independent 1D integration of quadratic end-edge virtual work."""
+    f = np.zeros(6*len(xy)); done = set()
+    for cell in cells:
+        for a, b, m in ((0, 1, 3), (1, 2, 4), (2, 0, 5)):
+            edge = cell[[a, b, m]]
+            key = tuple(sorted(edge))
+            if key in done or not np.all(abs(xy[edge, 0]-x) < 1e-12):
+                continue
+            done.add(key)
+            length = np.linalg.norm(xy[edge[1]]-xy[edge[0]])
+            for z, w in zip(*leggauss(4)):
+                n = np.array([z*(z-1)/2, z*(z+1)/2, 1-z*z])
+                for node, value in zip(edge, n):
+                    f[6*node:6*node+6] += length*w/2*value*np.asarray(traction)
+    return f
+
+
+def strip_run(n=4, e=.06, N=3., M=0., support='cantilever', anchor=0.):
+    E, t, L = 2.e5, .2, 2.
+    xy, cells = mesh(n, max(1, n//2), L, 1.)
+    K, _ = assemble(xy, cells, E, 0., t, e)
+    f = edge_load(xy, cells, L, [N, 0., 0. if not anchor else 1., 0., M, 0.])
+    left = np.flatnonzero(abs(xy[:, 0]) < 1e-12)
+    if support == 'cantilever':
+        bc = (6*left[:, None]+np.arange(6)).ravel()
+    else:
+        ends = np.flatnonzero((abs(xy[:, 0]) < 1e-12)|(abs(xy[:, 0]-L) < 1e-12))
+        bc = np.r_[6*left, 6*ends+2, 6*np.arange(len(xy))+1,
+                   6*np.arange(len(xy))+3, 6*np.arange(len(xy))+5]
+    if anchor:
+        # One bilateral linear spring/truss, k=EA/La, through a work-conjugate
+        # uniform edge load distributor. Extension is average tip w (unit width).
+        # This is a rank-one spring, not independent springs at every node.
+        g = edge_load(xy, cells, L, [0., 0., 1., 0., 0., 0.])
+        v = csr_matrix(g[:, None]); Ka = anchor*(v@v.T)
+        Ktotal = K+Ka
+    else:
+        Ka = csr_matrix(K.shape); Ktotal = K
+    d, r, relative = solve(Ktotal, f, bc)
+    if anchor:
+        D, S = E*t**3/12, 5/6*E/2*t
+        compliance = L**3/(3*D)+L/S
+        P = 1/(1+anchor*compliance)
+        tip_exact = compliance*P
+        tip = np.flatnonzero((abs(xy[:, 0]-L) < 1e-12))
+        errors = dict(w_tip_absolute_m=float(np.max(abs(d.reshape(-1, 6)[tip, 2]-tip_exact))),
+                      w_tip_average_absolute_m=abs(float(g@d)-tip_exact),
+                      w_tip_exact_m=tip_exact, anchor_force_exact_kn=anchor*tip_exact,
+                      anchor_force_numeric_kn=float(np.sum((Ka@d)[2::6])))
+    else:
+        exact = np.array([strip_exact(x, E, t, e, N, M, L, support) for x, y in xy])
+        errors = dict(displacement_max_m=float(np.max(abs(d.reshape(-1, 6)[:, :3]-exact[:, :3]))),
+                      rotation_max_rad=float(np.max(abs(d.reshape(-1, 6)[:, 3:]-exact[:, 3:]))))
+    report = dict(n=n, e_m=e, support=support, anchor_stiffness_kn_m=anchor,
+                  free_residual_relative=relative, errors=errors,
+                  diagnostics=diagnostics(Ktotal, f, d, r, xy, -Ka@d),
+                  spring_energy_kn_m=.5*float(d@Ka@d))
+    return report, xy, cells, d, r
+
+
+def winkler_exact(x, y, E=2.e5, nu=.3, t=.2, kf=100., q=1., L=2., H=1.):
+    a, b = np.pi/L, np.pi/H; k2 = a*a+b*b
+    _, Dm, S = constitutive(E, nu, t); D = Dm[0, 0]
+    W = q/(kf+D*k2*k2/(1+D*k2/S))
+    R = W/(1+D*k2/S)
+    w = W*np.sin(a*x)*np.sin(b*y)
+    bx, by = -a*R*np.cos(a*x)*np.sin(b*y), -b*R*np.sin(a*x)*np.cos(b*y)
+    return w, bx, by
+
+
+def winkler_run(n=4, e=.06, order=5):
+    E, nu, t, kf, L, H = 2.e5, .3, .2, 100., 2., 1.
+    xy, cells = mesh(2*n, n, L, H)
+    K, f = assemble(xy, cells, E, nu, t, e,
+                    lambda x, y: np.sin(np.pi*x/L)*np.sin(np.pi*y/H), kf, order)
+    # Membrane-free subspace u_p=v_p=theta_z=0. Explicit offset MPC.
+    row, col, val = [], [], []
+    for i in range(len(xy)):
+        row.extend([6*i+2, 6*i+4, 6*i+3, 6*i, 6*i+1])
+        col.extend([3*i, 3*i+1, 3*i+2, 3*i+1, 3*i+2])
+        val.extend([1., 1., -1., e, e])
+    P = coo_matrix((val, (row, col)), shape=(6*len(xy), 3*len(xy))).tocsr()
+    Kr, fr = P.T@K@P, P.T@f
+    bc = []
+    for i, (x, y) in enumerate(xy):
+        onx, ony = abs(x) < 1e-12 or abs(x-L) < 1e-12, abs(y) < 1e-12 or abs(y-H) < 1e-12
+        if onx or ony: bc.append(3*i)
+        if onx: bc.append(3*i+2)  # tangential director fixed, M_nn natural zero
+        if ony: bc.append(3*i+1)
+    a, rr, relative = solve(Kr, fr, bc)
+    d = P@a
+    # Physical constrained reactions from the full system, including offset MPC.
+    reaction = K@d-f
+    projected = np.asarray(P.T@reaction)
+    projected[np.unique(bc)] = 0.
+    reaction -= P@(projected/np.asarray(P.power(2).sum(axis=0)).ravel())
+    Kplate, _ = assemble(xy, cells, E, nu, t, e, order=order)
+    ground = -(K-Kplate)@d
+    err, norm = 0., 0.
+    for cell in cells:
+        J = geometry(xy[cell]); nodal = a.reshape(-1, 3)[cell]
+        for r, s, wt in quadrature(6):
+            N, _ = shapes(r, s); x, y = N@xy[cell]
+            ex = np.array(winkler_exact(x, y))
+            delta = N@nodal-ex
+            err += wt*np.linalg.det(J)*delta[0]**2
+            norm += wt*np.linalg.det(J)*ex[0]**2
+    return dict(n=n, h_m=H/n, e_m=e, w_relative_L2=float(np.sqrt(err/norm)),
+                free_residual_relative=relative, diagnostics=diagnostics(K, f, d, reaction, xy, ground),
+                foundation_energy_kn_m=-.5*float(d@ground)), xy, cells, d, reaction
+
+
+def rigid_diagnostics(e=.06):
+    xy, cells = mesh(1, 1)
+    cell = cells[0]; p = xy[cell]
+    K, _ = element(p, 2.e5, .3, .2, e)
+    modes = []
+    for j in range(6):
+        trans, rot = np.zeros(3), np.zeros(3)
+        (trans if j < 3 else rot)[j % 3] = 1
+        q = np.zeros((6, 6)); q[:, :3] = trans+np.cross(rot, np.column_stack((p, np.zeros(6))))
+        q[:, 3:] = rot; modes.append(q.ravel())
+    R = np.array(modes).T
+    values = np.linalg.eigvalsh(K)
+    cutoff = 1.e-10*max(abs(values))
+    count = int(np.sum(abs(values) <= cutoff))
+    return dict(e_m=e, eigenvalues=values.tolist(), eigen_cutoff=cutoff,
+                nullity=count, extra_zero_modes=count-6,
+                rigid_relative_residual=float(np.linalg.norm(K@R)/(np.linalg.norm(K)*np.linalg.norm(R))))
+
+
+def direct_energy(xy, d, E, nu, t, e):
+    """Separate through-thickness evaluation, without T, B operators or K."""
+    validate(E, nu, t, e)
+    J = geometry(xy); q = np.asarray(d).reshape(6, 6)
+    C = E/(1-nu*nu)*np.array([[1., nu, 0.], [nu, 1., 0.], [0., 0., (1-nu)/2]])
+    G = E/(2*(1+nu)); energy = 0.
+    for r, s, wt in quadrature(5):
+        N, dn = shapes(r, s); grad = dn@np.linalg.inv(J)
+        v, g = N@q, q.T@grad
+        gamma = np.array([g[2, 0]+v[4], g[2, 1]-v[3]])
+        spin = .5*(g[1, 0]+e*g[3, 0]-g[0, 1]+e*g[4, 1])
+        for z, wz in zip(*leggauss(3)):
+            lever = z*t/2-e
+            strain = np.array([g[0, 0]+lever*g[4, 0], g[1, 1]-lever*g[3, 1],
+                               g[0, 1]+g[1, 0]+lever*(g[4, 1]-g[3, 0])])
+            density = .5*strain@C@strain+.5*(5/6)*G*(gamma@gamma)+.5*.01*(5/6)*G*(v[5]-spin)**2
+            energy += wt*np.linalg.det(J)*wz*t/2*density
+    return float(energy)
+
+
+def pressure_nodes(xy, level, gamma=9.81, e=.06, order=5):
+    """Clipped wet polygon, independent of production hydrostatic routines.
+
+    Water height is local y (vertical plate); load acts in -local z.
+    The moment e*n cross (-p*n) is exactly zero for normal pressure.
+    """
+    J = geometry(xy)
+    poly = [np.array([0., 0.]), np.array([1., 0.]), np.array([0., 1.])]
+    def height(v): return float((xy[0]+J@v)[1])
+    clipped = []
+    for a, b in zip(poly, poly[1:]+poly[:1]):
+        ha, hb = height(a), height(b)
+        if ha <= level: clipped.append(a)
+        if (ha < level < hb) or (hb < level < ha):
+            clipped.append(a+(b-a)*(level-ha)/(hb-ha))
+    force = np.zeros(36)
+    for i in range(1, len(clipped)-1):
+        v = np.array([clipped[0], clipped[i], clipped[i+1]])
+        B = np.column_stack((v[1]-v[0], v[2]-v[0]))
+        for r, s, wt in quadrature(order):
+            rs = v[0]+B@np.array([r, s]); N, _ = shapes(*rs)
+            p = gamma*(level-height(rs))
+            force[2::6] -= wt*abs(np.linalg.det(B))*np.linalg.det(J)*p*N
+    return transform(e).T@force
+
+
+def pressure_closed(level, gamma=9.81):
+    """Exact nodal forces for unit right triangle (0,0),(1,0),(0,1).
+
+    Integrate monomials x^a y^b (level-y), x=0..1-y, y=0..min(level,1).
+    No quadrature or shape-function evaluator used on this analytic path.
+    """
+    from math import comb
+    h = max(0., min(level, 1.))
+    def integral(a, b):
+        return sum((-1)**j*comb(a+1, j)/(a+1)*
+                   (level*h**(b+j+1)/(b+j+1)-h**(b+j+2)/(b+j+2)) for j in range(a+2))
+    polys = [{(0, 0): 1, (1, 0): -3, (0, 1): -3, (2, 0): 2, (1, 1): 4, (0, 2): 2},
+             {(2, 0): 2, (1, 0): -1}, {(0, 2): 2, (0, 1): -1},
+             {(1, 0): 4, (2, 0): -4, (1, 1): -4}, {(1, 1): 4},
+             {(0, 1): 4, (1, 1): -4, (0, 2): -4}]
+    return -gamma*np.array([sum(c*integral(a, b) for (a, b), c in poly.items()) for poly in polys])
+
+
+def mcc_invariants(stress, pc, M):
+    """Confirmed FOUNDATION definitions only; no coupled soil solver."""
+    sigma = np.asarray(stress, float)
+    if sigma.shape != (3, 3) or not np.all(np.isfinite(sigma)) or not np.allclose(sigma, sigma.T):
+        raise ValueError('symmetric finite compression-positive effective stress required')
+    if not np.isfinite(pc+M) or pc <= 0 or M <= 0:
+        raise ValueError('positive pc and M required')
+    p = np.trace(sigma)/3
+    if p <= 0: raise ValueError('p>0 required; clipping forbidden')
+    dev = sigma-p*np.eye(3); q = np.sqrt(1.5*np.sum(dev*dev))
+    return dict(p_kpa=float(p), q_kpa=float(q), F_kpa2=float(q*q+M*M*p*(p-pc)),
+                accepted=None, coupled_offset_soil='仕様未定義')
