@@ -148,3 +148,29 @@ M=1.2〜1.45の近傍場ではMの増加と上下側値の増加が整合する�
 [validation.json](validation.json)は最終全件前のsnapshotで、後から成功へ書き換えない。最終のLinux fmt／clippy／Rust／Python全件の実件数・終了コード・ログSHA、ソース不変照合は `validation/final-summary.tsv` に保存する。Python全件は通常2群と旧mean/spatial各4件の和集合を照合し、重複・欠落・skipを確認する。Windows CIの結果はpush後の同一先端を別途示し、実行中・キャンセル・時間切れを成功に数えない。
 
 配布用証拠ZIPは、一次162材料点延長の全observer要求／応答、旧foldのSHA照合済み原場、掃引の全受理場・全実線形系・GP接線・停止／拒否ログと入力を収録する。大きい掃引のobserver材料点呼出し要求／応答は、全件のSHAを `sweep-material-call-sha256.tsv` に保存し、ZIPには重複収録しない。生ファイルは今回の `runs/` に保持した。未収録分を新規展開でバイト再監査したとは主張しない。保存された受理場・行列・GP接線の再組立と一次材料点延長は配布ZIPから検査できる。
+
+## 最終実測・不変コミット登録
+
+|Linux検証|最終結果|
+|---|---|
+|cargo fmt --all --check|終了0|
+|cargo clippy --locked --all-targets -- -D warnings|終了0|
+|locked release CLI build|完了。実行版を全CLI試験に使用|
+|cargo test --locked --release --all-targets|88集計群・461件成功、failed/ignored/measured/filteredは全て0|
+|Rust doc tests|0件、終了0|
+|Python全件|708固有ID、通常0群341＋通常1群359＋旧mean4＋旧spatial4、全成功|
+|Python最終failure/error/skip/expected failure/unexpected success|全て0|
+|新規診断単体試験|19件、708件に内包|
+|P6関連の該当試験|76件、708件に内包。登録後の個別実行でも成功|
+|固定ソース|通常群前の1,487ファイルの集合・SHA-256が最終終了後も同一|
+|保存再現|30分割・2,142メンバーのSHA照合、新規展開からGP・上下界・安定性の3 JSONがバイト一致。材料点JSONは実測時間以外の全フィールドが一致|
+
+[最終件数・終了コード・ログSHA](validation/final-summary.tsv)、[Python固有ID](validation/python-test-ids.tsv)、[不変ソース](validation/source-fingerprints.tsv)、[終了後の同一性](validation/source-check.tsv)、[証拠の再測定](validation/artifact-replay.tsv)を保存した。Rustの全体wall timeは記録していないため、推定値を入れず、各実ログの時間と区別する。今回のソフトウェア検証成功を、NC-01や物理的崩壊分類の成功へ転用しない。
+
+初回通常0群は317実行・10 error、通常1群は347実行・4 error・1 skipだった。原因は疎取得で不足した旧ZIP fixture、通常群の起動時にCargoのPATHを読み込んでいなかったこと、PowerShell未配置である。通常0群の次の実行もPowerShellがそのプロセスのPATHにないため341実行・1 skipとなり、既存runnerは終了1を返した。これらを成功として数えていない。初回／中間のログと全inventory値を `validation/retained-*` に保持した。
+
+不足fixtureは起点2a826c4のGit blob SHA-1と保存SHA-256を照合してそのまま復元し、[取得表](validation/fixture-materialization.tsv)を保存した。PowerShell 7.5.4は既存の互換試験を実際にLinuxでも走らせるための作業用ランタイムで、公式releaseのhashes.sha256と照合して `work/` 配下へ置いた。キャッシュも作業フォルダ内に設定した。[ランタイムのSHA](validation/powershell-runtime.tsv)を保存し、プロジェクトのCargo／Python依存やSOCP依存は増やしていない。環境を揃えて通常2群を**全件再実行**し、最終の341＋359件はerror・skipとも0。試験のskip追加や条件削除では通していない。
+
+11測定JSON・追記manifest等は不変コミット **`bf8d691e6fdaba6d98f4e3df86f0fea12c0b574b`** に固定し、**N015〜N025**としてP6-01追補台帳へ登録した。[登録表](validation/registration.tsv)を参照。旧登録・旧台帳のバイトprefixは保持した。新しい文書suffixの改変・再封印・欠損、および旧suffixの改変が引き続き拒否される単体試験を付けた。
+
+起点7,006 blobパスのGit IDを比較し、最終変更した既存ファイルはNC文書とtodoの末尾追記、厳密suffixを扱うP6-01監査器、追補台帳の4件に限定した。src・入力例・既存試験・参照値・過去の失敗・旧interim証拠のGit blobを変更していない。未配置の無関係な大規模アーカイブまで実バイトで読み直したという主張ではなく、必要な旧fixtureと今回の生証拠のSHA再検査、Git tree保持を区別する。NC-01・P6全体ほかの未達は保持する。
