@@ -16,7 +16,9 @@ import tomllib
 BASE = '8342762bd714e33523ce5fef772572699fc21881'
 DEST = 'interim/2026-12-06-p6-01-status-reconciliation'
 SUPPLEMENTAL_PATH = 'interim/2026-12-10-ci-p601-inventory-fix/inventory.toml'
-SUPPLEMENTAL_SHA256 = 'b52659fa8058d72c2d3906ef3f674efed73875c661aac7b61e6a1400b2f8c8c6'
+SUPPLEMENTAL_SHA256 = '0b65594e1240edbae727814f2edef437207e4587c52282bd973d86fc5dae1f39'
+PHYSICAL_APPENDICES_PATH = 'interim/2026-11-13-nc-lambda-physical-limit/document-appendices.json'
+PHYSICAL_APPENDICES_SHA256 = '2984747e89a2d3e2ff3f45ae3b32c06c0d0522a85e844b4ca349705ea1736bdc'
 STATES = ('限定受入', '未達', '未対応（入力拒否）', '判定不能', '未確認・PC手順待ち')
 DOCS = ['docs/P6_STATUS.ja.md', 'docs/STRUCTURE_WATER_JOINT_REMAINDERS.ja.md',
         'interim/2026-11-16-issue-triage/todo.ja.md']
@@ -68,6 +70,28 @@ def safe_path(root, path):
 def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args], stderr=subprocess.PIPE,
                                    env=dict(os.environ, GIT_NO_LAZY_FETCH='1'))
+
+
+def physical_document_appendices(root):
+    """Validate a new, pinned tail without resealing any historical document."""
+    root = Path(root)
+    raw = (root / PHYSICAL_APPENDICES_PATH).read_bytes()
+    if sha(raw) != PHYSICAL_APPENDICES_SHA256:
+        raise ValueError('NC physical document appendix manifest SHA-256 differs')
+    data = json.loads(raw)
+    if (set(data) != {'schema', 'diagnostic_only', 'passed', 'nc01_complete', 'appendices'}
+            or data['schema'] != 'nc-physical-document-appendices/1'
+            or data['diagnostic_only'] is not True or data['passed'] is not False
+            or data['nc01_complete'] is not False):
+        raise ValueError('NC physical appendix status or schema differs')
+    tails = data['appendices']
+    if (set(tails) != {'docs/LOW_PRELOAD_NC.ja.md', 'interim/2026-11-16-issue-triage/todo.ja.md'}
+            or any(not isinstance(t, str) or not t for t in tails.values())):
+        raise ValueError('NC physical appendix scope differs')
+    for name, tail in tails.items():
+        if not safe_path(root, name).read_bytes().endswith(tail.encode('utf-8')):
+            raise ValueError('NC physical document appendix suffix differs: '+name)
+    return tails
 
 
 def audit(root, ledger, *, verify_git=True):
@@ -137,6 +161,12 @@ def audit(root, ledger, *, verify_git=True):
             if set(later) != {DOCS[0], DOCS[2]} or any(not isinstance(t, str) or not t for t in later.values()):
                 add('LATER_APPENDIX_SCOPE', 'P6-03追補の対象/内容が異なる')
                 later = {}
+    physical_tails = {}
+    if (root / PHYSICAL_APPENDICES_PATH).exists() or (root / DEST / 'ledger.json').exists():
+        try:
+            physical_tails = physical_document_appendices(root)
+        except (OSError, ValueError, KeyError, TypeError) as e:
+            add('PHYSICAL_APPENDIX_MANIFEST', str(e))
     cache = {}
     for sid, source in inventory.items():
         path = source.get('path', '')
@@ -144,6 +174,9 @@ def audit(root, ledger, *, verify_git=True):
             add('EXTERNAL_SOURCE_SCOPE', '固定Git証拠を外部snapshotへ再分類できない', evidence=[sid])
         try:
             data = safe_path(root, path).read_bytes()
+            if path in physical_tails:
+                # The complete tail was checked above, before old-byte checks.
+                data = data[:-len(physical_tails[path].encode('utf-8'))]
             if path in later:
                 tail = later[path].encode('utf-8')
                 if not data.endswith(tail):
@@ -195,7 +228,8 @@ def audit(root, ledger, *, verify_git=True):
         if inventory[sid].get('kind') != 'markdown':
             continue
         complete_document = (data.decode('utf-8') + inventory[sid].get('appendix', '')
-                             + later.get(inventory[sid]['path'], ''))
+                             + later.get(inventory[sid]['path'], '')
+                             + physical_tails.get(inventory[sid]['path'], ''))
         for lineno, line in enumerate(complete_document.splitlines(), 1):
             # Only the status column of an identified acceptance row; negated/historical prose is not a completion claim.
             if re.search(r'(?:NC-01|P6全体|P3b/P4各行)\s*(?:は|が|[:：])\s*(?:全て|すべて)?(?:完了(?:しました|です|済み)|全体受入済み|全面合格)', line) and not re.search(r'しない|ではない|認定せず|禁止|引用|誤記', line):

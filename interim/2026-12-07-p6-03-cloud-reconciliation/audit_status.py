@@ -74,6 +74,11 @@ def audit(status=None, *, verify_files=True):
     check(s.get('windows_ci',{}).get('success_claimed') is False,'CI_NOT_CONFIRMED')
     if verify_files:
         tails=read(HERE/'document-appendices.json')
+        try:
+            physical_tails=load_old().physical_document_appendices(ROOT)
+        except (OSError, ValueError, KeyError, TypeError):
+            physical_tails={}
+            check(False,'PHYSICAL_APPENDIX_MANIFEST')
         for item in read(HERE/'branch-sources.json')['files']:
             p=item['path']
             frozen=subprocess.check_output(['git','-C',str(ROOT),'show',BASE+':'+p])
@@ -82,7 +87,7 @@ def audit(status=None, *, verify_files=True):
             check(blob==item['git_blob_sha1'],'BASE_BLOB:'+p)
             if p.endswith('/audit_status.py'):
                 continue # Explicit strict appendix compatibility change, audited by old tests.
-            expected=frozen+tails.get(p,'').encode()
+            expected=frozen+tails.get(p,'').encode()+physical_tails.get(p,'').encode()
             try:actual=(ROOT/p).read_bytes()
             except OSError:actual=None
             check(actual==expected,'CURRENT_BYTES:'+p)
