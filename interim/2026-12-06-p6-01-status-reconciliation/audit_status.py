@@ -19,6 +19,8 @@ SUPPLEMENTAL_PATH = 'interim/2026-12-10-ci-p601-inventory-fix/inventory.toml'
 SUPPLEMENTAL_SHA256 = '0b65594e1240edbae727814f2edef437207e4587c52282bd973d86fc5dae1f39'
 PHYSICAL_APPENDICES_PATH = 'interim/2026-11-13-nc-lambda-physical-limit/document-appendices.json'
 PHYSICAL_APPENDICES_SHA256 = '2984747e89a2d3e2ff3f45ae3b32c06c0d0522a85e844b4ca349705ea1736bdc'
+COLLAPSE_APPENDICES_PATH = 'interim/2026-11-13-nc-lambda-collapse-classification/document-appendices.json'
+COLLAPSE_APPENDICES_SHA256 = '9ef6ecf6de7eafb6dc199172249f62179812736c8c03b7c780a1dc1eed3f2bfc'
 STATES = ('限定受入', '未達', '未対応（入力拒否）', '判定不能', '未確認・PC手順待ち')
 DOCS = ['docs/P6_STATUS.ja.md', 'docs/STRUCTURE_WATER_JOINT_REMAINDERS.ja.md',
         'interim/2026-11-16-issue-triage/todo.ja.md']
@@ -72,6 +74,31 @@ def git(root, *args):
                                    env=dict(os.environ, GIT_NO_LAZY_FETCH='1'))
 
 
+def collapse_document_appendices(root):
+    """Only the exact pinned new suffix can precede historical hash checks."""
+    root = Path(root)
+    path = root / COLLAPSE_APPENDICES_PATH
+    if not path.parent.exists():
+        return {}
+    raw = path.read_bytes()
+    if sha(raw) != COLLAPSE_APPENDICES_SHA256:
+        raise ValueError('NC collapse document appendix manifest SHA-256 differs')
+    data = json.loads(raw)
+    if (set(data) != {'schema', 'diagnostic_only', 'passed', 'nc01_complete', 'appendices'}
+            or data['schema'] != 'nc-collapse-document-appendices/1'
+            or data['diagnostic_only'] is not True or data['passed'] is not False
+            or data['nc01_complete'] is not False):
+        raise ValueError('NC collapse appendix status or schema differs')
+    tails = data['appendices']
+    if (set(tails) != {'docs/LOW_PRELOAD_NC.ja.md', 'interim/2026-11-16-issue-triage/todo.ja.md'}
+            or any(not isinstance(t, str) or not t for t in tails.values())):
+        raise ValueError('NC collapse appendix scope differs')
+    for name, tail in tails.items():
+        if not safe_path(root, name).read_bytes().endswith(tail.encode('utf-8')):
+            raise ValueError('NC collapse document appendix suffix differs: '+name)
+    return tails
+
+
 def physical_document_appendices(root):
     """Validate a new, pinned tail without resealing any historical document."""
     root = Path(root)
@@ -88,10 +115,12 @@ def physical_document_appendices(root):
     if (set(tails) != {'docs/LOW_PRELOAD_NC.ja.md', 'interim/2026-11-16-issue-triage/todo.ja.md'}
             or any(not isinstance(t, str) or not t for t in tails.values())):
         raise ValueError('NC physical appendix scope differs')
-    for name, tail in tails.items():
+    collapse = collapse_document_appendices(root)
+    combined = {name: tail+collapse.get(name, '') for name, tail in tails.items()}
+    for name, tail in combined.items():
         if not safe_path(root, name).read_bytes().endswith(tail.encode('utf-8')):
             raise ValueError('NC physical document appendix suffix differs: '+name)
-    return tails
+    return combined
 
 
 def audit(root, ledger, *, verify_git=True):
