@@ -5,7 +5,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools'))
-import run_ci_python_tests as runner
+import run_ci_python_evidence_shards as runner
 
 
 class PythonCIPartition(unittest.TestCase):

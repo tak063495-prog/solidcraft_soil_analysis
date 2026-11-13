@@ -91,7 +91,7 @@ jobs:
       - name: Run all Python tests
         if: startsWith(matrix.group, 'python-')
         run: |
-          python tools/run_ci_python_tests.py --group ${{ matrix.group }} --output runs/ci
+          python tools/run_ci_python_evidence_shards.py --group ${{ matrix.group }} --output runs/ci
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify small wet JOINT plate beam integration
         if: matrix.group == 'verification'

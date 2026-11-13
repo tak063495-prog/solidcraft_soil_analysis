@@ -16,6 +16,7 @@ job **131956600215** (`python-core-1 on Windows`) は **cancelled**。
 `git checkout` の開始 14:49:08.878 から最初の `Updating files` 15:23:55.615
 まで約 34 分 47 秒かかる。大きな保存 blob の遅延取得と配置が支配的で、
 全履歴の commit/tree 取得だけが 37 分かかったわけではない。
+旧ログには Trace2 等がなく、遅延取得のネットワークと runner の展開・ディスク処理の内訳は分離できない。
 LFS は false。`Preserve exact archived source bytes` は
 checkout 前の `git config --global core.autocrlf false` で、アーカイブ生成・展開の処理ではない。
 
@@ -56,7 +57,10 @@ core-1 は 363 → 389 件、core-0 は 347 → 329 件となった。
   既存 NC archive の除外パターン、NC の試験・数値設定は変更しない。
 - ジョブ上限は **75 分**にする。37 分の checkout の再発も予算に含め、
   完走に必要な余裕を明示的に確保する。cancelled/timeout は集約で引き続き failure になる。
-- runner が各試験の実測時間も JSON に記録する。replay の中身・判定・保存値は変更しない。
+- 新規 `tools/run_ci_python_evidence_shards.py` が各試験の実測時間も JSON に記録する。
+  既存 `tools/run_ci_python_tests.py` は PC-3 の保守的な全 tools ソース照合に含まれるため、
+  元のバイトを維持する。NC のゲート・試験・設定を変更して新 runner を除外することはしない。
+  replay の中身・判定・保存値は変更しない。
 
 実際の Git sparse checkout を使う回帰試験で、全群の source 保持と必要 archive の配置、
 全試験 ID の一意な割当、CRLF で保存した文書の末尾一致を検査する。

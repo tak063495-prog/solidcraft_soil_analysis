@@ -17,13 +17,13 @@ cargo clippy --locked --all-targets -- -D warnings
 cargo build --locked --release
 cargo test --locked --release
 python -m pip install -r requirements-reference.lock.txt
-python tools/run_ci_python_tests.py --group python-core-0 --output work/validation/python-core-0
-python tools/run_ci_python_tests.py --group python-core-1 --output work/validation/python-core-1
-python tools/run_ci_python_tests.py --group python-mean-evidence --output work/validation/python-mean-evidence
-python tools/run_ci_python_tests.py --group python-spatial-evidence --output work/validation/python-spatial-evidence
-python tools/run_ci_python_tests.py --group python-c01-switch --output work/validation/python-c01-switch
-python tools/run_ci_python_tests.py --group python-c01-path --output work/validation/python-c01-path
-python tools/run_ci_python_tests.py --group python-c01-cause --output work/validation/python-c01-cause
+python tools/run_ci_python_evidence_shards.py --group python-core-0 --output work/validation/python-core-0
+python tools/run_ci_python_evidence_shards.py --group python-core-1 --output work/validation/python-core-1
+python tools/run_ci_python_evidence_shards.py --group python-mean-evidence --output work/validation/python-mean-evidence
+python tools/run_ci_python_evidence_shards.py --group python-spatial-evidence --output work/validation/python-spatial-evidence
+python tools/run_ci_python_evidence_shards.py --group python-c01-switch --output work/validation/python-c01-switch
+python tools/run_ci_python_evidence_shards.py --group python-c01-path --output work/validation/python-c01-path
+python tools/run_ci_python_evidence_shards.py --group python-c01-cause --output work/validation/python-c01-cause
 ```
 
 7 群の `python-test-inventory.json` の discovered IDs と assigned IDs の和集合を照合し、

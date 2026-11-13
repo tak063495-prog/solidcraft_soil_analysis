@@ -8,7 +8,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools'))
-import run_ci_python_tests as runner
+import run_ci_python_evidence_shards as runner
 
 HERE = ROOT/'interim/2026-12-14-ci-timeout-fa22e14'
 FOLDERS = ('2026-12-11-c01-global-step-control',

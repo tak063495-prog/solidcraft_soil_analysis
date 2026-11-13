@@ -1,8 +1,8 @@
 """Run every discovered unittest in exactly one Windows job, by whole module.
 
-The two NC evidence modules and three C-01 modules each get a job. Other modules
-are sorted and round-robin partitioned, including tools tests. Assertions and
-tolerances are unchanged; every job records the complete inventory and partitions.
+The two archived-evidence modules each get a job. Other modules are sorted and
+round-robin partitioned, including tools tests. Assertions and tolerances are
+unchanged; every job records the complete inventory and all four partitions.
 """
 import argparse
 import json
@@ -11,18 +11,14 @@ import sys
 import time
 import unittest
 
-GROUPS = ('python-core-0', 'python-core-1', 'python-mean-evidence', 'python-spatial-evidence',
-          'python-c01-switch', 'python-c01-path', 'python-c01-cause')
+GROUPS = ('python-core-0', 'python-core-1', 'python-mean-evidence', 'python-spatial-evidence')
 HEAVY = {'test_nc_mean_stress_evidence': 'python-mean-evidence',
-         'test_nc_spatial_evidence': 'python-spatial-evidence',
-         'test_c01_global_step_control': 'python-c01-switch',
-         'test_c01_path_error_control': 'python-c01-path',
-         'test_c01_cause_diagnosis': 'python-c01-cause'}
+         'test_nc_spatial_evidence': 'python-spatial-evidence'}
 
 
 def partition(modules):
     if not modules or not set(HEAVY) <= set(modules):
-        raise ValueError('complete discovered inventory must include all dedicated evidence modules')
+        raise ValueError('complete discovered inventory must include both evidence modules')
     ids = [test for values in modules.values() for test in values]
     if not ids or len(ids) != len(set(ids)) or any(not values for values in modules.values()):
         raise ValueError('nonempty unique discovered tests required')
@@ -64,21 +60,6 @@ def discover(root):
     return by_id, partition(modules)
 
 
-class TimedResult(unittest.TextTestResult):
-    """Record wall time per test, including its own setup/teardown, for CI budgets."""
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.test_elapsed_seconds = {}
-
-    def startTest(self, test):
-        self.started = time.monotonic()
-        super().startTest(test)
-
-    def stopTest(self, test):
-        self.test_elapsed_seconds[test.id()] = time.monotonic()-self.started
-        super().stopTest(test)
-
-
 class Tee:
     def __init__(self, log):
         self.log = log
@@ -113,11 +94,10 @@ def main():
             status = 0
         else:
             with (args.output/'python-tests.log').open('w', encoding='utf-8') as log:
-                result = unittest.TextTestRunner(stream=Tee(log), verbosity=2, resultclass=TimedResult).run(unittest.TestSuite(tests[x] for x in selected))
+                result = unittest.TextTestRunner(stream=Tee(log), verbosity=2).run(unittest.TestSuite(tests[x] for x in selected))
             report.update(tests_run=result.testsRun, failures=len(result.failures), errors=len(result.errors),
                           skipped=len(result.skipped), expected_failures=len(result.expectedFailures),
-                          unexpected_successes=len(result.unexpectedSuccesses),
-                          test_elapsed_seconds=result.test_elapsed_seconds)
+                          unexpected_successes=len(result.unexpectedSuccesses))
             status = int(not result.wasSuccessful() or result.testsRun != len(selected) or bool(result.skipped)
                          or bool(result.expectedFailures) or bool(result.unexpectedSuccesses))
     finally:
