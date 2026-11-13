@@ -39,7 +39,7 @@ JSON の妥当性、型付き boolean/null の値、根拠のない全体完了�
 旧ソース ID・パスとの衝突、可変 ref、外部 snapshot への付け替え、不正パスは拒否する。
 旧ソースには従来どおり `8342762` 固定を適用する。
 `SOURCE_NOT_INVENTORIED`、integrity 判定、旧テストの期待値は維持する。
-P6-03 の検査もそのままで、P6-01 への連鎖が解消することを確認する。
+P6-03 の検査もそのままで、P6-01 への連鎖が解消したことを Linux と Windows の実テストで確認した。
 
 ## 今後、新規 interim フォルダを追加するとき
 
@@ -64,14 +64,36 @@ P6-03 の検査もそのままで、P6-01 への連鎖が解消することを�
 |Linux release build|終了 0|
 |P6-01 該当試験|57 成功、failure/error/skip 0|
 |P6-03 該当試験|19 成功、failure/error/skip 0|
-|通常 Python 全件|676 固有 ID を 4 群へ重複なく割当、実行中。全件成功は未確認|
+|通常 Python 全件|**676 固有 ID すべて成功**。core-0: 321 / core-1: 347 / mean: 4 / spatial: 4。最終 failure/error/skip/expected failure/unexpected success はすべて 0|
 |旧先端 5e3d191 の Windows|run 43325715202 は failure。両 core 群が failure、他 6 群は success、集約は failure。PC compatibility 43325715212 は success|
-|今回の修正の Windows|push 後に同一先端の結果を確認する。現時点では成功未確認|
+|修正後 Windows Python|core-0 321 / core-1 347 / mean 4 / spatial 4、計 676 件を実行し、4 群すべて success。両固定監査の `... ok` をログでも照合|
+|今回の修正の Windows|**08b58fef4727659ad91e2fafaa087aef53e7ee52** の [FEM 43330893373](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43330893373) は完了・success。8 検証群と集約の全 9 job が success。[PC compatibility 43330893601](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43330893601) も両シェル success|
 
-全件試験前に 3,919 ファイルの指紋を固定した。全件の最終件数・終了コード・生ログは後続の追補で記録する。
+Windows は上記の **同一先端 SHA** と run 結論を照合し、FEM 全 9 job と compatibility 全 2 job の完了・success を確認した。
+[Windows job 一覧](validation/windows-08b58fe-jobs.tsv) と [Python 件数・該当監査のログ抜粋](validation/windows-08b58fe-python-excerpts.log) を保存した。
+キャンセル・時間切れ・実行中を成功へ数えていない。旧 5e3d191 の failure は [旧 job 一覧](validation/windows-5e3d191-jobs.tsv) にも保持する。
+
+この追補は検証済みコード 08b58fe に結果文書・ログを追加するもので、数値・監査・試験ソースと台帳登録は変更しない。
+結果記録コミットによって発火する新しい CI は、[PR #13 Checks](https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13/checks) で別に確認し、
+作業完了時の返信でも先端と結果を明示する。この文書内の成功記録の対象 SHA を後続の文書コミットへ付け替えない。
+
+全件試験前に固定した **3,919 ファイルは終了後もすべて同一**。
+最終 4 群は全て終了 0。各群の件数・終了コード・実測時間・ログ SHA は [linux-summary.tsv](validation/linux-summary.tsv)、
+重複のない全 ID は [linux-test-ids.tsv](validation/linux-test-ids.tsv)、生ログは `validation/linux-python-*.log` に保存した。
+該当 57 + 19 件は通常集合にも含まれるため、676 件へ加算しない。
 初回 core-0 では疎配置から漏れた旧 cut-volume `evidence.zip` による準備エラーを検出し、
-元コミットの blob と完全一致するファイルを復元した。初回 321 件は 320 成功・準備エラー 1・skip 0。初回ログを残し、同群 321 件を再実行中。
+元コミットの blob と完全一致するファイルを復元した。初回 core-0 の 321 件は 320 成功・準備エラー 1・skip 0、終了 1。
+同群全 321 件を元の CI runner で再実行し、全成功・終了 0 を確認した。
+初回の全群 676 件と同群再実行 321 件の method 試行は **997 件**。
+最終結果は 676 固有 ID に対して判定し、再実行や該当試験を水増ししない。
+初回ログ・初回集約の終了 1 は `linux-core-0-first-attempt.log` / `linux-initial-processes.log` に保持した。
 これはテスト期待値や証拠の変更ではない。
+
+Git tree では起点の旧 6,933 パスをすべて保持し、監査器・試験以外の 6,931 blob ID と実行属性は不変、削除は 0 件。
+起点 6,933 追跡ファイルのうち、配置した旧 5,898 ファイルはバイト・実行属性が一致した。
+既存変更は監査器と試験の 2 ファイルのみ。旧 JSON 2,687 件はすべて同一バイトで、
+省略したアーカイブ等 1,033 パスの中身は今回検証したとはしない。
+内訳は `validation/preservation.tsv` と `validation/sparse-omissions.tsv` に保存する。
 
 ## 保持した限界
 

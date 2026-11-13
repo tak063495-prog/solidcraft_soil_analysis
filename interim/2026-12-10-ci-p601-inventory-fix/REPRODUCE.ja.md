@@ -30,7 +30,7 @@ PowerShell を使う試験も実行するため、実物の `pwsh` を PATH に�
 不要な大規模アーカイブは疎配置で省略し、検証したとは主張しない。公式 PowerShell 7.5.2 を作業ディレクトリへ配置し、
 `XDG_CACHE_HOME`・`XDG_CONFIG_HOME`・`XDG_DATA_HOME` を書込可能な作業ディレクトリへ設定した。
 証拠 JSON、旧 hash、受入基準を変更する準備処理は行っていない。
-全件試験前に 3,919 ファイルの指紋を固定し、終了後に同一性を確認する。
+全件試験前に 3,919 ファイルの指紋を固定し、終了後も全て同一であることを確認した。
 
 ## 台帳への追加
 
@@ -58,9 +58,20 @@ HEAD SHA を照合し、8 検証群と `Rust and Python on Windows` 集約の完
 PC rate-arc gate compatibility も別 workflow として確認する。
 キャンセル・時間切れ・実行中・旧先端の成功は、この先端の成功に数えない。
 
-修正後の同一先端について、FEM の 8 群と集約、PC compatibility の両シェルの完了を確認し、
-最終観測を README と作業完了時の返信へ記録する。現時点では成功を主張しない。
+検証済み先端は `08b58fef4727659ad91e2fafaa087aef53e7ee52`。
+[FEM run 43330893373](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43330893373) は完了・success、
+8 検証群と集約の全 9 job が success。
+[PC compatibility 43330893601](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43330893601) も
+Windows PowerShell / PowerShell 7 の両 job が完了・success。
+Windows Python は 321 + 347 + 4 + 4 = 676 件、両固定監査の `... ok` をログで照合した。
+
+結果記録コミット自身で起動する新しい CI は PR の最新 Checks で確認する。
+上記成功の SHA と後続の文書コミットを区別し、最終確認は作業完了時の返信にも記録する。
 
 Windows PowerShell 5.1 で台帳を追補する場合は `>` / `Out-File` の既定 UTF-16 保存を避け、
 Python の `subprocess.check_output` が返す bytes を `Path.write_bytes` / `open(..., "ab")` で保存する。
 台帳の hash は保存された実バイトから計算し、改行や文字コードの差を許容値で吸収しない。
+
+今回の Linux 最終実測は core-0 321、core-1 347、mean 4、spatial 4、合計 676 固有 ID 成功。
+初回 core-0 の旧アーカイブ配置漏れ 1 error を保持し、同群 321 件を再実行した。
+全群と再実行の method 試行 997 件と、最終 676 固有 ID を分けて確認する。
