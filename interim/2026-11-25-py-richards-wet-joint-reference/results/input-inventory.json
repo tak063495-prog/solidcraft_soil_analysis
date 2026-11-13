@@ -1,0 +1,149 @@
+{
+  "base_commit": "79d839e3f89331a82d976efc1f23cbe2c848cbee",
+  "source_hashes_verified": true,
+  "C04_water_materials": [
+    {
+      "id": 1,
+      "saturated_conductivity_m_s": [
+        [
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.02,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.02
+        ]
+      ],
+      "retention": {
+        "residual_water_content": 0.08,
+        "saturated_water_content": 0.4117647058823529,
+        "alpha_per_m": 1.2,
+        "n": 1.6,
+        "saturated_specific_storage_per_m": 0.02
+      }
+    },
+    {
+      "id": 2,
+      "saturated_conductivity_m_s": [
+        [
+          0.02,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.02,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.02
+        ]
+      ],
+      "retention": {
+        "residual_water_content": 0.08,
+        "saturated_water_content": 0.4117647058823529,
+        "alpha_per_m": 1.2,
+        "n": 1.6,
+        "saturated_specific_storage_per_m": 0.02
+      }
+    }
+  ],
+  "C04_contact": {
+    "schema": "soil-fem-joints/1",
+    "geometric_tolerance_m": 1e-10,
+    "maximum_increment_m": 0.0005,
+    "tangent_step_m": 1e-08,
+    "joints": [
+      {
+        "id": "Seam",
+        "side_a": "Seam:a",
+        "side_b": "Seam:b",
+        "material": {
+          "normal_stiffness_kpa_m": 1000000.0,
+          "tangential_stiffness_kpa_m": 200000.0,
+          "friction_coefficient": 0.3
+        },
+        "water": {
+          "kind": "continuous"
+        }
+      }
+    ]
+  },
+  "C04_initial_head": {
+    "head_m": 0.3
+  },
+  "reference_inputs": {
+    "ks_m_s": 0.02,
+    "theta_r": 0.08,
+    "theta_s": 0.4117647058823529,
+    "alpha_per_m": 1.2,
+    "n": 1.6,
+    "ss_per_m": 0.02,
+    "gamma_water_kn_m3": 10.0,
+    "external_opening_stiffness_kpa_m": 2000.0,
+    "tangential_contact_stiffness_kpa_m": 200.0,
+    "mu": 0.3,
+    "gap_ks_m_s": 0.002,
+    "one_d_elevation_m": 0.32,
+    "normal_load_offset_kpa": 0.1,
+    "normal_load_amplitude_kpa": 0.5,
+    "boundary_head_amplitude_m": 0.15,
+    "prescribed_head_amplitude_m": 0.07,
+    "shear_displacement_amplitude_m": 0.006,
+    "schedule_peak_aperture_m": 0.0005,
+    "schedule_events_s": [
+      0.35,
+      0.75
+    ],
+    "problem_definition": "unit_cartesian_domain;left_Hbase+.15*sin(pi*t)^2*(1+.2*cos(pi*z));right_Hbase;N=.1+.5*cos(2*pi*t)^2;s=.006*sin(2*pi*t)"
+  },
+  "identified_comparison_quantities": [
+    "both soil-side total head traces",
+    "interface total head",
+    "instantaneous oriented flow on both faces",
+    "actual hydraulic storage change",
+    "cumulative exterior/reservoir inflow",
+    "physical seconds and dt",
+    "hydraulic opening and mechanical opening separately",
+    "fixed generation and IDs",
+    "physical pressure vs effective normal pressure",
+    "Coulomb shear/plastic slip/friction dissipation"
+  ],
+  "source_policy_meanings": {
+    "CONTINUOUS": "both sides SOIL; share only hydraulic head",
+    "SOIL": "explicit soil_side a/b; opposite impermeable structure excluded from hydraulics",
+    "PRESCRIBED": "fixed total head on adjacent active SOIL faces; null level follows exterior water level"
+  },
+  "unconfirmed": [
+    "Richards-to-JOINT production trace mapping",
+    "SOIL transient closed/open connection",
+    "contact-triggered PRESCRIBED reservoir switching",
+    "two-way production controller/schema/CLI",
+    "generation-change head/water/history transfer and initial contact force",
+    "A04-specific fully coupled material/geometry/boundary dataset",
+    "coupled numerical acceptance tolerance",
+    "real fracture aperture-dependent hydraulic calibration",
+    "general 3D bulk mechanical effective-stress solution"
+  ],
+  "tolerance": {
+    "coupled_acceptance": "未定義",
+    "accepted": null,
+    "existing_C04_hydraulics": {
+      "relative_flow": 1e-08,
+      "absolute_flow_m3_s": 1e-16,
+      "head_m": 1e-08
+    },
+    "source": "interim/2026-11-22-wet-joint-transient-water/REPRODUCE.ja.md: 出力と確認基準"
+  },
+  "A04": "未達",
+  "C04": "未達"
+}
