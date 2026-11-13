@@ -201,6 +201,7 @@ C-02〜C-04、NC-01、P6、A/B各項も未達のまま。局所経路の限定�
 
 fmt/clippy/build、Rust全件（all-targetsとdoc）、tests/toolsのPython全件は`validation.json`と`validation/`の件数・終了コード・生ログを参照。
 Pythonは既存7群の発見IDと実行IDの重複なし和集合で検査し、未実行・skipを成功に混ぜない。新しい9試験は通常群で実行する。
+初回の通常2群ではPowerShell未導入による各1件、計2件のskipを検出した。初回ログ・件数を`validation/initial-without-powershell/`に保持し、公式SHAを検証したPowerShell 7.5.4をwork領域へ用意して両群を再実行する。NCコード・設定は変更せず、skipを最終成功へ転用しない。
 重い保存履歴の再計算を新しいCI試験には追加せず、既存C-01の3シャード・75分予算を保持する。
 新ZIPは通常群の既存checkout規則で取得され、旧reference400-fixture.zipも必要なアーカイブ集合へ含める。旧CI/NCコード・設定の変更はない。
 新しい文書末尾の試験は`read_text`で改行を正規化し、実際のCRLFコピーでも照合する。証拠のSHAは正規化しない。

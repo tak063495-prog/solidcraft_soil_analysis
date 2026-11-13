@@ -25,6 +25,8 @@ git pull --ff-only origin codex/plastic-spatial-convergence
 git merge-base --is-ancestor 73e29c327745fbc045b84b23b405408a67e91fe8 HEAD
 # sparse checkout中なら全必要証拠を確保する。過去のZIP/part/失敗記録も必要。
 git sparse-checkout disable
+pwsh --version
+# PowerShell 7が無いWindows環境では先に winget install --id Microsoft.PowerShell --exact を実行する。
 rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
 py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
