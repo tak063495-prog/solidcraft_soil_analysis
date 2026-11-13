@@ -47,7 +47,7 @@ python tools/run_ci_python_evidence_shards.py --group python-c01-cause --output 
 固定 commit、SHA-256、blob SHA-1、型付き status keys の検査は維持する。
 
 ```sh
-python interim/2026-12-10-ci-p601-inventory-fix/register_sources.py --commit <保存コミット40桁> --id CI_TIMEOUT_FA22_VALIDATION interim/2026-12-14-ci-timeout-fa22e14/validation.json
+python interim/2026-12-10-ci-p601-inventory-fix/register_sources.py --commit dab6555d8653f99dfd1b67be80adc5ded06150d9 --id CI_TIMEOUT_FA22_VALIDATION interim/2026-12-14-ci-timeout-fa22e14/validation.json
 python -m unittest discover -s interim/2026-12-06-p6-01-status-reconciliation -p 'test_*.py' -v
 python -m unittest discover -s interim/2026-12-07-p6-03-cloud-reconciliation -p 'test_*.py' -v
 ```

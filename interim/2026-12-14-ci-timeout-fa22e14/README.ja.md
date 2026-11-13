@@ -122,5 +122,16 @@ PowerShell 不在で発生した skip は `validation/preliminary/` に保持し
 先行する不変コミットへ保存した後、P6-01 の追補台帳へ commit、SHA-256、blob SHA-1、
 型付き status keys を登録する。過去の登録・証拠を再封印しない。
 
+## 今回の固定登録
+
+`validation.json` は保存コミット `dab6555d8653f99dfd1b67be80adc5ded06150d9` に固定し、
+`CI_TIMEOUT_FA22_VALIDATION` として追補台帳へ登録した。
+SHA-256 は `b3dd2d4afd0704f20cbc1d437aa354677b3b791cac94dc25797dc7be6ea659d2`。
+既存の登録を保持したまま、追補台帳全体の hash 定数だけを更新する。
+登録後の P6-01 / P6-03 検査と文書の CRLF 検査は
+`validation/post-registration.json`、旧ファイルの保持は `preservation.json` に記録する。
+ソフトウェア全件結果の保存後に変わる実行コードは、この台帳の hash 定数だけであり、
+数値試験・replay の全件を再加算しない。
+
 Windows CIはpush後の新先端では未確定。
 C-01は未達、passed=false、原因は判定不能。

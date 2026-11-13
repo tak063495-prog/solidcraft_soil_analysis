@@ -16,7 +16,7 @@ import tomllib
 BASE = '8342762bd714e33523ce5fef772572699fc21881'
 DEST = 'interim/2026-12-06-p6-01-status-reconciliation'
 SUPPLEMENTAL_PATH = 'interim/2026-12-10-ci-p601-inventory-fix/inventory.toml'
-SUPPLEMENTAL_SHA256 = 'eeff2090b7f981aed1284b1a7bd1e49fe8e079bb785d8e8bb87eb6e51bf94436'
+SUPPLEMENTAL_SHA256 = 'd441cb639c6363bc7c76195ea8be09bfa107ca956b9f0ef4e777866f19091744'
 PHYSICAL_APPENDICES_PATH = 'interim/2026-11-13-nc-lambda-physical-limit/document-appendices.json'
 PHYSICAL_APPENDICES_SHA256 = '2984747e89a2d3e2ff3f45ae3b32c06c0d0522a85e844b4ca349705ea1736bdc'
 COLLAPSE_APPENDICES_PATH = 'interim/2026-11-13-nc-lambda-collapse-classification/document-appendices.json'
