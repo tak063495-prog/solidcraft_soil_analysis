@@ -1,0 +1,357 @@
+{
+  "base_commit": "3b1133d3be9905dc24f62c27b5b1eb456a83f2e2",
+  "sources": {
+    "interim/2026-11-20-wet-joint-plastic-bulk-integration/README.ja.md": {
+      "sha256": "25ab2cb08799ad3e5a77d1286bab9083669acc49b7c0cefdfc1e1a55316ce685"
+    },
+    "interim/2026-11-20-wet-joint-plastic-bulk-integration/measurements.json": {
+      "sha256": "be75f689746c82ff1aa548f6bfe3534f724de47055917abf5cee104ae3f8686e"
+    },
+    "interim/2026-11-20-wet-joint-plastic-bulk-integration/conclusion.json": {
+      "sha256": "ae886c201114b66824be2297a836a338f86448750a2d91d9981c6cd8cf5a6961"
+    },
+    "interim/2026-11-16-issue-triage/todo.ja.md": {
+      "sha256": "b0027189fa5e66dd494e50ceae357b27e003c6ba5331c14cfd43a3ce19c8a9ab"
+    },
+    "interim/2026-11-15-wet-joint-convergence/acceptance.json": {
+      "sha256": "77c93e89ac56576075f7252b3e0bc9386da922cbbbe1a0e20ebbe84df8a05708"
+    }
+  },
+  "original_scope": {
+    "material": "MC non_associated, c=30 kPa, phi=30 deg, psi=5 deg, no tension cutoff",
+    "elements": 12,
+    "nodes": 16,
+    "material_gp": 12,
+    "contact_gp": 6,
+    "global_steps_per_stage": 32,
+    "stages": [
+      [
+        "geostatic",
+        0
+      ],
+      [
+        "shear",
+        0.04
+      ],
+      [
+        "open",
+        0.12
+      ],
+      [
+        "recontact",
+        0.0
+      ],
+      [
+        "reverse",
+        -0.1
+      ],
+      [
+        "reload",
+        0.1
+      ],
+      [
+        "return",
+        0.0
+      ]
+    ],
+    "fixed_hydrostatic_water_level_m": 0.75,
+    "water_policy": "CONTINUOUS",
+    "material_maxima": [
+      0.0001,
+      5e-05,
+      2.5e-05
+    ],
+    "contact_maxima_m": [
+      0.0001,
+      5e-05,
+      2.5e-05
+    ]
+  },
+  "original_C03": "未達",
+  "original_passed": false,
+  "limited_verified": [
+    "fresh input-only independent 3D plastic histories, all 224 points per route",
+    "all field comparisons including MC return/contact status",
+    "separate material and contact subdivisions at a fixed global schedule",
+    "seven real-file separate-PID restarts through the final stage",
+    "unobserved solve exactly matches observed run except elapsed_seconds"
+  ],
+  "remaining": [
+    "nonmonotonic plastic joint-slip sensitivity under contact subdivision",
+    "no established full-history numerical gates for all plastic/internal/work fields; existing endpoint coupling gates are distinct",
+    "original open target 1.0 still requires cutbacks or stops in retained cases; the .12 case is a separate physical input",
+    "MCC and other plastic materials, general geometries, refined-space and long-series certification are unverified"
+  ],
+  "counts": {
+    "fresh_native_routes": 6,
+    "fresh_independent_routes": 6,
+    "accepted_states_per_route": 224,
+    "accepted_states_total": 2688,
+    "material_gp_states_total": 32256,
+    "contact_gp_states_total": 16128,
+    "field_count": 23,
+    "real_file_restarts": 7,
+    "post_restart_states_exact": 784
+  },
+  "measurements_selections": {
+    "/native_vs_independent/baseline/all_fields/accumulated": {
+      "difference_squared": 2.017781890197755e-11,
+      "reference_squared": 0.013005844817596668,
+      "maximum_absolute": 3.876826104925665e-07,
+      "components": 1344,
+      "absolute_l2": 4.4919727183029005e-06,
+      "relative_l2": 3.938835341748178e-05
+    },
+    "/native_vs_independent/baseline/all_fields/contact_status": {
+      "mismatches": 0,
+      "components": 1344,
+      "mismatch_fraction": 0.0
+    },
+    "/native_vs_independent/baseline/all_fields/elastic_energy": {
+      "difference_squared": 2.1823344815381054e-10,
+      "reference_squared": 0.3847103406115247,
+      "maximum_absolute": 2.2209820806111044e-06,
+      "components": 1344,
+      "absolute_l2": 1.4772726496954126e-05,
+      "relative_l2": 2.3817365831948914e-05
+    },
+    "/native_vs_independent/baseline/all_fields/endpoint_work": {
+      "difference_squared": 2.1366459940602987e-05,
+      "reference_squared": 9.809048972639284,
+      "maximum_absolute": 0.0005141866897063474,
+      "components": 1344,
+      "absolute_l2": 0.004622386822909025,
+      "relative_l2": 0.0014758860745366761
+    },
+    "/native_vs_independent/baseline/all_fields/equivalent_plastic_strain": {
+      "difference_squared": 7.50385279109853e-12,
+      "reference_squared": 0.001595554614283906,
+      "maximum_absolute": 2.8601624330916453e-07,
+      "components": 2688,
+      "absolute_l2": 2.7393161174093305e-06,
+      "relative_l2": 6.857823692286225e-05
+    },
+    "/native_vs_independent/baseline/all_fields/gap": {
+      "difference_squared": 2.1971759346375557e-14,
+      "reference_squared": 2.2821785894691857e-05,
+      "maximum_absolute": 3.195980898260456e-08,
+      "components": 1344,
+      "absolute_l2": 1.48228739947338e-07,
+      "relative_l2": 3.1028272969521405e-05
+    },
+    "/native_vs_independent/baseline/all_fields/jump": {
+      "difference_squared": 2.6600144575443083e-12,
+      "reference_squared": 0.0018493066288138877,
+      "maximum_absolute": 2.9630179697033403e-07,
+      "components": 4032,
+      "absolute_l2": 1.6309550752685703e-06,
+      "relative_l2": 3.7926043195659596e-05
+    },
+    "/native_vs_independent/baseline/all_fields/material_return": {
+      "mismatches": 0,
+      "components": 2688,
+      "mismatch_fraction": 0.0
+    },
+    "/native_vs_independent/baseline/all_fields/numerical_dissipation": {
+      "difference_squared": 2.1231689264266784e-06,
+      "reference_squared": 0.004431329443063221,
+      "maximum_absolute": 0.00018549284450930167,
+      "components": 1344,
+      "absolute_l2": 0.001457109785303317,
+      "relative_l2": 0.021888966445321945
+    },
+    "/native_vs_independent/baseline/all_fields/open": {
+      "difference_squared": 0.0,
+      "reference_squared": 153.0,
+      "maximum_absolute": 0.0,
+      "components": 1344,
+      "absolute_l2": 0.0,
+      "relative_l2": 0.0
+    },
+    "/native_vs_independent/baseline/all_fields/physical_pressure": {
+      "difference_squared": 0.0,
+      "reference_squared": 8400.0,
+      "maximum_absolute": 0.0,
+      "components": 1344,
+      "absolute_l2": 0.0,
+      "relative_l2": 0.0
+    },
+    "/native_vs_independent/baseline/all_fields/plastic_dissipation": {
+      "difference_squared": 3.6781465278459226e-05,
+      "reference_squared": 6.8942956576087875,
+      "maximum_absolute": 0.0006998418321915723,
+      "components": 1344,
+      "absolute_l2": 0.0060647724836517345,
+      "relative_l2": 0.0023097743874508814
+    },
+    "/native_vs_independent/baseline/all_fields/plastic_slip": {
+      "difference_squared": 2.75073199404804e-11,
+      "reference_squared": 0.0012321749955617296,
+      "maximum_absolute": 7.232109850480086e-07,
+      "components": 4032,
+      "absolute_l2": 5.244742123353674e-06,
+      "relative_l2": 0.00014941284787785636
+    },
+    "/native_vs_independent/baseline/all_fields/plastic_strain": {
+      "difference_squared": 5.489098191252471e-11,
+      "reference_squared": 0.0024213519463896745,
+      "maximum_absolute": 8.498250816467e-07,
+      "components": 16128,
+      "absolute_l2": 7.408844843329134e-06,
+      "relative_l2": 0.0001505641373500885
+    },
+    "/native_vs_independent/baseline/all_fields/plastic_work": {
+      "difference_squared": 3.6578859554942663e-07,
+      "reference_squared": 9.895959894538478,
+      "maximum_absolute": 5.5570037665375605e-05,
+      "components": 2688,
+      "absolute_l2": 0.0006048045928640313,
+      "relative_l2": 0.00019225875128037954
+    },
+    "/native_vs_independent/baseline/all_fields/pore": {
+      "difference_squared": 0.0,
+      "reference_squared": 35700.0,
+      "maximum_absolute": 0.0,
+      "components": 2688,
+      "absolute_l2": 0.0,
+      "relative_l2": 0.0
+    },
+    "/native_vs_independent/baseline/all_fields/reaction": {
+      "difference_squared": 0.00085496937050054,
+      "reference_squared": 894949.0157276595,
+      "maximum_absolute": 0.003003151458287334,
+      "components": 10752,
+      "absolute_l2": 0.02923985927634639,
+      "relative_l2": 3.090837201361148e-05
+    },
+    "/native_vs_independent/baseline/all_fields/strain": {
+      "difference_squared": 3.464501717096515e-11,
+      "reference_squared": 0.004450911330828292,
+      "maximum_absolute": 6.074106154305625e-07,
+      "components": 16128,
+      "absolute_l2": 5.8860017984167445e-06,
+      "relative_l2": 8.822586381120566e-05
+    },
+    "/native_vs_independent/baseline/all_fields/stress": {
+      "difference_squared": 0.11253699657625071,
+      "reference_squared": 89714137.28656314,
+      "maximum_absolute": 0.04890115065519751,
+      "components": 16128,
+      "absolute_l2": 0.3354653433310969,
+      "relative_l2": 3.541744413805722e-05
+    },
+    "/native_vs_independent/baseline/all_fields/traction": {
+      "difference_squared": 0.03610663367451139,
+      "reference_squared": 19260595.035054676,
+      "maximum_absolute": 0.08538183761548268,
+      "components": 4032,
+      "absolute_l2": 0.19001745623629265,
+      "relative_l2": 4.329708416714964e-05
+    },
+    "/native_vs_independent/baseline/all_fields/u": {
+      "difference_squared": 4.294868005242621e-12,
+      "reference_squared": 0.003632985465780684,
+      "maximum_absolute": 2.3263390033529275e-07,
+      "components": 10752,
+      "absolute_l2": 2.0724063320793585e-06,
+      "relative_l2": 3.4382945619379164e-05
+    },
+    "/native_vs_independent/baseline/all_fields/void": {
+      "difference_squared": 9.560694490363159e-12,
+      "reference_squared": 1317.9222192421428,
+      "maximum_absolute": 6.185446310702503e-07,
+      "components": 2688,
+      "absolute_l2": 3.0920372718263213e-06,
+      "relative_l2": 8.517258539288216e-08
+    },
+    "/native_vs_independent/baseline/all_fields/water_load": {
+      "difference_squared": 2.6643777073839674e-28,
+      "reference_squared": 777.7777777777746,
+      "maximum_absolute": 5.551115123125783e-16,
+      "components": 10752,
+      "absolute_l2": 1.6322921636104142e-14,
+      "relative_l2": 5.852886878218523e-16
+    },
+    "/sensitivity/native-baseline-to-material-half/all_fields/plastic_slip": {
+      "difference_squared": 4.167090980939093e-11,
+      "reference_squared": 0.0012323231683918784,
+      "maximum_absolute": 4.212262714512979e-07,
+      "components": 4032,
+      "absolute_l2": 6.455300907733963e-06,
+      "relative_l2": 0.00018388833668857868
+    },
+    "/sensitivity/native-material-half-to-material-quarter/all_fields/plastic_slip": {
+      "difference_squared": 1.0320905002998784e-10,
+      "reference_squared": 0.0012325865960270055,
+      "maximum_absolute": 8.021311452107902e-07,
+      "components": 4032,
+      "absolute_l2": 1.0159185500323725e-05,
+      "relative_l2": 0.0002893677783981311
+    },
+    "/sensitivity/native-baseline-to-contact-half/all_fields/plastic_slip": {
+      "difference_squared": 1.8586308002948174e-12,
+      "reference_squared": 0.001232091183881223,
+      "maximum_absolute": 6.614479354915409e-07,
+      "components": 4032,
+      "absolute_l2": 1.363316104318737e-06,
+      "relative_l2": 3.8839634995983786e-05
+    },
+    "/sensitivity/native-contact-half-to-contact-quarter/all_fields/plastic_slip": {
+      "difference_squared": 1.5295385104516677e-11,
+      "reference_squared": 0.001232041426857765,
+      "maximum_absolute": 6.917622003717577e-07,
+      "components": 4032,
+      "absolute_l2": 3.910931488087803e-06,
+      "relative_l2": 0.00011142112842839698
+    },
+    "/sensitivity/independent-baseline-to-material-half/all_fields/plastic_slip": {
+      "difference_squared": 3.5741863974477265e-11,
+      "reference_squared": 0.0012323819384176188,
+      "maximum_absolute": 3.9617481227031894e-07,
+      "components": 4032,
+      "absolute_l2": 5.9784499642028676e-06,
+      "relative_l2": 0.0001703005052582729
+    },
+    "/sensitivity/independent-material-half-to-material-quarter/all_fields/plastic_slip": {
+      "difference_squared": 4.3405740360175175e-11,
+      "reference_squared": 0.0012325717732973702,
+      "maximum_absolute": 5.127136224970439e-07,
+      "components": 4032,
+      "absolute_l2": 6.588303299042567e-06,
+      "relative_l2": 0.00018765816927583895
+    },
+    "/sensitivity/independent-baseline-to-contact-half/all_fields/plastic_slip": {
+      "difference_squared": 2.5106465916888645e-12,
+      "reference_squared": 0.0012321632283970837,
+      "maximum_absolute": 6.60278997878874e-07,
+      "components": 4032,
+      "absolute_l2": 1.5845020011627832e-06,
+      "relative_l2": 4.513970016995551e-05
+    },
+    "/sensitivity/independent-contact-half-to-contact-quarter/all_fields/plastic_slip": {
+      "difference_squared": 7.68974953250282e-12,
+      "reference_squared": 0.0012321254262203383,
+      "maximum_absolute": 4.817296793738733e-07,
+      "components": 4032,
+      "absolute_l2": 2.7730397639599076e-06,
+      "relative_l2": 7.900028122324074e-05
+    }
+  },
+  "unchanged_thresholds": {
+    "native_force_relative": 1e-08,
+    "independent_force_relative": 1e-10,
+    "endpoint_displacement_relative_l2": 0.005,
+    "endpoint_traction_relative_l2": 0.01
+  },
+  "threshold_source": "interim/2026-11-15-wet-joint-convergence/acceptance.json#/unchanged_thresholds",
+  "full_history_tolerance": "未定義",
+  "accepted": null,
+  "unconfirmed": [
+    "original physical increment durations in seconds",
+    "original saved stress total/effective tag and component-order metadata in the cited records",
+    "a general MC/MCC coupled full-field tolerance",
+    "a universal material/contact partition dominance",
+    "future production output IDs/component metadata before supplied"
+  ],
+  "acceptance_filename_note": "No acceptance.json in the C-03 supplement tree; its judgement is conclusion.json. Older endpoint gates are explicitly sourced separately."
+}
