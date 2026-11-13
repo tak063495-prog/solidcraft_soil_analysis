@@ -126,7 +126,10 @@ class CollapseAppendixTests(unittest.TestCase):
         for name in (self.audit.PHYSICAL_APPENDICES_PATH,self.audit.COLLAPSE_APPENDICES_PATH):
             p=self.root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((root/name).read_bytes())
         for name in self.old:
-            p=self.root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('original prefix\n'+self.old[name]+self.new[name])
+            # The audit pins UTF-8 bytes, including LF. Windows text output
+            # translates LF to CRLF even when Git checkout preserves bytes.
+            p=self.root/name;p.parent.mkdir(parents=True,exist_ok=True)
+            p.write_bytes(('original prefix\n'+self.old[name]+self.new[name]).encode('utf-8'))
 
     def test_both_pinned_suffixes_checked_before_old_prefix(self):
         self.assertEqual(self.audit.physical_document_appendices(self.root),{p:self.old[p]+self.new[p] for p in self.old})
@@ -144,8 +147,28 @@ class CollapseAppendixTests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):self.audit.physical_document_appendices(self.root)
 
     def test_old_suffix_mutation_is_still_rejected(self):
-        p=self.root/'docs/LOW_PRELOAD_NC.ja.md';p.write_text('original prefix\nchanged old suffix'+self.new['docs/LOW_PRELOAD_NC.ja.md'])
+        p=self.root/'docs/LOW_PRELOAD_NC.ja.md'
+        p.write_bytes(('original prefix\nchanged old suffix'+self.new['docs/LOW_PRELOAD_NC.ja.md']).encode('utf-8'))
         with self.assertRaisesRegex(ValueError,'suffix differs'):self.audit.physical_document_appendices(self.root)
+
+    def test_windows_text_translation_is_rejected_without_normalization(self):
+        path='docs/LOW_PRELOAD_NC.ja.md';p=self.root/path
+        original=p.read_bytes()
+        # Explicit Windows text-mode behavior is reproducible on every OS.
+        p.write_text(original.decode('utf-8'),encoding='utf-8',newline='\r\n')
+        converted=p.read_bytes()
+        self.assertNotEqual(converted,original)
+        self.assertEqual(converted.replace(b'\r\n',b'\n'),original)
+        with self.assertRaisesRegex(ValueError,'NC collapse document appendix suffix differs'):
+            self.audit.physical_document_appendices(self.root)
+
+    def test_old_suffix_crlf_is_rejected_after_exact_new_suffix(self):
+        path='docs/LOW_PRELOAD_NC.ja.md';p=self.root/path
+        p.write_bytes(b'original prefix\n'+self.old[path].encode('utf-8').replace(b'\n',b'\r\n')
+                      +self.new[path].encode('utf-8'))
+        self.assertEqual(self.audit.collapse_document_appendices(self.root),self.new)
+        with self.assertRaisesRegex(ValueError,'NC physical document appendix suffix differs'):
+            self.audit.physical_document_appendices(self.root)
 
 
 class IntersectionTests(unittest.TestCase):
