@@ -65,3 +65,24 @@ cargo clippy --locked --all-targets -- -D warnings
 cargo test --locked --release --all-targets
 cargo test --locked --release --doc
 ```
+
+失敗CIが実際にcheckoutした `bce3299b30308fcc3e25cfb955c4d61f0a9b23c0` は、092f132をmainへ重ねるCI用マージコミットだった。両者のGit treeは `afb47d912b098e70121b6dd2d16e3d2bbded86f0` で一致した。[照合表](validation/failed-ci-git-tree.tsv)を保持する。異なるコミットの試験結果を092f132へ転用したという説明も採らない。
+
+## Linux最終実測
+
+|検証|結果|
+|---|---|
+|fmt／locked clippy all-targets -D warnings|終了0|
+|Rust --locked --release --all-targets|88集計群、461件成功。failed/ignored/measured/filteredは全て0|
+|Rust doc tests|0件、終了0|
+|Python全件|710固有ID＝通常0群343＋通常1群359＋旧mean4＋旧spatial4、全成功|
+|Python failure/error/skip/expected failure/unexpected success|全て0|
+|診断・fixture単体試験|21件成功。追加のCRLF拒否2件を含み、710件に内包|
+|P6関連の個別確認|76件成功。710件にも内包|
+|固定ソース|1,487ファイルの集合・SHAが全Python通常群前と終了後で同一|
+
+[全件の件数・実終了コード・ログSHA](validation/final-summary.tsv)、[全Pythonの固有ID](validation/python-test-ids.tsv)、[固定ソース](validation/source-fingerprints.tsv)、[終了後の同一性](validation/source-check.tsv)を保存した。Rust等の全体wall timeは記録していないため、推定値を入れない。全件実行を過去のログの再利用で代用していない。
+
+3 JSONは不変コミット `cb9c88341247905e8be59a4f97646eb9c59df9f0` に固定し、N026〜N028として登録した。[固定commit・登録先](validation/registration.tsv)を参照。監査器は追補台帳のSHA定数だけが変わり、それ以外の全バイトが起点と一致する。[厳密照合](validation/strict-auditor-check.tsv)を保持する。旧追補台帳439,512バイトのprefixも同じである。
+
+新しい先端のWindows CIはpush後に同じSHAを対象に確認し、最終報告でrunへのリンクと結果を示す。092f132の失敗・集約失敗・gate成功は前述の固定記録として残す。今回のソフトウェア試験成功は崩壊分類D、NC-01／P6未達という判断を変更しない。
