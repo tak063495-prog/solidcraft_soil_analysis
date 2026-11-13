@@ -16,8 +16,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::{sync::Arc, time::Instant};
 
+#[path = "stages_joint_path_error.rs"]
+mod joint_path_error;
 #[path = "stages_mixed.rs"]
 mod mixed;
+pub use joint_path_error::PathErrorAudit;
 pub(crate) mod srm_adapter;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -366,6 +369,8 @@ pub struct Committed {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Attempt {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub joint_path_error: Option<PathErrorAudit>,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub rejected_trial_water_changed: bool,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -4664,7 +4669,12 @@ fn equilibrate(
             if attempt.accepted {
                 cursor = target;
                 if global_control.is_some() {
-                    increment = settings.initial_increment;
+                    increment = attempt
+                        .joint_path_error
+                        .as_ref()
+                        .map_or(settings.initial_increment, |a| {
+                            joint_path_error::next_increment(a, settings.minimum_increment)
+                        });
                 }
             } else {
                 if !attempt.committed_state_unchanged_on_rejection {
@@ -4747,7 +4757,7 @@ fn equilibrate(
         let before = serde_json::to_vec(&report.last_committed)?;
         let load_changed = load != report.last_committed.applied_nodal_load_kn;
         model.notify(|| model.progress(crate::stage_control::Kind::AttemptStarted, 0, next))?;
-        let trial = model.trial(
+        let trial = model.trial_with_path_error(
             &report.last_committed,
             Target {
                 joint_water: report.last_committed.joint_water.clone(),
@@ -4764,9 +4774,10 @@ fn equilibrate(
             },
             &settings,
         );
-        let trial = match trial {
+        let (trial, joint_path_error) = match trial {
             Err(error @ Error::Control(_)) => return Err(error),
-            other => other,
+            Err(error) => (Err(error), None),
+            Ok((t, audit)) => (Ok(t), audit),
         };
         let changed_structure = trial.as_ref().is_ok_and(|t| {
             t.state.beams != report.last_committed.beams
@@ -4776,6 +4787,7 @@ fn equilibrate(
         let changed_joint_slip = trial
             .as_ref()
             .is_ok_and(|t| joint_slip_changed(&t.state.joints, &report.last_committed.joints));
+        let path_error_cutback = joint_path_error.as_ref().is_some_and(|a| a.reject);
         let switch_cutback = global_control.is_some_and(|control| {
             trial.as_ref().is_ok_and(|t| {
                 control.reject_switch(
@@ -4810,8 +4822,9 @@ fn equilibrate(
             .as_ref()
             .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
         match trial {
-            Ok(t) if !injected && !strain_limit && !switch_cutback => {
+            Ok(t) if !injected && !strain_limit && !switch_cutback && !path_error_cutback => {
                 report.attempts.push(Attempt {
+                    joint_path_error,
                     rejected_trial_water_changed: false,
                     contact_predictors,
                     stage: "geostatic_equilibration".into(),
@@ -4833,7 +4846,13 @@ fn equilibrate(
                 report.last_committed = t.state;
                 report.progress = next;
                 if global_control.is_some() {
-                    report.next_increment = settings.initial_increment;
+                    report.next_increment = report
+                        .attempts
+                        .last()
+                        .and_then(|a| a.joint_path_error.as_ref())
+                        .map_or(settings.initial_increment, |a| {
+                            joint_path_error::next_increment(a, settings.minimum_increment)
+                        });
                 }
                 report.maximum_absolute_engineering_strain_from_seed = strain;
                 accepted += 1;
@@ -4849,6 +4868,8 @@ fn equilibrate(
                         "geostatic initial strain {strain:e} exceeds configured limit {}",
                         cfg.maximum_initial_engineering_strain
                     )
+                } else if path_error_cutback {
+                    "joint_global_path_error_cutback".into()
                 } else if switch_cutback {
                     "joint_global_switch_cutback".into()
                 } else if injected {
@@ -4862,6 +4883,7 @@ fn equilibrate(
                 };
                 let unchanged = before == serde_json::to_vec(&report.last_committed)?;
                 report.attempts.push(Attempt {
+                    joint_path_error,
                     rejected_trial_water_changed: false,
                     contact_predictors,
                     stage: "geostatic_equilibration".into(),
@@ -5964,9 +5986,11 @@ fn solve_controlled(
                         "display RESET must not change physical loads".into(),
                     ));
                 }
-                model.reset_display(&origin, stage_index + 1)
+                model
+                    .reset_display(&origin, stage_index + 1)
+                    .map(|t| (t, None))
             } else {
-                model.trial(
+                model.trial_with_path_error(
                     if stage.is_transition() && progress == 0. {
                         &prepared
                     } else {
@@ -6001,9 +6025,10 @@ fn solve_controlled(
                     &case.settings,
                 )
             };
-            let trial = match trial {
+            let (trial, joint_path_error) = match trial {
                 Err(error @ Error::Control(_)) => return Err(error),
-                other => other,
+                Err(error) => (Err(error), None),
+                Ok((t, audit)) => (Ok(t), audit),
             };
             let changed_structure = trial.as_ref().is_ok_and(|t| {
                 t.state.beams != committed.beams
@@ -6018,6 +6043,7 @@ fn solve_controlled(
             let changed_joint_slip = trial
                 .as_ref()
                 .is_ok_and(|t| joint_slip_changed(&t.state.joints, &committed.joints));
+            let path_error_cutback = joint_path_error.as_ref().is_some_and(|a| a.reject);
             let switch_cutback = global_control.is_some_and(|control| {
                 trial.as_ref().is_ok_and(|t| {
                     control.reject_switch(
@@ -6067,13 +6093,22 @@ fn solve_controlled(
                 .as_ref()
                 .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
             match trial {
-                Ok(t) if !force_reject && !switch_cutback => {
+                Ok(t) if !force_reject && !switch_cutback && !path_error_cutback => {
                     committed = t.state;
                     progress = next;
                     if global_control.is_some() {
-                        increment = stage.step(&case.settings);
+                        increment =
+                            joint_path_error
+                                .as_ref()
+                                .map_or(stage.step(&case.settings), |a| {
+                                    joint_path_error::next_increment(
+                                        a,
+                                        case.settings.minimum_increment,
+                                    )
+                                });
                     }
                     attempts.push(Attempt {
+                        joint_path_error,
                         contact_predictors,
                         stage: stage.name().into(),
                         progress_from: from,
@@ -6116,6 +6151,8 @@ fn solve_controlled(
                     let reason = if force_reject {
                         injected.insert(stage.name().to_string());
                         "verification_injected_rejection_after_convergence".into()
+                    } else if path_error_cutback {
+                        "joint_global_path_error_cutback".into()
                     } else if switch_cutback {
                         "joint_global_switch_cutback".into()
                     } else {
@@ -6126,6 +6163,7 @@ fn solve_controlled(
                     };
                     let unchanged = before == serde_json::to_vec(&committed)?;
                     attempts.push(Attempt {
+                        joint_path_error,
                         contact_predictors,
                         stage: stage.name().into(),
                         progress_from: progress,

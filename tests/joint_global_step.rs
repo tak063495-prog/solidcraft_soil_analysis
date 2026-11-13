@@ -47,11 +47,13 @@ fn invalid_resolution_and_unsupported_stage_are_refused() -> Result<()> {
     let (_, _, mut case) = fixture()?;
     for depth in [0, 9, u32::MAX] {
         case.joint_system.as_mut().unwrap().global_step_control = Some(GlobalStepControl {
+            path_error: None,
             switch_bisections: depth,
         });
         assert!(case.validate().is_err());
     }
     case.joint_system.as_mut().unwrap().global_step_control = Some(GlobalStepControl {
+        path_error: None,
         switch_bisections: 2,
     });
     case.validate()?;
@@ -69,6 +71,7 @@ fn invalid_resolution_and_unsupported_stage_are_refused() -> Result<()> {
 fn adaptive_global_equilibria_keep_anchors_reject_immutably_and_resume_exactly() -> Result<()> {
     let (mesh, ground, mut case) = fixture()?;
     case.joint_system.as_mut().unwrap().global_step_control = Some(GlobalStepControl {
+        path_error: None,
         switch_bisections: 2,
     });
     let whole = stages::solve(&mesh, ground.clone(), case.clone())?;
