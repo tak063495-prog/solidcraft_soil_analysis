@@ -1,4 +1,8 @@
 //! Matching Tri3/Tri6 interfaces; only declared Tet10 crack-tip edges may share nodes.
+#[path = "joints_global_step.rs"]
+mod global_step;
+pub use global_step::GlobalStepControl;
+
 use crate::{
     Error, Result, boundary, elements,
     joint_law::{Material, PointState},
@@ -294,6 +298,9 @@ mod predictor_tests {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Configuration {
+    /// Global equilibrium cutback at endpoint contact-status changes; absent is legacy.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub global_step_control: Option<GlobalStepControl>,
     pub schema: String,
     pub geometric_tolerance_m: f64,
     pub maximum_increment_m: f64,

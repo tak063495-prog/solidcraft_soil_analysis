@@ -1022,6 +1022,26 @@ impl StageCase {
             ));
         }
         s.linear_solver.validate()?;
+        if let Some(control) = self
+            .joint_system
+            .as_ref()
+            .and_then(|j| j.global_step_control.as_ref())
+        {
+            if self
+                .stages
+                .iter()
+                .any(|stage| !matches!(stage, Stage::Boundary { .. }))
+            {
+                return Err(Error::Input(
+                    "JOINT global step control currently supports boundary-factor stages only"
+                        .into(),
+                ));
+            }
+            control.validate(s.initial_increment, s.minimum_increment)?;
+            for stage in &self.stages {
+                control.validate(stage.step(s), s.minimum_increment)?;
+            }
+        }
         if self.beam_system.is_some() && matches!(s.kinematics, Kinematics::Oedometer) {
             return Err(Error::Input(
                 "beams require explicit or side-roller kinematics".into(),
@@ -4528,6 +4548,11 @@ fn equilibrate(
             "geostatic boundary factor requires boundary conditions".into(),
         ));
     }
+    let global_control = model
+        .case
+        .joint_system
+        .as_ref()
+        .and_then(|j| j.global_step_control.as_ref());
     let mut settings = model.case.settings.clone();
     settings.relative_force_tolerance = settings
         .relative_force_tolerance
@@ -4617,7 +4642,13 @@ fn equilibrate(
         let mut increment = settings.initial_increment;
         let mut injected = false;
         for attempt in &saved.attempts {
-            let target = if cursor + increment >= 1. - 1e-12 {
+            let target = if global_control.is_some() {
+                crate::joints::GlobalStepControl::next(
+                    cursor,
+                    increment,
+                    settings.initial_increment,
+                )
+            } else if cursor + increment >= 1. - 1e-12 {
                 1.
             } else {
                 cursor + increment
@@ -4632,6 +4663,9 @@ fn equilibrate(
             }
             if attempt.accepted {
                 cursor = target;
+                if global_control.is_some() {
+                    increment = settings.initial_increment;
+                }
             } else {
                 if !attempt.committed_state_unchanged_on_rejection {
                     return Err(Error::Input(
@@ -4646,7 +4680,11 @@ fn equilibrate(
                     }
                     injected = true;
                 }
-                increment *= 0.5;
+                increment = if global_control.is_some() {
+                    (target - cursor) * 0.5
+                } else {
+                    increment * 0.5
+                };
             }
         }
         if cursor != saved.progress
@@ -4681,7 +4719,17 @@ fn equilibrate(
             break;
         }
         let sum = report.progress + report.next_increment;
-        let next = if sum >= 1. - 1e-12 { 1. } else { sum };
+        let next = if global_control.is_some() {
+            crate::joints::GlobalStepControl::next(
+                report.progress,
+                report.next_increment,
+                settings.initial_increment,
+            )
+        } else if sum >= 1. - 1e-12 {
+            1.
+        } else {
+            sum
+        };
         let active = report.last_committed.active_elements.clone();
         let factor = next * cfg.initial_boundary_factor;
         let physical = model.physical_load(
@@ -4728,6 +4776,16 @@ fn equilibrate(
         let changed_joint_slip = trial
             .as_ref()
             .is_ok_and(|t| joint_slip_changed(&t.state.joints, &report.last_committed.joints));
+        let switch_cutback = global_control.is_some_and(|control| {
+            trial.as_ref().is_ok_and(|t| {
+                control.reject_switch(
+                    &report.last_committed.joints,
+                    &t.state.joints,
+                    next - report.progress,
+                    settings.initial_increment,
+                )
+            })
+        });
         let injected =
             cfg.verification_reject_once && !report.verification_rejection_done && trial.is_ok();
         let (iterations, residual, changed, plastic, strain, linear) = if let Ok(t) = &trial {
@@ -4752,7 +4810,7 @@ fn equilibrate(
             .as_ref()
             .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
         match trial {
-            Ok(t) if !injected && !strain_limit => {
+            Ok(t) if !injected && !strain_limit && !switch_cutback => {
                 report.attempts.push(Attempt {
                     rejected_trial_water_changed: false,
                     contact_predictors,
@@ -4774,6 +4832,9 @@ fn equilibrate(
                 });
                 report.last_committed = t.state;
                 report.progress = next;
+                if global_control.is_some() {
+                    report.next_increment = settings.initial_increment;
+                }
                 report.maximum_absolute_engineering_strain_from_seed = strain;
                 accepted += 1;
                 model.notify_attempt(0, report.attempts.last().unwrap())?;
@@ -4788,6 +4849,8 @@ fn equilibrate(
                         "geostatic initial strain {strain:e} exceeds configured limit {}",
                         cfg.maximum_initial_engineering_strain
                     )
+                } else if switch_cutback {
+                    "joint_global_switch_cutback".into()
                 } else if injected {
                     report.verification_rejection_done = true;
                     "verification_injected_rejection_after_convergence".into()
@@ -4827,7 +4890,11 @@ fn equilibrate(
                     report.failure_reason = Some(reason);
                     break;
                 }
-                report.next_increment *= 0.5;
+                report.next_increment = if global_control.is_some() {
+                    (next - report.progress) * 0.5
+                } else {
+                    report.next_increment * 0.5
+                };
                 if report.next_increment < settings.minimum_increment {
                     report.failure_reason = Some(format!("geostatic cutback exhausted: {reason}"));
                     break;
@@ -5308,6 +5375,10 @@ fn solve_controlled(
         injected = runtime.injected_stages.clone();
         continuation = Some(runtime);
     }
+    let global_control = case
+        .joint_system
+        .as_ref()
+        .and_then(|j| j.global_step_control.as_ref());
     let start_stage = continuation.as_ref().map_or(0, |c| c.stage_index);
     if continuation.is_some() {
         let expected: Vec<_> = case
@@ -5826,6 +5897,12 @@ fn solve_controlled(
             }
             let next = if matches!(stage, Stage::ResetDisplay { .. }) {
                 1.
+            } else if global_control.is_some() {
+                crate::joints::GlobalStepControl::next(
+                    progress,
+                    increment,
+                    stage.step(&case.settings),
+                )
             } else {
                 (progress + increment).min(1.)
             };
@@ -5941,6 +6018,16 @@ fn solve_controlled(
             let changed_joint_slip = trial
                 .as_ref()
                 .is_ok_and(|t| joint_slip_changed(&t.state.joints, &committed.joints));
+            let switch_cutback = global_control.is_some_and(|control| {
+                trial.as_ref().is_ok_and(|t| {
+                    control.reject_switch(
+                        &committed.joints,
+                        &t.state.joints,
+                        next - progress,
+                        stage.step(&case.settings),
+                    )
+                })
+            });
             let force_reject = case
                 .verification_reject_once_stages
                 .iter()
@@ -5980,9 +6067,12 @@ fn solve_controlled(
                 .as_ref()
                 .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
             match trial {
-                Ok(t) if !force_reject => {
+                Ok(t) if !force_reject && !switch_cutback => {
                     committed = t.state;
                     progress = next;
+                    if global_control.is_some() {
+                        increment = stage.step(&case.settings);
+                    }
                     attempts.push(Attempt {
                         contact_predictors,
                         stage: stage.name().into(),
@@ -6026,6 +6116,8 @@ fn solve_controlled(
                     let reason = if force_reject {
                         injected.insert(stage.name().to_string());
                         "verification_injected_rejection_after_convergence".into()
+                    } else if switch_cutback {
+                        "joint_global_switch_cutback".into()
                     } else {
                         match result {
                             Err(e) => e.to_string(),
@@ -6058,7 +6150,11 @@ fn solve_controlled(
                         ));
                     }
                     model.notify_attempt(stage_index + 1, attempts.last().unwrap())?;
-                    increment *= 0.5;
+                    increment = if global_control.is_some() {
+                        (next - progress) * 0.5
+                    } else {
+                        increment * 0.5
+                    };
                     if increment < case.settings.minimum_increment {
                         failure = Some(format!("{}: cutback exhausted: {reason}", stage.name()));
                         break;
