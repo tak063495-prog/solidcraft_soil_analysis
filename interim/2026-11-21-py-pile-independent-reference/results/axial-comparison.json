@@ -1,0 +1,71 @@
+{
+  "schema": "pile-field-difference/1",
+  "case": {
+    "id": "verification-only-axial",
+    "model": "1d-axial-linear-springs",
+    "geometry": {
+      "length_m": 6.0,
+      "area_m2": 1.0,
+      "inertia_m4": 0.08333333333333333
+    },
+    "materials": {
+      "pile_young_kpa": 30000000.0,
+      "distributed_k_kn_m2": 833333.3333333334,
+      "tip_k_kn_m": 5000000.0
+    },
+    "loads": {
+      "head_load_kn": 100.0,
+      "head_moment_kn_m": 0.0,
+      "distributed_load": "none"
+    },
+    "boundary": "axial elastic tip",
+    "interface": "independent linear springs; verification parameters, NOT identified 3D mapping",
+    "water": "dry",
+    "reference_state": "load increment; no gravity increment; small strain linear"
+  },
+  "frame": "verification-only full head load relative to unloaded spring model",
+  "reference": {
+    "source": "standalone axial exact, n=not applicable",
+    "sha256": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d"
+  },
+  "actual": {
+    "source": "standalone axial fe, n=16",
+    "sha256": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d"
+  },
+  "quantities": {
+    "u": {
+      "count": 17,
+      "unit": "m",
+      "max_absolute_error": 2.8141511940708982e-09,
+      "rms_error": 2.4178016351773384e-09,
+      "relative_l2": 0.00018207846299955153,
+      "accepted": null,
+      "tolerance": "未定義"
+    },
+    "N": {
+      "count": 17,
+      "unit": "kN",
+      "max_absolute_error": 3.061449253233363,
+      "rms_error": 2.038025153314449,
+      "relative_l2": 0.030695693316685393,
+      "accepted": null,
+      "tolerance": "未定義"
+    },
+    "shaft_reaction": {
+      "count": 17,
+      "unit": "kN/m",
+      "max_absolute_error": 0.0023451259950597603,
+      "rms_error": 0.002014834695981477,
+      "relative_l2": 0.00018207846299958416,
+      "accepted": null,
+      "tolerance": "未定義"
+    }
+  },
+  "accepted": null,
+  "tolerance": "未定義",
+  "p6_complete": false,
+  "input_sha256": {
+    "interim/2026-11-21-py-pile-independent-reference/results/axial-exact.json": "0e61bd0c5cae5d0db0e7aab71062c1a32568331101f1080afbcaea5cbe183c9a",
+    "interim/2026-11-21-py-pile-independent-reference/results/axial-fe.json": "ce7e605f6948da2b110564f00db6d4bf4cd02eada4ed18477a73c511dde675b2"
+  }
+}
