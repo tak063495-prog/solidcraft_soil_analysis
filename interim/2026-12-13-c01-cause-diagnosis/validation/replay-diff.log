@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/work/c01-diagnosis/replay-diff.py", line 16, in <module>
+    for k in ['pairs','audits']:diff(a[k],b[k],k)
+                                ~~~~^^^^^^^^^^^^^
+  File "/workspace/work/c01-diagnosis/replay-diff.py", line 13, in diff
+    else:diff(a[k],b[k],p+'/'+k)
+         ~~~~^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/c01-diagnosis/replay-diff.py", line 13, in diff
+    else:diff(a[k],b[k],p+'/'+k)
+         ~~~~^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/c01-diagnosis/replay-diff.py", line 11, in diff
+    for k in sorted(set(a)|set(b)):
+             ~~~~~~^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'str' and 'int'

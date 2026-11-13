@@ -1,0 +1,30 @@
+unittest.loader._FailedTest.test_nc_oblique_release Failed to import test module: test_nc_oblique_release
+Traceback (most recent call last):
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/unittest/loader.py", line 403, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/unittest/loader.py", line 346, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_oblique_release.py", line 15, in <module>
+    oblique = importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(oblique)
+                                                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-oblique-and-joint-history/oblique.py", line 20, in <module>
+    from trace import refinement
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-postfold-branches/trace.py", line 15, in <module>
+    from diagnose import checksum, read, rows, write
+ImportError: cannot import name 'checksum' from 'diagnose' (/workspace/solidcraft_soil_analysis/interim/2026-12-13-c01-cause-diagnosis/diagnose.py)
+
+unittest.loader._FailedTest.test_nc_tangent_branch_diagnosis Failed to import test module: test_nc_tangent_branch_diagnosis
+Traceback (most recent call last):
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/unittest/loader.py", line 403, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/unittest/loader.py", line 346, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_tangent_branch_diagnosis.py", line 21, in <module>
+    spec.loader.exec_module(arc)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-tangent-branch-diagnosis/arc.py", line 24, in <module>
+    from diagnose import checksum, read, rows, spectrum, write
+ImportError: cannot import name 'checksum' from 'diagnose' (/workspace/solidcraft_soil_analysis/interim/2026-12-13-c01-cause-diagnosis/diagnose.py)
+
