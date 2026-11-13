@@ -7,16 +7,21 @@
 ## 環境と全件実行
 
 Rust 1.99.1、Python 3.13.17 と `requirements-reference.lock.txt` の固定依存を用いる。
+Linux でも既存 PowerShell 実行試験を省略しないため `pwsh` を PATH に入れる。
+今回の Linux 検証では公式 portable PowerShell 7.5.4 を使用した。
+PowerShell 不在の skip を全件成功として扱わない。
 checkout 前に `git config --global core.autocrlf false` を設定する。
 ローカルでは CI で省略していた archive 以外も必要に応じて元の Git blob から配置する。
 実際の配置・欠損を確認し、ファイルの省略を試験の skip で回避しない。
 
 ```sh
+python -m pip install -r requirements-reference.lock.txt
+pwsh --version
 cargo fmt --all --check
 cargo clippy --locked --all-targets -- -D warnings
 cargo build --locked --release
 cargo test --locked --release
-python -m pip install -r requirements-reference.lock.txt
+cargo test --locked --release -- --list
 python tools/run_ci_python_evidence_shards.py --group python-core-0 --output work/validation/python-core-0
 python tools/run_ci_python_evidence_shards.py --group python-core-1 --output work/validation/python-core-1
 python tools/run_ci_python_evidence_shards.py --group python-mean-evidence --output work/validation/python-mean-evidence
