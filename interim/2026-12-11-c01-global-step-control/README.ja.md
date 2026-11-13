@@ -71,4 +71,14 @@ PLAXIS は具体的な状態切替による刻み制御の一次資料本文を�
 
 生証拠は **504エントリー、596,504,815 bytes、12 part**。`archive-index.json` に全part・ZIP・全エントリーのSHAを保存し、`acceptance.json` から索引SHAも固定する。`evidence.py --output NEW_FOLDER` は全SHAを確認して展開し、全履歴の計測JSON・切替イベントを現行ソースで再計算して完全一致を要求する。数値求解・PC計算を再実行するコマンドではない。旧版と新版の112状態の比較用生証拠も同梱し、実行ファイル自体は同梱しない。
 
+## Linux全件検査と保持
+
+fmt・`cargo clippy --locked --all-targets -- -D warnings`・locked release build・`cargo test --locked --release` はすべて終了0。**Rust 461件（71集計群）、Python 714固有ID**が成功した。Pythonはcore-0=325、core-1=381、mean=4、spatial=4で、tests/toolsの全発見IDと実ログの実行IDが重複・欠落なく一致する。最終のfailure/error/未実行/skip/ignored/filtered-out/expected-failure/unexpected-successは0。追加Rust3件・Python4件と個別の追加確認を二重加算しない。
+
+Rustの158ソースは全件試験開始前、結合した1320ソースはcore2群の開始前に固定し、終了後の同一性を確認した。既存封印証拠を使うmean/spatialの開始は結合固定より前であり、この時点差を隠さない。全件終了後のvalidation登録では台帳とそのSHA定数だけを追補し、関連するP6-01/P6-03を再検査する。件数・終了コード・ログ・前後指紋は `validation.json` と `validation/`。
+
+起点の7115パスは削除0、7111の既存Git blobとモードを保持した。変更した既存4件は数値オプションを追加したsrc2件と台帳・台帳SHA定数の2件だけ。旧2712 JSONのGit blob・配置済み実バイト、旧入力・docs・todo・NC関連コード/設定・過去の失敗・hash/snapshotは保持する（`validation/preservation.tsv`）。新規フォルダの受入・計測・互換性・全件検証と群別検証JSONは、先に不変コミットへ保存してから追補台帳へ登録する。
+
+push後の新先端Windows CIは未確定。Linux成功や旧先端Windows成功を新先端の結果に転用しない。
+
 C-01は未達、passed=false。
