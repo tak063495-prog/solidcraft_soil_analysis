@@ -1,0 +1,199 @@
+{
+  "complete": true,
+  "failure_reason": null,
+  "accepted": 316,
+  "rejected": [
+    {
+      "stage": "open",
+      "progress_from": 0.03125,
+      "progress_to": 0.0625,
+      "classification": "numerical_global_nonconvergence",
+      "reason": "numerical solve failed: Newton iteration limit; material force residual=5.033982117363638e-3",
+      "relative_force_residual": 0.005033982117363638,
+      "force_gate": 1e-08,
+      "iteration": 50,
+      "rejected_global_residual_not_single_gp": true,
+      "failing_gp": null,
+      "maximum_reduced_residual_dof": 19,
+      "maximum_reduced_residual": 0.2736192021447259,
+      "material_gp_last_returns": {
+        "0": "elastic",
+        "1": "elastic",
+        "2": "elastic",
+        "3": "elastic",
+        "4": "elastic",
+        "5": "elastic",
+        "6": "shear_face",
+        "7": "shear_face",
+        "8": "shear_face",
+        "9": "elastic",
+        "10": "elastic",
+        "11": "shear_face"
+      },
+      "maximum_strain_increment_gp": 6,
+      "maximum_strain_increment": 0.00033489893520083434,
+      "material_partitions": [
+        58,
+        58,
+        794,
+        804,
+        852,
+        908,
+        16464,
+        16506,
+        14922,
+        864,
+        864,
+        14946
+      ],
+      "contact_partitions": [
+        3414,
+        1098,
+        2690,
+        1098,
+        3414,
+        2692
+      ],
+      "contact_gp_jump_m": [
+        [
+          0.001951839052608814,
+          0.0009933327830062562,
+          0.0002172680799402127
+        ],
+        [
+          0.0019917494778872663,
+          0.0011524025485428859,
+          0.0003162686739529029
+        ],
+        [
+          0.001951419604836747,
+          0.0011127065614196614,
+          0.00023862435860989763
+        ],
+        [
+          0.001951734019540038,
+          0.001192155176609898,
+          0.0003160029542649586
+        ],
+        [
+          0.001791777219219901,
+          0.0011523432952743038,
+          0.0002162052011884354
+        ],
+        [
+          0.0019114041464895187,
+          0.0011524591894866733,
+          0.0002383586389219533
+        ]
+      ],
+      "contact_gp_gap_m": [
+        0.0002172680799402127,
+        0.0003162686739529029,
+        0.00023862435860989763,
+        0.0003160029542649586,
+        0.0002162052011884354,
+        0.0002383586389219533
+      ],
+      "physical_failure_proven": false
+    },
+    {
+      "stage": "open",
+      "progress_from": 0.046875,
+      "progress_to": 0.0625,
+      "classification": "numerical_global_nonconvergence",
+      "reason": "numerical solve failed: global line search failed; committed state retained; iteration=26, relative_force=4.996268469512158e-3, best_candidate=4.996285298950947e-3, correction_norm_m=8.299490149511383e-4, trust_rejections=0, projected_load=true, predictor=None",
+      "relative_force_residual": 0.004996268469512158,
+      "force_gate": 1e-08,
+      "iteration": 26,
+      "rejected_global_residual_not_single_gp": true,
+      "failing_gp": null,
+      "maximum_reduced_residual_dof": 23,
+      "maximum_reduced_residual": 0.41858991123363903,
+      "material_gp_last_returns": {
+        "0": "elastic",
+        "1": "elastic",
+        "2": "elastic",
+        "3": "elastic",
+        "4": "elastic",
+        "5": "elastic",
+        "6": "shear_face",
+        "7": "shear_face",
+        "8": "shear_face",
+        "9": "elastic",
+        "10": "elastic",
+        "11": "shear_face"
+      },
+      "maximum_strain_increment_gp": 8,
+      "maximum_strain_increment": 6.967061652616386e-05,
+      "material_partitions": [
+        4,
+        4,
+        10,
+        8,
+        8,
+        8,
+        164,
+        176,
+        234,
+        14,
+        14,
+        114
+      ],
+      "contact_partitions": [
+        54,
+        24,
+        38,
+        24,
+        32,
+        24
+      ],
+      "contact_gp_jump_m": [
+        [
+          0.0019577541893047905,
+          0.0009068900948835572,
+          0.00014582768611379803
+        ],
+        [
+          0.0019940462778141807,
+          0.0011276635745990308,
+          0.00028894887365124285
+        ],
+        [
+          0.0019480040019256204,
+          0.0010743608514452115,
+          0.00017598836371942396
+        ],
+        [
+          0.0019380043222087982,
+          0.0011888895772279074,
+          0.00029424891600165863
+        ],
+        [
+          0.00173358636688326,
+          0.001151794105399063,
+          0.00016702785551546087
+        ],
+        [
+          0.0018919620463202376,
+          0.0011355868540740882,
+          0.0001812884060698397
+        ]
+      ],
+      "contact_gp_gap_m": [
+        0.00014582768611379803,
+        0.00028894887365124285,
+        0.00017598836371942396,
+        0.00029424891600165863,
+        0.00016702785551546087,
+        0.0001812884060698397
+      ],
+      "physical_failure_proven": false
+    }
+  ],
+  "local_evaluation_error_count": 0,
+  "local_evaluation_errors": [],
+  "input_scope_rejection": false,
+  "physical_failure_proven": false,
+  "passed": false,
+  "note": "An equilibrium rejection is assessed on the reduced nodal residual, not a GP failure criterion."
+}

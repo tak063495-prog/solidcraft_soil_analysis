@@ -1,0 +1,24 @@
+{
+  "schema": "c03-cause-failure-record/1",
+  "passed": false,
+  "single_primary_cause_identified": false,
+  "reason": "Contact local integration and global path sensitivities both remain; no unique additive causal split and no converged finest reference.",
+  "old_failures_deleted": false,
+  "original_acceptance_met": false,
+  "old_tolerances_relaxed": false,
+  "retained_preparation_failures": [
+    {
+      "kind": "format_preflight",
+      "exit_code": 1,
+      "log": "fmt-first.log",
+      "reason": "new observation example had not yet been formatted",
+      "resolved": "rustfmt only the new example; final cargo fmt returned zero"
+    },
+    {
+      "kind": "portable_powershell_preparation",
+      "exit_code": 134,
+      "reason": "PowerShell tried to create /home/agent/.cache/powershell on a read-only filesystem",
+      "resolved": "use writable XDG_CACHE_HOME, XDG_CONFIG_HOME, XDG_DATA_HOME under work; no NC-specific environment setting changed"
+    }
+  ]
+}
