@@ -1,0 +1,3313 @@
+{
+  "schema": "b01cause-measurements/1",
+  "passed": false,
+  "b01_complete": false,
+  "diagnostic_only": true,
+  "curved_element_acceptance": null,
+  "production_scope_expanded": false,
+  "source_sha256": "b83ecdbc46361fe2db591763a259b3377e51ad236f912ec8329284319d7df025",
+  "formal_observation_sha256": "6891812e53af298260912614a6e12c4d41016957b59c245b723ca57a9e1d4332",
+  "internal_requests": 123,
+  "internal_meshes": 6,
+  "global_equilibrium_solves": 9,
+  "maximum_new_elements": 8,
+  "maximum_new_structure_dofs": 150,
+  "production_accepted_requests": 67,
+  "all_accepted_transplants_exactly_equal_production": true,
+  "main": [
+    {
+      "id": "plane",
+      "production_guard": {
+        "accepted": true,
+        "error": null
+      },
+      "inherited_zero_count": 6,
+      "physical_rigid_residual": [
+        3.7444951083989967e-17,
+        2.6106129869619012e-17,
+        2.5441525974968686e-17,
+        8.075079566955253e-18,
+        6.432275078602794e-18,
+        5.003462024683889e-18
+      ],
+      "physical_rigid_fraction_outside_algebraic_nullspace": [
+        2.2854115384622831e-10,
+        2.1977947160407568e-10,
+        1.5635889246709816e-10,
+        2.967383267912515e-10,
+        1.431339632434847e-10,
+        3.186604657648849e-10
+      ],
+      "exact_quadratic_rigid_membrane_roundoff": 0.0,
+      "geometry_normal_derivative": 0.0,
+      "geometry_second_form": 0.0,
+      "internal_K_exactly_equal_to_plane_same_corners": true,
+      "isotropic_membrane_pullback_error_l2": 4.799967632819708e-18,
+      "energy_partitions": [
+        {
+          "name": "rigid-0",
+          "membrane_energy_kn_m": 4.7434095641715756e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 3.3881496886939823e-31
+        },
+        {
+          "name": "rigid-1",
+          "membrane_energy_kn_m": 4.743409564171575e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 3.3881496886939823e-31
+        },
+        {
+          "name": "rigid-2",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 1.912104363009155e-25,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-3",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 3.9528413034763134e-29,
+          "transverse_shear_energy_kn_m": 2.0122017899931997e-26,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-4",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 3.952841303476314e-29,
+          "transverse_shear_energy_kn_m": 3.5049850530789086e-26,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-5",
+          "membrane_energy_kn_m": 1.7608736890240558e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 9.044460875062878e-30
+        },
+        {
+          "name": "isotropic-membrane",
+          "membrane_energy_kn_m": 1.8750000000000007,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 0.0
+        }
+      ]
+    },
+    {
+      "id": "inplane-bow",
+      "production_guard": {
+        "accepted": false,
+        "error": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported"
+      },
+      "inherited_zero_count": 6,
+      "physical_rigid_residual": [
+        3.7444951083989967e-17,
+        2.6106129869619012e-17,
+        2.5441525974968686e-17,
+        0.0012342912246632084,
+        6.432275078602794e-18,
+        0.002517167896457879
+      ],
+      "physical_rigid_fraction_outside_algebraic_nullspace": [
+        2.2854115384622831e-10,
+        2.1977947160407568e-10,
+        1.5635889246709816e-10,
+        0.006909077170984788,
+        1.431339632434847e-10,
+        0.00654176445096186
+      ],
+      "exact_quadratic_rigid_membrane_roundoff": 9.943804096457294e-19,
+      "geometry_normal_derivative": 0.0,
+      "geometry_second_form": 0.0,
+      "internal_K_exactly_equal_to_plane_same_corners": true,
+      "isotropic_membrane_pullback_error_l2": 9.497290468600731e-05,
+      "energy_partitions": [
+        {
+          "name": "rigid-0",
+          "membrane_energy_kn_m": 4.7434095641715756e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 3.3881496886939823e-31
+        },
+        {
+          "name": "rigid-1",
+          "membrane_energy_kn_m": 4.743409564171575e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 3.3881496886939823e-31
+        },
+        {
+          "name": "rigid-2",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 1.912104363009155e-25,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-3",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 3.9528413034763134e-29,
+          "transverse_shear_energy_kn_m": 555.5555555555557,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-4",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 3.952841303476314e-29,
+          "transverse_shear_energy_kn_m": 3.5049850530789086e-26,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-5",
+          "membrane_energy_kn_m": 1166.6666666666713,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 0.008333333333333616
+        },
+        {
+          "name": "isotropic-membrane",
+          "membrane_energy_kn_m": 1.8261666666666674,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 8.333333333333345e-09
+        }
+      ]
+    },
+    {
+      "id": "outplane-bulge",
+      "production_guard": {
+        "accepted": false,
+        "error": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported"
+      },
+      "inherited_zero_count": 6,
+      "physical_rigid_residual": [
+        3.7444951083989967e-17,
+        2.6106129869619012e-17,
+        2.5441525974968686e-17,
+        0.0023561365998076506,
+        0.0023561365998076506,
+        5.003462024683889e-18
+      ],
+      "physical_rigid_fraction_outside_algebraic_nullspace": [
+        2.2854115384622831e-10,
+        2.1977947160407568e-10,
+        1.5635889246709816e-10,
+        0.00937001435586118,
+        0.009370014355861104,
+        3.186604657648849e-10
+      ],
+      "exact_quadratic_rigid_membrane_roundoff": 1.988760819291459e-18,
+      "geometry_normal_derivative": 0.25298221281347033,
+      "geometry_second_form": 0.25298221281347033,
+      "internal_K_exactly_equal_to_plane_same_corners": true,
+      "isotropic_membrane_pullback_error_l2": 8.43815207086148e-06,
+      "energy_partitions": [
+        {
+          "name": "rigid-0",
+          "membrane_energy_kn_m": 4.7434095641715756e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 3.3881496886939823e-31
+        },
+        {
+          "name": "rigid-1",
+          "membrane_energy_kn_m": 4.743409564171575e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 3.3881496886939823e-31
+        },
+        {
+          "name": "rigid-2",
+          "membrane_energy_kn_m": 0.0,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 1.912104363009155e-25,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-3",
+          "membrane_energy_kn_m": 1166.666666666668,
+          "bending_energy_kn_m": 3.9528413034763134e-29,
+          "transverse_shear_energy_kn_m": 2.0122017899931997e-26,
+          "drilling_penalty_energy_kn_m": 0.008333333333333344
+        },
+        {
+          "name": "rigid-4",
+          "membrane_energy_kn_m": 1166.6666666666679,
+          "bending_energy_kn_m": 3.952841303476314e-29,
+          "transverse_shear_energy_kn_m": 3.5049850530789086e-26,
+          "drilling_penalty_energy_kn_m": 0.008333333333333344
+        },
+        {
+          "name": "rigid-5",
+          "membrane_energy_kn_m": 1.7608736890240558e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 9.044460875062878e-30
+        },
+        {
+          "name": "isotropic-membrane",
+          "membrane_energy_kn_m": 1.8750000000000007,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0005555555555555564,
+          "drilling_penalty_energy_kn_m": 0.0
+        }
+      ]
+    },
+    {
+      "id": "cylinder",
+      "production_guard": {
+        "accepted": false,
+        "error": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported"
+      },
+      "inherited_zero_count": 6,
+      "physical_rigid_residual": [
+        1.4997445786688772e-17,
+        3.8394855408963866e-17,
+        3.748073765682395e-17,
+        0.009164038428880503,
+        0.003765776638665238,
+        0.0009141865288762112
+      ],
+      "physical_rigid_fraction_outside_algebraic_nullspace": [
+        1.0014952114034771e-10,
+        3.1333704173794775e-10,
+        4.0075064369687896e-10,
+        0.027451204697258764,
+        0.026381608625494022,
+        0.006404445486355397
+      ],
+      "exact_quadratic_rigid_membrane_roundoff": 2.6878713187673904e-17,
+      "geometry_normal_derivative": 0.5026205463005228,
+      "geometry_second_form": 0.4974012526296823,
+      "internal_K_exactly_equal_to_plane_same_corners": null,
+      "isotropic_membrane_pullback_error_l2": 7.394754217537338e-05,
+      "energy_partitions": [
+        {
+          "name": "rigid-0",
+          "membrane_energy_kn_m": 3.6935664670009695e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.0,
+          "drilling_penalty_energy_kn_m": 8.514996922037177e-32
+        },
+        {
+          "name": "rigid-1",
+          "membrane_energy_kn_m": 5.545652918370993e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 2.815833103809295e-26,
+          "drilling_penalty_energy_kn_m": 3.3529665901194825e-31
+        },
+        {
+          "name": "rigid-2",
+          "membrane_energy_kn_m": 3.1599787340793236e-27,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 4.866400016152164e-25,
+          "drilling_penalty_energy_kn_m": 0.0
+        },
+        {
+          "name": "rigid-3",
+          "membrane_energy_kn_m": 16276.307898912466,
+          "bending_energy_kn_m": 1.8272386068762593e-29,
+          "transverse_shear_energy_kn_m": 4.6057069040052497e-26,
+          "drilling_penalty_energy_kn_m": 8.185953589158893e-35
+        },
+        {
+          "name": "rigid-4",
+          "membrane_energy_kn_m": 6112.022376591309,
+          "bending_energy_kn_m": 4.1956275858739704e-29,
+          "transverse_shear_energy_kn_m": 5.184440585804025e-26,
+          "drilling_penalty_energy_kn_m": 0.15280055941478304
+        },
+        {
+          "name": "rigid-5",
+          "membrane_energy_kn_m": 398.50078297367907,
+          "bending_energy_kn_m": 1.0533262446931082e-30,
+          "transverse_shear_energy_kn_m": 3.0293202188950266e-27,
+          "drilling_penalty_energy_kn_m": 0.009962519574341692
+        },
+        {
+          "name": "isotropic-membrane",
+          "membrane_energy_kn_m": 1.8555296944089226,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.005425435966304147,
+          "drilling_penalty_energy_kn_m": 0.0
+        }
+      ]
+    },
+    {
+      "id": "sphere",
+      "production_guard": {
+        "accepted": false,
+        "error": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported"
+      },
+      "inherited_zero_count": 6,
+      "physical_rigid_residual": [
+        3.2093316188817676e-17,
+        3.914984566944544e-17,
+        1.822278278799026e-17,
+        0.009670190405255217,
+        0.009388391412449574,
+        0.002189953586931544
+      ],
+      "physical_rigid_fraction_outside_algebraic_nullspace": [
+        1.0401236301669063e-10,
+        1.7873305439383574e-10,
+        2.0361382703696546e-10,
+        0.04314650216876867,
+        0.04295448149985483,
+        0.00818241998482123
+      ],
+      "exact_quadratic_rigid_membrane_roundoff": 2.7755575615628914e-17,
+      "geometry_normal_derivative": 0.7038300469578682,
+      "geometry_second_form": 0.6915150079551183,
+      "internal_K_exactly_equal_to_plane_same_corners": null,
+      "isotropic_membrane_pullback_error_l2": 0.00020091499375790155,
+      "energy_partitions": [
+        {
+          "name": "rigid-0",
+          "membrane_energy_kn_m": 1.1426152877490859e-25,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 9.022170102519503e-27,
+          "drilling_penalty_energy_kn_m": 1.172317572282515e-30
+        },
+        {
+          "name": "rigid-1",
+          "membrane_energy_kn_m": 7.503447181391198e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 9.022170102519503e-27,
+          "drilling_penalty_energy_kn_m": 1.682155175969968e-31
+        },
+        {
+          "name": "rigid-2",
+          "membrane_energy_kn_m": 1.8968138902542262e-26,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 1.4574170812595046e-25,
+          "drilling_penalty_energy_kn_m": 7.998104833735227e-32
+        },
+        {
+          "name": "rigid-3",
+          "membrane_energy_kn_m": 22523.939666836406,
+          "bending_energy_kn_m": 5.02079953769587e-29,
+          "transverse_shear_energy_kn_m": 300.90754701596,
+          "drilling_penalty_energy_kn_m": 0.14746601169973603
+        },
+        {
+          "name": "rigid-4",
+          "membrane_energy_kn_m": 21301.910445160313,
+          "bending_energy_kn_m": 3.678657683642712e-29,
+          "transverse_shear_energy_kn_m": 892.6550979623901,
+          "drilling_penalty_energy_kn_m": 0.13774195910303333
+        },
+        {
+          "name": "rigid-5",
+          "membrane_energy_kn_m": 941.5452777534382,
+          "bending_energy_kn_m": 1.1955292064285976e-29,
+          "transverse_shear_energy_kn_m": 56.3910510369886,
+          "drilling_penalty_energy_kn_m": 0.013909489867465059
+        },
+        {
+          "name": "isotropic-membrane",
+          "membrane_energy_kn_m": 1.8021915260639862,
+          "bending_energy_kn_m": 0.0,
+          "transverse_shear_energy_kn_m": 0.009827430323653017,
+          "drilling_penalty_energy_kn_m": 3.3204059919816873e-08
+        }
+      ]
+    }
+  ],
+  "meshes": [
+    {
+      "kind": "plane",
+      "n": 1,
+      "nodes": 9,
+      "elements": 2,
+      "dofs": 54,
+      "spectrum": {
+        "eigenvalues": [
+          -8.694452486612914e-10,
+          -2.691173371252754e-10,
+          1.9062329548837204e-10,
+          4.907313781821541e-10,
+          6.774400386386783e-10,
+          1.9209043235950594e-09,
+          2.036295002242685,
+          2.0832847234614116,
+          3.2136871004574776,
+          3.922568811245779,
+          5.555509259932681,
+          7.202507373033871,
+          9.493865877517226,
+          16.665736158180593,
+          70.65777575809267,
+          1201.2996358524695,
+          1321.7541294405432,
+          1823.8635360610224,
+          1888.5983304442489,
+          1892.5428199049577,
+          4222.51275507437,
+          5827.982705121776,
+          6381.586173079335,
+          7760.296418896202,
+          14852.284246601828,
+          27165.948701438087,
+          28422.5154760832,
+          29538.939156204033,
+          50166.48553251905,
+          123330.5646032392,
+          131183.54268071486,
+          765106.0566999216,
+          767494.7975852044,
+          775790.0415588474,
+          848699.2573052435,
+          850921.6888194197,
+          1137533.0468496073,
+          1407926.0457611105,
+          1846006.7739859058,
+          2425468.4055744126,
+          2865467.4021955505,
+          3335630.986227288,
+          3358792.4422665057,
+          3510085.683914111,
+          3793489.628974392,
+          3849454.9376391117,
+          5929458.613809989,
+          6171710.787000727,
+          7451239.315600651,
+          7680894.447420917,
+          7929803.682783614,
+          9741085.559965247,
+          11795381.445949797,
+          21008131.735257454
+        ],
+        "inherited_rank_threshold": 0.0021008131735257454,
+        "modes_below_inherited_threshold": 6,
+        "negative_below_minus_threshold": 0,
+        "physical_six_rigid_normalized_residual": [
+          2.4195450297164174e-17,
+          3.051648462887735e-17,
+          3.706104918888509e-17,
+          9.385987390758308e-18,
+          1.744357454099647e-17,
+          9.69164341826242e-18
+        ],
+        "physical_six_rigid_energy_kn_m": [
+          1.309672370553015e-10,
+          6.257323548197744e-10,
+          8.346393893051324e-10,
+          -3.301368304638632e-11,
+          1.2307834514539247e-10,
+          -1.0552370088845464e-10
+        ],
+        "classification": "algebraic mode counts and actual rigid residual must be read together"
+      },
+      "element_stiffness_exactly_equals_same_corner_faceted_control": [
+        true,
+        true
+      ]
+    },
+    {
+      "kind": "plane",
+      "n": 2,
+      "nodes": 25,
+      "elements": 8,
+      "dofs": 150,
+      "spectrum": {
+        "eigenvalues": [
+          -8.462303123914484e-10,
+          -4.604916475967171e-10,
+          2.2507397648610915e-10,
+          2.835499287477193e-10,
+          4.203342946581963e-10,
+          1.070586244180325e-09,
+          0.4748744402260158,
+          0.5082935218036674,
+          0.925994865476881,
+          1.0268169606442095,
+          1.1042166450710975,
+          1.1548415723051428,
+          1.251889764359666,
+          1.2531093237052853,
+          1.6591284971231295,
+          1.7795310071927661,
+          1.7976537917831557,
+          1.8072684683439233,
+          2.0832967082636733,
+          2.1476386370653007,
+          2.4129519335996523,
+          2.828150545057075,
+          3.121524732601539,
+          3.5769881620950477,
+          4.604108906102927,
+          5.051549937069052,
+          5.7937317055813295,
+          6.905814823270763,
+          8.057387336338532,
+          8.855775655068214,
+          28.981340586183563,
+          602.5927114490541,
+          620.8010234468159,
+          830.7838546785574,
+          1120.4549097879283,
+          1121.887895924924,
+          1642.880274642945,
+          2125.32673936716,
+          2130.6343944096498,
+          2288.1116369813876,
+          2502.5990261032844,
+          3600.408495180714,
+          3617.6140047854083,
+          3735.8042239338247,
+          5441.452041439628,
+          5708.882172651781,
+          6017.0604817721205,
+          6249.9669299932675,
+          7598.267636425109,
+          7992.941952023307,
+          8144.45765536354,
+          8468.375691827474,
+          9460.08501363429,
+          9811.512719150829,
+          10279.584879213506,
+          10607.62385686745,
+          11578.548963753892,
+          12216.792806751606,
+          12253.235903162253,
+          13908.398269474968,
+          14091.528205128127,
+          15897.204157894266,
+          15913.365044804752,
+          21393.38755329053,
+          22005.86839822791,
+          22609.571149025833,
+          24163.544183405764,
+          24610.005459413816,
+          31771.74548454061,
+          32695.810829546168,
+          33051.55699292349,
+          34612.20722635823,
+          37808.482431799894,
+          41708.75124998812,
+          48981.82704564695,
+          49219.07033041049,
+          50890.66008358856,
+          50950.90701522576,
+          76193.76264975106,
+          364500.54470657615,
+          365890.734387283,
+          393771.5136274341,
+          405411.14570914186,
+          434384.3125819819,
+          483026.7987446026,
+          657712.1775680853,
+          823615.3971875114,
+          953621.3538778734,
+          968900.9731102496,
+          974252.558608191,
+          991752.309121282,
+          1135071.3954106735,
+          1207889.8090498496,
+          1371886.664159532,
+          1471005.9863962217,
+          1850391.511991891,
+          1888747.3830922928,
+          1924791.856464658,
+          2003472.8886401807,
+          2200601.746266679,
+          2359187.242845227,
+          2493293.655514678,
+          2497693.0449862373,
+          2811514.9131867257,
+          3033746.7761501153,
+          3259516.7935896707,
+          3263069.6468916344,
+          3272077.3822135264,
+          3292524.0196862663,
+          3295406.1612103316,
+          3519897.311881763,
+          3566468.7442649673,
+          3800738.2893309286,
+          3981623.3700132775,
+          4050148.9000562355,
+          4713032.641233789,
+          4714589.988665636,
+          4817837.778087547,
+          4944655.034679748,
+          5066831.646357222,
+          5365458.884148431,
+          5647961.700879528,
+          6094313.939261694,
+          6337199.880998421,
+          6374197.078065855,
+          6639399.33463395,
+          6754664.1427835375,
+          6820066.608566302,
+          7633746.167534644,
+          7655864.782125877,
+          7980201.104918969,
+          8152673.344518349,
+          8157240.529842667,
+          8465585.724522594,
+          9542112.141234117,
+          9676043.34543829,
+          9715220.93322767,
+          10665100.151101584,
+          11329211.245353185,
+          11914540.70644192,
+          12225212.136714643,
+          12873685.569680046,
+          13069107.02651565,
+          13470554.250848828,
+          16073003.300060827,
+          16953950.113309097,
+          18344828.481092017,
+          22550015.703035884,
+          23520596.2326416,
+          28456646.8646983
+        ],
+        "inherited_rank_threshold": 0.00284566468646983,
+        "modes_below_inherited_threshold": 6,
+        "negative_below_minus_threshold": 0,
+        "physical_six_rigid_normalized_residual": [
+          1.5041871639191078e-17,
+          1.696539583851638e-17,
+          1.6846656844494342e-17,
+          4.839656548675743e-18,
+          6.2505954545060545e-18,
+          5.4665398909789505e-18
+        ],
+        "physical_six_rigid_energy_kn_m": [
+          -2.910383045673443e-11,
+          1.8335413187742225e-09,
+          2.8728962699127904e-09,
+          1.2252598935447168e-10,
+          3.3944047572731506e-10,
+          4.727168656515338e-11
+        ],
+        "classification": "algebraic mode counts and actual rigid residual must be read together"
+      },
+      "element_stiffness_exactly_equals_same_corner_faceted_control": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "global_solves": [
+        {
+          "name": "rigid-boundary-0",
+          "elapsed_seconds": 0.004133599000056165,
+          "interior_translation_force_l2_kn": 7.138384394686614e-13,
+          "interior_rotation_moment_l2_kn_m": 5.712387598637409e-13,
+          "mixed_dof_algebraic_relative_residual": 0.5706843769347221,
+          "displacement_error": {
+            "absolute_l2": 1.6339839771348e-18,
+            "reference_l2": 0.0017677669529663688,
+            "relative_l2": 9.243209204657453e-16,
+            "maximum_absolute": 9.215718466126788e-19
+          },
+          "rotation_error": {
+            "absolute_l2": 1.502940687508203e-17,
+            "reference_l2": 0.005,
+            "relative_l2": 3.005881375016406e-15,
+            "maximum_absolute": 9.092987495407025e-18
+          },
+          "boundary_translation_force_l2_kn": 1.585744887118818e-12,
+          "boundary_rotation_moment_l2_kn_m": 2.279768083399257e-13,
+          "energy_kn_m": 1.2898482282253344e-16
+        },
+        {
+          "name": "rigid-boundary-1",
+          "elapsed_seconds": 0.004001850999998169,
+          "interior_translation_force_l2_kn": 4.97775119153416e-13,
+          "interior_rotation_moment_l2_kn_m": 2.8521143533109485e-13,
+          "mixed_dof_algebraic_relative_residual": 0.3869154019611183,
+          "displacement_error": {
+            "absolute_l2": 8.624919401461904e-19,
+            "reference_l2": 0.0017677669529663688,
+            "relative_l2": 4.878991196768905e-16,
+            "maximum_absolute": 4.87890977618477e-19
+          },
+          "rotation_error": {
+            "absolute_l2": 1.216375250986689e-17,
+            "reference_l2": 0.005,
+            "relative_l2": 2.432750501973378e-15,
+            "maximum_absolute": 6.5052130349130266e-18
+          },
+          "boundary_translation_force_l2_kn": 1.4707912652355927e-12,
+          "boundary_rotation_moment_l2_kn_m": 1.878543424860347e-13,
+          "energy_kn_m": 3.222470068564582e-16
+        },
+        {
+          "name": "rigid-boundary-2",
+          "elapsed_seconds": 0.0035067469999603418,
+          "interior_translation_force_l2_kn": 1.714102192142373e-12,
+          "interior_rotation_moment_l2_kn_m": 9.935909406663312e-13,
+          "mixed_dof_algebraic_relative_residual": 0.45415545640971633,
+          "displacement_error": {
+            "absolute_l2": 4.688782067533115e-19,
+            "reference_l2": 0.0025,
+            "relative_l2": 1.8755128270132458e-16,
+            "maximum_absolute": 2.168404344971009e-19
+          },
+          "rotation_error": {
+            "absolute_l2": 2.389245719161038e-13,
+            "reference_l2": 0.005,
+            "relative_l2": 4.778491438322076e-11,
+            "maximum_absolute": 1.4482447359409623e-13
+          },
+          "boundary_translation_force_l2_kn": 4.348291857203642e-12,
+          "boundary_rotation_moment_l2_kn_m": 3.5183664010209177e-13,
+          "energy_kn_m": -4.785170469415537e-17
+        }
+      ]
+    },
+    {
+      "kind": "cylinder",
+      "n": 1,
+      "nodes": 9,
+      "elements": 2,
+      "dofs": 54,
+      "spectrum": {
+        "eigenvalues": [
+          -1.2482982573079912e-09,
+          -9.319905466864474e-10,
+          -3.4697077871601557e-10,
+          -2.4973172093171447e-11,
+          6.499789162779422e-10,
+          9.984363816246308e-10,
+          2.0160150284750027,
+          2.061651551655587,
+          3.1803156482765043,
+          3.8857050738542083,
+          5.497819944232363,
+          7.127715299497147,
+          9.39857184582688,
+          16.49267631809043,
+          70.34642984970833,
+          1202.0060687738808,
+          1321.50222085536,
+          1824.2061717037434,
+          1888.4532210846257,
+          1892.7803664195417,
+          4220.114391343285,
+          5826.156067661052,
+          6389.947577368755,
+          7763.590118268134,
+          14844.106989682845,
+          26922.905980908545,
+          28172.40571655399,
+          29279.41433111072,
+          49722.44743507084,
+          122080.26967198844,
+          129911.66789588098,
+          762148.320411036,
+          766778.1973923778,
+          775239.1455540408,
+          838633.7760088993,
+          861091.2852168364,
+          1137471.4642545744,
+          1407937.1198433666,
+          1846066.4622690985,
+          2423620.9584935335,
+          2865860.9398092814,
+          3332377.0768197468,
+          3359753.057147573,
+          3508519.0995028433,
+          3795220.6828902606,
+          3849826.5767093985,
+          5928778.5491497805,
+          6171527.780146288,
+          7450852.159261841,
+          7681641.936248722,
+          7930311.284971169,
+          9742128.097812079,
+          11796435.886809843,
+          21009760.471551172
+        ],
+        "inherited_rank_threshold": 0.002100976047155117,
+        "modes_below_inherited_threshold": 6,
+        "negative_below_minus_threshold": 0,
+        "physical_six_rigid_normalized_residual": [
+          3.785685597232206e-17,
+          2.747461612511575e-17,
+          3.114387787383608e-17,
+          0.007635808856681283,
+          0.0030918106066251277,
+          0.0007456409531651944
+        ],
+        "physical_six_rigid_energy_kn_m": [
+          -1.1511674208518074e-09,
+          2.2293508796261236e-09,
+          6.627906270301642e-10,
+          32552.615797825118,
+          12224.350354301438,
+          797.021490986415
+        ],
+        "classification": "algebraic mode counts and actual rigid residual must be read together"
+      },
+      "element_stiffness_exactly_equals_same_corner_faceted_control": [
+        true,
+        true
+      ]
+    },
+    {
+      "kind": "cylinder",
+      "n": 2,
+      "nodes": 25,
+      "elements": 8,
+      "dofs": 150,
+      "spectrum": {
+        "eigenvalues": [
+          -1.1937128529132078e-09,
+          -6.443222107806031e-10,
+          -8.630217072473401e-11,
+          -4.501851557572594e-12,
+          3.251082840930188e-10,
+          5.656683170505514e-10,
+          0.48026885253027873,
+          0.511497679418917,
+          0.9770110454819309,
+          1.066194649292287,
+          1.1966664928307875,
+          1.2031952446124967,
+          1.6024275377596922,
+          1.6028917180982565,
+          1.8418302247839895,
+          2.0155350338961857,
+          2.1857786432587165,
+          2.2476220881461058,
+          2.802608017565528,
+          2.8334752142559783,
+          4.5702234043169145,
+          4.739388048236631,
+          6.807877422160104,
+          6.833538127928735,
+          8.395488391913284,
+          16.076554612338615,
+          195.4738429458642,
+          201.31718654587695,
+          488.1258694790678,
+          579.9476864678705,
+          595.7620284581286,
+          666.8545771658096,
+          853.0463624729525,
+          960.406570336377,
+          1122.2145302443507,
+          1141.8743623011603,
+          1649.0566882820121,
+          2127.754209726063,
+          2142.351404225455,
+          2386.894080368247,
+          2517.7374521949814,
+          3651.753878695386,
+          3669.252071553239,
+          3908.163508924059,
+          5480.926762191333,
+          5744.360710215867,
+          6037.763977852615,
+          6270.854402670466,
+          7647.496142723801,
+          7995.822778994473,
+          8143.4610494336175,
+          8481.928810759622,
+          9511.618498824893,
+          9805.10527037391,
+          10271.96047105365,
+          10639.954478979691,
+          11546.695872401184,
+          12220.861939039343,
+          12243.825827038409,
+          13996.431249634721,
+          14150.529069180107,
+          15847.137411801443,
+          15901.20468245958,
+          21411.377379139874,
+          21953.910531553272,
+          22599.18893039042,
+          24136.249010600404,
+          24538.1856063158,
+          31627.2843768923,
+          32584.019966926706,
+          33034.217640099654,
+          34634.78436093881,
+          37672.852110039916,
+          41618.20717456398,
+          48544.18459942212,
+          48857.14859963357,
+          50579.15687342071,
+          50805.15534180922,
+          76183.31383083417,
+          341476.1638619429,
+          365028.95249787014,
+          401159.04640173144,
+          416885.02364476013,
+          430603.16350183863,
+          481812.3502459187,
+          659259.4681099526,
+          800265.1673468056,
+          950132.9915732684,
+          970228.1389659218,
+          982005.9128335402,
+          985562.0337533493,
+          1160256.114716557,
+          1207774.3975190702,
+          1370420.9790938313,
+          1467782.3175761253,
+          1848877.1709261544,
+          1912275.9013072855,
+          1919398.8782090999,
+          2001594.9338547988,
+          2189166.2246206566,
+          2370521.056599008,
+          2490854.0980744604,
+          2501840.857730964,
+          2814561.8586048377,
+          3027843.880323967,
+          3251807.3840613076,
+          3254049.6215277673,
+          3265677.360622833,
+          3279305.1451958325,
+          3290369.899906592,
+          3521514.596099289,
+          3567758.275560833,
+          3807472.715841602,
+          3999465.1627811515,
+          4055080.8253920595,
+          4705049.250417303,
+          4739015.806782324,
+          4799374.718718278,
+          4960485.8812616095,
+          5083844.923042881,
+          5365658.772589074,
+          5645768.676654511,
+          6124886.047893478,
+          6347003.945869339,
+          6391102.333095157,
+          6633856.242541633,
+          6747645.651913535,
+          6826156.008714933,
+          7645174.817712711,
+          7646037.469654373,
+          7976673.195800695,
+          8153440.181087659,
+          8172661.933860702,
+          8457791.49149369,
+          9545043.572125744,
+          9699809.342024535,
+          9725351.139111657,
+          10656336.674485484,
+          11334403.674677849,
+          11935884.742713936,
+          12227728.02065961,
+          12860198.851924054,
+          13054929.270058002,
+          13490057.378556928,
+          16047694.461387102,
+          16916481.650945313,
+          18372317.987710744,
+          22540847.141753417,
+          23498766.056418438,
+          28392242.77476775
+        ],
+        "inherited_rank_threshold": 0.002839224277476775,
+        "modes_below_inherited_threshold": 6,
+        "negative_below_minus_threshold": 0,
+        "physical_six_rigid_normalized_residual": [
+          1.7867751617567128e-17,
+          1.4368575075837054e-17,
+          1.1878835099764777e-17,
+          0.0012045597961019938,
+          0.00046706559217727343,
+          0.00012397430256195553
+        ],
+        "physical_six_rigid_energy_kn_m": [
+          -2.8517424136659314e-09,
+          2.1266970956586948e-09,
+          -1.9721092151363992e-09,
+          8138.029122038672,
+          3011.635396185699,
+          243.65763292102415
+        ],
+        "classification": "algebraic mode counts and actual rigid residual must be read together"
+      },
+      "element_stiffness_exactly_equals_same_corner_faceted_control": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "global_solves": [
+        {
+          "name": "rigid-boundary-0",
+          "elapsed_seconds": 0.0029297809999206947,
+          "interior_translation_force_l2_kn": 9.258733851723488e-13,
+          "interior_rotation_moment_l2_kn_m": 8.544696685290697e-13,
+          "mixed_dof_algebraic_relative_residual": 6.130949494042389e-15,
+          "displacement_error": {
+            "absolute_l2": 3.1719565731199584e-05,
+            "reference_l2": 0.0017569843715542792,
+            "relative_l2": 0.01805341370403855,
+            "maximum_absolute": 1.331963929402375e-05
+          },
+          "rotation_error": {
+            "absolute_l2": 4.6702555435752636e-05,
+            "reference_l2": 0.005,
+            "relative_l2": 0.009340511087150527,
+            "maximum_absolute": 2.6322990362731724e-05
+          },
+          "boundary_translation_force_l2_kn": 205.49911825870078,
+          "boundary_rotation_moment_l2_kn_m": 0.03597212556731989,
+          "energy_kn_m": 0.002577285286699538
+        },
+        {
+          "name": "rigid-boundary-1",
+          "elapsed_seconds": 0.0032043230000908807,
+          "interior_translation_force_l2_kn": 1.1383089688404495e-12,
+          "interior_rotation_moment_l2_kn_m": 6.85926260437526e-13,
+          "mixed_dof_algebraic_relative_residual": 1.0602912512798162e-14,
+          "displacement_error": {
+            "absolute_l2": 2.0331912702339974e-05,
+            "reference_l2": 0.001824493523505934,
+            "relative_l2": 0.011143866744602257,
+            "maximum_absolute": 8.14871171431644e-06
+          },
+          "rotation_error": {
+            "absolute_l2": 3.3305382442888516e-05,
+            "reference_l2": 0.005,
+            "relative_l2": 0.006661076488577703,
+            "maximum_absolute": 1.5957543756263838e-05
+          },
+          "boundary_translation_force_l2_kn": 125.34282671712715,
+          "boundary_rotation_moment_l2_kn_m": 0.18221724769858497,
+          "energy_kn_m": 0.0015095680992616072
+        },
+        {
+          "name": "rigid-boundary-2",
+          "elapsed_seconds": 0.002886035999949854,
+          "interior_translation_force_l2_kn": 2.4712063822724906e-12,
+          "interior_rotation_moment_l2_kn_m": 1.3221753786907285e-12,
+          "mixed_dof_algebraic_relative_residual": 7.887987910165913e-14,
+          "displacement_error": {
+            "absolute_l2": 5.863608496701416e-06,
+            "reference_l2": 0.0024511665517811896,
+            "relative_l2": 0.0023921705738194354,
+            "maximum_absolute": 3.2308161892825903e-06
+          },
+          "rotation_error": {
+            "absolute_l2": 9.028977639746799e-06,
+            "reference_l2": 0.005,
+            "relative_l2": 0.0018057955279493596,
+            "maximum_absolute": 4.90157023873717e-06
+          },
+          "boundary_translation_force_l2_kn": 35.53094235562391,
+          "boundary_rotation_moment_l2_kn_m": 0.04658557138407179,
+          "energy_kn_m": 0.00012507694875053243
+        }
+      ]
+    },
+    {
+      "kind": "sphere",
+      "n": 1,
+      "nodes": 9,
+      "elements": 2,
+      "dofs": 54,
+      "spectrum": {
+        "eigenvalues": [
+          -9.430517724785832e-10,
+          -4.1735169230960857e-10,
+          -2.2451995461268043e-10,
+          8.29818759703137e-11,
+          8.605247341342098e-10,
+          1.8082201542951765e-09,
+          1.7827495679658865,
+          2.0012543717554028,
+          2.941929471634534,
+          3.627630530041854,
+          5.036154541610732,
+          6.678690731523761,
+          8.725201431201134,
+          15.239293825218597,
+          68.13516698649232,
+          1200.887928999812,
+          1307.9200278744813,
+          1712.6998276905124,
+          1897.9487977806532,
+          2030.557908773997,
+          4160.213112596184,
+          5716.768362834977,
+          6614.529965260138,
+          7834.711361861864,
+          14917.669875954594,
+          24502.45809290631,
+          26922.510318167875,
+          28200.94949026707,
+          46740.36935625019,
+          113281.32732910519,
+          121476.0727385647,
+          728211.3079857023,
+          737473.4566007716,
+          784878.8759258292,
+          812644.5977506143,
+          882466.6509498986,
+          1178148.3881777937,
+          1412134.8544495627,
+          1836915.2817132354,
+          2358518.791280504,
+          2903600.5632277685,
+          3292078.773877578,
+          3453074.8517380995,
+          3453176.7351382067,
+          3737923.7786053666,
+          4013655.062275118,
+          5865431.986330389,
+          6225798.044699018,
+          7420159.094799728,
+          7513804.800839285,
+          8293483.247293269,
+          9815631.352886617,
+          11894734.289602881,
+          21224671.313025683
+        ],
+        "inherited_rank_threshold": 0.0021224671313025685,
+        "modes_below_inherited_threshold": 6,
+        "negative_below_minus_threshold": 0,
+        "physical_six_rigid_normalized_residual": [
+          4.0080633235157134e-17,
+          3.192972977382283e-17,
+          2.779340453891168e-17,
+          0.007046023331773758,
+          0.008718080973938754,
+          0.005542830094509088
+        ],
+        "physical_six_rigid_energy_kn_m": [
+          -1.5788501061021809e-09,
+          1.0333424526546716e-09,
+          -6.259215224360225e-10,
+          34597.92732048599,
+          45695.90844387684,
+          14646.30350375827
+        ],
+        "classification": "algebraic mode counts and actual rigid residual must be read together"
+      },
+      "element_stiffness_exactly_equals_same_corner_faceted_control": [
+        true,
+        true
+      ]
+    },
+    {
+      "kind": "sphere",
+      "n": 2,
+      "nodes": 25,
+      "elements": 8,
+      "dofs": 150,
+      "spectrum": {
+        "eigenvalues": [
+          -1.7009499541629066e-09,
+          -8.494763222881312e-10,
+          -9.708926490288156e-11,
+          1.706804173493426e-10,
+          4.847790852853761e-10,
+          9.67189752740957e-10,
+          0.44059676039551726,
+          0.5060043327088128,
+          0.9753084786005488,
+          1.0656947093099247,
+          1.21072869236189,
+          1.3808752364093724,
+          1.637073191620426,
+          1.7718715164479724,
+          2.545140505878421,
+          2.554087537808723,
+          2.7166443925086394,
+          2.7980538358997253,
+          6.117549330703544,
+          6.356047584097619,
+          6.71005685015867,
+          10.499758911041209,
+          165.4287789330837,
+          189.10735132871372,
+          192.56045919873952,
+          198.86657596980083,
+          418.4258908360867,
+          498.644264157879,
+          591.302562279334,
+          627.1815706043737,
+          653.5859479044668,
+          701.0281481146695,
+          917.9928741089261,
+          1145.1733223682236,
+          1160.2374158132407,
+          1206.3764328663603,
+          1667.6090385180335,
+          2102.644492443348,
+          2196.5671747332653,
+          2534.562728999866,
+          2659.9444469953814,
+          3595.8928755210286,
+          3825.9146556192063,
+          3978.987381454787,
+          5523.546498427071,
+          5704.862218144808,
+          6049.589160797494,
+          6392.210035593445,
+          7511.917443423364,
+          7948.822329476126,
+          8200.158746040846,
+          8646.10882453561,
+          9462.448710474411,
+          9774.181184622483,
+          10108.338642414463,
+          10513.47551414325,
+          11300.57186062445,
+          11819.780140838042,
+          12303.972716799186,
+          13922.558418630186,
+          14181.503012817207,
+          15486.094224415598,
+          15682.621130841942,
+          20747.11335941763,
+          21402.996031895484,
+          22096.237720836158,
+          23859.1925209062,
+          24301.07812540676,
+          30317.909514780287,
+          30983.661315063273,
+          31660.543896889252,
+          33609.902462917365,
+          36110.4654328397,
+          40241.676681309975,
+          46323.52590146847,
+          46443.472868597506,
+          48368.5781673436,
+          49575.246330306465,
+          74593.68164780398,
+          344383.70278668386,
+          353746.88993383374,
+          400447.2822405564,
+          409344.56040868507,
+          451628.73149542604,
+          481813.3601073832,
+          669921.3621946806,
+          773885.7537327827,
+          934073.5610053055,
+          962654.9913756927,
+          1005598.6342523483,
+          1054096.6409117898,
+          1149774.8280572065,
+          1219373.5007833662,
+          1380234.5464356095,
+          1483628.3462238866,
+          1852136.97193967,
+          1911653.5125331718,
+          1919377.2519164816,
+          2009492.3549409767,
+          2184355.244102982,
+          2378166.182535079,
+          2425012.1003885577,
+          2595519.542497963,
+          2865848.3466198924,
+          2984371.7473350205,
+          3157773.4225146906,
+          3200671.368057186,
+          3250949.1861435045,
+          3256413.4662610297,
+          3446082.699621902,
+          3604056.0493487823,
+          3705773.9714035955,
+          3838609.9324124358,
+          4009846.8819153006,
+          4188436.394696785,
+          4583689.532958491,
+          4729615.232172322,
+          4868843.754004009,
+          4966326.674565821,
+          5111005.546034184,
+          5375341.979128467,
+          5623491.0272624735,
+          6141305.721958905,
+          6258999.431138011,
+          6448425.687738176,
+          6683962.707299224,
+          6736641.121370214,
+          7035033.664391887,
+          7407321.618178781,
+          7814705.850064523,
+          8073971.40510485,
+          8139065.541121091,
+          8291387.384066607,
+          8607911.017000169,
+          9530077.07619862,
+          9723743.407434799,
+          9774241.427784082,
+          10727210.069231126,
+          11279955.983347928,
+          11887312.54226331,
+          12232555.680081312,
+          12933122.768845761,
+          13145790.182089357,
+          13620597.444580829,
+          15764497.365168968,
+          17033594.736617707,
+          18574241.864050813,
+          22526717.15128884,
+          23573590.844476227,
+          28240143.360089116
+        ],
+        "inherited_rank_threshold": 0.002824014336008912,
+        "modes_below_inherited_threshold": 6,
+        "negative_below_minus_threshold": 0,
+        "physical_six_rigid_normalized_residual": [
+          1.489245546233871e-17,
+          1.594502342685588e-17,
+          1.3511245758980744e-17,
+          0.001122146652498649,
+          0.001333463777249212,
+          0.0008006941948142216
+        ],
+        "physical_six_rigid_energy_kn_m": [
+          -1.5802165565863966e-09,
+          3.764181659404354e-09,
+          -4.2773083369443445e-10,
+          8914.752736296621,
+          11608.102150625798,
+          3735.562177779495
+        ],
+        "classification": "algebraic mode counts and actual rigid residual must be read together"
+      },
+      "element_stiffness_exactly_equals_same_corner_faceted_control": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "global_solves": [
+        {
+          "name": "rigid-boundary-0",
+          "elapsed_seconds": 0.0031843430000435546,
+          "interior_translation_force_l2_kn": 1.185650894846265e-12,
+          "interior_rotation_moment_l2_kn_m": 7.338445186743023e-13,
+          "mixed_dof_algebraic_relative_residual": 6.949096190571436e-15,
+          "displacement_error": {
+            "absolute_l2": 3.7026458182939825e-05,
+            "reference_l2": 0.0018040036220444734,
+            "relative_l2": 0.02052460301658254,
+            "maximum_absolute": 1.7846860741088503e-05
+          },
+          "rotation_error": {
+            "absolute_l2": 5.658827362865978e-05,
+            "reference_l2": 0.005,
+            "relative_l2": 0.011317654725731955,
+            "maximum_absolute": 2.855275763350217e-05
+          },
+          "boundary_translation_force_l2_kn": 200.65319288330232,
+          "boundary_rotation_moment_l2_kn_m": 1.1206615199527163,
+          "energy_kn_m": 0.002737433539999706
+        },
+        {
+          "name": "rigid-boundary-1",
+          "elapsed_seconds": 0.0029772530000400366,
+          "interior_translation_force_l2_kn": 1.4516848750558647e-12,
+          "interior_rotation_moment_l2_kn_m": 7.179401214191141e-13,
+          "mixed_dof_algebraic_relative_residual": 7.446664379154436e-15,
+          "displacement_error": {
+            "absolute_l2": 4.391016332474789e-05,
+            "reference_l2": 0.0017356143943441811,
+            "relative_l2": 0.025299492483951063,
+            "maximum_absolute": 1.7587374921042488e-05
+          },
+          "rotation_error": {
+            "absolute_l2": 4.5825283398714024e-05,
+            "reference_l2": 0.005,
+            "relative_l2": 0.009165056679742805,
+            "maximum_absolute": 1.9328686873134754e-05
+          },
+          "boundary_translation_force_l2_kn": 217.48124520957936,
+          "boundary_rotation_moment_l2_kn_m": 0.5177786201271358,
+          "energy_kn_m": 0.0030014716041362782
+        },
+        {
+          "name": "rigid-boundary-2",
+          "elapsed_seconds": 0.003146445999959724,
+          "interior_translation_force_l2_kn": 3.785079509726384e-12,
+          "interior_rotation_moment_l2_kn_m": 1.6259526549379862e-12,
+          "mixed_dof_algebraic_relative_residual": 4.966105177759716e-14,
+          "displacement_error": {
+            "absolute_l2": 2.562586209019516e-05,
+            "reference_l2": 0.0023503963892600997,
+            "relative_l2": 0.010902783125131557,
+            "maximum_absolute": 1.700770588509496e-05
+          },
+          "rotation_error": {
+            "absolute_l2": 2.5993960518374907e-05,
+            "reference_l2": 0.005,
+            "relative_l2": 0.005198792103674982,
+            "maximum_absolute": 1.2956182445624312e-05
+          },
+          "boundary_translation_force_l2_kn": 82.9522741204923,
+          "boundary_rotation_moment_l2_kn_m": 0.3440418580937766,
+          "energy_kn_m": 0.00046431857237758204
+        }
+      ]
+    }
+  ],
+  "boundary": [
+    {
+      "id": "boundary-0.001-0.0-inplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-17,
+      "actual_maximum_midpoint_distance_m": 1.004859173557616e-17
+    },
+    {
+      "id": "boundary-0.001-0.0-inplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-17,
+      "actual_maximum_midpoint_distance_m": 2.009718347115232e-17
+    },
+    {
+      "id": "boundary-0.001-0.0-inplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.009718347115232e-17,
+      "actual_maximum_midpoint_distance_m": 4.019436694230464e-17
+    },
+    {
+      "id": "boundary-0.001-0.0-outplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-17,
+      "actual_maximum_midpoint_distance_m": 1.004859173557616e-17
+    },
+    {
+      "id": "boundary-0.001-0.0-outplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-17,
+      "actual_maximum_midpoint_distance_m": 2.009718347115232e-17
+    },
+    {
+      "id": "boundary-0.001-0.0-outplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.009718347115232e-17,
+      "actual_maximum_midpoint_distance_m": 4.019436694230464e-17
+    },
+    {
+      "id": "boundary-0.001-1000000.0-inplane-0.5",
+      "accepted": false,
+      "cutoff_m": 2.0097183948434822e-17,
+      "actual_maximum_midpoint_distance_m": 1.1641532182693525e-10
+    },
+    {
+      "id": "boundary-0.001-1000000.0-inplane-1.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183948434822e-17,
+      "actual_maximum_midpoint_distance_m": 1.1641532182693655e-10
+    },
+    {
+      "id": "boundary-0.001-1000000.0-inplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183948434822e-17,
+      "actual_maximum_midpoint_distance_m": 1.1641532182694174e-10
+    },
+    {
+      "id": "boundary-0.001-1000000.0-outplane-0.5",
+      "accepted": false,
+      "cutoff_m": 2.0097183948434822e-17,
+      "actual_maximum_midpoint_distance_m": 1.1641532182693525e-10
+    },
+    {
+      "id": "boundary-0.001-1000000.0-outplane-1.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183948434822e-17,
+      "actual_maximum_midpoint_distance_m": 1.1641532182693655e-10
+    },
+    {
+      "id": "boundary-0.001-1000000.0-outplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183948434822e-17,
+      "actual_maximum_midpoint_distance_m": 1.1641532182694174e-10
+    },
+    {
+      "id": "boundary-1.0-0.0-inplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 1.0048591735576161e-14
+    },
+    {
+      "id": "boundary-1.0-0.0-inplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 2.0097183471152322e-14
+    },
+    {
+      "id": "boundary-1.0-0.0-inplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 4.0194366942304644e-14
+    },
+    {
+      "id": "boundary-1.0-0.0-outplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 1.0048591735576161e-14
+    },
+    {
+      "id": "boundary-1.0-0.0-outplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 2.0097183471152322e-14
+    },
+    {
+      "id": "boundary-1.0-0.0-outplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 4.0194366942304644e-14
+    },
+    {
+      "id": "boundary-1.0-1000000.0-inplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 1.0048591735576161e-14
+    },
+    {
+      "id": "boundary-1.0-1000000.0-inplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 2.0097183471152322e-14
+    },
+    {
+      "id": "boundary-1.0-1000000.0-inplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 4.0194366942304644e-14
+    },
+    {
+      "id": "boundary-1.0-1000000.0-outplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 1.0048591735576161e-14
+    },
+    {
+      "id": "boundary-1.0-1000000.0-outplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 2.0097183471152322e-14
+    },
+    {
+      "id": "boundary-1.0-1000000.0-outplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.0097183471152322e-14,
+      "actual_maximum_midpoint_distance_m": 4.0194366942304644e-14
+    },
+    {
+      "id": "boundary-1000.0-0.0-inplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 1.004859173557616e-11
+    },
+    {
+      "id": "boundary-1000.0-0.0-inplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 2.009718347115232e-11
+    },
+    {
+      "id": "boundary-1000.0-0.0-inplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 4.019436694230464e-11
+    },
+    {
+      "id": "boundary-1000.0-0.0-outplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 1.004859173557616e-11
+    },
+    {
+      "id": "boundary-1000.0-0.0-outplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 2.009718347115232e-11
+    },
+    {
+      "id": "boundary-1000.0-0.0-outplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 4.019436694230464e-11
+    },
+    {
+      "id": "boundary-1000.0-1000000.0-inplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 1.004859173557616e-11
+    },
+    {
+      "id": "boundary-1000.0-1000000.0-inplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 2.009718347115232e-11
+    },
+    {
+      "id": "boundary-1000.0-1000000.0-inplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 4.019436694230464e-11
+    },
+    {
+      "id": "boundary-1000.0-1000000.0-outplane-0.5",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 1.004859173557616e-11
+    },
+    {
+      "id": "boundary-1000.0-1000000.0-outplane-1.0",
+      "accepted": true,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 2.009718347115232e-11
+    },
+    {
+      "id": "boundary-1000.0-1000000.0-outplane-2.0",
+      "accepted": false,
+      "cutoff_m": 2.009718347115232e-11,
+      "actual_maximum_midpoint_distance_m": 4.019436694230464e-11
+    }
+  ],
+  "maximum_node_order_K_relative_difference": 5.687889165149394e-16,
+  "thickness_drilling_sensitivity": [
+    {
+      "id": "bulge-t0.01-d1e-08",
+      "zero_count": 11,
+      "rotation_x_energies": {
+        "area_m2": 0.5,
+        "bending_energy_kn_m": 3.952841303476314e-32,
+        "drilling_penalty_energy_kn_m": 8.333333333333343e-08,
+        "id": "internal-only",
+        "local_axes": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "membrane_energy_kn_m": 116.66666666666683,
+        "samples": [
+          {
+            "barycentric": [
+              0.816847572980459,
+              0.091576213509771,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              -2.3129646346357434e-16,
+              -1.1564823173178717e-15,
+              -4.625929269271487e-16
+            ],
+            "curvature_per_m": [
+              0.0,
+              -4.440892098500626e-16,
+              -4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": 0.02901085437882752,
+            "membrane_force_kn_m": [
+              -3626.35679735344,
+              -18131.7839867672,
+              -7252.71359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.05802170875765504,
+              -0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              5.059610138265688e-12,
+              1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              4.85722573273506e-17,
+              1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.816847572980459,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              4.625929269271487e-16
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": -0.02901085437882752,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              7252.71359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              2.023844055306275e-11,
+              2.4575249243004773e-11
+            ],
+            "transverse_shear_strain": [
+              1.942890293094024e-16,
+              2.3592239273284576e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.091576213509771,
+              0.816847572980459
+            ],
+            "bending_moment_kn": [
+              2.3129646346357434e-16,
+              1.1564823173178717e-15,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              4.440892098500626e-16,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              3626.35679735344,
+              18131.7839867672,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              0.05802170875765504,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              4.6259292692714864e-11,
+              -1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              4.440892098500626e-16,
+              -1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.10810301816807,
+              0.445948490915965,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": -0.0135138189099158,
+            "membrane_force_kn_m": [
+              1689.2273637394749,
+              8446.136818697374,
+              3378.4547274789497
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0270276378198316,
+              0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              2.891205793294679e-11,
+              -8.673617379884037e-12
+            ],
+            "transverse_shear_strain": [
+              2.7755575615628914e-16,
+              -8.326672684688674e-17
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.10810301816807,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0135138189099158,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              -3378.4547274789497
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              -0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              1.1564823173178716e-11,
+              0.0
+            ],
+            "transverse_shear_strain": [
+              1.1102230246251565e-16,
+              0.0
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.445948490915965,
+              0.10810301816807
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              -1689.2273637394749,
+              -8446.136818697374,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.0270276378198316,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              2.963485938127046e-11,
+              1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              2.8449465006019636e-16,
+              1.1102230246251565e-16
+            ]
+          }
+        ],
+        "transverse_shear_energy_kn_m": 2.0122017899932e-27
+      }
+    },
+    {
+      "id": "bulge-t0.01-d0.0001",
+      "zero_count": 6,
+      "rotation_x_energies": {
+        "area_m2": 0.5,
+        "bending_energy_kn_m": 3.952841303476314e-32,
+        "drilling_penalty_energy_kn_m": 0.0008333333333333343,
+        "id": "internal-only",
+        "local_axes": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "membrane_energy_kn_m": 116.66666666666683,
+        "samples": [
+          {
+            "barycentric": [
+              0.816847572980459,
+              0.091576213509771,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              -2.3129646346357434e-16,
+              -1.1564823173178717e-15,
+              -4.625929269271487e-16
+            ],
+            "curvature_per_m": [
+              0.0,
+              -4.440892098500626e-16,
+              -4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": 0.02901085437882752,
+            "membrane_force_kn_m": [
+              -3626.35679735344,
+              -18131.7839867672,
+              -7252.71359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.05802170875765504,
+              -0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              5.059610138265688e-12,
+              1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              4.85722573273506e-17,
+              1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.816847572980459,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              4.625929269271487e-16
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": -0.02901085437882752,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              7252.71359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              2.023844055306275e-11,
+              2.4575249243004773e-11
+            ],
+            "transverse_shear_strain": [
+              1.942890293094024e-16,
+              2.3592239273284576e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.091576213509771,
+              0.816847572980459
+            ],
+            "bending_moment_kn": [
+              2.3129646346357434e-16,
+              1.1564823173178717e-15,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              4.440892098500626e-16,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              3626.35679735344,
+              18131.7839867672,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              0.05802170875765504,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              4.6259292692714864e-11,
+              -1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              4.440892098500626e-16,
+              -1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.10810301816807,
+              0.445948490915965,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": -0.0135138189099158,
+            "membrane_force_kn_m": [
+              1689.2273637394749,
+              8446.136818697374,
+              3378.4547274789497
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0270276378198316,
+              0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              2.891205793294679e-11,
+              -8.673617379884037e-12
+            ],
+            "transverse_shear_strain": [
+              2.7755575615628914e-16,
+              -8.326672684688674e-17
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.10810301816807,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0135138189099158,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              -3378.4547274789497
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              -0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              1.1564823173178716e-11,
+              0.0
+            ],
+            "transverse_shear_strain": [
+              1.1102230246251565e-16,
+              0.0
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.445948490915965,
+              0.10810301816807
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              -1689.2273637394749,
+              -8446.136818697374,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.0270276378198316,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              2.963485938127046e-11,
+              1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              2.8449465006019636e-16,
+              1.1102230246251565e-16
+            ]
+          }
+        ],
+        "transverse_shear_energy_kn_m": 2.0122017899932e-27
+      }
+    },
+    {
+      "id": "bulge-t0.01-d0.01",
+      "zero_count": 6,
+      "rotation_x_energies": {
+        "area_m2": 0.5,
+        "bending_energy_kn_m": 3.952841303476314e-32,
+        "drilling_penalty_energy_kn_m": 0.08333333333333343,
+        "id": "internal-only",
+        "local_axes": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "membrane_energy_kn_m": 116.66666666666683,
+        "samples": [
+          {
+            "barycentric": [
+              0.816847572980459,
+              0.091576213509771,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              -2.3129646346357434e-16,
+              -1.1564823173178717e-15,
+              -4.625929269271487e-16
+            ],
+            "curvature_per_m": [
+              0.0,
+              -4.440892098500626e-16,
+              -4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": 0.02901085437882752,
+            "membrane_force_kn_m": [
+              -3626.35679735344,
+              -18131.7839867672,
+              -7252.71359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.05802170875765504,
+              -0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              5.059610138265688e-12,
+              1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              4.85722573273506e-17,
+              1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.816847572980459,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              4.625929269271487e-16
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": -0.02901085437882752,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              7252.71359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              2.023844055306275e-11,
+              2.4575249243004773e-11
+            ],
+            "transverse_shear_strain": [
+              1.942890293094024e-16,
+              2.3592239273284576e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.091576213509771,
+              0.816847572980459
+            ],
+            "bending_moment_kn": [
+              2.3129646346357434e-16,
+              1.1564823173178717e-15,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              4.440892098500626e-16,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              3626.35679735344,
+              18131.7839867672,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              0.05802170875765504,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              4.6259292692714864e-11,
+              -1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              4.440892098500626e-16,
+              -1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.10810301816807,
+              0.445948490915965,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": -0.0135138189099158,
+            "membrane_force_kn_m": [
+              1689.2273637394749,
+              8446.136818697374,
+              3378.4547274789497
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0270276378198316,
+              0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              2.891205793294679e-11,
+              -8.673617379884037e-12
+            ],
+            "transverse_shear_strain": [
+              2.7755575615628914e-16,
+              -8.326672684688674e-17
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.10810301816807,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0135138189099158,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              -3378.4547274789497
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              -0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              1.1564823173178716e-11,
+              0.0
+            ],
+            "transverse_shear_strain": [
+              1.1102230246251565e-16,
+              0.0
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.445948490915965,
+              0.10810301816807
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              -1689.2273637394749,
+              -8446.136818697374,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.0270276378198316,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              2.963485938127046e-11,
+              1.1564823173178716e-11
+            ],
+            "transverse_shear_strain": [
+              2.8449465006019636e-16,
+              1.1102230246251565e-16
+            ]
+          }
+        ],
+        "transverse_shear_energy_kn_m": 2.0122017899932e-27
+      }
+    },
+    {
+      "id": "bulge-t0.001-d1e-08",
+      "zero_count": 11,
+      "rotation_x_energies": {
+        "area_m2": 0.5,
+        "bending_energy_kn_m": 3.952841303476313e-35,
+        "drilling_penalty_energy_kn_m": 8.333333333333343e-09,
+        "id": "internal-only",
+        "local_axes": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "membrane_energy_kn_m": 11.66666666666668,
+        "samples": [
+          {
+            "barycentric": [
+              0.816847572980459,
+              0.091576213509771,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              -2.3129646346357432e-19,
+              -1.1564823173178715e-18,
+              -4.6259292692714865e-19
+            ],
+            "curvature_per_m": [
+              0.0,
+              -4.440892098500626e-16,
+              -4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": 0.02901085437882752,
+            "membrane_force_kn_m": [
+              -362.635679735344,
+              -1813.17839867672,
+              -725.271359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.05802170875765504,
+              -0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              5.059610138265688e-13,
+              1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              4.85722573273506e-17,
+              1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.816847572980459,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              4.6259292692714865e-19
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": -0.02901085437882752,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              725.271359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              2.023844055306275e-12,
+              2.457524924300477e-12
+            ],
+            "transverse_shear_strain": [
+              1.942890293094024e-16,
+              2.3592239273284576e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.091576213509771,
+              0.816847572980459
+            ],
+            "bending_moment_kn": [
+              2.3129646346357432e-19,
+              1.1564823173178715e-18,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              4.440892098500626e-16,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              362.635679735344,
+              1813.17839867672,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              0.05802170875765504,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              4.625929269271486e-12,
+              -1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              4.440892098500626e-16,
+              -1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.10810301816807,
+              0.445948490915965,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": -0.0135138189099158,
+            "membrane_force_kn_m": [
+              168.9227363739475,
+              844.6136818697374,
+              337.845472747895
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0270276378198316,
+              0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              2.891205793294679e-12,
+              -8.673617379884036e-13
+            ],
+            "transverse_shear_strain": [
+              2.7755575615628914e-16,
+              -8.326672684688674e-17
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.10810301816807,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0135138189099158,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              -337.845472747895
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              -0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              1.1564823173178715e-12,
+              0.0
+            ],
+            "transverse_shear_strain": [
+              1.1102230246251565e-16,
+              0.0
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.445948490915965,
+              0.10810301816807
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              -168.9227363739475,
+              -844.6136818697374,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.0270276378198316,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              2.9634859381270457e-12,
+              1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              2.8449465006019636e-16,
+              1.1102230246251565e-16
+            ]
+          }
+        ],
+        "transverse_shear_energy_kn_m": 2.0122017899932e-28
+      }
+    },
+    {
+      "id": "bulge-t0.001-d0.0001",
+      "zero_count": 6,
+      "rotation_x_energies": {
+        "area_m2": 0.5,
+        "bending_energy_kn_m": 3.952841303476313e-35,
+        "drilling_penalty_energy_kn_m": 8.333333333333343e-05,
+        "id": "internal-only",
+        "local_axes": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "membrane_energy_kn_m": 11.66666666666668,
+        "samples": [
+          {
+            "barycentric": [
+              0.816847572980459,
+              0.091576213509771,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              -2.3129646346357432e-19,
+              -1.1564823173178715e-18,
+              -4.6259292692714865e-19
+            ],
+            "curvature_per_m": [
+              0.0,
+              -4.440892098500626e-16,
+              -4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": 0.02901085437882752,
+            "membrane_force_kn_m": [
+              -362.635679735344,
+              -1813.17839867672,
+              -725.271359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.05802170875765504,
+              -0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              5.059610138265688e-13,
+              1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              4.85722573273506e-17,
+              1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.816847572980459,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              4.6259292692714865e-19
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": -0.02901085437882752,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              725.271359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              2.023844055306275e-12,
+              2.457524924300477e-12
+            ],
+            "transverse_shear_strain": [
+              1.942890293094024e-16,
+              2.3592239273284576e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.091576213509771,
+              0.816847572980459
+            ],
+            "bending_moment_kn": [
+              2.3129646346357432e-19,
+              1.1564823173178715e-18,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              4.440892098500626e-16,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              362.635679735344,
+              1813.17839867672,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              0.05802170875765504,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              4.625929269271486e-12,
+              -1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              4.440892098500626e-16,
+              -1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.10810301816807,
+              0.445948490915965,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": -0.0135138189099158,
+            "membrane_force_kn_m": [
+              168.9227363739475,
+              844.6136818697374,
+              337.845472747895
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0270276378198316,
+              0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              2.891205793294679e-12,
+              -8.673617379884036e-13
+            ],
+            "transverse_shear_strain": [
+              2.7755575615628914e-16,
+              -8.326672684688674e-17
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.10810301816807,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0135138189099158,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              -337.845472747895
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              -0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              1.1564823173178715e-12,
+              0.0
+            ],
+            "transverse_shear_strain": [
+              1.1102230246251565e-16,
+              0.0
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.445948490915965,
+              0.10810301816807
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              -168.9227363739475,
+              -844.6136818697374,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.0270276378198316,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              2.9634859381270457e-12,
+              1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              2.8449465006019636e-16,
+              1.1102230246251565e-16
+            ]
+          }
+        ],
+        "transverse_shear_energy_kn_m": 2.0122017899932e-28
+      }
+    },
+    {
+      "id": "bulge-t0.001-d0.01",
+      "zero_count": 6,
+      "rotation_x_energies": {
+        "area_m2": 0.5,
+        "bending_energy_kn_m": 3.952841303476313e-35,
+        "drilling_penalty_energy_kn_m": 0.008333333333333344,
+        "id": "internal-only",
+        "local_axes": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "membrane_energy_kn_m": 11.66666666666668,
+        "samples": [
+          {
+            "barycentric": [
+              0.816847572980459,
+              0.091576213509771,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              -2.3129646346357432e-19,
+              -1.1564823173178715e-18,
+              -4.6259292692714865e-19
+            ],
+            "curvature_per_m": [
+              0.0,
+              -4.440892098500626e-16,
+              -4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": 0.02901085437882752,
+            "membrane_force_kn_m": [
+              -362.635679735344,
+              -1813.17839867672,
+              -725.271359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.05802170875765504,
+              -0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              5.059610138265688e-13,
+              1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              4.85722573273506e-17,
+              1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.816847572980459,
+              0.091576213509771
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              4.6259292692714865e-19
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              4.440892098500626e-16
+            ],
+            "drilling_mismatch_rad": -0.02901085437882752,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              725.271359470688
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              0.05802170875765504
+            ],
+            "transverse_shear_force_kn_m": [
+              2.023844055306275e-12,
+              2.457524924300477e-12
+            ],
+            "transverse_shear_strain": [
+              1.942890293094024e-16,
+              2.3592239273284576e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.091576213509771,
+              0.091576213509771,
+              0.816847572980459
+            ],
+            "bending_moment_kn": [
+              2.3129646346357432e-19,
+              1.1564823173178715e-18,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              4.440892098500626e-16,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              362.635679735344,
+              1813.17839867672,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              0.05802170875765504,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              4.625929269271486e-12,
+              -1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              4.440892098500626e-16,
+              -1.1102230246251565e-16
+            ]
+          },
+          {
+            "barycentric": [
+              0.10810301816807,
+              0.445948490915965,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": -0.0135138189099158,
+            "membrane_force_kn_m": [
+              168.9227363739475,
+              844.6136818697374,
+              337.845472747895
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0270276378198316,
+              0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              2.891205793294679e-12,
+              -8.673617379884036e-13
+            ],
+            "transverse_shear_strain": [
+              2.7755575615628914e-16,
+              -8.326672684688674e-17
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.10810301816807,
+              0.445948490915965
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0135138189099158,
+            "membrane_force_kn_m": [
+              0.0,
+              0.0,
+              -337.845472747895
+            ],
+            "membrane_strain": [
+              0.0,
+              0.0,
+              -0.0270276378198316
+            ],
+            "transverse_shear_force_kn_m": [
+              1.1564823173178715e-12,
+              0.0
+            ],
+            "transverse_shear_strain": [
+              1.1102230246251565e-16,
+              0.0
+            ]
+          },
+          {
+            "barycentric": [
+              0.445948490915965,
+              0.445948490915965,
+              0.10810301816807
+            ],
+            "bending_moment_kn": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "curvature_per_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "drilling_mismatch_rad": 0.0,
+            "membrane_force_kn_m": [
+              -168.9227363739475,
+              -844.6136818697374,
+              0.0
+            ],
+            "membrane_strain": [
+              0.0,
+              -0.0270276378198316,
+              0.0
+            ],
+            "transverse_shear_force_kn_m": [
+              2.9634859381270457e-12,
+              1.1564823173178715e-12
+            ],
+            "transverse_shear_strain": [
+              2.8449465006019636e-16,
+              1.1102230246251565e-16
+            ]
+          }
+        ],
+        "transverse_shear_energy_kn_m": 2.0122017899932e-28
+      }
+    }
+  ],
+  "saved_reference_assessment": {
+    "saved_reanalysis_only": true,
+    "fresh_benchmark_solves": 0,
+    "old_source_sha256": "9c9d4217a0717607c5a30d0f2782a20c238babe86095fa824ab67fdbc8784791",
+    "roof": [
+      {
+        "n": 2,
+        "native_signed_probe": -0.3519475890638953,
+        "draft_signed_probe": -0.3707753852968122,
+        "native_minus_draft": 0.018827796232916916,
+        "literature_signed_probe": -0.3024,
+        "native_relative_literature_error": 0.16384784743351613
+      },
+      {
+        "n": 4,
+        "native_signed_probe": -0.30457174164525674,
+        "draft_signed_probe": -0.28712955192675454,
+        "native_minus_draft": -0.0174421897185022,
+        "literature_signed_probe": -0.3024,
+        "native_relative_literature_error": 0.007181685334843722
+      }
+    ],
+    "roof_observed_order": null,
+    "roof_levels_insufficient_for_order": true,
+    "native_minus_q4_sign_reversal": true,
+    "attached": [
+      {
+        "n": 2,
+        "uz_m": -0.00012476700593137095
+      },
+      {
+        "n": 4,
+        "uz_m": -0.00012550304356337205
+      },
+      {
+        "n": 8,
+        "uz_m": -0.00012581581132431818
+      }
+    ],
+    "attached_signed_differences_m": [
+      -7.360376320010998e-07,
+      -3.1276776094613383e-07
+    ],
+    "attached_diagnostic_order": 1.2346877178901248,
+    "attached_scope": "circumferential refinement only, fixed soil and one axial division, faceted planar elements",
+    "reference_status": "finite Q4 analytic-director discretization; not exact and not the same element as faceted Tri6",
+    "legacy_references_unchanged": {
+      "roof": -0.3024,
+      "cylinder": -1.8248e-05,
+      "open_top_hemisphere": 0.094
+    },
+    "source_confirmed_variant_values": {
+      "Ko2017_roof": -0.3024,
+      "Ko2017_cylinder": -1.8248e-05,
+      "Ko2017_open_top_hemisphere": 0.093,
+      "Ko2017_full_hemisphere": 0.0924,
+      "Abaqus2025_LE3_target_mm": 185.0,
+      "Abaqus2025_cylinder": 1.825e-05,
+      "Abaqus2025_roof_target_mm": 91.2
+    },
+    "reference_definitions_interchangeable": false,
+    "source_warning": "KC2023 sections 2/4 distinguish KL/MR and point-load singularities; no reference/definition/tolerance replacement adopted",
+    "original_numerical_acceptance": null,
+    "curved_benchmarks_implemented": false
+  },
+  "conclusions": {
+    "guard": "full 3D distance to arithmetic edge midpoint; not just a coplanarity test",
+    "implementation": "midpoint coordinates do not enter stiffness after guard; fixed affine geometry cannot represent the quadratic surface",
+    "rigid_modes": "six algebraic near-zero eigenvalues do not certify actual-coordinate rigid rotations",
+    "global_equilibrium": "zero-load rigid boundary tests solve assembled systems; internal force balance can coexist with erroneous artificial deformation/reactions",
+    "drilling": "spurious membrane/shear energy dominates selected examples; drilling is not the sole cause; no curved drilling law was tested",
+    "reference": "variant/model/point-load target definitions differ; finite saved series do not establish a curved Tri6 limit",
+    "unique_cause_fully_identified": false
+  },
+  "cloud_diagnostics_remaining": true,
+  "cloud_remaining": [
+    "small distorted-patch and frame-rotation cross controls",
+    "compatible curved manufactured-load specification and independent element (requires design first)",
+    "separate director-interpolation versus curvature versus MITC interventions after specification"
+  ],
+  "specification_decisions_needed": true,
+  "pc_executed": false,
+  "windows_ci_after_push": "未確定",
+  "production_cli_controls": {
+    "solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+    "refusals": 21,
+    "accepted_controls": 4,
+    "all_original_contracts_confirmed": true,
+    "prior_all_members_sha256_verified": true,
+    "accepted_legacy_exact_comparisons": [
+      {
+        "name": "legacy-e0-mindlin_tri6",
+        "exact": false
+      },
+      {
+        "name": "legacy-e0-cst_dkt",
+        "exact": false
+      },
+      {
+        "name": "legacy-e0-default",
+        "exact": false
+      },
+      {
+        "name": "planar-offset-positive",
+        "exact": false
+      }
+    ],
+    "accepted_legacy_exact_comparisons_after_recursive_time_audit": [
+      {
+        "name": "legacy-e0-mindlin_tri6",
+        "exact": true,
+        "saved_new_run_sha256": "ac7c9bd753a209b83612ec36fa28a15d20bed4bdcd1aa1505d34152e98775e7d",
+        "old_solver_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7"
+      },
+      {
+        "name": "legacy-e0-cst_dkt",
+        "exact": true,
+        "saved_new_run_sha256": "fc2d52c5db8312e516f65d2cfdf312605009a3fda222cea0cf04e3435bcc193d",
+        "old_solver_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7"
+      },
+      {
+        "name": "legacy-e0-default",
+        "exact": true,
+        "saved_new_run_sha256": "c8e847b24ddcc2b8c83a3b516de88c2987db53944ddcf99d663ea1211352484c",
+        "old_solver_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7"
+      },
+      {
+        "name": "planar-offset-positive",
+        "exact": true,
+        "saved_new_run_sha256": "23f1feebfbb757dabb0d8f0b6c583d4313fc05a29f157c57584e7fdcb6987f8f",
+        "old_solver_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7"
+      }
+    ],
+    "initial_false_comparison_retained": true
+  },
+  "same_input_repeat": {
+    "pid": 5514,
+    "exit_code": 0,
+    "stdout_exact": true,
+    "sha256": "d5327bb344d9a030ddac7c4f0411e9163f1be2a3432f8a600ae04e5a0fc9a6f6"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "review_date_jst": "2026-11-15",
+  "direct_quotes_used": false,
+  "unavailable_bodies_quoted": false,
+  "sources": [
+    {
+      "id": "AIZ1970",
+      "citation": "Ahmad, Irons & Zienkiewicz, IJNME 2 (1970), 419–451",
+      "url": "https://doi.org/10.1002/nme.1620020310",
+      "acquired_scope": "publisher bibliography and abstract only; full body not acquired",
+      "use_and_limit": "General curved thick/thin shell geometry and shear deformation motivate continuum-based comparison; no formula or numerical benchmark quoted from unavailable body."
+    },
+    {
+      "id": "MITC2004",
+      "citation": "P.-S. Lee & K.-J. Bathe, Computers & Structures 82 (2004), 945–962",
+      "url": "https://web.mit.edu/kjb/www/Principal_Publications/Development_of_MITC_Isotropic_Triangular_Shell_Finite_Elements.pdf",
+      "acquired_scope": "author-hosted full PDF, pp.946–948 and 951–953, sections 1–4, equations 1–8",
+      "use_and_limit": "Director interpolation, covariant strain and separate tying fields; consistency/ellipticity and six physical rigid modes. Used to diagnose the fixed affine frame and missing geometry/director derivatives; not adopted as a new element."
+    },
+    {
+      "id": "MITC2014",
+      "citation": "Y. Lee, P.-S. Lee & K.-J. Bathe, Computers & Structures 138 (2014), 12–23",
+      "url": "https://web.mit.edu/kjb/www/Principal_Publications/The_MITC3%2B_shell_element_and_its_performance.pdf",
+      "acquired_scope": "author-hosted full PDF, abstract and sections 1–2",
+      "use_and_limit": "Cubic rotational bubble and assumed shear field; basic isotropy/patch/zero-energy tests. This is a three-node formulation, not a six-node curved-element acceptance result."
+    },
+    {
+      "id": "MODAL2015",
+      "citation": "Y. Lee, H.-M. Jeon, P.-S. Lee & K.-J. Bathe, Computers & Structures 153 (2015), 148–164",
+      "url": "https://web.mit.edu/kjb/www/Principal_Publications/The_modal_behavior_of_the_MITC3_plus_triangular_shell_element.pdf",
+      "acquired_scope": "author-hosted full PDF, pp.148–150, sections 1–2",
+      "use_and_limit": "Single-element and two-element modal studies and bending/shear fields motivate examining mode vectors and full assembled patches, not only eigenvalue counts."
+    },
+    {
+      "id": "KO2017",
+      "citation": "Y. Ko, Y. Lee, P.-S. Lee & K.-J. Bathe, Computers & Structures 193 (2017), 187–206",
+      "url": "https://web.mit.edu/kjb/www/Principal_Publications/Performance_of_the_MITC3%2B_and_MITC4%2B_shell_elements_in_widely_used_benchmark_problems.pdf",
+      "acquired_scope": "author-hosted full PDF, Figs.9/11/17/19, sections 3.3/3.4/3.7/3.8, Tables8/10/15/17",
+      "use_and_limit": "Verified roof -.3024, cylinder -1.8248e-5, open-top hemisphere .093, full hemisphere .0924 with their separate load/BC/geometry definitions. Small regular/distorted mesh examples N=4/8; no large-PC recipe inferred."
+    },
+    {
+      "id": "KC2023",
+      "citation": "P. Krysl & J.-S. Chen, Archives of Computational Methods in Engineering 30 (2023), 301–315, online 2022",
+      "url": "https://link.springer.com/article/10.1007/s11831-022-09798-5",
+      "acquired_scope": "publisher full open-access body, sections 2.1/2.2/4",
+      "use_and_limit": "Authors’ own calculations and provenance review distinguish KL/MR roof targets and open/full hemisphere variants; point-load displacement in shear-flexible models may be singular. Used as a limitation, never to replace the fixed legacy target or manufacture acceptance with Richardson extrapolation."
+    },
+    {
+      "id": "ABAQUS_LIBRARY",
+      "citation": "SIMULIA Abaqus 2025, Three-Dimensional Conventional Shell Element Library",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEELMRefMap/simaelm-r-shellgeneral.htm",
+      "acquired_scope": "official full HTML, Element Types/Active Degrees of Freedom/Nodal Coordinates",
+      "use_and_limit": "S3/S3R are three-node general-purpose, STRI65 is six-node thin shell with five DOFs at most nodes and conditional six-DOF promotion. Mechanical S6 was not listed in this source; DS6 is heat transfer. Do not invent an S6 equivalence or copy drilling policy."
+    },
+    {
+      "id": "ABAQUS_ROOF",
+      "citation": "SIMULIA Abaqus 2025, The barrel vault roof problem",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEBMKRefMap/simabmk-c-barrelvault.htm",
+      "acquired_scope": "official full HTML, Problem description/Results/Input files",
+      "use_and_limit": "Free-edge center vertical displacement 91.2 mm for the specified 15.24 m span/76.2 mm thickness model; STRI65 input meshes 2x2/4x4/9x9. Not interchangeable numerically with the unconverted legacy R25/L50 data."
+    },
+    {
+      "id": "ABAQUS_CYLINDER",
+      "citation": "SIMULIA Abaqus 2025, The pinched cylinder problem",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEBMKRefMap/simabmk-c-pinchcyl.htm",
+      "acquired_scope": "official full HTML, Problem description/Results",
+      "use_and_limit": "Self-consistent units, diaphragm-supported symmetric cylinder, radial displacement at load, reference .1825e-4. Equal-node and equal-element comparisons differ; keep the exact target definition and discrete mesh counts explicit."
+    },
+    {
+      "id": "ABAQUS_LE3",
+      "citation": "SIMULIA Abaqus 2025, LE3 Hemispherical shell with point loads",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEBMKRefMap/simabmk-c-le3.htm",
+      "acquired_scope": "official full HTML, Model/Material/BC/Loading/Reference",
+      "use_and_limit": "NAFEMS LE3 ux at A=185 mm, E68.25 GPa, nu .3, radial 2kN loads, stated BC. Not the open-top .094 legacy problem."
+    },
+    {
+      "id": "ASTER",
+      "citation": "EDF R&D Code_Aster R3.07.04, Éléments finis de coques volumiques",
+      "url": "https://codeaster.gitlab.io/doc/docaster/manuals/man_r/r3/r3.07.04/index.html",
+      "acquired_scope": "official French HTML summary and sections 2/4; official English PDF retrieval failed",
+      "use_and_limit": "COQUE_3D uses quadratic Q9 heterosis and T7 equivalent; Cartesian displacement/director interpolation can encode curvature implicitly. Absence of an explicit curvature variable is not alone proof of missing physics; this code lacks both a variable geometry map and director field."
+    },
+    {
+      "id": "ASTER_DISCRETE",
+      "citation": "EDF R&D Code_Aster R3.07.04 section 4",
+      "url": "https://codeaster.gitlab.io/doc/docaster/manuals/man_r/r3/r3.07.04/Discr_tisation_num_rique_de_la_formulation_variationnelle_issue_du_principe_du_travail_virtuel.html",
+      "acquired_scope": "official French HTML, sections 4.1–4.4",
+      "use_and_limit": "Geometry and nodal-normal interpolation, separate rotation interpolation and selective integration/zero-mode caveats. Used to distinguish single-element versus assembled checks, not to accept a copied rule."
+    },
+    {
+      "id": "MH1985",
+      "citation": "R.H. MacNeal & R.L. Harder, Finite Elements in Analysis and Design 1 (1985), 3–20",
+      "url": "https://doi.org/10.1016/0168-874X(85)90003-4",
+      "acquired_scope": "bibliography/search metadata only; publisher body returned 403",
+      "use_and_limit": "Bibliographic standard set includes patch/beam/plate/shell tests; no unavailable body text or direct numerical table is cited. Numerical definitions instead verified in Ko2017 and official benchmarks above."
+    },
+    {
+      "id": "CB2011",
+      "citation": "D. Chapelle & K.-J. Bathe, The Finite Element Analysis of Shells—Fundamentals, 2nd ed., 2011",
+      "url": "https://link.springer.com/book/10.1007/978-3-642-16408-8",
+      "acquired_scope": "publisher bibliography, description and contents only; chapter bodies not acquired",
+      "use_and_limit": "Bibliographic only for geometric/tensor/mixed-model background. No chapter formula or theorem asserted as read."
+    },
+    {
+      "id": "PLAXIS",
+      "citation": "Bentley PLAXIS 3D Reference Manual, Modelling loads and structures, 2024-era indexed chapter",
+      "url": "https://bentleysystems.service-now.com/sys_attachment.do?sys_id=db955a539715661081d373b0f053af67",
+      "acquired_scope": "body retrieval rejected by web-tool size limit; bibliography/search metadata only",
+      "use_and_limit": "Do not cite the unacquired plate-theory text or claim curved-Tri6/director equivalence from its six-node plate label."
+    },
+    {
+      "id": "SOF2026",
+      "citation": "SOFiSTiK 2026 Verification, BE41 Linear Pinched Cylinder",
+      "url": "https://docs.sofistik.com/2026/en/verification/_static/verification/pdf/be41.pdf",
+      "acquired_scope": "official PDF sections1–3 and tables",
+      "use_and_limit": "Text verifies full load1/eighth load.25 and target1.8248e-5; table/OCR thickness units require care. No parameter conversion from this table adopted; the legacy definition is checked against Ko2017 instead."
+    }
+  ],
+  "initial_primary_review_preceded_solves": true,
+  "supplemental_reference_variant_review_after_internal_solves": [
+    "KO2017",
+    "KC2023",
+    "SOF2026"
+  ]
+}
