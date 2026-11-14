@@ -123,4 +123,6 @@ fmt、全ターゲットclippy、locked release buildは終了0。Rustは通常4
 
 validation.json自体は固定コミットにした後で台帳へ追記登録する。登録後の最終監査・関連試験は `validation/post-registration.json` と `validation/p601-final-audit.json` に保存し、元の全件数へ加算しない。push後の新先端Windows CIは未確定。
 
+最終のP6-01監査は305ソース・integrity_ok=true、SOURCE_NOT_INVENTORIED=0。登録後のP6関連57件＋C-04関連8件も全て成功（全件の777固有IDへ重複加算なし）。
+
 C-04は未達、passed=false。
