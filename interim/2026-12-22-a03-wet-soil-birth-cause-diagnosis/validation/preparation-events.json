@@ -1,0 +1,56 @@
+[
+  {
+    "action": "GitHub recursive tree via api.github.com",
+    "exit_code": 1,
+    "reason": "network proxy tunnel HTTP403; actual repository obtained by git fetch; no source modified"
+  },
+  {
+    "action": "PowerShell release hash manifest initial read",
+    "exit_code": 1,
+    "reason": "UnicodeDecodeError: official hash manifest UTF-16 BOM; re-read with BOM detection, exact SHA-256 verified; no test skip or tolerance changed"
+  },
+  {
+    "action": "initial full-history git fetch",
+    "exit_code": 130,
+    "reason": "interrupted excessive full-history transfer after 8.6 GiB cache; no tracked evidence deleted; replaced by fixed-head filtered fetch and full working-tree archive restoration"
+  },
+  {
+    "action": "tracking setup after explicit filtered branch fetch",
+    "exit_code": 128,
+    "reason": "remote fetch refspec initially tracked main only; added requested branch refspec and switched explicitly to verified 9a5e9d1; clean baseline retained"
+  },
+  {
+    "action": "bulk missing-blob checkout",
+    "exit_code": 130,
+    "reason": "interrupted before transfer; fixed head contains 28,339,290,414 bytes; restore exact archive blobs directly to avoid duplicate pack/worktree disk use"
+  },
+  {
+    "action": "remove incomplete unindexed network cache from this session only",
+    "bytes": 9207119871,
+    "reason": "no usable Git object or tracked evidence removed; transfer failures retained in this event record"
+  },
+  {
+    "action": "git diff --name-only after raw blob restoration",
+    "exit_code": 139,
+    "reason": "Git 2.52.0 segfault in partial checkout; independent full-byte SHA-1/SHA-256 preservation verified all 8254 baseline files before inventory edits; investigation ongoing, not a numerical solver failure"
+  },
+  {
+    "action": "Git working-tree comparison after disabling preloadIndex",
+    "exit_code": 0,
+    "reason": "same exact restored files; source diff empty, status contains only requested new work and scratch; repository-local preloadIndex=false; no tracked code/config changed"
+  },
+  {
+    "action": "initial git add of new evidence parts",
+    "exit_code": 1,
+    "reason": "worktree-specific sparse setting overrode local config; caught before commit; disabled worktree sparse flags and staged both parts explicitly; no omitted archive committed"
+  },
+  {
+    "action": "ordinary git commit on materialized partial clone",
+    "first_exit_code": 130,
+    "retry_exit_codes": [
+      128,
+      128
+    ],
+    "reason": "commit validation attempted to lazy-fetch unchanged historical blobs; interrupted network fetch, no commit or source loss; all baseline blobs already SHA-verified as working files; used git write-tree --missing-ok and commit-tree/update-ref with exact parent guard; no executable hooks configured; no tracked file/physics/acceptance bypass"
+  }
+]
