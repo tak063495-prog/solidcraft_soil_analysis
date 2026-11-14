@@ -274,4 +274,7 @@ validation.jsonを確定コミットにしてからP6追記台帳へ固定SHA登
 最終監査と関連試験はvalidation/post-registration.jsonに別記する。
 **push後の新先端Windows CIは未確定**。Linux成功を転用しない。
 
+最終P6監査は出典311、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+登録後の関連76件と新診断10件も成功し、全件の固有件数には重複加算していない。
+
 A-02は未達、passed=false。
