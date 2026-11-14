@@ -50,9 +50,10 @@ if ($LASTEXITCODE -ne 0) { throw '再集計失敗。保存場を変更しない'
 見る値は、plan-results.jsonの各経路完走/既存ゲート・受理数・実PID、
 レポートのinput_only_vs_native（u/σ'/回転/設置参照）、reference_sensitivity（GL5→7/加算逆順）、
 load_step_sensitivity（状態/Q/瞬間仕事/元の累積仕事）、spatial_12_to_96、
-maximum（膜の連成恒等式/荷重仮想仕事/全節点再組立/明示構造自由度）、
+maximum（膜の連成恒等式/荷重仮想仕事/全節点再組立/明示構造の力kN・モーメントkN m）、
 scope・mutations・restartsである。
-force-work-energy-raw.jsonには土・板・梁の符号付き全自由度ベクトル、仕事源、各板の交差/腕二乗項を残す。
+recovered_vs_raw_gradientとplate-probes-raw.jsonは仮定せん断と未投影生勾配の別量を保持する。
+force-work-energy-raw.jsonには土・板・梁の単位付き符号付き全自由度ベクトル、仕事源、各板の交差/腕二乗項を残す。
 work-raw.jsonは旧端点台形規約の値。新しい回復法・仕事定義・ゲートとして採用しない。
 
 元ゲートは再組立1e-10、力1e-8、真線形1e-10、土相対1e-7、構造絶対1e-9、

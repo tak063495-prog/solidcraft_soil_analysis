@@ -50,7 +50,7 @@ def seal(run, destination, retained):
             parts.append(dict(name=path.name,size=len(raw),sha256=sha(path)))
     write(destination/'archive-index.json',dict(archive_bytes=archive.stat().st_size,archive_sha256=sha(archive),
         parts=parts,entries=entries,raw_inputs_states_checkpoints_refusals_and_failures_retained=True,
-        solver_binaries_archived=False))
+        solver_binaries_archived=any(name.startswith('formal/bin/') for name in entries)))
     return verify(destination)
 
 

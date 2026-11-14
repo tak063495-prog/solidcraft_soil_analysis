@@ -15,6 +15,7 @@ from b02cause_binding import bind, legacy
 from b02cause_driver import reverse_keys
 from b02cause_metrics import common, document_text, dot, metric, norm
 from b02cause_reference import volume_control
+from b02cause_report import holding_vector, probe_metric, structure_norms
 
 
 class B02OffsetCompositeCauseDiagnosis(unittest.TestCase):
@@ -37,6 +38,11 @@ class B02OffsetCompositeCauseDiagnosis(unittest.TestCase):
             common(rows+[rows[-1]])
         with self.assertRaises(ValueError):
             common(rows[:-1])
+        probes = {(0, 1.): {'q': []}, (1, 1.): {'q': [3., 4.]}}
+        self.assertEqual(probe_metric(probes, probes)['absolute_l2'], 0.)
+        self.assertEqual(probe_metric(probes, probes)['components'], 2)
+        with self.assertRaises(ValueError):
+            probe_metric(probes, {(0, 1.): {'q': [0.]}, (1, 1.): {'q': [3., 4.]}})
 
     def test_import_names_and_sys_path_are_restored(self):
         names = ('cases', 'compare', 'reference', 'study', 'work_audit')
@@ -63,6 +69,12 @@ class B02OffsetCompositeCauseDiagnosis(unittest.TestCase):
         self.assertIs(reference.ref, original)
 
     def test_signed_offset_coupling_and_load_work_conjugacy(self):
+        self.assertEqual(structure_norms([3., 4., 0., 1., 2., 2.]), {'force_kn': 5., 'moment_kn_m': 3.})
+        np.testing.assert_array_equal(holding_vector({}, 3), [0., 0., 0.])
+        np.testing.assert_array_equal(holding_vector({'transition_release_load_kn': []}, 3), [0., 0., 0.])
+        np.testing.assert_array_equal(holding_vector({'transition_release_load_kn': [1., -2., 3.]}, 3), [1., -2., 3.])
+        with self.assertRaises(ValueError):
+            holding_vector({'transition_release_load_kn': [1.]}, 3)
         mesh, _, case, _ = legacy['cases'].inputs()
         kernel = legacy['reference'].System(mesh, case['beam_system']).plate_data[0][2]
         d = np.arange(36, dtype=float)*1e-7
@@ -91,6 +103,9 @@ class B02OffsetCompositeCauseDiagnosis(unittest.TestCase):
         old = ROOT/'interim/2026-12-01-tri6-offset-composite-b02/measurements.json'
         binding = json.loads((HERE/'prior-record-binding.json').read_text())
         self.assertEqual(hashlib.sha256(old.read_bytes()).hexdigest(), binding[old.relative_to(ROOT).as_posix()])
+        for p in HERE.rglob('*.json'):
+            if p.name in ('acceptance.json', 'measurements.json', 'validation.json'):
+                self.assertEqual(p.parent, HERE, 'retained copies must stay sealed or be uniquely named for P6 inventory')
 
     def test_sealed_evidence_parts_exist_and_match_sha256(self):
         value = json.loads((HERE/'archive-index.json').read_text())

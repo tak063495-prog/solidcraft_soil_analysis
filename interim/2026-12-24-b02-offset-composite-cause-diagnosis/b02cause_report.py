@@ -5,7 +5,7 @@ import math
 from pathlib import Path
 import numpy as np
 from b02cause_binding import legacy
-from b02cause_driver import write
+from b02cause_driver import write, sha
 from b02cause_metrics import common, dot, metric, norm
 
 System = legacy['reference'].System
@@ -29,6 +29,25 @@ def factor(case, row):
 
 def sum_vectors(vectors, size):
     return np.array([math.fsum(float(v[i]) for v in vectors) for i in range(size)])
+
+
+def holding_vector(state, size):
+    # stages.rs:360-361: default Vec, omitted precisely when empty. This is the
+    # existing empty-load convention, not a missing unimplemented contribution.
+    value = np.asarray(state.get('transition_release_load_kn', []), float)
+    if value.size == 0:
+        return np.zeros(size)
+    if value.shape != (size,) or not np.isfinite(value).all():
+        raise ValueError('invalid existing transition release load vector')
+    return value
+
+
+def structure_norms(vector):
+    value = np.asarray(vector, float)
+    if value.size % 6:
+        raise ValueError('declared node translation/rotation blocks required')
+    blocks = value.reshape(-1, 6)
+    return dict(force_kn=norm(blocks[:, :3]), moment_kn_m=norm(blocks[:, 3:]))
 
 
 def state_fields(row):
@@ -123,25 +142,31 @@ def force_work_energy(folder, kind):
                 mapped_load[3*node:3*node+3] += eff[i]
         soil = np.asarray(row['soil_internal_kn'])
         applied = np.asarray(s['applied_nodal_load_kn'])
-        holding = np.asarray(s['transition_release_load_kn'])
-        if holding.size == 0:
-            holding = np.zeros(nd)
+        holding = holding_vector(s, nd)
         rhs_without_attachment = applied-mapped_load
         global_residual = soil+mapped_internal-applied
         # This saved-field reassembly is coupled to input-only full solves elsewhere.
         # It is not a new solution, and does not stand in for global equilibrium.
         structure_free = model.space(bs, np.asarray(s['displacement_m']))[2]
-        rotation_residual = structure_free.T@(structural_internal-load)
+        if model.size != 6*len(model.nodes):
+            raise ValueError('diagnostic scope has no extra released-rotation DOFs')
+        explicit_residual = structure_free@(structure_free.T@(structural_internal-load))
+        explicit_norms = structure_norms(explicit_residual)
+        decomposition = (structural_internal-(k@d+rest)).reshape(-1, 6)
         source_work = dict(soil_physical=dot(rhs_without_attachment-holding, u),
                            construction_holding=dot(holding, u), plate=dot(plate_load, d),
                            beam=dot(beam_load, d), nodal=dot(nodal_load, d))
         result.append(dict(stage_index=row['stage_index'], progress=row['progress'],
-            force_vectors_kn=dict(soil=soil.tolist(), plate_structure=plate_internal.tolist(), beam_structure=beam_internal.tolist(),
+            force_and_moment_vectors=dict(soil=soil.tolist(), plate_structure=plate_internal.tolist(), beam_structure=beam_internal.tolist(),
                                   structure_load=load.tolist(), mapped_structure_internal=mapped_internal.tolist(), applied=applied.tolist()),
-            structural_decomposition_max=float(np.max(np.abs(structural_internal-(k@d+rest)), initial=0.)),
+            vector_units=dict(soil_and_mapped_and_applied='node XYZ: kN',
+                              structure='declared node blocks: XYZ force kN, XYZ moment kN m'),
+            structural_decomposition_force_max_kn=float(np.max(np.abs(decomposition[:, :3]), initial=0.)),
+            structural_decomposition_moment_max_kn_m=float(np.max(np.abs(decomposition[:, 3:]), initial=0.)),
             global_free_residual_l2=norm(global_residual[free]), original_normalization=max(norm(applied), 1.),
             global_free_residual_relative=norm(global_residual[free])/max(norm(applied), 1.),
-            explicit_free_structure_residual_l2=norm(rotation_residual),
+            explicit_free_structure_force_l2_kn=explicit_norms['force_kn'],
+            explicit_free_structure_moment_l2_kn_m=explicit_norms['moment_kn_m'],
             work_sources_kn_m=source_work, instantaneous_work_kn_m=math.fsum(source_work.values()),
             plate_load_virtual_work_max=max(map(abs, work_identity), default=0.), energy_kn_m=energy,
             unsupported_contributions=dict(joint=None, water=None, plastic_soil=None, mcc=None, idh=None, anchor=None, soil_birth_death_matset=None)))
@@ -195,6 +220,21 @@ def plate_probes(folder, coarse_folder, kind):
     return out
 
 
+def probe_metric(a, b, left='q', right='q'):
+    if a.keys() != b.keys():
+        raise ValueError('probe path coordinates differ')
+    av, bv = [], []
+    for key in sorted(a):
+        aa, bb = a[key][left], b[key][right]
+        # Inactive plates have exactly no samples on both sides. Preserve each
+        # coordinate's inventory check before pooling active components.
+        if len(aa) != len(bb):
+            raise ValueError('probe activity/component inventory differs')
+        av.extend(aa)
+        bv.extend(bb)
+    return metric(av, bv)
+
+
 def run(formal, output):
     plan = read(formal/'plan-results.json')
     cases, detailed, probes = {}, {}, {}
@@ -220,24 +260,28 @@ def run(formal, output):
                 pa, pb = probes[na][kind], probes[nb][kind]
                 wa, wb = common(work[na][kind]), common(work[nb][kind])
                 pairs.append(dict(steps=[a, b], state=compare_paths(rows(formal/na, kind), rows(formal/nb, kind)),
-                                  q=metric([pa[k]['q'] for k in sorted(pa)], [pb[k]['q'] for k in sorted(pb)]),
+                                  q=probe_metric(pa, pb),
                                   instantaneous_work=metric([wa[k]['global_F_dot_d_kn_m'] for k in sorted(wa)], [wb[k]['global_F_dot_d_kn_m'] for k in sorted(wb)]),
                                   cumulative_work=metric([wa[k]['cumulative_total_work_kn_m'] for k in sorted(wa)], [wb[k]['cumulative_total_work_kn_m'] for k in sorted(wb)])))
             series[str(size)][kind] = pairs
     spatial = {}
     for kind in ('native', 'independent'):
         a, b = probes['tet12-n4'][kind], probes['tet96-n4'][kind]
-        spatial[kind] = metric([a[k]['q'] for k in sorted(a)], [b[k]['q'] for k in sorted(b)])
-    maximum = dict(plate_virtual_work=0., membrane_strain_identity=0., membrane_energy_identity=0., structural_decomposition=0.,
-                   global_free_residual_native=0., global_free_residual_independent=0., explicit_structure_residual=0., recovered_vs_direct=0.)
+        spatial[kind] = probe_metric(a, b)
+    maximum = dict(plate_virtual_work=0., membrane_strain_identity=0., membrane_energy_identity=0.,
+                   structural_decomposition_force_kn=0., structural_decomposition_moment_kn_m=0.,
+                   global_free_residual_native=0., global_free_residual_independent=0.,
+                   explicit_structure_force_kn=0., explicit_structure_moment_kn_m=0., recovered_vs_direct=0.)
     source_differences = {}
     for name, kinds in detailed.items():
         for kind, values in kinds.items():
             for row in values:
                 maximum['plate_virtual_work'] = max(maximum['plate_virtual_work'], row['plate_load_virtual_work_max'])
-                maximum['structural_decomposition'] = max(maximum['structural_decomposition'], row['structural_decomposition_max'])
+                maximum['structural_decomposition_force_kn'] = max(maximum['structural_decomposition_force_kn'], row['structural_decomposition_force_max_kn'])
+                maximum['structural_decomposition_moment_kn_m'] = max(maximum['structural_decomposition_moment_kn_m'], row['structural_decomposition_moment_max_kn_m'])
                 maximum['global_free_residual_'+kind] = max(maximum['global_free_residual_'+kind], row['global_free_residual_relative'])
-                maximum['explicit_structure_residual'] = max(maximum['explicit_structure_residual'], row['explicit_free_structure_residual_l2'])
+                maximum['explicit_structure_force_kn'] = max(maximum['explicit_structure_force_kn'], row['explicit_free_structure_force_l2_kn'])
+                maximum['explicit_structure_moment_kn_m'] = max(maximum['explicit_structure_moment_kn_m'], row['explicit_free_structure_moment_l2_kn_m'])
                 for energy in row['energy_kn_m']:
                     maximum['membrane_strain_identity'] = max(maximum['membrane_strain_identity'], energy['strain_identity_max'])
                     maximum['membrane_energy_identity'] = max(maximum['membrane_energy_identity'], abs(energy['membrane_identity_residual']))
@@ -245,9 +289,15 @@ def run(formal, output):
         source_differences[name] = {field: metric([r['work_sources_kn_m'][field] for r in kinds['native']], [r['work_sources_kn_m'][field] for r in kinds['independent']]) for field in kinds['native'][0]['work_sources_kn_m']}
     write(formal/'force-work-energy-raw.json', detailed)
     write(formal/'work-raw.json', work)
+    write(formal/'plate-probes-raw.json', {name: {kind: {str(k): v for k, v in values.items()}
+                                               for kind, values in kinds.items()}
+                                         for name, kinds in probes.items()})
+    recovery_distinction = {name: {kind: probe_metric(values, values, 'q', 'raw_gradient_q')
+                                  for kind, values in kinds.items()} for name, kinds in probes.items()}
     result = dict(schema='b02cause-measurements/1', passed=False, b02_complete=False, diagnostic_only=True,
                   numerical_acceptance_all_fields=None, cases=cases, reference_sensitivity=reference_sensitivity,
                   load_step_sensitivity=series, spatial_12_to_96=spatial, work_source_differences=source_differences, maximum=maximum,
+                  recovered_vs_raw_gradient=recovery_distinction, postprocessing_source_sha256=sha(Path(__file__)),
                   restarts=plan['restarts'], total_state_pairs=sum(r['accepted_states'] for r in plan['cases']),
                   scope=read(formal/'scope/refusals.json'), mutations=read(formal/'mutations/mutations.json'),
                   residual_768='quotation only: 5e3d191; no new 768 solve or precision/stopping diagnostic',
