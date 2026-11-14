@@ -266,4 +266,14 @@ validation.jsonを確定コミットとしてからP6追記台帳に固定SHA登
 登録後の監査・関連試験は別記し、467/816件の固有件数へ重複加算しない。
 push後の新先端Windows CIは未確定。Linux成功を転用しない。
 
+最終P6監査は出典317、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+acceptance/measurementsは固定コミット4fbb7ed7937649c05f507f5463cc115b874b2177、
+validationは645e81e77439be28efa81ba573bd6a8aff9701eeへ固定SHA登録済み。
+登録後のP6関連76件＋新診断11件、計87件も成功し、全件の固有件数へ加算していない。
+全件後にも起点8,360ファイルのGit blob/SHA-256を再照合し、8,358件はバイト一致。
+既存2変更はP6台帳の厳密な末尾追記と監査器の台帳SHA定数だけ。
+生産Rust、NC、旧数値・生証拠・失敗・封印・旧hash/snapshotは保持した。
+追加の実行環境記録でpip未配置による取得失敗も残し、標準ライブラリのpackage metadataで記録した。
+環境や依存を変えて全件検証を通した結果ではない。
+
 A-04は未達、passed=false。
