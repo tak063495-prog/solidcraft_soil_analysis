@@ -138,4 +138,6 @@ fmt・全target clippy（警告をエラー）・locked release buildは成功�
 
 初期の書式・PowerShell書込先・大容量Git取得のHTTP/2切断・Gitオブジェクト復旧/履歴取得の準備上の不成功は、最終成功件数へ加えず `failure-record.json` と `validation/preparation/` に保持した。skipで回避せず必要な証拠を復旧し、厳格なP6事前監査は301 source・integrity_ok=true。最終検証snapshotを固定した後の台帳監査と関連再確認は別ログに置き、769件へ二重加算しない。push後の新先端Windows CIは未確定。
 
+台帳登録後の関連再確認は91件すべて成功（失敗・未実行・skip 0）。P6最終監査は301 source・integrity_ok=true。N047/N048は科学証拠コミット `2f25ea3f68c9375ae67941b15933ae2b415ccf94`、N049は全件検証コミット `059ef2e16453b34bc06391e5f048c4b69251005c` を固定し、登録後の結果は `validation/post-registration.json` と `validation/p601-final-audit.json` に別記した。旧7756ファイル中、変更は台帳の追加登録と監査SHA定数の2ファイルだけで、残る7754のGit blobは完全一致する。
+
 C-03は未達、passed=false。
