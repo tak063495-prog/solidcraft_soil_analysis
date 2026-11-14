@@ -1,0 +1,67 @@
+{
+  "reviewed_on_client_date": "2026-11-15",
+  "logical_work_record_date": "2026-12-23 (user requested label)",
+  "method": "web search and open official primary documentation; abstract-only and failed retrieval explicitly separated",
+  "sources": [
+    {
+      "id": "abaqus-gap",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-cohesivefluidbehavior.htm",
+      "access": "本文確認",
+      "verified_scope": "Tangential / normal flow separately; flow continuity includes aperture rate; Newtonian transmissivity d^3/(12 mu); normal leak-off couples middle and surface nodes. Saturated incompressible gap model; not a Richards interface validation."
+    },
+    {
+      "id": "abaqus-nodes",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-cohesiveusage.htm",
+      "access": "本文確認",
+      "verified_scope": "Pore pressure cohesive elements add interior pressure nodes. Without pressure DOFs, opened cohesive surfaces remain impermeable in this model."
+    },
+    {
+      "id": "plaxis-permeability",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0109451",
+      "access": "本文確認",
+      "verified_scope": "Official Bentley documentation: impermeable, permeable, semi-permeable interface settings in flow / consolidation / fully coupled flow-deformation."
+    },
+    {
+      "id": "plaxis-output",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0108947",
+      "access": "本文確認",
+      "verified_scope": "Fully permeable pressure DOFs coupled: no head difference; specific cross flow output not calculated by Darcy law in that case. Missing output is not a mass-balance proof."
+    },
+    {
+      "id": "plaxis-activation",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0109902",
+      "access": "本文確認",
+      "verified_scope": "Active in flow is separate from deformation active state; inactive for flow permits flow without resistance."
+    },
+    {
+      "id": "aster-hm",
+      "url": "https://codeaster.gitlab.io/doc/docaster/manuals/man_r/r7/r7.01.25/Formulation_th_orique_du_couplage_hydrom_canique.html",
+      "access": "本文確認",
+      "verified_scope": "R7.01.25 section 6: XXX_JOINT_HYME, opening-dependent cubic flow, OUV_MIN closed-joint regularization, hydraulic and mechanical balance, non-symmetric tangent. Section presents stationary flow; not unsaturated transient acceptance."
+    },
+    {
+      "id": "aster-imposed",
+      "url": "https://codeaster.gitlab.io/doc/docaster/manuals/man_r/r7/r7.01.25/Prise_en_compte_de_la_pression_hydrostatique_sans_couplage.html",
+      "access": "本文確認",
+      "verified_scope": "Section 5: imposed PRES_FLUIDE depending on space and time changes normal stress; distinct from HM flow solve."
+    },
+    {
+      "id": "segura-carol-I",
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/nag.735",
+      "access": "書誌・出版社abstractのみ確認、本文未取得",
+      "verified_scope": "J. M. Segura and I. Carol (2008), Coupled HM analysis using zero-thickness interface elements with double nodes. Part I: Theoretical model. Abstract describes nodal u-p, aperture/permeability dependence, staggered and fully coupled approaches. No unverified body equations used."
+    },
+    {
+      "id": "segura-carol-II",
+      "url": "https://doi.org/10.1002/nag.730",
+      "access": "書誌のみ、本文取得失敗",
+      "verified_scope": "Part II: Verification and application. No numerical result cited."
+    },
+    {
+      "id": "celia1990",
+      "url": "https://doi.org/10.1029/WR026i007p01483",
+      "access": "書誌・出版社abstractのみ確認、本文未取得",
+      "verified_scope": "M. A. Celia, E. T. Bouloutas, R. L. Zarba (1990), A general mass-conservative numerical solution for the unsaturated flow equation, Water Resources Research 26(7), 1483-1496. Abstract distinguishes mixed form conservation and diagonal time matrix/profile accuracy. No body quotation or numerical benchmark adopted."
+    }
+  ]
+}
