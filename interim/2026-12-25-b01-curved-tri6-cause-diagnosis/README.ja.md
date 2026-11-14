@@ -267,4 +267,9 @@ validation.jsonを確定コミットにしてからP6台帳へ固定SHA登録す
 登録後監査と関連再確認はvalidation/に別記する。push後Windows CIは未確定。
 A-01〜A-04、B-02/B-03、C-01〜C-04、NC-01、P6も未達のまま。
 
+最終P6監査は出典323、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+acceptance/measurementsはca94c69e65d19f4642bf99eba5a576585a7b310f、
+validationは3b4fe5117aa9a222501c49ef24b0a4a6c95485a0へ固定SHA登録した。
+登録後の関連試験はvalidation/post-registration.jsonに保存し、467/835件へ重複加算しない。
+
 B-01は未達、passed=false。
