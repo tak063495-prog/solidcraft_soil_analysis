@@ -310,4 +310,7 @@ validation.jsonを確定コミットにしてからP6追記台帳へ固定SHA登
 その後の監査と関連試験をvalidation/へ別記し、全件の成功数へ重複加算しない。
 当該push後のWindows CIは未確定。A-01/02/04、B、C-01〜04、NC-01、P6は未達のまま。
 
+最終P6監査は出典314、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+登録後のP6関連76件＋新診断10件、計86件も成功し、全件の固有件数には加算していない。
+
 A-03は未達、passed=false。
