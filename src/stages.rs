@@ -792,6 +792,42 @@ impl Tangent {
         }
         Ok(())
     }
+    fn solve_a01_observed(
+        &self,
+        rhs: &DVector<f64>,
+        settings: &Settings,
+        observer: Option<&dyn crate::stage_control::Observer>,
+    ) -> Result<(DVector<f64>, LinearReport)> {
+        let Some(o) = observer.filter(|o| o.a01_joint_cause_enabled()) else {
+            return self.solve(rhs, settings);
+        };
+        if rhs.len() > 256 {
+            return Err(Error::Control(
+                "A-01 linear observation limited to 256 DOF".into(),
+            ));
+        }
+        let storage = match self {
+            Self::Sparse(a) => serde_json::json!({"kind":"csr", "row_ptr":a.row_ptr(),
+                "columns":a.columns(), "values":a.values()}),
+            Self::Dense(a) => serde_json::json!({"kind":"dense", "matrix_columns":
+                (0..a.ncols()).map(|i| a.column(i).iter().copied().collect::<Vec<_>>()).collect::<Vec<_>>()}),
+        };
+        o.on_diagnostic(
+            &serde_json::json!({"kind":"a01_linear_system", "storage":storage,
+            "rhs":rhs.as_slice(), "settings":settings}),
+        )
+        .map_err(|e| Error::Control(e.to_string()))?;
+        let result = self.solve(rhs, settings);
+        let value = match &result {
+            Ok((x, report)) => {
+                serde_json::json!({"kind":"a01_linear_result", "solution":x.as_slice(), "report":report})
+            }
+            Err(e) => serde_json::json!({"kind":"a01_linear_result", "error":e.to_string()}),
+        };
+        o.on_diagnostic(&value)
+            .map_err(|e| Error::Control(e.to_string()))?;
+        result
+    }
     fn solve(
         &self,
         rhs: &DVector<f64>,
@@ -3152,7 +3188,8 @@ impl<'a> Model<'a> {
                         }
                     }
                 }
-                let (x, report) = temporary.solve(&reduced, settings)?;
+                let (x, report) =
+                    temporary.solve_a01_observed(&reduced, settings, self.observer)?;
                 let original = (matrix.action(&x)? - &reduced).norm() / reduced.norm().max(1e-30);
                 let index = contact_predictors.len();
                 contact_predictors.push(ContactPredictor {
@@ -3172,7 +3209,7 @@ impl<'a> Model<'a> {
                 });
                 (x, Some(index))
             } else if gauges.as_ref().is_none_or(|g| g.coordinates.is_empty()) {
-                let (x, report) = matrix.solve(&reduced, settings)?;
+                let (x, report) = matrix.solve_a01_observed(&reduced, settings, self.observer)?;
                 linear_solves.push(report);
                 (x, None)
             } else {
@@ -3194,7 +3231,11 @@ impl<'a> Model<'a> {
                 for &i in coordinates {
                     rhs[i] = 0.;
                 }
-                let (mut x, temporary) = matrix.gauged(coordinates)?.solve(&rhs, settings)?;
+                let (mut x, temporary) = matrix.gauged(coordinates)?.solve_a01_observed(
+                    &rhs,
+                    settings,
+                    self.observer,
+                )?;
                 // Choose the minimum-norm correction, removing arbitrary
                 // neutral motion induced by the temporary coordinate pins.
                 let neutral = &gauges.modes * (gauges.modes.transpose() * &x);

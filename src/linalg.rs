@@ -648,6 +648,19 @@ pub fn gmres_ilu0_with_cancel(
     options: &GmresOptions,
     cancelled: impl Fn() -> bool,
 ) -> LinearResult<(Vec<f64>, LinearReport)> {
+    gmres_ilu0_a01_residual_observed(matrix, rhs, tolerance, options, cancelled, &mut |_, _| {})
+}
+
+/// Read-only samples at the existing true-residual checks; no extra iteration,
+/// changed stopping test, preconditioner, or fallback. Used only when invoked.
+pub fn gmres_ilu0_a01_residual_observed(
+    matrix: &CsrMatrix,
+    rhs: &[f64],
+    tolerance: f64,
+    options: &GmresOptions,
+    cancelled: impl Fn() -> bool,
+    sample: &mut impl FnMut(usize, f64),
+) -> LinearResult<(Vec<f64>, LinearReport)> {
     let started = Instant::now();
     options.validate()?;
     let n = matrix.pattern.n;
@@ -741,6 +754,7 @@ pub fn gmres_ilu0_with_cancel(
         }
         let beta = norm(&r);
         let residual = matrix.true_residual(&x, rhs)?;
+        sample(iterations, residual);
         if residual <= tolerance {
             return Ok((x, report(iterations, cycles, residual, factor_bytes)));
         }
@@ -817,6 +831,7 @@ pub fn gmres_ilu0_with_cancel(
             {
                 let next = candidate(&x, &z, &h, &g, j + 1)?;
                 let true_residual = matrix.true_residual(&next, rhs)?;
+                sample(iterations, true_residual);
                 if true_residual <= tolerance {
                     return Ok((
                         next,
@@ -1152,6 +1167,49 @@ mod tests {
         let (x, r) = gmres_ilu0(&a, &[0.; 20], 1e-12, &options)?;
         assert_eq!(x, vec![0.; 20]);
         assert_eq!(r.iterations, 0);
+        Ok(())
+    }
+    #[test]
+    fn a01_residual_observation_preserves_success_and_failure() -> LinearResult<()> {
+        let dense = DMatrix::from_fn(20, 20, |i, j| {
+            if i == j {
+                4.
+            } else if (i + j) % 7 == 0 {
+                0.5
+            } else {
+                0.
+            }
+        });
+        let a = from_dense(&dense)?;
+        let b: Vec<_> = (0..20).map(|i| i as f64).collect();
+        let mut samples = Vec::new();
+        let options = GmresOptions::default();
+        let (plain, report) = gmres_ilu0(&a, &b, 1e-12, &options)?;
+        let (observed, observed_report) =
+            gmres_ilu0_a01_residual_observed(&a, &b, 1e-12, &options, || false, &mut |i, r| {
+                samples.push((i, r))
+            })?;
+        assert_eq!(plain, observed);
+        assert_eq!(report.iterations, observed_report.iterations);
+        assert_eq!(
+            report.true_relative_residual,
+            observed_report.true_relative_residual
+        );
+        assert_eq!(samples.last().unwrap().1, a.true_residual(&observed, &b)?);
+        let limited = GmresOptions {
+            restart: 1,
+            maximum_iterations: 1,
+            ..options
+        };
+        let plain_error = gmres_ilu0(&a, &b, 1e-14, &limited).unwrap_err();
+        samples.clear();
+        let observed_error =
+            gmres_ilu0_a01_residual_observed(&a, &b, 1e-14, &limited, || false, &mut |i, r| {
+                samples.push((i, r))
+            })
+            .unwrap_err();
+        assert_eq!(plain_error.to_string(), observed_error.to_string());
+        assert!(samples.iter().any(|&(i, r)| i == 1 && r > 1e-14));
         Ok(())
     }
 }

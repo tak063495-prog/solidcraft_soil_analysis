@@ -43,6 +43,10 @@ pub trait Observer {
     fn on_diagnostic(&self, _value: &serde_json::Value) -> Result<()> {
         Ok(())
     }
+    /// Separate opt-in for A-01 cause records. Existing diagnostics are unchanged.
+    fn a01_joint_cause_enabled(&self) -> bool {
+        false
+    }
     fn stop_requested(&self) -> Result<bool> {
         Ok(false)
     }
