@@ -2,7 +2,7 @@
 
 **C-03 は未達、passed=false。** 限定確認は小型離散問題の診断・全履歴比較・実再開に限る。一般バルク塑性との湿潤統合を完了にしない。C-01・C-02・C-04、NC-01、P6、A/B各項も未達のまま。
 
-PR #13、`codex/plastic-spatial-convergence`、起点 `1802c11be0145c706c49d4b698b2e5aed235c509`。マージしない。保存先2026-12-18は依頼された作業系列ラベル、実施2026-11-14（日本時間）。[前回C-03](../2026-11-20-wet-joint-plastic-bulk-integration/README.ja.md)、[C-01原因診断](../2026-12-13-c01-cause-diagnosis/README.ja.md)、[C-01全体経路対照](../2026-12-16-c01-regen-global-control/README.ja.md)、[C-02](../2026-12-17-c02-spatial-cause-diagnosis/README.ja.md)を先に確認した。
+PR #13、`codex/plastic-spatial-convergence`、起点 `1802c11be0145c706c49d4b698b2e5aed235c509`。マージしない。保存先2026-12-18は依頼された作業系列ラベル、実施2026-11-14（日本時間）。[前回C-03](../2026-11-20-wet-joint-plastic-bulk-integration/README.ja.md)、[C-01原因診断](../2026-12-13-c01-cause-diagnosis/README.ja.md)、[C-01全体経路対照](../2026-12-16-c01-regen-global-control/README.ja.md)、[C-02](../2026-12-17-c02-spatial-cause-diagnosis/README.ja.md)を参照した。
 
 生産 `src/`、旧入力・旧JSON・旧hash/snapshot・旧オプション・旧失敗記録は変えない。新しい `c03_bulk_cause_probe` は既存Observerへコピーを要求する `--diagnose` のみで、既定オフ。旧exampleも変更しない。新Python名は `c03diag_*` とし、既存 import 名へ割り込まない。NCコード・設定は変更しない。todoの既存C-03行は未達のまま保持する。
 
@@ -24,7 +24,7 @@ Code_Aster 同文書 [§6](https://codeaster.gitlab.io/doc/docaster/manuals/man_
 
 前回と同じ12 Tet4 / 16節点 / 12材料GP / 6接触GP、固定水位.75 m・γw=10、CONTINUOUS、非関連MC c=30 kPa、E=100000 kPa、ν=.3、φ=30°、ψ=5°、tension cutoffなし。open=.12、全7工程、各32増分を基準にする。物理入力・全体/線形残差の基準は変更しない。
 
-材料上限m0/m1/m2=`1e-4/5e-5/2.5e-5`、接触上限c0/c1/c2/c3=`1e-4/5e-5/2.5e-5/1.25e-5 m`。m0〜m2×c0〜c2の9組合せ、m0c3/m2c3、m2c2の全体64、分割1対照を本体・独立で新規求解した。さらに、独立系で材料の実分割数8/32×接触の実分割数4/16を全増分・全GPで固定した4経路を解いた。**本体13＋独立17、計30経路・7,168受理状態**。全て完了、固定全体列からの切戻し0。MC最大力残差は本体9.90894061357e-9、独立9.61137431851e-11、真の線形残差は本体9.98337971992e-11で、元の1e-8/1e-10/1e-10を維持した。
+材料上限m0/m1/m2=`1e-4/5e-5/2.5e-5`、接触上限c0/c1/c2/c3=`1e-4/5e-5/2.5e-5/1.25e-5 m`。m0〜m2×c0〜c2の9組合せ、m0c3/m2c3、m2c2の全体64、分割1対照を本体・独立で新規求解した。さらに、独立系で材料の実分割数8/32×接触の実分割数4/16を全増分・全GPで固定した4経路を解いた。**本体13＋独立17、計30経路・7,168受理状態**。全て完了、固定全体列からの切戻し0。ここで30は比較行列の経路数。別に観測なしwhole 1、元MC open=1.0のCLI/観測2、MCC3条件のCLI/観測/独立9を実行し、診断実験の新規完走求解呼出しは計42、受理増分は計10,040。2入力拒否・7実再開・局所再生・全件ソフトウェア試験中の求解はこの42へ加えない（`solve-call-ledger.json`）。MC最大力残差は本体9.90894061357e-9、独立9.61137431851e-11、真の線形残差は本体9.98337971992e-11で、元の1e-8/1e-10/1e-10を維持した。
 
 独立は既存の入力組立3D MC系を固有名 `c03diag_*` に移した診断snapshot。幾何・水圧荷重・材料・接触から自由DOFの平衡を独自に解き、本体の状態・受理列・接線・実分割数を解の入力にしない。固定分割対照も各端点で全体平衡を求解する。これらは元の方式を置換する実装変更ではない。
 
@@ -115,7 +115,7 @@ c3を厳密解にしない。材料m0の接触差は本体3.88396e-5→1.11421e-
 
 基準MCの各7工程progress=.5の実ファイルから別PIDで再開し、最後まで208/176/144/112/80/48/16、計784後続状態が完全一致。全Runもelapsed_seconds以外完全一致。同じ実行版SHAを要求し、観測なしwholeとの全Run一致も確認した。これは封印再監査と別の実行である。
 
-新規求解・全確定状態・Newton/分割/棄却・独立場・実行版・入力・checkpoint・再開・局所対照・使用ソースは `evidence.zip.part*` と `archive-index.json`、材料全サブステップの追加観測は `return-trace-evidence.zip` に保存した。全part/ZIP/全エントリーのSHAを検証し、封印ソースを隔離プロセスで再計測して `measurements.json` のJSONオブジェクト完全一致を確認した。封印確認を新規求解や実再開へ数えない。求解時の新exampleは後のrustfmt前、新studyは既定実行版名の編集前の原本も保存し、旧数値ソースは不変。最終試験のソース束は別に固定する。
+新規求解・比較経路の全確定状態・Newton/分割/棄却・独立場・実行版・入力・checkpoint・再開・局所対照・使用ソースは `evidence.zip.part*` と `archive-index.json`、材料全サブステップの追加観測は `return-trace-evidence.zip` に保存した。全part/ZIP/全エントリーのSHAを検証し、封印ソースを隔離プロセスで再計測して `measurements.json` のJSONオブジェクト完全一致を確認した。封印確認を新規求解や実再開へ数えない。求解時の新exampleは後のrustfmt前、新studyは既定実行版名の編集前の原本も保存し、旧数値ソースは不変。最終試験のソース束は別に固定する。
 
 |寄与|今回の根拠付き判断|
 |---|---|
@@ -131,5 +131,11 @@ c3を厳密解にしない。材料m0の接触差は本体3.88396e-5→1.11421e-
 新フォルダのacceptance/measurements/validationは、固定コミット・SHA-256・Git blob・boolean/null pointerでP6-01補助台帳へ登録する。旧台帳原本・旧登録を再生成しない。新しい試験は通常core群に属し、重い再求解をCIで起動しない。文書はread_textの改行正規化を使い、実CRLFコピーを試験する。NCコード・設定、旧失敗・封印・参照値は変更しない。
 
 全件の終了コード・成功/失敗/未実行/skipと生ログは `validation.json` / `validation/`。最終検証値は同ファイルの確定結果を参照。push後のWindows CIは未確定。
+
+## Linux全件検証の確定結果
+
+fmt・全target clippy（警告をエラー）・locked release buildは成功。**Rust466成功 / 0失敗 / 0未実行 / 0skip、Python769成功 / 0failure / 0error / 0未実行 / 0skip**。Rustは標準463＋exampleの3試験、docは0件。Rustの発見/実行466 IDとPython全7群の発見/実行769 IDは重複・欠落なく一致した。expected failure / unexpected success / ignored / filtered-outも0。Pythonは通常340/405、専用4/4/4/4/8件で、新規8試験を含む。1270ソースは全Python実行の前後でSHA一致し、163 Rustソースは試験snapshotと最終checkoutで全件一致した。
+
+初期の書式・PowerShell書込先・大容量Git取得のHTTP/2切断・Gitオブジェクト復旧/履歴取得の準備上の不成功は、最終成功件数へ加えず `failure-record.json` と `validation/preparation/` に保持した。skipで回避せず必要な証拠を復旧し、厳格なP6事前監査は301 source・integrity_ok=true。最終検証snapshotを固定した後の台帳監査と関連再確認は別ログに置き、769件へ二重加算しない。push後の新先端Windows CIは未確定。
 
 C-03は未達、passed=false。

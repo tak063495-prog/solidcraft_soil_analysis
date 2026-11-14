@@ -1,0 +1,14 @@
+Diff in /workspace/work/c03/source/examples/c03_bulk_cause_probe.rs:102:
+         )),
+         last: RefCell::new(None),
+         diagnostic,
+-        events: RefCell::new(BufWriter::new(OpenOptions::new().write(true).create_new(true).open(folder.join("cause-events.jsonl"))?)),
++        events: RefCell::new(BufWriter::new(
++            OpenOptions::new()
++                .write(true)
++                .create_new(true)
++                .open(folder.join("cause-events.jsonl"))?,
++        )),
+     };
+     let resumed = args.len() == 6;
+     let mut run = if resumed {
