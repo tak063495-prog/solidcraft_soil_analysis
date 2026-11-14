@@ -56,6 +56,8 @@
 
 各項を時刻順に累積し、保存された実散逸差から差し引いた残りを「増分内部の残差」とする。最細の元差ノルムに対し、traction項は `5.92506e-7` 倍、塑性すべり増分項は `3.65107e-7` 倍、両項を除いた残りは `1.000000763` 倍。残りは小刻み内部の力・すべり変化、相殺等を端点だけでは表せない分であり、平衡残差や生産バグの認定ではない。相関したベクトルのノルムを足して100%の原因割合にはしない。
 
+追加の [displacement-contributions.json](displacement-contributions.json) では、保存変位から得るjumpとtractionの項も直接分離した。既存の会計関係 `s_plastic = jump_t − τ/kt − reference_offset` を差分化し、元散逸差ノルムに対するjump差の寄与は `3.56313e-7` 倍、弾性traction変化は `5.72721e-8` 倍、接触参照offset変化は `6.03125e-10` 倍だった。先のtraction差項と合わせても端点情報から説明できる量は微小で、増分内部の残りは `1.000000763` 倍。恒等式の最大残差は0。これは既存保存値の会計上の分解で、新しい散逸則・合格定義ではない。この軽い追補は検証済み封印内の旧履歴から計算し、スクリプトSHAをJSONへ記録、最終固定コミットで台帳にも登録する。
+
 ## (ii) 水位・力学刻みと摩擦円の更新順
 
 本体 `src/stages.rs` の `stage_water` は工程始点Hと目標Hを内分し、`trial_with_predictor` は新しい水理入力を反映してから力学候補を評価する。`src/joint_law.rs` の閉鎖枝は、小刻み終点のgapから `p_eff = −kn min(g,0)`、`r=μp_eff` を計算してtrial接線力を摩擦円へ戻し、`max(τ·Δs_plastic,0)` を積算する。接触内ではjumpが等分され、開閉面との交点も処理する。物理水圧は荷重として別に更新される。小刻み中にRichardsの水理時刻を解く仕組みではない。
@@ -100,5 +102,25 @@ PCには、同じ小型Tet4の長系列と12 Tet10の範囲確認を任意の追
 P6-01台帳は旧ledgerを保持し、新しいacceptance/measurements/validationを固定コミット・SHA-256・Git blob・型付きbool/nullで追加登録する。同じ作業で監査器の台帳SHAも更新し、最終監査を保存する。未登録をskipで回避しない。
 
 fmt/clippy/build、Rust全件、Python全件の実測件数・失敗/未実行/skip、準備失敗と最終実行の区別はvalidation.jsonに記録する。**push後の新先端Windows CIは未確定**。Linux成功・旧CI成功を転用しない。
+
+## 全件検証の確定記録
+
+fmt、全ターゲットclippy、locked release buildは終了0。Rustは通常463＋examples内3の**466件**、Pythonはtools試験を含む**777件**が成功。failure/error/未実行/skip/ignore/filter除外/expected-failure/unexpected-successは0。全発見IDと実行IDを一致させ、重複・欠落0を確認した。単独スモーク8件と登録後の関連再確認はこの固有件数へ二重加算しない。
+
+|Python群|成功|実測秒|
+|---|---:|---:|
+|python-core-0|366|260.207|
+|python-core-1|387|311.493|
+|python-mean-evidence|4|821.365|
+|python-spatial-evidence|4|133.417|
+|python-c01-switch|4|47.205|
+|python-c01-path|4|78.433|
+|python-c01-cause|8|65.767|
+
+初回のcore0/core1はPowerShell不在でそれぞれ1skip、厳格runnerは非0終了した。公式SHAを照合したportable PowerShell 7.5.4をwork/へ配置し、HOME・NC固有環境設定を変えずに両群全体を再実行した。初回753実行/751成功/2skip、fixture作成前の新規試験3成功/5error、準備コマンドの不成功は全て別ログとして保持し、最終777件に加算していない。
+
+正式12経路の実行ソースは開始前固定のままで、準備10経路と正式の対応する10全場JSONLもバイト完全一致した。全試験後のCLI/観測exampleバイナリSHAも正式求解時と一致。起点7,894 Gitパス中7,892 blobを保持し、変更した既存2ファイルはP6監査器の台帳SHAと追記台帳だけ。旧ledger、src、既存tools/examples/tests/docs、NC実装/設定、旧数値・失敗・封印を保持した。
+
+validation.json自体は固定コミットにした後で台帳へ追記登録する。登録後の最終監査・関連試験は `validation/post-registration.json` と `validation/p601-final-audit.json` に保存し、元の全件数へ加算しない。push後の新先端Windows CIは未確定。
 
 C-04は未達、passed=false。

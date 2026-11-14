@@ -1,0 +1,102 @@
+test_diagnostic_fixed_parts_reject_out_of_budget_inputs (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_diagnostic_fixed_parts_reject_out_of_budget_inputs) ... ok
+test_document_terminal_status_with_actual_crlf (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_document_terminal_status_with_actual_crlf) ... ERROR
+test_endpoint_products_do_not_determine_substep_dissipation (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_endpoint_products_do_not_determine_substep_dissipation) ... ok
+test_fixed_reduction_and_invalid_correspondence (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_fixed_reduction_and_invalid_correspondence) ... ok
+test_margin_bins_are_observation_labels_and_keep_boundary_points (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_margin_bins_are_observation_labels_and_keep_boundary_points) ... ERROR
+test_original_acceptance_and_richards_scope_remain_unachieved (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_original_acceptance_and_richards_scope_remain_unachieved) ... ERROR
+test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation) ... ERROR
+test_sealed_small_metrics_exact_without_float_tolerance (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_sealed_small_metrics_exact_without_float_tolerance) ... ERROR
+
+======================================================================
+ERROR: test_document_terminal_status_with_actual_crlf (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_document_terminal_status_with_actual_crlf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c04_transient_water_cause_diagnosis.py", line 62, in test_document_terminal_status_with_actual_crlf
+    text=(STUDY/'README.ja.md').read_text(encoding='utf-8')
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-19-c04-transient-water-cause-diagnosis/README.ja.md'
+
+======================================================================
+ERROR: test_margin_bins_are_observation_labels_and_keep_boundary_points (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_margin_bins_are_observation_labels_and_keep_boundary_points)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c04_transient_water_cause_diagnosis.py", line 45, in test_margin_bins_are_observation_labels_and_keep_boundary_points
+    fixture=json.loads((STUDY/'diagnostic-fixture.json').read_text(encoding='utf-8'))
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-19-c04-transient-water-cause-diagnosis/diagnostic-fixture.json'
+
+======================================================================
+ERROR: test_original_acceptance_and_richards_scope_remain_unachieved (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_original_acceptance_and_richards_scope_remain_unachieved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c04_transient_water_cause_diagnosis.py", line 82, in test_original_acceptance_and_richards_scope_remain_unachieved
+    a=json.loads((STUDY/'acceptance.json').read_text(encoding='utf-8'))
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-19-c04-transient-water-cause-diagnosis/acceptance.json'
+
+======================================================================
+ERROR: test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c04_transient_water_cause_diagnosis.py", line 70, in test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation
+    acceptance=json.loads((STUDY/'acceptance.json').read_text(encoding='utf-8'))
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-19-c04-transient-water-cause-diagnosis/acceptance.json'
+
+======================================================================
+ERROR: test_sealed_small_metrics_exact_without_float_tolerance (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_sealed_small_metrics_exact_without_float_tolerance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c04_transient_water_cause_diagnosis.py", line 56, in test_sealed_small_metrics_exact_without_float_tolerance
+    fixture=json.loads((STUDY/'diagnostic-fixture.json').read_text(encoding='utf-8'))
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-19-c04-transient-water-cause-diagnosis/diagnostic-fixture.json'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.009s
+
+FAILED (errors=5)

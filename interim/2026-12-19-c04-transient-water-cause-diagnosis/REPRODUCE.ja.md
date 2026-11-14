@@ -153,6 +153,14 @@ python -m unittest discover -s tests -p test_c04_transient_water_cause_diagnosis
 
 part・ZIP・全エントリーSHAを照合し、新規展開する。`raw/data/global-final` が保存求解、`raw/data/observation-final` が全原因集計。旧baselineは最初に照合した `$Base` を使い、新しい出力先でc04cause_observeを再実行できる。再監査・再計測を新規全体求解として数えない。アーカイブ検査の時間/容量はarchive-index.json、全件検証ログを参照する。
 
+変位・tractionの会計分解の追補も、検証済み展開から軽く再計算できる：
+
+```powershell
+python "$Study/c04cause_displacement.py" --baseline work/NEW-C04-cause-sealed/raw/data/old-baseline --report work/NEW-C04-displacement-contributions.json
+```
+
+`source_sha256`、3水準の寄与ベクトル、恒等式残差を確認する。元散逸値を置換しない。
+
 ## ソフトウェア全件
 
 局所再現用の疎取得では過去NC/C-01等のアーカイブが不足する。全件試験にはCIと同様に、旧postfoldだけを省いた全証拠を配置する。既存NCコード/設定・試験は変更しない。
@@ -163,6 +171,7 @@ cargo fmt --all --check
 cargo clippy --locked --all-targets -- -D warnings
 cargo build --locked --release
 cargo test --locked --release
+cargo test --locked --release --examples
 foreach ($G in @('python-core-0','python-core-1','python-mean-evidence','python-spatial-evidence','python-c01-switch','python-c01-path','python-c01-cause')) {
   python tools/run_ci_python_evidence_shards.py --group $G --output "work/NEW-C04-software/$G"
   if ($LASTEXITCODE -ne 0) { throw "full Python group failed: $G" }
