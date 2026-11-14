@@ -1,0 +1,144 @@
+# B-02：平面Tri6オフセット複合の原因切り分け
+
+**B-02全体は未達、passed=false。乾燥弾性MC＋板＋線形梁の既存限定受入を維持し、拒否範囲を広げない。**
+PR #13、`codex/plastic-spatial-convergence`、起点
+`33b185b060c26cf2d0957271391b7bec86e491da`。マージしない。
+2026-12-24は依頼された保存先ラベル、実施日は2026-11-15（日本時間）。
+生産Rustソルバー・物理・NCコード/設定、旧入力/JSON/hash/snapshot、既存オプションの結果は変更しない。
+新しい診断は明示実行のみのb02cause_*であり、通常CLIから呼ばれない。
+
+## 最初に確認した一次資料
+
+取得範囲・URL・使用法は[primary-source-review.json](primary-source-review.json)。
+以下は確認した本文の要約であり、製品の機能や論文の結果を本件の受入証拠へ転用しない。
+
+|一次資料・取得範囲|確認内容と今回への使用法|
+|---|---|
+|SIMULIA Abaqus 2026 [shell geometry](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-shellgeometry.htm)、[*SHELL SECTION](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEKEYRefMap/simakey-r-shellsection.htm)、公式本文|参照面に自由度・運動学があり、偏心時の面内荷重は膜力と曲げを生む。OFFSETは厚さ比。本件の長さe・中立面/付着面・N/Mp/Msと符号を明記し、入力数値を製品間で同一視しない。|
+|同 [Coupling Constraints](https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-coupling.htm)、[Shell-to-Solid Coupling](https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-shelltosolidcoup.htm)、公式本文|剛体運動のkinematicと平均運動のdistributingは異なる。後者によるshell edge→solid surfaceの力/モーメント伝達は自己釣合いを保つ。現行の角部点結合を分布接続へ変更する根拠にはせず、全節点の伝達を監査する。|
+|EDF Code_Aster [U4.42.01 COQUE §8.3.2](https://codeaster.gitlab.io/doc/docaster/manuals/man_u/u4/u4.42.01/Mot_cle_COQUE.html)、[R3.07.06 §5](https://code-aster.org/doc/v17/manuals/man_r/r3/r3.07.06/Mise_en__uvre_et_post-traitements.html)、公式本文|DKT/DST等のEXCENTREMENT、荷重・変位・一般化断面力の評価面変換が明示される。膜曲げ連成とせん断、荷重の作用面と出力面を区別する。本体を同じ要素と呼ばない。|
+|Bentley [soil-structure interfaces](https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0110020)、[interface FAQ](https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0047965)、公式本文|界面なしのtieと、節点対で開離/すべりを扱う界面は異なる。力学活動・透水性・active-in-flowは独立の選択である。乾燥付着の一致からJOINT/水の成功仕様を補わない。|
+|Bentley [soil activation saturation](https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0107818)、[staged construction](https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0110294)、公式本文|新設土の初期水圧/飽和度は水条件・生成法に依存し、活動/材料割当て/荷重は工程別。非活動配列の保持値だけでは新世代を定義できないこと、MATSETの割当てと履歴移送を区別する動機にする。|
+|Bentley [structural tables/curves](https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0108821)、[interface shear sign](https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0108294)、公式本文|外挿・平滑化の有無、局所軸・前工程履歴・節点/応力点で値や符号が異なり得る。生値、既存回復値、共通物理点の比較を区別し、平滑化で合格にしない。|
+|Bathe & Dvorkin (1985), IJNME 21, 367–383、[著者公開PDF](https://web.mit.edu/kjb/www/Publications_Prior_to_1998/A_Four-Node_Plate_Bending_Element_Based_on_Mindlin_Reissner_Plate_Theory_and_a_Mixed_Interpolation.pdf)、本文17頁、特に368–371/380頁|変位/回転と共変せん断の別補間による薄板ロッキング対策、応力勾配の大きい領域の断面力精度を確認。仮定せん断と生勾配せん断を別観測する。4節点論文をTri6偏心＋地盤の収束保証にしない。|
+|Zienkiewicz & Zhu (1992), IJNME 33, 1331–1364、[DOI 10.1002/nme.1620330702](https://onlinelibrary.wiley.com/doi/10.1002/nme.1620330702)、書誌・要旨のみ、**本文未取得**|要旨に節点微分回復と全体L2投影の区別がある。書誌上の動機に限定し、本件の6点Nedelec再構成をSPRと呼ばず、論文の次数を付与しない。|
+|Maunder & Moitinho de Almeida (2018), IJNME 114, 375–398、[DOI 10.1002/nme.5747](https://onlinelibrary.wiley.com/doi/abs/10.1002/nme.5747)、書誌・summaryのみ、**本文未取得**|summaryの平衡パッチ回復と相補エネルギー比較は文献候補として記録。局所回復を全体系の平衡検証の代わりにしない。|
+|PLAXIS 3D Reference Manual 2024.1/2024.3/2025.1、リンクはJSON参照|本文取得は文書サイズ上限で失敗。**本作業では書誌・検索メタデータのみ**。Mindlin板やactivate/deactivateのマニュアル本文の式・数値を未確認のまま引用しない。上の公式サポート本文で確認できた範囲だけを使う。|
+
+これらだけでは偏心板＋水/塑性地盤/施工段階の本件仕様は一意に決まらない。
+商用製品と同じ名前の要素・工程が存在することは、本実装の結合を検証したことにはならない。
+
+## 2回以上の作業で残った症状
+
+[todo B-02](../2026-11-16-issue-triage/todo.ja.md)、
+[11-14限定受入と拒否](../2026-11-14-plate6-curved-offset/README.ja.md)、
+[12-01 B-02](../2026-12-01-tri6-offset-composite-b02/README.ja.md)、
+[12-09診断・5e3d191](../2026-12-09-b02-tet768-reassembly-residual/README.ja.md)、
+[B-01](../2026-12-03-tri6-curved-b01/README.ja.md)、[B-03](../2026-12-02-tri6-offset-kink-b03/README.ja.md)、
+[A-01](../2026-12-20-a01-joint-combo-cause-diagnosis/README.ja.md)、
+[A-02](../2026-12-21-a02-joint-birth-cause-diagnosis/README.ja.md)、
+[A-03](../2026-12-22-a03-wet-soil-birth-cause-diagnosis/README.ja.md)、
+[A-04](../2026-12-23-a04-richards-wet-joint-cause-diagnosis/README.ja.md)を確認した。
+既存記録の内容SHAは[prior-record-binding.json](prior-record-binding.json)。
+
+|ID・継続症状|2回以上の根拠・元の未達理由|切り分け|
+|---|---|---|
+|S1 offset＋JOINTの拒否|11-14→12-01、e=0でも明示offset方式は拒否。A-01/02の旧方式の接触確認は転用不可|(ii)付着/接触所有と世代、(iii)局所則、(iv)結合仕様不足|
+|S2 offset＋水の拒否|11-14→12-01。初期/工程静水圧、Darcy、Richards ONE_WAY。A-03/04でも土水圧・面圧・水頭写像/水量を区別|(i)圧力と仕事、(ii)設置時状態、(iv)水力経路の未定義|
+|S3 offset＋塑性土/MCC/IDHの拒否|11-14→12-01。塑性履歴、材料ガード。低強度MCは専用拒否成功ではなく数値未完了|(ii)初期応力/形成史、(iii)構成則、(iv)全体履歴。拒否後は未測定|
+|S4 offset＋アンカーの拒否|11-14→12-01。既存乾燥梁の回転共有と定着経路/初期軸力は別|(ii)設置参照、(iii)(iv)定着・腕・仕事の契約不足|
+|S5 offset＋土BIRTH/DEATH/MATSETの拒否|11-14→12-01、A-02/03の部分活動/新設状態問題も継続|(ii)土/板/接触/材料世代、(iv)領域・荷重・保持力・再平衡不足|
+|S6 設置参照と初期状態の未定義|11-14→12-01は乾燥固定活動だけの参照保存。A-02/03/04で新世代・水理時計/履歴移送の不足を保持|(ii)許可範囲の一意性と、拒否範囲の仕様不足を分離|
+|S7 膜曲げ連成・荷重仕事の比較範囲|11-14→12-01、B-01/03。中立面Mpと付着面Ms、瞬間F·dと離散累積仕事は別|(i)定義、(iii)腕の連成、(iv)二重計上/荷重経路|
+|S8 共通点せん断差の増加|12-01→12-09、141.283499→437.863419 kN/m、次数−1.631888|(i)回復/対応、(iii)仮定せん断と局在、(v)空間参照の限界|
+|S9 瞬間荷重仕事差の増加|同2記録、0.013640722→0.015947827 kN m、次数−.225440|(i)瞬間/累積、(iv)角部梁荷重・接続回転、(v)有限格子|
+|S10 累積仕事の刻み感度|12-01、B-03の4/8/16。状態場の微小差と異なり離散仕事差は約1次|(i)設置/撤去切替の端点規約、(v)参照自体の刻み感度|
+|S11 768再組立残差|12-01→12-09。旧本体3.871041e-10／独立1.050823e-10は元ゲート1e-10超過|**5e3d191の結論を引用するだけ。今回再診断しない**|
+|S12 一様全場収束・一般独立参照の未達|12-01→12-09、B-01/03でも元の負次数を保持|(v)固定離散問題の一致と連続極限を区別。2水準から次数を作らない|
+
+## 診断の範囲・独立性・測り方
+
+求解前の[SPEC](SPEC.ja.md)を固定した。新規計算は12/96 Tet10×4/8/16刻みだけ。
+元の点荷重・梁角部接続・支持・物性・ゲートを変えない。
+旧公開API観測器を再ビルドし、元の入力生成・比較・入力のみのGL125土＋Tri6剛体腕＋梁の
+独立直接系を変更せず使う。本体の場を独立解生成に使わない。
+独立GL7と体積積分点の加算逆順も全体系を別求解し、元の出力GP位置は維持する。
+観測付き/なし、同入力再実行/JSONキー逆順、実checkpointの別PID復旧、元の改変/範囲拒否は別枠。
+
+新しいノルムは工程→厳密progress→宣言ID→C-order成分、math.fsumで固定。
+絶対差、生分母、分母下限max(norm(reference),1e-12)を併記する。
+旧numpy集計・生値・受入定義を変更せず、Windowsの集計順差を許容値で吸収しない。
+12共通物理点の一意なowner、既存6点回復多項式と解からの直接Q、未投影生勾配Qを分ける。
+生勾配への交換やSPRという名称の付与で合格を作らない。
+
+N/Mpは中立面、Ms=Mp-eN。設置時全並進/回転との差へAを適用する。
+膜エネルギーを付着面膜、−eの交差項、e²の腕項に分けて元の中立面膜と照合する。
+全節点の土・板・梁内力、明示構造自由度、土への写像、物理荷重/施工保持荷重を独立に再組立する。
+仕事は土物理・施工保持・板・梁・節点の符号付き内訳であり、ノルムを足して原因割合にはしない。
+局所エネルギー恒等式や保存場の再評価を全体平衡の代用にはせず、入力からの全体系比較と併記する。
+未対応のJOINT/水/塑性/MCC/IDH/アンカー/土活動・材料変更の寄与はnullのまま。
+
+## 拒否される複合に不足する仕様
+
+現行ガードの固定SHA付き抜粋は[source-path-diagnosis.json](source-path-diagnosis.json)。
+以下は将来のユーザー判断事項であり、新しい接続・物理・入力・既定の追加ではない。
+
+|対象|乾燥弾性MC＋板＋線形梁との違い／受入前に必要な仕様|
+|---|---|
+|JOINT|土付着面と接触面のどちらが偏心板の並進/回転を所有するか、両側/片側の面・法線・GP対応、開離/すべり時の腕と接触力、設置時jump/初期traction/弾性エネルギー、世代凍結/再誕生、全体の力/モーメント/仕事と独立全場、再hash改変拒否・途中実再開。旧方式のJOINTの一致は代用不可。|
+|初期/工程静水圧|有効/全応力、物理圧力面と中立/付着面の荷重点、腕の偶力、土体積圧力内力/重量/外面/接合面の一回性、設置時p/σ'と保持力、独立全場/仕事/再開。処方圧力に水量0を補わない。|
+|Darcy|土の水頭/面トレース/GP圧力から板/界面への写像、活動領域・排水面・物理圧力面、設置時初期水圧、重量/面圧/内力の経路と水収支、独立水理/力学全場・保存復旧。|
+|Richards|上記に加え物理秒と準静的progress、非飽和吸引/χpと面圧の関係、開口/透水/保持/貯留、生成/除去水量、one-way/双方向とfeedbackの契約、時間刻み収束。A-04の未接続水頭/時計/水量を板で補わない。|
+|塑性MC|設置時応力/塑性ひずみ/仕事とひずみ原点、腕の連成による塑性載荷、除荷・棄却保持・独立全履歴・荷重仕事/散逸、材料状態と板参照の内容認証が必要。低強度の未完了を受入/物理破壊/範囲拒否へ変換しない。|
+|MCC / IDH|構成則固有の初期σ'/pc/e/OCRや硬化変数・形成史、設置前後の平衡、塑性体積変形/散逸と板仕事。乾燥MCのゼロseedを他材料へ転用しない。正の局所剛性や局所再生だけでは全体施工経路にならない。|
+|アンカー|headと板の接続面/回転/腕、定着域への独立力伝達、初期軸力/設置長・参照形状/施工保持力、引張限定則・解放、全場/仕事/世代/再開認証。線形梁の共有回転だけでは定着を定義しない。|
+|土BIRTH|新設土の参照形状/σ'/p/塑性履歴、土/板/接触世代の順序と所有、活動拘束・新規面・重量/荷重/保持力/再平衡、初期仕事・水量、独立全場・改変拒否・実再開。|
+|土DEATH|板/梁/土の残存所有と解放力、撤去面圧/重量、凍結状態、解放progressでの仕事・残存域平衡と水量、独立全経路と途中再開。板だけの撤去確認を土撤去へ転用しない。|
+|土MATSET|何の履歴を保持/初期化/移送するか、ひずみ原点・材料/構造世代、変更直後の内力差/保持力/仕事・散逸、独立全場と材料ID/参照の改変拒否・実再開。|
+
+全組合せで元の範囲ガードは保持する。拒否後の数値寄与・初期化の一意性は未測定。
+単独部品の局所則を組み合わせて「複合全体平衡済み」としない。
+
+## 768残差について引用する結論
+
+[5e3d191の既存診断](../2026-12-09-b02-tet768-reassembly-residual/README.ja.md)は、
+残差超過が最後の和の順序だけでは説明できず、本体の線形停止精度への感度と、
+独立直接系/物理再組立の分母の差が関わることを示した。
+旧独立1.0508229745493171e-10と同診断の再実測1.1557208463335835e-10は別記録で、差し替えない。
+今回、768の補償和・拡張精度・反復改良・停止条件の対照は追加しない。
+元の1e-10判定は未達のまま。
+
+同診断で共通点回復と直接Qは一致し、角部梁先端荷重の離散応答が局在した。
+先端荷重源の仕事変化の91.85%/96.90%が接続回転に対応し、梁自体の変形仕事は一定だった。
+これは既存3水準の荷重源診断の引用であり、本作業の新規計算や連続極限の発散証明ではない。
+
+## 実測・結論の確定記録
+
+新しい全場・内力/仕事内訳・参照感度はmeasurements.json、原入力/全状態/実再開/拒否は封印証拠に保存する。
+診断終了後に実数と症状別の主な寄与をここへ追記する。
+原因を単一に特定できない場合も未達の失敗記録として残す。
+
+## 規模上限・残件の振分け
+
+クラウドで可能な小型診断は残る。許可域内の板厚比/別の小型荷重位置に対する
+仮定せん断と膜曲げエネルギーの感度、独立面積分/辺モーメント次数の全体系交差対照は未実施。
+新しい支持や分布接続への変更はこの診断の続きではなく仕様変更であり、今回採用しない。
+拒否先の複合は仕様判断が先。未定義の接続をPCへ回しても数値参照にはならない。
+
+PCには同じ12/96・4/8/16の明示診断/再集計だけを[REPRODUCE](REPRODUCE.ja.md)へ記す。
+PCでは実行していない。768/6144を再計算する新しいPC手順はない。
+それ以上でなければ確認できない連続極限・一様全場収束は**規模上限のため確認不可・未達**。
+外挿・Richardson補正・新しい許容値/定義で合格を作らない。
+
+## 台帳・CI・保全
+
+新フォルダーのacceptance/measurementsと確定validationを固定コミット・SHA-256・Git blob・
+型付きfalse/null付きでP6-01追記台帳に登録する。旧台帳・封印・過去の失敗を再生成しない。
+新試験は小fixture・固定順ノルム・隔離import・実CRLF文書・封印SHAだけ。
+重い再計算をCIや既存rust-integration-1へ追加しない。通常core群のsparse規則は新partを保持する。
+全件前に固定先端の既存1598アーカイブを元Git blob SHAで照合・復元し、欠落0を確認した。
+Linux全件の確定件数はvalidation.json。過去の失敗/未実行を今回の実結果で書き換えない。
+**当該push後のWindows CIは未確定**。Linux成功・過去CI・時間切れ/取消を転用しない。
+A-01〜A-04、B-01、B-03、C-01〜C-04、NC-01、P6は全体未達のまま。
+
+B-02は未達、passed=false。
