@@ -176,4 +176,36 @@ Linux全件の確定件数はvalidation.json。過去の失敗/未実行を今�
 **当該push後のWindows CIは未確定**。Linux成功・過去CI・時間切れ/取消を転用しない。
 A-01〜A-04、B-01、B-03、C-01〜C-04、NC-01、P6は全体未達のまま。
 
+## 全件検証の確定結果
+
+fmt、locked全ターゲットclippy、locked release全ターゲットbuildは全て終了0。
+Rustは通常464＋examples内3の**467成功**、Pythonはtests/toolsを全発見した**824成功**。
+失敗/error・未実行・skip・ignore・filter除外・expected failure・unexpected successは全て0。
+発見/割当/実行IDの重複・欠落0。準備の選択3実行＋6件群、単独8件の17実行は全件へ二重加算しない。
+旧NC mean/spatial各4件も元の厳密検査で成功したが、過去の失敗/8件未実行を変更せず、NC-01受入へ転用しない。
+
+|Python群|成功|実測秒（discoveryを含む）|
+|---|---:|---:|
+|python-core-0|387|265.487|
+|python-core-1|413|318.699|
+|python-mean-evidence|4|1073.041|
+|python-spatial-evidence|4|223.683|
+|python-c01-switch|4|85.059|
+|python-c01-path|4|109.453|
+|python-c01-cause|8|89.850|
+
+実求解中1411ソースは不変。専用5群は先に実行し、求解後の新集計器の修正/新小試験の拡張とP6登録の後で
+通常2群を実行した。通常群の前後1408コード/設定ソースは全SHA一致した。
+最初の専用群開始時から全件終了までの全ソース一致は主張しない。
+その間の差はP6台帳/監査SHA定数と、新しい集計/梱包/小試験だけの5ファイルであり、
+生産Rust・元の試験・物理・数値設定・実求解診断コードは不変。各時点のSHAをvalidation/に残す。
+
+[validation.json](validation.json)はソフトウェア試験の判定、[acceptance.json](acceptance.json)はB-02の未達。
+[保全確認](preservation.json)は起点8454ファイル中8452件の実バイト/実行属性一致と、残る2件の
+P6台帳の元全バイトprefix保持・監査器SHA定数だけの変更を証明する。
+証拠183228758 bytes・8 part・597エントリーは全SHA照合済み、新規展開から計測JSONがバイト一致。
+これは追加求解ではない。未特定の原因・準備/集計失敗・単位監査前の記録も封印内に保持する。
+validation確定後の固定コミット登録・最終P6監査・関連試験はvalidation/へ別記し、全件の成功数へ加算しない。
+当該push後Windows CIは未確定。A-01〜A-04、B-01/B-03、C-01〜C-04、NC-01、P6も未達。
+
 B-02は未達、passed=false。
