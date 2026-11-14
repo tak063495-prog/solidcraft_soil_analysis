@@ -1,0 +1,36 @@
+test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) ... ok
+test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) ... ok
+test_material_constants_same_id_and_legacy_fallback (test_p2_acoustic.MaterialInventory.test_material_constants_same_id_and_legacy_fallback) ... ok
+test_matset_before_after_and_exact_cli (test_p2_acoustic.MaterialInventory.test_matset_before_after_and_exact_cli) ... ok
+test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) ... ok
+test_every_payload_uses_same_encoded_bytes_for_size_and_write (test_p2_epoch_budget.Budgets.test_every_payload_uses_same_encoded_bytes_for_size_and_write) ... ok
+test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) ... ok
+test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) ... /workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/zipfile/__init__.py:1686: UserWarning: Duplicate name: 'mesh.json'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+ok
+test_normal_child_failure_unlocks (test_p2_resume_ownership.OwnedChild.test_normal_child_failure_unlocks) ... ok
+test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry (test_p2_resume_ownership.OwnedChild.test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry) ... ok
+test_status_exception_after_launch_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_status_exception_after_launch_stops_and_waits) ... ok
+test_unconfirmed_child_exit_retains_lock_with_owner_record (test_p2_resume_ownership.OwnedChild.test_unconfirmed_child_exit_retains_lock_with_owner_record) ... ok
+test_wait_exception_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_wait_exception_stops_and_waits) ... ok
+test_monotone_known_orders_and_existing_guards (test_p2_richardson.SignedRichardson.test_monotone_known_orders_and_existing_guards) ... ok
+test_oscillating_positive_and_negative_are_indeterminate (test_p2_richardson.SignedRichardson.test_oscillating_positive_and_negative_are_indeterminate) ... FAIL
+test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) ... ok
+test_normal_api_and_cli (test_p2_soil_source.SoilGP.test_normal_api_and_cli) ... ok
+
+======================================================================
+FAIL: test_oscillating_positive_and_negative_are_indeterminate (test_p2_richardson.SignedRichardson.test_oscillating_positive_and_negative_are_indeterminate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_richardson.py", line 17, in test_oscillating_positive_and_negative_are_indeterminate
+    self.assertEqual(report['continuum_verdict'],'indeterminate');self.assertIsNone(report['reference_free_estimate'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' != 'indeterminate'
+- pass
++ indeterminate
+
+
+----------------------------------------------------------------------
+Ran 17 tests in 16.616s
+
+FAILED (failures=1)

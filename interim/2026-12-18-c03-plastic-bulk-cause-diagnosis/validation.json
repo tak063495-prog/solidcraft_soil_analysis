@@ -1,0 +1,295 @@
+{
+  "schema": "c03-cause-validation/1",
+  "platform": "Linux managed cloud",
+  "starting_commit": "1802c11be0145c706c49d4b698b2e5aed235c509",
+  "scientific_payload_commit": "2f25ea3f68c9375ae67941b15933ae2b415ccf94",
+  "initial_registered_payload_commit": "d9b25d8e729326eee1f4987a8fc84db98718ec95",
+  "software_validation_passed": true,
+  "passed": false,
+  "c03_complete": false,
+  "c01_complete": false,
+  "c02_complete": false,
+  "c04_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "ab_items_completed": false,
+  "pc_executed": false,
+  "windows_ci": "push後の新先端Windows CIは未確定",
+  "rust": {
+    "discovered": 466,
+    "executed": 466,
+    "success": 466,
+    "failure": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "doc_tests": 0
+  },
+  "python": {
+    "discovered": 769,
+    "executed": 769,
+    "success": 769,
+    "failure": 0,
+    "error": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "expected_failure": 0,
+    "unexpected_success": 0,
+    "disjoint_complete_inventory_verified": true,
+    "groups": {
+      "python-core-0": {
+        "tests_run": 340,
+        "assigned_total": 340,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 328.00649679100025
+      },
+      "python-core-1": {
+        "tests_run": 405,
+        "assigned_total": 405,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 252.21579881900016
+      },
+      "python-mean-evidence": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 791.9545438109999
+      },
+      "python-spatial-evidence": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 119.66476078100004
+      },
+      "python-c01-switch": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 47.70460379399992
+      },
+      "python-c01-path": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 72.71964320899951
+      },
+      "python-c01-cause": {
+        "tests_run": 8,
+        "assigned_total": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 56.124489802000426
+      }
+    }
+  },
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/solidcraft_soil_analysis",
+      "log": "validation/root-final/fmt.log"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/solidcraft_soil_analysis",
+      "log": "validation/root-final/clippy.log"
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/solidcraft_soil_analysis",
+      "log": "validation/root-final/build.log"
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/work/c03/source",
+      "log": "validation/rust-tests.log"
+    },
+    {
+      "name": "rust-example-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--example",
+        "nc_dense_lu_diagnostic",
+        "--example",
+        "nc_material_probe"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/work/c03/source",
+      "log": "validation/rust-example-tests.log"
+    },
+    {
+      "name": "rust-list",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--",
+        "--list"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/work/c03/source",
+      "log": "validation/rust-list.log"
+    },
+    {
+      "name": "rust-example-list",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--example",
+        "nc_dense_lu_diagnostic",
+        "--example",
+        "nc_material_probe",
+        "--",
+        "--list"
+      ],
+      "exit_code": 0,
+      "source_root": "/workspace/work/c03/source",
+      "log": "validation/rust-example-list.log"
+    }
+  ],
+  "source_unchanged_during_all_python_tests": true,
+  "frozen_source_files": 1270,
+  "all_final_rust_sources_match_tested_snapshot": true,
+  "rust_source_files": 163,
+  "source_before_sha256": "a203e93cbc29bbc71d614b2da2f2e413c7c6280d29db37ba19bdeae8fd150abc",
+  "source_after_sha256": "a203e93cbc29bbc71d614b2da2f2e413c7c6280d29db37ba19bdeae8fd150abc",
+  "rust_id_coverage": "validation/rust-coverage.json",
+  "python_id_coverage": "validation/python-coverage.json",
+  "p601_preflight_integrity_verified": true,
+  "p601_preflight_sources": 301,
+  "p601_final_report": "validation/p601-final-audit.json",
+  "post_registration_checks": "validation/post-registration.json",
+  "inventory_registration": "N047/N048 pin the scientific payload; N049 pins this final committed validation snapshot; see inventory.toml",
+  "production_defaults_changed": false,
+  "nc_code_or_settings_changed": false,
+  "old_blobs_preserved": true,
+  "old_reference_values_rewritten": false,
+  "cloud_required_diagnostics_remaining": false,
+  "single_primary_cause_identified": false,
+  "experimental_global_solve_call_ledger": "solve-call-ledger.json",
+  "retained_nonpassing_preparations": [
+    {
+      "kind": "format_preflight",
+      "exit_code": 1,
+      "log": "fmt-first.log",
+      "reason": "new observation example had not yet been formatted",
+      "resolved": "rustfmt only the new example; final cargo fmt returned zero"
+    },
+    {
+      "kind": "portable_powershell_preparation",
+      "exit_code": 134,
+      "reason": "PowerShell tried to create /home/agent/.cache/powershell on a read-only filesystem",
+      "resolved": "use writable XDG_CACHE_HOME, XDG_CONFIG_HOME, XDG_DATA_HOME under work; no NC-specific environment setting changed"
+    },
+    {
+      "kind": "initial_full_git_fetch",
+      "exit_code": 128,
+      "reason": "HTTP/2 INTERNAL_ERROR, unexpected disconnect, early EOF after 24473968639 received bytes",
+      "resolution": "salvage 4887 complete objects; Git index-pack verified; fetch only missing checkout objects"
+    },
+    {
+      "kind": "pack_recovery_preflight",
+      "exit_code": 1,
+      "reason": "initial guard expected more than 6000 objects; parser found 4887 complete objects and stopped before mutation",
+      "resolution": "salvage the complete prefix; Git verified indexed pack 170efa6dd41d94247a21dd389dff9765be52276f"
+    },
+    {
+      "kind": "tracking_setup",
+      "exit_code": 128,
+      "reason": "initial clone refspec tracked main only; tracking branch setup failed after checkout",
+      "resolution": "assert index tree equals immutable 1802c11; add exact target refspec and align branch HEAD"
+    },
+    {
+      "kind": "p601_metadata_preflight",
+      "exit_code": 1,
+      "reason": "274 BASE_EVIDENCE_MISSING findings; seven historical commit metadata objects were unavailable after interrupted fetch",
+      "resolution": "refetch exact fixed commits with blob:none; strict 301-source audit succeeded"
+    },
+    {
+      "kind": "ordinary_fixed_metadata_fetch",
+      "exit_code": 1,
+      "reason": "bad object during negotiation against an incomplete promisor history",
+      "resolution": "git fetch --refetch --filter=blob:none; exit 0"
+    }
+  ],
+  "powershell": {
+    "version": "7.5.4",
+    "tar_sha256": "1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef",
+    "generic_launcher": ".venv/bin/pwsh",
+    "writable_xdg_directories": true,
+    "nc_specific_settings_changed": false
+  },
+  "sealed_raw_evidence_verified": true,
+  "sealed_measurements_object_exact": true,
+  "real_mc_checkpoint_restarts": 7,
+  "exact_suffix_states": 784
+}

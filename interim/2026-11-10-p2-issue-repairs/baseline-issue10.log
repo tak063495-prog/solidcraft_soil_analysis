@@ -1,0 +1,19 @@
+test_monotone_known_orders_and_existing_guards (test_p2_richardson.SignedRichardson.test_monotone_known_orders_and_existing_guards) ... ok
+test_oscillating_positive_and_negative_are_indeterminate (test_p2_richardson.SignedRichardson.test_oscillating_positive_and_negative_are_indeterminate) ... FAIL
+
+======================================================================
+FAIL: test_oscillating_positive_and_negative_are_indeterminate (test_p2_richardson.SignedRichardson.test_oscillating_positive_and_negative_are_indeterminate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_richardson.py", line 17, in test_oscillating_positive_and_negative_are_indeterminate
+    self.assertEqual(report['continuum_verdict'],'indeterminate');self.assertIsNone(report['reference_free_estimate'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'pass' != 'indeterminate'
+- pass
++ indeterminate
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.032s
+
+FAILED (failures=1)

@@ -1,0 +1,171 @@
+{
+  "schema": "soil-fem-nc-turning-diagnostic-validation/1",
+  "passed": false,
+  "history_converged": false,
+  "software_checks_passed": true,
+  "rust_passed": 12,
+  "python_passed": 7,
+  "selected_failed": 0,
+  "selected_ignored_or_skipped": 0,
+  "selected_name_filtered_out": 0,
+  "full_rust_suite_executed": false,
+  "full_python_suite_executed": false,
+  "windows_execution_performed": false,
+  "windows_ci_for_new_head": "unconfirmed",
+  "native_full_solves": 0,
+  "native_regular_restarts": 0,
+  "independent_3d_solves": 0,
+  "native_new_committed_increments": 0,
+  "final_diagnostic_batches": 3,
+  "final_derivative_material_requests": 3240,
+  "final_path_material_requests": 41796,
+  "final_diagnostic_material_requests": 45036,
+  "final_equilibrium_samples": 128,
+  "final_saved_augmented_linear_systems": 128,
+  "all_exploratory_and_final_material_batches": 3,
+  "all_path_batches": 9,
+  "path_batch_samples": {
+    "path-final-fine": 64,
+    "path-1e-5-fine": 64,
+    "path-1e-5-corrected": 64,
+    "path-diagnostic-fine": 64,
+    "path-2e-5": 64,
+    "path-2e-5-corrected": 64,
+    "path-final-coarse": 64,
+    "path-1e-5": 16,
+    "path-diagnostic-coarse": 64
+  },
+  "path_batch_native_processes": {
+    "path-final-fine": 129,
+    "path-1e-5-fine": 86,
+    "path-1e-5-corrected": 129,
+    "path-diagnostic-fine": 129,
+    "path-2e-5": 129,
+    "path-2e-5-corrected": 129,
+    "path-final-coarse": 129,
+    "path-1e-5": 22,
+    "path-diagnostic-coarse": 129
+  },
+  "all_path_equilibrium_samples": 528,
+  "all_diagnostic_material_requests_excluding_unit_tests": 173502,
+  "rust_test_summaries": [
+    [
+      "2",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "10",
+      "0",
+      "0",
+      "0",
+      "0"
+    ]
+  ],
+  "check_processes": [
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "work/nc-mechanism/isolated/Cargo.toml",
+        "--target-dir",
+        "work/nc-mechanism/target",
+        "--example",
+        "material_diagnostic",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.200524650000034
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.5095532319999165
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "mcc_midpoint",
+        "--test",
+        "free_contact"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 97.75011586000005
+    }
+  ],
+  "python_log": "checks/python.log; reported 7 tests in 0.225 s; separate wall time not captured",
+  "development_issues": [
+    "first analysis rejected reset-reference substep replay: AD/primal all exact, 23 separately restarted substep paths differed in arithmetic; final internal path observer exact for all 3240",
+    "first source reproduction differed only in mcc.rs CRLF; final 69 files exact",
+    "first metadata-only rustc query omitted activate.sh and failed; no tests ran in that query"
+  ],
+  "exploratory_binary_fingerprints_available": false,
+  "final_binary_and_source_fingerprints_available": true,
+  "production_numeric_sources_modified": false,
+  "pr_merged": false,
+  "additional_credits_purchased": false,
+  "source_reproduction": {
+    "files": 69,
+    "all_exact": true,
+    "different_files": []
+  },
+  "data_reproduction": {
+    "material-requests.json": true,
+    "field-records.json": true
+  },
+  "final_source_unchanged_after_checks": true,
+  "fresh_archive_remeasurement": {
+    "passed": false,
+    "history_converged": false,
+    "solver_executed": false,
+    "material_map_executed": false,
+    "archives_verified": {
+      "evidence.tar.xz": 1038,
+      "development-evidence.tar.xz": 2336
+    },
+    "source_files_verified": 69,
+    "exact_saved_json_matches": {
+      "derivative-measurements.json": true,
+      "measurements.json": true
+    },
+    "all_matches": true
+  },
+  "packaging_notes": [
+    "solid compression preserves all raw entry bytes; first development archive exceeded the initial 95 MiB packaging margin, not the 100 MiB GitHub hard limit; no numerical criterion changed",
+    "intermediate ZIP archives were replaced by two tar.xz archives; initial inventory recheck failed after adding packaging scratch files, then excluded those intermediates; final inventory and every SHA256 verified",
+    "packaging logs are retained separately; all numerical execution logs remain in the archives"
+  ],
+  "isolated_build": {
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "work/nc-mechanism/isolated/Cargo.toml",
+      "--target-dir",
+      "work/nc-mechanism/target",
+      "--example",
+      "material_diagnostic"
+    ],
+    "exit_code": 0,
+    "cargo_reported_duration_seconds": 49.06,
+    "separate_wall_time_captured": false
+  }
+}

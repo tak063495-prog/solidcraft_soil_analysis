@@ -1,0 +1,2191 @@
+{
+  "passed": false,
+  "b01_complete": false,
+  "all_field_numerical_acceptance": null,
+  "cases": [
+    {
+      "case": "attached-n2-s4",
+      "kind": "attached",
+      "n": 2,
+      "load_steps": 4,
+      "native_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "solve",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/native",
+          "2,6,10,14,18"
+        ],
+        "pid": 2584,
+        "exit_code": 0,
+        "elapsed_seconds": 6.526728004999995,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "independent_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/interim/2026-12-01-tri6-offset-composite-b02/reference.py",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/independent.jsonl"
+        ],
+        "pid": 7249,
+        "exit_code": 0,
+        "elapsed_seconds": 0.9458641690000604,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "solver_sha256": "cc7ef028a4c05e574de20ec73489d852635837ac0fb35a0deb445bae74b8d196",
+      "input_sha256": {
+        "mesh.json": "7018da444fe97e4af594714af52d1a4501985542168d6799b9495430d460985f",
+        "ground.json": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages.json": "6c0a23528fdefe14b68db8702757e84d86e07075d3d132a0693675e57431101d"
+      },
+      "comparison": {
+        "accepted_points": 20,
+        "maximum_by_field": {
+          "soil_displacement_m": {
+            "maximum_absolute": 2.681936703968768e-15,
+            "relative_l2": 1.1968498759271854e-11,
+            "components_compared": 2700,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_effective_stress_kpa": {
+            "maximum_absolute": 8.020961672627891e-11,
+            "relative_l2": 1.2454896665111154e-11,
+            "components_compared": 38880,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_engineering_strain_from_native_displacement": {
+            "maximum_absolute": 2.7028618058977383e-15,
+            "relative_l2": 1.6631274323030803e-11,
+            "components_compared": 38880,
+            "gate": null,
+            "passed": null
+          },
+          "soil_active_elements": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_material_ids": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_void_ratio": {
+            "maximum_absolute": 3.3306690738754696e-15,
+            "relative_l2": 1.6746351770392175e-15,
+            "components_compared": 6480,
+            "gate": "void",
+            "passed": true
+          },
+          "soil_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 38880,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_equivalent_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_plastic_work_kpa": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_node_displacement_m": {
+            "maximum_absolute": 2.681936703968768e-15,
+            "relative_l2": 1.3669166510492434e-11,
+            "components_compared": 900,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_node_rotation_rad": {
+            "maximum_absolute": 9.105627349334836e-14,
+            "relative_l2": 5.094243155834387e-10,
+            "components_compared": 900,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_plate_reference_global_kinematics": {
+            "maximum_absolute": 9.03899351201165e-16,
+            "relative_l2": 3.4478203968445757e-12,
+            "components_compared": 2880,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_active_members": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_active_plates": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 80,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_internal_kn": {
+            "maximum_absolute": 1.1074474670635936e-11,
+            "relative_l2": 1.3654163222868832e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "total_internal_kn": {
+            "maximum_absolute": 1.1074474670635936e-11,
+            "relative_l2": 1.3654163222868832e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "applied_nodal_load_kn": {
+            "maximum_absolute": 8.18833889582038e-12,
+            "relative_l2": 3.020742750204511e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_by_node_kn": {
+            "maximum_absolute": 8.65441052155802e-12,
+            "relative_l2": 5.8166340596430716e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_total_kn": {
+            "maximum_absolute": 2.184030734042608e-11,
+            "relative_l2": 4.605133241143441e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "load_work_kn_m": {
+            "maximum_absolute": 7.770260129769113e-15,
+            "relative_l2": 5.667501671479173e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structural_load_work_kn_m": {
+            "maximum_absolute": 1.0366056971133908e-15,
+            "relative_l2": 2.7583931412972272e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_force_kn": {
+            "maximum_absolute": 4.440892098500626e-16,
+            "relative_l2": 1.8356236831795152e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_moment_origin_kn_m": {
+            "maximum_absolute": 4.440892098500626e-16,
+            "relative_l2": 2.7777981800608517e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_force_kn": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_moment_origin_kn_m": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "transition_release_load_kn": {
+            "maximum_absolute": 8.187617250854373e-12,
+            "relative_l2": 3.2128419395190964e-12,
+            "components_compared": 1080,
+            "gate": null,
+            "passed": null
+          },
+          "plates.area_m2": {
+            "maximum_absolute": 5.551115123125783e-17,
+            "relative_l2": 2.202748419815418e-16,
+            "components_compared": 48,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.local_axes": {
+            "maximum_absolute": 1.1102230246251565e-16,
+            "relative_l2": 9.780312907634022e-17,
+            "components_compared": 432,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].barycentric": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_strain": {
+            "maximum_absolute": 3.815036394433369e-18,
+            "relative_l2": 3.803893914089389e-11,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].curvature_per_m": {
+            "maximum_absolute": 8.516255598943132e-16,
+            "relative_l2": 2.9261797487879275e-11,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_force_kn_m": {
+            "maximum_absolute": 1.11664011370749e-11,
+            "relative_l2": 2.4138738436309935e-11,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].bending_moment_kn": {
+            "maximum_absolute": 1.1787862352896639e-12,
+            "relative_l2": 1.7991922236677032e-11,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_strain": {
+            "maximum_absolute": 9.039853250453114e-18,
+            "relative_l2": 3.396054116864433e-11,
+            "components_compared": 576,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_force_kn_m": {
+            "maximum_absolute": 9.416509239024151e-12,
+            "relative_l2": 3.3960554006662347e-11,
+            "components_compared": 576,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].drilling_mismatch_rad": {
+            "maximum_absolute": 4.437392178214906e-14,
+            "relative_l2": 4.642862679613972e-07,
+            "components_compared": 288,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.membrane_energy_kn_m": {
+            "maximum_absolute": 5.3331311941498885e-19,
+            "relative_l2": 1.2781625342191557e-11,
+            "components_compared": 48,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.bending_energy_kn_m": {
+            "maximum_absolute": 7.38443323416299e-18,
+            "relative_l2": 2.3133026040489806e-12,
+            "components_compared": 48,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.transverse_shear_energy_kn_m": {
+            "maximum_absolute": 6.736426559733849e-19,
+            "relative_l2": 9.123925869849622e-12,
+            "components_compared": 48,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.drilling_penalty_energy_kn_m": {
+            "maximum_absolute": 6.307296760921731e-20,
+            "relative_l2": 6.933749017505431e-09,
+            "components_compared": 48,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_moment_kn[all]": {
+            "maximum_absolute": 1.1787862352896639e-12,
+            "relative_l2": 1.7991922236677032e-11,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_trace_m": {
+            "maximum_absolute": 2.710505431213761e-19,
+            "relative_l2": 0.0,
+            "components_compared": 720,
+            "gate": "existing_attachment_1e-10_m",
+            "passed": true
+          }
+        },
+        "existing_gate_failures": [],
+        "existing_field_gates_passed": true,
+        "maximum_native_reassembled_residual": 2.380148867642516e-11,
+        "maximum_independent_reassembled_residual": 2.351087502666763e-13,
+        "all_field_numerical_acceptance": null,
+        "b01_complete": false,
+        "note": "Reaction, work and general all-field gates remain undefined; no new tolerance. Existing displacement/stress/structure/plate gates only."
+      },
+      "plain_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "plain",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n2-s4/plain"
+        ],
+        "pid": 7254,
+        "exit_code": 0,
+        "elapsed_seconds": 0.9530866750001223,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "all_run_equal_to_unobserved": true,
+      "solver": {
+        "complete": true,
+        "accepted": 20,
+        "rejected": 0,
+        "maximum_accepted_force_residual": 2.3801452607675467e-11,
+        "maximum_true_linear_residual": 2.4779835483889426e-11
+      },
+      "existing_limited_gates_passed": true
+    },
+    {
+      "case": "attached-n4-s4",
+      "kind": "attached",
+      "n": 4,
+      "load_steps": 4,
+      "native_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "solve",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/native",
+          "10"
+        ],
+        "pid": 23396,
+        "exit_code": 0,
+        "elapsed_seconds": 7.371438161000015,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "independent_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/interim/2026-12-01-tri6-offset-composite-b02/reference.py",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/independent.jsonl"
+        ],
+        "pid": 28053,
+        "exit_code": 0,
+        "elapsed_seconds": 1.3118395269998473,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "solver_sha256": "cc7ef028a4c05e574de20ec73489d852635837ac0fb35a0deb445bae74b8d196",
+      "input_sha256": {
+        "mesh.json": "54159f1942f1f2c8c9254cb6897cb0899e40a6ba5b32f2ea9f88bf385bae4dbb",
+        "ground.json": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages.json": "bf232a87b333b635ba2d506a0167741ddcef34ee4aec36dde4a66c9af5c19a07"
+      },
+      "comparison": {
+        "accepted_points": 20,
+        "maximum_by_field": {
+          "soil_displacement_m": {
+            "maximum_absolute": 2.697801631070841e-15,
+            "relative_l2": 1.1968498759271854e-11,
+            "components_compared": 2700,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_effective_stress_kpa": {
+            "maximum_absolute": 8.176925803127233e-11,
+            "relative_l2": 1.2454896665111154e-11,
+            "components_compared": 38880,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_engineering_strain_from_native_displacement": {
+            "maximum_absolute": 2.7131075164277263e-15,
+            "relative_l2": 1.6631274323030803e-11,
+            "components_compared": 38880,
+            "gate": null,
+            "passed": null
+          },
+          "soil_active_elements": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_material_ids": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_void_ratio": {
+            "maximum_absolute": 3.3306690738754696e-15,
+            "relative_l2": 1.6887736708083623e-15,
+            "components_compared": 6480,
+            "gate": "void",
+            "passed": true
+          },
+          "soil_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 38880,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_equivalent_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_plastic_work_kpa": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_node_displacement_m": {
+            "maximum_absolute": 2.764510346106564e-15,
+            "relative_l2": 1.8709734942789e-11,
+            "components_compared": 1620,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_node_rotation_rad": {
+            "maximum_absolute": 1.5970986490266832e-13,
+            "relative_l2": 1.0048277665417807e-09,
+            "components_compared": 1620,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_plate_reference_global_kinematics": {
+            "maximum_absolute": 9.03899351201165e-16,
+            "relative_l2": 3.4478203968445757e-12,
+            "components_compared": 5760,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_active_members": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_active_plates": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 160,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_internal_kn": {
+            "maximum_absolute": 1.113242831252137e-11,
+            "relative_l2": 1.3654163222868832e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "total_internal_kn": {
+            "maximum_absolute": 1.113242831252137e-11,
+            "relative_l2": 1.3654163222868832e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "applied_nodal_load_kn": {
+            "maximum_absolute": 8.18833889582038e-12,
+            "relative_l2": 3.045401703952735e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_by_node_kn": {
+            "maximum_absolute": 8.65441052155802e-12,
+            "relative_l2": 5.8166340596430716e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_total_kn": {
+            "maximum_absolute": 2.184030734042608e-11,
+            "relative_l2": 4.605133241143441e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "load_work_kn_m": {
+            "maximum_absolute": 7.795847301039771e-15,
+            "relative_l2": 5.667501671479173e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structural_load_work_kn_m": {
+            "maximum_absolute": 9.587599811289316e-16,
+            "relative_l2": 2.9780544582340324e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_force_kn": {
+            "maximum_absolute": 8.881784197001252e-16,
+            "relative_l2": 3.5469317997769813e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_moment_origin_kn_m": {
+            "maximum_absolute": 6.661338147750939e-16,
+            "relative_l2": 4.570056038479117e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_force_kn": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_moment_origin_kn_m": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "transition_release_load_kn": {
+            "maximum_absolute": 8.187617250854373e-12,
+            "relative_l2": 3.24055624719316e-12,
+            "components_compared": 1080,
+            "gate": null,
+            "passed": null
+          },
+          "plates.area_m2": {
+            "maximum_absolute": 5.551115123125783e-17,
+            "relative_l2": 4.432175778553274e-16,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.local_axes": {
+            "maximum_absolute": 2.220446049250313e-16,
+            "relative_l2": 1.8445802327586938e-16,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].barycentric": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_strain": {
+            "maximum_absolute": 8.197584863527119e-18,
+            "relative_l2": 6.730056470595831e-11,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].curvature_per_m": {
+            "maximum_absolute": 1.133763764295248e-15,
+            "relative_l2": 6.024384271225786e-11,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_force_kn_m": {
+            "maximum_absolute": 2.1823320928149315e-11,
+            "relative_l2": 5.586538746835316e-11,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].bending_moment_kn": {
+            "maximum_absolute": 2.5333415920592017e-12,
+            "relative_l2": 5.908497869733627e-11,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_strain": {
+            "maximum_absolute": 6.00406599167002e-17,
+            "relative_l2": 1.6421389004704052e-10,
+            "components_compared": 1152,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_force_kn_m": {
+            "maximum_absolute": 6.254236017966264e-11,
+            "relative_l2": 1.6421388486972452e-10,
+            "components_compared": 1152,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].drilling_mismatch_rad": {
+            "maximum_absolute": 8.744069811140033e-14,
+            "relative_l2": 8.218032406295995e-06,
+            "components_compared": 576,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.membrane_energy_kn_m": {
+            "maximum_absolute": 4.512038630905251e-19,
+            "relative_l2": 3.427950722753958e-11,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.bending_energy_kn_m": {
+            "maximum_absolute": 7.924840254511234e-18,
+            "relative_l2": 8.127883352701381e-12,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.transverse_shear_energy_kn_m": {
+            "maximum_absolute": 1.0504002639341375e-18,
+            "relative_l2": 3.969928655976507e-11,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.drilling_penalty_energy_kn_m": {
+            "maximum_absolute": 1.8740183420670443e-19,
+            "relative_l2": 3.5166930485520725e-08,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_moment_kn[all]": {
+            "maximum_absolute": 2.5333415920592017e-12,
+            "relative_l2": 5.908497869733627e-11,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_trace_m": {
+            "maximum_absolute": 2.710505431213761e-19,
+            "relative_l2": 0.0,
+            "components_compared": 1440,
+            "gate": "existing_attachment_1e-10_m",
+            "passed": true
+          }
+        },
+        "existing_gate_failures": [],
+        "existing_field_gates_passed": true,
+        "maximum_native_reassembled_residual": 2.380148867642516e-11,
+        "maximum_independent_reassembled_residual": 4.974601052377793e-13,
+        "all_field_numerical_acceptance": null,
+        "b01_complete": false,
+        "note": "Reaction, work and general all-field gates remain undefined; no new tolerance. Existing displacement/stress/structure/plate gates only."
+      },
+      "plain_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "plain",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n4-s4/plain"
+        ],
+        "pid": 28060,
+        "exit_code": 0,
+        "elapsed_seconds": 0.4439452809999693,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "all_run_equal_to_unobserved": true,
+      "solver": {
+        "complete": true,
+        "accepted": 20,
+        "rejected": 0,
+        "maximum_accepted_force_residual": 2.3801452607675467e-11,
+        "maximum_true_linear_residual": 2.4779835483889426e-11
+      },
+      "existing_limited_gates_passed": true
+    },
+    {
+      "case": "attached-n8-s4",
+      "kind": "attached",
+      "n": 8,
+      "load_steps": 4,
+      "native_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "solve",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/native",
+          "10"
+        ],
+        "pid": 31854,
+        "exit_code": 0,
+        "elapsed_seconds": 7.855757393999966,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "independent_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/interim/2026-12-01-tri6-offset-composite-b02/reference.py",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/independent.jsonl"
+        ],
+        "pid": 36505,
+        "exit_code": 0,
+        "elapsed_seconds": 2.7139017459999195,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "solver_sha256": "cc7ef028a4c05e574de20ec73489d852635837ac0fb35a0deb445bae74b8d196",
+      "input_sha256": {
+        "mesh.json": "be6e3bca495038b9f3c73ef223d749da7aa841f0029db802a55834d86d88ee95",
+        "ground.json": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages.json": "f4b5c2f5c09ef159ec0d6e86f94ee2eb92ce3613922cd788a49729c2cd4510c4"
+      },
+      "comparison": {
+        "accepted_points": 20,
+        "maximum_by_field": {
+          "soil_displacement_m": {
+            "maximum_absolute": 3.039618388803525e-15,
+            "relative_l2": 1.1968498759271854e-11,
+            "components_compared": 2700,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_effective_stress_kpa": {
+            "maximum_absolute": 9.584510962667991e-11,
+            "relative_l2": 1.2454896665111154e-11,
+            "components_compared": 38880,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_engineering_strain_from_native_displacement": {
+            "maximum_absolute": 2.728774237820142e-15,
+            "relative_l2": 1.6631274323030803e-11,
+            "components_compared": 38880,
+            "gate": null,
+            "passed": null
+          },
+          "soil_active_elements": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_material_ids": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_void_ratio": {
+            "maximum_absolute": 3.9968028886505635e-15,
+            "relative_l2": 1.9187905594369573e-15,
+            "components_compared": 6480,
+            "gate": "void",
+            "passed": true
+          },
+          "soil_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 38880,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_equivalent_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_plastic_work_kpa": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_node_displacement_m": {
+            "maximum_absolute": 3.1657523943197678e-15,
+            "relative_l2": 2.8169020926381095e-11,
+            "components_compared": 3060,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_node_rotation_rad": {
+            "maximum_absolute": 5.499715524877639e-13,
+            "relative_l2": 2.1071724595649684e-09,
+            "components_compared": 3060,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_plate_reference_global_kinematics": {
+            "maximum_absolute": 9.03899351201165e-16,
+            "relative_l2": 3.4478203968445757e-12,
+            "components_compared": 11520,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_active_members": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_active_plates": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 320,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_internal_kn": {
+            "maximum_absolute": 1.1677769862217247e-11,
+            "relative_l2": 1.3654163222868832e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "total_internal_kn": {
+            "maximum_absolute": 1.1677769862217247e-11,
+            "relative_l2": 1.3654163222868832e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "applied_nodal_load_kn": {
+            "maximum_absolute": 8.18833889582038e-12,
+            "relative_l2": 3.026682127488903e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_by_node_kn": {
+            "maximum_absolute": 9.441336601412331e-12,
+            "relative_l2": 5.8166340596430716e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_total_kn": {
+            "maximum_absolute": 2.184030734042608e-11,
+            "relative_l2": 4.605133241143441e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "load_work_kn_m": {
+            "maximum_absolute": 6.8855511570209416e-15,
+            "relative_l2": 5.667501671479173e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structural_load_work_kn_m": {
+            "maximum_absolute": 1.6563356589061051e-15,
+            "relative_l2": 5.9156699976483025e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_force_kn": {
+            "maximum_absolute": 2.6645352591003757e-15,
+            "relative_l2": 1.0870144024810601e-15,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_moment_origin_kn_m": {
+            "maximum_absolute": 6.661338147750939e-16,
+            "relative_l2": 3.7459380450340564e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_force_kn": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_moment_origin_kn_m": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "transition_release_load_kn": {
+            "maximum_absolute": 8.187617250854373e-12,
+            "relative_l2": 3.2213852445233336e-12,
+            "components_compared": 1080,
+            "gate": null,
+            "passed": null
+          },
+          "plates.area_m2": {
+            "maximum_absolute": 1.3877787807814457e-17,
+            "relative_l2": 2.2193605208678742e-16,
+            "components_compared": 192,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.local_axes": {
+            "maximum_absolute": 2.220446049250313e-16,
+            "relative_l2": 1.834109494058731e-16,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].barycentric": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_strain": {
+            "maximum_absolute": 1.6095320063726215e-17,
+            "relative_l2": 2.109502180927783e-10,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].curvature_per_m": {
+            "maximum_absolute": 1.1353643177523798e-14,
+            "relative_l2": 3.87819140358345e-10,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_force_kn_m": {
+            "maximum_absolute": 4.019780341923962e-11,
+            "relative_l2": 1.778762012935341e-10,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].bending_moment_kn": {
+            "maximum_absolute": 2.835625484420845e-11,
+            "relative_l2": 4.1501615942002147e-10,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_strain": {
+            "maximum_absolute": 2.4212097984085273e-16,
+            "relative_l2": 7.839568926582001e-10,
+            "components_compared": 2304,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_force_kn_m": {
+            "maximum_absolute": 2.522093645040968e-10,
+            "relative_l2": 7.83956761969775e-10,
+            "components_compared": 2304,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].drilling_mismatch_rad": {
+            "maximum_absolute": 3.1354189231629605e-13,
+            "relative_l2": 5.611268563043232e-06,
+            "components_compared": 1152,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.membrane_energy_kn_m": {
+            "maximum_absolute": 1.9382496113342544e-19,
+            "relative_l2": 6.23961042802545e-11,
+            "components_compared": 192,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.bending_energy_kn_m": {
+            "maximum_absolute": 1.4843193609447546e-17,
+            "relative_l2": 2.4281357143267334e-11,
+            "components_compared": 192,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.transverse_shear_energy_kn_m": {
+            "maximum_absolute": 2.1847031117607537e-18,
+            "relative_l2": 2.741337145226105e-10,
+            "components_compared": 192,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.drilling_penalty_energy_kn_m": {
+            "maximum_absolute": 7.217629575304682e-19,
+            "relative_l2": 5.194971743012634e-08,
+            "components_compared": 192,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_moment_kn[all]": {
+            "maximum_absolute": 2.835625484420845e-11,
+            "relative_l2": 4.1501615942002147e-10,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_trace_m": {
+            "maximum_absolute": 2.439454888092385e-19,
+            "relative_l2": 0.0,
+            "components_compared": 2880,
+            "gate": "existing_attachment_1e-10_m",
+            "passed": true
+          }
+        },
+        "existing_gate_failures": [],
+        "existing_field_gates_passed": true,
+        "maximum_native_reassembled_residual": 2.380148867642516e-11,
+        "maximum_independent_reassembled_residual": 8.371524910771852e-13,
+        "all_field_numerical_acceptance": null,
+        "b01_complete": false,
+        "note": "Reaction, work and general all-field gates remain undefined; no new tolerance. Existing displacement/stress/structure/plate gates only."
+      },
+      "plain_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "plain",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/attached-n8-s4/plain"
+        ],
+        "pid": 36540,
+        "exit_code": 0,
+        "elapsed_seconds": 0.5553628929999377,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "all_run_equal_to_unobserved": true,
+      "solver": {
+        "complete": true,
+        "accepted": 20,
+        "rejected": 0,
+        "maximum_accepted_force_residual": 2.3801452607675467e-11,
+        "maximum_true_linear_residual": 2.4779835483889426e-11
+      },
+      "existing_limited_gates_passed": true
+    },
+    {
+      "case": "roof-n2-s4",
+      "kind": "roof",
+      "n": 2,
+      "load_steps": 4,
+      "native_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "solve",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/native",
+          "10"
+        ],
+        "pid": 40338,
+        "exit_code": 0,
+        "elapsed_seconds": 3.5188033189999715,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "independent_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/interim/2026-12-01-tri6-offset-composite-b02/reference.py",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/independent.jsonl"
+        ],
+        "pid": 43144,
+        "exit_code": 0,
+        "elapsed_seconds": 1.5296751900000345,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "solver_sha256": "cc7ef028a4c05e574de20ec73489d852635837ac0fb35a0deb445bae74b8d196",
+      "input_sha256": {
+        "mesh.json": "9a0f5721c4bdb073c86c212906b578998f62cd8a282060ebf513500be321cde0",
+        "ground.json": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages.json": "084f981679ccf91542f68836e61c49b75bce0a9a6a631082a24d1618a5d8cf02"
+      },
+      "comparison": {
+        "accepted_points": 20,
+        "maximum_by_field": {
+          "soil_displacement_m": {
+            "maximum_absolute": 1.2918336647800566e-15,
+            "relative_l2": 1.3710360609051818e-11,
+            "components_compared": 2700,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_effective_stress_kpa": {
+            "maximum_absolute": 1.1000977906405751e-10,
+            "relative_l2": 1.4381300926239823e-11,
+            "components_compared": 38880,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_engineering_strain_from_native_displacement": {
+            "maximum_absolute": 2.917696466375741e-15,
+            "relative_l2": 1.7564175419433392e-11,
+            "components_compared": 38880,
+            "gate": null,
+            "passed": null
+          },
+          "soil_active_elements": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_material_ids": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_void_ratio": {
+            "maximum_absolute": 4.218847493575595e-15,
+            "relative_l2": 1.4526749296039369e-15,
+            "components_compared": 6480,
+            "gate": "void",
+            "passed": true
+          },
+          "soil_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 38880,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_equivalent_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_plastic_work_kpa": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_node_displacement_m": {
+            "maximum_absolute": 1.730837695390619e-13,
+            "relative_l2": 4.853188349353361e-13,
+            "components_compared": 1500,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_node_rotation_rad": {
+            "maximum_absolute": 1.4972745265851017e-13,
+            "relative_l2": 2.608903231101648e-12,
+            "components_compared": 1500,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_plate_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 5760,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_active_members": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_active_plates": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 160,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_internal_kn": {
+            "maximum_absolute": 9.409187188072488e-12,
+            "relative_l2": 1.3559418314494285e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "total_internal_kn": {
+            "maximum_absolute": 9.409187188072488e-12,
+            "relative_l2": 1.3559418314494285e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "applied_nodal_load_kn": {
+            "maximum_absolute": 7.055538607785711e-12,
+            "relative_l2": 3.1801960778334937e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_by_node_kn": {
+            "maximum_absolute": 6.672440377997191e-12,
+            "relative_l2": 4.5994746314007416e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_total_kn": {
+            "maximum_absolute": 8.801848139228241e-12,
+            "relative_l2": 1.9062823739703423e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "load_work_kn_m": {
+            "maximum_absolute": 5.820766091346741e-11,
+            "relative_l2": 4.122853298626047e-12,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structural_load_work_kn_m": {
+            "maximum_absolute": 5.820766091346741e-11,
+            "relative_l2": 2.0911360594422744e-14,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_force_kn": {
+            "maximum_absolute": 1.4551915228366852e-11,
+            "relative_l2": 3.724495106236774e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_moment_origin_kn_m": {
+            "maximum_absolute": 3.4924596548080444e-10,
+            "relative_l2": 5.958947885796406e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_force_kn": {
+            "maximum_absolute": 4.700268618762493e-08,
+            "relative_l2": 1.471820737492542e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_moment_origin_kn_m": {
+            "maximum_absolute": 8.60774889588356e-07,
+            "relative_l2": 1.9044713252538663e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "transition_release_load_kn": {
+            "maximum_absolute": 7.055538607785711e-12,
+            "relative_l2": 3.4363865568956535e-12,
+            "components_compared": 1080,
+            "gate": null,
+            "passed": null
+          },
+          "plates.area_m2": {
+            "maximum_absolute": 4.973799150320701e-14,
+            "relative_l2": 9.165749675504566e-16,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.local_axes": {
+            "maximum_absolute": 1.1102230246251565e-16,
+            "relative_l2": 9.064933036736791e-17,
+            "components_compared": 864,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].barycentric": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_strain": {
+            "maximum_absolute": 5.559246639419424e-16,
+            "relative_l2": 7.757232276598126e-12,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].curvature_per_m": {
+            "maximum_absolute": 9.139390633183808e-15,
+            "relative_l2": 4.727692926660266e-12,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_force_kn_m": {
+            "maximum_absolute": 6.004120223224163e-08,
+            "relative_l2": 1.2537442887644078e-11,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].bending_moment_kn": {
+            "maximum_absolute": 3.721993380167987e-09,
+            "relative_l2": 4.19137967098866e-12,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_strain": {
+            "maximum_absolute": 2.689634539393415e-16,
+            "relative_l2": 1.3824682549547706e-10,
+            "components_compared": 1152,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_force_kn_m": {
+            "maximum_absolute": 1.2103356539228116e-08,
+            "relative_l2": 1.3824685527816423e-10,
+            "components_compared": 1152,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].drilling_mismatch_rad": {
+            "maximum_absolute": 1.2857274381446182e-13,
+            "relative_l2": 1.055357664439307e-07,
+            "components_compared": 576,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.membrane_energy_kn_m": {
+            "maximum_absolute": 5.237836830929155e-10,
+            "relative_l2": 2.618529334090639e-12,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.bending_energy_kn_m": {
+            "maximum_absolute": 3.539639692462515e-10,
+            "relative_l2": 4.469461870124523e-12,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.transverse_shear_energy_kn_m": {
+            "maximum_absolute": 2.7708946248594657e-12,
+            "relative_l2": 1.3105399626120754e-11,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.drilling_penalty_energy_kn_m": {
+            "maximum_absolute": 9.082680083299238e-14,
+            "relative_l2": 3.772022723781197e-09,
+            "components_compared": 96,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_moment_kn[all]": {
+            "maximum_absolute": 3.721993380167987e-09,
+            "relative_l2": 4.19137967098866e-12,
+            "components_compared": 1728,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_trace_m": {
+            "maximum_absolute": 5.551115123125783e-17,
+            "relative_l2": 0.0,
+            "components_compared": 1440,
+            "gate": "existing_attachment_1e-10_m",
+            "passed": true
+          }
+        },
+        "existing_gate_failures": [],
+        "existing_field_gates_passed": true,
+        "maximum_native_reassembled_residual": 2.4540907258826665e-11,
+        "maximum_independent_reassembled_residual": 5.722598093450114e-15,
+        "all_field_numerical_acceptance": null,
+        "b01_complete": false,
+        "note": "Reaction, work and general all-field gates remain undefined; no new tolerance. Existing displacement/stress/structure/plate gates only."
+      },
+      "plain_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "plain",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n2-s4/plain"
+        ],
+        "pid": 43152,
+        "exit_code": 0,
+        "elapsed_seconds": 0.1615081149998332,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "all_run_equal_to_unobserved": true,
+      "solver": {
+        "complete": true,
+        "accepted": 20,
+        "rejected": 0,
+        "maximum_accepted_force_residual": 2.4540872857513907e-11,
+        "maximum_true_linear_residual": 2.555122212318645e-11
+      },
+      "existing_limited_gates_passed": true
+    },
+    {
+      "case": "roof-n4-s4",
+      "kind": "roof",
+      "n": 4,
+      "load_steps": 4,
+      "native_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "solve",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/native",
+          "10"
+        ],
+        "pid": 45179,
+        "exit_code": 0,
+        "elapsed_seconds": 5.0288463439999305,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "independent_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/interim/2026-12-01-tri6-offset-composite-b02/reference.py",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/independent.jsonl"
+        ],
+        "pid": 47985,
+        "exit_code": 0,
+        "elapsed_seconds": 4.609672265000199,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "solver_sha256": "cc7ef028a4c05e574de20ec73489d852635837ac0fb35a0deb445bae74b8d196",
+      "input_sha256": {
+        "mesh.json": "9a0f5721c4bdb073c86c212906b578998f62cd8a282060ebf513500be321cde0",
+        "ground.json": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages.json": "148285296fe6ab1b1245910f271166f73c7d49f34c65f57ca8d3a9153b7fd383"
+      },
+      "comparison": {
+        "accepted_points": 20,
+        "maximum_by_field": {
+          "soil_displacement_m": {
+            "maximum_absolute": 1.2917282091781234e-15,
+            "relative_l2": 1.3710360609051818e-11,
+            "components_compared": 2700,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_effective_stress_kpa": {
+            "maximum_absolute": 1.1000977906405751e-10,
+            "relative_l2": 1.4381300926239823e-11,
+            "components_compared": 38880,
+            "gate": "soil",
+            "passed": true
+          },
+          "soil_engineering_strain_from_native_displacement": {
+            "maximum_absolute": 2.917696466375741e-15,
+            "relative_l2": 1.7564175419433392e-11,
+            "components_compared": 38880,
+            "gate": null,
+            "passed": null
+          },
+          "soil_active_elements": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_material_ids": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 240,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_void_ratio": {
+            "maximum_absolute": 4.218847493575595e-15,
+            "relative_l2": 1.4526749296039369e-15,
+            "components_compared": 6480,
+            "gate": "void",
+            "passed": true
+          },
+          "soil_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 38880,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_equivalent_plastic_strain": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_plastic_work_kpa": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6480,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_node_displacement_m": {
+            "maximum_absolute": 5.041800310578992e-12,
+            "relative_l2": 1.7670581983512548e-11,
+            "components_compared": 4860,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_node_rotation_rad": {
+            "maximum_absolute": 7.179742911311848e-13,
+            "relative_l2": 2.037147748184782e-11,
+            "components_compared": 4860,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_plate_reference_global_kinematics": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 23040,
+            "gate": "kinematics",
+            "passed": true
+          },
+          "structure_active_members": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 0,
+            "gate": "exact",
+            "passed": true
+          },
+          "structure_active_plates": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 640,
+            "gate": "exact",
+            "passed": true
+          },
+          "soil_internal_kn": {
+            "maximum_absolute": 9.409118341234535e-12,
+            "relative_l2": 1.3559418314494285e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "total_internal_kn": {
+            "maximum_absolute": 9.409118341234535e-12,
+            "relative_l2": 1.3559418314494285e-11,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "applied_nodal_load_kn": {
+            "maximum_absolute": 7.055205540878323e-12,
+            "relative_l2": 3.1801960778334937e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_by_node_kn": {
+            "maximum_absolute": 6.672440377997191e-12,
+            "relative_l2": 4.5994746314007416e-12,
+            "components_compared": 2700,
+            "gate": null,
+            "passed": null
+          },
+          "support_reaction_total_kn": {
+            "maximum_absolute": 8.801848139228241e-12,
+            "relative_l2": 1.9062823739703423e-12,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "load_work_kn_m": {
+            "maximum_absolute": 3.5784978535957634e-08,
+            "relative_l2": 1.4712650589075353e-11,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structural_load_work_kn_m": {
+            "maximum_absolute": 3.5784978535957634e-08,
+            "relative_l2": 1.4712673424836682e-11,
+            "components_compared": 20,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_force_kn": {
+            "maximum_absolute": 7.275957614183426e-11,
+            "relative_l2": 1.855161138950866e-15,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_external_moment_origin_kn_m": {
+            "maximum_absolute": 1.1641532182693481e-10,
+            "relative_l2": 1.9740915056439035e-16,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_force_kn": {
+            "maximum_absolute": 4.6745844883844256e-07,
+            "relative_l2": 1.2524761438479999e-11,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "structure_support_moment_origin_kn_m": {
+            "maximum_absolute": 9.214156307280064e-06,
+            "relative_l2": 1.952496329369188e-11,
+            "components_compared": 60,
+            "gate": null,
+            "passed": null
+          },
+          "transition_release_load_kn": {
+            "maximum_absolute": 7.055205540878323e-12,
+            "relative_l2": 3.4363865568956535e-12,
+            "components_compared": 1080,
+            "gate": null,
+            "passed": null
+          },
+          "plates.area_m2": {
+            "maximum_absolute": 7.105427357601002e-15,
+            "relative_l2": 5.217640703299296e-16,
+            "components_compared": 384,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.local_axes": {
+            "maximum_absolute": 2.220446049250313e-16,
+            "relative_l2": 1.4686870114880517e-16,
+            "components_compared": 3456,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].barycentric": {
+            "maximum_absolute": 0.0,
+            "relative_l2": 0.0,
+            "components_compared": 6912,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_strain": {
+            "maximum_absolute": 5.645332291914773e-15,
+            "relative_l2": 1.414188374866462e-10,
+            "components_compared": 6912,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].curvature_per_m": {
+            "maximum_absolute": 1.0072411654737934e-13,
+            "relative_l2": 2.3635580256336638e-11,
+            "components_compared": 6912,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].membrane_force_kn_m": {
+            "maximum_absolute": 6.096961442381144e-07,
+            "relative_l2": 1.612103507831235e-10,
+            "components_compared": 6912,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].bending_moment_kn": {
+            "maximum_absolute": 4.7743014874868095e-08,
+            "relative_l2": 2.9935505968030806e-11,
+            "components_compared": 6912,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_strain": {
+            "maximum_absolute": 1.7702853072343316e-15,
+            "relative_l2": 5.711183178554246e-10,
+            "components_compared": 4608,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].transverse_shear_force_kn_m": {
+            "maximum_absolute": 7.96628398802568e-08,
+            "relative_l2": 5.711183368682725e-10,
+            "components_compared": 4608,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.samples[all].drilling_mismatch_rad": {
+            "maximum_absolute": 6.169483869090941e-13,
+            "relative_l2": 9.217504947170745e-07,
+            "components_compared": 2304,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.membrane_energy_kn_m": {
+            "maximum_absolute": 2.2995436665951274e-09,
+            "relative_l2": 4.7660989316059556e-11,
+            "components_compared": 384,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.bending_energy_kn_m": {
+            "maximum_absolute": 2.009826971516304e-09,
+            "relative_l2": 4.5660301605904474e-11,
+            "components_compared": 384,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.transverse_shear_energy_kn_m": {
+            "maximum_absolute": 7.445960514829153e-12,
+            "relative_l2": 2.1778498643603706e-10,
+            "components_compared": 384,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.drilling_penalty_energy_kn_m": {
+            "maximum_absolute": 6.386337856115198e-13,
+            "relative_l2": 2.102139327494425e-08,
+            "components_compared": 384,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_moment_kn[all]": {
+            "maximum_absolute": 4.7743014874868095e-08,
+            "relative_l2": 2.9935505968030806e-11,
+            "components_compared": 6912,
+            "gate": "plate",
+            "passed": true
+          },
+          "plates.attachment_trace_m": {
+            "maximum_absolute": 2.220446049250313e-16,
+            "relative_l2": 0.0,
+            "components_compared": 5760,
+            "gate": "existing_attachment_1e-10_m",
+            "passed": true
+          }
+        },
+        "existing_gate_failures": [],
+        "existing_field_gates_passed": true,
+        "maximum_native_reassembled_residual": 2.4540907258826665e-11,
+        "maximum_independent_reassembled_residual": 5.862541551283735e-15,
+        "all_field_numerical_acceptance": null,
+        "b01_complete": false,
+        "note": "Reaction, work and general all-field gates remain undefined; no new tolerance. Existing displacement/stress/structure/plate gates only."
+      },
+      "plain_process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/solver/b02-observer",
+          "plain",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b01-fresh/roof-n4-s4/plain"
+        ],
+        "pid": 48030,
+        "exit_code": 0,
+        "elapsed_seconds": 0.22000188900005924,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "all_run_equal_to_unobserved": true,
+      "solver": {
+        "complete": true,
+        "accepted": 20,
+        "rejected": 0,
+        "maximum_accepted_force_residual": 2.4540872857513907e-11,
+        "maximum_true_linear_residual": 2.555122212318645e-11
+      },
+      "existing_limited_gates_passed": true
+    }
+  ],
+  "maximum_by_field": {
+    "soil_displacement_m": {
+      "maximum_absolute": 3.039618388803525e-15,
+      "relative_l2": 1.3710360609051818e-11,
+      "components_compared": 13500,
+      "gate": "soil",
+      "passed": true
+    },
+    "soil_effective_stress_kpa": {
+      "maximum_absolute": 1.1000977906405751e-10,
+      "relative_l2": 1.4381300926239823e-11,
+      "components_compared": 194400,
+      "gate": "soil",
+      "passed": true
+    },
+    "soil_engineering_strain_from_native_displacement": {
+      "maximum_absolute": 2.917696466375741e-15,
+      "relative_l2": 1.7564175419433392e-11,
+      "components_compared": 194400,
+      "gate": null,
+      "passed": null
+    },
+    "soil_active_elements": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 1200,
+      "gate": "exact",
+      "passed": true
+    },
+    "soil_material_ids": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 1200,
+      "gate": "exact",
+      "passed": true
+    },
+    "soil_void_ratio": {
+      "maximum_absolute": 4.218847493575595e-15,
+      "relative_l2": 1.9187905594369573e-15,
+      "components_compared": 32400,
+      "gate": "void",
+      "passed": true
+    },
+    "soil_plastic_strain": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 194400,
+      "gate": "exact",
+      "passed": true
+    },
+    "soil_equivalent_plastic_strain": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 32400,
+      "gate": "exact",
+      "passed": true
+    },
+    "soil_plastic_work_kpa": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 32400,
+      "gate": "exact",
+      "passed": true
+    },
+    "structure_node_displacement_m": {
+      "maximum_absolute": 5.041800310578992e-12,
+      "relative_l2": 2.8169020926381095e-11,
+      "components_compared": 11940,
+      "gate": "kinematics",
+      "passed": true
+    },
+    "structure_node_rotation_rad": {
+      "maximum_absolute": 7.179742911311848e-13,
+      "relative_l2": 2.1071724595649684e-09,
+      "components_compared": 11940,
+      "gate": "kinematics",
+      "passed": true
+    },
+    "structure_reference_global_kinematics": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 0,
+      "gate": "kinematics",
+      "passed": true
+    },
+    "structure_plate_reference_global_kinematics": {
+      "maximum_absolute": 9.03899351201165e-16,
+      "relative_l2": 3.4478203968445757e-12,
+      "components_compared": 48960,
+      "gate": "kinematics",
+      "passed": true
+    },
+    "structure_active_members": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 0,
+      "gate": "exact",
+      "passed": true
+    },
+    "structure_active_plates": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 1360,
+      "gate": "exact",
+      "passed": true
+    },
+    "soil_internal_kn": {
+      "maximum_absolute": 1.1677769862217247e-11,
+      "relative_l2": 1.3654163222868832e-11,
+      "components_compared": 13500,
+      "gate": null,
+      "passed": null
+    },
+    "total_internal_kn": {
+      "maximum_absolute": 1.1677769862217247e-11,
+      "relative_l2": 1.3654163222868832e-11,
+      "components_compared": 13500,
+      "gate": null,
+      "passed": null
+    },
+    "applied_nodal_load_kn": {
+      "maximum_absolute": 8.18833889582038e-12,
+      "relative_l2": 3.1801960778334937e-12,
+      "components_compared": 13500,
+      "gate": null,
+      "passed": null
+    },
+    "support_reaction_by_node_kn": {
+      "maximum_absolute": 9.441336601412331e-12,
+      "relative_l2": 5.8166340596430716e-12,
+      "components_compared": 13500,
+      "gate": null,
+      "passed": null
+    },
+    "support_reaction_total_kn": {
+      "maximum_absolute": 2.184030734042608e-11,
+      "relative_l2": 4.605133241143441e-12,
+      "components_compared": 300,
+      "gate": null,
+      "passed": null
+    },
+    "load_work_kn_m": {
+      "maximum_absolute": 3.5784978535957634e-08,
+      "relative_l2": 1.4712650589075353e-11,
+      "components_compared": 100,
+      "gate": null,
+      "passed": null
+    },
+    "structural_load_work_kn_m": {
+      "maximum_absolute": 3.5784978535957634e-08,
+      "relative_l2": 1.4712673424836682e-11,
+      "components_compared": 100,
+      "gate": null,
+      "passed": null
+    },
+    "structure_external_force_kn": {
+      "maximum_absolute": 7.275957614183426e-11,
+      "relative_l2": 1.855161138950866e-15,
+      "components_compared": 300,
+      "gate": null,
+      "passed": null
+    },
+    "structure_external_moment_origin_kn_m": {
+      "maximum_absolute": 3.4924596548080444e-10,
+      "relative_l2": 5.958947885796406e-16,
+      "components_compared": 300,
+      "gate": null,
+      "passed": null
+    },
+    "structure_support_force_kn": {
+      "maximum_absolute": 4.6745844883844256e-07,
+      "relative_l2": 1.2524761438479999e-11,
+      "components_compared": 300,
+      "gate": null,
+      "passed": null
+    },
+    "structure_support_moment_origin_kn_m": {
+      "maximum_absolute": 9.214156307280064e-06,
+      "relative_l2": 1.952496329369188e-11,
+      "components_compared": 300,
+      "gate": null,
+      "passed": null
+    },
+    "transition_release_load_kn": {
+      "maximum_absolute": 8.187617250854373e-12,
+      "relative_l2": 3.4363865568956535e-12,
+      "components_compared": 5400,
+      "gate": null,
+      "passed": null
+    },
+    "plates.area_m2": {
+      "maximum_absolute": 4.973799150320701e-14,
+      "relative_l2": 9.165749675504566e-16,
+      "components_compared": 816,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.local_axes": {
+      "maximum_absolute": 2.220446049250313e-16,
+      "relative_l2": 1.8445802327586938e-16,
+      "components_compared": 7344,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].barycentric": {
+      "maximum_absolute": 0.0,
+      "relative_l2": 0.0,
+      "components_compared": 14688,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].membrane_strain": {
+      "maximum_absolute": 5.645332291914773e-15,
+      "relative_l2": 2.109502180927783e-10,
+      "components_compared": 14688,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].curvature_per_m": {
+      "maximum_absolute": 1.0072411654737934e-13,
+      "relative_l2": 3.87819140358345e-10,
+      "components_compared": 14688,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].membrane_force_kn_m": {
+      "maximum_absolute": 6.096961442381144e-07,
+      "relative_l2": 1.778762012935341e-10,
+      "components_compared": 14688,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].bending_moment_kn": {
+      "maximum_absolute": 4.7743014874868095e-08,
+      "relative_l2": 4.1501615942002147e-10,
+      "components_compared": 14688,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].transverse_shear_strain": {
+      "maximum_absolute": 1.7702853072343316e-15,
+      "relative_l2": 7.839568926582001e-10,
+      "components_compared": 9792,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].transverse_shear_force_kn_m": {
+      "maximum_absolute": 7.96628398802568e-08,
+      "relative_l2": 7.83956761969775e-10,
+      "components_compared": 9792,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.samples[all].drilling_mismatch_rad": {
+      "maximum_absolute": 6.169483869090941e-13,
+      "relative_l2": 8.218032406295995e-06,
+      "components_compared": 4896,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.membrane_energy_kn_m": {
+      "maximum_absolute": 2.2995436665951274e-09,
+      "relative_l2": 6.23961042802545e-11,
+      "components_compared": 816,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.bending_energy_kn_m": {
+      "maximum_absolute": 2.009826971516304e-09,
+      "relative_l2": 4.5660301605904474e-11,
+      "components_compared": 816,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.transverse_shear_energy_kn_m": {
+      "maximum_absolute": 7.445960514829153e-12,
+      "relative_l2": 2.741337145226105e-10,
+      "components_compared": 816,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.drilling_penalty_energy_kn_m": {
+      "maximum_absolute": 6.386337856115198e-13,
+      "relative_l2": 5.194971743012634e-08,
+      "components_compared": 816,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.attachment_moment_kn[all]": {
+      "maximum_absolute": 4.7743014874868095e-08,
+      "relative_l2": 4.1501615942002147e-10,
+      "components_compared": 14688,
+      "gate": "plate",
+      "passed": true
+    },
+    "plates.attachment_trace_m": {
+      "maximum_absolute": 2.220446049250313e-16,
+      "relative_l2": 0.0,
+      "components_compared": 12240,
+      "gate": "existing_attachment_1e-10_m",
+      "passed": true
+    }
+  },
+  "existing_limited_gates_passed": true,
+  "accepted_point_pairs": 100,
+  "maximum_native_reassembled_residual": 2.4540907258826665e-11,
+  "maximum_independent_reassembled_residual": 8.371524910771852e-13,
+  "maximum_true_linear_residual": 2.555122212318645e-11,
+  "maximum_accepted_force_residual": 2.4540872857513907e-11
+}

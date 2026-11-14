@@ -1,0 +1,1 @@
+原本アーカイブを保持して取得用promisorキャッシュだけを整理後、porcelain commitが旧アーカイブの再取得を試みたため中断（130）。GIT_NO_LAZY_FETCH=1の同commitはキャッシュ不在で128。試験失敗ではない。確認済みのリモート既存blobを再取得せず、git write-tree --missing-ok、commit-tree、update-ref（旧HEAD照合）でコミットした。古い生証拠ファイルは削除・改変していない。

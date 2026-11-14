@@ -1,0 +1,17 @@
+setUpClass (test_nc_mean_stress_evidence.MeanStressEvidence) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_nc_mean_stress_evidence.MeanStressEvidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_mean_stress_evidence.py", line 20, in setUpClass
+    cls.integrity = replay.run(cls.folder, allow_platform_float_differences=sys.platform == 'win32')
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-mean-stress-release/remeasure.py", line 53, in run
+    raise ValueError('archive part changed: '+p.name)
+ValueError: archive part changed: evidence.tar.gz.part298
+
+----------------------------------------------------------------------
+Ran 0 tests in 55.624s
+
+FAILED (errors=1)

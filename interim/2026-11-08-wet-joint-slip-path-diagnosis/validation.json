@@ -1,0 +1,80 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "timestamp_utc": "2026-11-08T14:14:03.469756+00:00",
+  "rust": [
+    {
+      "command": "cargo test --locked --release --test joint_law --test joint_water --test hydrostatic_volume",
+      "returncode": 0,
+      "tests": 18,
+      "failed": 0,
+      "ignored": 0,
+      "filtered_out": 0,
+      "log": "raw/rust-tests.log"
+    }
+  ],
+  "python": [
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_wet_joint_slip_path.py -v",
+      "returncode": 0,
+      "tests": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "raw/new-tests-final.log"
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_hydrostatic_volume_audit.py -v",
+      "returncode": 0,
+      "tests": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "raw/hydrostatic-volume-tests.log"
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_joint_water_reference.py -v",
+      "returncode": 0,
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "raw/joint-water-tests.log"
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -p test_cut_volume_history.py -v",
+      "returncode": 0,
+      "tests": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "raw/cut-history-tests.log"
+    }
+  ],
+  "rust_tests": 18,
+  "python_tests": 20,
+  "build": {
+    "command": "cargo build --locked --release",
+    "returncode": 0,
+    "log": "raw/build.log"
+  },
+  "fmt": {
+    "command": "cargo fmt --all --check",
+    "returncode": 0,
+    "log": "raw/fmt.log"
+  },
+  "python_first_six_tests_counted_again": false,
+  "full_rust_suite_executed": false,
+  "full_python_suite_executed": false,
+  "clippy_executed": false,
+  "nc_executed": false,
+  "windows_ci": "unverified",
+  "unexecuted": [
+    "Rust all-targets suite",
+    "Python full suite",
+    "Clippy",
+    "Windows numerical replay",
+    "8192/64",
+    "4096/128 full cycle",
+    "all excluded large analyses/Native UI/GPU/distribution"
+  ]
+}

@@ -1,0 +1,32 @@
+--- tools/wet_joint_cycle_reference.py
++++ reference_history.py
+@@ -58 +58 @@
+-def cut_volume_reference(mesh, ground, case, steps=32, contact_steps=20, order=5):
++def cut_volume_reference(mesh, ground, case, steps=32, contact_steps=20, order=5, history_sink=None):
+@@ -64,4 +64,4 @@
+-    return _reference(mesh, ground, case, steps, contact_steps, order, False, True)
+-
+-
+-def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False):
++    return _reference(mesh, ground, case, steps, contact_steps, order, False, True, history_sink)
++
++
++def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None):
+@@ -158,0 +159,2 @@
++                if history_sink is not None:
++                    history_sink(dict(path[-1]), field_state(name, load))
+@@ -175 +177 @@
+-    def frame(name, load):
++    def field_state(name, load):
+@@ -188 +190 @@
+-        frames.append(dict(name=name, u=u.reshape(-1, 3).copy(), stress=np.asarray(stress),
++        return dict(name=name, u=u.reshape(-1, 3).copy(), stress=np.asarray(stress),
+@@ -195 +197 @@
+-                           reaction=reaction.reshape(-1, 3), gap=normal))
++                           reaction=reaction.reshape(-1, 3), gap=normal)
+@@ -199 +201 @@
+-    frame('initial_equilibrated', base)
++    frames.append(field_state('initial_equilibrated', base))
+@@ -205 +207 @@
+-        origin = stage['target_factor']; frame(stage['name'], base+origin*boundary)
++        origin = stage['target_factor']; frames.append(field_state(stage['name'], base+origin*boundary))

@@ -1,0 +1,49 @@
+name: PC rate-arc gate compatibility
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shell-gate:
+    name: Gate on ${{ matrix.shell }}
+    runs-on: windows-2025
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [pwsh, powershell]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/nc_pc_gate.py
+            /tests/test_nc_pc_gate.py
+            /interim/2026-12-08-pc3-rate-arc-gate-fix/test-rate-arc-gate.ps1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+      - name: Run shared Python gate and real shell compatibility tests
+        shell: pwsh
+        env:
+          NC_GATE_SHELL: ${{ matrix.shell }}
+        run: |
+          $env:PYTHONUTF8='1'
+          $env:PYTHONIOENCODING='utf-8'
+          $env:NC_GATE_POWERSHELL=(Get-Command $env:NC_GATE_SHELL -CommandType Application).Source
+          python -m unittest discover -s tests -p test_nc_pc_gate.py -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $env:NC_GATE_POWERSHELL -NoProfile -ExecutionPolicy Bypass -File './interim/2026-12-08-pc3-rate-arc-gate-fix/test-rate-arc-gate.ps1' -Python (Get-Command python).Source -Output 'work/pc-rate-arc-gate'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Retain compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: pc-rate-arc-gate-${{ matrix.shell }}-${{ github.sha }}
+          path: work/pc-rate-arc-gate
+          retention-days: 14

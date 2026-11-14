@@ -1,0 +1,11 @@
+--- a/src/mcc.rs
++++ b/src/mcc.rs
+@@ -373,7 +373,7 @@
+         let mut success = false;
+         for _ in 0..60 {
+             let r = evaluate(&x);
+-            if r.norm() < 1e-11 {
++            if r.norm() < 1e-13 {
+                 success = true;
+                 break;
+             }

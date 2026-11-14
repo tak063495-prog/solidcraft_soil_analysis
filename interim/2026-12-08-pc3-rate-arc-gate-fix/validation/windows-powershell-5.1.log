@@ -1,0 +1,342 @@
+﻿2026-11-12T20:44:51.0905654Z Current runner version: '2.338.2'
+2026-11-12T20:44:51.0932538Z ##[group]Runner Image Provisioner
+2026-11-12T20:44:51.0933878Z Hosted Compute Agent
+2026-11-12T20:44:51.0934493Z Version: 20261103.629
+2026-11-12T20:44:51.0935133Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-12T20:44:51.0935895Z Build Date: 2026-11-03T17:26:59Z
+2026-11-12T20:44:51.0936557Z Worker ID: {76b650a5-93ed-4411-8eac-9260efdbaf64}
+2026-11-12T20:44:51.0937424Z Region: westus3
+2026-11-12T20:44:51.0937986Z Cloud: Azure
+2026-11-12T20:44:51.0938507Z ##[endgroup]
+2026-11-12T20:44:51.0939956Z ##[group]Operating System
+2026-11-12T20:44:51.0940584Z Microsoft Windows Server 2025
+2026-11-12T20:44:51.0941168Z 10.0.26100
+2026-11-12T20:44:51.0941699Z Datacenter
+2026-11-12T20:44:51.0942256Z ##[endgroup]
+2026-11-12T20:44:51.0942782Z ##[group]Runner Image
+2026-11-12T20:44:51.0943363Z Image: windows-2025-vs2026
+2026-11-12T20:44:51.0943927Z Version: 20261103.298.1
+2026-11-12T20:44:51.0945549Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-12T20:44:51.0947193Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-12T20:44:51.0948155Z ##[endgroup]
+2026-11-12T20:44:51.0949254Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T20:44:51.0951219Z Contents: read
+2026-11-12T20:44:51.0951741Z Metadata: read
+2026-11-12T20:44:51.0952303Z ##[endgroup]
+2026-11-12T20:44:51.0954736Z Secret source: Actions
+2026-11-12T20:44:51.0955739Z Cache mode: write
+2026-11-12T20:44:51.0956426Z Prepare workflow directory
+2026-11-12T20:44:51.1347364Z Prepare all required actions
+2026-11-12T20:44:51.1399813Z Getting action download info
+2026-11-12T20:44:51.4859493Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-12T20:44:51.5963749Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-12T20:44:52.2759316Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-11-12T20:44:52.4946750Z Complete job name: Gate on powershell
+2026-11-12T20:44:52.6533664Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-12T20:44:52.6535217Z with:
+2026-11-12T20:44:52.6535650Z   persist-credentials: false
+2026-11-12T20:44:52.6536155Z   sparse-checkout-cone-mode: false
+2026-11-12T20:44:52.6537226Z   sparse-checkout: /tools/nc_pc_gate.py
+/tests/test_nc_pc_gate.py
+/interim/2026-12-08-pc3-rate-arc-gate-fix/test-rate-arc-gate.ps1
+
+2026-11-12T20:44:52.6538352Z   repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-12T20:44:52.6542510Z   token: ***
+2026-11-12T20:44:52.6542900Z   ssh-strict: true
+2026-11-12T20:44:52.6543299Z   ssh-user: git
+2026-11-12T20:44:52.6543680Z   clean: true
+2026-11-12T20:44:52.6544052Z   fetch-depth: 1
+2026-11-12T20:44:52.6544467Z   fetch-tags: false
+2026-11-12T20:44:52.6544878Z   show-progress: true
+2026-11-12T20:44:52.6545293Z   lfs: false
+2026-11-12T20:44:52.6545657Z   submodules: false
+2026-11-12T20:44:52.6546061Z   set-safe-directory: true
+2026-11-12T20:44:52.6546576Z   allow-unsafe-pr-checkout: false
+2026-11-12T20:44:52.6547313Z ##[endgroup]
+2026-11-12T20:44:52.8153369Z Syncing repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-12T20:44:52.8155662Z ##[group]Getting Git version info
+2026-11-12T20:44:52.8156761Z Working directory is 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-12T20:44:52.8895303Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-12T20:44:53.2776769Z git version 2.56.0.windows.4
+2026-11-12T20:44:53.2841936Z ##[endgroup]
+2026-11-12T20:44:53.2861435Z Temporarily overriding HOME='D:\a\_temp\5af846ab-164a-49fa-a48d-e9b7c3d04292' before making global git config changes
+2026-11-12T20:44:53.2864084Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T20:44:53.2874587Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-12T20:44:53.3573954Z Deleting the contents of 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-12T20:44:53.3579432Z ##[group]Determining repository object format
+2026-11-12T20:44:53.3581458Z ##[endgroup]
+2026-11-12T20:44:53.3582579Z ##[group]Initializing the repository
+2026-11-12T20:44:53.3591053Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-12T20:44:53.4490602Z Initialized empty Git repository in D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/
+2026-11-12T20:44:53.4547273Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-12T20:44:53.5471810Z ##[endgroup]
+2026-11-12T20:44:53.5473038Z ##[group]Disabling automatic garbage collection
+2026-11-12T20:44:53.5481744Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-12T20:44:53.5880623Z ##[endgroup]
+2026-11-12T20:44:53.5881748Z ##[group]Setting up auth
+2026-11-12T20:44:53.5882634Z Removing SSH command configuration
+2026-11-12T20:44:53.5891877Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T20:44:53.6294395Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-12T20:44:55.2560812Z Removing HTTP extra header
+2026-11-12T20:44:55.2570551Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T20:44:55.2985860Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-12T20:44:55.8992794Z Removing includeIf entries pointing to credentials config files
+2026-11-12T20:44:55.9007607Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T20:44:55.9460449Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-12T20:44:56.5126388Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-12T20:44:56.5555276Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D:\a\_temp\git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:44:56.5973544Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D:\a\_temp\git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:44:56.6450987Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:44:56.6863306Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:44:56.7287733Z ##[endgroup]
+2026-11-12T20:44:56.7288533Z ##[group]Fetching the repository
+2026-11-12T20:44:56.7301449Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +a8d586e6d0b469c51574a5128754b2ebff90f2f6:refs/remotes/pull/13/merge
+2026-11-12T20:44:59.1071183Z From https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-12T20:44:59.1073003Z  * [new ref]         a8d586e6d0b469c51574a5128754b2ebff90f2f6 -> pull/13/merge
+2026-11-12T20:44:59.1133859Z ##[endgroup]
+2026-11-12T20:44:59.1134845Z ##[group]Determining the checkout info
+2026-11-12T20:44:59.1135721Z ##[endgroup]
+2026-11-12T20:44:59.1136732Z ##[group]Setting up sparse checkout
+2026-11-12T20:44:59.1150223Z [command]"C:\Program Files\Git\bin\git.exe" config core.sparseCheckout true
+2026-11-12T20:44:59.1595563Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --git-path info/sparse-checkout
+2026-11-12T20:44:59.2068492Z .git/info/sparse-checkout
+2026-11-12T20:44:59.2122679Z ##[endgroup]
+2026-11-12T20:44:59.2123472Z ##[group]Checking out the ref
+2026-11-12T20:44:59.2132795Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/13/merge
+2026-11-12T20:44:59.7403559Z Note: switching to 'refs/remotes/pull/13/merge'.
+2026-11-12T20:44:59.7404271Z 
+2026-11-12T20:44:59.7404582Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-12T20:44:59.7405383Z changes and commit them, and you can discard any commits you make in this
+2026-11-12T20:44:59.7406286Z state without impacting any branches by switching back to a branch.
+2026-11-12T20:44:59.7407006Z 
+2026-11-12T20:44:59.7407302Z If you want to create a new branch to retain commits you create, you may
+2026-11-12T20:44:59.7407827Z do so (now or later) by using -c with the switch command. Example:
+2026-11-12T20:44:59.7408187Z 
+2026-11-12T20:44:59.7408355Z   git switch -c <new-branch-name>
+2026-11-12T20:44:59.7408594Z 
+2026-11-12T20:44:59.7408722Z Or undo this operation with:
+2026-11-12T20:44:59.7408937Z 
+2026-11-12T20:44:59.7409119Z   git switch -
+2026-11-12T20:44:59.7409262Z 
+2026-11-12T20:44:59.7409536Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-12T20:44:59.7409844Z 
+2026-11-12T20:44:59.7410238Z HEAD is now at a8d586e Merge e3c1ca2f2a774e90e78f938502f5f17e958a6be6 into 024835cea9a7c12ad12deda10203f4f45f1fd285
+2026-11-12T20:44:59.7616728Z ##[endgroup]
+2026-11-12T20:44:59.8240351Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-12T20:44:59.8615075Z a8d586e6d0b469c51574a5128754b2ebff90f2f6
+2026-11-12T20:44:59.8664510Z ##[group]Removing auth
+2026-11-12T20:44:59.8664929Z Removing SSH command configuration
+2026-11-12T20:44:59.8673597Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T20:44:59.9089837Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-12T20:45:00.5039705Z Removing HTTP extra header
+2026-11-12T20:45:00.5050595Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T20:45:00.5464315Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-12T20:45:01.1476092Z Removing includeIf entries pointing to credentials config files
+2026-11-12T20:45:01.1492005Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T20:45:01.1864629Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-12T20:45:01.1865820Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-12T20:45:01.1866669Z includeif.gitdir:/github/workspace/.git.path
+2026-11-12T20:45:01.1867256Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-12T20:45:01.1921029Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-12T20:45:01.2280884Z D:\a\_temp\git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:45:01.2340603Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D\:\\a\\_temp\\git\-credentials\-1c272259\-fffc\-4f36\-b345\-4b937db908c5\.config
+2026-11-12T20:45:01.2754907Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-12T20:45:01.3108375Z D:\a\_temp\git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:45:01.3166997Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-1c272259\-fffc\-4f36\-b345\-4b937db908c5\.config
+2026-11-12T20:45:01.3573900Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-12T20:45:01.3926286Z /github/runner_temp/git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:45:01.3986238Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-1c272259\-fffc\-4f36\-b345\-4b937db908c5\.config
+2026-11-12T20:45:01.4438896Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-12T20:45:01.4794048Z /github/runner_temp/git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config
+2026-11-12T20:45:01.4845887Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-1c272259\-fffc\-4f36\-b345\-4b937db908c5\.config
+2026-11-12T20:45:01.5260261Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-12T20:45:02.1034252Z Removing credentials config 'D:\a\_temp\git-credentials-1c272259-fffc-4f36-b345-4b937db908c5.config'
+2026-11-12T20:45:02.1047292Z ##[endgroup]
+2026-11-12T20:45:02.1509730Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+2026-11-12T20:45:02.1510278Z with:
+2026-11-12T20:45:02.1510566Z   python-version: 3.13
+2026-11-12T20:45:02.1510920Z   check-latest: false
+2026-11-12T20:45:02.1513316Z   token: ***
+2026-11-12T20:45:02.1513873Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-12T20:45:02.1514356Z   update-environment: true
+2026-11-12T20:45:02.1514695Z   allow-prereleases: false
+2026-11-12T20:45:02.1515041Z   freethreaded: false
+2026-11-12T20:45:02.1515357Z ##[endgroup]
+2026-11-12T20:45:02.3103488Z ##[group]Installed versions
+2026-11-12T20:45:02.3345122Z Successfully set up CPython (3.13.17)
+2026-11-12T20:45:02.3346034Z ##[endgroup]
+2026-11-12T20:45:02.3681923Z ##[group]Run $env:PYTHONUTF8='1'
+2026-11-12T20:45:02.3682564Z [36;1m$env:PYTHONUTF8='1'[0m
+2026-11-12T20:45:02.3682939Z [36;1m$env:PYTHONIOENCODING='utf-8'[0m
+2026-11-12T20:45:02.3683636Z [36;1m$env:NC_GATE_POWERSHELL=(Get-Command $env:NC_GATE_SHELL -CommandType Application).Source[0m
+2026-11-12T20:45:02.3684269Z [36;1mpython -m unittest discover -s tests -p test_nc_pc_gate.py -v[0m
+2026-11-12T20:45:02.3684768Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-12T20:45:02.3685741Z [36;1m& $env:NC_GATE_POWERSHELL -NoProfile -ExecutionPolicy Bypass -File './interim/2026-12-08-pc3-rate-arc-gate-fix/test-rate-arc-gate.ps1' -Python (Get-Command python).Source -Output 'work/pc-rate-arc-gate'[0m
+2026-11-12T20:45:02.3686681Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-12T20:45:02.4452589Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-12T20:45:02.4453088Z env:
+2026-11-12T20:45:02.4453819Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:02.4454441Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-12T20:45:02.4454968Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:02.4455534Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:02.4456016Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:02.4456439Z   NC_GATE_SHELL: powershell
+2026-11-12T20:45:02.4456761Z ##[endgroup]
+2026-11-12T20:45:04.5768529Z test_127_samples_rejected (test_nc_pc_gate.RateArcGate.test_127_samples_rejected) ... ok
+2026-11-12T20:45:04.8627380Z test_cli_rc_diagnostics_and_no_overwrite_or_source_change (test_nc_pc_gate.RateArcGate.test_cli_rc_diagnostics_and_no_overwrite_or_source_change) ... ok
+2026-11-12T20:45:04.8628523Z test_count_must_be_integer (test_nc_pc_gate.RateArcGate.test_count_must_be_integer) ... ok
+2026-11-12T20:45:04.8630841Z test_each_missing_report_key_rejected (test_nc_pc_gate.RateArcGate.test_each_missing_report_key_rejected) ... ok
+2026-11-12T20:45:04.8632701Z test_empty_samples_rejected (test_nc_pc_gate.RateArcGate.test_empty_samples_rejected) ... ok
+2026-11-12T20:45:04.8664579Z test_missing_and_malformed_files_are_diagnostic_failures (test_nc_pc_gate.RateArcGate.test_missing_and_malformed_files_are_diagnostic_failures) ... ok
+2026-11-12T20:45:04.8666442Z test_passed_must_be_boolean_false (test_nc_pc_gate.RateArcGate.test_passed_must_be_boolean_false) ... ok
+2026-11-12T20:45:04.8669460Z test_pc3_values_accepted_without_production_acceptance (test_nc_pc_gate.RateArcGate.test_pc3_values_accepted_without_production_acceptance) ... ok
+2026-11-12T20:45:09.7081878Z test_powershell_gate_when_available (test_nc_pc_gate.RateArcGate.test_powershell_gate_when_available) ... ok
+2026-11-12T20:45:09.7084286Z test_residual_boundary_accepted (test_nc_pc_gate.RateArcGate.test_residual_boundary_accepted) ... ok
+2026-11-12T20:45:09.7085859Z test_residual_exceeded_rejected (test_nc_pc_gate.RateArcGate.test_residual_exceeded_rejected) ... ok
+2026-11-12T20:45:09.7086932Z test_residual_type_and_finiteness (test_nc_pc_gate.RateArcGate.test_residual_type_and_finiteness) ... ok
+2026-11-12T20:45:09.8462307Z test_reuse_manifest_detects_source_change_and_retains_failure (test_nc_pc_gate.RateArcGate.test_reuse_manifest_detects_source_change_and_retains_failure) ... ok
+2026-11-12T20:45:09.8463355Z test_stop_reason_strings_rejected (test_nc_pc_gate.RateArcGate.test_stop_reason_strings_rejected) ... ok
+2026-11-12T20:45:09.8464748Z test_wrong_shapes_rejected (test_nc_pc_gate.RateArcGate.test_wrong_shapes_rejected) ... ok
+2026-11-12T20:45:09.8465460Z 
+2026-11-12T20:45:09.8465931Z ----------------------------------------------------------------------
+2026-11-12T20:45:09.8466563Z Ran 15 tests in 5.270s
+2026-11-12T20:45:09.8466832Z 
+2026-11-12T20:45:09.8467025Z OK
+2026-11-12T20:45:11.0927362Z {
+2026-11-12T20:45:11.0927876Z     "ps_version":  "5.1.26100.33648",
+2026-11-12T20:45:11.0931621Z     "old_wrapped_count":  1,
+2026-11-12T20:45:11.0932461Z     "direct_count":  128,
+2026-11-12T20:45:11.0932914Z     "passed":  10,
+2026-11-12T20:45:11.0933384Z     "failed":  0,
+2026-11-12T20:45:11.0934178Z     "skipped":  0,
+2026-11-12T20:45:11.0934678Z     "cases":  [
+2026-11-12T20:45:11.0935054Z                   {
+2026-11-12T20:45:11.0935475Z                       "name":  "pc3-values",
+2026-11-12T20:45:11.0936003Z                       "rc":  0,
+2026-11-12T20:45:11.0936464Z                       "accepted":  true,
+2026-11-12T20:45:11.0936961Z                       "failures":  [
+2026-11-12T20:45:11.0937268Z 
+2026-11-12T20:45:11.0937421Z                                    ]
+2026-11-12T20:45:11.0937845Z                   },
+2026-11-12T20:45:11.0938243Z                   {
+2026-11-12T20:45:11.0938687Z                       "name":  "count127",
+2026-11-12T20:45:11.0939117Z                       "rc":  1,
+2026-11-12T20:45:11.0939475Z                       "accepted":  false,
+2026-11-12T20:45:11.0940674Z                       "failures":  [
+2026-11-12T20:45:11.0941133Z                                        "samples: top-level array of exactly 128 objects required"
+2026-11-12T20:45:11.0941590Z                                    ]
+2026-11-12T20:45:11.0941897Z                   },
+2026-11-12T20:45:11.0942313Z                   {
+2026-11-12T20:45:11.0942725Z                       "name":  "residual",
+2026-11-12T20:45:11.0943150Z                       "rc":  1,
+2026-11-12T20:45:11.0943475Z                       "accepted":  false,
+2026-11-12T20:45:11.0943802Z                       "failures":  [
+2026-11-12T20:45:11.0944385Z                                        "report.maximum_bordered_true_linear_residual: finite number in [0, 1e-10] required"
+2026-11-12T20:45:11.0944926Z                                    ]
+2026-11-12T20:45:11.0945245Z                   },
+2026-11-12T20:45:11.0945545Z                   {
+2026-11-12T20:45:11.0945869Z                       "name":  "stop-string",
+2026-11-12T20:45:11.0946321Z                       "rc":  1,
+2026-11-12T20:45:11.0946704Z                       "accepted":  false,
+2026-11-12T20:45:11.0947046Z                       "failures":  [
+2026-11-12T20:45:11.0947454Z                                        "report.stop_reason: JSON null required"
+2026-11-12T20:45:11.0947873Z                                    ]
+2026-11-12T20:45:11.0948208Z                   },
+2026-11-12T20:45:11.0948508Z                   {
+2026-11-12T20:45:11.0949250Z                       "name":  "empty",
+2026-11-12T20:45:11.0949681Z                       "rc":  1,
+2026-11-12T20:45:11.0950004Z                       "accepted":  false,
+2026-11-12T20:45:11.0950351Z                       "failures":  [
+2026-11-12T20:45:11.0950956Z                                        "samples: top-level array of exactly 128 objects required"
+2026-11-12T20:45:11.0951401Z                                    ]
+2026-11-12T20:45:11.0951751Z                   },
+2026-11-12T20:45:11.0952055Z                   {
+2026-11-12T20:45:11.0952384Z                       "name":  "missing",
+2026-11-12T20:45:11.0952753Z                       "rc":  1,
+2026-11-12T20:45:11.0953108Z                       "accepted":  false,
+2026-11-12T20:45:11.0953483Z                       "failures":  [
+2026-11-12T20:45:11.0953853Z                                        "report.stop_reason: missing"
+2026-11-12T20:45:11.0954224Z                                    ]
+2026-11-12T20:45:11.0954552Z                   },
+2026-11-12T20:45:11.0954844Z                   {
+2026-11-12T20:45:11.0955236Z                       "name":  "residual-string",
+2026-11-12T20:45:11.0955581Z                       "rc":  1,
+2026-11-12T20:45:11.0955886Z                       "accepted":  false,
+2026-11-12T20:45:11.0956280Z                       "failures":  [
+2026-11-12T20:45:11.0956791Z                                        "report.maximum_bordered_true_linear_residual: finite number in [0, 1e-10] required"
+2026-11-12T20:45:11.0957985Z                                    ]
+2026-11-12T20:45:11.0958309Z                   },
+2026-11-12T20:45:11.0958577Z                   {
+2026-11-12T20:45:11.0958921Z                       "name":  "passed-string",
+2026-11-12T20:45:11.0959273Z                       "rc":  1,
+2026-11-12T20:45:11.0959586Z                       "accepted":  false,
+2026-11-12T20:45:11.0959972Z                       "failures":  [
+2026-11-12T20:45:11.0960385Z                                        "report.passed: boolean false required"
+2026-11-12T20:45:11.0960807Z                                    ]
+2026-11-12T20:45:11.0961112Z                   },
+2026-11-12T20:45:11.0961384Z                   {
+2026-11-12T20:45:11.0961696Z                       "name":  "nested",
+2026-11-12T20:45:11.0962037Z                       "rc":  1,
+2026-11-12T20:45:11.0962364Z                       "accepted":  false,
+2026-11-12T20:45:11.0962703Z                       "failures":  [
+2026-11-12T20:45:11.0963302Z                                        "samples: top-level array of exactly 128 objects required"
+2026-11-12T20:45:11.0963748Z                                    ]
+2026-11-12T20:45:11.0964061Z                   },
+2026-11-12T20:45:11.0964348Z                   {
+2026-11-12T20:45:11.0964657Z                       "name":  "count-string",
+2026-11-12T20:45:11.0965076Z                       "rc":  1,
+2026-11-12T20:45:11.0965529Z                       "accepted":  false,
+2026-11-12T20:45:11.0965871Z                       "failures":  [
+2026-11-12T20:45:11.0966277Z                                        "report.equilibrium_samples: integer 128 required"
+2026-11-12T20:45:11.0966764Z                                    ]
+2026-11-12T20:45:11.0967050Z                   }
+2026-11-12T20:45:11.0967350Z               ]
+2026-11-12T20:45:11.0967675Z }
+2026-11-12T20:45:11.0967805Z 
+2026-11-12T20:45:11.2538920Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+2026-11-12T20:45:11.2539704Z with:
+2026-11-12T20:45:11.2540162Z   name: pc-rate-arc-gate-powershell-a8d586e6d0b469c51574a5128754b2ebff90f2f6
+2026-11-12T20:45:11.2540663Z   path: work/pc-rate-arc-gate
+2026-11-12T20:45:11.2541075Z   retention-days: 14
+2026-11-12T20:45:11.2541388Z   if-no-files-found: warn
+2026-11-12T20:45:11.2541714Z   compression-level: 6
+2026-11-12T20:45:11.2542021Z   overwrite: false
+2026-11-12T20:45:11.2542344Z   include-hidden-files: false
+2026-11-12T20:45:11.2542698Z   archive: true
+2026-11-12T20:45:11.2542979Z env:
+2026-11-12T20:45:11.2543438Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:11.2543980Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-12T20:45:11.2544546Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:11.2545520Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:11.2546100Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-12T20:45:11.2546681Z ##[endgroup]
+2026-11-12T20:45:11.4684187Z With the provided path, there will be 41 files uploaded
+2026-11-12T20:45:11.4689998Z Artifact name is valid!
+2026-11-12T20:45:11.4690594Z Root directory input is valid!
+2026-11-12T20:45:11.8079024Z Uploading artifact: pc-rate-arc-gate-powershell-a8d586e6d0b469c51574a5128754b2ebff90f2f6.zip
+2026-11-12T20:45:11.8120702Z Beginning upload of artifact content to blob storage
+2026-11-12T20:45:12.1807090Z Uploaded bytes 16690
+2026-11-12T20:45:12.2464788Z Finished uploading artifact content to blob storage!
+2026-11-12T20:45:12.2466018Z SHA256 digest of uploaded artifact is cf9f976a2f6ccb470ebe851724ab47cca78c293d3d9feabe4af23c03d9c9df7d
+2026-11-12T20:45:12.2466885Z Finalizing artifact upload
+2026-11-12T20:45:12.7653760Z Artifact pc-rate-arc-gate-powershell-a8d586e6d0b469c51574a5128754b2ebff90f2f6 successfully finalized. Artifact ID 13982392171
+2026-11-12T20:45:12.7654951Z Artifact pc-rate-arc-gate-powershell-a8d586e6d0b469c51574a5128754b2ebff90f2f6 has been successfully uploaded! Final size is 16690 bytes. Artifact ID is 13982392171
+2026-11-12T20:45:12.7661838Z Artifact download URL: https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/43303337672/artifacts/13982392171
+2026-11-12T20:45:12.8054846Z Post job cleanup.
+2026-11-12T20:45:12.9987286Z Post job cleanup.
+2026-11-12T20:45:13.1965139Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-12T20:45:13.2336631Z git version 2.56.0.windows.4
+2026-11-12T20:45:13.2409627Z Temporarily overriding HOME='D:\a\_temp\c8a4467e-5a7d-4272-bdad-2f983fc5d04d' before making global git config changes
+2026-11-12T20:45:13.2410610Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T20:45:13.2420955Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-12T20:45:13.2820326Z Removing SSH command configuration
+2026-11-12T20:45:13.2832049Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T20:45:13.3243292Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-12T20:45:13.8957967Z Removing HTTP extra header
+2026-11-12T20:45:13.8968899Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T20:45:13.9376923Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-12T20:45:14.5699283Z Removing includeIf entries pointing to credentials config files
+2026-11-12T20:45:14.5711767Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T20:45:14.6157363Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-12T20:45:15.2873207Z Cleaning up orphan processes
+

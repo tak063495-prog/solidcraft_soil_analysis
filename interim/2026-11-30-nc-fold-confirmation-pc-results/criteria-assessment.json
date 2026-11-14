@@ -1,0 +1,178 @@
+{
+  "schema": "nc-fold-existing-criteria-assessment/1",
+  "evidence": "pc-results-transcribed.json (user-transcribed; original zip unavailable)",
+  "existing_criteria_changed": false,
+  "new_tolerances_defined": false,
+  "conclusion_ja": "未確定・局所foldを強く支持。PC結果で支持は強まったが確定に必要な照合が不足。NC-01未達。",
+  "static_limit_confirmed": false,
+  "passed": false,
+  "nc01_complete": false,
+  "differences_from_transcribed_decimals": {
+    "native128_coarse_fine": "5.204E-13",
+    "native256_coarse_fine": "2.79489E-11",
+    "series128_256_coarse": "0.0000821363782104",
+    "series128_256_fine": "0.0000821364066797"
+  },
+  "criteria": [
+    {
+      "id": "fixed_inputs",
+      "scope": "input",
+      "existing_requirement": "Known schema defaults only; exact canonical comparison, no physical/control differences",
+      "source": "tools/nc_fixed_inputs.py; tools/nc_fold_fresh.py",
+      "pc_status": "reported_satisfied",
+      "observation_ja": "両系列rc=0、raw_equal=false、fixed_inputs_match=true。原JSONとhashは未取得。"
+    },
+    {
+      "id": "common_lambda",
+      "scope": "local_fold",
+      "existing_requirement": "Ffinal+(1-lambda)H, every component including restrained/inactive DOFs",
+      "source": "tools/fold_stability.py:audit_load; tools/analyze_nc_fold_path.py:analyze",
+      "pc_status": "reported_only",
+      "observation_ja": "analyze rc=0が転記されているが、全成分差と荷重・前史・source bindingをクラウドで原ファイル照合していない。"
+    },
+    {
+      "id": "accepted_path",
+      "scope": "local_fold",
+      "existing_requirement": "At least 3 accepted points; no rejected points substituted",
+      "source": "tools/fold_stability.py:judge",
+      "pc_status": "reported_satisfied",
+      "observation_ja": "128/256点、全点accepted、各local_fold_bracket。"
+    },
+    {
+      "id": "force_residual",
+      "scope": "local_fold",
+      "existing_requirement": "relative_force_residual <= 1e-8; follow acceptance strictly < 1e-8",
+      "source": "tools/fold_stability.py:FORCE_TOL,judge; interim/2026-11-09-nc-beyond-fold/continue_path.py:follow",
+      "pc_status": "reported_satisfied",
+      "observation_ja": "bracket点約5e-16。local_fold_bracketは全点の残差検査を含むが、全点の最大値は転記されていない。"
+    },
+    {
+      "id": "linear_arc_residual",
+      "scope": "local_fold",
+      "existing_requirement": "Augmented and force-block residuals each <= 1e-10; arc constraint < 1e-12 m in follow",
+      "source": "tools/fold_stability.py:LINEAR_TOL,judge; tools/analyze_nc_fold.py:linear_audit; interim/2026-11-09-nc-beyond-fold/continue_path.py:follow",
+      "pc_status": "reported_satisfied_not_raw_verified",
+      "observation_ja": "analyzeのlocal_fold_bracketと全点acceptedの報告。各残差最大値・実行列は未取得。"
+    },
+    {
+      "id": "oriented_tangent",
+      "scope": "local_fold",
+      "existing_requirement": "Oriented adjacent dlambda/ds changes positive to negative",
+      "source": "tools/fold_stability.py:judge",
+      "pc_status": "reported_satisfied",
+      "observation_ja": "全4経路で正→負が各1回。bracket番号は転記表記を保持し、元step/indexとの対応は未確認。"
+    },
+    {
+      "id": "regular_transverse_bracket",
+      "scope": "local_fold",
+      "existing_requirement": "Around bracket: augmented rank=n+1, normalized transversality>64*eps, stiffness rank>=n-1",
+      "source": "tools/fold_stability.py:judge; spectrum",
+      "pc_status": "reported_satisfied",
+      "observation_ja": "n=54、rank(K)=54、rank(border)=55、単位平面行の最小特異値約1、横断性約0.371〜0.374。厳密なrank落ちの受理ではない。"
+    },
+    {
+      "id": "frozen_removed",
+      "scope": "local_fold",
+      "existing_requirement": "Removed GP and all contact history equal initial; accepted GP tangent decomposition and checkpoint/hash audits",
+      "source": "tools/analyze_nc_fold_path.py:analyze; tools/nc_fold_path.py:validate_checkpoint",
+      "pc_status": "reported_satisfied_not_raw_verified",
+      "observation_ja": "removed_all_gp_contacts_frozen=true。full-release freezeの検証とは別。元manifest/全場/GP接線は未取得。"
+    },
+    {
+      "id": "weak_modes_and_separation",
+      "scope": "confirmation_review",
+      "existing_requirement": "Actual nonsymmetric K, left/right singular equations, minimum/next singular-value separation; compare branch modes",
+      "source": "interim/2026-11-17-nc-fold-stability/REPRODUCE.ja.md section 6; tools/fold_stability.py:point",
+      "pc_status": "not_supplied",
+      "observation_ja": "最小特異値とrankは転記されたが、次の特異値、左右モード、左右特異方程式残差、全場との対応は未転記。追加の数値合否しきい値は設けない。"
+    },
+    {
+      "id": "low_stress_distribution",
+      "scope": "diagnostic_context",
+      "existing_requirement": "Save all GP pressure, bulk modulus, location and weak-mode correlations; diagnostic thresholds do not change material",
+      "source": "interim/2026-11-17-nc-fold-stability/REPRODUCE.ja.md section 6; tools/fold_stability.py:low_stress",
+      "pc_status": "not_supplied",
+      "observation_ja": "今回のPC low-stress.jsonは未取得。旧b069ec8の低応力分布と今回の新しいPC場を同一視しない。低圧化による因果関係や安定性を推論しない。"
+    },
+    {
+      "id": "local_step_refinement",
+      "scope": "confirmation_review",
+      "existing_requirement": "Halve local ds; compare peak, modes, full GP/contact histories and loads; no new peak tolerance",
+      "source": "interim/2026-11-17-nc-fold-stability/REPRODUCE.ja.md section 6; tools/compare_nc_fold_reports.py:compare",
+      "pc_status": "support_only_criterion_undefined",
+      "observation_ja": "同一系列のpeak差は128で5.204E-13、256で2.79489E-11。数値的な一致合否の許容値は基準未定義。全場・モード比較も不足。"
+    },
+    {
+      "id": "proportional_history_refinement",
+      "scope": "confirmation_review",
+      "existing_requirement": "Compare original proportional initial increments 1/128 and 1/256 with fixed prehistories/controls",
+      "source": "tools/prepare_nc_fold_series.py:run; interim/2026-11-17-nc-fold-stability/REPRODUCE.ja.md section 6",
+      "pc_status": "support_only_criterion_undefined",
+      "observation_ja": "fine同士のpeak差0.0000821364066797。既存peak許容値は基準未定義で、一致合格にも不合格にも認定しない。128/256はメッシュ数ではない。"
+    },
+    {
+      "id": "mesh_refinement",
+      "scope": "broader_convergence",
+      "existing_requirement": "No mesh-convergence certification in this 1/128-1/256 generator/FreshNative path",
+      "source": "tools/prepare_nc_fold_series.py:run; tools/nc_fixed_inputs.py; tools/nc_fold_fresh.py",
+      "pc_status": "not_demonstrated",
+      "observation_ja": "既存固定入力は同一54節点・12 Tet10。真の細かいメッシュをこの手順へ渡すと固定入力検査に拒否される。今回のPC4本を空間収束へ読み替えない。メッシュ間peak一致基準も未定義。"
+    },
+    {
+      "id": "independent_agreement",
+      "scope": "confirmation_review",
+      "existing_requirement": "Input-only independent history 400/800, local ds refinement, material steps 4/8; compare modes/full fields/loads",
+      "source": "interim/2026-11-17-nc-fold-stability/REPRODUCE.ja.md sections 4,6; tools/compare_nc_fold_reports.py",
+      "pc_status": "not_supplied",
+      "observation_ja": "今回のPC転記はnative4本だけ。旧b069ec8のnative対独立peak差約1.78546e-4は保持し、新しい独立400/800の一致として扱わない。自動一致閾値なし。"
+    },
+    {
+      "id": "diagnostic_restart",
+      "scope": "confirmation_review",
+      "existing_requirement": "Same source/binary/runtime/ds/input/material steps; actual emitted checkpoint and sidecar hashes; direct vs split full fields",
+      "source": "tools/nc_fold_path.py:validate_checkpoint; interim/2026-11-17-nc-fold-stability/REPRODUCE.ja.md section 5",
+      "pc_status": "not_supplied",
+      "observation_ja": "今回のPC4本の実restart比較は未報告。旧解析例/6点の一致と、新しい長経路の一致を区別する。full completion restartとは別。"
+    },
+    {
+      "id": "static_limit_flag",
+      "scope": "report_semantics",
+      "existing_requirement": "static_limit_confirmed=False is unconditionally emitted; no implemented promotion gate",
+      "source": "interim/2026-11-09-nc-beyond-fold/continue_path.py:follow; tools/nc_fold_path.py:run",
+      "pc_status": "false_by_design",
+      "observation_ja": "refinementを満たせば自動trueになる実装はない。局所fold支持をこの値のtrueへ書き換えない。"
+    },
+    {
+      "id": "passed_flags",
+      "scope": "report_semantics",
+      "existing_requirement": "follow report, analyze and comparison passed=False; analyze nc01_complete=False",
+      "source": "interim/2026-11-09-nc-beyond-fold/continue_path.py:follow; tools/analyze_nc_fold_path.py:analyze; tools/compare_nc_fold_reports.py:compare",
+      "pc_status": "false_by_design",
+      "observation_ja": "全4本falseを保持。ユーザー転記のfold_passed=falseも保持するが、nc_fold_path/analyzeの標準出力にfold_passedフィールドはなく、元の集計元は未確認。rc=0は受入ではない。"
+    },
+    {
+      "id": "full_removal",
+      "scope": "nc01_production",
+      "existing_requirement": "lambda=1 full removal; complete original history and acceptance evidence",
+      "source": "interim/2026-11-09-nc-beyond-fold/continue_path.py:follow; interim/2026-11-17-nc-fold-stability/README.ja.md",
+      "pc_status": "unmet",
+      "observation_ja": "peak約0.9514、最終λも1未満。full_removal_reached=false、history_converged=false、production_adopted=false、native committed increments=0。局所foldの必要条件とは区別。"
+    },
+    {
+      "id": "full_release_restart",
+      "scope": "nc01_production",
+      "existing_requirement": "Full-release freeze and production restart-to-completion evidence",
+      "source": "interim/2026-11-09-nc-beyond-fold/continue_path.py:follow; interim/2026-11-17-nc-fold-stability/README.ja.md",
+      "pc_status": "unmet",
+      "observation_ja": "full_release_freeze_verified=false、restart_to_completion_verified=false。診断器は両flagを固定falseで出力し、診断restart一致だけでは本番完了を証明しない。"
+    },
+    {
+      "id": "bound_stop",
+      "scope": "interpretation",
+      "existing_requirement": "Count/time/cutback limits are inconclusive; no global nonexistence or dynamic stability conclusion",
+      "source": "interim/2026-11-09-nc-beyond-fold/continue_path.py:follow; tools/fold_stability.py:judge",
+      "pc_status": "inconclusive",
+      "observation_ja": "全4本bounded step count; inconclusive、arc_length_m=0.00256。時間切れではなく点数上限。下降枝は得たが全域の無解・安定性の証明はない。"
+    }
+  ]
+}

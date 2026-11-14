@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tools/verify_wet_structures.py", line 272, in <module>
+    print(json.dumps(run(a.solver.resolve(), a.output.resolve()), indent=2))
+                     ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_wet_structures.py", line 219, in run
+    expected = reference(mesh, ground, case); rows = compare(mesh, ground, case, native, expected)
+                                                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_wet_structures.py", line 188, in compare
+    assert len(frame['beam_results']['plates']) == len(r['results']['plates'])
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+KeyError: 'plates'

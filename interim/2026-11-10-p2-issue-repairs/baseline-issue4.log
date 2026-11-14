@@ -1,0 +1,35 @@
+test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) ... 
+  test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) (kind='file', limit=3471) ... FAIL
+  test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) (kind='total', limit=11005) ... FAIL
+test_every_payload_uses_same_encoded_bytes_for_size_and_write (test_p2_epoch_budget.Budgets.test_every_payload_uses_same_encoded_bytes_for_size_and_write) ... ERROR
+
+======================================================================
+ERROR: test_every_payload_uses_same_encoded_bytes_for_size_and_write (test_p2_epoch_budget.Budgets.test_every_payload_uses_same_encoded_bytes_for_size_and_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_epoch_budget.py", line 25, in test_every_payload_uses_same_encoded_bytes_for_size_and_write
+    budget_type=getattr(module,'ViewBudget')
+AttributeError: module 'export_mc_epoch_view' has no attribute 'ViewBudget'
+
+======================================================================
+FAIL: test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) (kind='file', limit=3471)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_epoch_budget.py", line 22, in test_actual_file_and_total_boundaries_and_no_success_on_overflow
+    with self.assertRaises(ValueError):module.export(job,native,out)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) (kind='total', limit=11005)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_epoch_budget.py", line 22, in test_actual_file_and_total_boundaries_and_no_success_on_overflow
+    with self.assertRaises(ValueError):module.export(job,native,out)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.037s
+
+FAILED (failures=2, errors=1)

@@ -1,0 +1,412 @@
+{
+  "schema": "soil-fem-nc-full-pivot-fixed-prescribed/1",
+  "base_commit": "9a15c83cd7de73e42e9344a8b4bfab31918e5d49",
+  "branch": "codex/plastic-spatial-convergence",
+  "nc": {
+    "passed": false,
+    "production_adopted": false,
+    "complete": false,
+    "progress": 0.9512972831726074,
+    "previous_best": 0.9512960910797119,
+    "progress_gain": 1.1920928955078125e-06,
+    "accepted_increments": 262,
+    "remaining_holding_fraction": 0.04870271682739258,
+    "failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: true linear residual 1.5814795527509818e-10",
+    "last_attempt": {
+      "stage": "excavate_upper",
+      "progress_from": 0.9512972831726074,
+      "progress_to": 0.9512975215911865,
+      "accepted": false,
+      "reason": "numerical solve failed: true linear residual 1.5814795527509818e-10",
+      "newton_iterations": null,
+      "relative_force_residual": null,
+      "committed_state_unchanged_on_rejection": true,
+      "rejected_trial_material_changed": false,
+      "rejected_trial_plastic_changed": false,
+      "rejected_trial_active_set_changed": false,
+      "rejected_trial_load_changed": false,
+      "linear_solves": []
+    },
+    "observation": {
+      "accepted_increments": 262,
+      "completed_frames": [
+        "initial_equilibrated",
+        "load",
+        "unload"
+      ],
+      "stage_index": 3,
+      "stage_progress": 0.9512972831726074,
+      "geostatic_progress": 1.0,
+      "pc_range_kpa": [
+        69.00437985498998,
+        172.48143952371066
+      ],
+      "plastic_points": 324,
+      "rejections": 18,
+      "rejected_plastic_trial_changed": true,
+      "rejected_contact_trial_changed": true,
+      "all_rejections_preserve_committed_state": true,
+      "stored_stress_force_checks": [
+        {
+          "frame": "initial_equilibrated",
+          "relative_force_residual": 1.479510974479736e-13,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": 6.202426790672273e-13
+        },
+        {
+          "frame": "load",
+          "relative_force_residual": 1.1108045469251813e-15,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": 4.827091026426354e-13
+        },
+        {
+          "frame": "unload",
+          "relative_force_residual": 2.1724569582787084e-12,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": -0.016687482179998197
+        }
+      ],
+      "last_committed_force_check": {
+        "relative_force_residual": 9.955027653861772e-11,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 1.1436311702111157e-12
+      },
+      "independent_plastic_3d_displacement": false,
+      "zero_release_check": {
+        "relative_force_residual": 1.5255013280638015e-12,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": -0.01880115809889887
+      },
+      "fully_released_and_frozen": false,
+      "removed_joint_and_material_history_frozen": true
+    },
+    "force_tolerance": 1e-08,
+    "true_linear_tolerance": 1e-10,
+    "stop": "cutback_exhausted",
+    "physical_failure_conclusion": false,
+    "new_sealed_checkpoint": false
+  },
+  "fixed_prescribed": {
+    "schema": "soil-fem-wet-structures-verification/1",
+    "passed": true,
+    "frames": [
+      {
+        "name": "initial_equilibrated",
+        "relative_displacement_error": 2.6845491097390954e-11,
+        "relative_increment_error": 0.0,
+        "relative_stress_error": 3.8384581232696116e-12,
+        "reference_true_residual": 2.854580609509564e-16,
+        "minimum_effective_contact_pressure_kpa": 104.99999999999964
+      },
+      {
+        "name": "install",
+        "relative_displacement_error": 2.644126920905906e-12,
+        "relative_increment_error": 3.471490722721888e-11,
+        "relative_stress_error": 5.591999000008261e-13,
+        "reference_true_residual": 4.4136251957369026e-15,
+        "minimum_effective_contact_pressure_kpa": 103.72717111892705
+      },
+      {
+        "name": "load_plate_beam",
+        "relative_displacement_error": 1.871071591449902e-12,
+        "relative_increment_error": 3.877947388438473e-13,
+        "relative_stress_error": 5.317605716443611e-13,
+        "reference_true_residual": 1.1767535432988032e-14,
+        "minimum_effective_contact_pressure_kpa": 101.96344860988376
+      },
+      {
+        "name": "flow",
+        "relative_displacement_error": 3.3518113042481577e-12,
+        "relative_increment_error": 1.9468268182932466e-11,
+        "relative_stress_error": 1.022283208107684e-12,
+        "reference_true_residual": 1.3098777876796462e-14,
+        "minimum_effective_contact_pressure_kpa": 101.96344860988388,
+        "independent_darcy": {
+          "maximum_head_error_m": 8.881784197001252e-16,
+          "maximum_flux_error_m_s": 1.1926223897340549e-18,
+          "maximum_pressure_head_error_m": 1.5543122344752192e-15,
+          "independent_water_balance": 1.219727444046192e-16
+        }
+      },
+      {
+        "name": "unload_plate_beam",
+        "relative_displacement_error": 3.265828443974278e-12,
+        "relative_increment_error": 9.505065898274818e-12,
+        "relative_stress_error": 6.0552751745571e-13,
+        "reference_true_residual": 7.051172584895601e-15,
+        "minimum_effective_contact_pressure_kpa": 103.72717111892713
+      },
+      {
+        "name": "reset_water",
+        "relative_displacement_error": 4.7454674811700886e-12,
+        "relative_increment_error": 1.883451455080015e-11,
+        "relative_stress_error": 8.847842300410234e-13,
+        "reference_true_residual": 4.4136251957369026e-15,
+        "minimum_effective_contact_pressure_kpa": 103.72717111892705
+      },
+      {
+        "name": "remove",
+        "relative_displacement_error": 3.8319591344428285e-13,
+        "relative_increment_error": 1.004229280536858e-11,
+        "relative_stress_error": 6.647431010020819e-14,
+        "reference_true_residual": 2.854580609509564e-16,
+        "minimum_effective_contact_pressure_kpa": 104.99999999999964
+      }
+    ],
+    "independent_gl5_to_gl7_relative_difference": 1.1630766646304642e-14,
+    "clean_rejected_path_exact": true,
+    "checkpoints": [
+      {
+        "stage": "geostatic",
+        "accepted_count": 1,
+        "progress": 0.25,
+        "exact": true
+      },
+      {
+        "stage": "install",
+        "accepted_count": 5,
+        "progress": 0.125,
+        "exact": true
+      },
+      {
+        "stage": "load_plate_beam",
+        "accepted_count": 13,
+        "progress": 0.125,
+        "exact": true
+      },
+      {
+        "stage": "flow",
+        "accepted_count": 21,
+        "progress": 0.25,
+        "exact": true
+      },
+      {
+        "stage": "unload_plate_beam",
+        "accepted_count": 25,
+        "progress": 0.25,
+        "exact": true
+      },
+      {
+        "stage": "reset_water",
+        "accepted_count": 29,
+        "progress": 0.25,
+        "exact": true
+      },
+      {
+        "stage": "remove",
+        "accepted_count": 33,
+        "progress": 0.25,
+        "exact": true
+      }
+    ],
+    "inputs_sources_solver_sha256": {
+      "target/release/soil-fem-3d": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6",
+      "work/fixed-prescribed-final/mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+      "work/fixed-prescribed-final/ground.json": "767dcc453a0a9f9d68632804b09e4863873f9d6af0d38036dd430001d206dbdf",
+      "work/fixed-prescribed-final/stages.json": "a30d86c88ab1532d564a6e9bb584fe3f4b2ae8be5cc6ea2f30c6f1fc1e6b36b9",
+      "tools/verify_wet_structures.py": "19134afd15f3f344f5fef526303f1984314ae87cd1981cca32e8cace48640ed5",
+      "tools/beam_reference.py": "af8e6721708f6d5a2ec6040273d2863facc06143dbf5fa710e317ff6577645a6",
+      "tools/plate_reference.py": "3b04078ea2873f5d9c40c8a6aea7cd82287ae735eb6a1330f6495015cf885cbd",
+      "tools/joint_water_reference.py": "c3659b97f3f2001e83ca24cee2822adc5f8920a5766312dbac36a883874e49ff",
+      "tools/joint_reference.py": "ef26b439a2481ae41a85400f79af65ab0c171cce4806a2d8b4d9528593516063",
+      "tools/fem_reference.py": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+      "tools/darcy_reference.py": "773cbec4e87585db5b199a1786c4f46c3c54aa577d12c6eeda8256cc8a5df3ea",
+      "tools/hydrostatic_reference.py": "1f4df89c9bb33b244061f76f2876cccf1a485a76137d575909659720cd507ec2",
+      "tools/verify_high_order.py": "fdce847d13fc15ae82567bcdd3d32f7cc9c7e8a6ef590e8a13e4bf37936f6541",
+      "tools/mc_reference.py": "2a7235dbbd0c33963eccbc5cf0ab8316509e1867a4f705ac22d0595f94e4c853",
+      "tools/verify_checkpoint.py": "b3fe1f5d18a780ce8e32cd781c644220c67dabc93c49dc70d89b7e711f5c9ef2",
+      "tools/export_stages.py": "753acd6364355b820e67caef273d294e7c763ed41e565b5e8685fd225031d38a",
+      "tools/high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+      "tools/beam_io.py": "d7d60b57906279ff1bade09af8a0446634ab43ac7b944a114ab467a2150c8154",
+      "tools/plate_io.py": "f9572fda67c029cec153a7aaa75e3ba6d94a1e423ff55ec6b0f1dc600b8ef09a",
+      "tools/joint_io.py": "2ef212c5552b2976c8661b47e629bd86cc5d4e8348aff1940a4ba1fe2cb582cb",
+      "examples/stages-joint-water-prescribed.json": "7d6c14f7fcfb8acdaf709a00f9a7f06d23ef353ccf77ef11a9d43c0369b0630f"
+    },
+    "result_sha256": "9125ed70ee124e6331d63f0041c758d33c721ecd5a4253e30bde9453a264c2d0",
+    "output_roundtrip": {
+      "schema": "soil-fem-stage-export/2",
+      "result_sha256": "9125ed70ee124e6331d63f0041c758d33c721ecd5a4253e30bde9453a264c2d0",
+      "mesh_sha256": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+      "vtu_roundtrip": "passed",
+      "integration_point_roundtrip": "passed",
+      "cell_field_meaning": "volume_average",
+      "frame_count": 7,
+      "joint_point_roundtrip": "passed",
+      "plate_sample_roundtrip": "passed"
+    },
+    "p6_complete": false,
+    "p3b_p4_rows_complete": false,
+    "water_modes": [
+      "prescribed"
+    ],
+    "fixed_prescribed": true,
+    "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('prescribed',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance."
+  },
+  "windows_ci": "unconfirmed",
+  "p3b_p4_rows_complete": false,
+  "p6_complete": false,
+  "fixed_reservoir_analytic_control": {
+    "schema": "soil-fem-fixed-reservoir-analytic-control/1",
+    "passed": true,
+    "scope": "existing axis-aligned column, two isotropic layers, fixed PRESCRIBED reservoir only",
+    "reservoir_head_m": 1.0,
+    "seam_z_m": 0.5,
+    "input_derived_head_gradients": {
+      "lower": -2.0,
+      "upper": 4.0
+    },
+    "input_derived_darcy_flux_m_s": {
+      "lower": [
+        0.0,
+        0.0,
+        0.0002
+      ],
+      "upper": [
+        0.0,
+        0.0,
+        -0.0008
+      ]
+    },
+    "input_derived_joint_pressure_kpa": 5.0,
+    "maximum_head_error_m": 1.3322676295501878e-15,
+    "maximum_pressure_head_error_m": 1.1102230246251565e-15,
+    "maximum_flux_error_m_s": 1.1926223897340549e-18,
+    "p6_complete": false,
+    "nonzero_soil_policy_validated": false
+  },
+  "nc_accepted_convergence_gates": {
+    "schema": "soil-fem-nc-accepted-gates/1",
+    "maximum_accepted_force_residual": 8.921514504787992e-09,
+    "maximum_recorded_accepted_true_linear_residual": 7.732861802999355e-11,
+    "accepted_linear_solve_reports": 641,
+    "force_threshold": 1e-08,
+    "linear_threshold": 1e-10,
+    "all_accepted_attempts_preserve_original_thresholds": true,
+    "last_failed_attempt": {
+      "stage": "excavate_upper",
+      "progress_from": 0.9512972831726074,
+      "progress_to": 0.9512975215911865,
+      "accepted": false,
+      "reason": "numerical solve failed: true linear residual 1.5814795527509818e-10",
+      "newton_iterations": null,
+      "relative_force_residual": null,
+      "committed_state_unchanged_on_rejection": true,
+      "rejected_trial_material_changed": false,
+      "rejected_trial_plastic_changed": false,
+      "rejected_trial_active_set_changed": false,
+      "rejected_trial_load_changed": false,
+      "linear_solves": []
+    },
+    "complete": false,
+    "passed": false
+  },
+  "linux_validation": {
+    "schema": "soil-fem-nc-fixed-prescribed-validation/1",
+    "commands": [
+      {
+        "name": "fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.6771288630000072
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 7.418623483000033
+      },
+      {
+        "name": "build",
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.07956379300003391
+      },
+      {
+        "name": "python-tests",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 247.65083112000002,
+        "count": 299,
+        "ok": true,
+        "skip_lines": []
+      },
+      {
+        "name": "python-tools-tests",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.08455813399996259,
+        "count": 2,
+        "ok": true,
+        "skip_lines": []
+      },
+      {
+        "name": "rust-tests",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1131.181492782,
+        "counts": {
+          "passed": 408,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      }
+    ],
+    "all_software_checks_passed": true,
+    "source_file_count": 722,
+    "sources_unchanged_after_tests": true,
+    "new_tests": {
+      "rust": 0,
+      "python": 5
+    },
+    "windows_ci": "unconfirmed",
+    "low_preload_nc_passed": false,
+    "p6_complete": false,
+    "p3b_p4_rows_complete": false
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "passed": false,
+  "nc_acceptance_passed": false,
+  "linux_checks_passed": true,
+  "checks": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "rust_tests": 406,
+  "python_tests": 280,
+  "python_tools_tests": 2,
+  "new_python_tests": 5,
+  "failed": 0,
+  "ignored": 0,
+  "skipped": 0,
+  "frozen_non_document_sources": 621,
+  "frozen_sources_unchanged": true,
+  "solver_sha256": "afc5b3f542bd2bd68b9520f5a392780cb23fbf8cdc630f689f71a6ca57dd260e",
+  "highest_accepted_progress": 0.95123291015625,
+  "full_release": false,
+  "windows_ci": "未確認（push後、同じ先端コミットを確認してPR本文に結果を記録）",
+  "source_archive_sha256": "eefd30ad2d98b489cd2bdd22770e31d68277f20f439df15cc7dad642195b5255",
+  "recorded_before_push": true,
+  "windows_result_location": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13"
+}

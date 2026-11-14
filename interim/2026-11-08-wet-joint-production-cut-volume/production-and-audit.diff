@@ -1,0 +1,379 @@
+diff --git a/src/lib.rs b/src/lib.rs
+index 2f4a559..f6f7139 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -19,6 +19,7 @@ pub mod ground;
+ pub mod hardening;
+ pub mod hydraulic_transition;
+ pub mod hydrostatic;
++pub mod hydrostatic_volume;
+ pub mod joint_law;
+ pub mod joint_water;
+ pub mod joints;
+diff --git a/src/stages.rs b/src/stages.rs
+index 054ed97..a0b1f93 100644
+--- a/src/stages.rs
++++ b/src/stages.rs
+@@ -420,6 +420,9 @@ pub struct Frame {
+ #[derive(Debug, Serialize, Deserialize)]
+ #[serde(deny_unknown_fields)]
+ pub struct Run {
++    /// Absent in historical runs, which used the material GP water rule.
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    pub hydrostatic_volume_integration: Option<String>,
+     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+     pub flow_audits: Vec<FlowAudit>,
+     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+@@ -2213,6 +2216,48 @@ impl<'a> Model<'a> {
+             for (offset, e) in self.elements[first..last].iter().enumerate() {
+                 let ei = first + offset;
+                 if active[ei] {
++                    // Hydrostatic max(H-z,0) is not polynomial across a water
++                    // table. Keep effective material stress/GP display on the
++                    // original rule, but integrate this affine cut separately.
++                    // Explicit seepage/ONE_WAY GP fields retain their own rule.
++                    let cut_pore = if committed.pore_pressure_kpa.is_none()
++                        && self.soil_points[e.point_start]
++                    {
++                        if let Some(level) = committed
++                            .hydrostatic_water_level_m
++                            .or(self.ground.initialization.water_level_m)
++                        {
++                            let points: Vec<_> = self
++                                .mesh
++                                .cell_nodes(ei)
++                                .iter()
++                                .map(|&n| self.mesh.nodes[n])
++                                .collect();
++                            let lo = points
++                                .iter()
++                                .take(4)
++                                .map(|p| p[2])
++                                .fold(f64::INFINITY, f64::min);
++                            let hi = points
++                                .iter()
++                                .take(4)
++                                .map(|p| p[2])
++                                .fold(f64::NEG_INFINITY, f64::max);
++                            if lo < level && level < hi {
++                                crate::hydrostatic_volume::affine_load(
++                                    &points,
++                                    level,
++                                    self.ground.initialization.water_unit_weight_kn_m3,
++                                )?
++                            } else {
++                                None
++                            }
++                        } else {
++                            None
++                        }
++                    } else {
++                        None
++                    };
+                     for (qi, q) in e.points.iter().enumerate() {
+                         let point = e.point_start + qi;
+                         let (update, d) = updates.next().ok_or_else(|| {
+@@ -2226,8 +2271,10 @@ impl<'a> Model<'a> {
+                                 *value += pressure[point] - mean;
+                             }
+                         }
+-                        for s in total.iter_mut().take(3) {
+-                            *s += self.point_pore(committed, point, q.position[2]);
++                        if cut_pore.is_none() {
++                            for s in total.iter_mut().take(3) {
++                                *s += self.point_pore(committed, point, q.position[2]);
++                            }
+                         }
+                         let force = -q.weight_m3
+                             * q.b.transpose()
+@@ -2248,6 +2295,11 @@ impl<'a> Model<'a> {
+                             }
+                         }
+                     }
++                    if let Some(force) = cut_pore {
++                        for (i, f) in force.iter().flatten().enumerate() {
++                            internal[e.dofs[i]] += f;
++                        }
++                    }
+                 }
+             }
+             if updates.next().is_some() {
+@@ -4600,6 +4652,7 @@ fn solve_controlled(
+     let provenance = crate::checkpoint::Identity::current(mesh, &ground, &case)?;
+     if let Some(p) = &previous {
+         if p.schema != result_schema(mesh, &ground, &case)
++            || p.hydrostatic_volume_integration.as_deref() != Some("affine_cut_partial")
+             || p.complete
+             || p.provenance != provenance
+             || p.failure_reason.as_deref() != Some("checkpoint_requested")
+@@ -4778,6 +4831,7 @@ fn solve_controlled(
+                 )
+             });
+             return Ok(Run {
++                hydrostatic_volume_integration: Some("affine_cut_partial".into()),
+                 flow_audits: vec![],
+                 joint_integration_points,
+                 schema: result_schema(mesh, &ground, &case).into(),
+@@ -5666,6 +5720,7 @@ fn solve_controlled(
+     let integration_points = model.layout();
+     let reference_displacement_m = model.reference_displacement_m.clone();
+     Ok(Run {
++        hydrostatic_volume_integration: Some("affine_cut_partial".into()),
+         flow_audits,
+         joint_integration_points,
+         provenance,
+diff --git a/tools/verify_geostatic.py b/tools/verify_geostatic.py
+index 21af88b..128b3d1 100644
+--- a/tools/verify_geostatic.py
++++ b/tools/verify_geostatic.py
+@@ -44,7 +44,8 @@ def verify_initial(mesh,ground,run,q,offset):
+             assert np.allclose(p['position_m'],qinfo['position_m'],atol=1e-8,rtol=0);expected.append(p['state'])
+     else:raise ValueError('unsupported geostatic seed definition')
+     if expected is not None:assert expected==seed['material_states']
+-    force,_=internal(mesh,ground,seed['material_states'],all_active,q,offset)
++    from hydrostatic_volume_audit import enabled
++    force,_=internal(mesh,ground,seed['material_states'],all_active,q,offset,hydrostatic_cut=enabled(run))
+     joint_system=None
+     if case.get('joint_system'):
+         from joint_reference import System as JointSystem,coupled_forces as joint_forces
+@@ -69,7 +70,7 @@ def verify_initial(mesh,ground,run,q,offset):
+     assert last['boundary_factor']==cfg['initial_boundary_factor']
+     physical_load=base
+     if case.get('boundary') is not None:physical_load=base+cfg['initial_boundary_factor']*ref.conditions_load(mesh,case['boundary'],all_active)
+-    actual,_=internal(mesh,ground,last['material_states'],all_active,q,offset)
++    actual,_=internal(mesh,ground,last['material_states'],all_active,q,offset,hydrostatic_cut=enabled(run))
+     if beam_system is not None:actual,physical_load,_=coupled_forces(beam_system,last,actual,physical_load)
+     if anchor_system is not None:actual,physical_load=anchor_forces(anchor_system,last,actual,physical_load)
+     if joint_system is not None:actual,physical_load=joint_forces(joint_system,last,actual,physical_load)
+diff --git a/tools/verify_high_order.py b/tools/verify_high_order.py
+index 3c6b764..6eddb21 100644
+--- a/tools/verify_high_order.py
++++ b/tools/verify_high_order.py
+@@ -27,7 +27,7 @@ def prepare(mesh,layout=None):
+     return q,offset
+
+
+-def internal(mesh,ground,states,active,q,offset,material_ids=None,pore_pressure_kpa=None):
++def internal(mesh,ground,states,active,q,offset,material_ids=None,pore_pressure_kpa=None,hydrostatic_cut=False):
+     out=np.zeros((len(mesh['nodes']),3));max_yield=-np.inf
+     materials={m['id']:m for m in ground['materials']}
+     for ei in np.flatnonzero(active):
+@@ -54,6 +54,9 @@ def internal(mesh,ground,states,active,q,offset,material_ids=None,pore_pressure_
+         elif h is not None:total[:,:3]+=np.maximum(h-qp['position'][:,2],0)[:,None]*ground['initialization']['water_unit_weight_kn_m3']
+         force=-np.einsum('qai,qa,q->i',qp['b'],total,qp['weight'])
+         out[qp['nodes']]+=force.reshape(-1,3)
++    if hydrostatic_cut:
++        from hydrostatic_volume_audit import correction
++        out+=correction(mesh,active,q,ground['initialization']['water_level_m'],ground['initialization']['water_unit_weight_kn_m3'])
+     return out,max_yield
+
+
+@@ -230,7 +233,8 @@ def verify_stages(mesh_path,ground_path,result_path,exports,solver=None):
+         frame_ground=ground
+         if 'hydrostatic_water_level_m' in state:
+             frame_ground={**ground,'initialization':{**ground['initialization'],'water_level_m':state['hydrostatic_water_level_m']}}
+-        material_ids=state.get('element_material_ids');force,yield_value=internal(mesh,frame_ground,state['material_states'],active,q,offset,material_ids,state.get('pore_pressure_kpa'))
++        from hydrostatic_volume_audit import enabled
++        material_ids=state.get('element_material_ids');force,yield_value=internal(mesh,frame_ground,state['material_states'],active,q,offset,material_ids,state.get('pore_pressure_kpa'),enabled(run) and state.get('pore_pressure_kpa') is None)
+         f,geometry=physical(mesh,frame_ground,active,state['surface_pressure_kpa'],case.get('pressure_on_original_surface_only',False),material_ids,joint_system)
+         if case.get('boundary') and state.get('boundary_factor',0)!=0:
+             f+=state['boundary_factor']*ref.conditions_load(mesh,case['boundary'],active)
+@@ -299,7 +303,7 @@ def verify_stages(mesh_path,ground_path,result_path,exports,solver=None):
+             for ei in np.flatnonzero(~active):
+                 assert state['material_states'][offset[ei]:offset[ei+1]]==history_before['material_states'][offset[ei]:offset[ei+1]]
+             if case['stages'][index-1]['kind']=='excavate':
+-                removed=np.array(previous['active_elements'])&~active;removed_force,_=internal(mesh,frame_ground,previous['material_states'],removed,q,offset,previous.get('element_material_ids'),previous.get('pore_pressure_kpa'))
++                removed=np.array(previous['active_elements'])&~active;removed_force,_=internal(mesh,frame_ground,previous['material_states'],removed,q,offset,previous.get('element_material_ids'),previous.get('pore_pressure_kpa'),enabled(run) and previous.get('pore_pressure_kpa') is None)
+                 expected_holding=np.array(previous['applied_nodal_load_kn']).reshape(-1,3)-f-removed_force
+                 if joint_system is not None:
+                     retained={**previous,'active_elements':active.tolist()}
+diff --git a/tools/verify_joint_water.py b/tools/verify_joint_water.py
+index a58efd7..c7229f4 100644
+--- a/tools/verify_joint_water.py
++++ b/tools/verify_joint_water.py
+@@ -57,6 +57,9 @@ def audit(mesh,ground,run,exports=None):
+         if had_flow:assert np.allclose(state['pore_pressure_kpa'],pore,rtol=1e-10,atol=1e-8)
+         frame_ground={**ground,'initialization':{**ground['initialization'],'water_level_m':level}}
+         force,yield_value=internal(mesh,frame_ground,state['material_states'],active,q,offset,state.get('element_material_ids'),pore)
++        from hydrostatic_volume_audit import correction,enabled
++        if enabled(run) and not had_flow:
++            force+=correction(mesh,active,q,level,water.gamma,water.soil)
+         load,geometry=physical(mesh,frame_ground,active,pressure,case['pressure_on_original_surface_only'],state.get('element_material_ids'),water.contact)
+         if case.get('boundary') and factor:load+=factor*fem.conditions_load(mesh,case['boundary'],active)
+         load+=interface['load'];force+=water.audit(state,frame['joint_results'],interface)
+diff --git a/src/hydrostatic_volume.rs b/src/hydrostatic_volume.rs
+new file mode 100644
+index 0000000..fab6f79
+--- /dev/null
++++ b/src/hydrostatic_volume.rs
+@@ -0,0 +1,132 @@
++//! Exact -integral grad(N) p for affine Tet4/Tet10 hydrostatic water.
++//! Material quadrature and displayed GP pressures are deliberately separate.
++use crate::{Error, Result, elements};
++use nalgebra::{Matrix3, Vector3};
++
++/// None means a curved Tet10: retain its existing isoparametric GP rule.
++/// The caller must validate the element before taking this affine shortcut.
++pub fn affine_load(points: &[[f64; 3]], level: f64, gamma: f64) -> Result<Option<Vec<[f64; 3]>>> {
++    if ![4, 10].contains(&points.len())
++        || !points.iter().flatten().all(|x| x.is_finite())
++        || !level.is_finite()
++        || !gamma.is_finite()
++        || gamma < 0.
++    {
++        return Err(Error::Input(
++            "invalid affine hydrostatic volume data".into(),
++        ));
++    }
++    let v: [Vector3<f64>; 4] = std::array::from_fn(|i| Vector3::from(points[i]));
++    let jac = Matrix3::from_columns(&[v[1] - v[0], v[2] - v[0], v[3] - v[0]]);
++    let inverse = jac
++        .try_inverse()
++        .filter(|_| jac.determinant() > 0.)
++        .ok_or_else(|| Error::Input("positive affine hydrostatic tetrahedron required".into()))?;
++    if points.len() == 10 {
++        let scale = (1..4).map(|i| (v[i] - v[0]).norm()).fold(0., f64::max);
++        for (k, [i, j]) in elements::EDGES.into_iter().enumerate() {
++            if (Vector3::from(points[k + 4]) - (v[i] + v[j]) / 2.).norm()
++                > 32. * f64::EPSILON * scale
++            {
++                return Ok(None);
++            }
++        }
++    }
++    let wet: Vec<_> = (0..4).filter(|&i| v[i][2] <= level).collect();
++    let dry: Vec<_> = (0..4).filter(|&i| v[i][2] > level).collect();
++    let cross = |i: usize, j: usize| {
++        let mut p = v[i] + (v[j] - v[i]) * ((level - v[i][2]) / (v[j][2] - v[i][2]));
++        p[2] = level;
++        p
++    };
++    // A two-wet-vertex wedge is three tetrahedra. For three wet vertices,
++    // subtract the dry corner from the full *linear extension* of p.
++    // This differs from the independent reference's clipped-face centroid fan.
++    let mut cells = Vec::new();
++    match wet.len() {
++        0 => {}
++        1 => cells.push((
++            [
++                v[wet[0]],
++                cross(wet[0], dry[0]),
++                cross(wet[0], dry[1]),
++                cross(wet[0], dry[2]),
++            ],
++            1.,
++        )),
++        2 => {
++            let [a, b, c, d] = [
++                cross(wet[0], dry[0]),
++                cross(wet[0], dry[1]),
++                cross(wet[1], dry[0]),
++                cross(wet[1], dry[1]),
++            ];
++            cells.push(([v[wet[0]], a, b, v[wet[1]]], 1.));
++            cells.push(([v[wet[1]], a, b, c], 1.));
++            cells.push(([v[wet[1]], b, c, d], 1.));
++        }
++        3 => {
++            cells.push((v, 1.));
++            cells.push((
++                [
++                    v[dry[0]],
++                    cross(dry[0], wet[0]),
++                    cross(dry[0], wet[1]),
++                    cross(dry[0], wet[2]),
++                ],
++                -1.,
++            ));
++        }
++        _ => cells.push((v, 1.)),
++    }
++    let g: [Vector3<f64>; 4] = std::array::from_fn(|i| {
++        inverse.transpose()
++            * if i == 0 {
++                Vector3::repeat(-1.)
++            } else {
++                Vector3::ith(i - 1, 1.)
++            }
++    });
++    let mut integral_p = 0.;
++    let mut integral_pl = [0.; 4];
++    for (cell, sign) in cells {
++        let volume = sign
++            * Matrix3::from_columns(&[cell[1] - cell[0], cell[2] - cell[0], cell[3] - cell[0]])
++                .determinant()
++                .abs()
++            / 6.;
++        let p = cell.map(|x| gamma * (level - x[2]));
++        let l = cell.map(|x| {
++            let r = inverse * (x - v[0]);
++            [1. - r.sum(), r[0], r[1], r[2]]
++        });
++        let sum_p = p.iter().sum::<f64>();
++        integral_p += volume * sum_p / 4.;
++        for (i, value) in integral_pl.iter_mut().enumerate() {
++            *value += volume / 20.
++                * (sum_p * l.iter().map(|a| a[i]).sum::<f64>()
++                    + (0..4).map(|j| p[j] * l[j][i]).sum::<f64>());
++        }
++    }
++    let mut force = vec![[0.; 3]; points.len()];
++    for i in 0..4 {
++        force[i] = (-g[i]
++            * if points.len() == 4 {
++                integral_p
++            } else {
++                4. * integral_pl[i] - integral_p
++            })
++        .into();
++    }
++    if points.len() == 10 {
++        for (k, [i, j]) in elements::EDGES.into_iter().enumerate() {
++            force[k + 4] = (-4. * (integral_pl[i] * g[j] + integral_pl[j] * g[i])).into();
++        }
++    }
++    if !force.iter().flatten().all(|x| x.is_finite()) {
++        return Err(Error::Solve(
++            "non-finite affine hydrostatic volume force".into(),
++        ));
++    }
++    Ok(Some(force))
++}
+diff --git a/tools/hydrostatic_volume_audit.py b/tools/hydrostatic_volume_audit.py
+new file mode 100644
+index 0000000..685c52e
+--- /dev/null
++++ b/tools/hydrostatic_volume_audit.py
+@@ -0,0 +1,32 @@
++"""Explicit, provenance-selected correction; never reinterpret old saved runs."""
++import numpy as np
++import fem_reference as fem
++from hydrostatic_cut_volume_reference import force
++
++
++def correction(mesh, active, quadrature, level, gamma, soil=None):
++    result = np.zeros((len(mesh['nodes']), 3))
++    if level is None:
++        return result
++    xyz = np.asarray(mesh['nodes'])
++    for ei in np.flatnonzero(active):
++        if soil is not None and not soil[ei]:
++            continue
++        q = quadrature[ei]; points = xyz[q['nodes']]; vertices = points[:4]
++        if not vertices[:, 2].min() < level < vertices[:, 2].max():
++            continue
++        if len(points) == 10:
++            mids = np.asarray([(vertices[i]+vertices[j])/2 for i, j in fem.EDGES])
++            scale = np.linalg.norm(vertices[1:]-vertices[0], axis=1).max()
++            if np.any(np.linalg.norm(points[4:]-mids, axis=1) > 32*np.finfo(float).eps*scale):
++                continue
++        p = gamma*np.maximum(level-q['position'][:, 2], 0)
++        sampled = -np.einsum('qi,q,q->i', q['b'][:, :3].sum(axis=1), p, q['weight'])
++        result[q['nodes']] += force(mesh, ei, level, gamma)['force']-sampled.reshape(-1, 3)
++    return result
++
++
++def enabled(run):
++    value = run.get('hydrostatic_volume_integration')
++    assert value in (None, 'affine_cut_partial'), 'unknown hydrostatic volume integration'
++    return value is not None

@@ -1,0 +1,223 @@
+{
+  "schema": "soil-fem-joint-crack-tip-acceptance/1",
+  "passed": true,
+  "dry_cases": {
+    "compression": {
+      "assembly": [
+        {
+          "frame": "initial_equilibrated",
+          "reassembled_relative_residual": 1.5346261361346955e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "compression0",
+          "reassembled_relative_residual": 2.8009717231884498e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        }
+      ],
+      "independent_3d": {
+        "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+        "maximum_independent_residual": 1.5528821612093314e-13,
+        "frames": [
+          {
+            "frame": "initial_equilibrated",
+            "all_node_displacement_relative_l2": 3.009687594993204e-13,
+            "all_volume_gp_stress_relative_l2": 1.5510480350360817e-14,
+            "all_contact_gp_traction_relative_l2": 3.8734362023534815e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          },
+          {
+            "frame": "compression0",
+            "all_node_displacement_relative_l2": 5.233440375268057e-14,
+            "all_volume_gp_stress_relative_l2": 1.1930150044790184e-14,
+            "all_contact_gp_traction_relative_l2": 1.2627421392101704e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          }
+        ],
+        "passed": true
+      },
+      "final_contact_status": "stick",
+      "contact_points": 32,
+      "history": {
+        "restarts": [
+          {
+            "stage": "compression0",
+            "accepted_increment": 5,
+            "exact_except_elapsed_seconds": true
+          }
+        ],
+        "intended_rejections": 0,
+        "clean_accepted_path_exact": true
+      }
+    },
+    "opening": {
+      "assembly": [
+        {
+          "frame": "initial_equilibrated",
+          "reassembled_relative_residual": 1.5346261361346955e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "opening0",
+          "reassembled_relative_residual": 1.4554981517782002e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        }
+      ],
+      "independent_3d": {
+        "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+        "maximum_independent_residual": 1.5528821612093314e-13,
+        "frames": [
+          {
+            "frame": "initial_equilibrated",
+            "all_node_displacement_relative_l2": 3.009687594993204e-13,
+            "all_volume_gp_stress_relative_l2": 1.5510480350360817e-14,
+            "all_contact_gp_traction_relative_l2": 3.8734362023534815e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          },
+          {
+            "frame": "opening0",
+            "all_node_displacement_relative_l2": 2.073005043390087e-15,
+            "all_volume_gp_stress_relative_l2": 6.9309851752376415e-15,
+            "all_contact_gp_traction_relative_l2": 0.0,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 3.1113374609216195e-13,
+              "accumulated_plastic_slip_m": 1.720349913374798e-13
+            }
+          }
+        ],
+        "passed": true
+      },
+      "final_contact_status": "open",
+      "contact_points": 32,
+      "history": {
+        "restarts": [
+          {
+            "stage": "opening0",
+            "accepted_increment": 5,
+            "exact_except_elapsed_seconds": true
+          }
+        ],
+        "intended_rejections": 0,
+        "clean_accepted_path_exact": true
+      }
+    },
+    "reverse_shear": {
+      "assembly": [
+        {
+          "frame": "initial_equilibrated",
+          "reassembled_relative_residual": 1.5346261361346955e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "reverse_shear0",
+          "reassembled_relative_residual": 3.8537253035664014e-12,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "reverse_shear1",
+          "reassembled_relative_residual": 1.5203587611396279e-12,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        }
+      ],
+      "independent_3d": {
+        "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+        "maximum_independent_residual": 6.899898030676968e-11,
+        "frames": [
+          {
+            "frame": "initial_equilibrated",
+            "all_node_displacement_relative_l2": 3.009687594993204e-13,
+            "all_volume_gp_stress_relative_l2": 1.5510480350360817e-14,
+            "all_contact_gp_traction_relative_l2": 3.8734362023534815e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          },
+          {
+            "frame": "reverse_shear0",
+            "all_node_displacement_relative_l2": 5.014721862385775e-12,
+            "all_volume_gp_stress_relative_l2": 6.7502360832669075e-12,
+            "all_contact_gp_traction_relative_l2": 2.0093377578331965e-11,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 3.1256732573715675e-11,
+              "accumulated_plastic_slip_m": 1.5020233838905223e-12
+            }
+          },
+          {
+            "frame": "reverse_shear1",
+            "all_node_displacement_relative_l2": 4.643726752182338e-13,
+            "all_volume_gp_stress_relative_l2": 7.35323725700464e-13,
+            "all_contact_gp_traction_relative_l2": 1.956116923203482e-12,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 2.9638201655613335e-12,
+              "accumulated_plastic_slip_m": 1.1068354528069184e-12
+            }
+          }
+        ],
+        "passed": true
+      },
+      "final_contact_status": "slip",
+      "contact_points": 32,
+      "history": {
+        "restarts": [
+          {
+            "stage": "reverse_shear0",
+            "accepted_increment": 5,
+            "exact_except_elapsed_seconds": true
+          },
+          {
+            "stage": "reverse_shear1",
+            "accepted_increment": 7,
+            "exact_except_elapsed_seconds": true
+          }
+        ],
+        "intended_rejections": 0,
+        "clean_accepted_path_exact": true
+      }
+    }
+  },
+  "construction": {
+    "assembly": [
+      {
+        "frame": "initial_equilibrated",
+        "reassembled_relative_residual": 1.5346261361346955e-14,
+        "load_max_abs_kn": 1.4210854715202004e-14,
+        "constraint_error_m": 0.0
+      },
+      {
+        "frame": "remove_side",
+        "reassembled_relative_residual": 4.8189494369511546e-14,
+        "load_max_abs_kn": 1.0658141036401503e-14,
+        "constraint_error_m": 0.0
+      }
+    ],
+    "history": {
+      "restarts": [
+        {
+          "stage": "remove_side",
+          "accepted_increment": 5,
+          "exact_except_elapsed_seconds": true
+        }
+      ],
+      "intended_rejections": 1,
+      "clean_accepted_path_exact": true
+    }
+  },
+  "solver_sha256": "35f7e6e4e6465538e7a43139c0bc36f85a5b324a0055952ca0f3e44d83fe2b40"
+}

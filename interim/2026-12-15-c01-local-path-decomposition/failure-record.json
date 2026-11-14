@@ -1,0 +1,34 @@
+{
+  "schema": "c01-local-path-failure-record/1",
+  "passed": false,
+  "c01_decision": "未達",
+  "single_dominant_cause_identified": false,
+  "classification": "量別の主記帳成分を限定確認したが、全体平衡と開閉の因果分離は判定不能",
+  "retained_previous_failures_unchanged": true,
+  "independent256_converged": false,
+  "independent512_is_exact_reference": false,
+  "pc_executed": false,
+  "infrastructure": [
+    {
+      "action": "initial ordinary full-history fetch into original checkout",
+      "result": "process exited after approximately 60 minutes; FETCH_HEAD not updated; target object absent; unindexed tmp pack observed; its metadata retained, incomplete bytes later cleaned separately",
+      "temporary_pack_bytes": 21953363967,
+      "reason": "unconfirmed: original tool session was unavailable after environment reconnect; no exit log recovered",
+      "fallback": "fixed 73e29c3 filtered checkout, complete commit/tree history, source blob and SHA verification; required archives explicitly fetched"
+    }
+  ],
+  "development": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--example",
+        "wet_joint_local_path_probe"
+      ],
+      "exit_code": 2,
+      "reason": "cargo fmt does not accept --example; corrected with rustfmt --edition 2024",
+      "numerical_cause": false
+    }
+  ],
+  "windows_ci": "push後の新先端は未確定"
+}

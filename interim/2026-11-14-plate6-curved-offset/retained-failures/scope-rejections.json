@@ -1,0 +1,123 @@
+{
+  "schema": "soil-fem-plate6-curved-offset-rejections/1",
+  "records": [
+    {
+      "case": "nonzero_offset_without_new_formulation",
+      "returncode": 1,
+      "stderr": "invalid input: attachment_offset_m requires explicit mindlin_tri6_offset\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "outside_half_thickness",
+      "returncode": 1,
+      "stderr": "invalid input: offset scope requires finite |e| <= thickness/2\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "initial_water",
+      "returncode": 1,
+      "stderr": "invalid input: offset Tri6 with water is unverified\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "staged_water",
+      "returncode": 1,
+      "stderr": "invalid input: offset Tri6 scope excludes JOINT, anchors, water, soil BIRTH/DEATH/MATSET and unverified stage combinations\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "joint",
+      "returncode": 1,
+      "stderr": "invalid input: offset Tri6 scope excludes JOINT, anchors, water, soil BIRTH/DEATH/MATSET and unverified stage combinations\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "soil_birth",
+      "returncode": 1,
+      "stderr": "invalid input: offset Tri6 scope excludes JOINT, anchors, water, soil BIRTH/DEATH/MATSET and unverified stage combinations\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "soil_death",
+      "returncode": 1,
+      "stderr": "invalid input: offset Tri6 scope excludes JOINT, anchors, water, soil BIRTH/DEATH/MATSET and unverified stage combinations\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "plastic_soil_history",
+      "returncode": 1,
+      "stderr": "invalid input: offset Tri6 scope requires elastic MC soil; plastic history/response is unverified\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "folded_offset_normals",
+      "returncode": 1,
+      "stderr": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "curved_edge_component_0",
+      "returncode": 1,
+      "stderr": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "curved_edge_component_1",
+      "returncode": 1,
+      "stderr": "invalid input: geostatic mesh/CAD volume difference exceeds configured tolerance in UpperClay\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "curved_edge_component_2",
+      "returncode": 1,
+      "stderr": "invalid input: geostatic mesh/CAD volume difference exceeds configured tolerance in UpperClay\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "cylinder_quadratic_geometry",
+      "returncode": 1,
+      "stderr": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+      "stdout": "",
+      "refused": true
+    },
+    {
+      "case": "sphere_quadratic_geometry",
+      "returncode": 1,
+      "stderr": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+      "stdout": "",
+      "refused": true
+    }
+  ],
+  "refusal_contract_passed": true,
+  "curved_tri6_accepted": false,
+  "curved_benchmarks_passed": false,
+  "classical_benchmarks": [
+    {
+      "name": "Scordelis-Lo roof",
+      "status": "not_run_no_validated_curved_kernel",
+      "passed": false
+    },
+    {
+      "name": "pinched cylinder",
+      "status": "not_run_no_validated_curved_kernel",
+      "passed": false
+    },
+    {
+      "name": "hemispherical shell",
+      "status": "not_run_no_validated_curved_kernel",
+      "passed": false
+    }
+  ]
+}

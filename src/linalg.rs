@@ -10,6 +10,8 @@ pub enum LinearError {
     Invalid { message: String },
     #[error("ILU(0) pivot failure at row {row}: scaled pivot={pivot:e}")]
     Pivot { row: usize, pivot: f64 },
+    #[error("ILUT pivot failure at row {row}: scaled pivot={pivot:e}")]
+    IlutPivot { row: usize, pivot: f64 },
     #[error("GMRES Arnoldi breakdown after {iterations} iterations; true residual={residual:e}")]
     Breakdown { iterations: usize, residual: f64 },
     #[error("GMRES iteration limit {iterations}; true residual={residual:e}")]
@@ -310,6 +312,9 @@ pub struct GmresOptions {
     pub restart: usize,
     pub maximum_iterations: usize,
     pub pivot_tolerance: f64,
+    /// Explicit opt-in. Omission preserves the legacy ILU(0) path and JSON.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ilut: Option<IlutOptions>,
 }
 impl Default for GmresOptions {
     fn default() -> Self {
@@ -317,11 +322,15 @@ impl Default for GmresOptions {
             restart: 60,
             maximum_iterations: 3000,
             pivot_tolerance: 1e-14,
+            ilut: None,
         }
     }
 }
 impl GmresOptions {
     pub fn validate(&self) -> LinearResult<()> {
+        if let Some(ilut) = &self.ilut {
+            ilut.validate()?;
+        }
         if self.restart == 0
             || self.restart > 500
             || self.maximum_iterations == 0
@@ -355,6 +364,9 @@ impl LinearSolver {
             options.validate()?;
         }
         Ok(())
+    }
+    pub fn uses_ilut(&self) -> bool {
+        matches!(self, Self::SparseGmresIlu0 { options } if options.ilut.is_some())
     }
     pub fn dimension_limit(&self) -> usize {
         if self.is_dense() { 2000 } else { 300_000 }
@@ -435,6 +447,154 @@ impl<'a> Ilu0<'a> {
     }
 }
 
+/// Natural-order, dual-threshold ILUT. `fill_limit` caps EACH strict L/U
+/// row, excluding the diagonal. No permutations, pivot replacement or shifts.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IlutOptions {
+    pub drop_tolerance: f64,
+    pub fill_limit: usize,
+}
+impl IlutOptions {
+    pub fn validate(&self) -> LinearResult<()> {
+        if !self.drop_tolerance.is_finite()
+            || !(0.0..=1.0).contains(&self.drop_tolerance)
+            || !(1..=4096).contains(&self.fill_limit)
+        {
+            return Err(invalid(
+                "ILUT requires finite drop_tolerance in [0,1] and fill_limit in 1..=4096",
+            ));
+        }
+        Ok(())
+    }
+}
+
+struct Ilut {
+    lower: Vec<Vec<(usize, f64)>>,
+    upper: Vec<Vec<(usize, f64)>>,
+    diagonal: Vec<f64>,
+}
+impl Ilut {
+    fn factor(
+        matrix: &CsrMatrix,
+        threshold: f64,
+        options: &IlutOptions,
+        cancelled: &impl Fn() -> bool,
+    ) -> LinearResult<Self> {
+        options.validate()?;
+        let p = &matrix.pattern;
+        let mut result = Self {
+            lower: Vec::with_capacity(p.n),
+            upper: Vec::with_capacity(p.n),
+            diagonal: Vec::with_capacity(p.n),
+        };
+        let mut entries = 0usize;
+        for i in 0..p.n {
+            if cancelled() {
+                return Err(LinearError::Cancelled { iterations: 0 });
+            }
+            let range = p.row_ptr[i]..p.row_ptr[i + 1];
+            // Original equilibrated row mean, fixed before elimination.
+            let drop = options.drop_tolerance
+                * matrix.values[range.clone()]
+                    .iter()
+                    .map(|x| x.abs())
+                    .sum::<f64>()
+                / range.len() as f64;
+            let mut row: std::collections::BTreeMap<usize, f64> =
+                range.map(|k| (p.columns[k], matrix.values[k])).collect();
+            let mut lower = Vec::new();
+            while let Some((&j, _)) = row.first_key_value().filter(|(j, _)| **j < i) {
+                let value = row.remove(&j).expect("first key exists");
+                if !value.is_finite() {
+                    return Err(invalid("ILUT elimination overflow"));
+                }
+                // First threshold drops small working-row entries. Multipliers
+                // are then subject to the same dimensionless drop tolerance.
+                if value.abs() <= drop {
+                    continue;
+                }
+                let multiplier = value / result.diagonal[j];
+                if !multiplier.is_finite() {
+                    return Err(invalid("ILUT multiplier overflow"));
+                }
+                if multiplier.abs() <= options.drop_tolerance {
+                    continue;
+                }
+                lower.push((j, multiplier));
+                for &(k, u) in &result.upper[j] {
+                    *row.entry(k).or_insert(0.) -= multiplier * u;
+                }
+            }
+            let pivot = row.remove(&i).unwrap_or(0.);
+            if !pivot.is_finite() || pivot.abs() < threshold {
+                return Err(LinearError::IlutPivot { row: i, pivot });
+            }
+            if !row.values().all(|v| v.is_finite()) {
+                return Err(invalid("ILUT factor overflow"));
+            }
+            let mut upper: Vec<_> = row.into_iter().filter(|(_, v)| v.abs() > drop).collect();
+            Self::retain_largest(&mut lower, options.fill_limit);
+            Self::retain_largest(&mut upper, options.fill_limit);
+            entries += lower.len() + upper.len() + 1;
+            if entries > 50_000_000 {
+                return Err(invalid("ILUT factor storage exceeds 50000000 entries"));
+            }
+            result.lower.push(lower);
+            result.upper.push(upper);
+            result.diagonal.push(pivot);
+        }
+        Ok(result)
+    }
+    fn retain_largest(row: &mut Vec<(usize, f64)>, limit: usize) {
+        row.sort_unstable_by(|a, b| b.1.abs().total_cmp(&a.1.abs()).then(a.0.cmp(&b.0)));
+        row.truncate(limit);
+        row.shrink_to_fit();
+        row.sort_unstable_by_key(|e| e.0);
+    }
+    fn storage_bytes(&self) -> usize {
+        (self.lower.capacity() + self.upper.capacity()) * size_of::<Vec<(usize, f64)>>()
+            + self
+                .lower
+                .iter()
+                .chain(&self.upper)
+                .map(|row| row.capacity() * size_of::<(usize, f64)>())
+                .sum::<usize>()
+            + self.diagonal.capacity() * size_of::<f64>()
+    }
+    fn apply(&self, rhs: &[f64]) -> LinearResult<Vec<f64>> {
+        let mut x = rhs.to_vec();
+        for (i, row) in self.lower.iter().enumerate() {
+            for &(j, v) in row {
+                x[i] -= v * x[j];
+            }
+        }
+        for (i, row) in self.upper.iter().enumerate().rev() {
+            for &(j, v) in row {
+                x[i] -= v * x[j];
+            }
+            x[i] /= self.diagonal[i];
+        }
+        if !x.iter().all(|v| v.is_finite()) {
+            return Err(invalid("ILUT triangular solve overflow"));
+        }
+        Ok(x)
+    }
+}
+
+enum Preconditioner<'a> {
+    Ilu0(Ilu0<'a>),
+    Ilut(Ilut),
+}
+impl Preconditioner<'_> {
+    fn apply(&self, rhs: &[f64]) -> LinearResult<Vec<f64>> {
+        match self {
+            Self::Ilu0(p) => p.apply(rhs),
+            Self::Ilut(p) => p.apply(rhs),
+        }
+    }
+}
+
 fn dot(a: &[f64], b: &[f64]) -> f64 {
     a.iter().zip(b).map(|(a, b)| a * b).sum()
 }
@@ -488,6 +648,19 @@ pub fn gmres_ilu0_with_cancel(
     options: &GmresOptions,
     cancelled: impl Fn() -> bool,
 ) -> LinearResult<(Vec<f64>, LinearReport)> {
+    gmres_ilu0_a01_residual_observed(matrix, rhs, tolerance, options, cancelled, &mut |_, _| {})
+}
+
+/// Read-only samples at the existing true-residual checks; no extra iteration,
+/// changed stopping test, preconditioner, or fallback. Used only when invoked.
+pub fn gmres_ilu0_a01_residual_observed(
+    matrix: &CsrMatrix,
+    rhs: &[f64],
+    tolerance: f64,
+    options: &GmresOptions,
+    cancelled: impl Fn() -> bool,
+    sample: &mut impl FnMut(usize, f64),
+) -> LinearResult<(Vec<f64>, LinearReport)> {
     let started = Instant::now();
     options.validate()?;
     let n = matrix.pattern.n;
@@ -509,24 +682,30 @@ pub fn gmres_ilu0_with_cancel(
         return Err(invalid("right-hand side norm overflow"));
     }
     let restart = options.restart.min(n).min(options.maximum_iterations);
-    let report = |iterations, restarts, residual| LinearReport {
-        method: "csr_gmres_ilu0".into(),
+    let report = |iterations, restarts, residual, factor_bytes| LinearReport {
+        method: if options.ilut.is_some() {
+            "csr_gmres_ilut"
+        } else {
+            "csr_gmres_ilu0"
+        }
+        .into(),
         dimension: n,
         stored_nonzeros: matrix.values.len(),
         iterations,
         restarts,
         true_relative_residual: residual,
         matrix_storage_bytes: matrix.storage_bytes(),
-        workspace_storage_bytes: (2 * matrix.values.len()
+        workspace_storage_bytes: (matrix.values.len()
             + (2 * restart + 12) * n
             + (restart + 1) * restart
             + 4 * restart
             + 1)
-            * size_of::<f64>(),
+            * size_of::<f64>()
+            + factor_bytes,
         elapsed_seconds: started.elapsed().as_secs_f64(),
     };
     if bnorm == 0. {
-        return Ok((x, report(0, 0, 0.)));
+        return Ok((x, report(0, 0, 0., matrix.values.len() * size_of::<f64>())));
     }
     // Row equilibration changes only the preconditioned system. Acceptance is
     // always checked using the original A and b, with no diagonal regularization.
@@ -549,7 +728,19 @@ pub fn gmres_ilu0_with_cancel(
     if !b.iter().all(|x| x.is_finite()) {
         return Err(invalid("row scaling overflow"));
     }
-    let ilu = Ilu0::factor(&scaled, options.pivot_tolerance)?;
+    let ilu = match &options.ilut {
+        None => Preconditioner::Ilu0(Ilu0::factor(&scaled, options.pivot_tolerance)?),
+        Some(ilut) => Preconditioner::Ilut(Ilut::factor(
+            &scaled,
+            options.pivot_tolerance,
+            ilut,
+            &cancelled,
+        )?),
+    };
+    let factor_bytes = match &ilu {
+        Preconditioner::Ilu0(_) => matrix.values.len() * size_of::<f64>(),
+        Preconditioner::Ilut(p) => p.storage_bytes(),
+    };
     let mut iterations = 0;
     let mut cycles = 0;
     loop {
@@ -563,8 +754,9 @@ pub fn gmres_ilu0_with_cancel(
         }
         let beta = norm(&r);
         let residual = matrix.true_residual(&x, rhs)?;
+        sample(iterations, residual);
         if residual <= tolerance {
-            return Ok((x, report(iterations, cycles, residual)));
+            return Ok((x, report(iterations, cycles, residual, factor_bytes)));
         }
         if iterations >= options.maximum_iterations {
             return Err(LinearError::IterationLimit {
@@ -639,8 +831,12 @@ pub fn gmres_ilu0_with_cancel(
             {
                 let next = candidate(&x, &z, &h, &g, j + 1)?;
                 let true_residual = matrix.true_residual(&next, rhs)?;
+                sample(iterations, true_residual);
                 if true_residual <= tolerance {
-                    return Ok((next, report(iterations, cycles, true_residual)));
+                    return Ok((
+                        next,
+                        report(iterations, cycles, true_residual, factor_bytes),
+                    ));
                 }
                 if breakdown {
                     return Err(LinearError::Breakdown {
@@ -662,6 +858,80 @@ pub fn gmres_ilu0_with_cancel(
 mod tests {
     use super::*;
     use nalgebra::{DMatrix, DVector};
+
+    #[test]
+    fn ilut_fill_caps_both_triangles_and_drops_without_changing_matrix() -> LinearResult<()> {
+        let dense = DMatrix::from_fn(30, 30, |i, j| {
+            if i == j {
+                40.
+            } else {
+                ((17 * i + 3 * j) as f64).sin()
+            }
+        });
+        let a = from_dense(&dense)?;
+        let before = a.values.clone();
+        let options = IlutOptions {
+            drop_tolerance: 1e-4,
+            fill_limit: 3,
+        };
+        let ilu = Ilut::factor(&a, 1e-14, &options, &|| false)?;
+        let repeat = Ilut::factor(&a, 1e-14, &options, &|| false)?;
+        assert!(ilu.lower.iter().chain(&ilu.upper).all(|r| r.len() <= 3));
+        assert_eq!(ilu.lower, repeat.lower);
+        assert_eq!(ilu.upper, repeat.upper);
+        assert_eq!(ilu.diagonal, repeat.diagonal);
+        assert_eq!(a.values, before);
+        assert!(matches!(
+            Ilut::factor(&a, 1e-14, &options, &|| true),
+            Err(LinearError::Cancelled { iterations: 0 })
+        ));
+        let singular = from_dense(&DMatrix::from_row_slice(2, 2, &[0., 1., 1., 0.]))?;
+        assert!(matches!(
+            Ilut::factor(&singular, 1e-14, &options, &|| false),
+            Err(LinearError::IlutPivot { row: 0, .. })
+        ));
+        Ok(())
+    }
+
+    #[test]
+    fn ilut_reduces_diffusion_iterations_and_respects_iteration_limit() -> LinearResult<()> {
+        let side = 12;
+        let n = side * side;
+        let mut dense = DMatrix::identity(n, n) * 4.;
+        for i in 0..n {
+            for j in [
+                i.checked_sub(side),
+                (i + side < n).then_some(i + side),
+                (i % side > 0).then(|| i - 1),
+                (i % side + 1 < side).then_some(i + 1),
+            ]
+            .into_iter()
+            .flatten()
+            {
+                dense[(i, j)] = -1.;
+            }
+        }
+        let a = from_dense(&dense)?;
+        let b: Vec<_> = (0..n).map(|i| ((i * 7) as f64).sin()).collect();
+        let (_, base) = gmres_ilu0(&a, &b, 1e-10, &GmresOptions::default())?;
+        let mut options = GmresOptions {
+            ilut: Some(IlutOptions {
+                drop_tolerance: 1e-4,
+                fill_limit: 30,
+            }),
+            ..Default::default()
+        };
+        let (x, report) = gmres_ilu0(&a, &b, 1e-10, &options)?;
+        assert!(report.iterations < base.iterations);
+        assert!(a.true_residual(&x, &b)? <= 1e-10);
+        options.maximum_iterations = 1;
+        options.ilut.as_mut().unwrap().fill_limit = 1;
+        assert!(matches!(
+            gmres_ilu0(&a, &b, 1e-10, &options),
+            Err(LinearError::IterationLimit { iterations: 1, .. })
+        ));
+        Ok(())
+    }
 
     fn from_dense(a: &DMatrix<f64>) -> LinearResult<CsrMatrix> {
         let n = a.nrows();
@@ -897,6 +1167,49 @@ mod tests {
         let (x, r) = gmres_ilu0(&a, &[0.; 20], 1e-12, &options)?;
         assert_eq!(x, vec![0.; 20]);
         assert_eq!(r.iterations, 0);
+        Ok(())
+    }
+    #[test]
+    fn a01_residual_observation_preserves_success_and_failure() -> LinearResult<()> {
+        let dense = DMatrix::from_fn(20, 20, |i, j| {
+            if i == j {
+                4.
+            } else if (i + j) % 7 == 0 {
+                0.5
+            } else {
+                0.
+            }
+        });
+        let a = from_dense(&dense)?;
+        let b: Vec<_> = (0..20).map(|i| i as f64).collect();
+        let mut samples = Vec::new();
+        let options = GmresOptions::default();
+        let (plain, report) = gmres_ilu0(&a, &b, 1e-12, &options)?;
+        let (observed, observed_report) =
+            gmres_ilu0_a01_residual_observed(&a, &b, 1e-12, &options, || false, &mut |i, r| {
+                samples.push((i, r))
+            })?;
+        assert_eq!(plain, observed);
+        assert_eq!(report.iterations, observed_report.iterations);
+        assert_eq!(
+            report.true_relative_residual,
+            observed_report.true_relative_residual
+        );
+        assert_eq!(samples.last().unwrap().1, a.true_residual(&observed, &b)?);
+        let limited = GmresOptions {
+            restart: 1,
+            maximum_iterations: 1,
+            ..options
+        };
+        let plain_error = gmres_ilu0(&a, &b, 1e-14, &limited).unwrap_err();
+        samples.clear();
+        let observed_error =
+            gmres_ilu0_a01_residual_observed(&a, &b, 1e-14, &limited, || false, &mut |i, r| {
+                samples.push((i, r))
+            })
+            .unwrap_err();
+        assert_eq!(plain_error.to_string(), observed_error.to_string());
+        assert!(samples.iter().any(|&(i, r)| i == 1 && r > 1e-14));
         Ok(())
     }
 }

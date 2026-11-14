@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2",
+    "title": "[P2] Python最適化時に構造表示の独立照査が消え、不一致reportでもcompleteを出力する",
+    "issue_number": 2,
+    "body": "## 概要・優先度\n**P2（Python最適化実行時に限定）/ 構造結果の独立照査欠落**。\n新しいnative構造表示の抽出経路は `beam_reference.verify_state` に依存していますが、その数値整合比較が `assert` で実装されているため、`python -O` または `PYTHONOPTIMIZE=1` で消えます。不一致の板曲げモーメント等を含むreportが、通常モードなら拒否されるのに、最適化モードでは `complete=true` の表示JSONへ出力されることを独立再現しました。\n\n通常モードの正常解が誤計算される指摘ではありません。また、既存のhash検査を破ったという指摘でもありません。既存assert基盤の問題が、今回追加された表示経路へ持ち込まれています。\n\n## 対象・根拠\n- main SHA: `5d4afb45234c0781e86b63cb4d0b67a3d54b33f2`\n- 新規 `tools/solidcraft_structure_fields.py` blob: `8d718aa3e8a681593f930d27d7066c946ce4729d`\n- [独立照査呼出と元reportを出力する処理 L45–73](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/solidcraft_structure_fields.py#L45-L73)\n- [比較がassertに依存する verify_state L201–220](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/beam_reference.py#L201-L220)\n- [表示exportからの呼出](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/export_solidcraft_view.py#L170-L174)\n- [native workerは環境変数を継承 L171–180](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/native_job.py#L171-L180)。PYTHONOPTIMIZEを除去・拒否していません（静的確認）。\n\n## 発生条件・独立再現\n固定版の実 `fields()` と `export_solidcraft_view.export()` をPythonで実行しました。\n- 既存テストの構造/transport fixtureを使用。板reportの `samples[0].bending_moment_kn[0]` に0.1を加え、既存回帰と同様にfixtureのreceipt/result hashを更新。\n- 正しいfixtureはnormal/最適化の両方で成功。\n- 不一致fixtureはnormalで `ValueError: structural report/history fails independent member equilibrium`、manifestは生成されない。\n- 同じfixtureを `-O` または `PYTHONOPTIMIZE=1` で実行すると受理し、`soil-fem-solidcraft-view/3`, `complete=true` を生成。\n- 関数単位ではglobal force+100、beam local_axes+1も同じnormal拒否/最適化受理を確認。\n\nreceipt未更新の単純改変は既存hash照査で拒否されます。本件は、整合したreceiptを持つ入力report自体に数値不整合があるときの、独立再計算との比較欠落を示します。外部攻撃や改竄防止全体の破綻を主張しません。\n\n## 影響・修正案\n最適化環境で構造照査が静かに弱まり、履歴から再計算した値と一致しない部材値を完了済み表示packetへ渡せます。呼出しているだけでは比較保証になりません。\n- 外部データの照査には `assert` でなく `if not condition: raise ValueError(...)` を使用してください。\n- または、最適化モードを非対応とするなら公開/監査entryで `sys.flags.optimize != 0` を明示拒否し、完了markerを生成しないでください。\n\n## 回帰試験と未検証\nnormal、`-O`、`PYTHONOPTIMIZE=1` の別プロセスで、正しいpacket、板moment、梁axes、global force、履歴変位の不一致を対照し、不一致が常に拒否されmanifestが残らないことを確認してください。\n独立実行は合成fixture＋実JSON exportです。fixture solverはdummy bytesで、Rust/本物のaccepted-run生成・Windows/native GUI/PowerShell・VTUは未実行。JSON経路のみを検証し、meshioはimport-only sentinel（API呼出は必ず例外）を使用、実際そのAPIは使われませんでした。作者CIの成功を本レビュー独立実行に算入していません。",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 3,
+    "created_at": "2026-10-26T23:22:14Z",
+    "updated_at": "2026-11-09T22:49:14Z",
+    "closed_at": "2026-11-09T22:49:14Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2",
+    "display_title": "[P2] Python最適化時に構造表示の独立照査が消え、不一致reportでもcompleteを出力する"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2",
+  "title": "[P2] Python最適化時に構造表示の独立照査が消え、不一致reportでもcompleteを出力する",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2",
+  "display_title": "[P2] Python最適化時に構造表示の独立照査が消え、不一致reportでもcompleteを出力する"
+}

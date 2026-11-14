@@ -49,6 +49,8 @@ def normalize_stage_case(value):
         for key in ('plates','plate_sections'):
             if not beam.get(key):beam.pop(key,None)
         for plate in beam.get('plates',[]):
+            if plate.get('formulation')=='cst_dkt':plate.pop('formulation')
+            if plate.get('attachment_offset_m')==0.:plate.pop('attachment_offset_m',None)
             for key in ('constant_traction_kpa','boundary_traction_kpa'):plate.setdefault(key,[0.]*3)
         for load in beam['nodal_loads']:
             for key in ('constant_force_kn','boundary_force_kn','constant_moment_kn_m','boundary_moment_kn_m'):load.setdefault(key,[0.]*3)

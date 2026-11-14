@@ -1,0 +1,9 @@
+evidence.tar.xz 1038 45277264 ba0f84ead6eeb40ef22d018f3c76afaace19843500deb41dd51d82e75178d1c5
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-09-nc-turning-path-diagnosis/package.py", line 58, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--raw',type=Path,required=True);a=p.parse_args();package(a.raw.resolve())
+                                                                                                 ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-09-nc-turning-path-diagnosis/package.py", line 43, in package
+    if set(z.getnames())!=set(files):raise ValueError('existing archive inventory differs')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: existing archive inventory differs

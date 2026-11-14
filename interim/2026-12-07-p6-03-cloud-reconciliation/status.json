@@ -1,0 +1,1495 @@
+{
+  "schema": "p6-03-cloud-reconciliation/v1",
+  "base_commit": "e3d830d8d1bdffd727c4ab7271755f52e556006d",
+  "recorded_date_jst": "2026-11-12",
+  "destination_label": "2026-12-07",
+  "target_id": "TODO:P6-03",
+  "not_target_id": "STATUS:P6-03 (性能)",
+  "state": "未達",
+  "p6_03_complete": false,
+  "p6_complete": false,
+  "nc01_complete": false,
+  "rows": [
+    {
+      "id": "mcc-spatial",
+      "target": "MCC空間差",
+      "state": "未達",
+      "bounded": "同一離散MCCの独立全5工程・材料履歴の既存限定受入。空間収束とは分離。",
+      "observed": "274→945→1324→2262:18.1664→12.7877→9.9690%。固定壁の最後2対1.463403911→1.527772593%は非減少。",
+      "independent": "独立一般3D精度の判定は判定不能。PR24の材料点・1D柱は別問題。6.828%の元柱は非関連MCでMCCではない。1m MCC拘束柱の条件は別途特定済み。",
+      "missing": "同じ荷重・壁・活動領域216m³での追加h系列、全工程の共通体積/GP履歴、刻みを分離した独立比較。1D材料点には3D掘削の空間誤差を判定する基準がない。",
+      "pc": "既存MCC大規模再求解と1m MCC柱8/16/32層・荷重/材料刻み別系列。",
+      "ledger": [
+        "STATUS:P6-01:bounded",
+        "STATUS:P6-02:remaining",
+        "TODO:P6-03:overall",
+        "TODO:P6-03:indeterminate"
+      ],
+      "sources": [
+        "docs/DEPTH_SPATIAL_DIAGNOSTICS.ja.md#MCCの既存記録を分離して固定",
+        "references/pr24/README.ja.md#特定できた既存柱と1D参照"
+      ],
+      "completed": false,
+      "pc_state": "PC手順待ち",
+      "new_overall_acceptance": false,
+      "independent_state": "判定不能"
+    },
+    {
+      "id": "extrusion-stress",
+      "target": "押出し応力",
+      "state": "判定不能",
+      "bounded": "24/96/384 Tet4の完成Runの元物理監査通過だけ。応力精度の受入ではない。",
+      "observed": "全6成分Frobenius RMS差2.787761268789842→1.9822035618786626 kPa、比0.7110377721615777。",
+      "independent": "PR33のLamé Q4/Hex8は弾性・別座標・別境界。新参照との本体比較許容値未定義、accepted=null。",
+      "missing": "同一MC入力・y拘束・1層固定の4/8/16、8/16/32系列と半減対照。元条件Dfine<0.7Dcoarse、p∈[0.5,8]の持続確認。応力絶対精度の受入基準は未定義。",
+      "pc": "実MC系列と交差体積積分。Laméの成功で旧MCを代替しない。",
+      "ledger": [
+        "TODO:P6-03:overall",
+        "TODO:P6-03:indeterminate"
+      ],
+      "sources": [
+        "docs/PLASTIC_SPATIAL_CONVERGENCE.ja.md#結果",
+        "references/pr33/results/legacy-rows.json"
+      ],
+      "completed": false,
+      "pc_state": "PC手順待ち",
+      "new_overall_acceptance": false,
+      "independent_state": "判定不能"
+    },
+    {
+      "id": "oscillating-monitor",
+      "target": "振動モニター",
+      "state": "判定不能",
+      "bounded": "静的掘削増分の共通物質位置(0.5,0,0.5)mを保持。動解析の受入なし。",
+      "observed": "0.140613433823263→0.110561322608903→0.114496843796512 mm、差の符号反転。半減対照でも反転。",
+      "independent": "PR33 SDOF/Newmark・縦振動棒は別問題。旧記録には物理秒・慣性質量・減衰がない。",
+      "missing": "同一静的モニターと初期平衡/全変位/掘削増分を分離した追加h系列。元の同符号・非零差、比<0.7、p∈[0.5,8]、値の1e-8帯を超える変化が必要。時間動解析を判定するには別途物理入力と原基準が必要。",
+      "pc": "静的実モデルの細分化/半減対照。周期の仮定で埋めない。",
+      "ledger": [
+        "TODO:P6-03:overall",
+        "TODO:P6-03:indeterminate"
+      ],
+      "sources": [
+        "docs/DEPTH_SPATIAL_DIAGNOSTICS.ja.md#押出し応力と掘削モニターの追加診断",
+        "references/pr33/README.ja.md#旧3行の特定"
+      ],
+      "completed": false,
+      "pc_state": "PC手順待ち",
+      "new_overall_acceptance": false,
+      "independent_state": "判定不能"
+    },
+    {
+      "id": "finite-depth-stress",
+      "target": "有限幅奥行き応力",
+      "state": "判定不能",
+      "bounded": "物理奥行き1m、y端面uy=0、部分撤去。面内2/4固定の奥行き2/4/8層の元監査のみ。",
+      "observed": "全テンソルRMS: 面内2固定1.3144810108272258→0.9536884079087129、面内4固定1.3245170342394583→0.946817458453 kPa。両差比>=0.7。",
+      "independent": "PR33有限弾性箱は自由端・矩形面圧で、旧MC拘束端掘削と異なる。2水準の箱に空間次数/許容値なし。",
+      "missing": "面内を固定した奥行き4/8/16層以上の列、同一hでの別物理奥行き列、元の比<0.7と次数ガード・刻み対照。物理奥行き変更とメッシュ細分化を混ぜない。",
+      "pc": "旧MC奥行き列と別面内列。PR33箱の大系列は診断専用。",
+      "ledger": [
+        "TODO:P6-03:overall",
+        "TODO:P6-03:indeterminate"
+      ],
+      "sources": [
+        "docs/DEPTH_SPATIAL_DIAGNOSTICS.ja.md#奥行き系列",
+        "references/pr33/README.ja.md#有限幅・有限奥行き参照"
+      ],
+      "completed": false,
+      "pc_state": "PC手順待ち",
+      "new_overall_acceptance": false,
+      "independent_state": "判定不能"
+    },
+    {
+      "id": "pile",
+      "target": "杭",
+      "state": "未達",
+      "bounded": "同一Tet10の独立3D弾性全場・力/モーメント・小メッシュ再開の旧限定受入。",
+      "observed": "436/819/2279 Tet10:0.32521742815831706/0.3485245109509388/0.36577978075570766 mm。隣接差6.687358294838157→4.717393008743999%。",
+      "independent": "PR28の同条件Hex8は近似参照。1D棒/梁は周面・先端・水平ばねの3D対応が未確認。新工学許容値未定義。",
+      "missing": "誤差帯を裏付けた同条件3D独立細分化、境界感度、先端/周面分担と塑性/すべり。既存同一メッシュの許容値や他問題の5%を空間収束へ転用しない。",
+      "pc": "本体Tet10と独立Hex8の大系列、共有稜線力の分担定義。",
+      "ledger": [
+        "P3b-05:bounded",
+        "P3b-05:remaining",
+        "TODO:P6-03:overall"
+      ],
+      "sources": [
+        "interim/2026-10-26-body-pile/reports/solid-pile-first-pair.json",
+        "interim/2026-10-26-body-pile/reports/solid-pile-refined-pair.json",
+        "references/pr28/README.ja.md"
+      ],
+      "completed": false,
+      "pc_state": "PC手順待ち",
+      "new_overall_acceptance": false,
+      "independent_state": "判定不能"
+    },
+    {
+      "id": "rainfall",
+      "target": "降雨",
+      "state": "未達",
+      "bounded": "後続82944 Tet4/FV64³・29水理ゲートは均質立方体・無湛水の別範囲。旧5失敗を置換しない。",
+      "observed": "旧4/8/16分割Tet4・FV8/16/32、100秒。3600/7200/10800秒の旧5項目は未達。",
+      "independent": "PR32の1D指数構成/2D帯状雨は中央0.25m²正方形VG/Mualem 3D雨と異なる。同条件3D新独立値は未計算。",
+      "missing": "元3D正方形パッチ、VG/Mualem、H=0初期・底面H=0・無流束側面・雨休止再開の独立3D系列と旧RT0生出力の対応。元補間・6tet平均・貯留オフセットを厳密保持。",
+      "pc": "独立3D FV8/16/32・時間100/50/25秒、本体旧4/8/16と後続8/16/24の別列、湛水等。",
+      "ledger": [
+        "P4c-02:bounded",
+        "P4c-02:remaining",
+        "TODO:P6-03:overall"
+      ],
+      "sources": [
+        "interim/2026-10-29-native-kernel-and-rain-gates/rain-original/comparison.json",
+        "references/pr32/original-five.json",
+        "references/pr32/README.ja.md"
+      ],
+      "completed": false,
+      "pc_state": "PC手順待ち",
+      "new_overall_acceptance": false,
+      "independent_state": "判定不能"
+    }
+  ],
+  "original_mc_column": {
+    "material": "nonassociated_MC",
+    "tet4_fine_percent": 6.828,
+    "tet4_fine_accepted": false,
+    "continuum_estimate_percent": 1.034,
+    "continuum_is_separate": true,
+    "estimate_accepts_tet4": false
+  },
+  "old_rainfall_five": [
+    {
+      "id": 1,
+      "value": 0.0046205475457005325,
+      "upper_bound": 0.003,
+      "operator": "<",
+      "passed": false,
+      "unit": "m"
+    },
+    {
+      "id": 2,
+      "value": 1.348244318335049,
+      "upper_bound": 0.8,
+      "operator": "<",
+      "passed": false,
+      "unit": "1"
+    },
+    {
+      "id": 3,
+      "value": 0.998450823613834,
+      "upper_bound": 0.8,
+      "operator": "<",
+      "passed": false,
+      "unit": "1"
+    },
+    {
+      "id": 4,
+      "value": 0.0038863726982864173,
+      "upper_bound": 0.003,
+      "operator": "<",
+      "passed": false,
+      "unit": "m"
+    },
+    {
+      "id": 5,
+      "value": 0.00014219441327791016,
+      "upper_bound": 0.0001,
+      "operator": "<",
+      "passed": false,
+      "unit": "m3"
+    }
+  ],
+  "new_independent_comparison_count": 1,
+  "new_comparison_scope": "PR24独立閉形式対本体CIプロファイルのMC柱天端3工程のみ。MCC/旧失敗/全場受入の代替ではない。",
+  "pc_procedure": "REPRODUCE.ja.md",
+  "historical_python": {
+    "p601_discovered": 625,
+    "p601_passed": 617,
+    "p601_unexecuted": 8,
+    "p601_setup_errors": 2,
+    "retained": true
+  },
+  "windows_ci": {
+    "state": "未確認",
+    "api_observation": "gh pr view: https://api.github.com/graphql Forbidden",
+    "success_claimed": false
+  },
+  "reference_legacy_rows": [
+    {
+      "id": "extrusion-stress",
+      "state": "判定不能 / 未達",
+      "conditions": {
+        "depth_boundary": "uy=0 everywhere",
+        "cut": "x<.5,z>.5 all y; active volume .75 m3",
+        "mesh": "in-plane x/z=2/4/8; y=1 fixed; 24/96/384 Tet4"
+      },
+      "comparison": "cut full 6-component tensor Frobenius RMS over common active volume; shear squared weight 2",
+      "values_kPa": [
+        2.787761268789842,
+        1.9822035618786626
+      ],
+      "difference_ratio": 0.7110377721615777,
+      "original_order": null,
+      "original_estimate": null,
+      "component_diagnostic": {
+        "recorded_difference_norms_kpa": [
+          2.787761268789842,
+          1.9822035618786626
+        ],
+        "recorded_ratio": 0.7110377721615777,
+        "guard_ratio": 0.7,
+        "order": null,
+        "estimate": null,
+        "status": "indeterminate",
+        "component_order": [
+          "xx",
+          "yy",
+          "zz",
+          "xy",
+          "yz",
+          "xz"
+        ],
+        "tensor_weighted_component_rms_kpa": [
+          [
+            1.1932293695177574,
+            0.7565720124412262,
+            2.128855697185797,
+            0.09545805700454671,
+            0.26871495558818115,
+            1.0779929526816816
+          ],
+          [
+            0.9148606485129016,
+            0.5493279297752087,
+            1.4472183370616178,
+            0.05745534412672201,
+            0.12908116156664248,
+            0.8221896387868113
+          ]
+        ],
+        "component_difference_ratios": [
+          0.7667097977002039,
+          0.7260748755464741,
+          0.6798104441624402,
+          0.6018909867816122,
+          0.480364635024132,
+          0.7627040944390979
+        ],
+        "pair_decompositions": [
+          {
+            "component_order": [
+              "xx",
+              "yy",
+              "zz",
+              "xy",
+              "yz",
+              "xz"
+            ],
+            "tensor_weighted_component_rms_kpa": [
+              1.1932293695177574,
+              0.7565720124412262,
+              2.128855697185797,
+              0.09545805700454671,
+              0.26871495558818115,
+              1.0779929526816816
+            ],
+            "component_squared_integrals_kpa2_m3": [
+              1.067847246209809,
+              0.42930090750702526,
+              3.3990199345803194,
+              0.006834180485312467,
+              0.05415579551756864,
+              0.8715516045235279
+            ],
+            "hydrostatic_squared_integral_kpa2_m3": 3.5597548126197727,
+            "deviatoric_squared_integral_kpa2_m3": 2.2689548562037904,
+            "plastic_partition": [
+              {
+                "region": "both_plastic",
+                "volume_m3": 0.1875,
+                "squared_integral_kpa2_m3": 1.260345078710923
+              },
+              {
+                "region": "one_plastic",
+                "volume_m3": 0.15625000000000003,
+                "squared_integral_kpa2_m3": 1.3450703464941987
+              },
+              {
+                "region": "both_elastic",
+                "volume_m3": 0.40625000000000006,
+                "squared_integral_kpa2_m3": 3.223294243618441
+              }
+            ]
+          },
+          {
+            "component_order": [
+              "xx",
+              "yy",
+              "zz",
+              "xy",
+              "yz",
+              "xz"
+            ],
+            "tensor_weighted_component_rms_kpa": [
+              0.9148606485129016,
+              0.5493279297752087,
+              1.4472183370616178,
+              0.05745534412672201,
+              0.12908116156664248,
+              0.8221896387868113
+            ],
+            "component_squared_integrals_kpa2_m3": [
+              0.6277275046480852,
+              0.2263208808233375,
+              1.5708306863455457,
+              0.002475837426540037,
+              0.012496459703545244,
+              0.5069968515962904
+            ],
+            "hydrostatic_squared_integral_kpa2_m3": 1.8276185835059455,
+            "deviatoric_squared_integral_kpa2_m3": 1.1192296370373978,
+            "plastic_partition": [
+              {
+                "region": "both_plastic",
+                "volume_m3": 0.23242187499999997,
+                "squared_integral_kpa2_m3": 1.0127267305435497
+              },
+              {
+                "region": "one_plastic",
+                "volume_m3": 0.14453125000000003,
+                "squared_integral_kpa2_m3": 0.5870541173814836
+              },
+              {
+                "region": "both_elastic",
+                "volume_m3": 0.37304687499999994,
+                "squared_integral_kpa2_m3": 1.34706737261831
+              }
+            ]
+          }
+        ]
+      },
+      "reason": "ratio >= .7; an individual component improvement cannot replace full tensor gate",
+      "source_pointers": [
+        "interim/2026-11-07-plastic-spatial-convergence/plane.json#/field_difference_orders/5",
+        "interim/2026-11-07-depth-spatial-diagnostics/plane-diagnostic.json#/stress"
+      ],
+      "same_condition_independent_MC_reference": "未確認; elastic Lamé benchmark is a different problem",
+      "accepted": null
+    },
+    {
+      "id": "oscillating-static-monitor",
+      "state": "判定不能 / 未達",
+      "conditions": {
+        "same_as": "extrusion-stress",
+        "position_m": [
+          0.5,
+          0.0,
+          0.5
+        ],
+        "physical_time_s": "未定義",
+        "inertial_mass": "未定義",
+        "damping": "未定義"
+      },
+      "comparison": "static cut uz minus initial-equilibrium uz at same material point, across x/z meshes",
+      "values_m": [
+        0.00014061343382326268,
+        0.00011056132260890293,
+        0.000114496843796512
+      ],
+      "signed_changes_m": [
+        -3.0052111214359746e-05,
+        3.935521187609071e-06
+      ],
+      "initial_uz_m": [
+        -0.0005881705498333489,
+        -0.0006048387919165764,
+        -0.0006160596872145967
+      ],
+      "total_uz_m": [
+        -0.00044755711601008626,
+        -0.0004942774693076734,
+        -0.0005015628434180847
+      ],
+      "half_control_values_m": [
+        0.0001406100705667001,
+        0.00011055979793850323,
+        0.00011447530938124269
+      ],
+      "original_order": null,
+      "original_estimate": null,
+      "reason": "zero_or_oscillating_differences",
+      "velocity_m_s": "未定義: no physical time",
+      "acceleration_m_s2": "未定義: no physical time",
+      "period_s": "未定義: nonmonotone spatial sequence is not a dynamic oscillation",
+      "source_pointers": [
+        "interim/2026-11-07-depth-spatial-diagnostics/plane-diagnostic.json#/monitor"
+      ],
+      "same_condition_independent_dynamic_reference": "未定義; SDOF/rod are separate explicit dynamic benchmarks",
+      "accepted": null
+    },
+    {
+      "id": "finite-width-depth-stress",
+      "state": "判定不能 / 未達",
+      "conditions": {
+        "depth_boundary": "only y=0/1 uy=0, interior uy free; NOT traction-free ends",
+        "cut": "x<.5,z>.5,y<.5 fixed; active volume .875 m3",
+        "series_1": "x/z=2 fixed, y=2/4/8; 48/96/192 Tet4",
+        "series_2": "x/z=4 fixed, y=2/4/8; 192/384/768 Tet4; do not mix"
+      },
+      "comparison": "full tensor Frobenius RMS after depth MESH refinement at FIXED physical 1 m depth; not depth-component-only or physical-length sensitivity",
+      "series_1_kPa": [
+        1.3144810108272258,
+        0.9536884079087129
+      ],
+      "series_1_ratio": 0.7255246747981092,
+      "series_2_kPa": [
+        1.3245170342394583,
+        0.946817458453
+      ],
+      "series_2_ratio": 0.714839774783769,
+      "original_orders": [
+        null,
+        null
+      ],
+      "reason": "both ratios >= .7; fixed coarse in-plane mesh also prevents general 3D convergence claim",
+      "source_pointers": [
+        "interim/2026-11-07-depth-spatial-diagnostics/depth-finite.json#/field_difference_orders/5",
+        "interim/2026-11-07-depth-spatial-diagnostics/depth-finite-xz4.json#/field_difference_orders/5"
+      ],
+      "same_condition_independent_MC_reference": "未確認; finite elastic box has different material/load/end constraints",
+      "accepted": null
+    }
+  ],
+  "pile_metrics": {
+    "historical_tet10_counts": [
+      436,
+      819,
+      2279
+    ],
+    "historical_settlement_mm": [
+      0.32521742815831706,
+      0.3485245109509388,
+      0.36577978075570766
+    ],
+    "historical_relative_difference": [
+      0.06687358294838157,
+      0.04717393008743999
+    ],
+    "metric_is_exact_solution_error": false,
+    "spatial_threshold": "未定義",
+    "accepted": null,
+    "historical_spatial_convergence_accepted": false
+  },
+  "old_rainfall_source_rows": [
+    {
+      "id": "OLD-RAIN-01",
+      "name": "rain finest head RMS",
+      "physical": {
+        "geometry": "1m cube, bottom H=0, sides no-flow, top atmosphere with a central square rain patch",
+        "rain_patch_m": [
+          [
+            0.25,
+            0.75
+          ],
+          [
+            0.25,
+            0.75
+          ]
+        ],
+        "rain_area_m2": 0.25,
+        "materials": [
+          {
+            "id": 1,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          },
+          {
+            "id": 2,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          }
+        ],
+        "initial_total_head_m": 0.0,
+        "initial_pressure_head": "psi(z)=-z; z=0 bottom, z=1 top",
+        "initial_saturation": "Sr(z)=theta_VG(-z)/theta_s (not effective saturation)",
+        "boundary_conditions": "bottom total H=0; sides no-flow; top atmospheric_no_ponding; patch rain, dry remainder 0",
+        "physical_periods": [
+          {
+            "name": "rain",
+            "end_time_s": 3600.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          },
+          {
+            "name": "pause",
+            "end_time_s": 7200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "rain_again",
+            "end_time_s": 10800.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          }
+        ],
+        "native_subdivisions": [
+          4,
+          8,
+          16
+        ],
+        "native_tet4_counts": [
+          384,
+          3072,
+          24576
+        ],
+        "native_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "reference_subdivisions": [
+          8,
+          16,
+          32
+        ],
+        "reference_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "mechanics": false,
+        "surface_storage_or_runoff_dynamics": false
+      },
+      "time_s": 3600.0,
+      "comparison_quantity": "native16 cube-mean head vs trilinear FV32 at native16 centres",
+      "unit": "m",
+      "original_criterion": "finite(actual) and actual < upper_bound",
+      "original_upper_bound": 0.003,
+      "original_recorded_actual": 0.0046205475457005325,
+      "original_passed": false,
+      "current_status": "未達（旧記録を保持）",
+      "evidence_pointer": "/checks/0",
+      "failure_reason": "元の厳密な上限を超える。離散化の根本原因はこの記録だけでは未確認。",
+      "independent_same_condition_value": null,
+      "accepted": null,
+      "independent_reason": "未定義：有限正方形の降雨パッチと二横方向流を同時に保存する1D/2D縮約なし。新規3D求解は未実行。",
+      "missing_input_values": [],
+      "not_confirmed": [
+        "元3Dと同じ新規独立参照値",
+        "不合格の数値アルゴリズム上の根本原因"
+      ],
+      "later_bounded_record": {
+        "path": "interim/2026-10-30-rain-refinement-and-finer14909/rain/comparison.json",
+        "check": {
+          "name": "rain finest head RMS",
+          "actual": 0.0021063828153719357,
+          "upper_bound": 0.003,
+          "passed": true
+        },
+        "scope": "native 8/16/24, finest 82944 Tet4 vs FV64; different refinement window",
+        "replaces_original_failure": false
+      }
+    },
+    {
+      "id": "OLD-RAIN-02",
+      "name": "rain native_space difference ratio",
+      "physical": {
+        "geometry": "1m cube, bottom H=0, sides no-flow, top atmosphere with a central square rain patch",
+        "rain_patch_m": [
+          [
+            0.25,
+            0.75
+          ],
+          [
+            0.25,
+            0.75
+          ]
+        ],
+        "rain_area_m2": 0.25,
+        "materials": [
+          {
+            "id": 1,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          },
+          {
+            "id": 2,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          }
+        ],
+        "initial_total_head_m": 0.0,
+        "initial_pressure_head": "psi(z)=-z; z=0 bottom, z=1 top",
+        "initial_saturation": "Sr(z)=theta_VG(-z)/theta_s (not effective saturation)",
+        "boundary_conditions": "bottom total H=0; sides no-flow; top atmospheric_no_ponding; patch rain, dry remainder 0",
+        "physical_periods": [
+          {
+            "name": "rain",
+            "end_time_s": 3600.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          },
+          {
+            "name": "pause",
+            "end_time_s": 7200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "rain_again",
+            "end_time_s": 10800.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          }
+        ],
+        "native_subdivisions": [
+          4,
+          8,
+          16
+        ],
+        "native_tet4_counts": [
+          384,
+          3072,
+          24576
+        ],
+        "native_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "reference_subdivisions": [
+          8,
+          16,
+          32
+        ],
+        "reference_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "mechanics": false,
+        "surface_storage_or_runoff_dynamics": false
+      },
+      "time_s": 3600.0,
+      "comparison_quantity": "RMS difference(8,16)/RMS difference(4,8), RT0 six-tet block averages trilinearly sampled at common FV32 centres",
+      "unit": "1",
+      "original_criterion": "finite(actual) and actual < upper_bound",
+      "original_upper_bound": 0.8,
+      "original_recorded_actual": 1.348244318335049,
+      "original_passed": false,
+      "current_status": "未達（旧記録を保持）",
+      "evidence_pointer": "/checks/2",
+      "failure_reason": "元の厳密な上限を超える。離散化の根本原因はこの記録だけでは未確認。",
+      "independent_same_condition_value": null,
+      "accepted": null,
+      "independent_reason": "未定義：有限正方形の降雨パッチと二横方向流を同時に保存する1D/2D縮約なし。新規3D求解は未実行。",
+      "missing_input_values": [],
+      "not_confirmed": [
+        "元3Dと同じ新規独立参照値",
+        "不合格の数値アルゴリズム上の根本原因"
+      ],
+      "later_bounded_record": {
+        "path": "interim/2026-10-30-rain-refinement-and-finer14909/rain/comparison.json",
+        "check": {
+          "name": "rain native_space difference ratio",
+          "actual": 0.14680280036451515,
+          "upper_bound": 0.8,
+          "passed": true
+        },
+        "scope": "native 8/16/24, finest 82944 Tet4 vs FV64; different refinement window",
+        "replaces_original_failure": false
+      }
+    },
+    {
+      "id": "OLD-RAIN-03",
+      "name": "pause native_space difference ratio",
+      "physical": {
+        "geometry": "1m cube, bottom H=0, sides no-flow, top atmosphere with a central square rain patch",
+        "rain_patch_m": [
+          [
+            0.25,
+            0.75
+          ],
+          [
+            0.25,
+            0.75
+          ]
+        ],
+        "rain_area_m2": 0.25,
+        "materials": [
+          {
+            "id": 1,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          },
+          {
+            "id": 2,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          }
+        ],
+        "initial_total_head_m": 0.0,
+        "initial_pressure_head": "psi(z)=-z; z=0 bottom, z=1 top",
+        "initial_saturation": "Sr(z)=theta_VG(-z)/theta_s (not effective saturation)",
+        "boundary_conditions": "bottom total H=0; sides no-flow; top atmospheric_no_ponding; patch rain, dry remainder 0",
+        "physical_periods": [
+          {
+            "name": "rain",
+            "end_time_s": 3600.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          },
+          {
+            "name": "pause",
+            "end_time_s": 7200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "rain_again",
+            "end_time_s": 10800.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          }
+        ],
+        "native_subdivisions": [
+          4,
+          8,
+          16
+        ],
+        "native_tet4_counts": [
+          384,
+          3072,
+          24576
+        ],
+        "native_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "reference_subdivisions": [
+          8,
+          16,
+          32
+        ],
+        "reference_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "mechanics": false,
+        "surface_storage_or_runoff_dynamics": false
+      },
+      "time_s": 7200.0,
+      "comparison_quantity": "RMS difference(8,16)/RMS difference(4,8), RT0 six-tet block averages trilinearly sampled at common FV32 centres",
+      "unit": "1",
+      "original_criterion": "finite(actual) and actual < upper_bound",
+      "original_upper_bound": 0.8,
+      "original_recorded_actual": 0.998450823613834,
+      "original_passed": false,
+      "current_status": "未達（旧記録を保持）",
+      "evidence_pointer": "/checks/8",
+      "failure_reason": "元の厳密な上限を超える。離散化の根本原因はこの記録だけでは未確認。",
+      "independent_same_condition_value": null,
+      "accepted": null,
+      "independent_reason": "未定義：有限正方形の降雨パッチと二横方向流を同時に保存する1D/2D縮約なし。新規3D求解は未実行。",
+      "missing_input_values": [],
+      "not_confirmed": [
+        "元3Dと同じ新規独立参照値",
+        "不合格の数値アルゴリズム上の根本原因"
+      ],
+      "later_bounded_record": {
+        "path": "interim/2026-10-30-rain-refinement-and-finer14909/rain/comparison.json",
+        "check": {
+          "name": "pause native_space difference ratio",
+          "actual": 0.10329519327983219,
+          "upper_bound": 0.8,
+          "passed": true
+        },
+        "scope": "native 8/16/24, finest 82944 Tet4 vs FV64; different refinement window",
+        "replaces_original_failure": false
+      }
+    },
+    {
+      "id": "OLD-RAIN-04",
+      "name": "rain_again finest head RMS",
+      "physical": {
+        "geometry": "1m cube, bottom H=0, sides no-flow, top atmosphere with a central square rain patch",
+        "rain_patch_m": [
+          [
+            0.25,
+            0.75
+          ],
+          [
+            0.25,
+            0.75
+          ]
+        ],
+        "rain_area_m2": 0.25,
+        "materials": [
+          {
+            "id": 1,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          },
+          {
+            "id": 2,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          }
+        ],
+        "initial_total_head_m": 0.0,
+        "initial_pressure_head": "psi(z)=-z; z=0 bottom, z=1 top",
+        "initial_saturation": "Sr(z)=theta_VG(-z)/theta_s (not effective saturation)",
+        "boundary_conditions": "bottom total H=0; sides no-flow; top atmospheric_no_ponding; patch rain, dry remainder 0",
+        "physical_periods": [
+          {
+            "name": "rain",
+            "end_time_s": 3600.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          },
+          {
+            "name": "pause",
+            "end_time_s": 7200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "rain_again",
+            "end_time_s": 10800.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          }
+        ],
+        "native_subdivisions": [
+          4,
+          8,
+          16
+        ],
+        "native_tet4_counts": [
+          384,
+          3072,
+          24576
+        ],
+        "native_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "reference_subdivisions": [
+          8,
+          16,
+          32
+        ],
+        "reference_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "mechanics": false,
+        "surface_storage_or_runoff_dynamics": false
+      },
+      "time_s": 10800.0,
+      "comparison_quantity": "native16 cube-mean head vs trilinear FV32 at native16 centres",
+      "unit": "m",
+      "original_criterion": "finite(actual) and actual < upper_bound",
+      "original_upper_bound": 0.003,
+      "original_recorded_actual": 0.0038863726982864173,
+      "original_passed": false,
+      "current_status": "未達（旧記録を保持）",
+      "evidence_pointer": "/checks/12",
+      "failure_reason": "元の厳密な上限を超える。離散化の根本原因はこの記録だけでは未確認。",
+      "independent_same_condition_value": null,
+      "accepted": null,
+      "independent_reason": "未定義：有限正方形の降雨パッチと二横方向流を同時に保存する1D/2D縮約なし。新規3D求解は未実行。",
+      "missing_input_values": [],
+      "not_confirmed": [
+        "元3Dと同じ新規独立参照値",
+        "不合格の数値アルゴリズム上の根本原因"
+      ],
+      "later_bounded_record": {
+        "path": "interim/2026-10-30-rain-refinement-and-finer14909/rain/comparison.json",
+        "check": {
+          "name": "rain_again finest head RMS",
+          "actual": 0.0016775630565907939,
+          "upper_bound": 0.003,
+          "passed": true
+        },
+        "scope": "native 8/16/24, finest 82944 Tet4 vs FV64; different refinement window",
+        "replaces_original_failure": false
+      }
+    },
+    {
+      "id": "OLD-RAIN-05",
+      "name": "rain_again finest storage",
+      "physical": {
+        "geometry": "1m cube, bottom H=0, sides no-flow, top atmosphere with a central square rain patch",
+        "rain_patch_m": [
+          [
+            0.25,
+            0.75
+          ],
+          [
+            0.25,
+            0.75
+          ]
+        ],
+        "rain_area_m2": 0.25,
+        "materials": [
+          {
+            "id": 1,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          },
+          {
+            "id": 2,
+            "saturated_conductivity_m_s": [
+              [
+                1e-06,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1e-06,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1e-06
+              ]
+            ],
+            "retention": {
+              "residual_water_content": 0.08,
+              "saturated_water_content": 0.45,
+              "alpha_per_m": 1.2,
+              "n": 1.6,
+              "saturated_specific_storage_per_m": 1e-05
+            }
+          }
+        ],
+        "initial_total_head_m": 0.0,
+        "initial_pressure_head": "psi(z)=-z; z=0 bottom, z=1 top",
+        "initial_saturation": "Sr(z)=theta_VG(-z)/theta_s (not effective saturation)",
+        "boundary_conditions": "bottom total H=0; sides no-flow; top atmospheric_no_ponding; patch rain, dry remainder 0",
+        "physical_periods": [
+          {
+            "name": "rain",
+            "end_time_s": 3600.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          },
+          {
+            "name": "pause",
+            "end_time_s": 7200.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 0.0
+                }
+              }
+            ]
+          },
+          {
+            "name": "rain_again",
+            "end_time_s": 10800.0,
+            "boundaries": [
+              {
+                "face_set": "bottom",
+                "condition": {
+                  "kind": "head",
+                  "value": {
+                    "head_m": 0.0
+                  }
+                }
+              },
+              {
+                "face_set": "top",
+                "condition": {
+                  "kind": "atmospheric_no_ponding",
+                  "rainfall_vertical_m_s": 3e-06
+                }
+              }
+            ]
+          }
+        ],
+        "native_subdivisions": [
+          4,
+          8,
+          16
+        ],
+        "native_tet4_counts": [
+          384,
+          3072,
+          24576
+        ],
+        "native_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "reference_subdivisions": [
+          8,
+          16,
+          32
+        ],
+        "reference_dt_s": [
+          100,
+          50,
+          25
+        ],
+        "mechanics": false,
+        "surface_storage_or_runoff_dynamics": false
+      },
+      "time_s": 10800.0,
+      "comparison_quantity": "absolute native16 minus FV32 total storage offset",
+      "unit": "m3",
+      "original_criterion": "finite(actual) and actual < upper_bound",
+      "original_upper_bound": 0.0001,
+      "original_recorded_actual": 0.00014219441327791016,
+      "original_passed": false,
+      "current_status": "未達（旧記録を保持）",
+      "evidence_pointer": "/checks/13",
+      "failure_reason": "元の厳密な上限を超える。離散化の根本原因はこの記録だけでは未確認。",
+      "independent_same_condition_value": null,
+      "accepted": null,
+      "independent_reason": "未定義：有限正方形の降雨パッチと二横方向流を同時に保存する1D/2D縮約なし。新規3D求解は未実行。",
+      "missing_input_values": [],
+      "not_confirmed": [
+        "元3Dと同じ新規独立参照値",
+        "不合格の数値アルゴリズム上の根本原因"
+      ],
+      "later_bounded_record": {
+        "path": "interim/2026-10-30-rain-refinement-and-finer14909/rain/comparison.json",
+        "check": {
+          "name": "rain_again finest storage",
+          "actual": 4.3335159960022906e-05,
+          "upper_bound": 0.0001,
+          "passed": true
+        },
+        "scope": "native 8/16/24, finest 82944 Tet4 vs FV64; different refinement window",
+        "replaces_original_failure": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "group": "rust-core",
+  "integration_target_shards": {
+    "rust-integration-0": [
+      "anchors",
+      "construction",
+      "embedding",
+      "epoch_srm_gate_job",
+      "epoch_srm_search",
+      "free_contact",
+      "geostatic_affine",
+      "hardening_fem",
+      "hydrostatic",
+      "joint_law",
+      "joints",
+      "low_preload_cut",
+      "mc_epoch_cli",
+      "mc_fem",
+      "mc_parameter_global",
+      "mcc_midpoint",
+      "mcc_split",
+      "mechanics",
+      "mixed_mechanics",
+      "one_way",
+      "one_way_lifecycle",
+      "projected_mcc",
+      "reset",
+      "rigidity",
+      "srm_bound",
+      "srm_search_control",
+      "srm_virtual_work",
+      "stage_job",
+      "surface_projection",
+      "water_stages"
+    ],
+    "rust-integration-1": [
+      "beams",
+      "darcy",
+      "epoch_srm_gate",
+      "epoch_srm_job",
+      "exact_fs",
+      "geostatic",
+      "ground_initialization",
+      "hardening_material",
+      "hydrostatic_volume",
+      "joint_water",
+      "local_excavation",
+      "mc_epoch_checkpoint",
+      "mc_epoch_path",
+      "mc_material",
+      "mc_parameter_transition",
+      "mcc_sensitivity",
+      "mcc_stop_boundaries",
+      "mixed_mcc",
+      "newton_diagnostics",
+      "one_way_construction",
+      "plates",
+      "replay",
+      "richards",
+      "seepage_stages",
+      "srm_search",
+      "srm_search_job",
+      "stage_control",
+      "stages_fem",
+      "tet10",
+      "wet_structures"
+    ]
+  },
+  "integration_targets_total": 60,
+  "commands": [
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--lib",
+      "--bins"
+    ],
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--doc"
+    ],
+    [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "--examples"
+    ]
+  ],
+  "executed": true,
+  "exit_code": 0,
+  "test_results": [
+    {
+      "result": "ok",
+      "passed": 60,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 0
+    },
+    {
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 0
+    },
+    {
+      "result": "ok",
+      "passed": 0,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 0
+    }
+  ],
+  "elapsed_seconds": 305.36064903999977
+}

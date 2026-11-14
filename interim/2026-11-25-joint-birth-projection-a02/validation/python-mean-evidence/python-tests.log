@@ -1,0 +1,21 @@
+setUpClass (test_nc_mean_stress_evidence.MeanStressEvidence) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_nc_mean_stress_evidence.MeanStressEvidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_mean_stress_evidence.py", line 20, in setUpClass
+    cls.integrity = replay.run(cls.folder, allow_platform_float_differences=sys.platform == 'win32')
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-mean-stress-release/remeasure.py", line 115, in run
+    subprocess.run(isolated_command('-c',child_code,script,evidence,out/'measurements.json',int(allow_platform_float_differences)),cwd=snapshot,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/workspace/solidcraft_soil_analysis/.venv/bin/python', '-I', '-X', 'utf8', '-c', "import importlib.util,json,sys\nfrom pathlib import Path\nscript,evidence,output=map(Path,sys.argv[1:4])\nspec=importlib.util.spec_from_file_location('sealed_nc_measure',script)\nmodule=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\noutput.write_text(json.dumps(module.measure(evidence,bool(int(sys.argv[4]))),indent=2,allow_nan=False)+'\\n',encoding='utf-8')\n", '/tmp/tmp60rx7abn/replay/evidence/sources/interim/2026-11-10-nc-mean-stress-release/measure.py', '/tmp/tmp60rx7abn/replay/evidence', '/tmp/tmp60rx7abn/replay/measurements.json', '0']' returned non-zero exit status 1.
+
+----------------------------------------------------------------------
+Ran 0 tests in 1149.509s
+
+FAILED (errors=1)

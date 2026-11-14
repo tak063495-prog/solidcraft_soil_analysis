@@ -1,0 +1,9 @@
+evidence.tar.xz 1038 45277168 9fb484c07f8f2bb51a632d14d5459c3752a06d7e4bf65aae05963c5767d691a4
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-09-nc-turning-path-diagnosis/package.py", line 51, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--raw',type=Path,required=True);a=p.parse_args();package(a.raw.resolve())
+                                                                                                 ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-09-nc-turning-path-diagnosis/package.py", line 45, in package
+    if destination.stat().st_size>=95*1024*1024:raise ValueError('split this archive before committing')
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: split this archive before committing

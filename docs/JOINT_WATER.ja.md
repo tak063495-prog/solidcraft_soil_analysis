@@ -105,3 +105,18 @@ Richardsの水頭トレースと湿潤接合の接続、有限の透水抵抗・
 この追加比較は弾性・閉鎖固着の工程端を対象とし、一般塑性地盤の独立変位解や、すべり経路全体の独立解の検証とは区別する。塑性/すべり試行の切戻し、開離と水圧の残存、保持力のある部分撤去と途中再開は、前述のRust/CLI試験で別に検査した。
 
 実行版SHA256：`29784813aaded32897290701ab31956322954cc961f15945b9bc387f4b6eec01`。検証前に **407ソース**を凍結し、ZIPのSHA256は`fca40ba3a31efbff632c11995966353ce2660603f772488d68cd32a98fabde00`。[現行ソース照合](../runs/wet-joint-current-source-binding-29784813.json)は非Markdown **363ファイル**の完全一致と、その後の受入記録・追加図/独立計算のハッシュを対応付ける。Richards湿潤接合、接触BIRTH、一般3D塑性独立解、SolidCraft画面内UIとP6全体は継続する。
+
+## 2026-11-08の小規模統合追補
+
+既存の固定版記録を保持したまま、静水圧・定常Darcy CONTINUOUS JOINTと12 Tet10・板2枚・梁1本の独立3D弾性対照を追加した。[既存証拠の棚卸し・限定範囲・残件・ユーザーPC手順](STRUCTURE_WATER_JOINT_REMAINDERS.ja.md)を参照。弾性・閉鎖固着の範囲であり、板/地盤の節点間補間整合、一般塑性・Richards湿潤接触、接触BIRTHやP3b/P4/P6全体の完了ではない。
+
+## PRESCRIBED追従水位と既存小部材の限定統合（2026-11-08）
+
+PR #13指定先端813b751から、既存の湿潤柱12 Tet10・板2枚・梁1本だけで、`PRESCRIBED level_m=null` の静水圧/定常Darcyを独立3D全場と比較した。物理水圧/両側面荷重/有効接触力、全構造回転と設置基準、地盤GP・梁力・板生評価点、GL5→7、8地点の別CLI途中再開、棄却なし対照、VTU/CSV再読込を検査した。生証拠と元の基準による限定判定は [interim](../interim/2026-11-08-nc-newton-and-prescribed-joint/README.ja.md) を参照する。
+
+既定CONTINUOUS参照の受入範囲は維持し、新条件には `--water-mode prescribed` が必要。固定水頭PRESCRIBEDとSOIL＋部材は拒否/未検証のまま。一般塑性・開離/滑り、Richards、接触BIRTH、部分亀裂先端や一般空間収束の完成証拠ではない。P3b/P4各行、構造・水・JOINT全体、P6全体を完了にしない。旧CONTINUOUS保護値2.6845491097390954e-11と全既存記録は変更しない。新先端Windows CIは未確認。
+
+
+## 2026-11-11：宣言したTet10先端の限定追加
+
+[案1の記録](../interim/2026-11-11-joint-crack-tip/README.ja.md)に、完全水没・閉鎖固着・弾性MCのCONTINUOUS/SOIL/PRESCRIBED先端を追加した。静水圧・Darcy・片側撤去・再開、共有先端での対向物理面圧の相殺、土/構造の圧力区別を独立に照合する。CONTINUOUSとSOILは非ゼロ流れ、PRESCRIBEDは固定水頭整合経路に限る。水頭1e-8 m・独立弾性相対1e-7・再組立1e-10等を緩めていない。部分水没先端、湿潤塑性すべり全履歴の収束、Richards、BIRTHの受入ではなく、過去の未達を保持する。

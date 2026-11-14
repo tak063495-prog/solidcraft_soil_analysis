@@ -1,0 +1,175 @@
+{
+  "schema": "solidcraft-issue-triage-validation/1",
+  "passed": true,
+  "baseline_commit": "d8616cefb526e70f422ec8c164afd2353c8f8149",
+  "repair_commit": "bfec86f0ff119f44a8046853258e3daf10a992f7",
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "cwd": "/workspace/work/issue-triage-code",
+      "started_at_utc": "2026-11-11T05:46:08.515856+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 1.2054884919998585
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/workspace/work/issue-triage-code",
+      "started_at_utc": "2026-11-11T05:46:09.721597+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 16.588404337000156
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "cwd": "/workspace/work/issue-triage-code",
+      "started_at_utc": "2026-11-11T05:46:26.310247+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 106.17971484300006
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "cwd": "/workspace/work/issue-triage-code",
+      "started_at_utc": "2026-11-11T06:04:25.861881+00:00",
+      "retry_reason": "Exact missing archival fixtures restored; original failure retained",
+      "exit_code": 0,
+      "elapsed_seconds": 940.877418609
+    },
+    {
+      "name": "python-mean-evidence",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/work/issue-triage/validation/python-mean-evidence"
+      ],
+      "cwd": "/workspace/solidcraft_soil_analysis",
+      "started_at_utc": "2026-11-11T05:59:09.497303+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 895.897051764
+    },
+    {
+      "name": "python-spatial-evidence",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/work/issue-triage/validation/python-spatial-evidence"
+      ],
+      "cwd": "/workspace/solidcraft_soil_analysis",
+      "started_at_utc": "2026-11-11T06:01:38.407574+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 135.74549043700017
+    },
+    {
+      "name": "python-core-0",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/work/issue-triage/validation/python-core-0"
+      ],
+      "cwd": "/workspace/solidcraft_soil_analysis",
+      "started_at_utc": "2026-11-11T05:59:42.195612+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 391.46691414099996
+    },
+    {
+      "name": "python-core-1",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/work/issue-triage/validation/python-core-1"
+      ],
+      "cwd": "/workspace/solidcraft_soil_analysis",
+      "started_at_utc": "2026-11-11T06:06:13.663247+00:00",
+      "exit_code": 0,
+      "elapsed_seconds": 254.60169782999992
+    }
+  ],
+  "rust_passed": 451,
+  "rust_summary_groups": 69,
+  "rust_failed": 0,
+  "rust_ignored": 0,
+  "rust_measured": 0,
+  "rust_filtered_out": 0,
+  "python_passed": 512,
+  "python_tests": 510,
+  "python_tools": 2,
+  "python_groups": {
+    "python-core-0": {
+      "tests_run": 270,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "python-core-1": {
+      "tests_run": 234,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "python-mean-evidence": {
+      "tests_run": 4,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "python-spatial-evidence": {
+      "tests_run": 4,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "failures": 0,
+  "errors": 0,
+  "ignored": 0,
+  "skipped": 0,
+  "filtered_out": 0,
+  "expected_failures": 0,
+  "unexpected_successes": 0,
+  "new_python_test_methods": 7,
+  "new_rust_test_methods": 0,
+  "focused_repeats_not_added": true,
+  "numerical_acceptance": false,
+  "p6_complete": false
+}

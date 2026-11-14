@@ -16,8 +16,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::{sync::Arc, time::Instant};
 
+#[path = "stages_joint_path_error.rs"]
+mod joint_path_error;
 #[path = "stages_mixed.rs"]
 mod mixed;
+pub use joint_path_error::PathErrorAudit;
 pub(crate) mod srm_adapter;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -51,6 +54,19 @@ pub struct Settings {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Stage {
+    /// Convert an exact pre-birth tie into unilateral effective contact.
+    JointBirth {
+        name: String,
+        joints: Vec<String>,
+        #[serde(default)]
+        initial_increment: Option<f64>,
+    },
+    JointDeath {
+        name: String,
+        joints: Vec<String>,
+        #[serde(default)]
+        initial_increment: Option<f64>,
+    },
     /// ONE_WAY: solve steady flow on the current active geometry, then apply
     /// its pore pressure to mechanics. Exterior water is specified separately.
     SteadySeepage {
@@ -115,6 +131,10 @@ pub enum Stage {
         bodies: Vec<String>,
         states: BTreeMap<String, soil::State>,
         placement: BirthPlacement,
+        /// Explicit initial pore field for newly placed soil. Omission keeps
+        /// the existing dry, stress-free BIRTH contract.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        hydraulic_initialization: Option<BirthHydraulicState>,
         #[serde(default)]
         initial_increment: Option<f64>,
     },
@@ -160,11 +180,19 @@ pub enum BirthPlacement {
     CurrentDisplacement,
     CadNewNodes,
 }
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+pub enum BirthHydraulicState {
+    /// ONE_WAY, prescribed hydrostatic field, fully submerged fresh MC soil.
+    Hydrostatic { level_m: f64 },
+}
 impl Stage {
     fn is_transition(&self) -> bool {
         matches!(
             self,
             Self::Birth { .. }
+                | Self::JointBirth { .. }
+                | Self::JointDeath { .. }
                 | Self::MaterialSet { .. }
                 | Self::ResetState { .. }
                 | Self::InstallBeams { .. }
@@ -175,7 +203,9 @@ impl Stage {
     }
     pub(crate) fn name(&self) -> &str {
         match self {
-            Self::Pressure { name, .. }
+            Self::JointBirth { name, .. }
+            | Self::JointDeath { name, .. }
+            | Self::Pressure { name, .. }
             | Self::SteadySeepage { name, .. }
             | Self::HydrostaticWater { name, .. }
             | Self::Excavate { name, .. }
@@ -193,7 +223,13 @@ impl Stage {
     fn step(&self, settings: &Settings) -> f64 {
         match self {
             Self::ResetDisplay { .. } => 1.,
-            Self::Pressure {
+            Self::JointBirth {
+                initial_increment, ..
+            }
+            | Self::JointDeath {
+                initial_increment, ..
+            }
+            | Self::Pressure {
                 initial_increment, ..
             }
             | Self::HydrostaticWater {
@@ -244,7 +280,9 @@ impl Stage {
                 remaining_surface_pressure_kpa,
                 ..
             } => *remaining_surface_pressure_kpa,
-            Self::Boundary { .. }
+            Self::JointBirth { .. }
+            | Self::JointDeath { .. }
+            | Self::Boundary { .. }
             | Self::SteadySeepage { .. }
             | Self::HydrostaticWater { .. }
             | Self::Birth { .. }
@@ -331,6 +369,8 @@ pub struct Committed {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Attempt {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub joint_path_error: Option<PathErrorAudit>,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub rejected_trial_water_changed: bool,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -420,6 +460,9 @@ pub struct Frame {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Run {
+    /// Absent in historical runs, which used the material GP water rule.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hydrostatic_volume_integration: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub flow_audits: Vec<FlowAudit>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -749,6 +792,42 @@ impl Tangent {
         }
         Ok(())
     }
+    fn solve_a01_observed(
+        &self,
+        rhs: &DVector<f64>,
+        settings: &Settings,
+        observer: Option<&dyn crate::stage_control::Observer>,
+    ) -> Result<(DVector<f64>, LinearReport)> {
+        let Some(o) = observer.filter(|o| o.a01_joint_cause_enabled()) else {
+            return self.solve(rhs, settings);
+        };
+        if rhs.len() > 256 {
+            return Err(Error::Control(
+                "A-01 linear observation limited to 256 DOF".into(),
+            ));
+        }
+        let storage = match self {
+            Self::Sparse(a) => serde_json::json!({"kind":"csr", "row_ptr":a.row_ptr(),
+                "columns":a.columns(), "values":a.values()}),
+            Self::Dense(a) => serde_json::json!({"kind":"dense", "matrix_columns":
+                (0..a.ncols()).map(|i| a.column(i).iter().copied().collect::<Vec<_>>()).collect::<Vec<_>>()}),
+        };
+        o.on_diagnostic(
+            &serde_json::json!({"kind":"a01_linear_system", "storage":storage,
+            "rhs":rhs.as_slice(), "settings":settings}),
+        )
+        .map_err(|e| Error::Control(e.to_string()))?;
+        let result = self.solve(rhs, settings);
+        let value = match &result {
+            Ok((x, report)) => {
+                serde_json::json!({"kind":"a01_linear_result", "solution":x.as_slice(), "report":report})
+            }
+            Err(e) => serde_json::json!({"kind":"a01_linear_result", "error":e.to_string()}),
+        };
+        o.on_diagnostic(&value)
+            .map_err(|e| Error::Control(e.to_string()))?;
+        result
+    }
     fn solve(
         &self,
         rhs: &DVector<f64>,
@@ -877,6 +956,13 @@ fn same_anchor_basis(a: &Option<crate::anchors::State>, b: &Option<crate::anchor
 }
 
 impl StageCase {
+    pub(crate) fn has_offset_plates(&self) -> bool {
+        self.beam_system.as_ref().is_some_and(|c| {
+            c.plates
+                .iter()
+                .any(|p| p.formulation == crate::plates::Formulation::MindlinTri6Offset)
+        })
+    }
     fn is_mixed_mcc(&self) -> bool {
         self.schema == "soil-fem-mixed-mcc-stages/1" || self.is_projected_mcc()
     }
@@ -908,6 +994,50 @@ impl StageCase {
     }
     pub fn validate(&self) -> Result<()> {
         let s = &self.settings;
+        if self.has_offset_plates()
+            && (self.joint_system.is_some()
+                || self.anchor_system.is_some()
+                || !self.initially_inactive_bodies.is_empty()
+                || self.stages.iter().any(|stage| {
+                    !matches!(
+                        stage,
+                        Stage::Boundary { .. }
+                            | Stage::InstallBeams { .. }
+                            | Stage::RemoveBeams { .. }
+                    )
+                }))
+        {
+            return Err(Error::Input("offset Tri6 scope excludes JOINT, anchors, water, soil BIRTH/DEATH/MATSET and unverified stage combinations".into()));
+        }
+        for stage in &self.stages {
+            if let Stage::JointBirth { joints, .. } | Stage::JointDeath { joints, .. } = stage {
+                let c = self.joint_system.as_ref().ok_or_else(|| {
+                    Error::Input("JOINT BIRTH/DEATH requires a joint system".into())
+                })?;
+                if joints.is_empty()
+                    || joints.iter().collect::<BTreeSet<_>>().len() != joints.len()
+                    || joints.iter().any(|id| {
+                        !c.joints
+                            .iter()
+                            .any(|d| &d.id == id && d.birth_policy.is_some())
+                    })
+                {
+                    return Err(Error::Input(
+                        "JOINT BIRTH/DEATH requires unique ids and an explicit birth_policy".into(),
+                    ));
+                }
+            }
+        }
+        if let Some(c) = &self.joint_system
+            && c.joints
+                .iter()
+                .any(|d| d.crack_tip.is_some() && d.birth_policy.is_some())
+            && (self.beam_system.is_some() || self.anchor_system.is_some())
+        {
+            return Err(Error::Input(
+                "declared-tip JOINT BIRTH with structural members is unverified".into(),
+            ));
+        }
         if let Some(c) = &self.joint_system
             && self.has_staged_water()
             && !c.joints.iter().any(|d| d.water.is_some())
@@ -919,7 +1049,11 @@ impl StageCase {
         if self.joint_system.is_some()
             && (matches!(s.kinematics, Kinematics::Oedometer)
                 || !self.pressure_on_original_surface_only
-                || self.stages.iter().any(|s| matches!(s, Stage::Birth { .. })))
+                || (self.stages.iter().any(|s| matches!(s, Stage::Birth { .. }))
+                    && self
+                        .joint_system
+                        .as_ref()
+                        .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_none()))))
         {
             return Err(Error::Input("JOINT requires independent displacements and original-surface surcharge; BIRTH reactivation requires an explicit interface history policy".into()));
         }
@@ -929,6 +1063,26 @@ impl StageCase {
             ));
         }
         s.linear_solver.validate()?;
+        if let Some(control) = self
+            .joint_system
+            .as_ref()
+            .and_then(|j| j.global_step_control.as_ref())
+        {
+            if self
+                .stages
+                .iter()
+                .any(|stage| !matches!(stage, Stage::Boundary { .. }))
+            {
+                return Err(Error::Input(
+                    "JOINT global step control currently supports boundary-factor stages only"
+                        .into(),
+                ));
+            }
+            control.validate(s.initial_increment, s.minimum_increment)?;
+            for stage in &self.stages {
+                control.validate(stage.step(s), s.minimum_increment)?;
+            }
+        }
         if self.beam_system.is_some() && matches!(s.kinematics, Kinematics::Oedometer) {
             return Err(Error::Input(
                 "beams require explicit or side-roller kinematics".into(),
@@ -1248,6 +1402,21 @@ impl<'a> Model<'a> {
                     adjacency[b].push(a);
                 }
             }
+            // Reachability only: an actual shared tip DOF can connect retained
+            // solids after a partial DEATH. It does not certify their rotational
+            // support. Geometry::constrained imposes the shared-node equalities;
+            // joint_support_space adds only sustained compressive contact rows.
+            for node in joints.shared_tip_nodes() {
+                let incident: Vec<_> = (0..active.len())
+                    .filter(|&e| active[e] && self.mesh.cell_nodes(e).contains(&node))
+                    .collect();
+                if let Some(&first) = incident.first() {
+                    for &other in &incident[1..] {
+                        adjacency[first].push(other);
+                        adjacency[other].push(first);
+                    }
+                }
+            }
         }
         for (face, owners) in &self.faces {
             if owners.len() == 2 && active[owners[0]] && active[owners[1]] {
@@ -1292,6 +1461,62 @@ impl<'a> Model<'a> {
         stage: &Stage,
         external_fluid: bool,
     ) -> Result<(Committed, Vec<usize>)> {
+        if let Stage::JointBirth { joints: ids, .. } | Stage::JointDeath { joints: ids, .. } = stage
+        {
+            if external_fluid {
+                return Err(Error::Input(
+                    "Richards wet JOINT BIRTH/DEATH is unsupported".into(),
+                ));
+            }
+            let j = self
+                .joints
+                .as_ref()
+                .ok_or_else(|| Error::Input("missing JOINT model".into()))?;
+            let state = origin
+                .joints
+                .as_ref()
+                .ok_or_else(|| Error::Input("missing JOINT history".into()))?;
+            let mut prepared = origin.clone();
+            prepared.joints = Some(if matches!(stage, Stage::JointDeath { .. }) {
+                j.death(state, ids)?
+            } else {
+                // Recover only effective contact transfer: physical water is
+                // already present once on the RHS and pore stress in I_pore.
+                let mut untied = state.clone();
+                for l in &mut untied.lifecycle {
+                    l.tied = false;
+                }
+                let dofs = self.dofs(
+                    &origin.active_elements,
+                    &self.case.settings,
+                    origin.boundary_factor,
+                    Some(&untied),
+                )?;
+                let evaluated = self.evaluate(
+                    origin,
+                    &origin.displacement_m,
+                    &origin.active_elements,
+                    &dofs,
+                    &self.case.settings,
+                    EvaluationMode::plain(),
+                )?;
+                let residual: Vec<_> = origin
+                    .applied_nodal_load_kn
+                    .iter()
+                    .zip(&evaluated.internal)
+                    .map(|(f, i)| f - i)
+                    .collect();
+                j.birth(
+                    state,
+                    &origin.displacement_m,
+                    &origin.active_elements,
+                    ids,
+                    &residual,
+                    &dofs.rows,
+                )?
+            });
+            return Ok((prepared, vec![]));
+        }
         if matches!(stage, Stage::Birth { .. })
             && origin.pore_pressure_kpa.is_some()
             && !external_fluid
@@ -1372,6 +1597,51 @@ impl<'a> Model<'a> {
             ));
         }
         let selected = self.selected_bodies(bodies)?;
+        let birth_hydraulic = match stage {
+            Stage::Birth {
+                hydraulic_initialization,
+                ..
+            } => hydraulic_initialization.as_ref(),
+            _ => None,
+        };
+        if let Some(BirthHydraulicState::Hydrostatic { level_m }) = birth_hydraulic
+            && (external_fluid
+                || bodies.len() != 1
+                || !matches!(
+                    stage,
+                    Stage::Birth {
+                        placement: BirthPlacement::CadNewNodes,
+                        ..
+                    }
+                )
+                || self.case.beam_system.is_some()
+                || self.case.anchor_system.is_some()
+                || self.case.joint_system.as_ref().is_none_or(|c| {
+                    c.joints.len() != 1
+                        || !c.structure_bodies.is_empty()
+                        || c.joints[0].crack_tip.is_some()
+                        || c.joints[0].birth_policy != Some(crate::joints::BirthPolicy::StressFree)
+                        || !matches!(
+                            c.joints[0].water,
+                            Some(crate::joint_water::Policy::Continuous)
+                        )
+                })
+                || !level_m.is_finite()
+                || Some(*level_m)
+                    != origin
+                        .hydrostatic_water_level_m
+                        .or(self.ground.initialization.water_level_m)
+                || selected.iter().any(|&e| {
+                    !self.soil_points[self.elements[e].point_start]
+                        || self
+                            .mesh
+                            .cell_nodes(e)
+                            .iter()
+                            .any(|&n| self.mesh.nodes[n][2] > *level_m)
+                }))
+        {
+            return Err(Error::Input("wet BIRTH requires one fully submerged fresh soil body, cad_new_nodes, explicit matching hydrostatic level, and one mode-B CONTINUOUS all-soil interface; flow/Richards/structural combinations are unverified".into()));
+        }
         let mut prepared = origin.clone();
         if matches!(
             stage,
@@ -1431,12 +1701,10 @@ impl<'a> Model<'a> {
                     {
                         return Err(Error::Input("stress-free BIRTH requires a zero-stress-admissible model; MCC has zero bulk stiffness at p=0".into()));
                     }
-                    if self.pore(origin.hydrostatic_water_level_m, q.position[2]) != 0.
-                        || state
-                            .stress()
-                            .iter()
-                            .chain(state.plastic_strain())
-                            .any(|v| *v != 0.)
+                    if (birth_hydraulic.is_none()
+                        && (self.pore(origin.hydrostatic_water_level_m, q.position[2]) != 0.
+                            || state.stress().iter().any(|v| *v != 0.)))
+                        || state.plastic_strain().iter().any(|v| *v != 0.)
                     {
                         return Err(Error::Input(
                             "stress-free BIRTH requires dry, zero-stress, fresh material states"
@@ -1458,6 +1726,26 @@ impl<'a> Model<'a> {
             if birth {
                 prepared.active_elements[ei] = true;
             }
+        }
+        if birth && let (Some(j), Some(state)) = (&self.joints, &origin.joints) {
+            let history =
+                j.prepare_body_birth(state, &origin.active_elements, &prepared.active_elements)?;
+            let mut existing = vec![false; self.mesh.nodes.len()];
+            for (ei, &enabled) in origin.active_elements.iter().enumerate() {
+                if enabled {
+                    for n in self.mesh.cell_nodes(ei) {
+                        existing[n] = true;
+                    }
+                }
+            }
+            for [a, b] in j.tied_pairs(&history, &prepared.active_elements)? {
+                if existing[a] && !existing[b] {
+                    prepared.displacement_m[b] = prepared.displacement_m[a];
+                } else if existing[b] && !existing[a] {
+                    prepared.displacement_m[a] = prepared.displacement_m[b];
+                }
+            }
+            prepared.joints = Some(history);
         }
         self.ensure_supported(&prepared.active_elements)?;
         if birth && !prepared.display_reference_displacement_m.is_empty() {
@@ -1616,7 +1904,13 @@ impl<'a> Model<'a> {
         })
     }
 
-    fn dofs(&self, active: &[bool], settings: &Settings, factor: f64) -> Result<Dofs> {
+    fn dofs(
+        &self,
+        active: &[bool],
+        settings: &Settings,
+        factor: f64,
+        joint_state: Option<&crate::joints::State>,
+    ) -> Result<Dofs> {
         let mut active_nodes = vec![false; self.mesh.nodes.len()];
         for (i, &enabled) in active.iter().enumerate() {
             if enabled {
@@ -1627,8 +1921,19 @@ impl<'a> Model<'a> {
         }
         let mut map = vec![None; self.mesh.nodes.len() * 3];
         let mut count = 0;
-        if let Some(boundary) = &self.case.boundary {
-            let mut constraints = boundary.constraints.clone();
+        if self.case.boundary.is_some()
+            || self.joints.as_ref().is_some_and(|j| {
+                j.configuration
+                    .joints
+                    .iter()
+                    .any(|d| d.birth_policy.is_some())
+            })
+        {
+            let mut constraints = self
+                .case
+                .boundary
+                .as_ref()
+                .map_or_else(Vec::new, |b| b.constraints.clone());
             for c in &mut constraints {
                 c.value_m *= factor;
                 for g in &mut c.gradient {
@@ -1654,7 +1959,13 @@ impl<'a> Model<'a> {
                     }
                 }
             }
-            let transform = if self.joints.is_some() {
+            let pairs = match (&self.joints, joint_state) {
+                (Some(j), Some(state)) => j.tied_pairs(state, active)?,
+                _ => vec![],
+            };
+            let transform = if !pairs.is_empty() {
+                Transform::with_node_pairs(self.mesh, &constraints, active.to_vec(), extra, &pairs)?
+            } else if self.joints.is_some() {
                 Transform::with_interfaces(self.mesh, &constraints, active.to_vec(), extra)?
             } else {
                 Transform::with_extra(self.mesh, &constraints, active.to_vec(), extra)?
@@ -1899,6 +2210,40 @@ impl<'a> Model<'a> {
             .ok_or_else(|| Error::Input("missing committed JOINT water field".into()))?;
         if let Some(target) = flow {
             return Ok(Some(wet.interpolate(old, target, active, progress)?));
+        }
+        if matches!(stage, Stage::JointBirth { .. } | Stage::Birth { .. }) {
+            let level = self
+                .stage_water(origin, stage, progress)
+                .or(self.ground.initialization.water_level_m);
+            let previous_water = self
+                .case
+                .stages
+                .iter()
+                .take(origin.stage_index)
+                .rev()
+                .find(|s| {
+                    matches!(
+                        s,
+                        Stage::SteadySeepage { .. } | Stage::HydrostaticWater { .. }
+                    )
+                });
+            if origin.pore_pressure_kpa.is_some()
+                && let Some(Stage::SteadySeepage { flow, .. }) = previous_water
+            {
+                let solved =
+                    wet.solve_steady(flow, active, Some(&origin.element_material_ids), level)?;
+                if !solved.solution.complete {
+                    return Err(Error::Solve(
+                        "JOINT BIRTH hydraulic reconstruction did not complete".into(),
+                    ));
+                }
+                return Ok(Some(wet.regenerate_birth(
+                    active,
+                    level,
+                    Some(&solved.original_field),
+                )?));
+            }
+            return Ok(Some(wet.regenerate_birth(active, level, None)?));
         }
         if matches!(stage, Stage::HydrostaticWater { .. }) {
             if origin.pore_pressure_kpa.is_some() {
@@ -2213,6 +2558,48 @@ impl<'a> Model<'a> {
             for (offset, e) in self.elements[first..last].iter().enumerate() {
                 let ei = first + offset;
                 if active[ei] {
+                    // Hydrostatic max(H-z,0) is not polynomial across a water
+                    // table. Keep effective material stress/GP display on the
+                    // original rule, but integrate this affine cut separately.
+                    // Explicit seepage/ONE_WAY GP fields retain their own rule.
+                    let cut_pore = if committed.pore_pressure_kpa.is_none()
+                        && self.soil_points[e.point_start]
+                    {
+                        if let Some(level) = committed
+                            .hydrostatic_water_level_m
+                            .or(self.ground.initialization.water_level_m)
+                        {
+                            let points: Vec<_> = self
+                                .mesh
+                                .cell_nodes(ei)
+                                .iter()
+                                .map(|&n| self.mesh.nodes[n])
+                                .collect();
+                            let lo = points
+                                .iter()
+                                .take(4)
+                                .map(|p| p[2])
+                                .fold(f64::INFINITY, f64::min);
+                            let hi = points
+                                .iter()
+                                .take(4)
+                                .map(|p| p[2])
+                                .fold(f64::NEG_INFINITY, f64::max);
+                            if lo < level && level < hi {
+                                crate::hydrostatic_volume::affine_load(
+                                    &points,
+                                    level,
+                                    self.ground.initialization.water_unit_weight_kn_m3,
+                                )?
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    };
                     for (qi, q) in e.points.iter().enumerate() {
                         let point = e.point_start + qi;
                         let (update, d) = updates.next().ok_or_else(|| {
@@ -2226,8 +2613,10 @@ impl<'a> Model<'a> {
                                 *value += pressure[point] - mean;
                             }
                         }
-                        for s in total.iter_mut().take(3) {
-                            *s += self.point_pore(committed, point, q.position[2]);
+                        if cut_pore.is_none() {
+                            for s in total.iter_mut().take(3) {
+                                *s += self.point_pore(committed, point, q.position[2]);
+                            }
                         }
                         let force = -q.weight_m3
                             * q.b.transpose()
@@ -2246,6 +2635,11 @@ impl<'a> Model<'a> {
                                     }
                                 }
                             }
+                        }
+                    }
+                    if let Some(force) = cut_pore {
+                        for (i, f) in force.iter().flatten().enumerate() {
+                            internal[e.dofs[i]] += f;
                         }
                     }
                 }
@@ -2315,6 +2709,16 @@ impl<'a> Model<'a> {
         } else {
             None
         };
+        if self.case.has_offset_plates()
+            && states.iter().any(|s| {
+                !matches!(s, soil::State::MohrCoulomb(m)
+            if m.equivalent_plastic_strain == 0. && m.plastic_work_kpa == 0.
+            && m.plastic_strain_compression_positive.iter().all(|v| *v == 0.)
+            && m.last_return == crate::mc::Return::Elastic)
+            })
+        {
+            return Err(Error::Input("offset Tri6 scope requires elastic MC soil; plastic history/response is unverified".into()));
+        }
         Ok(Evaluation {
             joints,
             anchors,
@@ -2515,7 +2919,7 @@ impl<'a> Model<'a> {
         } else {
             old
         };
-        let dofs = self.dofs(&active, settings, boundary_factor)?;
+        let dofs = self.dofs(&active, settings, boundary_factor, old.joints.as_ref())?;
         let rigid_geometry = self
             .joints
             .as_ref()
@@ -2578,6 +2982,14 @@ impl<'a> Model<'a> {
                 }
             }
         }
+        let diagnostic = self
+            .observer
+            .filter(|o| o.diagnostic_enabled(stage, progress));
+        if diagnostic.is_some() && (self.point_count > 512 || dofs.count > 256) {
+            return Err(Error::Control(
+                "Newton diagnostics limited to 512 GP / 256 DOF".into(),
+            ));
+        }
         let mut linear_solves = Vec::new();
         let mut contact_predictors = Vec::new();
         for iteration in 0..=settings.maximum_newton_iterations {
@@ -2596,6 +3008,32 @@ impl<'a> Model<'a> {
                 .collect();
             let reduced = self.reduce(&residual, &dofs);
             let relative = reduced.norm() / scale;
+            if let Some(o) = diagnostic {
+                let mut strains = vec![[0.; 6]; self.point_count];
+                for (ei, e) in self.elements.iter().enumerate() {
+                    if active[ei] {
+                        let du = DVector::from_fn(e.dofs.len(), |i, _| {
+                            let g = e.dofs[i];
+                            u[g / 3][g % 3] - old.displacement_m[g / 3][g % 3]
+                        });
+                        for (qi, q) in e.points.iter().enumerate() {
+                            let de = -&q.b * &du;
+                            strains[e.point_start + qi] = std::array::from_fn(|i| de[i]);
+                        }
+                    }
+                }
+                o.on_diagnostic(&serde_json::json!({
+                    "strain_increment": strains,
+                    "kind": "iterate", "stage": stage, "progress": progress,
+                    "iteration": iteration, "projected_load": projected_load,
+                    "committed": old, "displacement_m": u, "active": active,
+                    "partitions": partitions, "states": eval.states,
+                    "internal": eval.internal, "target": target,
+                    "reduced_residual": reduced.as_slice(), "scale": scale,
+                    "relative_force_residual": relative,
+                }))
+                .map_err(|e| Error::Control(e.to_string()))?;
+            }
             self.notify(|| {
                 let mut event = self.progress(crate::stage_control::Kind::Newton, stage, progress);
                 event.newton_iteration = Some(iteration);
@@ -2686,6 +3124,22 @@ impl<'a> Model<'a> {
                 .tangent
                 .take()
                 .ok_or_else(|| Error::Solve("missing global tangent".into()))?;
+            if let Some(o) = diagnostic {
+                let rows: Vec<Vec<f64>> = (0..dofs.count)
+                    .map(|i| {
+                        let mut basis = DVector::zeros(dofs.count);
+                        basis[i] = 1.;
+                        matrix.action(&basis).map(|v| v.as_slice().to_vec())
+                    })
+                    .collect::<Result<_>>()?;
+                o.on_diagnostic(&serde_json::json!({
+                    "kind": "tangent", "stage": stage, "progress": progress,
+                    "iteration": iteration, "projected_load": projected_load,
+                    "matrix_columns": rows, "dof_rows": dofs.rows,
+                    "reduced_residual": reduced.as_slice(),
+                }))
+                .map_err(|e| Error::Control(e.to_string()))?;
+            }
             let gauges = if let Some(geometry) = &rigid_geometry {
                 let space = self.joint_support_space(geometry, &active, &dofs, &eval)?;
                 if space.full() {
@@ -2734,7 +3188,8 @@ impl<'a> Model<'a> {
                         }
                     }
                 }
-                let (x, report) = temporary.solve(&reduced, settings)?;
+                let (x, report) =
+                    temporary.solve_a01_observed(&reduced, settings, self.observer)?;
                 let original = (matrix.action(&x)? - &reduced).norm() / reduced.norm().max(1e-30);
                 let index = contact_predictors.len();
                 contact_predictors.push(ContactPredictor {
@@ -2754,7 +3209,7 @@ impl<'a> Model<'a> {
                 });
                 (x, Some(index))
             } else if gauges.as_ref().is_none_or(|g| g.coordinates.is_empty()) {
-                let (x, report) = matrix.solve(&reduced, settings)?;
+                let (x, report) = matrix.solve_a01_observed(&reduced, settings, self.observer)?;
                 linear_solves.push(report);
                 (x, None)
             } else {
@@ -2776,7 +3231,11 @@ impl<'a> Model<'a> {
                 for &i in coordinates {
                     rhs[i] = 0.;
                 }
-                let (mut x, temporary) = matrix.gauged(coordinates)?.solve(&rhs, settings)?;
+                let (mut x, temporary) = matrix.gauged(coordinates)?.solve_a01_observed(
+                    &rhs,
+                    settings,
+                    self.observer,
+                )?;
                 // Choose the minimum-norm correction, removing arbitrary
                 // neutral motion induced by the temporary coordinate pins.
                 let neutral = &gauges.modes * (gauges.modes.transpose() * &x);
@@ -2927,13 +3386,20 @@ impl<'a> Model<'a> {
                     }
                 }
                 if repartition {
+                    if let Some(o) = diagnostic {
+                        o.on_diagnostic(&serde_json::json!({
+                            "kind": "repartition", "iteration": iteration, "alpha": alpha,
+                            "partitions": partitions, "displacement_m": candidate,
+                        }))
+                        .map_err(|e| Error::Control(e.to_string()))?;
+                    }
                     if let Some(i) = predictor_index {
                         contact_predictors[i].repartitioned = true;
                     }
                     u = constrained_start.clone();
                     break;
                 }
-                if let Ok(trial) = self.evaluate(
+                let candidate_evaluation = self.evaluate(
                     old,
                     &candidate,
                     &active,
@@ -2946,7 +3412,29 @@ impl<'a> Model<'a> {
                         partitions: Some(&partitions),
                         factor: Some(boundary_factor),
                     },
-                ) {
+                );
+                if let Some(o) = diagnostic {
+                    let value = match &candidate_evaluation {
+                        Ok(trial) => {
+                            let r: Vec<_> = target
+                                .iter()
+                                .zip(&trial.internal)
+                                .map(|(a, b)| a - b)
+                                .collect();
+                            let candidate_relative = self.reduce(&r, &dofs).norm() / scale;
+                            serde_json::json!({"kind": "line_search", "iteration": iteration,
+                                "alpha": alpha, "displacement_m": candidate, "states": trial.states,
+                                "partitions": partitions, "relative_force_residual": candidate_relative,
+                                "armijo_accepted": candidate_relative < relative * (1. - 1e-4 * alpha)})
+                        }
+                        Err(e) => serde_json::json!({"kind": "line_search", "iteration": iteration,
+                            "alpha": alpha, "displacement_m": candidate, "partitions": partitions,
+                            "error": e.to_string()}),
+                    };
+                    o.on_diagnostic(&value)
+                        .map_err(|e| Error::Control(e.to_string()))?;
+                }
+                if let Ok(trial) = candidate_evaluation {
                     let r: Vec<_> = target
                         .iter()
                         .zip(&trial.internal)
@@ -3000,6 +3488,7 @@ impl<'a> Model<'a> {
             &state.active_elements,
             &case.settings,
             state.boundary_factor,
+            state.joints.as_ref(),
         )?;
         let eval = self.evaluate(
             state,
@@ -3795,6 +4284,7 @@ impl<'a> ExternalMechanics<'a> {
             &prepared.active_elements,
             &self.model.case.settings,
             prepared.boundary_factor,
+            prepared.joints.as_ref(),
         )?;
         let mut holding = internal
             .iter()
@@ -3846,6 +4336,7 @@ impl<'a> ExternalMechanics<'a> {
             &state.active_elements,
             &m.case.settings,
             state.boundary_factor,
+            state.joints.as_ref(),
         )?;
         Ok(m.evaluate(
             state,
@@ -3883,7 +4374,12 @@ impl<'a> ExternalMechanics<'a> {
         rhs: &[f64],
     ) -> Result<(Vec<f64>, f64)> {
         let m = &self.model;
-        let dofs = m.dofs(active, &m.case.settings, old.boundary_factor)?;
+        let dofs = m.dofs(
+            active,
+            &m.case.settings,
+            old.boundary_factor,
+            old.joints.as_ref(),
+        )?;
         let removed = old
             .active_elements
             .iter()
@@ -4098,11 +4594,16 @@ fn equilibrate(
             "geostatic boundary factor requires boundary conditions".into(),
         ));
     }
+    let global_control = model
+        .case
+        .joint_system
+        .as_ref()
+        .and_then(|j| j.global_step_control.as_ref());
     let mut settings = model.case.settings.clone();
     settings.relative_force_tolerance = settings
         .relative_force_tolerance
         .min(model.ground.initialization.relative_equilibrium_tolerance);
-    let dofs = model.dofs(&seed.active_elements, &settings, 0.)?;
+    let dofs = model.dofs(&seed.active_elements, &settings, 0., seed.joints.as_ref())?;
     let internal = model
         .evaluate(
             &seed,
@@ -4187,7 +4688,13 @@ fn equilibrate(
         let mut increment = settings.initial_increment;
         let mut injected = false;
         for attempt in &saved.attempts {
-            let target = if cursor + increment >= 1. - 1e-12 {
+            let target = if global_control.is_some() {
+                crate::joints::GlobalStepControl::next(
+                    cursor,
+                    increment,
+                    settings.initial_increment,
+                )
+            } else if cursor + increment >= 1. - 1e-12 {
                 1.
             } else {
                 cursor + increment
@@ -4202,6 +4709,14 @@ fn equilibrate(
             }
             if attempt.accepted {
                 cursor = target;
+                if global_control.is_some() {
+                    increment = attempt
+                        .joint_path_error
+                        .as_ref()
+                        .map_or(settings.initial_increment, |a| {
+                            joint_path_error::next_increment(a, settings.minimum_increment)
+                        });
+                }
             } else {
                 if !attempt.committed_state_unchanged_on_rejection {
                     return Err(Error::Input(
@@ -4216,7 +4731,11 @@ fn equilibrate(
                     }
                     injected = true;
                 }
-                increment *= 0.5;
+                increment = if global_control.is_some() {
+                    (target - cursor) * 0.5
+                } else {
+                    increment * 0.5
+                };
             }
         }
         if cursor != saved.progress
@@ -4251,7 +4770,17 @@ fn equilibrate(
             break;
         }
         let sum = report.progress + report.next_increment;
-        let next = if sum >= 1. - 1e-12 { 1. } else { sum };
+        let next = if global_control.is_some() {
+            crate::joints::GlobalStepControl::next(
+                report.progress,
+                report.next_increment,
+                settings.initial_increment,
+            )
+        } else if sum >= 1. - 1e-12 {
+            1.
+        } else {
+            sum
+        };
         let active = report.last_committed.active_elements.clone();
         let factor = next * cfg.initial_boundary_factor;
         let physical = model.physical_load(
@@ -4269,7 +4798,7 @@ fn equilibrate(
         let before = serde_json::to_vec(&report.last_committed)?;
         let load_changed = load != report.last_committed.applied_nodal_load_kn;
         model.notify(|| model.progress(crate::stage_control::Kind::AttemptStarted, 0, next))?;
-        let trial = model.trial(
+        let trial = model.trial_with_path_error(
             &report.last_committed,
             Target {
                 joint_water: report.last_committed.joint_water.clone(),
@@ -4286,9 +4815,10 @@ fn equilibrate(
             },
             &settings,
         );
-        let trial = match trial {
+        let (trial, joint_path_error) = match trial {
             Err(error @ Error::Control(_)) => return Err(error),
-            other => other,
+            Err(error) => (Err(error), None),
+            Ok((t, audit)) => (Ok(t), audit),
         };
         let changed_structure = trial.as_ref().is_ok_and(|t| {
             t.state.beams != report.last_committed.beams
@@ -4298,6 +4828,17 @@ fn equilibrate(
         let changed_joint_slip = trial
             .as_ref()
             .is_ok_and(|t| joint_slip_changed(&t.state.joints, &report.last_committed.joints));
+        let path_error_cutback = joint_path_error.as_ref().is_some_and(|a| a.reject);
+        let switch_cutback = global_control.is_some_and(|control| {
+            trial.as_ref().is_ok_and(|t| {
+                control.reject_switch(
+                    &report.last_committed.joints,
+                    &t.state.joints,
+                    next - report.progress,
+                    settings.initial_increment,
+                )
+            })
+        });
         let injected =
             cfg.verification_reject_once && !report.verification_rejection_done && trial.is_ok();
         let (iterations, residual, changed, plastic, strain, linear) = if let Ok(t) = &trial {
@@ -4322,8 +4863,9 @@ fn equilibrate(
             .as_ref()
             .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
         match trial {
-            Ok(t) if !injected && !strain_limit => {
+            Ok(t) if !injected && !strain_limit && !switch_cutback && !path_error_cutback => {
                 report.attempts.push(Attempt {
+                    joint_path_error,
                     rejected_trial_water_changed: false,
                     contact_predictors,
                     stage: "geostatic_equilibration".into(),
@@ -4344,6 +4886,15 @@ fn equilibrate(
                 });
                 report.last_committed = t.state;
                 report.progress = next;
+                if global_control.is_some() {
+                    report.next_increment = report
+                        .attempts
+                        .last()
+                        .and_then(|a| a.joint_path_error.as_ref())
+                        .map_or(settings.initial_increment, |a| {
+                            joint_path_error::next_increment(a, settings.minimum_increment)
+                        });
+                }
                 report.maximum_absolute_engineering_strain_from_seed = strain;
                 accepted += 1;
                 model.notify_attempt(0, report.attempts.last().unwrap())?;
@@ -4358,6 +4909,10 @@ fn equilibrate(
                         "geostatic initial strain {strain:e} exceeds configured limit {}",
                         cfg.maximum_initial_engineering_strain
                     )
+                } else if path_error_cutback {
+                    "joint_global_path_error_cutback".into()
+                } else if switch_cutback {
+                    "joint_global_switch_cutback".into()
                 } else if injected {
                     report.verification_rejection_done = true;
                     "verification_injected_rejection_after_convergence".into()
@@ -4369,6 +4924,7 @@ fn equilibrate(
                 };
                 let unchanged = before == serde_json::to_vec(&report.last_committed)?;
                 report.attempts.push(Attempt {
+                    joint_path_error,
                     rejected_trial_water_changed: false,
                     contact_predictors,
                     stage: "geostatic_equilibration".into(),
@@ -4397,7 +4953,11 @@ fn equilibrate(
                     report.failure_reason = Some(reason);
                     break;
                 }
-                report.next_increment *= 0.5;
+                report.next_increment = if global_control.is_some() {
+                    (next - report.progress) * 0.5
+                } else {
+                    report.next_increment * 0.5
+                };
                 if report.next_increment < settings.minimum_increment {
                     report.failure_reason = Some(format!("geostatic cutback exhausted: {reason}"));
                     break;
@@ -4438,6 +4998,13 @@ fn equilibrate(
 }
 
 fn result_schema(mesh: &Mesh, ground: &Ground, case: &StageCase) -> &'static str {
+    if case
+        .joint_system
+        .as_ref()
+        .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_some()))
+    {
+        return "soil-fem-stage-result/15";
+    }
     if case.is_projected_mcc() {
         return if case.beam_system.is_some() {
             "soil-fem-projected-mcc-stage-result/2"
@@ -4509,6 +5076,19 @@ fn solve_controlled(
     observer: Option<&dyn crate::stage_control::Observer>,
 ) -> Result<Run> {
     case.validate()?;
+    if case.has_offset_plates()
+        && ground
+            .materials
+            .iter()
+            .any(|m| !matches!(m.model, soil::Model::MohrCoulomb(_)))
+    {
+        return Err(Error::Input(
+            "offset Tri6 soil scope is dry elastic MC only; MCC/IDH unverified".into(),
+        ));
+    }
+    if case.has_offset_plates() && ground.initialization.water_level_m.is_some() {
+        return Err(Error::Input("offset Tri6 with water is unverified".into()));
+    }
     let states = if ground.is_general() {
         geostatic::states(mesh, &ground)?
     } else {
@@ -4521,6 +5101,7 @@ fn solve_controlled(
     let provenance = crate::checkpoint::Identity::current(mesh, &ground, &case)?;
     if let Some(p) = &previous {
         if p.schema != result_schema(mesh, &ground, &case)
+            || p.hydrostatic_volume_integration.as_deref() != Some("affine_cut_partial")
             || p.complete
             || p.provenance != provenance
             || p.failure_reason.as_deref() != Some("checkpoint_requested")
@@ -4648,7 +5229,12 @@ fn solve_controlled(
         mixed::initialize(&model, &mut committed)?;
     }
     if let Some(model_beams) = &model.beams {
-        let dofs = model.dofs(&committed.active_elements, &case.settings, 0.)?;
+        let dofs = model.dofs(
+            &committed.active_elements,
+            &case.settings,
+            0.,
+            committed.joints.as_ref(),
+        )?;
         committed.beams = Some(
             model_beams
                 .evaluate(
@@ -4699,6 +5285,7 @@ fn solve_controlled(
                 )
             });
             return Ok(Run {
+                hydrostatic_volume_integration: Some("affine_cut_partial".into()),
                 flow_audits: vec![],
                 joint_integration_points,
                 schema: result_schema(mesh, &ground, &case).into(),
@@ -4772,6 +5359,7 @@ fn solve_controlled(
             &geometry_check.active_elements,
             &case.settings,
             geometry_check.boundary_factor,
+            geometry_check.joints.as_ref(),
         )?;
         model.physical_load(
             &geometry_check.active_elements,
@@ -4850,6 +5438,10 @@ fn solve_controlled(
         injected = runtime.injected_stages.clone();
         continuation = Some(runtime);
     }
+    let global_control = case
+        .joint_system
+        .as_ref()
+        .and_then(|j| j.global_step_control.as_ref());
     let start_stage = continuation.as_ref().map_or(0, |c| c.stage_index);
     if continuation.is_some() {
         let expected: Vec<_> = case
@@ -4905,7 +5497,9 @@ fn solve_controlled(
             | Stage::Boundary { .. }
             | Stage::ResetDisplay { .. }
             | Stage::JackAnchors { .. } => origin.active_elements.clone(),
-            Stage::Birth { .. }
+            Stage::JointBirth { .. }
+            | Stage::JointDeath { .. }
+            | Stage::Birth { .. }
             | Stage::MaterialSet { .. }
             | Stage::ResetState { .. }
             | Stage::InstallBeams { .. }
@@ -5003,10 +5597,22 @@ fn solve_controlled(
         };
         let end_joint_water =
             model.stage_joint_water(&origin, stage, &active, joint_flow_target.as_ref(), 1.)?;
-        let endload = if matches!(stage, Stage::ResetDisplay { .. }) {
-            // Display RESET owns no physical load update. The last pressure
-            // increment may differ from a fresh assembly by a few ulps; retain
-            // its exact committed load, including in checkpoint reconstruction.
+        let force_preserving_joint_birth = match stage {
+            Stage::JointBirth { joints, .. } => case.joint_system.as_ref().is_some_and(|c| {
+                joints.iter().all(|id| {
+                    c.joints.iter().any(|d| {
+                        &d.id == id
+                            && d.birth_policy == Some(crate::joints::BirthPolicy::TransferForce)
+                    })
+                })
+            }),
+            _ => false,
+        };
+        let endload = if force_preserving_joint_birth || matches!(stage, Stage::ResetDisplay { .. })
+        {
+            // RESET and mode A retain the exact physical load vector. A
+            // fresh assembly may differ by a few ulps; neither operation
+            // introduces a load increment, including during continuation.
             origin.applied_nodal_load_kn.clone()
         } else {
             model.physical_load(
@@ -5020,11 +5626,21 @@ fn solve_controlled(
                 end_joint_water.as_ref(),
             )?
         };
-        let mut release = if matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc() {
+        let mut release = if force_preserving_joint_birth {
+            // Mode A already reproduces the full nodal transfer at the same
+            // displacement. It needs no artificial construction holding load,
+            // including at prescribed support DOFs.
+            vec![0.; endload.len()]
+        } else if matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc() {
             // Projection is domain-dependent: full minus removed work forces
             // need not equal the restricted-domain work force. Reconstruct
             // the retained force without changing any GP material history.
-            let dofs = model.dofs(&active, &case.settings, end_factor)?;
+            let dofs = model.dofs(
+                &active,
+                &case.settings,
+                end_factor,
+                prepared.joints.as_ref(),
+            )?;
             model
                 .evaluate(
                     &origin,
@@ -5046,7 +5662,12 @@ fn solve_controlled(
                 .zip(&active)
                 .map(|(a, b)| *a && !*b)
                 .collect();
-            let dofs = model.dofs(&active, &case.settings, end_factor)?;
+            let dofs = model.dofs(
+                &active,
+                &case.settings,
+                end_factor,
+                prepared.joints.as_ref(),
+            )?;
             let removed_force = model
                 .evaluate(
                     &origin,
@@ -5068,7 +5689,12 @@ fn solve_controlled(
                 .map(|((a, b), f)| a - b - f)
                 .collect::<Vec<_>>()
         } else if stage.is_transition() {
-            let dofs = model.dofs(&active, &case.settings, end_factor)?;
+            let dofs = model.dofs(
+                &active,
+                &case.settings,
+                end_factor,
+                prepared.joints.as_ref(),
+            )?;
             let retained = model.evaluate(
                 &prepared,
                 &prepared.displacement_m,
@@ -5114,7 +5740,12 @@ fn solve_controlled(
                 *h -= a - b;
             }
         }
-        let active_dofs = model.dofs(&active, &case.settings, end_factor)?;
+        let active_dofs = model.dofs(
+            &active,
+            &case.settings,
+            end_factor,
+            prepared.joints.as_ref(),
+        )?;
         for (i, r) in release.iter_mut().enumerate() {
             if !active_dofs.active_nodes[i / 3] {
                 *r = 0.;
@@ -5329,6 +5960,12 @@ fn solve_controlled(
             }
             let next = if matches!(stage, Stage::ResetDisplay { .. }) {
                 1.
+            } else if global_control.is_some() {
+                crate::joints::GlobalStepControl::next(
+                    progress,
+                    increment,
+                    stage.step(&case.settings),
+                )
             } else {
                 (progress + increment).min(1.)
             };
@@ -5390,9 +6027,11 @@ fn solve_controlled(
                         "display RESET must not change physical loads".into(),
                     ));
                 }
-                model.reset_display(&origin, stage_index + 1)
+                model
+                    .reset_display(&origin, stage_index + 1)
+                    .map(|t| (t, None))
             } else {
-                model.trial(
+                model.trial_with_path_error(
                     if stage.is_transition() && progress == 0. {
                         &prepared
                     } else {
@@ -5427,9 +6066,10 @@ fn solve_controlled(
                     &case.settings,
                 )
             };
-            let trial = match trial {
+            let (trial, joint_path_error) = match trial {
                 Err(error @ Error::Control(_)) => return Err(error),
-                other => other,
+                Err(error) => (Err(error), None),
+                Ok((t, audit)) => (Ok(t), audit),
             };
             let changed_structure = trial.as_ref().is_ok_and(|t| {
                 t.state.beams != committed.beams
@@ -5444,6 +6084,17 @@ fn solve_controlled(
             let changed_joint_slip = trial
                 .as_ref()
                 .is_ok_and(|t| joint_slip_changed(&t.state.joints, &committed.joints));
+            let path_error_cutback = joint_path_error.as_ref().is_some_and(|a| a.reject);
+            let switch_cutback = global_control.is_some_and(|control| {
+                trial.as_ref().is_ok_and(|t| {
+                    control.reject_switch(
+                        &committed.joints,
+                        &t.state.joints,
+                        next - progress,
+                        stage.step(&case.settings),
+                    )
+                })
+            });
             let force_reject = case
                 .verification_reject_once_stages
                 .iter()
@@ -5483,10 +6134,22 @@ fn solve_controlled(
                 .as_ref()
                 .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
             match trial {
-                Ok(t) if !force_reject => {
+                Ok(t) if !force_reject && !switch_cutback && !path_error_cutback => {
                     committed = t.state;
                     progress = next;
+                    if global_control.is_some() {
+                        increment =
+                            joint_path_error
+                                .as_ref()
+                                .map_or(stage.step(&case.settings), |a| {
+                                    joint_path_error::next_increment(
+                                        a,
+                                        case.settings.minimum_increment,
+                                    )
+                                });
+                    }
                     attempts.push(Attempt {
+                        joint_path_error,
                         contact_predictors,
                         stage: stage.name().into(),
                         progress_from: from,
@@ -5529,6 +6192,10 @@ fn solve_controlled(
                     let reason = if force_reject {
                         injected.insert(stage.name().to_string());
                         "verification_injected_rejection_after_convergence".into()
+                    } else if path_error_cutback {
+                        "joint_global_path_error_cutback".into()
+                    } else if switch_cutback {
+                        "joint_global_switch_cutback".into()
                     } else {
                         match result {
                             Err(e) => e.to_string(),
@@ -5537,6 +6204,7 @@ fn solve_controlled(
                     };
                     let unchanged = before == serde_json::to_vec(&committed)?;
                     attempts.push(Attempt {
+                        joint_path_error,
                         contact_predictors,
                         stage: stage.name().into(),
                         progress_from: progress,
@@ -5561,7 +6229,11 @@ fn solve_controlled(
                         ));
                     }
                     model.notify_attempt(stage_index + 1, attempts.last().unwrap())?;
-                    increment *= 0.5;
+                    increment = if global_control.is_some() {
+                        (next - progress) * 0.5
+                    } else {
+                        increment * 0.5
+                    };
                     if increment < case.settings.minimum_increment {
                         failure = Some(format!("{}: cutback exhausted: {reason}", stage.name()));
                         break;
@@ -5587,6 +6259,7 @@ fn solve_controlled(
     let integration_points = model.layout();
     let reference_displacement_m = model.reference_displacement_m.clone();
     Ok(Run {
+        hydrostatic_volume_integration: Some("affine_cut_partial".into()),
         flow_audits,
         joint_integration_points,
         provenance,
@@ -5699,6 +6372,7 @@ fn validate_committed(model: &Model<'_>, state: &Committed, case: &StageCase) ->
         &state.active_elements,
         &case.settings,
         state.boundary_factor,
+        state.joints.as_ref(),
     )?;
     match (&model.joints, &state.joints) {
         (None, None) => {}

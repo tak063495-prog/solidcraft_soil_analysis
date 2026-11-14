@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+    "-I",
+    "-X",
+    "utf8",
+    "-c",
+    "import importlib.util,json,sys\nfrom pathlib import Path\nassert sys.flags.isolated==1 and sys.flags.utf8_mode==1\nscript,evidence,output=map(Path,sys.argv[1:4])\nspec=importlib.util.spec_from_file_location('sealed_nc_measure',script)\nmodule=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\noutput.write_text(json.dumps(module.measure(evidence,False),indent=2,allow_nan=False)+'\\n',encoding='utf-8')\n",
+    "/tmp/work-nc-utf8-sealed-replay/evidence/sources/interim/2026-11-10-nc-mean-stress-release/measure.py",
+    "/tmp/work-nc-utf8-sealed-replay/evidence",
+    "/tmp/work-nc-utf8-sealed-replay/measurements.json"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 271.62563358499983,
+  "measurements_byte_identical": true,
+  "isolated_and_utf8_flags_asserted": true,
+  "measurement_source": "unchanged SHA-verified sealed historical measure.py",
+  "existing_extraction_reused_after_archive_entry_verification": true,
+  "numerical_acceptance": false
+}

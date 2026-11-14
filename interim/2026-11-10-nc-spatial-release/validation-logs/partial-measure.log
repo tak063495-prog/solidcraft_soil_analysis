@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-spatial-release/measure.py", line 156, in <module>
+    a=p.parse_args();a.output.write_text(json.dumps(measure(a.evidence),indent=2,allow_nan=False)+'\n')
+                                                    ~~~~~~~^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-spatial-release/measure.py", line 126, in measure
+    production_adopted=False,native_committed_increments=0,paths={p.name:audit(p) for p in paths},step_sensitivity={},restart={},cross_map={})
+                                                                         ~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-spatial-release/measure.py", line 41, in audit
+    if x['fractions']!=list(fractions(x['coordinate'])) or np.array(x['displacement_m']).shape!=(54,3) or len(x['contacts']['points'])!=32:
+                                                                                                              ~~~~~~~~~~~~~^^^^^^^^^^
+KeyError: 'points'

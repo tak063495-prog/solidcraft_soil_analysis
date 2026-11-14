@@ -1,0 +1,138 @@
+{
+  "schema": "soil-fem-plate6-curved-offset-acceptance/1",
+  "source_head": "cecbb39edf7359f02ca3968998532ebd8612d544",
+  "passed": false,
+  "requested_all_items_passed": false,
+  "curved_tri6": {
+    "accepted": false,
+    "passed": false,
+    "reason": "No validated covariant curved-shell kernel, nodal director basis or curved MITC extension; classical shell refinement benchmarks not run. Curved geometry remains explicitly refused.",
+    "benchmarks": [
+      {
+        "name": "Scordelis-Lo roof",
+        "status": "not_run_no_validated_curved_kernel",
+        "passed": false
+      },
+      {
+        "name": "pinched cylinder",
+        "status": "not_run_no_validated_curved_kernel",
+        "passed": false
+      },
+      {
+        "name": "hemispherical shell",
+        "status": "not_run_no_validated_curved_kernel",
+        "passed": false
+      }
+    ]
+  },
+  "thickness_offset": {
+    "accepted": true,
+    "passed": true,
+    "scope": "Explicit mindlin_tri6_offset; direct straight/flat Tri6 input, finite |e|<=t/2, common signed normal offset at shared plate nodes; dry elastic MC soil + linear plate/beam; install/load/unload/remove only.",
+    "signed_distances_m": [
+      -0.05,
+      0.05
+    ],
+    "kernel_returncode": 0,
+    "zero_equivalence": {
+      "passed": true,
+      "roundoff_or_better": "exact equality",
+      "fields": [
+        "frames",
+        "last_committed",
+        "attempts",
+        "geostatic",
+        "transition_audits"
+      ],
+      "excluded_fields": [
+        "elapsed_seconds"
+      ]
+    },
+    "studies": {
+      "positive": {
+        "schema": "soil-fem-plate6-offset-acceptance/1",
+        "passed": true,
+        "source_head": "cecbb39edf7359f02ca3968998532ebd8612d544",
+        "attachment_offset_m": 0.05,
+        "reassembled_relative_residuals": [
+          2.6214694040259383e-12,
+          5.460102337957462e-12,
+          1.3405004078203773e-11,
+          2.587621758949121e-11,
+          3.6735972707100815e-12
+        ],
+        "maximum_attachment_trace_error_m": 4.336808689942018e-19,
+        "maximum_accepted_true_linear_residual": 2.932029800019145e-11,
+        "no_rejection_comparison": true,
+        "accepted_run_exact_comparison": true,
+        "loaded_soil_increment_max_abs_by_component_m": [
+          0.0014042872527713296,
+          0.0005073338881310123,
+          0.0021739200309521057
+        ],
+        "frames": 5,
+        "accepted_increments": 24,
+        "rejected_attempts": 3,
+        "maximum_accepted_force_residual": 2.6319975505648915e-11,
+        "separate_process_restart_stops": [
+          1,
+          9,
+          17,
+          25,
+          29
+        ],
+        "bounded_cache_mib": [
+          0,
+          64
+        ],
+        "quadratic_vtu_roundtrip": true,
+        "checkpoint_reference_and_type_tampering_rejected": true,
+        "p6_complete": false,
+        "scope": "NEW: straight planar offset Tri6, |e|<=t/2, dry elastic soil + plate + beam; no JOINT, water, soil BIRTH/DEATH, folds, curved shell, large model or GUI/GPU acceptance."
+      },
+      "negative": {
+        "schema": "soil-fem-plate6-offset-acceptance/1",
+        "passed": true,
+        "source_head": "cecbb39edf7359f02ca3968998532ebd8612d544",
+        "attachment_offset_m": -0.05,
+        "reassembled_relative_residuals": [
+          2.6214694040259383e-12,
+          1.5383598262618503e-12,
+          2.273204267921918e-11,
+          4.7547439805231157e-11,
+          3.559354937513143e-12
+        ],
+        "maximum_attachment_trace_error_m": 4.336808689942018e-19,
+        "maximum_accepted_true_linear_residual": 2.8101954904067644e-11,
+        "no_rejection_comparison": true,
+        "accepted_run_exact_comparison": true,
+        "loaded_soil_increment_max_abs_by_component_m": [
+          0.001329414921059465,
+          0.0004631276254890888,
+          0.0021312385831488197
+        ],
+        "frames": 5,
+        "accepted_increments": 24,
+        "rejected_attempts": 3,
+        "maximum_accepted_force_residual": 4.752539645288868e-11,
+        "separate_process_restart_stops": [
+          1,
+          9,
+          17,
+          25,
+          29
+        ],
+        "bounded_cache_mib": [
+          0,
+          64
+        ],
+        "quadratic_vtu_roundtrip": true,
+        "checkpoint_reference_and_type_tampering_rejected": true,
+        "p6_complete": false,
+        "scope": "NEW: straight planar offset Tri6, |e|<=t/2, dry elastic soil + plate + beam; no JOINT, water, soil BIRTH/DEATH, folds, curved shell, large model or GUI/GPU acceptance."
+      }
+    }
+  },
+  "p6_complete": false,
+  "windows_ci": "unconfirmed"
+}

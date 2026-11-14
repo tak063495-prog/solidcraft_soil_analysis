@@ -1,0 +1,61 @@
+{
+  "passed": false,
+  "solver_complete": false,
+  "solver_sha256": "afc5b3f542bd2bd68b9520f5a392780cb23fbf8cdc630f689f71a6ca57dd260e",
+  "source_sha256": "208fd4fde81e7026e26572c90d21f8f9521d4e5a3fc14f8f3bd1950dce9c3235",
+  "owned_child_terminated": true,
+  "observation": {
+    "accepted_increments": 18,
+    "completed_frames": [
+      "initial_equilibrated",
+      "load",
+      "unload"
+    ],
+    "stage_index": 3,
+    "stage_progress": 0.875,
+    "geostatic_progress": 1.0,
+    "pc_range_kpa": [
+      101.82526050681295,
+      121.04129818142636
+    ],
+    "plastic_points": 324,
+    "rejections": 4,
+    "rejected_plastic_trial_changed": true,
+    "rejected_contact_trial_changed": true,
+    "all_rejections_preserve_committed_state": true,
+    "stored_stress_force_checks": [
+      {
+        "frame": "initial_equilibrated",
+        "relative_force_residual": 1.4805773938066018e-13,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 6.20368179221492e-13
+      },
+      {
+        "frame": "load",
+        "relative_force_residual": 1.2165745439510796e-15,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 4.828308121081868e-13
+      },
+      {
+        "frame": "unload",
+        "relative_force_residual": 5.289872788757447e-13,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": -0.016687482180963546
+      }
+    ],
+    "last_committed_force_check": {
+      "relative_force_residual": 2.442028274979164e-11,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": 6.383746186866726e-13
+    },
+    "independent_plastic_3d_displacement": false,
+    "zero_release_check": {
+      "relative_force_residual": 3.8035929133263025e-13,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": -0.01880115809897424
+    },
+    "fully_released_and_frozen": false,
+    "removed_joint_and_material_history_frozen": true
+  },
+  "note": "Manual pilot; stop requested at accepted .875, process terminated during next unaccepted lambda=1 trial; stale running status retained. Source driver was not frozen before this pilot; this is a later stored-state reassembly, not an independent plastic displacement solve."
+}

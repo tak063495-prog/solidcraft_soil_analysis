@@ -1,0 +1,87 @@
+{
+  "starting_commit": "c71777d2dfd5cde12774981bdd357cf46c69fa06",
+  "scope": "Existing 54-node / 12 Tet10 5 kPa preload NC; short implementation and prior-trial audit only",
+  "low_preload_kpa": 5,
+  "seed_pc_kpa": 100,
+  "force_kn": [
+    1,
+    0.5,
+    0
+  ],
+  "passed": false,
+  "untried_existing_applicable_control_found": false,
+  "branch_nonexistence_proven": false,
+  "controls": [
+    {
+      "control": "production Newton Armijo line search and automatic cutback",
+      "status": "already tried",
+      "implementation": "src/stages.rs: for _ in 0..16, alpha halving, physical-force decrease; cutback loop",
+      "evidence": [
+        "interim/2026-11-08-nc-newton-and-prescribed-joint/README.ja.md"
+      ]
+    },
+    {
+      "control": "dense LU / sparse GMRES ILU0",
+      "status": "both already tried",
+      "implementation": "src/linalg.rs: LinearSolver enum",
+      "evidence": [
+        "interim/2026-11-08-low-preload-nc-followup/README.ja.md"
+      ]
+    },
+    {
+      "control": "limited displacement-plane diagnostic",
+      "status": "already tried",
+      "implementation": "interim/2026-11-09-nc-turning-path-diagnosis/path_diagnostic.py",
+      "evidence": [
+        "interim/2026-11-09-nc-turning-path-diagnosis/README.ja.md"
+      ]
+    },
+    {
+      "control": "corrected pseudo-arclength diagnostic, native / input-only material maps",
+      "status": "already tried; bounded fold and continuation, no full release",
+      "implementation": "interim/2026-11-09-nc-pseudo-arclength/native_arc.py",
+      "evidence": [
+        "interim/2026-11-09-nc-pseudo-arclength/README.ja.md",
+        "interim/2026-11-09-nc-continuation-ci/README.ja.md",
+        "interim/2026-11-10-nc-tangent-branch-diagnosis/README.ja.md"
+      ]
+    },
+    {
+      "control": "Stage::Boundary",
+      "status": "existing prescribed factor; not feedback control of excavation release",
+      "implementation": "src/stages.rs: Settings and Stage enums, solve_until excavation loop",
+      "reason": "A new displacement constraint or new controller would change this physical input or add implementation; not an untried existing NC release controller."
+    },
+    {
+      "control": "automatic contact predictor / trust partition",
+      "status": "automatic, not an unused switch; terminal accepted active contact count is zero",
+      "evidence": [
+        "interim/2026-11-10-nc-history-material-cause/README.ja.md"
+      ]
+    }
+  ],
+  "decision": "Proceed to B; no new controller, tolerances, gates, constitutive law, geometry or contact specification",
+  "nc_acceptance": {
+    "material_contact_history": "prior accepted histories only",
+    "remaining_domain_lambda0": "prior evidence retained",
+    "full_release_and_post_release_freeze": false,
+    "independent_plastic_3d_complete_fields": false,
+    "complete_step_sensitivity": false,
+    "completion_restart": false
+  },
+  "source_sha256": {
+    "src/stages.rs": "88a4ba67b44bdb68e2d02c840f461fecc126df889bd1bab55f8bf862fcede53b",
+    "src/linalg.rs": "5a65fc05e59f3724d141bbdb8c39c38fbe27129853de13a56d06890693b16749",
+    "interim/2026-11-08-nc-newton-and-prescribed-joint/README.ja.md": "649a0cc415d69c32799b178910db31061b36cf141196719acdfa447631bae97b",
+    "interim/2026-11-08-low-preload-nc-followup/README.ja.md": "f777149069d66059f0c1c3aa26cd4360be6e0bc18545f4a3cac5e0ca02e6d841",
+    "interim/2026-11-09-nc-turning-path-diagnosis/README.ja.md": "25a42f357631328a5658488ce0f16bb5cf54b9bd87758e46162f324fa09926a1",
+    "interim/2026-11-09-nc-turning-path-diagnosis/path_diagnostic.py": "421ba2c95e7ec608e3caf289a95a986bbe05f25bd6824181b2b28b91331e22cc",
+    "interim/2026-11-09-nc-pseudo-arclength/README.ja.md": "7c46394e1f4b61336cd5f1008f566165dadeab10d6d993a11c76b31d6b8b8052",
+    "interim/2026-11-09-nc-pseudo-arclength/native_arc.py": "a1d0b8ead216d7ab8fbdad6b697f903d8337a97451fe9ffd5ee664a9fb16b7da",
+    "interim/2026-11-09-nc-continuation-ci/README.ja.md": "900a8a24525f1b973a8e0fbf8f8680af7842daa5ec0ff41aeeb054abe73b82f7",
+    "interim/2026-11-10-nc-tangent-branch-diagnosis/README.ja.md": "84c3edd2e519dcff5b1bac7485194fac22e5a3d5fa682c03e126d69b27cd0fba",
+    "interim/2026-11-10-nc-history-material-cause/README.ja.md": "57cd76c353551e058fe30820dbbf27aed04f6c9e15db09676705317b1dc73cdf"
+  },
+  "new_nc_study_full_path_solves": 0,
+  "existing_full_test_suite_contains_nc_prefix_solves_and_restarts": true
+}

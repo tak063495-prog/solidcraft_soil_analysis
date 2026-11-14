@@ -1,0 +1,15 @@
+
+      A-03のDarcyを伴う土BIRTHは現行の完全水没・新規MC・静水圧の限定受入を超えるため、将来比較用の独立NumPy/SciPy参照と厳密なCSV/JSON診断を追加します。A-03・NC-01・P6は未達、accepted=null。draftのままマージしません。
+指定起点 702a19a7ce189f1173caed727ee2a0059298a607 の直接の子 1e03fe617c75c60eea00bab06a1b11b08514fa13。変更は interim/2026-11-26-py-wet-soil-birth-darcy-reference/ 内の新規13ファイルだけです。既存5,961パスのmode/blobを保持し、配置済みソース・文書・入力3,627件の指紋も一致。既存ソース・試験・CI・docs・旧interimを変更しません。
+
+#21の静水圧・全域飽和の層状Darcyを繰り返さず、不均質K(z)=K0 exp(αz)、明示給水流束と底水頭から未知自由水面を解く1D保存形FVを自作。α=.5/−.25、n=8/16/32/64の8系列。Rust・既存Pythonソルバを参照生成から呼びません。未計算の上部通過帯からの給水を水面境界へ与える理想化で、Richards降雨や一般3D浸出面の解ではありません。
+水位の最終観測次数1.999988/1.999997、水頭RMSの次数2.003533/2.006796。最大水収支欠損1.114907e−18 m³/s。固定点水圧には.7941等の低い次数も残し、全点応力の2次収束を認定しません。
+数値水圧から厳密に積分できる1D BIRTH静力学を組立。初期有効応力・水圧内部力・重量・面荷重・浮力/浸透力を分離し、全節点平衡残差最大7.105427e−15 kN。同一トレースの活動面再生成を監査します。SOIL/CONTINUOUS/PRESCRIBEDの意味と競合拒否は区別しますが、三方針の一般施工経路を受け入れません。
+todo A-03、湿潤BIRTH記録、STRUCTURE_WATER_JOINT_REMAINDERS、DARCY/JOINT_WATER/FOUNDATION/GEOSTATIC、A-03: 独立Python湿潤土BIRTH参照と定常Darcy診断（未達維持） #21 READMEをSHA固定。新設MCCのpc/e/応力の確認済み定義と、施工形成史・旧履歴再平衡・誕生時水量移送の未定義を表で分離。#24のMCC構成則を再実装しません。未達TODOの先行受入試験（strict xfail・新規追加のみ） #16〜#30は範囲照合のみ、未マージです。
+比較器は単位・全/有効応力・全水頭・符号・完了/世代・全ID/座標を検査し、欠損/重複、黙示補間、補完/クリップを拒否。比較許容値は既存文書にA-03拡張への適用定義がないため未定義、差0でもexit 2/accepted=null。提案交換契約だけで、本体schema/exporterは追加しません。人工往復を本体実比較にしません。
+
+Linux：新規42件成功、既存568件発見・560件成功・8件未実行、setUpClassエラー2件。既存全件成功ではありません。
+既存4群276/284/4/4を全て実行し、収集前後の全IDと割当は一致。初回の証拠未配置による通常群エラー3/5はログを保持し、原Git blob一致で証拠を復元後、該当8モジュール47件を全件再実行して成功しました。重複20成功を件数に加算しません。旧NC meanは saved mean-stress/complement partition differs from own history、spatialは remeasured JSON differs で準備失敗し、各4メソッドは未実行です。元の厳密比較・参照値・platform条件を維持し、skipで回避しません。新規のfail/error/skip/xfailは0、既存の最終fail/skip/expected-failure/unexpected-successは0ですが、上記2エラーを成功にしません。
+locked releaseのCLI/bins/examples build成功。Rust全試験/fmt/clippy、新先端Windows CI成功は未主張です。大きな新規3D/長系列はクラウドで回さず、Windowsの具体的な小型・長い1D・将来出力比較コマンド、所要時間・出力・判定/未定義をREPRODUCEに記載。独立3DとMCC/旧履歴の施工仕様が無い範囲は未達と明記します。許容値緩和・旧参照書換え・過去失敗削除・時間切れ/キャンセルの成功扱いはしません。
+出典・式・結果・未達 / Windows再現 / 検証集計
+    

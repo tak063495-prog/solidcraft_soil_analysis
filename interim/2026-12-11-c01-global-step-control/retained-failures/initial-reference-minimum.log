@@ -1,0 +1,17 @@
+independent complete 16
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 156, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 154, in main
+    elif a.mode=='independent': independent(out,g,not a.legacy)
+                                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 106, in independent
+    value=reference._reference(mesh,ground,cfg,g,1,7,False,True,writer,maximum_m=5e-5,switch_bisections=BISECTIONS if enabled else None)
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/reference.py", line 305, in _reference
+    phase(stage['name'], origin, stage['target_factor'])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/reference.py", line 300, in phase
+    assert size >= case['settings']['minimum_increment'], 'independent cutback exhausted'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: independent cutback exhausted

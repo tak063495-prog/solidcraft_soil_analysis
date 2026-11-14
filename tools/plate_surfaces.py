@@ -82,6 +82,11 @@ def attach(mesh, case, specification):
         return name
 
     for surface in surfaces:
+        formulation=surface.get('formulation','cst_dkt')
+        if formulation not in ('cst_dkt','mindlin_tri6'):raise ValueError('unknown plate formulation')
+        if surface.get('thickness_offset_m',0.)!=0.:raise ValueError('plate thickness offset attachment unsupported')
+        if surface.get('attachment_offset_m',0.)!=0.:raise ValueError('offset scope requires explicit direct mindlin_tri6_offset members')
+        if surface.get('load_distribution','consistent')!='consistent':raise ValueError('consistent surface load required; six equal forces unsupported')
         name=surface['id']
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_-]{0,79}',name) or name in groups or name in member_ids:
             raise ValueError('unique safe surface ID required')
@@ -146,8 +151,14 @@ def attach(mesh, case, specification):
                 expected=np.array([(points[i]+points[j])/2 for i,j in ((0,1),(1,2),(2,0))])
                 if np.max(np.abs(points[3:]-expected))>1e-10*scale:
                     raise ValueError('curved Tri6 trace is not silently flattened; straight faces required')
-                parts=((0,3,5),(3,1,4),(5,4,2),(3,4,5))
-            elif len(nodes)==3:parts=((0,1,2),)
+                if formulation=='mindlin_tri6':
+                    edge_scale=max(np.linalg.norm(points[i]-points[j]) for i,j in ((0,1),(1,2),(2,0)))
+                    if np.linalg.norm(points[3:]-expected,axis=1).max()>64*np.finfo(float).eps*edge_scale:
+                        raise ValueError('Mindlin Tri6 requires straight planar geometry to round-off; no flattening')
+                parts=((0,1,2,3,4,5),) if formulation=='mindlin_tri6' else ((0,3,5),(3,1,4),(5,4,2),(3,4,5))
+            elif len(nodes)==3:
+                if formulation=='mindlin_tri6':raise ValueError('Mindlin Tri6 requires a six-node soil trace')
+                parts=((0,1,2),)
             else:raise ValueError('Tri3 or Tri6 trace required')
             source_area+=float(np.linalg.norm(q['area_vector'],axis=1).sum())
             outward=q['area_vector'].sum(axis=0)
@@ -161,6 +172,7 @@ def attach(mesh, case, specification):
                 if member in member_ids:raise ValueError('generated plate member ID collision')
                 member_ids.add(member);groups[name].append(member)
                 plate=dict(id=member,nodes=[node_id(n) for n in cell],section_id=surface['section_id'],initially_active=surface['initially_active'])
+                if formulation!='cst_dkt':plate['formulation']=formulation
                 for field in ('constant_traction_kpa','boundary_traction_kpa'):
                     value=np.asarray(surface.get(field,[0.]*3),float)
                     if value.shape!=(3,) or not np.isfinite(value).all():raise ValueError('finite global plate traction required')
@@ -171,6 +183,7 @@ def attach(mesh, case, specification):
         records.append(dict(id=name,face_set=surface['face_set'],owner_body=surface['owner_body'],source_faces=len(faces),
             plate_triangles=len(cells),shared_soil_nodes=len(used),area_m2=total_area,source_area_m2=source_area,
             outward_orientation_checked=True,all_quadratic_trace_nodes_retained=True))
+        if formulation=='mindlin_tri6':records[-1].update(formulation=formulation,translation_interpolation='Tet10 face quadratic Tri6; same reference plane; no thickness offset')
         if version in ('soil-fem-plate-surfaces/2','soil-fem-plate-surfaces/3'):
             records[-1].update(attachment=attachment,opposite_body=opposite,owner_pairs=owner_pairs)
             if cut is not None:records[-1]['opposite_excavation_set']=selector
@@ -189,6 +202,8 @@ def attach(mesh, case, specification):
         binding.update(schema='soil-fem-plate-surface-binding/'+version.rsplit('/',1)[1],
             geometry_scope='Straight exterior or explicitly declared conforming shared-interface faces; no persistent CAD face ID claim',
             interface_limitation='Shared soil translations on both sides before excavation; no opening, slip or JOINT introduced. Owner-side orientation is explicit; retaining-wall mechanics and pointwise trace identity require separate verification.')
+    if any(s.get('formulation')=='mindlin_tri6' for s in surfaces):
+        binding['interpolation_limitation']='Per-surface selection: mindlin_tri6 has identical quadratic translations on the same straight planar Tri6 reference face; cst_dkt retains its piecewise-linear limitation. Thickness offsets unsupported.'
     return result_mesh,result_case,binding
 
 

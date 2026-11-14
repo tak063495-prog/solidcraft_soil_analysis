@@ -1,0 +1,28 @@
+test_all_fields_all_frames_and_independent_work_identity (test_wet_joint_cycle.WetJointCycle.test_all_fields_all_frames_and_independent_work_identity) ... ok
+test_every_phase_interior_restart_matches_whole_run (test_wet_joint_cycle.WetJointCycle.test_every_phase_interior_restart_matches_whole_run) ... ok
+test_existing_geometry_input_and_actual_open_slip (test_wet_joint_cycle.WetJointCycle.test_existing_geometry_input_and_actual_open_slip) ... FAIL
+test_full_history_and_quadrature_differences_are_not_certified (test_wet_joint_cycle.WetJointCycle.test_full_history_and_quadrature_differences_are_not_certified) ... ok
+test_missing_frames_nonfinite_and_changed_displacement_fail (test_wet_joint_cycle.WetJointCycle.test_missing_frames_nonfinite_and_changed_displacement_fail) ... ok
+test_reference_signature_and_independent_schedule (test_wet_joint_cycle.WetJointCycle.test_reference_signature_and_independent_schedule) ... ok
+test_unsupported_water_domain_and_bulk_plasticity_refused (test_wet_joint_cycle.WetJointCycle.test_unsupported_water_domain_and_bulk_plasticity_refused) ... ok
+
+======================================================================
+FAIL: test_existing_geometry_input_and_actual_open_slip (test_wet_joint_cycle.WetJointCycle.test_existing_geometry_input_and_actual_open_slip)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_wet_joint_cycle.py", line 33, in test_existing_geometry_input_and_actual_open_slip
+    self.assertEqual(driver.read(self.folder/'original/stages.json'), driver.read(ROOT/'examples/stages-joint-water-cycle.json'))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'sch[544 chars]: 0.0, 'gradient': [0.0, 0.0, 0.0], 'reference[1777 chars]}}]}} != {'sch[544 chars]: 0.0}, {'node_set': 'bottom', 'direction': [0[1227 chars]}}]}}
+Diff is 4710 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 7 tests in 67.172s
+
+FAILED (failures=1)
+Exported 7 tetra10 frames and raw integration-point frames: /tmp/tmp_w2uavdf/cycle/original/results
+Wet JOINT independent audit: 7 frames
+Exported 7 tetra10 frames and raw integration-point frames: /tmp/tmp_w2uavdf/cycle/h8/results
+Wet JOINT independent audit: 7 frames
+Exported 7 tetra10 frames and raw integration-point frames: /tmp/tmp_w2uavdf/cycle/h16/results
+Wet JOINT independent audit: 7 frames

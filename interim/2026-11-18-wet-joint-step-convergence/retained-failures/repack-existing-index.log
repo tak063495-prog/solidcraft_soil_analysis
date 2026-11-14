@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-18-wet-joint-step-convergence/evidence_steps.py", line 74, in <module>
+    if a.pack_paths:pack(a.pack_paths.resolve(),a.measurements.resolve(),a.archive.resolve())
+                    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-18-wet-joint-step-convergence/evidence_steps.py", line 47, in pack
+    write(HERE/'archive-sha256.json',dict(archive_sha256=sha(archive),archive_bytes=archive.stat().st_size,parts=parts,entries=entries,solver_binary_archived=False))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-15-wet-joint-convergence/study.py", line 50, in write
+    with path.open('x', encoding='utf-8') as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/workspace/solidcraft_soil_analysis/interim/2026-11-18-wet-joint-step-convergence/archive-sha256.json'

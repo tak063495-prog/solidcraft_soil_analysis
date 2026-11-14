@@ -1,0 +1,87 @@
+cargo test --locked --release --lib --bins
+   Compiling soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis)
+    Finished `release` profile [optimized] target(s) in 1m 37s
+     Running unittests src/lib.rs (target/release/deps/soil_fem_3d-8e5b6078918236ba)
+
+running 60 tests
+test beams::storage::tests::storage_arithmetic_overflow_and_invalid_budgets_are_rejected ... ok
+test beams::storage::tests::sparse_constraint_projection_matches_independent_dense_products ... ok
+test benchmark::tests::real_tet4_grid_assembly_solves_manufactured_field ... ok
+test beams::storage::tests::uncached_and_evicted_compilations_reproduce_identical_schur_matrices ... ok
+test elastic::tests::affine_patch_and_rigid_body_modes ... ok
+test checkpoint::tests::standard_sha256_vector_and_canonical_json_are_stable ... ok
+test elastic::tests::rejects_invalid_geometry_and_material ... ok
+test elements::tests::jacobian_certificate_rejects_fold_outside_integration_points ... ok
+test elements::tests::positive_quadrature_integrates_all_degree_five_monomials ... ok
+test elements::tests::tet10_partition_affine_patch_and_six_rigid_modes ... ok
+test elements::tests::tri6_integrates_constant_traction_and_linear_pressure ... ok
+test epoch_srm_control::tests::altered_origin_specification_and_producer_identity_are_rejected ... ok
+test epoch_srm_control::tests::callback_error_is_terminal_control_and_previous_saved_snapshot_remains_usable ... ok
+test epoch_srm_control::tests::distributed_support_limit_has_real_rejections_accepted_rollback_and_unknown_result ... ok
+test epoch_srm_control::tests::all_attempt_roundtrips_match_the_complete_direct_report_bytes ... ok
+test epoch_srm_control::tests::post_cut_dormant_history_and_final_report_match_uninterrupted_direct_search ... ok
+test epoch_srm_control::tests::invalid_budget_and_advance_after_finished_are_rejected ... ok
+test epoch_srm_control::tests::resealed_completed_trial_and_origin_audit_evidence_are_semantically_checked ... ok
+test epoch_srm_control::tests::resealed_frozen_load_metadata_fails_even_when_all_outer_hashes_are_updated ... ok
+test epoch_srm_control::tests::resealed_pending_factor_and_target_path_cannot_cross_factor_history ... ok
+test epoch_srm_control::tests::stop_before_an_attempt_keeps_the_whole_snapshot_byte_exact ... ok
+test epoch_srm_control::tests::stop_from_a_nonlinear_callback_finishes_only_the_current_attempt_and_resumes ... ok
+test joints::predictor_tests::cold_elastic_prediction_matches_a_closed_sticking_physical_increment ... ok
+test joints::predictor_tests::neutral_predictor_returns_an_overshot_sliding_trial_to_the_elastic_interior ... ok
+test linalg::tests::compiled_scatter_preserves_duplicate_order_cancellation_and_unsymmetric_values ... ok
+test linalg::tests::compiled_scatter_rejects_foreign_pattern_sequence_counts_and_nonfinite_values ... ok
+test linalg::tests::condensed_interface_above_256_preserves_full_unsymmetric_operator ... ok
+test linalg::tests::condensed_symbolic_blocks_match_legacy_boundaries_without_filling_elsewhere ... ok
+test linalg::tests::duplicate_assembly_preserves_unsymmetric_entries_and_matches_dense ... ok
+test linalg::tests::invalid_pivot_limit_and_cancellation_have_distinct_failures ... ok
+test linalg::tests::restarted_nonnormal_indefinite_system_matches_independent_pivoted_lu ... ok
+test linalg::tests::row_scaling_does_not_replace_original_residual_acceptance ... ok
+test mcc::tests::algorithmic_tangent_matches_half_step_and_independent_direction ... ok
+test mcc::tests::arbitrary_basis_rotation_and_plastic_work ... ok
+test mcc::tests::invalid_state_and_failed_trial_are_not_committed ... ok
+test mcc::tests::isotropic_compression_unloading_follows_lambda_kappa ... ok
+test mcc::tests::pure_shear_is_rotation_equivalent_and_refines ... ok
+test mcc::tests::restart_retains_all_hardening_and_plastic_history ... ok
+test plane_strain_2d::tests::archived_slope_failure_files_are_unchanged ... ok
+test epoch_srm_control::tests::resealed_finished_requirement_interval_and_safety_claims_are_recomputed ... ok
+test plane_strain_2d::tests::documented_crest_stays_inside_the_archived_theory_band ... ok
+test plane_strain_2d::tests::nested_monitor_separates_a_coarse_miss_from_the_continuum ... ok
+test plane_strain_2d::tests::non_nested_series_stays_indeterminate_and_keeps_discrete_failures ... ok
+test plane_strain_2d::tests::plateau_away_from_the_2d_value_is_not_called_a_pass ... ok
+test solver::tests::constrained_tetra_has_analytic_settlement_and_reaction ... ok
+test spatial_convergence::tests::ci_profile_reports_orders_without_closing_p6 ... ok
+test spatial_convergence::tests::existing_single_tet_settlement_is_unchanged ... ok
+test spatial_convergence::tests::manufactured_stress_matches_its_body_force ... ok
+test stages::mixed::ordering::tests::volume_first_rcm_preserves_unsymmetric_saddle_equations_and_matches_dense ... ok
+test stages::mixed::tests::compiled_projected_soil_scatter_is_bit_exact_to_original_and_matches_residual_jacobian ... ok
+test stages::mixed::tests::compiled_projected_structure_scatter_is_bit_exact_to_original_and_matches_residual_jacobian ... ok
+test stages::mixed::tests::full_three_field_jacobian_matches_residual_directional_differences ... ok
+test stages::mixed::tests::material_strain_includes_independent_volume_and_initial_domain_uses_cumulative_history ... ok
+test stages::mixed::tests::mixed_beam_plate_jacobian_includes_nonlocal_structural_tangent ... ok
+test stages::mixed::tests::projected_beam_plate_jacobian_includes_nonlocal_structural_tangent ... ok
+test stages::mixed::tests::projected_three_field_jacobian_matches_all_residual_blocks ... ok
+test stages::predictor_tests::parallel_material_errors_choose_first_input_failure_and_leave_all_committed_histories_unchanged ... ok
+test stages::predictor_tests::parallel_material_states_tangents_partitions_and_order_match_serial_without_history_mutation ... ok
+test stages::predictor_tests::temporary_sparse_and_dense_gauges_do_not_certify_the_original_equations ... ok
+test plane_strain_2d::tests::ci_column_records_five_percent_without_closing_the_slope_or_p6 has been running for over 60 seconds
+test plane_strain_2d::tests::ci_column_records_five_percent_without_closing_the_slope_or_p6 ... ok
+
+test result: ok. 60 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 194.33s
+
+     Running unittests src/main.rs (target/release/deps/soil_fem_3d-dd74fdf2150e726e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test --locked --release --doc
+    Finished `release` profile [optimized] target(s) in 0.03s
+   Doc-tests soil_fem_3d
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo build --locked --release --examples
+   Compiling soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis)
+    Finished `release` profile [optimized] target(s) in 11.10s

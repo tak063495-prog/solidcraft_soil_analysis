@@ -1,0 +1,89 @@
+test_both_policies_form_two_generations_and_frozen_archives (test_joint_combo_extension.ComboExtension.test_both_policies_form_two_generations_and_frozen_archives) ... ok
+test_comparator_detects_single_nodal_field_corruption (test_joint_combo_extension.ComboExtension.test_comparator_detects_single_nodal_field_corruption) ... FAIL
+test_comparator_rejects_missing_accepted_state (test_joint_combo_extension.ComboExtension.test_comparator_rejects_missing_accepted_state) ... FAIL
+test_frame_plate_and_tendon_are_coupled_and_nonzero (test_joint_combo_extension.ComboExtension.test_frame_plate_and_tendon_are_coupled_and_nonzero) ... ok
+test_reference_refuses_undeclared_wet_or_tip_scope (test_joint_combo_extension.ComboExtension.test_reference_refuses_undeclared_wet_or_tip_scope) ... FAIL
+test_restart_equality_preserves_signed_zero_and_all_nonclock_fields (test_joint_combo_extension.ComboExtension.test_restart_equality_preserves_signed_zero_and_all_nonclock_fields) ... ok
+test_shared_edge_uses_the_same_side_nodes_and_distinct_opposite_dofs (test_joint_combo_extension.ComboExtension.test_shared_edge_uses_the_same_side_nodes_and_distinct_opposite_dofs) ... ok
+test_two_nonintersecting_interfaces_have_no_shared_physical_nodes (test_joint_combo_extension.ComboExtension.test_two_nonintersecting_interfaces_have_no_shared_physical_nodes) ... ok
+
+======================================================================
+FAIL: test_comparator_detects_single_nodal_field_corruption (test_joint_combo_extension.ComboExtension.test_comparator_detects_single_nodal_field_corruption)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_joint_combo_extension.py", line 74, in test_comparator_detects_single_nodal_field_corruption
+            self.check_code("""
+            ~~~~~~~~~~~~~~~^^^^
+    with tempfile.TemporaryDirectory() as tmp:
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+     assert r['numerical_acceptance'] is False
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """)
+    ^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_joint_combo_extension.py", line 17, in check_code
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 :   File "<string>", line 12
+    a.write_text(json.dumps(v)+'
+                               ^
+SyntaxError: unterminated string literal (detected at line 12)
+
+
+======================================================================
+FAIL: test_comparator_rejects_missing_accepted_state (test_joint_combo_extension.ComboExtension.test_comparator_rejects_missing_accepted_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_joint_combo_extension.py", line 84, in test_comparator_rejects_missing_accepted_state
+            self.check_code("""
+            ~~~~~~~~~~~~~~~^^^^
+    with tempfile.TemporaryDirectory() as tmp:
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+     else:raise AssertionError('missing state was ignored')
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """)
+    ^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_joint_combo_extension.py", line 17, in check_code
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 :   File "<string>", line 10
+    a=Path(tmp)/'a';b=Path(tmp)/'b';v=json.dumps(dict(row=dict(stage='open',progress=.5),fields=dict(u=[1.,2.,3.])))+'
+                                                                                                                     ^
+SyntaxError: unterminated string literal (detected at line 10)
+
+
+======================================================================
+FAIL: test_reference_refuses_undeclared_wet_or_tip_scope (test_joint_combo_extension.ComboExtension.test_reference_refuses_undeclared_wet_or_tip_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_joint_combo_extension.py", line 63, in test_reference_refuses_undeclared_wet_or_tip_scope
+            self.check_code("""
+            ~~~~~~~~~~~~~~~^^^^
+    for change in ('wet','tip'):
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+     else:raise AssertionError('unsupported reference scope admitted')
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """)
+    ^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_joint_combo_extension.py", line 17, in check_code
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<string>", line 13, in <module>
+    try:Model(m,g,c)
+        ~~~~~^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-23-joint-combo-extension/reference.py", line 35, in __init__
+    self.system = System(mesh, case['joint_system'])
+                  ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/joint_reference.py", line 81, in __init__
+    assert cells.shape[1] == 10
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.818s
+
+FAILED (failures=3)

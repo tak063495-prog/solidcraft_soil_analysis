@@ -20,7 +20,17 @@ pub enum Status {
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct BirthReference {
+    pub jump_m: [f64; 3],
+    pub initial_traction_kpa: [f64; 3],
+    pub elastic_offset_m: [f64; 3],
+    pub initial_energy_kpa_m: f64,
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct PointState {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub birth: Option<BirthReference>,
     pub normal: [f64; 3],
     /// u_b - u_a; positive normal component opens the interface.
     pub jump_m: [f64; 3],
@@ -41,6 +51,7 @@ impl PointState {
             return Err(Error::Input("invalid JOINT normal".into()));
         }
         Ok(Self {
+            birth: None,
             normal: (n / n.norm()).into(),
             jump_m: [0.; 3],
             traction_kpa: [0.; 3],
@@ -52,6 +63,14 @@ impl PointState {
             status: Status::Stick,
         })
     }
+    pub fn elastic_jump(&self) -> Vector3<f64> {
+        Vector3::from(self.jump_m) - self.elastic_offset()
+    }
+    fn elastic_offset(&self) -> Vector3<f64> {
+        self.birth
+            .as_ref()
+            .map_or(Vector3::zeros(), |b| Vector3::from(b.elastic_offset_m))
+    }
     pub fn rotated(&self, r: &Matrix3<f64>) -> Result<Self> {
         if (r.transpose() * r - Matrix3::identity()).norm() > 1e-10
             || (r.determinant() - 1.).abs() > 1e-10
@@ -61,6 +80,11 @@ impl PointState {
             ));
         }
         let mut s = self.clone();
+        if let Some(b) = &mut s.birth {
+            b.jump_m = (r * Vector3::from(b.jump_m)).into();
+            b.initial_traction_kpa = (r * Vector3::from(b.initial_traction_kpa)).into();
+            b.elastic_offset_m = (r * Vector3::from(b.elastic_offset_m)).into();
+        }
         s.normal = (r * Vector3::from(self.normal)).into();
         s.jump_m = (r * Vector3::from(self.jump_m)).into();
         s.traction_kpa = (r * Vector3::from(self.traction_kpa)).into();
@@ -82,6 +106,40 @@ impl Material {
             ));
         }
         Ok(())
+    }
+    /// Fresh generation. Initial effective traction is admitted, never clipped.
+    pub fn birth(
+        &self,
+        normal: [f64; 3],
+        jump: [f64; 3],
+        traction: [f64; 3],
+    ) -> Result<PointState> {
+        self.validate()?;
+        let mut s = PointState::initial(normal)?;
+        let n = Vector3::from(s.normal);
+        let q = Vector3::from(traction);
+        let qn = n.dot(&q);
+        let shear = q - qn * n;
+        if !jump.iter().chain(&traction).all(|v| v.is_finite())
+            || qn > 0.
+            || shear.norm() > self.friction_coefficient * (-qn)
+        {
+            return Err(Error::Input(
+                "JOINT BIRTH initial effective force violates no-tension/Coulomb cone".into(),
+            ));
+        }
+        let elastic =
+            qn * n / self.normal_stiffness_kpa_m + shear / self.tangential_stiffness_kpa_m;
+        s.jump_m = jump;
+        s.traction_kpa = traction;
+        s.birth = Some(BirthReference {
+            jump_m: jump,
+            initial_traction_kpa: traction,
+            elastic_offset_m: (Vector3::from(jump) - elastic).into(),
+            initial_energy_kpa_m: self.energy(&s),
+        });
+        self.validate_state(&s)?;
+        Ok(s)
     }
     pub fn energy(&self, s: &PointState) -> f64 {
         let n = Vector3::from(s.normal);
@@ -113,7 +171,7 @@ impl Material {
             return Err(Error::Input("invalid JOINT history".into()));
         }
         let n = Vector3::from(s.normal);
-        let jump = Vector3::from(s.jump_m);
+        let jump = s.elastic_jump();
         let q = Vector3::from(s.traction_kpa);
         let gn = n.dot(&jump);
         let qn = n.dot(&q);
@@ -134,8 +192,37 @@ impl Material {
                 "JOINT stress/contact/slip history is inconsistent".into(),
             ));
         }
+        let initial_energy = if let Some(b) = &s.birth {
+            let q0 = Vector3::from(b.initial_traction_kpa);
+            let qn0 = n.dot(&q0);
+            let qt0 = q0 - qn0 * n;
+            let e0 = qn0 * qn0 / (2. * self.normal_stiffness_kpa_m)
+                + qt0.norm_squared() / (2. * self.tangential_stiffness_kpa_m);
+            let elastic0 =
+                qn0 * n / self.normal_stiffness_kpa_m + qt0 / self.tangential_stiffness_kpa_m;
+            if !b
+                .jump_m
+                .iter()
+                .chain(&b.initial_traction_kpa)
+                .chain(&b.elastic_offset_m)
+                .chain([&b.initial_energy_kpa_m])
+                .all(|v| v.is_finite())
+                || qn0 > 0.
+                || qt0.norm() > self.friction_coefficient * (-qn0)
+                || (Vector3::from(b.jump_m) - elastic0 - Vector3::from(b.elastic_offset_m)).norm()
+                    > 1e-10
+                || (b.initial_energy_kpa_m - e0).abs() > 1e-10 * (1. + e0)
+            {
+                return Err(Error::Input(
+                    "JOINT BIRTH initial reference/energy is inconsistent".into(),
+                ));
+            }
+            e0
+        } else {
+            0.
+        };
         let work = self.energy(s) + s.plastic_dissipation_kpa_m + s.numerical_dissipation_kpa_m;
-        if (work - s.endpoint_work_kpa_m).abs()
+        if (work - initial_energy - s.endpoint_work_kpa_m).abs()
             > 1e-8 * (1. + work.abs() + s.endpoint_work_kpa_m.abs())
         {
             return Err(Error::Input(
@@ -152,7 +239,7 @@ impl Material {
         let tauold = qold - qold.dot(&n) * n;
         let dt = delta - delta.dot(&n) * n;
         let trial = tauold + self.tangential_stiffness_kpa_m * dt;
-        let normal = self.normal_stiffness_kpa_m * target.dot(&n).min(0.);
+        let normal = self.normal_stiffness_kpa_m * (target - old.elastic_offset()).dot(&n).min(0.);
         let limit = self.friction_coefficient * (-normal);
         let norm = trial.norm();
         let mut s = old.clone();
@@ -189,8 +276,9 @@ impl Material {
     fn segment(&self, old: &PointState, target: Vector3<f64>) -> Result<PointState> {
         let n = Vector3::from(old.normal);
         let before = Vector3::from(old.jump_m);
-        let g0 = n.dot(&before);
-        let g1 = n.dot(&target);
+        let offset = old.elastic_offset();
+        let g0 = n.dot(&(before - offset));
+        let g1 = n.dot(&(target - offset));
         if g0 <= 0. && g1 <= 0. {
             return self.closed(old, target);
         }
@@ -203,7 +291,7 @@ impl Material {
         }
         let crossing = before + (target - before) * (g0 / (g0 - g1));
         // Remove normal roundoff so a crossing is exactly on the contact plane.
-        let crossing = crossing - n * crossing.dot(&n);
+        let crossing = crossing - n * (crossing - offset).dot(&n);
         if g0 <= 0. {
             let mut s = self.closed(old, crossing)?;
             s.jump_m = target.into();

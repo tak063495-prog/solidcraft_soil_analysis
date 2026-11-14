@@ -1,4 +1,8 @@
-//! Matching Tri3/Tri6 interfaces with independent displacement nodes per side.
+//! Matching Tri3/Tri6 interfaces; only declared Tet10 crack-tip edges may share nodes.
+#[path = "joints_global_step.rs"]
+mod global_step;
+pub use global_step::GlobalStepControl;
+
 use crate::{
     Error, Result, boundary, elements,
     joint_law::{Material, PointState},
@@ -7,6 +11,8 @@ use crate::{
 use nalgebra::{DMatrix, DVector, Matrix3, Vector3};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+#[path = "joints_birth.rs"]
+mod birth;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -16,7 +22,147 @@ pub struct Definition {
     pub side_b: String,
     pub material: Material,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub birth_policy: Option<BirthPolicy>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub water: Option<crate::joint_water::Policy>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub crack_tip: Option<CrackTip>,
+}
+
+/// Explicit, immutable topology certificate for a degenerate Tet10 crack front.
+/// Edges are [endpoint, endpoint, intermediate node], in displacement IDs.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CrackTip {
+    pub edges: Vec<[usize; 3]>,
+    pub faces: Vec<OwnedFace>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct OwnedFace {
+    pub face_a: [usize; 3],
+    pub face_b: [usize; 3],
+    pub owner_a: usize,
+    pub owner_b: usize,
+}
+fn face_key(mut face: [usize; 3]) -> [usize; 3] {
+    face.sort_unstable();
+    face
+}
+impl CrackTip {
+    fn validate(
+        &self,
+        mesh: &Mesh,
+        fa: &[[usize; 3]],
+        fb: &[[usize; 3]],
+    ) -> Result<BTreeSet<usize>> {
+        let invalid =
+            || Error::Input("JOINT invalid crack-tip edge/surface/owner declaration".into());
+        if mesh.tetrahedra10.is_empty() || self.edges.is_empty() || self.faces.len() != fa.len() {
+            return Err(invalid());
+        }
+        let owners = boundary::surface_owners(mesh);
+        let mut a_faces = BTreeSet::new();
+        let mut b_faces = BTreeSet::new();
+        let mut surface_edges = BTreeMap::<[usize; 2], (usize, usize)>::new();
+        for f in &self.faces {
+            let a = face_key(f.face_a);
+            let b = face_key(f.face_b);
+            if !a_faces.insert(a)
+                || !b_faces.insert(b)
+                || f.owner_a == f.owner_b
+                || owners.get(&a).map(Vec::as_slice) != Some(&[f.owner_a])
+                || owners.get(&b).map(Vec::as_slice) != Some(&[f.owner_b])
+            {
+                return Err(invalid());
+            }
+            let nodes = mesh.face_nodes(f.owner_a, &a)?;
+            for (k, [i, j]) in [[0, 1], [1, 2], [2, 0]].into_iter().enumerate() {
+                let mut edge = [nodes[i], nodes[j]];
+                edge.sort_unstable();
+                let entry = surface_edges.entry(edge).or_insert((0, nodes[k + 3]));
+                entry.0 += 1;
+                if entry.0 > 2 || entry.1 != nodes[k + 3] {
+                    return Err(invalid());
+                }
+            }
+        }
+        if a_faces != fa.iter().copied().map(face_key).collect()
+            || b_faces != fb.iter().copied().map(face_key).collect()
+        {
+            return Err(invalid());
+        }
+        let mut unique = BTreeSet::new();
+        let mut degree = BTreeMap::<usize, usize>::new();
+        let mut allowed = BTreeSet::new();
+        for &[v, w, mid] in &self.edges {
+            let mut edge = [v, w];
+            edge.sort_unstable();
+            if v == w
+                || mid == v
+                || mid == w
+                || !unique.insert(edge)
+                || surface_edges.get(&edge) != Some(&(1, mid))
+            {
+                return Err(invalid());
+            }
+            for n in [v, w] {
+                *degree.entry(n).or_default() += 1;
+            }
+            allowed.extend([v, w, mid]);
+            // Reconstruct the pre-split fan using physical glued faces and
+            // declared contact pairs. A disconnected/branched fan is invalid.
+            let star: BTreeSet<_> = mesh
+                .tetrahedra
+                .iter()
+                .enumerate()
+                .filter(|(_, t)| t.contains(&v) && t.contains(&w))
+                .map(|(e, _)| e)
+                .collect();
+            let mut links: BTreeMap<usize, BTreeSet<usize>> =
+                star.iter().map(|&e| (e, BTreeSet::new())).collect();
+            let mut connect = |a, b| {
+                links.get_mut(&a).ok_or_else(invalid)?.insert(b);
+                links.get_mut(&b).ok_or_else(invalid)?.insert(a);
+                Ok::<_, Error>(())
+            };
+            for (face, os) in &owners {
+                if face.contains(&v) && face.contains(&w) && os.len() == 2 {
+                    connect(os[0], os[1])?;
+                }
+            }
+            for f in &self.faces {
+                if f.face_a.contains(&v) && f.face_a.contains(&w) {
+                    if !f.face_b.contains(&v) || !f.face_b.contains(&w) {
+                        return Err(invalid());
+                    }
+                    connect(f.owner_a, f.owner_b)?;
+                }
+            }
+            let mut stack = vec![*star.first().ok_or_else(invalid)?];
+            let mut seen = BTreeSet::new();
+            while let Some(e) = stack.pop() {
+                if seen.insert(e) {
+                    stack.extend(&links[&e]);
+                }
+            }
+            if seen != star || links.values().any(|l| l.len() > 2) {
+                return Err(invalid());
+            }
+        }
+        if degree.values().any(|&d| d > 2) {
+            return Err(invalid());
+        }
+        Ok(allowed)
+    }
+    fn matches(&self, ka: [usize; 3], kb: [usize; 3], oa: usize, ob: usize) -> bool {
+        self.faces.iter().any(|f| {
+            face_key(f.face_a) == ka
+                && face_key(f.face_b) == kb
+                && f.owner_a == oa
+                && f.owner_b == ob
+        })
+    }
 }
 
 #[cfg(test)]
@@ -152,6 +298,9 @@ mod predictor_tests {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Configuration {
+    /// Global equilibrium cutback at endpoint contact-status changes; absent is legacy.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub global_step_control: Option<GlobalStepControl>,
     pub schema: String,
     pub geometric_tolerance_m: f64,
     pub maximum_increment_m: f64,
@@ -160,9 +309,33 @@ pub struct Configuration {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub structure_bodies: Vec<String>,
 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BirthPolicy {
+    TransferForce,
+    StressFree,
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Generation {
+    pub generation: u64,
+    pub points: Vec<(usize, PointState)>,
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Lifecycle {
+    pub joint_id: String,
+    pub policy: Option<BirthPolicy>,
+    pub active: bool,
+    pub tied: bool,
+    pub generation: u64,
+    pub archived: Vec<Generation>,
+}
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct State {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub lifecycle: Vec<Lifecycle>,
     pub points: Vec<PointState>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -243,6 +416,35 @@ impl Model {
         {
             return Err(Error::Input("invalid JOINT configuration".into()));
         }
+        // The front is a property of the complete contact surface, even when
+        // callers assign different JOINT IDs/materials to adjacent patches.
+        let mut tip_edges = BTreeSet::new();
+        let mut tip_degree = BTreeMap::<usize, usize>::new();
+        for tip in c.joints.iter().filter_map(|d| d.crack_tip.as_ref()) {
+            for &[a, b, _] in &tip.edges {
+                let mut edge = [a, b];
+                edge.sort_unstable();
+                if !tip_edges.insert(edge) {
+                    return Err(Error::Input(
+                        "duplicate crack-tip edge across JOINTs".into(),
+                    ));
+                }
+                for n in edge {
+                    *tip_degree.entry(n).or_default() += 1;
+                }
+            }
+        }
+        if tip_degree.values().any(|&degree| degree > 2) {
+            return Err(Error::Input("branching crack tip across JOINTs".into()));
+        }
+        if c.joints.iter().any(|d| d.birth_policy.is_some())
+            && c.joints.iter().any(|d| d.crack_tip.is_some())
+            && (c.joints.len() != 1 || c.joints[0].water.is_some())
+        {
+            return Err(Error::Input(
+                "declared-tip JOINT BIRTH is limited to one dry interface".into(),
+            ));
+        }
         let owners = boundary::surface_owners(mesh);
         let mut ids = BTreeSet::new();
         let mut face_keys = BTreeSet::new();
@@ -269,6 +471,10 @@ impl Model {
             if fa.len() != fb.len() {
                 return Err(Error::Input("JOINT matching face counts differ".into()));
             }
+            let allowed_tip_nodes = match &d.crack_tip {
+                Some(tip) => tip.validate(mesh, fa, fb)?,
+                None => BTreeSet::new(),
+            };
             let mut used = BTreeSet::new();
             for (fi, key_a) in fa.iter().enumerate() {
                 let mut ka = *key_a;
@@ -279,7 +485,9 @@ impl Model {
                 let na = mesh.face_nodes(oa, &ka)?;
                 let mut found = Vec::new();
                 for (bi, key_b) in fb.iter().enumerate() {
-                    if used.contains(&bi) {
+                    // A declared tip must reject every geometric ambiguity,
+                    // including candidates paired with an earlier face.
+                    if used.contains(&bi) && d.crack_tip.is_none() {
                         continue;
                     }
                     let mut kb = *key_b;
@@ -324,11 +532,17 @@ impl Model {
                 }
                 let (bi, kb, ob, nb, permutation) = found.pop().unwrap();
                 if permutation[..3].iter().any(|&i| i >= 3)
-                    || na.iter().enumerate().any(|(i, &n)| n == nb[permutation[i]])
+                    || na
+                        .iter()
+                        .enumerate()
+                        .any(|(i, &n)| (n == nb[permutation[i]]) != allowed_tip_nodes.contains(&n))
+                    || na.iter().enumerate().all(|(i, &n)| n == nb[permutation[i]])
+                    || d.crack_tip
+                        .as_ref()
+                        .is_some_and(|tip| !tip.matches(ka, kb, oa, ob))
                 {
                     return Err(Error::Input(
-                        "JOINT side interpolation/order or separated-node requirement failed"
-                            .into(),
+                        "JOINT interpolation, declared-tip sharing or owner pair mismatch".into(),
                     ));
                 }
                 let inversions = (0..3)
@@ -370,6 +584,16 @@ impl Model {
                         *coefficients.entry(a).or_default() -= w;
                         *coefficients.entry(b).or_default() += w;
                     }
+                    // Exact +/- Ni cancellation removes shared tip DOFs from
+                    // force, tangent and connectivity, including inactive history.
+                    for &n in &allowed_tip_nodes {
+                        if coefficients.get(&n).is_some_and(|&v| v != 0.) {
+                            return Err(Error::Input(
+                                "JOINT tip jump coefficient did not cancel".into(),
+                            ));
+                        }
+                    }
+                    coefficients.retain(|_, w| *w != 0.);
                     points.push(Point {
                         info: PointInfo {
                             joint_id: d.id.clone(),
@@ -405,6 +629,14 @@ impl Model {
     pub fn counterpart(&self, face: &[usize; 3]) -> Option<usize> {
         self.counterparts.get(face).copied()
     }
+    pub fn shared_tip_nodes(&self) -> BTreeSet<usize> {
+        self.configuration
+            .joints
+            .iter()
+            .filter_map(|d| d.crack_tip.as_ref())
+            .flat_map(|tip| tip.edges.iter().flatten().copied())
+            .collect()
+    }
     fn validate_layout(&self, state: &State, u: &[[f64; 3]], active: &[bool]) -> Result<()> {
         if state.points.len() != self.points.len()
             || u.len() != self.positions.len()
@@ -415,6 +647,7 @@ impl Model {
                 "JOINT history/displacement/active layout mismatch".into(),
             ));
         }
+        self.validate_lifecycle(state)?;
         Ok(())
     }
     pub fn layout(&self) -> Vec<PointInfo> {
@@ -422,12 +655,37 @@ impl Model {
     }
     pub fn initial_state(&self) -> Result<State> {
         Ok(State {
+            lifecycle: if self
+                .configuration
+                .joints
+                .iter()
+                .any(|d| d.birth_policy.is_some())
+            {
+                self.configuration
+                    .joints
+                    .iter()
+                    .map(|d| Lifecycle {
+                        joint_id: d.id.clone(),
+                        policy: d.birth_policy,
+                        active: d.birth_policy.is_none(),
+                        tied: d.birth_policy.is_some(),
+                        generation: 0,
+                        archived: vec![],
+                    })
+                    .collect()
+            } else {
+                vec![]
+            },
             points: self
                 .points
                 .iter()
                 .map(|p| PointState::initial(p.info.normal))
                 .collect::<Result<_>>()?,
         })
+    }
+    /// Exact assembled jump coefficients, for topology/work audits.
+    pub fn jump_coefficients(&self) -> Vec<Vec<(usize, f64)>> {
+        self.points.iter().map(|p| p.coefficients.clone()).collect()
     }
     pub fn connectivity(&self) -> Vec<Vec<usize>> {
         self.points
@@ -439,6 +697,9 @@ impl Model {
                     .collect()
             })
             .collect()
+    }
+    fn contact_active(&self, state: &State, p: &Point, active: &[bool]) -> bool {
+        Self::active(p, active) && state.lifecycle.get(p.material).is_none_or(|l| l.active)
     }
     fn active(p: &Point, active: &[bool]) -> bool {
         active[p.info.owner_a] && active[p.info.owner_b]
@@ -459,7 +720,7 @@ impl Model {
             .iter()
             .zip(&state.points)
             .map(|(p, s)| {
-                if Self::active(p, active) {
+                if self.contact_active(state, p, active) {
                     self.configuration.joints[p.material].material.partition(
                         s,
                         Self::jump(p, u).into(),
@@ -473,15 +734,13 @@ impl Model {
     }
     pub fn validate_state(&self, state: &State, u: &[[f64; 3]], active: &[bool]) -> Result<()> {
         self.validate_layout(state, u, active)?;
-        if state.points.len() != self.points.len() || u.len() != self.positions.len() {
-            return Err(Error::Input("JOINT cache count mismatch".into()));
-        }
+        self.validate_lifecycle(state)?;
         for (p, s) in self.points.iter().zip(&state.points) {
             self.configuration.joints[p.material]
                 .material
                 .validate_state(s)?;
             if (Vector3::from(s.normal) - Vector3::from(p.info.normal)).norm() > 1e-10
-                || (Self::active(p, active)
+                || (self.contact_active(state, p, active)
                     && (Self::jump(p, u) - Vector3::from(s.jump_m)).norm() > 1e-10)
             {
                 return Err(Error::Input("JOINT geometry/jump cache mismatch".into()));
@@ -509,7 +768,7 @@ impl Model {
             if space.full() {
                 break;
             }
-            if !Self::active(p, active) {
+            if !self.contact_active(state, p, active) {
                 continue;
             }
             let n = Vector3::from(p.info.normal);
@@ -590,7 +849,7 @@ impl Model {
         }
         let mut matrix = DMatrix::zeros(rhs.len(), rhs.len());
         for (i, p) in self.points.iter().enumerate() {
-            if !Self::active(p, active) {
+            if !self.contact_active(current, p, active) {
                 continue;
             }
             let n = Vector3::from(p.info.normal);
@@ -598,8 +857,8 @@ impl Model {
             let o = &old.points[i];
             let jump = Vector3::from(s.jump_m);
             let old_jump = Vector3::from(o.jump_m);
-            let gap = n.dot(&jump);
-            let old_gap = n.dot(&old_jump);
+            let gap = n.dot(&s.elastic_jump());
+            let old_gap = n.dot(&o.elastic_jump());
             if gap > 0. {
                 continue;
             }
@@ -663,9 +922,9 @@ impl Model {
         }
         let mut found = false;
         for (p, s) in self.points.iter().zip(&state.points) {
-            if Self::active(p, active) {
+            if self.contact_active(state, p, active) {
                 found = true;
-                if s.jump_m != [0.; 3] || s.traction_kpa != [0.; 3] {
+                if s.elastic_jump() != Vector3::zeros() || s.traction_kpa != [0.; 3] {
                     return Ok(None);
                 }
             }
@@ -675,7 +934,7 @@ impl Model {
         }
         let mut matrix = Vec::new();
         for p in &self.points {
-            if !Self::active(p, active) {
+            if !self.contact_active(state, p, active) {
                 continue;
             }
             let material = &self.configuration.joints[p.material].material;
@@ -722,7 +981,7 @@ impl Model {
         let mut numerical = 0.;
         let mut work = 0.;
         for (i, p) in self.points.iter().enumerate() {
-            let is_active = Self::active(p, active);
+            let is_active = self.contact_active(state, p, active);
             let material = &self.configuration.joints[p.material].material;
             let old = &state.points[i];
             // Removed-side histories remain archived and must still be valid.
@@ -768,7 +1027,7 @@ impl Model {
             let s = &next.points[i];
             let n = Vector3::from(p.info.normal);
             let q = Vector3::from(s.traction_kpa);
-            let gn = Vector3::from(s.jump_m).dot(&n);
+            let gn = s.elastic_jump().dot(&n);
             let normal = q.dot(&n);
             let tau = q - normal * n;
             let elastic = material.energy(s);

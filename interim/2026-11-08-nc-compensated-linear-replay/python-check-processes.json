@@ -1,0 +1,76 @@
+[
+  {
+    "name": "python-midpoint",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_nc_midpoint_resume.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.2145032570000467
+  },
+  {
+    "name": "python-diagnosis",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_low_preload_nc_diagnosis.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.3147074780000594
+  },
+  {
+    "name": "python-trace",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_nc_newton_trace.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.16459620299997368
+  },
+  {
+    "name": "python-linear-audit",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "/workspace/solidcraft_soil_analysis/interim/2026-11-08-nc-compensated-linear-replay/test_linear_audit.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.06411718800006838
+  },
+  {
+    "name": "python-diagnostic-guards",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "interim/2026-11-08-nc-midpoint-stop-diagnosis/test_diagnosis.py",
+      "--probe",
+      "work/nc-linear/candidate/target/release/examples/nc_stop_probe",
+      "--prior",
+      "work/nc-linear/evidence/prior",
+      "--traces",
+      "work/nc-linear/evidence/diagnostic",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.3649509399999715
+  }
+]

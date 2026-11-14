@@ -1,0 +1,55 @@
+{
+  "scope": "Synthetic regression fixtures and transport bytes only; no new physical/FEM acceptance",
+  "mc_epoch_view": {
+    "files_bytes": {
+      "points-001.json": 1076,
+      "geometry.json": 205,
+      "frame-001.json": 2658,
+      "points-000.json": 1076,
+      "frame-000.json": 2523,
+      "view-manifest.json": 3473
+    },
+    "total_bytes": 11011,
+    "largest_file_bytes": 3473,
+    "mechanical_acceptance_mocked": true,
+    "view_file_count": 6
+  },
+  "matset_sampled": [
+    {
+      "stage": "material_inventory",
+      "near_yield_candidates": 0,
+      "sampled_negative_acoustic_candidates": 0
+    },
+    {
+      "stage": "after_matset",
+      "near_yield_candidates": 1,
+      "sampled_negative_acoustic_candidates": 1
+    }
+  ],
+  "soil_gp_count": 162,
+  "soil_normal_control": {
+    "schema": "soil-fem-soil-source-column-analytic/1",
+    "passed": true,
+    "frames": [
+      {
+        "stage": "flow",
+        "source_per_s": 0.0002,
+        "soil_volume_m3": 0.5,
+        "source_and_bottom_outflow_m3_s": 0.0001,
+        "head_at_seam_m": 2.25,
+        "physical_joint_pressure_kpa": 17.5,
+        "bottom_flux_m_s": -0.0001,
+        "seam_flux_m_s": 0.0,
+        "maximum_nodal_head_error_m": 0.0,
+        "maximum_gp_head_error_m": 4.440892098500626e-16,
+        "maximum_pressure_head_error_m": 2.220446049250313e-16,
+        "maximum_flux_error_m_s": 0.0,
+        "maximum_no_flow_face_outflow_m3_s": 0.0
+      }
+    ],
+    "scope": "existing 12 Tet10 column; saturated SOIL source flow only; elastic closed sticking with 2 plates and 1 beam",
+    "p3b_p4_rows_complete": false,
+    "p6_complete": false
+  },
+  "p6_complete": false
+}

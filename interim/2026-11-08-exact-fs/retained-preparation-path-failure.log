@@ -1,0 +1,122 @@
+test_missing_source_empty_identity_or_invalid_input_cannot_prepare (test_exact_fs.RealSectionPreparation.test_missing_source_empty_identity_or_invalid_input_cannot_prepare) ... ok
+test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing (test_exact_fs.RealSectionPreparation.test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing) ... ERROR
+test_real_search_and_cli_verification_with_missing_or_modified_evidence (test_exact_fs.RealSectionPreparation.test_real_search_and_cli_verification_with_missing_or_modified_evidence) ... ERROR
+test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) ... 
+  test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) (name='source') ... ERROR
+  test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) (name='job') ... ERROR
+  test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) (name='claim') ... ERROR
+
+======================================================================
+ERROR: test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing (test_exact_fs.RealSectionPreparation.test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 30, in test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing
+    bundle, result = self.prepare(d)
+                     ~~~~~~~~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 23, in prepare
+    result = MODULE.prepare(BINARY, *(FIXTURE / (n + '.json') for n in
+                            ('mesh', 'ground', 'case', 'fresh-spec')),
+                            source, 'TEST ONLY: not a real section', bundle)
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 42, in prepare
+    'job_manifest_sha256': digest(output / 'job' / 'manifest.json'),
+                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 15, in digest
+    with Path(path).open('rb') as stream:
+         ~~~~~~~~~~~~~~~^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmppv71xzij/bundle/job/manifest.json'
+
+======================================================================
+ERROR: test_real_search_and_cli_verification_with_missing_or_modified_evidence (test_exact_fs.RealSectionPreparation.test_real_search_and_cli_verification_with_missing_or_modified_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 71, in test_real_search_and_cli_verification_with_missing_or_modified_evidence
+    bundle, _ = self.prepare(d)
+                ~~~~~~~~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 23, in prepare
+    result = MODULE.prepare(BINARY, *(FIXTURE / (n + '.json') for n in
+                            ('mesh', 'ground', 'case', 'fresh-spec')),
+                            source, 'TEST ONLY: not a real section', bundle)
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 42, in prepare
+    'job_manifest_sha256': digest(output / 'job' / 'manifest.json'),
+                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 15, in digest
+    with Path(path).open('rb') as stream:
+         ~~~~~~~~~~~~~~~^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpo7s64bos/bundle/job/manifest.json'
+
+======================================================================
+ERROR: test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) (name='source')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 57, in test_tampered_preparation_source_and_job_are_refused
+    bundle, _ = self.prepare(d)
+                ~~~~~~~~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 23, in prepare
+    result = MODULE.prepare(BINARY, *(FIXTURE / (n + '.json') for n in
+                            ('mesh', 'ground', 'case', 'fresh-spec')),
+                            source, 'TEST ONLY: not a real section', bundle)
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 42, in prepare
+    'job_manifest_sha256': digest(output / 'job' / 'manifest.json'),
+                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 15, in digest
+    with Path(path).open('rb') as stream:
+         ~~~~~~~~~~~~~~~^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpqnqk095x/bundle/job/manifest.json'
+
+======================================================================
+ERROR: test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) (name='job')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 57, in test_tampered_preparation_source_and_job_are_refused
+    bundle, _ = self.prepare(d)
+                ~~~~~~~~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 23, in prepare
+    result = MODULE.prepare(BINARY, *(FIXTURE / (n + '.json') for n in
+                            ('mesh', 'ground', 'case', 'fresh-spec')),
+                            source, 'TEST ONLY: not a real section', bundle)
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 42, in prepare
+    'job_manifest_sha256': digest(output / 'job' / 'manifest.json'),
+                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 15, in digest
+    with Path(path).open('rb') as stream:
+         ~~~~~~~~~~~~~~~^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpzl4nohu_/bundle/job/manifest.json'
+
+======================================================================
+ERROR: test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) (name='claim')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 57, in test_tampered_preparation_source_and_job_are_refused
+    bundle, _ = self.prepare(d)
+                ~~~~~~~~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_exact_fs.py", line 23, in prepare
+    result = MODULE.prepare(BINARY, *(FIXTURE / (n + '.json') for n in
+                            ('mesh', 'ground', 'case', 'fresh-spec')),
+                            source, 'TEST ONLY: not a real section', bundle)
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 42, in prepare
+    'job_manifest_sha256': digest(output / 'job' / 'manifest.json'),
+                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/prepare_real_section_srm.py", line 15, in digest
+    with Path(path).open('rb') as stream:
+         ~~~~~~~~~~~~~~~^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpbp7splkw/bundle/job/manifest.json'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.484s
+
+FAILED (errors=5)

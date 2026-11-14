@@ -1,0 +1,395 @@
+{
+  "base": "c4a2b39d7f420036a8903163a653a6ed943e718c",
+  "nc": {
+    "baseline": {
+      "passed": false,
+      "production_adopted": false,
+      "complete": false,
+      "local_newton_tolerance": "1e-11",
+      "common_settings": {
+        "kinematics": "explicit",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 60,
+        "initial_increment": 0.25,
+        "minimum_increment": 2.384185791015625e-07,
+        "material_maximum_substep": 0.001,
+        "tangent_perturbation": 1e-09,
+        "maximum_free_dofs": 162,
+        "linear_solver": {
+          "method": "dense_lu"
+        }
+      },
+      "failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: true linear residual 1.194127284855861e-10",
+      "last_attempt": {
+        "stage": "excavate_upper",
+        "progress_from": 0.9512960910797119,
+        "progress_to": 0.951296329498291,
+        "accepted": false,
+        "reason": "numerical solve failed: true linear residual 1.194127284855861e-10",
+        "newton_iterations": null,
+        "relative_force_residual": null,
+        "committed_state_unchanged_on_rejection": true,
+        "rejected_trial_material_changed": false,
+        "rejected_trial_plastic_changed": false,
+        "rejected_trial_active_set_changed": false,
+        "rejected_trial_load_changed": false,
+        "linear_solves": []
+      },
+      "remaining_holding_fraction": 0.048703908920288086,
+      "observation": {
+        "accepted_increments": 266,
+        "completed_frames": [
+          "initial_equilibrated",
+          "load",
+          "unload"
+        ],
+        "stage_index": 3,
+        "stage_progress": 0.9512960910797119,
+        "geostatic_progress": 1.0,
+        "pc_range_kpa": [
+          68.99614926874916,
+          172.49310547775846
+        ],
+        "plastic_points": 324,
+        "rejections": 18,
+        "rejected_plastic_trial_changed": true,
+        "rejected_contact_trial_changed": true,
+        "all_rejections_preserve_committed_state": true,
+        "stored_stress_force_checks": [
+          {
+            "frame": "initial_equilibrated",
+            "relative_force_residual": 1.478753103968099e-13,
+            "constraint_error_m": 0.0,
+            "maximum_normalized_mcc_yield": 6.202845124519819e-13
+          },
+          {
+            "frame": "load",
+            "relative_force_residual": 1.1845652600329366e-15,
+            "constraint_error_m": 0.0,
+            "maximum_normalized_mcc_yield": 4.827465517089588e-13
+          },
+          {
+            "frame": "unload",
+            "relative_force_residual": 2.172866067196381e-12,
+            "constraint_error_m": 0.0,
+            "maximum_normalized_mcc_yield": -0.016687482179995664
+          }
+        ],
+        "last_committed_force_check": {
+          "relative_force_residual": 1.6058573425517926e-09,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": 9.404941971795467e-13
+        },
+        "independent_plastic_3d_displacement": false,
+        "zero_release_check": {
+          "relative_force_residual": 1.5244191234979123e-12,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": -0.018801158098909077
+        },
+        "fully_released_and_frozen": false,
+        "removed_joint_and_material_history_frozen": true
+      },
+      "maximum_accepted_linear_residual": 9.763762028490727e-11,
+      "maximum_accepted_force_residual": 8.921533529987844e-09,
+      "trace_event_counts": {
+        "progress": 4078,
+        "iterate": 252,
+        "tangent": 247,
+        "line_search": 769,
+        "repartition": 25
+      },
+      "saved_iteration_maximum_active_contact_points": 0,
+      "saved_committed_contact_history_frozen": true,
+      "removed_material_history_frozen_in_saved_iterates_and_candidates": true,
+      "detailed_trace_committed_progresses": [
+        0.9512939453125,
+        0.9512948989868164,
+        0.9512953758239746,
+        0.9512958526611328,
+        0.9512960910797119
+      ],
+      "last_saved_iterate": {
+        "stage": 3,
+        "progress": 0.951296329498291,
+        "iteration": 52,
+        "relative_force_residual": 1.1383847722886682e-07,
+        "maximum_partition": 4
+      },
+      "last_newton_event": {
+        "kind": "newton",
+        "linear_solve": null,
+        "maximum_material_partitions": 4,
+        "newton_iteration": 52,
+        "progress": 0.951296329498291,
+        "reason": null,
+        "relative_force_residual": 1.1383847722886682e-07,
+        "relative_pressure_residual": null,
+        "relative_volume_residual": null,
+        "schema": "soil-fem-stage-progress/1",
+        "stage": "excavate_upper",
+        "stage_index": 3
+      },
+      "detailed_trace_is_full_path": false,
+      "input_sha256": {
+        "ground.json": "4b055d60fb99d3e750b086079485f93dd92eeafed0926f29f922d74c4be2a701",
+        "mesh.json": "73360b7e5718089aec5391f99d13c3b1c42579440589430e3618cfa69e225fd2",
+        "stages.json": "4bf86ef4d0525872a3adbc1a58fdc0e99d238de030af8886aa2d1ec8d1a849e8"
+      }
+    },
+    "local13": {
+      "passed": false,
+      "production_adopted": false,
+      "complete": false,
+      "local_newton_tolerance": "1e-13",
+      "common_settings": {
+        "kinematics": "explicit",
+        "relative_force_tolerance": 1e-08,
+        "relative_linear_tolerance": 1e-10,
+        "maximum_newton_iterations": 60,
+        "initial_increment": 0.25,
+        "minimum_increment": 2.384185791015625e-07,
+        "material_maximum_substep": 0.001,
+        "tangent_perturbation": 1e-09,
+        "maximum_free_dofs": 162,
+        "linear_solver": {
+          "method": "dense_lu"
+        }
+      },
+      "failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: true linear residual 1.0192967770542909e-10",
+      "last_attempt": {
+        "stage": "excavate_upper",
+        "progress_from": 0.9512951374053955,
+        "progress_to": 0.9512953758239746,
+        "accepted": false,
+        "reason": "numerical solve failed: true linear residual 1.0192967770542909e-10",
+        "newton_iterations": null,
+        "relative_force_residual": null,
+        "committed_state_unchanged_on_rejection": true,
+        "rejected_trial_material_changed": false,
+        "rejected_trial_plastic_changed": false,
+        "rejected_trial_active_set_changed": false,
+        "rejected_trial_load_changed": false,
+        "linear_solves": []
+      },
+      "remaining_holding_fraction": 0.04870486259460449,
+      "observation": {
+        "accepted_increments": 266,
+        "completed_frames": [
+          "initial_equilibrated",
+          "load",
+          "unload"
+        ],
+        "stage_index": 3,
+        "stage_progress": 0.9512951374053955,
+        "geostatic_progress": 1.0,
+        "pc_range_kpa": [
+          68.98523953802899,
+          172.51700072535175
+        ],
+        "plastic_points": 324,
+        "rejections": 18,
+        "rejected_plastic_trial_changed": true,
+        "rejected_contact_trial_changed": true,
+        "all_rejections_preserve_committed_state": true,
+        "stored_stress_force_checks": [
+          {
+            "frame": "initial_equilibrated",
+            "relative_force_residual": 1.4788195405743981e-13,
+            "constraint_error_m": 0.0,
+            "maximum_normalized_mcc_yield": 5.901768595808359e-15
+          },
+          {
+            "frame": "load",
+            "relative_force_residual": 1.3451335957319929e-15,
+            "constraint_error_m": 0.0,
+            "maximum_normalized_mcc_yield": 3.8821110717627865e-16
+          },
+          {
+            "frame": "unload",
+            "relative_force_residual": 2.1694221833794583e-12,
+            "constraint_error_m": 0.0,
+            "maximum_normalized_mcc_yield": -0.016687482180007616
+          }
+        ],
+        "last_committed_force_check": {
+          "relative_force_residual": 2.3798327252745856e-09,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": 2.6239007880589898e-16
+        },
+        "independent_plastic_3d_displacement": false,
+        "zero_release_check": {
+          "relative_force_residual": 1.5213379326423892e-12,
+          "constraint_error_m": 0.0,
+          "maximum_normalized_mcc_yield": -0.018801158098959873
+        },
+        "fully_released_and_frozen": false,
+        "removed_joint_and_material_history_frozen": true
+      },
+      "maximum_accepted_linear_residual": 2.7086818742445803e-11,
+      "maximum_accepted_force_residual": 8.921523038876207e-09,
+      "trace_event_counts": {
+        "progress": 4030,
+        "iterate": 61,
+        "tangent": 60,
+        "line_search": 188,
+        "repartition": 9
+      },
+      "saved_iteration_maximum_active_contact_points": 0,
+      "saved_committed_contact_history_frozen": true,
+      "removed_material_history_frozen_in_saved_iterates_and_candidates": true,
+      "detailed_trace_committed_progresses": [
+        0.9512939453125
+      ],
+      "last_saved_iterate": {
+        "stage": 3,
+        "progress": 0.9512958526611328,
+        "iteration": 60,
+        "relative_force_residual": 1.24402645837251e-06,
+        "maximum_partition": 10
+      },
+      "last_newton_event": {
+        "kind": "newton",
+        "linear_solve": null,
+        "maximum_material_partitions": 4,
+        "newton_iteration": 40,
+        "progress": 0.9512953758239746,
+        "reason": null,
+        "relative_force_residual": 1.3427885976575664e-07,
+        "relative_pressure_residual": null,
+        "relative_volume_residual": null,
+        "schema": "soil-fem-stage-progress/1",
+        "stage": "excavate_upper",
+        "stage_index": 3
+      },
+      "detailed_trace_is_full_path": false,
+      "input_sha256": {
+        "ground.json": "4b055d60fb99d3e750b086079485f93dd92eeafed0926f29f922d74c4be2a701",
+        "mesh.json": "73360b7e5718089aec5391f99d13c3b1c42579440589430e3618cfa69e225fd2",
+        "stages.json": "4bf86ef4d0525872a3adbc1a58fdc0e99d238de030af8886aa2d1ec8d1a849e8"
+      }
+    }
+  },
+  "joint": {
+    "unchanged_closed_stick_fields_pass": true,
+    "frames": [
+      {
+        "name": "initial_equilibrated",
+        "relative_displacement_error": 2.521224214760812e-11,
+        "relative_increment_error": 0.0,
+        "relative_stress_error": 3.6343001709696405e-12,
+        "reference_true_residual": 3.3140897450171644e-16,
+        "minimum_effective_contact_pressure_kpa": 104.99999999999963
+      },
+      {
+        "name": "install",
+        "relative_displacement_error": 2.9637311010968417e-12,
+        "relative_increment_error": 3.3529909900857026e-11,
+        "relative_stress_error": 6.369157764040247e-13,
+        "reference_true_residual": 2.2900016435763343e-15,
+        "minimum_effective_contact_pressure_kpa": 103.72717111892705
+      },
+      {
+        "name": "rise",
+        "relative_displacement_error": 3.1178497094094795e-12,
+        "relative_increment_error": 8.428097882687905e-12,
+        "relative_stress_error": 6.620347117868746e-13,
+        "reference_true_residual": 3.901847205386309e-15,
+        "minimum_effective_contact_pressure_kpa": 101.22717111892703
+      },
+      {
+        "name": "load_plate_beam",
+        "relative_displacement_error": 2.1998049398159215e-12,
+        "relative_increment_error": 1.1815953658536138e-12,
+        "relative_stress_error": 6.109904221393552e-13,
+        "reference_true_residual": 1.9832272154623838e-14,
+        "minimum_effective_contact_pressure_kpa": 99.46344860988381
+      },
+      {
+        "name": "flow",
+        "relative_displacement_error": 2.9584711241819295e-12,
+        "relative_increment_error": 8.667962854651818e-12,
+        "relative_stress_error": 8.208837461259896e-13,
+        "reference_true_residual": 8.74150591871769e-15,
+        "minimum_effective_contact_pressure_kpa": 89.43226506415402,
+        "independent_darcy": {
+          "maximum_head_error_m": 6.661338147750939e-13,
+          "maximum_flux_error_m_s": 2.506810948058047e-16,
+          "maximum_pressure_head_error_m": 6.115108419635362e-13,
+          "independent_water_balance": 0.0
+        }
+      },
+      {
+        "name": "unload_plate_beam",
+        "relative_displacement_error": 4.02459317502291e-12,
+        "relative_increment_error": 5.22498040000366e-12,
+        "relative_stress_error": 6.784865700113497e-13,
+        "reference_true_residual": 4.884634525175107e-15,
+        "minimum_effective_contact_pressure_kpa": 91.19598757319721
+      },
+      {
+        "name": "reset_water",
+        "relative_displacement_error": 3.921071260960056e-12,
+        "relative_increment_error": 8.589112888024088e-12,
+        "relative_stress_error": 8.423780051289692e-13,
+        "reference_true_residual": 2.2900016435763343e-15,
+        "minimum_effective_contact_pressure_kpa": 103.72717111892705
+      },
+      {
+        "name": "remove",
+        "relative_displacement_error": 3.689088394238075e-13,
+        "relative_increment_error": 8.434327308960216e-12,
+        "relative_stress_error": 6.594067996426367e-14,
+        "reference_true_residual": 3.3140897450171644e-16,
+        "minimum_effective_contact_pressure_kpa": 104.99999999999963
+      }
+    ],
+    "before_guard_observations": [
+      {
+        "mutation": "open",
+        "accepted_before": true
+      },
+      {
+        "mutation": "slip",
+        "accepted_before": true
+      },
+      {
+        "mutation": "negative_slip",
+        "accepted_before": false
+      },
+      {
+        "mutation": "nan_slip",
+        "accepted_before": false
+      },
+      {
+        "mutation": "dissipation",
+        "accepted_before": true
+      }
+    ],
+    "after_guard": [
+      {
+        "mutation": "open",
+        "accepted": false
+      },
+      {
+        "mutation": "slip",
+        "accepted": false
+      },
+      {
+        "mutation": "negative_slip",
+        "accepted": false
+      },
+      {
+        "mutation": "nan_slip",
+        "accepted": false
+      },
+      {
+        "mutation": "dissipation",
+        "accepted": false
+      }
+    ],
+    "opening_sliding_or_general_plasticity_accepted": false,
+    "p3b_p4_rows_complete": false,
+    "p6_complete": false
+  }
+}

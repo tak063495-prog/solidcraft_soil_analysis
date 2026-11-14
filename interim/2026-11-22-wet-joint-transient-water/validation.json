@@ -1,0 +1,162 @@
+{
+  "complete": true,
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 3329,
+      "exit_code": 0,
+      "elapsed_seconds": 0.8601863779999803
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 3340,
+      "exit_code": 0,
+      "elapsed_seconds": 14.579549191999831
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "pid": 3610,
+      "exit_code": 0,
+      "elapsed_seconds": 0.10023120899995774
+    },
+    {
+      "name": "rust-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "pid": 3624,
+      "exit_code": 0,
+      "elapsed_seconds": 1483.539083957
+    },
+    {
+      "name": "python-core-0",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "interim/2026-11-22-wet-joint-transient-water/validation/python-core-0-retry"
+      ],
+      "pid": 620707,
+      "exit_code": 0,
+      "elapsed_seconds": 253.34275795899975,
+      "reason": "Original archived evidence was not yet materialized; downloaded and SHA-verified the unchanged Git blobs. Entire 274-test group rerun without test/code/tolerance changes.",
+      "original_failed_output": "python-core-0",
+      "source_hashes_unchanged": true
+    },
+    {
+      "name": "python-core-1",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-core-1"
+      ],
+      "pid": 598342,
+      "exit_code": 0,
+      "elapsed_seconds": 271.0764852530001
+    },
+    {
+      "name": "python-mean-evidence",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-mean-evidence"
+      ],
+      "pid": 715415,
+      "exit_code": 0,
+      "elapsed_seconds": 815.3048665790002
+    },
+    {
+      "name": "python-spatial-evidence",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-spatial-evidence"
+      ],
+      "pid": 768614,
+      "exit_code": 0,
+      "elapsed_seconds": 120.60281560599924
+    }
+  ],
+  "source_files": 1147,
+  "source_hashes_unchanged": true,
+  "rust_total_passed": 451,
+  "rust_summary_groups": 69,
+  "rust_failed": 0,
+  "rust_ignored": 0,
+  "rust_filtered_out": 0,
+  "python_total": 554,
+  "python_group_totals": {
+    "python-core-0": 274,
+    "python-core-1": 272,
+    "python-mean-evidence": 4,
+    "python-spatial-evidence": 4
+  },
+  "python_discovered_total": 554,
+  "python_id_union_exact": true,
+  "python_failures": 0,
+  "python_errors": 0,
+  "python_skipped": 0,
+  "python_expected_failures": 0,
+  "python_unexpected_successes": 0,
+  "numerical_C04_accepted": false,
+  "Windows_CI_status": "未確定",
+  "initial_incomplete_attempts_retained": [
+    {
+      "name": "python-core-0",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_tests.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/interim/2026-11-22-wet-joint-transient-water/validation/python-core-0"
+      ],
+      "pid": 502218,
+      "exit_code": 1,
+      "elapsed_seconds": 253.12784934499996
+    }
+  ],
+  "initial_driver_summary": "validation/initial-driver-summary.json",
+  "recovery": "Two old archived ZIPs absent from the sparse materialization caused two errors in the initial core0. Unchanged original Git blobs were downloaded/SHA-verified; the complete 274-test group was rerun successfully in a new process. No test/source/tolerance change.",
+  "core_source_files": 1147,
+  "supplemental_source_files": 4,
+  "final_numeric_test_observation_sources_unchanged": 1151,
+  "baseline_python_ids_preserved": 543,
+  "new_python_tests": 11,
+  "source_binding": "source-binding.json"
+}

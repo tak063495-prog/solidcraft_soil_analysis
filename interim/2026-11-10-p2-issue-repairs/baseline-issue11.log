@@ -1,0 +1,27 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis)
+error[E0624]: associated function `current` is private
+   --> tests/epoch_srm_gate.rs:475:58
+    |
+475 |         raw["identity"] = serde_json::to_value(Identity::current(&mesh, &target_ground, &a)?)?;
+    |                                                          ^^^^^^^ private associated function
+    |
+   ::: src/checkpoint.rs:49:5
+    |
+ 49 |     pub(crate) fn current(mesh: &Mesh, ground: &Ground, case: &StageCase) -> Result<Self> {
+    |     ------------------------------------------------------------------------------------- private associated function defined here
+
+error[E0599]: no method named `phase_name` found for struct `soil_fem_3d::epoch_srm_gate::Snapshot` in the current scope
+   --> tests/epoch_srm_gate.rs:513:30
+    |
+513 |             let phase=target.phase_name();
+    |                              ^^^^^^^^^^
+    |
+help: there is a method `phase_label` with a similar name
+    |
+513 -             let phase=target.phase_name();
+513 +             let phase=target.phase_label();
+    |
+
+Some errors have detailed explanations: E0599, E0624.
+For more information about an error, try `rustc --explain E0599`.
+error: could not compile `soil-fem-3d` (test "epoch_srm_gate") due to 2 previous errors

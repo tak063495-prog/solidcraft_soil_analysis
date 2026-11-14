@@ -1,0 +1,69 @@
+{
+  "fmt": {
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.8754854129999785
+  },
+  "clippy": {
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "seconds": 4.683533540999974
+  },
+  "release-build": {
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "seconds": 0.09079799599999205
+  },
+  "rust-tests": {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "seconds": 1126.619318737,
+    "tests": 398,
+    "failed": 0,
+    "ignored": 0,
+    "all_production_rust_sources_byte_identical_to_start_commit": true
+  },
+  "python-tests": {
+    "command": "python -m unittest discover -s tests -p test_*.py -v",
+    "exit_code": 0,
+    "seconds": 192.13090953100004,
+    "tests": 261,
+    "new_tests": 22,
+    "failed": 0,
+    "skipped": 0,
+    "tested_implementation_commit": "7c46773cdb2a0b830c4b4359effcdbe7d47b9632"
+  },
+  "focused_python_tests": {
+    "tests": 22,
+    "failed": 0,
+    "skipped": 0
+  },
+  "windows_ci": {
+    "latest_checks_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13/checks",
+    "status_at_recording": "pending_final_evidence_commit_CI",
+    "no_windows_success_claimed_by_this_snapshot": true
+  }
+}

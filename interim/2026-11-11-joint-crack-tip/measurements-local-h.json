@@ -1,0 +1,207 @@
+{
+  "schema": "soil-fem-joint-crack-tip-local-h/1",
+  "passed": true,
+  "scope": "three small local h meshes; original accuracy gates pass at each h; differences are observations, no general convergence threshold invented",
+  "meshes": [
+    {
+      "level": 0,
+      "elements": 24,
+      "nodes": 81,
+      "upper_crack_mouth_displacement_m": [
+        7.244427439367293e-06,
+        -2.445217352627561e-07,
+        -0.0001135001898685244
+      ],
+      "elastic_increment_energy_kn_m": 0.0052839415422353845,
+      "away_domain_mean_stress_kpa": [
+        101.95246496810033,
+        101.43521250128877,
+        111.01530321905342,
+        0.010743281951393518,
+        -0.015280355040288685,
+        -0.4214037541686055
+      ],
+      "assembly": [
+        {
+          "frame": "initial_equilibrated",
+          "reassembled_relative_residual": 1.5346261361346955e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "compress",
+          "reassembled_relative_residual": 2.8009717231884498e-14,
+          "load_max_abs_kn": 1.4210854715202004e-14,
+          "constraint_error_m": 0.0
+        }
+      ],
+      "independent": {
+        "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+        "maximum_independent_residual": 1.5528821612093314e-13,
+        "frames": [
+          {
+            "frame": "initial_equilibrated",
+            "all_node_displacement_relative_l2": 3.009687594993204e-13,
+            "all_volume_gp_stress_relative_l2": 1.5510480350360817e-14,
+            "all_contact_gp_traction_relative_l2": 3.8734362023534815e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          },
+          {
+            "frame": "compress",
+            "all_node_displacement_relative_l2": 5.233440375268057e-14,
+            "all_volume_gp_stress_relative_l2": 1.1930150044790184e-14,
+            "all_contact_gp_traction_relative_l2": 1.2627421392101704e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          }
+        ],
+        "passed": true
+      }
+    },
+    {
+      "level": 1,
+      "elements": 96,
+      "nodes": 255,
+      "upper_crack_mouth_displacement_m": [
+        5.6522998418605124e-06,
+        -3.977184587021579e-07,
+        -0.00011841190394737386
+      ],
+      "elastic_increment_energy_kn_m": 0.005520733822959312,
+      "away_domain_mean_stress_kpa": [
+        101.63837072603994,
+        101.34557957921274,
+        110.89518509157585,
+        0.02067406818645169,
+        -0.007303632731612999,
+        -0.34344090535129895
+      ],
+      "assembly": [
+        {
+          "frame": "initial_equilibrated",
+          "reassembled_relative_residual": 5.806974775960595e-14,
+          "load_max_abs_kn": 7.105427357601002e-15,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "compress",
+          "reassembled_relative_residual": 8.003105123750795e-14,
+          "load_max_abs_kn": 7.105427357601002e-15,
+          "constraint_error_m": 0.0
+        }
+      ],
+      "independent": {
+        "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+        "maximum_independent_residual": 2.270220580238039e-13,
+        "frames": [
+          {
+            "frame": "initial_equilibrated",
+            "all_node_displacement_relative_l2": 5.092697376393736e-13,
+            "all_volume_gp_stress_relative_l2": 2.4822168279260963e-14,
+            "all_contact_gp_traction_relative_l2": 5.837531847278398e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          },
+          {
+            "frame": "compress",
+            "all_node_displacement_relative_l2": 7.037210772934443e-14,
+            "all_volume_gp_stress_relative_l2": 3.008969341385885e-14,
+            "all_contact_gp_traction_relative_l2": 1.3809161708046225e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          }
+        ],
+        "passed": true
+      }
+    },
+    {
+      "level": 2,
+      "elements": 288,
+      "nodes": 615,
+      "upper_crack_mouth_displacement_m": [
+        5.899387511247053e-06,
+        -3.2190267224346796e-08,
+        -0.00011870457681828887
+      ],
+      "elastic_increment_energy_kn_m": 0.005624084136676302,
+      "away_domain_mean_stress_kpa": [
+        101.61686816535887,
+        101.26079912471823,
+        110.86330018702309,
+        0.013320282036569679,
+        -0.011209873915491334,
+        -0.3393005929137151
+      ],
+      "assembly": [
+        {
+          "frame": "initial_equilibrated",
+          "reassembled_relative_residual": 5.182034195428746e-14,
+          "load_max_abs_kn": 5.329070518200751e-15,
+          "constraint_error_m": 0.0
+        },
+        {
+          "frame": "compress",
+          "reassembled_relative_residual": 6.165179854987071e-14,
+          "load_max_abs_kn": 5.329070518200751e-15,
+          "constraint_error_m": 0.0
+        }
+      ],
+      "independent": {
+        "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+        "maximum_independent_residual": 2.2042782707371696e-13,
+        "frames": [
+          {
+            "frame": "initial_equilibrated",
+            "all_node_displacement_relative_l2": 4.899731378015011e-13,
+            "all_volume_gp_stress_relative_l2": 2.5290862211391992e-14,
+            "all_contact_gp_traction_relative_l2": 5.690638085286389e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          },
+          {
+            "frame": "compress",
+            "all_node_displacement_relative_l2": 5.319445886418606e-14,
+            "all_volume_gp_stress_relative_l2": 2.292930763593608e-14,
+            "all_contact_gp_traction_relative_l2": 1.3873221575817297e-13,
+            "all_contact_gp_history_errors": {
+              "plastic_slip_m": 0.0,
+              "accumulated_plastic_slip_m": 0.0
+            }
+          }
+        ],
+        "passed": true
+      }
+    }
+  ],
+  "differences": [
+    {
+      "levels": [
+        0,
+        1
+      ],
+      "displacement_difference_m": 5.165585612027294e-06,
+      "energy_difference_kn_m": 0.00023679228072392717,
+      "away_stress_difference_kpa": 0.35687262794146074
+    },
+    {
+      "levels": [
+        1,
+        2
+      ],
+      "displacement_difference_m": 5.294530994314276e-07,
+      "energy_difference_kn_m": 0.0001033503137169902,
+      "away_stress_difference_kpa": 0.0935586008685626
+    }
+  ]
+}

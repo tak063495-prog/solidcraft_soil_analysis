@@ -1,0 +1,76 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.9348433079999268
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 16.076244023000072
+  },
+  {
+    "name": "build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 103.8721895220001
+  },
+  {
+    "name": "rust-inventory",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--all-targets",
+      "--",
+      "--list"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 702.012582891
+  },
+  {
+    "name": "rust-all-targets",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--all-targets"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 922.4885888640001
+  },
+  {
+    "name": "rust-doc",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--doc"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1.6650160660001347
+  }
+]

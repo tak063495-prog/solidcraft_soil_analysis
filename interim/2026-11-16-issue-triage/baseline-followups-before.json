@@ -1,0 +1,252 @@
+{
+  "baseline_commit": "d8616cefb526e70f422ec8c164afd2353c8f8149",
+  "pause": {
+    "source_sha256": "017ce3ca21623c46fd06fc44be73d105979d80036956f8d0cc6de005603d1cb1",
+    "results": [
+      {
+        "mismatch": "image",
+        "optimize": 0,
+        "validation_block_accepted": false,
+        "error": "AssertionError: ",
+        "calls": [
+          "OpenProcess",
+          "QueryFullProcessImageNameW"
+        ]
+      },
+      {
+        "mismatch": "image",
+        "optimize": 1,
+        "validation_block_accepted": true,
+        "error": null,
+        "calls": [
+          "OpenProcess"
+        ]
+      },
+      {
+        "mismatch": "creation_time",
+        "optimize": 0,
+        "validation_block_accepted": false,
+        "error": "AssertionError: PID was reused",
+        "calls": [
+          "OpenProcess",
+          "QueryFullProcessImageNameW",
+          "GetProcessTimes"
+        ]
+      },
+      {
+        "mismatch": "creation_time",
+        "optimize": 1,
+        "validation_block_accepted": true,
+        "error": null,
+        "calls": [
+          "OpenProcess"
+        ]
+      }
+    ],
+    "scope": "AST-extracted original held-handle validation block; no CIM, OS handle, signal, termination, or receipt operation"
+  },
+  "soil": [
+    {
+      "defect": "trailing_no_flow_NaN",
+      "api": {
+        "baseline": {
+          "accepted": true,
+          "passed": true,
+          "maximum_no_flow_face_outflow_m3_s": 0.0
+        },
+        "current": {
+          "accepted": true,
+          "passed": true,
+          "maximum_no_flow_face_outflow_m3_s": 0.0
+        }
+      },
+      "cli": [
+        {
+          "version": "baseline",
+          "mode": "normal",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "baseline",
+          "mode": "-O",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "baseline",
+          "mode": "env",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "normal",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "-O",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "env",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        }
+      ]
+    },
+    {
+      "defect": "negative_infinite_balance_error",
+      "api": {
+        "baseline": {
+          "accepted": true,
+          "passed": true,
+          "maximum_no_flow_face_outflow_m3_s": 0.0
+        },
+        "current": {
+          "accepted": true,
+          "passed": true,
+          "maximum_no_flow_face_outflow_m3_s": 0.0
+        }
+      },
+      "cli": [
+        {
+          "version": "baseline",
+          "mode": "normal",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "baseline",
+          "mode": "-O",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "baseline",
+          "mode": "env",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "normal",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "-O",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "env",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        }
+      ]
+    },
+    {
+      "defect": "negative_balance_error",
+      "api": {
+        "baseline": {
+          "accepted": true,
+          "passed": true,
+          "maximum_no_flow_face_outflow_m3_s": 0.0
+        },
+        "current": {
+          "accepted": true,
+          "passed": true,
+          "maximum_no_flow_face_outflow_m3_s": 0.0
+        }
+      },
+      "cli": [
+        {
+          "version": "baseline",
+          "mode": "normal",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "baseline",
+          "mode": "-O",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "baseline",
+          "mode": "env",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "normal",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "-O",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        },
+        {
+          "version": "current",
+          "mode": "env",
+          "exit_code": 0,
+          "report_created": true,
+          "passed": true,
+          "stderr_last_line": null
+        }
+      ]
+    }
+  ],
+  "soil_baseline_source_sha256": "0af9a8890bc134d616f9074e4f4e1368ccb325a59ca8d448ea83877a6a8cd6bf",
+  "normal_report": {
+    "equal": true,
+    "baseline_sha256": "f337d08cf689ef038c8f6f910f5e688634b1866db69a41edf43080ccb6df1cdb",
+    "current_sha256": "f337d08cf689ef038c8f6f910f5e688634b1866db69a41edf43080ccb6df1cdb"
+  },
+  "scope": "Analytic 12 Tet10 fixture and real checker API/CLI. Baseline checker bytes come from git show; dependencies and input fixture use the current checkout. No Rust solve, real process stop, CAD, or GUI/GPU."
+}

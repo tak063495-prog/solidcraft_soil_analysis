@@ -11,13 +11,19 @@ permissions:
 
 concurrency:
   group: fem-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  windows-fem:
-    name: Rust and Python on Windows
+  windows-checks:
+    name: ${{ matrix.group }} on Windows
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [rust-core, rust-integration-0, rust-integration-1, python-core-0, python-core-1, python-mean-evidence, python-spatial-evidence, python-c01-switch, python-c01-path, python-c01-cause, verification]
     runs-on: windows-2025
-    timeout-minutes: 45
+    # Observed checkout outlier: 37m; retain room for the complete evidence tests.
+    # Measured budget and archive allocation: interim/2026-12-14-ci-timeout-fa22e14/README.ja.md
+    timeout-minutes: 75
     defaults:
       run:
         shell: pwsh
@@ -30,10 +36,25 @@ jobs:
       PYTHONUTF8: '1'
       PYTHONIOENCODING: utf-8
     steps:
+      - name: Preserve exact archived source bytes
+        run: git config --global core.autocrlf false
       - name: Check out sources
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.zip*' || '/*' }}
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.tar*' || '/*' }}
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.gz' || '/*' }}
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '!/**/*.npz' || '/*' }}
+            !/interim/2026-11-10-nc-postfold-branches/evidence.tar.gz.part*
+            ${{ (matrix.group == 'python-c01-switch' || matrix.group == 'python-c01-cause') && '/interim/2026-12-11-c01-global-step-control/evidence.zip.part*' || '!/interim/2026-12-11-c01-global-step-control/evidence.zip.part*' }}
+            ${{ (matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*' || '!/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*' }}
+            ${{ (matrix.group == 'python-c01-cause') && '/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*' || '!/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*' }}
+            ${{ (matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip' || '!/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip' }}
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
@@ -54,26 +75,118 @@ jobs:
           rustc --version --verbose | Out-File runs/ci/rust-version.log
           python -m pip freeze | Out-File runs/ci/python-packages.log
       - name: Check formatting
+        if: matrix.group == 'rust-core'
         run: cargo fmt --all --check
       - name: Check all Rust targets
+        if: matrix.group == 'rust-core'
         run: cargo clippy --locked --all-targets -- -D warnings
-      - name: Run all Rust tests
+      - name: Run discovered Rust test group
+        if: startsWith(matrix.group, 'rust-')
         run: |
-          cargo test --locked --release 2>&1 | Tee-Object -FilePath runs/ci/rust-tests.log
+          python tools/run_ci_rust_tests.py --group ${{ matrix.group }} --output runs/ci
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build the CLI used by geometry tests
+        if: startsWith(matrix.group, 'python-') || matrix.group == 'verification'
         run: cargo build --locked --release
       - name: Run all Python tests
+        if: startsWith(matrix.group, 'python-')
         run: |
-          python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | Tee-Object -FilePath runs/ci/python-tests.log
+          python tools/run_ci_python_evidence_shards.py --group ${{ matrix.group }} --output runs/ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify small wet JOINT plate beam integration
+        if: matrix.group == 'verification'
+        run: |
+          python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/wet-structures 2>&1 | Tee-Object -FilePath runs/ci/wet-structures.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify inherited SOIL water role and small members
+        if: matrix.group == 'verification'
+        run: |
+          python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-wet-structures --water-mode soil 2>&1 | Tee-Object -FilePath runs/ci/soil-wet-structures.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify nonzero SOIL volume source flow and small members
+        if: matrix.group == 'verification'
+        run: |
+          python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-source-wet-structures --water-mode soil-source 2>&1 | Tee-Object -FilePath runs/ci/soil-source-wet-structures.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify fixed PRESCRIBED reservoir and small members
+        if: matrix.group == 'verification'
+        run: |
+          python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify dedicated contact BIRTH and fresh generations
+        if: matrix.group == 'verification'
+        run: |
+          cargo build --locked --release --example joint_birth_points
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/verify_joint_birth.py --solver target/release/soil-fem-3d.exe --point-driver target/release/examples/joint_birth_points.exe --output runs/ci/joint-birth
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify declared Tet10 crack tips
+        if: matrix.group == 'verification'
+        run: |
+          python tools/verify_joint_crack_tip.py --solver target/release/soil-fem-3d.exe --output runs/ci/crack-tip
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($mode in @('continuous', 'soil', 'prescribed')) {
+            python tools/verify_joint_crack_tip_water.py --solver target/release/soil-fem-3d.exe --output "runs/ci/crack-tip-water-$mode" --mode $mode
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          python tools/verify_joint_crack_tip_refinement.py --solver target/release/soil-fem-3d.exe --output runs/ci/crack-tip-local-h
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Record bounded low preload NC diagnosis (not acceptance)
+        if: matrix.group == 'verification'
+        run: |
+          python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc --budget-seconds 20 --grace-seconds 5 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Measure refined low preload NC and independent plastic fields (not acceptance)
+        if: matrix.group == 'verification'
+        run: |
+          python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step32 --budget-seconds 60 --grace-seconds 5 --excavation-increment .03125 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step32.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step64 --budget-seconds 60 --grace-seconds 5 --excavation-increment .015625 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step64.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/low_preload_nc_reference.py --output runs/ci/low-preload-nc-reference128 --steps 128 --method rk4 --budget-seconds 120 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-reference128.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/low_preload_nc_reference.py --output runs/ci/low-preload-nc-reference256 --steps 256 --method rk4 --budget-seconds 120 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-reference256.log
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Save source fingerprints and verification logs
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: fem-windows-${{ github.sha }}
+          name: fem-windows-${{ matrix.group }}-${{ github.sha }}
           path: |
             runs/ci/*.json
             runs/ci/*.log
+            runs/ci/wet-structures/verification.json
+            runs/ci/wet-structures/stage-results.json
+            runs/ci/wet-structures/mesh.json
+            runs/ci/wet-structures/ground.json
+            runs/ci/wet-structures/stages.json
+            runs/ci/soil-wet-structures/**
+            runs/ci/soil-source-wet-structures/**
+            runs/ci/fixed-prescribed-wet-structures/**
+            runs/ci/crack-tip*/**
+            runs/ci/low-preload-nc/**
+            !runs/ci/low-preload-nc/job/solver/**
+            runs/ci/low-preload-nc-step32/**
+            runs/ci/low-preload-nc-step64/**
+            !runs/ci/low-preload-nc-step32/job/solver/**
+            !runs/ci/low-preload-nc-step64/job/solver/**
+            runs/ci/low-preload-nc-reference128/**
+            runs/ci/low-preload-nc-reference256/**
           if-no-files-found: warn
           retention-days: 14
+
+  windows-fem:
+    name: Rust and Python on Windows
+    needs: windows-checks
+    if: always()
+    runs-on: windows-2025
+    timeout-minutes: 5
+    steps:
+      - name: Require every verification group
+        shell: pwsh
+        env:
+          GROUP_RESULT: ${{ needs.windows-checks.result }}
+        run: |
+          if ($env:GROUP_RESULT -ne 'success') {
+            throw "Windows verification group result: $env:GROUP_RESULT"
+          }
