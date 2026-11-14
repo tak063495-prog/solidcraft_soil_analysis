@@ -41,7 +41,7 @@ cargo build --locked --release --bin soil-fem-3d --example joint_combo_probe --e
 if ($LASTEXITCODE -ne 0) { throw 'A-01 build failed' }
 ```
 
-取得・全件検査には旧証拠を含む相応のディスクが必要。必要partが欠けた場合は元Git blobを取得し元SHAで照合する。欠落をskip、manifestの更新、別の参照値への置換で回避しない。新しいpartは通常のPython core群で除外されない。全件検査の前にP6の固定コミットも取得する（shallow cloneなら `git fetch --unshallow`）。
+取得・全件検査には旧証拠原本約27GBに加え、Gitキャッシュ・ビルド・一時展開を含めて80–100GB程度の空きを用意する。これは既存の封印証拠の保管量で、新しい大規模求解の計画ではない。必要partが欠けた場合は元Git blobを取得し元SHAで照合する。欠落をskip、manifestの更新、別の参照値への置換で回避しない。新しいpartは通常のPython core群で除外されない。全件検査の前にP6の固定コミットも取得する（shallow cloneなら `git fetch --unshallow`）。
 
 ## 封印の監査と旧経路の再集計
 
@@ -83,6 +83,8 @@ foreach ($parts in @(1,2,4,8)) {
   python "$Diag/a01cause_driver.py" --mode controls --case shared-stress_free --steps 8 --parts $parts --output "work/NEW-PC-A01-fixed$parts-g8"
   if ($LASTEXITCODE -ne 0) { throw 'fixed-part global control incomplete' }
 }
+python -c "import sys,json;sys.path.insert(0,'$Diag');from a01cause_metrics import load,compare;print(json.dumps(compare(load('work/NEW-PC-A01-native-g32/native-fields.jsonl'),load('work/NEW-PC-A01-independent-g32/fields.jsonl')),ensure_ascii=False))" > work/NEW-PC-A01-g32-comparison.json
+if ($LASTEXITCODE -ne 0) { throw 'g32 full-field comparison failed' }
 ```
 
 本体個別入口の子プロセスは900秒上限。上限到達は失敗/未完了として保存する。より長い旧7経路の比較は既存入口で、時間上限を明示して行う。
