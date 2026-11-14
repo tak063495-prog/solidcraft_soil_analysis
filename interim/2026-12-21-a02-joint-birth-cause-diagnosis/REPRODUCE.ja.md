@@ -8,15 +8,21 @@ GPD WIN Max 2、利用可能約48GBを前提とし、**768/6144要素の新規�
 
 ## 準備と固定先端
 
-リポジトリルートでPowerShellを開く。元の作業ツリーに変更があれば保存したまま別worktreeを使う。
+リポジトリルートでPowerShell 7を開く。元の作業ツリーに変更があれば保存したまま別worktreeを使う。
 
 ```powershell
 git status --short
 git fetch --filter=blob:none origin codex/plastic-spatial-convergence
-git switch --detach origin/codex/plastic-spatial-convergence
+git -c core.autocrlf=false worktree add --detach ../NEW-a02cause-repro FETCH_HEAD
+if ($LASTEXITCODE -ne 0) { throw '新規worktree作成失敗。既存の保存先を上書きしない' }
+Set-Location ../NEW-a02cause-repro
+git -c core.autocrlf=false sparse-checkout disable
+if ($LASTEXITCODE -ne 0) { throw '元アーカイブの配置失敗' }
 git rev-parse HEAD
 git merge-base --is-ancestor 7b254b1cdbe9c288989631944cd698aa861f83ac HEAD
 if ($LASTEXITCODE -ne 0) { throw '指定起点の子孫ではありません' }
+py -3.13 -m venv .venv
+if ($LASTEXITCODE -ne 0) { throw 'Python 3.13の仮想環境作成失敗' }
 $Py = '.venv/Scripts/python.exe'
 $Study = 'interim/2026-12-21-a02-joint-birth-cause-diagnosis'
 $env:OPENBLAS_NUM_THREADS='1'
@@ -33,6 +39,8 @@ cargo build --locked --release --examples
 if ($LASTEXITCODE -ne 0) { throw '観測example build失敗' }
 ```
 
+新規worktreeをautocrlf=falseで作り、旧JSON/固定SHAのバイトを維持する。
+元の作業ツリーと設定は保持する。全保存証拠の取得には別途数十GBのディスクと回線時間を見込む。
 旧証拠を読む全件試験には、sparse除外した元アーカイブも必要。
 必要な元blobを取得し、コミットのGit blob SHAとバイト照合する。旧snapshotや参照を再生成しない。
 ビルドは通常数分〜30分、メモリ2〜8GBの計画枠（PC未測定）。診断は実行前にバイナリを固定コピーする。

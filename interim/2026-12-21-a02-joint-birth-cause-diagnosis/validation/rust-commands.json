@@ -1,0 +1,61 @@
+[
+  {
+    "label": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.890478628999972
+  },
+  {
+    "label": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 16.13726048700005
+  },
+  {
+    "label": "build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.0921689100000549
+  },
+  {
+    "label": "rust",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1589.1567864980002
+  },
+  {
+    "label": "rust-examples",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--examples"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 3.4727029000000584
+  }
+]

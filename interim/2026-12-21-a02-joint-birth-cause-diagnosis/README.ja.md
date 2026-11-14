@@ -3,7 +3,7 @@
 **A-02は未達、`passed=false`。新しい限定受入は追加しない。**
 PR #13、`codex/plastic-spatial-convergence`、起点
 `7b254b1cdbe9c288989631944cd698aa861f83ac` に積む。マージしない。
-2026-12-21は指定の保存先ラベル。実施日は2026-11-14（日本時間）。
+2026-12-21は指定の保存先ラベル。実施開始は2026-11-14（日本時間）。
 旧入力・旧JSON・旧hash/snapshot・既存オプション・拒否範囲・許容値を維持する。
 生産Rust、NCコード/設定には変更を加えない。
 
@@ -18,7 +18,7 @@ PR #13、`codex/plastic-spatial-convergence`、起点
 |SIMULIA, Abaqus 2026, [About Contact Pairs](https://docs.software.vt.edu/abaqusv2026/English/SIMACAEITNRefMap/simaitn-c-contactpair.htm), Removing and Reactivating Contact Pairs。本文取得|接触対の除去・再活性化を要素の処理と区別する。通常の二面接触対は同じ節点を共有しない|本件の共有先端の自己対を通常の二面接触の乗数へ読み替えない。接合専用の世代とボディ活動領域を区別する|
 |PLAXIS bv, Version 8 Reference Manual, [大学配布の原マニュアルPDF](https://www.civil.iitb.ac.in/~ajuneja/Plaxis%20program/Version%208%20Introductory/Manuals/English/V84-3_Reference.pdf), §§4.7.1–4.7.2, pp.4-24–4-25（PDF119–120、0始まり）。本文取得|土の再活性化は応力ゼロから始まり、新節点は既存の変形形状に無応力で適合させる。初期不平衡は後続刻みで解く。一方inactive interfaceはメッシュに残り、すべり・開口なしの弾性挙動となる|本件のDEATH凍結とPLAXIS inactive interfaceは同じ操作ではない。土のリセットと界面の履歴規則を分ける。この版の本文から現在版の界面再誕生の世代規則は確認できない|
 |EDF R&D, Code_Aster U2.04.04, rev.22dbb3cb313f, 2018-07-31, [contact使用ノート](https://www.code-aster.org/V2/doc/v14/en/man_u/u2/u2.04.04.pdf), p.4。本文取得（公式機械英訳、後続再取得はredirectエラー）|幾何のpairingとcontact/frictionの非線形解法を分け、DEFI_CONTACTで定義しSTAT_NON_LINE等で求解する|GP/節点対応と局所則、全体平衡を独立に監査する。取得したp.4から施工再活性化の履歴規則を推定しない|
-|EDF, Code_Aster v6.5 U2.04.06-A, 2004-06-11, [Comment creuser un tunnel（大学ミラーの原文書機械英訳）](https://www-mdp.eng.cam.ac.uk/web/CD/engapps/aster_docs/UDocs-HTML/U20406a/U20406a.pdf.html), §§4.1–4.4。本文取得。現在版公式PDFは取得不可|施工モデル、応力初期化、将来の掘削境界の節点反力回収、空洞形成と覆工設置を別の手順として扱う|初期力回収と新領域平衡の区別の参考。古い2D施工例を本件3D先端BIRTHの独立参照にしない|
+|EDF, Code_Aster v6.5 U2.04.06-A, 2004-06-11, [Comment creuser un tunnel（大学ミラーの原文書機械英訳）](https://www-mdp.eng.cam.ac.uk/web/CD/engapps/aster_docs/UDocs-HTML/U20406a/U20406a.pdf.html), 序文・要約と目次を取得。**施工方法の§§4.1–4.4本文は未確認・書誌/目次だけ**（後続取得timeout）。現在版公式PDFも取得不可|目次に施工モデル、初期応力、掘削境界の反力回収、空洞と覆工設置の項目があることまで確認。方法の式や履歴移行は確認していない|技術的な施工手順の根拠には使わない。古い2D例を本件3D先端BIRTHの独立参照にしない|
 |SIMULIA, Abaqus 2025 Theory, [Coulomb friction](https://docs.software.vt.edu/abaqusv2025/English/SIMACAETHERefMap/simathe-c-coulombfric.htm), Elastic stick formulation, eqs.(1)–(3)。本文取得|弾性予測が摩擦限界を超えると、後退差分のすべり増分と終点の摩擦限界を満たすよう解く。接触圧への接線連成がある|後続増分の戻りと、誕生時の不適格初期力を分離。初期tractionのクリップを受理理由にしない|
 |SIMULIA, Abaqus 2025, [Controlling the singularity at the crack tip](https://docs.software.vt.edu/abaqusv2025/English/SIMACAECAERefMap/simacae-c-engconccrackcracksingularity.htm)。本文取得|鋭い亀裂先端のひずみ特異性と、先端用の縮退・中間節点配置を明示している|本件の適合Tet10による共有先端の離散節点力再現と、連続体特異点値の精度を混同しない。quarter-pointや新接続は追加しない|
 |P. A. Vermeer, P. G. Bonnier, S. C. Möller, [On a Smart Use of 3D-FEM in Tunnelling](https://www.igs.uni-stuttgart.de/institut/publikationen/Publikationen/Veroeffentlichungen_vor_2010/65.pdf), pp.1–3。著者所属機関配布の本文取得、配布PDFで刊年を確認できず|段階掘削と覆工設置の初期条件で沈下過渡が変わり、定常に至るまで多段階を要する事例|固定した1系列の一致を経路・離散化収束の証明にしない。論文の別形状の数値を本件の参照値へ転用しない|
@@ -232,4 +232,46 @@ A-02全体は元の基準未達、`passed=false`。
 Windows CIはpush後の新先端について未確定。Linux成功を転用しない。
 
 A-01、A-03、A-04、B各項、C-01〜C-04、NC-01、P6は未達のまま。
+
+## 全件検証の確定記録
+
+fmt、全ターゲットclippy、locked release buildは終了0。Rustは通常464＋examples内3の
+**467件成功**、Pythonはtools試験を含む**795件成功**。最終の失敗/error・未実行・skip・
+ignore・filter除外・expected-failure・unexpected-successは0。Rust発見467件と実行件数、
+Python全発見795 IDと7群の実行IDの一致、重複/欠落0を確認した。
+
+|Python群|最終成功|実測秒（discoveryを含む）|
+|---|---:|---:|
+|python-core-0|359|319.890|
+|python-core-1|412|267.163|
+|python-mean-evidence|4|804.494|
+|python-spatial-evidence|4|118.427|
+|python-c01-switch|4|44.664|
+|python-c01-path|4|74.622|
+|python-c01-cause|8|58.693|
+
+初回core0/core1はPowerShell未配置で各1件skip、各終了1。実PowerShell 7.5.4を
+公式SHAと照合してwork内へ配置し、両群全体を再実行した。最終は359/412件ともskip0で成功。
+最初のPowerShell起動と関連21件のスモークはreadonly homeのキャッシュ作成で失敗
+（1 failure/1 error）し、そのログも保持した。汎用XDGキャッシュ/config/data先だけを
+workへ設定した後、関連21件が成功。NCコード・NC設定・試験条件は変更しない。
+初回・スモーク・再確認の成功は795件へ重複加算せず、初回失敗/skipを削除しない。
+
+主行列の開始前に固定した1,305ソースは終了時まで全SHA一致。追加の独立分割対照は
+別のsource-binding付きで保存した。Python全件の前後・core再実行後の1,311ソースも全SHA一致。
+既存Rust70件、既存tests195件、tools331件、docs91件、旧interimの数値・失敗・
+hash/snapshotを保持した。起点8,136ファイルの変更はP6登録の2件だけで、8,134件は同一。
+台帳は元本文を厳密接頭部に保って追記、監査器は台帳SHA定数だけを更新した。
+
+新生証拠は196,843,384 bytes・8 part・701エントリーを全SHA確認し、再展開から
+主要7集計をオブジェクト完全再現した（新規全体求解の追加ではない）。
+追加取得1,582ファイルは元Git blobと全件照合。原本を保持したまま、
+照合済み原本blobしか含まないpromisor取得キャッシュだけを整理し、コミット/ツリーや
+追跡証拠は削除しなかった。準備時の転送中断・UTF-16 hash一覧の初回読込失敗も
+validation内に区別して保持する。
+
+validation.jsonを確定コミットにしてからP6追記台帳へ固定SHA登録し、
+最終監査と関連試験はvalidation/post-registration.jsonに別記する。
+**push後の新先端Windows CIは未確定**。Linux成功を転用しない。
+
 A-02は未達、passed=false。
