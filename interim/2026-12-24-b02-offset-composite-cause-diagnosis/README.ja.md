@@ -208,4 +208,9 @@ P6台帳の元全バイトprefix保持・監査器SHA定数だけの変更を証
 validation確定後の固定コミット登録・最終P6監査・関連試験はvalidation/へ別記し、全件の成功数へ加算しない。
 当該push後Windows CIは未確定。A-01〜A-04、B-01/B-03、C-01〜C-04、NC-01、P6も未達。
 
+最終P6監査は**出典320、integrity_ok=true、SOURCE_NOT_INVENTORIED=0**。
+validationはef7e16bd5556c055ff39a0a0443c7a5eca8cc460の不変バイトへ固定し、同じ作業で登録した。
+登録後のP6関連76件＋新診断8件も成功（計84件、全件824へ二重加算しない）。
+[最終登録後の保全](final-registration-preservation.json)に台帳prefix/監査定数と両ファイルの最終SHAを記録した。
+
 B-02は未達、passed=false。
