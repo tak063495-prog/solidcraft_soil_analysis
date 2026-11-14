@@ -59,6 +59,7 @@ A-01/02の原因診断ではそれぞれ旧11-23/11-25と比較した残件も�
 
 求解前の[SPEC](SPEC.ja.md)を固定した。既存11-29の土N4/8/16、乾燥JOINT、
 静水圧JOINT、拒否スクリプトを別PIDでそのまま呼ぶ。新診断は通常のCLIに接続しない。
+現行ソースのガード/時計/CLIの固定SHA付き抜粋は[source-path-diagnosis.json](source-path-diagnosis.json)。
 新しいimport名はa04cause_*。旧soil_reference/studyの一時束縛とsys.pathは復元する。
 
 (i) Hは全水頭m、ψ=H−z、p=γwψ kPa、χ=Se。RT0のセルH・面トレース・土GPを区別し、
@@ -94,6 +95,9 @@ A-01/02の原因診断ではそれぞれ旧11-23/11-25と比較した残件も�
 新しいゼロ判定や許容幅を設けない。
 
 H−z、p=10ψ、χ=Se、χpの保存場の恒等式残りは全6経路0。
+VG最細には負の圧力水頭の水理GP状態が10,445点ある。土Richardsのpは符号付きで、
+処方静水圧JOINTの物理面圧γw max(H−z,0)とは定義が違う。χ=Seの土応力伝達を
+そのまま界面の吸引/摩擦圧へ転写する仕様はない。
 VG最細では同じ土セルのHとその面トレースの最大差 `0.2648828691212338 m`、
 飽和最細では `0.11914697816979558 m`。これはRT0/P0の別の量であり、JOINT誤差ではない。
 どちらを界面に使うかを決めずに「差0の界面写像」を作れない。位置/所有/IDの検査は旧観測器と
@@ -228,5 +232,38 @@ push後の新先端Windows CIは未確定。Linux成功・過去CIを転用し�
 A-01〜A-03、B各項、C-01〜C-04、NC-01、P6は未達のまま。
 PC手順は[REPRODUCE.ja.md](REPRODUCE.ja.md)。PCでは実行していない。
 規模上限を超える確認は「規模上限のため確認不可・未達」と記録する。
+
+## 全件検証の確定記録
+
+fmt、全ターゲットclippy、locked release全ターゲットbuildは終了0。
+Rustは通常464＋examples内3の**467件成功**、Pythonはtools試験を含む**816件成功**。
+最終の失敗/error・未実行・skip・ignore・filter除外・expected-failure・unexpected-successは0。
+Rust全467 ID、Python全816 IDの発見と実行が一致し、重複・欠落0。
+追加11件と単独スモークの成功は全件数へ二重加算していない。
+
+|Python群|成功|実測秒（discoveryを含む）|
+|---|---:|---:|
+|python-mean-evidence|4|814.848|
+|python-core-0|370|350.829|
+|python-core-1|422|262.189|
+|python-spatial-evidence|4|118.535|
+|python-c01-switch|4|47.276|
+|python-c01-path|4|76.019|
+|python-c01-cause|8|58.462|
+
+全件の前後で1,396コード/設定ソースがSHA一致。求解時1,402ソースとは対象/時点が異なる。
+求解後のreporter/小試験の訂正、後から保存した検証オーケストレーションのソースは分けて記録した。
+固定コピーした8バイナリも全ターゲットbuildの最終成果とSHA一致。
+新証拠135,397,631 bytes・6 part・2,078 entryを新規展開で全SHA検査し、
+主要計測JSONを再集計からバイト完全再現した。保存確認であり、新規平衡求解には加算しない。
+
+準備スモークの期待式1件失敗、最初の集計座標検査停止、Git/取得の準備失敗も
+[preparation-events.json](validation/preparation-events.json)と生ログに保持した。
+初回の失敗を最終成功へ書き換えず、元の物理/許容値・参照値の変更で通していない。
+旧NCの2群も元の厳密Linux比較で今回成功したが、過去の失敗/8件未実行とNC全体未達は保持する。
+
+validation.jsonを確定コミットとしてからP6追記台帳に固定SHA登録する。
+登録後の監査・関連試験は別記し、467/816件の固有件数へ重複加算しない。
+push後の新先端Windows CIは未確定。Linux成功を転用しない。
 
 A-04は未達、passed=false。

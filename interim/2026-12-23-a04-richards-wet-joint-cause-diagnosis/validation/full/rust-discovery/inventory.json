@@ -1,0 +1,2080 @@
+{
+  "total": 467,
+  "test_ids": [
+    "example:nc_dense_lu_diagnostic::tests::malformed_and_singular_systems_are_rejected",
+    "example:nc_dense_lu_diagnostic::tests::original_nonsymmetric_system_is_retained",
+    "example:nc_material_probe::tests::diagnostic_keeps_primal_return_and_committed_state",
+    "lib:soil_fem_3d::beams::storage::tests::sparse_constraint_projection_matches_independent_dense_products",
+    "lib:soil_fem_3d::beams::storage::tests::storage_arithmetic_overflow_and_invalid_budgets_are_rejected",
+    "lib:soil_fem_3d::beams::storage::tests::uncached_and_evicted_compilations_reproduce_identical_schur_matrices",
+    "lib:soil_fem_3d::benchmark::tests::real_tet4_grid_assembly_solves_manufactured_field",
+    "lib:soil_fem_3d::checkpoint::tests::standard_sha256_vector_and_canonical_json_are_stable",
+    "lib:soil_fem_3d::elastic::tests::affine_patch_and_rigid_body_modes",
+    "lib:soil_fem_3d::elastic::tests::rejects_invalid_geometry_and_material",
+    "lib:soil_fem_3d::elements::tests::jacobian_certificate_rejects_fold_outside_integration_points",
+    "lib:soil_fem_3d::elements::tests::positive_quadrature_integrates_all_degree_five_monomials",
+    "lib:soil_fem_3d::elements::tests::tet10_partition_affine_patch_and_six_rigid_modes",
+    "lib:soil_fem_3d::elements::tests::tri6_integrates_constant_traction_and_linear_pressure",
+    "lib:soil_fem_3d::epoch_srm_control::tests::all_attempt_roundtrips_match_the_complete_direct_report_bytes",
+    "lib:soil_fem_3d::epoch_srm_control::tests::altered_origin_specification_and_producer_identity_are_rejected",
+    "lib:soil_fem_3d::epoch_srm_control::tests::callback_error_is_terminal_control_and_previous_saved_snapshot_remains_usable",
+    "lib:soil_fem_3d::epoch_srm_control::tests::distributed_support_limit_has_real_rejections_accepted_rollback_and_unknown_result",
+    "lib:soil_fem_3d::epoch_srm_control::tests::invalid_budget_and_advance_after_finished_are_rejected",
+    "lib:soil_fem_3d::epoch_srm_control::tests::post_cut_dormant_history_and_final_report_match_uninterrupted_direct_search",
+    "lib:soil_fem_3d::epoch_srm_control::tests::resealed_completed_trial_and_origin_audit_evidence_are_semantically_checked",
+    "lib:soil_fem_3d::epoch_srm_control::tests::resealed_finished_requirement_interval_and_safety_claims_are_recomputed",
+    "lib:soil_fem_3d::epoch_srm_control::tests::resealed_frozen_load_metadata_fails_even_when_all_outer_hashes_are_updated",
+    "lib:soil_fem_3d::epoch_srm_control::tests::resealed_pending_factor_and_target_path_cannot_cross_factor_history",
+    "lib:soil_fem_3d::epoch_srm_control::tests::stop_before_an_attempt_keeps_the_whole_snapshot_byte_exact",
+    "lib:soil_fem_3d::epoch_srm_control::tests::stop_from_a_nonlinear_callback_finishes_only_the_current_attempt_and_resumes",
+    "lib:soil_fem_3d::joints::predictor_tests::cold_elastic_prediction_matches_a_closed_sticking_physical_increment",
+    "lib:soil_fem_3d::joints::predictor_tests::neutral_predictor_returns_an_overshot_sliding_trial_to_the_elastic_interior",
+    "lib:soil_fem_3d::linalg::tests::a01_residual_observation_preserves_success_and_failure",
+    "lib:soil_fem_3d::linalg::tests::compiled_scatter_preserves_duplicate_order_cancellation_and_unsymmetric_values",
+    "lib:soil_fem_3d::linalg::tests::compiled_scatter_rejects_foreign_pattern_sequence_counts_and_nonfinite_values",
+    "lib:soil_fem_3d::linalg::tests::condensed_interface_above_256_preserves_full_unsymmetric_operator",
+    "lib:soil_fem_3d::linalg::tests::condensed_symbolic_blocks_match_legacy_boundaries_without_filling_elsewhere",
+    "lib:soil_fem_3d::linalg::tests::duplicate_assembly_preserves_unsymmetric_entries_and_matches_dense",
+    "lib:soil_fem_3d::linalg::tests::ilut_fill_caps_both_triangles_and_drops_without_changing_matrix",
+    "lib:soil_fem_3d::linalg::tests::ilut_reduces_diffusion_iterations_and_respects_iteration_limit",
+    "lib:soil_fem_3d::linalg::tests::invalid_pivot_limit_and_cancellation_have_distinct_failures",
+    "lib:soil_fem_3d::linalg::tests::restarted_nonnormal_indefinite_system_matches_independent_pivoted_lu",
+    "lib:soil_fem_3d::linalg::tests::row_scaling_does_not_replace_original_residual_acceptance",
+    "lib:soil_fem_3d::mcc::tests::algorithmic_tangent_matches_half_step_and_independent_direction",
+    "lib:soil_fem_3d::mcc::tests::arbitrary_basis_rotation_and_plastic_work",
+    "lib:soil_fem_3d::mcc::tests::invalid_state_and_failed_trial_are_not_committed",
+    "lib:soil_fem_3d::mcc::tests::isotropic_compression_unloading_follows_lambda_kappa",
+    "lib:soil_fem_3d::mcc::tests::pure_shear_is_rotation_equivalent_and_refines",
+    "lib:soil_fem_3d::mcc::tests::restart_retains_all_hardening_and_plastic_history",
+    "lib:soil_fem_3d::plane_strain_2d::tests::archived_slope_failure_files_are_unchanged",
+    "lib:soil_fem_3d::plane_strain_2d::tests::ci_column_records_five_percent_without_closing_the_slope_or_p6",
+    "lib:soil_fem_3d::plane_strain_2d::tests::documented_crest_stays_inside_the_archived_theory_band",
+    "lib:soil_fem_3d::plane_strain_2d::tests::nested_monitor_separates_a_coarse_miss_from_the_continuum",
+    "lib:soil_fem_3d::plane_strain_2d::tests::non_nested_series_stays_indeterminate_and_keeps_discrete_failures",
+    "lib:soil_fem_3d::plane_strain_2d::tests::plateau_away_from_the_2d_value_is_not_called_a_pass",
+    "lib:soil_fem_3d::solver::tests::constrained_tetra_has_analytic_settlement_and_reaction",
+    "lib:soil_fem_3d::spatial_convergence::tests::ci_profile_reports_orders_without_closing_p6",
+    "lib:soil_fem_3d::spatial_convergence::tests::existing_single_tet_settlement_is_unchanged",
+    "lib:soil_fem_3d::spatial_convergence::tests::manufactured_stress_matches_its_body_force",
+    "lib:soil_fem_3d::stages::mixed::ordering::tests::volume_first_rcm_preserves_unsymmetric_saddle_equations_and_matches_dense",
+    "lib:soil_fem_3d::stages::mixed::tests::compiled_projected_soil_scatter_is_bit_exact_to_original_and_matches_residual_jacobian",
+    "lib:soil_fem_3d::stages::mixed::tests::compiled_projected_structure_scatter_is_bit_exact_to_original_and_matches_residual_jacobian",
+    "lib:soil_fem_3d::stages::mixed::tests::full_three_field_jacobian_matches_residual_directional_differences",
+    "lib:soil_fem_3d::stages::mixed::tests::material_strain_includes_independent_volume_and_initial_domain_uses_cumulative_history",
+    "lib:soil_fem_3d::stages::mixed::tests::mixed_beam_plate_jacobian_includes_nonlocal_structural_tangent",
+    "lib:soil_fem_3d::stages::mixed::tests::projected_beam_plate_jacobian_includes_nonlocal_structural_tangent",
+    "lib:soil_fem_3d::stages::mixed::tests::projected_three_field_jacobian_matches_all_residual_blocks",
+    "lib:soil_fem_3d::stages::predictor_tests::parallel_material_errors_choose_first_input_failure_and_leave_all_committed_histories_unchanged",
+    "lib:soil_fem_3d::stages::predictor_tests::parallel_material_states_tangents_partitions_and_order_match_serial_without_history_mutation",
+    "lib:soil_fem_3d::stages::predictor_tests::temporary_sparse_and_dense_gauges_do_not_certify_the_original_equations",
+    "test:anchors::anchor_affine_tension_rigid_motion_and_distributed_transfer_preserve_work",
+    "test:anchors::anchor_jack_lock_slack_and_plastic_soil_restore_exactly_on_cutback_and_restart",
+    "test:anchors::anchor_tangent_and_energy_match_independent_perturbations",
+    "test:anchors::excavation_with_retained_anchor_and_beam_releases_only_removed_soil_stress",
+    "test:anchors::installation_reference_and_lost_host_are_atomic_and_explicit",
+    "test:anchors::jacking_lockoff_slack_and_reloading_follow_free_length_theory",
+    "test:beams::cantilever_axial_biaxial_bending_torsion_and_scaling_match_closed_forms",
+    "test:beams::condensed_beam_is_coupled_to_mc_and_mcc_force_moment_and_exact_restart",
+    "test:beams::distributed_loading_and_end_releases_recover_fixed_and_simply_supported_moments",
+    "test:beams::explicit_storage_keeps_default500_limit_and_rejects_before_large_allocation",
+    "test:beams::kernels_pass_six_rigid_modes_axial_patch_and_arbitrary_orientation",
+    "test:beams::rehashed_checkpoint_rejects_corrupted_recovered_beam_kinematics",
+    "test:beams::timoshenko_uniform_load_and_nonzero_constraint_lifting_match_theory",
+    "test:beams::unsupported_torsion_and_invalid_geometry_are_rejected_without_stabilization",
+    "test:construction::inconsistent_replacement_born_active_wet_or_aged_material_is_rejected",
+    "test:construction::material_density_change_rebuilds_gravity_and_matches_layered_column_theory",
+    "test:construction::mcc_foundation_accepts_mc_fill_and_rejects_implicit_history_conversion",
+    "test:construction::plastic_birth_history_material_ids_and_holding_load_resume_exactly",
+    "test:construction::rebirth_placement_distinguishes_cad_nodes_from_archived_excavated_displacements",
+    "test:construction::stress_free_fill_and_material_change_match_oedometer_theory_and_restore_rejected_trials",
+    "test:darcy::balanced_neumann_and_volume_exchange_use_absolute_flow_for_water_balance",
+    "test:darcy::dense_and_sparse_backends_match_the_original_source_problem",
+    "test:darcy::each_disconnected_water_region_has_its_own_balance_and_needs_its_own_head",
+    "test:darcy::invalid_boundaries_materials_and_inactive_faces_are_rejected",
+    "test:darcy::layered_series_flow_matches_resistance_and_nodal_balance",
+    "test:darcy::malformed_head_interpolation_returns_errors_and_constant_large_head_stays_finite",
+    "test:darcy::original_rows_are_refined_after_prescribed_head_elimination_on_a_cad_mesh",
+    "test:darcy::quadratic_source_exact_solution_and_outflow_sign",
+    "test:darcy::rotated_anisotropic_affine_head_and_neumann_flux_on_curved_tet10",
+    "test:darcy::saturated_solver_preserves_negative_pressure_as_incomplete",
+    "test:embedding::curved_tet10_inverse_and_interface_hosts_keep_coordinate_and_activity",
+    "test:embedding::embedding_rejects_missing_host_body_outside_and_nonconforming_overlap",
+    "test:embedding::tet4_and_tet10_embedding_preserve_affine_fields_force_moment_and_work",
+    "test:epoch_srm_gate::fresh_history_srm_bracket_remains_four_thirds",
+    "test:epoch_srm_gate::independent_exclusion_stops_before_the_later_stage_and_keeps_the_unreduced_prefix",
+    "test:epoch_srm_gate::malformed_stage_list_and_fixed_through_stages_are_refused_before_solving",
+    "test:epoch_srm_gate::nonconvergence_is_indeterminate_and_does_not_exclude_or_continue",
+    "test:epoch_srm_gate::p2_foreign_completed_origin_cannot_borrow_target_identity_at_finish",
+    "test:epoch_srm_gate::p2_foreign_record_is_rejected_in_all_phases_and_saved_job_recovery",
+    "test:epoch_srm_gate::passed_gates_match_the_continuous_run_after_every_accepted_unit",
+    "test:epoch_srm_gate::stepped_full_case_keeps_material_ids",
+    "test:epoch_srm_gate::stop_at_an_accepted_unit_keeps_that_snapshot_and_resumes_to_the_direct_report",
+    "test:epoch_srm_gate::trial_limit_does_not_authorize_the_next_stage",
+    "test:epoch_srm_gate_job::exclusion_and_nonconvergence_remain_distinct_and_do_not_start_the_later_stage",
+    "test:epoch_srm_gate_job::paused_gate_recovery_matches_the_continuous_gate_and_the_unreduced_solve",
+    "test:epoch_srm_gate_job::prepared_stop_invalid_budget_and_second_launch_keep_the_saved_checkpoint",
+    "test:epoch_srm_job::actual_cli_two_slot_pause_fork_and_complete_report_are_byte_exact_to_direct_search",
+    "test:epoch_srm_job::complete_job_can_be_forked_without_recomputing_or_changing_its_report",
+    "test:epoch_srm_job::concurrent_launches_allow_exactly_one_worker_claim",
+    "test:epoch_srm_job::foreign_pointer_truncated_selected_slot_and_resealed_semantic_edit_are_refused",
+    "test:epoch_srm_job::immutable_origin_and_wrong_job_stop_request_fail_without_replacing_the_saved_pointer",
+    "test:epoch_srm_job::interrupted_part_files_are_ignored_and_invalid_budgets_do_not_claim_the_job",
+    "test:epoch_srm_job::killed_owned_solver_recovers_only_its_last_fully_published_accepted_snapshot",
+    "test:epoch_srm_job::numeric_attempt_limit_remains_unknown_even_when_the_disk_job_finishes",
+    "test:epoch_srm_job::prepared_stop_and_existing_output_refusal_keep_the_exact_initial_checkpoint",
+    "test:epoch_srm_job::stop_during_actual_plastic_material_continuation_preserves_and_resumes_all_report_bytes",
+    "test:epoch_srm_search::accepted_origin_search_brackets_four_over_three_and_keeps_every_factor_independent",
+    "test:epoch_srm_search::changed_producer_inputs_and_unbound_loads_cannot_define_an_origin",
+    "test:epoch_srm_search::cli_creates_a_bound_epoch_report_refuses_foreign_producer_and_preserves_existing_output",
+    "test:epoch_srm_search::factor_trial_limit_is_reported_without_claiming_the_requested_interval_width",
+    "test:epoch_srm_search::incomplete_epoch_paths_stay_unknown_and_cannot_create_an_attained_side",
+    "test:epoch_srm_search::malformed_schema_prefix_path_controls_and_virtual_dimensions_are_refused",
+    "test:epoch_srm_search::plastic_preload_unload_epoch_fields_match_confined_column_compliance_and_separate_path",
+    "test:epoch_srm_search::post_excavation_trials_keep_all_dormant_history_and_reject_resealed_frozen_metadata",
+    "test:epoch_srm_search::required_factor_above_limit_has_independent_exclusion_without_an_epoch",
+    "test:exact_fs::completed_material_path_and_reconstructed_mean_stress_certify_only_the_uniaxial_interval",
+    "test:exact_fs::fresh_failed_trial_cannot_be_relabelled_as_physical_exclusion_or_equilibrium",
+    "test:exact_fs::fresh_history_report_is_reaudited_without_replaying_a_solve",
+    "test:exact_fs::missing_changed_or_fabricated_epoch_evidence_is_rejected",
+    "test:exact_fs::no_physical_upper_may_continue_requirement_gate_but_does_not_certify_exact_fs",
+    "test:exact_fs::trial_limit_and_incomplete_paths_never_become_exact_or_an_upper_bound",
+    "test:free_contact::free_frictionless_or_overcapacity_blocks_never_commit_a_false_equilibrium",
+    "test:free_contact::free_upper_block_closes_without_physical_pins_and_restores_predictor_history",
+    "test:geostatic::excessive_initial_strain_preserves_seed_and_never_creates_an_equilibrated_frame",
+    "test:geostatic::geostatic_partial_boundary_and_construction_checkpoints_restore_identically",
+    "test:geostatic::integration_point_seed_import_checks_mesh_position_material_and_body_mapping",
+    "test:geostatic::mc_and_mcc_form_plastic_geostatic_history_and_keep_a_separate_construction_reference",
+    "test:geostatic::saturated_general_column_matches_effective_weight_and_rejects_internal_water_faces",
+    "test:geostatic::sloping_exposed_surface_allows_excavation_without_a_horizontal_top_facet",
+    "test:geostatic_affine::affine_global_tensor_uses_all_coordinates_material_ncl_and_rejects_invalid_recipes",
+    "test:geostatic_affine::affine_seed_matches_original_plastic_history_and_checkpoint_without_mesh_point_values",
+    "test:ground_initialization::detached_interface_and_sloping_layer_are_rejected",
+    "test:ground_initialization::material_and_region_order_do_not_determine_assignment",
+    "test:ground_initialization::rejects_yield_inconsistent_ocr_void_ratio_wrong_material_and_geometry",
+    "test:ground_initialization::saturated_two_layer_k0_matches_analytic_stress_and_fe_equilibrium",
+    "test:ground_initialization::surcharge_and_dry_state_have_correct_applied_resultant",
+    "test:ground_initialization::vertical_ocr_requires_pc_and_is_not_silently_an_mcc_ratio",
+    "test:hardening_fem::idh_cap_shear_void_ratio_and_release_histories_restore_after_cutback_and_all_phase_restarts",
+    "test:hardening_fem::idh_initial_cap_is_distinct_from_mcc_ocr_and_tampered_history_is_rejected",
+    "test:hardening_fem::idh_preload_unload_reload_and_excavation_satisfy_current_force_and_sparse_dense_gates",
+    "test:hardening_material::a_dilative_return_can_recover_a_negative_elastic_predictor_without_pressure_clipping",
+    "test:hardening_material::closed_nonproportional_elastic_cycles_leave_no_residual_stress_or_work",
+    "test:hardening_material::invalid_pressure_history_and_failed_trials_do_not_modify_committed_idh_state",
+    "test:hardening_material::pressure_dependent_unloading_and_isotropic_hardening_follow_independent_integrals",
+    "test:hardening_material::shear_cap_corner_rotation_and_complete_increment_tangent_are_consistent",
+    "test:hardening_material::shear_hardening_constant_pressure_has_a_closed_form_and_elastic_reversal",
+    "test:hydrostatic::curved_partial_face_matches_independent_root_and_all_six_nodal_integrals",
+    "test:hydrostatic::invalid_geometry_controls_and_unresolved_domain_are_rejected",
+    "test:hydrostatic::planar_partial_water_force_and_moment_match_closed_polynomial_integrals",
+    "test:hydrostatic::wet_dry_limits_reversed_normal_and_world_translation_are_consistent",
+    "test:hydrostatic::wet_interior_island_is_detected_when_all_six_surface_nodes_are_dry",
+    "test:hydrostatic_volume::curved_mapping_and_invalid_data_do_not_take_affine_shortcut",
+    "test:hydrostatic_volume::fully_wet_quadratic_force_matches_polynomial_material_quadrature",
+    "test:hydrostatic_volume::partial_water_virtual_work_matches_analytic_pressure_integral",
+    "test:ilut::checkpoint_binds_ilut_drop_fill_and_preconditioner_choice",
+    "test:ilut::ilut_checkpoint_rejects_rehashed_saved_state_and_saved_settings",
+    "test:ilut::ilut_rejects_invalid_ranges_types_and_unknown_options",
+    "test:ilut::ilut_solves_unsymmetric_operator_using_original_residual",
+    "test:ilut::legacy_options_json_has_identical_bytes_when_ilut_is_absent",
+    "test:joint_birth::body_death_then_dry_rebirth_keeps_the_removed_slip_generation_frozen",
+    "test:joint_birth::death_freezes_slip_and_dissipation_and_rebirth_has_no_old_reference",
+    "test:joint_birth::dry_new_mc_body_and_contact_have_separate_births",
+    "test:joint_birth::every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected",
+    "test:joint_birth::every_nodal_projection_and_cone_rejection_is_checked_before_birth",
+    "test:joint_birth::mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy",
+    "test:joint_birth::mode_b_birth_reference_closes_by_pressure_over_kn",
+    "test:joint_birth::omitted_policy_active_soil_birth_and_wet_crack_tip_combinations_stay_rejected",
+    "test:joint_birth::water_birth_rebuilds_face_loads_and_rehashed_tampering_is_refused",
+    "test:joint_birth_law::inherited_energy_work_and_stress_free_reference_obey_independent_increments",
+    "test:joint_crack_tip::a_branched_front_cannot_be_hidden_in_three_separate_joint_definitions",
+    "test:joint_crack_tip::compression_opening_and_reversed_shear_have_consistent_tangents",
+    "test:joint_crack_tip::declared_tip_cancels_exactly_and_preserves_virtual_work_force_and_moment",
+    "test:joint_crack_tip::declared_tip_rejects_geometric_ambiguity_even_after_an_opposing_face_was_used",
+    "test:joint_crack_tip::rehashed_checkpoint_cannot_change_tip_surface_or_owning_sides",
+    "test:joint_crack_tip::shared_tip_edge_keeps_one_open_hinge_and_contact_only_closes_it_in_compression",
+    "test:joint_crack_tip::undeclared_partial_wrong_owner_midpoint_duplicate_and_fully_tied_faces_are_rejected",
+    "test:joint_ext_combos::hydrostatic_birth_requires_fresh_explicit_state_and_regenerates_covered_interface",
+    "test:joint_ext_combos::richards_wet_joint_infiltration_drainage_and_two_way_remain_rejected",
+    "test:joint_ext_combos::tip_birth_checkpoints_replay_every_position_and_refuse_rehashed_force_reference_and_generation",
+    "test:joint_ext_combos::tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer",
+    "test:joint_ext_combos::tip_global_modes_have_equilibrium_and_fresh_generations",
+    "test:joint_ext_combos::tip_mode_b_stores_the_actual_near_tip_reference_and_freezes_sliding_generation",
+    "test:joint_global_step::absent_and_null_control_preserve_the_pinned_legacy_case_hash",
+    "test:joint_global_step::adaptive_global_equilibria_keep_anchors_reject_immutably_and_resume_exactly",
+    "test:joint_global_step::invalid_resolution_and_unsupported_stage_are_refused",
+    "test:joint_law::algorithmic_tangent_is_nonsymmetric_and_matches_half_step",
+    "test:joint_law::global_rotation_and_restart_preserve_all_interface_history",
+    "test:joint_law::normal_compression_stick_and_opening_obey_unilateral_friction_and_work",
+    "test:joint_law::numerical_dissipation_refines_and_failed_history_does_not_mutate_state",
+    "test:joint_law::open_motion_is_not_plastic_sliding_and_recontact_starts_unloaded",
+    "test:joint_law::two_direction_reversal_preserves_residual_slip_and_positive_dissipation",
+    "test:joint_path_error::global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly",
+    "test:joint_path_error::path_error_option_is_explicit_and_separate_from_legacy_switch_control",
+    "test:joint_water::continuous_heads_pass_series_flow_through_split_displacement_nodes",
+    "test:joint_water::death_after_wet_seepage_releases_interface_water_and_archives_contact_history",
+    "test:joint_water::hydrostatic_contact_uses_effective_spring_pressure_and_total_equals_effective_plus_water",
+    "test:joint_water::partial_submergence_integrates_actual_sloped_tri3_and_tri6_force_and_moment",
+    "test:joint_water::pressure_survives_open_contact_and_does_not_enter_friction_twice",
+    "test:joint_water::soil_structure_is_impermeable_and_prescribed_heads_are_not_averaged",
+    "test:joint_water::staged_darcy_interface_policies_preserve_primary_pressure_and_exact_midstage_restart",
+    "test:joint_water::wet_global_sliding_opening_recontact_preserves_water_load_and_rejected_slip_history",
+    "test:joint_water::wet_stage_cutback_restores_pressure_contact_history_and_checkpoint",
+    "test:joints::contact_normal_points_from_side_a_into_side_b",
+    "test:joints::excavation_of_contact_side_archives_history_and_releases_only_its_old_force",
+    "test:joints::global_joint_closure_sliding_opening_recontact_cutback_and_restart",
+    "test:joints::interface_assembly_tangent_matches_independent_direction_and_rejects_bad_layouts",
+    "test:joints::opposing_tri3_tri6_transfer_three_direction_traction_work_and_moment",
+    "test:local_excavation::buried_cavity_duplicate_cut_and_ambiguous_pressure_are_rejected",
+    "test:local_excavation::checkpoint_roundtrip_reproduces_plastic_and_excavation_history_after_every_increment",
+    "test:local_excavation::checkpoints_reject_changed_inputs_binary_and_corrupted_load_history",
+    "test:local_excavation::local_cut_keeps_surrounding_soil_and_removes_floor_surcharge",
+    "test:local_excavation::local_cutback_restores_plastic_history_loads_and_active_elements",
+    "test:local_excavation::local_failure_keeps_the_last_accepted_state",
+    "test:local_excavation::malformed_excavation_sets_and_ground_mapping_are_rejected",
+    "test:local_excavation::sequential_local_cuts_can_advance_from_the_existing_floor",
+    "test:local_excavation::sparse_local_cutback_retries_identically_and_linear_failure_is_not_committed",
+    "test:local_excavation::sparse_newton_matches_dense_for_plastic_local_excavation_and_reports_true_residual",
+    "test:local_excavation::submerged_cut_has_hydrostatic_wall_and_floor_tractions",
+    "test:low_preload_cut::low_preload_nc_cut_checkpoint_resumes_exact_prefix_and_rejects_preload_change",
+    "test:low_preload_cut::low_preload_nc_partial_cut_freezes_removed_plastic_and_contact_history",
+    "test:mc_epoch_checkpoint::accepted_plastic_epoch_roundtrip_and_later_continuation_are_exact",
+    "test:mc_epoch_checkpoint::genuine_global_material_failure_preserves_both_history_and_parameter_epoch",
+    "test:mc_epoch_checkpoint::tampering_and_resealed_wrong_material_load_origin_or_constraints_are_rejected",
+    "test:mc_epoch_cli::material_failure_rejected_prefix_recovers_without_inventing_stability_bounds",
+    "test:mc_epoch_cli::owned_abrupt_exit_recovers_the_last_complete_plastic_epoch",
+    "test:mc_epoch_cli::product_cli_pause_recovery_and_durable_checkpoint_match_continuous",
+    "test:mc_epoch_cli::stop_before_run_one_shot_immutable_inputs_and_pointer_paths_are_guarded",
+    "test:mc_epoch_path::actual_material_failures_cut_back_restore_parameters_and_resume_prefix_exactly",
+    "test:mc_epoch_path::attempt_limit_and_invalid_controls_do_not_produce_stability_bounds",
+    "test:mc_epoch_path::feasible_plastic_path_and_resume_match_exactly_and_closed_form",
+    "test:mc_epoch_path::resealed_progress_increment_target_and_history_chain_tampering_are_rejected",
+    "test:mc_fem::mc_checkpoint_restores_nonzero_plastic_history_and_rejects_state_model_mismatch",
+    "test:mc_fem::mc_initial_k0_has_no_fictitious_ocr_and_mcc_json_remains_compatible",
+    "test:mc_fem::mc_tet4_and_tet10_global_newton_match_series_column_theory",
+    "test:mc_fem::mcc_and_mc_share_one_mesh_without_sharing_history_fields",
+    "test:mc_material::davis_is_an_explicit_weaker_associated_comparison_and_tresca_is_supported",
+    "test:mc_material::full_mc_tangent_is_nonsymmetric_and_matches_independent_direction",
+    "test:mc_material::mc_face_edges_apex_and_zero_dilation_solvability_are_explicit",
+    "test:mc_material::mc_rotation_repeated_eigenvalues_and_plastic_history_are_objective",
+    "test:mc_material::rankine_tension_surfaces_return_without_silent_apex_clipping",
+    "test:mc_parameter_global::invalid_epoch_retains_parameters_and_history_and_rejects_wrong_origin",
+    "test:mc_parameter_global::post_load_tresca_weakening_matches_confined_compression_closed_form",
+    "test:mc_parameter_global::unit_epoch_preserves_loaded_plastic_origin_and_independent_controllers",
+    "test:mc_parameter_transition::invalid_origins_parameter_switches_and_genuine_no_solution_leave_inputs_unchanged",
+    "test:mc_parameter_transition::nonassociated_face_rotation_and_algorithmic_tangent_match_independent_formulas",
+    "test:mc_parameter_transition::rankine_tension_parameter_jump_matches_uniaxial_multiplier_without_clearing_history",
+    "test:mc_parameter_transition::unchanged_parameters_match_ordinary_updates_and_davis_matches_explicit_effective_model",
+    "test:mc_parameter_transition::zero_strain_tresca_weakening_matches_closed_form_and_preserves_prior_history",
+    "test:mcc_midpoint::adaptive_partition_and_its_consistent_tangent_use_the_identical_material_map",
+    "test:mcc_midpoint::arbitrary_rotation_preserves_stress_plastic_history_and_directional_tangent",
+    "test:mcc_midpoint::both_global_schemes_start_nearly_hydrostatic_elastic_newton_steps",
+    "test:mcc_midpoint::elastic_reversal_and_permitted_positive_drift_unloading_retain_pc_without_projection",
+    "test:mcc_midpoint::full_partition_tangent_includes_first_yield_hardening_and_opposite_reyield",
+    "test:mcc_midpoint::global_displacement_and_both_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms",
+    "test:mcc_midpoint::global_midpoint_cutback_checkpoint_restores_plastic_history_and_binds_scheme",
+    "test:mcc_midpoint::invalid_midpoint_trials_leave_committed_material_history_unchanged",
+    "test:mcc_midpoint::ocr_first_yield_and_unloading_converge_quadratically_to_closed_form",
+    "test:mcc_midpoint::optional_scheme_preserves_legacy_json_and_rejects_unknown_integration",
+    "test:mcc_sensitivity::complete_tangent_matches_two_finite_difference_steps_and_hydrostatic_limit",
+    "test:mcc_sensitivity::critical_state_zero_volumetric_flow_and_elastic_reversal_have_finite_consistent_tangents",
+    "test:mcc_sensitivity::invalid_trials_and_zero_partitions_never_mutate_committed_history",
+    "test:mcc_sensitivity::nonisotropic_history_and_rotated_direction_preserve_objectivity",
+    "test:mcc_sensitivity::primal_histories_and_substeps_are_exact_on_nc_oc_loading_unloading_and_shear",
+    "test:mcc_sensitivity::report_material_tangent_timing_without_changing_acceptance_or_primal_values",
+    "test:mcc_split::elastic_split_has_exact_bulk_and_deviatoric_moduli",
+    "test:mcc_split::plastic_split_reconstructs_all_history_and_unsymmetrized_full_tangent",
+    "test:mcc_split::rotated_plastic_response_and_failed_trials_preserve_committed_state",
+    "test:mcc_split::split_blocks_predict_independent_directional_derivatives",
+    "test:mcc_stop_boundaries::mixed_mcc_local_cut_early_and_late_stop_restore_every_accepted_history_bit",
+    "test:mcc_stop_boundaries::projected_mcc_local_cut_early_and_late_stop_restore_every_accepted_history_bit",
+    "test:mechanics::nodal_force_totals_and_underconstrained_components_are_checked",
+    "test:mechanics::nonzero_displacement_lifting_recovers_reaction_and_energy",
+    "test:mechanics::signed_surface_pressure_and_rotated_direction_constraints_are_objective",
+    "test:mechanics::tet10_cantilever_pure_bending_matches_exact_quadratic_solution",
+    "test:mechanics::two_material_series_bar_has_correct_interface_force_and_compliance",
+    "test:mixed_mcc::excavation_drops_inactive_pressure_dofs_and_freezes_removed_history",
+    "test:mixed_mcc::nearly_incompressible_elastic_pressure_matches_dense_sparse_and_column_theory",
+    "test:mixed_mcc::plastic_affine_patch_satisfies_material_and_volume_equations",
+    "test:mixed_mcc::plastic_geostatic_equilibration_and_restart_use_the_mixed_backend",
+    "test:mixed_mcc::rejection_and_checkpoint_retain_primary_pressure_volume_and_plastic_history",
+    "test:mixed_mcc::unsupported_water_and_underintegrated_cells_are_explicitly_rejected",
+    "test:mixed_mechanics::affine_strain_pressure_and_rigid_motion_are_exact_on_straight_and_curved_cells",
+    "test:mixed_mechanics::near_incompressible_uniaxial_stress_sparse_and_dense_match_theory",
+    "test:mixed_mechanics::two_material_column_preserves_pressure_jump_and_series_compliance",
+    "test:mixed_mechanics::unsupported_linear_cells_underintegration_and_exact_incompressibility_are_rejected",
+    "test:newton_diagnostics::diagnostics_preserve_full_run_and_sink_failure_is_terminal",
+    "test:one_way::bishop_zero_one_and_separate_exterior_pressure_match_exact_elastic_limits",
+    "test:one_way::checkpoints_replay_initialization_and_physical_periods_and_reject_resealed_changes",
+    "test:one_way::declared_compressible_water_mass_includes_positive_storage_and_closed_head_is_preserved",
+    "test:one_way::genuine_mechanical_exhaustion_does_not_commit_the_successful_hydraulic_trial",
+    "test:one_way::initial_unsaturated_column_matches_independent_continuous_elastic_integrals",
+    "test:one_way::invalid_closure_porosity_exterior_and_mixed_stage_policies_are_rejected",
+    "test:one_way::plastic_coupled_cutbacks_restore_both_histories_and_same_accepted_times_replay_exactly",
+    "test:one_way::raw_hydraulic_quadrature_transfers_water_mass_and_symmetric_pore_force_without_double_counting",
+    "test:one_way::saturated_limit_recovers_existing_pore_pressure_displacement_increments",
+    "test:one_way_construction::compressible_water_mass_removed_at_fixed_time_includes_positive_storage",
+    "test:one_way_construction::construction_checkpoints_restore_nonzero_holding_domain_archive_and_next_physical_time",
+    "test:one_way_construction::domain_death_retains_remaining_heads_storage_fluxes_traces_and_archives_removed_water",
+    "test:one_way_construction::genuine_post_cut_hydraulic_exhaustion_preserves_the_last_accepted_domain_and_mass_archive",
+    "test:one_way_construction::missing_cut_boundaries_overlap_reactivation_and_corrupt_origin_are_rejected",
+    "test:one_way_construction::rejected_domain_candidate_restores_history_and_clean_release_path_is_exact",
+    "test:one_way_construction::saturated_flooded_cut_matches_exact_oedometer_unloading_and_mass_theory",
+    "test:one_way_construction::two_local_removals_preserve_separate_archives_and_cumulative_water_budget",
+    "test:one_way_construction::unchanged_domain_reuses_geometry_but_applies_each_new_period_boundary",
+    "test:one_way_lifecycle::birth_water_source_includes_declared_positive_pressure_storage",
+    "test:one_way_lifecycle::excavated_mcc_can_be_replaced_while_inactive_and_reborn_as_wet_fresh_mc_without_losing_archive",
+    "test:one_way_lifecycle::impossible_water_preserving_change_keeps_the_previous_accepted_state_and_archive",
+    "test:one_way_lifecycle::lifecycle_checkpoints_restore_birth_reference_material_ids_porosity_and_mass_sources",
+    "test:one_way_lifecycle::lifecycle_rejections_restore_ledgers_and_same_clean_release_path_is_exact",
+    "test:one_way_lifecycle::material_set_preserve_head_uses_new_water_law_and_accounts_for_added_water",
+    "test:one_way_lifecycle::material_set_preserve_water_inverts_head_and_retains_unchanged_primary_cells_exactly",
+    "test:one_way_lifecycle::new_born_surface_missing_water_law_and_inherited_plastic_history_are_rejected_before_work",
+    "test:one_way_lifecycle::rejected_birth_with_genuine_plastic_history_replays_the_same_clean_path_exactly",
+    "test:one_way_lifecycle::time_zero_cut_keeps_clock_zero_and_nonzero_holding_checkpoint_resumes_exactly",
+    "test:one_way_lifecycle::wet_stress_free_birth_matches_closed_saturated_oedometer_theory_and_added_water",
+    "test:one_way_lifecycle::zero_storage_saturated_change_requires_a_physical_pressure_reference",
+    "test:plates6::mindlin_consistent_traction_force_moment_and_quadratic_virtual_work_reject_equal_six",
+    "test:plates6::mindlin_membrane_curvature_zero_shear_and_constant_shear_patches",
+    "test:plates6::mindlin_pure_bending_preserves_dkt_accuracy_across_thickness",
+    "test:plates6::mindlin_rejects_curved_nonplanar_and_implicit_six_node_inputs",
+    "test:plates6::mindlin_six_rigid_modes_rank_and_coordinate_objectivity",
+    "test:plates6::mindlin_thin_and_thick_cantilever_shear_force_converges_without_locking",
+    "test:plates6::tri6_trace_is_tet10_trace_for_all_translations_and_detects_legacy_difference",
+    "test:plates6_offset::offset_cantilever_and_simply_supported_eccentric_axial_load_analytic",
+    "test:plates6_offset::offset_checkpoint_replays_and_refuses_rehashed_type_offset_axes_and_reference",
+    "test:plates6_offset::offset_global_rotation_and_normal_sign_are_objective",
+    "test:plates6_offset::offset_load_virtual_work_and_neutral_plane_moment",
+    "test:plates6_offset::offset_rejects_outside_scope_and_requires_explicit_selection",
+    "test:plates6_offset::offset_rigid_modes_rank_patch_energy_and_trace",
+    "test:plates6_offset::offset_zero_is_bit_identical_to_planar_kernel",
+    "test:plates::dead_traction_preserves_global_force_and_moment_and_bad_inputs_are_rejected",
+    "test:plates::dkt_membrane_curvature_patch_six_rigid_modes_and_energy_are_objective",
+    "test:plates::plate_is_coupled_to_mc_mcc_and_mixed_forms_with_cutback_and_checkpoint_history",
+    "test:plates::thin_cantilever_plate_matches_closed_form_without_shear_locking_or_drilling_dependence",
+    "test:projected_mcc::affine_plastic_cycle_dense_sparse_and_removed_history",
+    "test:projected_mcc::altered_volume_offset_and_formulation_are_rejected_after_resealing",
+    "test:projected_mcc::local_death_freezes_nonzero_compatibility_offset_and_restarts",
+    "test:projected_mcc::pressure_unload_then_display_reset_preserves_exact_load_and_mixed_history",
+    "test:replay::policy_errors_and_numerical_incompleteness_do_not_produce_stability_bounds",
+    "test:replay::selected_strength_and_policies_are_explicit_and_mcc_is_rejected",
+    "test:replay::stage_gate_numeric_incompleteness_preserves_rejected_history_without_stability_bounds",
+    "test:replay::stage_gate_prefix_factor_one_and_factor_order_preserve_independent_histories",
+    "test:replay::stage_gate_validates_bounds_and_keeps_original_suffix_diagnostics_and_policy_errors",
+    "test:replay::unit_factor_is_exact_and_plastic_histories_do_not_leak_between_factor_orders",
+    "test:reset::born_nodes_get_their_new_display_origin_after_reset",
+    "test:reset::display_reset_preserves_every_physical_history_for_mc_and_mcc",
+    "test:reset::explicit_state_reset_reequilibrates_without_resetting_constitutive_displacement",
+    "test:reset::mcc_reset_uses_explicit_admissible_pc_and_void_ratio_then_forms_new_history",
+    "test:richards::atmospheric_face_opens_for_outflow_and_closes_without_inventing_inflow",
+    "test:richards::closed_saturated_storage_gains_exactly_the_injected_volume_without_a_head_gauge",
+    "test:richards::consistent_hydraulic_flux_derivative_matches_independent_directional_difference",
+    "test:richards::finite_width_reservoir_converges_without_changing_local_mass_or_atmospheric_gates",
+    "test:richards::hydraulic_inputs_reject_overlapping_inactive_boundaries_invalid_materials_and_insufficient_budgets",
+    "test:richards::mixed_saturated_affine_tensor_flow_is_exact_on_straight_tet4_and_tet10",
+    "test:richards::nonlinear_exhaustion_keeps_the_initial_field_and_steady_nonuniqueness_is_not_success",
+    "test:richards::rain_pause_restart_checkpoints_restore_all_heads_storage_faces_and_step_history",
+    "test:richards::rainfall_changes_unsaturated_storage_and_failed_trials_restore_the_last_accepted_field",
+    "test:richards::retention_matches_independent_100_digit_decimal_values_and_preserves_wet_mass_difference",
+    "test:richards::rt0_mass_matches_exact_simplex_moments_and_piola_preserves_curved_face_fluxes",
+    "test:richards::tight_flow_regression_uses_original_residual_increments_and_conductivity_tangent",
+    "test:richards::unsaturated_hydrostatic_head_has_zero_flux_and_retention_varies_with_height",
+    "test:richards::zero_storage_saturated_closed_domain_does_not_certify_an_undetermined_pressure_reference",
+    "test:rigidity::contact_alone_never_restrains_global_motion_after_large_coordinate_translation",
+    "test:rigidity::contact_support_counts_open_normal_stick_and_one_sided_limit_modes",
+    "test:rigidity::explicit_contact_supported_column_releases_upper_side_without_artificial_clamps",
+    "test:rigidity::inactive_contact_histories_are_validated_before_reporting",
+    "test:rigidity::rigid_audit_rejects_malformed_geometry_and_nonlocal_or_nonorthogonal_transforms",
+    "test:rigidity::shared_edge_and_vertex_retain_real_hinge_modes",
+    "test:rigidity::weak_early_rigid_rows_are_repivoted_without_inventing_extra_constraints",
+    "test:seepage_stages::mcc_seepage_cutback_and_each_phase_checkpoint_restore_pressure_and_plastic_history",
+    "test:seepage_stages::unsaturated_candidate_does_not_change_the_committed_mechanical_state",
+    "test:seepage_stages::upward_downward_flow_excavation_and_dewatering_match_column_theory",
+    "test:srm_bound::body_weight_and_all_six_reactions_enter_the_first_moment",
+    "test:srm_bound::certificate_is_rotation_translation_and_nonassociated_flow_invariant",
+    "test:srm_bound::davis_uses_its_effective_strength_instead_of_the_untransformed_cohesion",
+    "test:srm_bound::distributed_or_singular_supports_cannot_be_misreported_as_physical_uppers",
+    "test:srm_bound::invalid_or_heterogeneous_inputs_never_become_an_upper_candidate",
+    "test:srm_bound::mean_stress_agrees_with_an_independent_elastic_global_fem_and_tet10",
+    "test:srm_bound::rankine_exclusion_is_distinct_from_mc_and_not_an_admissibility_sufficiency_claim",
+    "test:srm_bound::uniaxial_closed_form_excludes_only_after_the_strength_limit_without_a_solver_failure",
+    "test:srm_bound::unknown_water_policy_and_overflow_do_not_create_physical_exclusion",
+    "test:srm_search::actual_nonlinear_failure_is_indeterminate_without_a_fabricated_upper",
+    "test:srm_search::actual_rejected_loading_trial_restores_history_for_every_fresh_replay",
+    "test:srm_search::assembled_nodal_witness_matches_surface_loads_and_rejects_inactive_node_forces",
+    "test:srm_search::different_trial_order_reproduces_the_full_same_factor_plastic_state",
+    "test:srm_search::distributed_support_and_actual_plastic_history_never_invent_a_physical_upper",
+    "test:srm_search::intermediate_prefix_keeps_the_original_unreduced_continuation_state",
+    "test:srm_search::invalid_search_controls_and_unsupported_water_davis_or_unknown_policies_reject",
+    "test:srm_search::real_fem_search_brackets_independent_unconfined_strength_and_evaluates_requested_factor",
+    "test:srm_search::reconstructed_endpoint_restores_the_actual_nonzero_geostatic_reference",
+    "test:srm_search::requested_factor_above_the_closed_form_limit_is_independently_excluded",
+    "test:srm_search::saved_endpoint_reconstruction_rejects_changed_load_stress_and_mesh",
+    "test:srm_search_control::changed_material_mesh_full_case_specification_and_saved_history_are_rejected",
+    "test:srm_search_control::distributed_frictional_virtual_upper_survives_all_restarts_without_history_transfer",
+    "test:srm_search_control::genuine_nonlinear_failure_after_restarts_is_unknown_and_never_an_upper",
+    "test:srm_search_control::observer_failure_leaves_last_saved_snapshot_valid_and_cannot_create_a_trial_failure",
+    "test:srm_search_control::original_geostatic_and_each_factor_keep_their_own_accepted_checkpoint",
+    "test:srm_search_control::restart_every_increment_matches_uninterrupted_closed_form_search_and_all_scientific_history",
+    "test:srm_search_job::actual_cli_alternating_snapshots_pause_recovery_and_one_shot_match_closed_form",
+    "test:srm_search_job::foreign_pointer_path_corruption_wrong_stop_and_immutable_changes_are_rejected",
+    "test:srm_search_job::fresh_stop_after_final_geostatic_acceptance_is_a_checkpoint_not_a_failed_origin",
+    "test:srm_search_job::real_nonlinear_failure_completes_an_indeterminate_search_without_an_upper",
+    "test:srm_search_job::snapshot_write_failure_keeps_previous_pointer_and_completed_report_can_be_recovered",
+    "test:srm_search_job::stop_already_requested_at_completed_geostatic_checkpoint_keeps_every_saved_byte",
+    "test:srm_search_job::stop_arriving_after_resume_precheck_never_rewinds_accepted_plastic_construction",
+    "test:srm_search_job::stop_before_resuming_plastic_construction_keeps_history_and_matches_uninterrupted_result",
+    "test:srm_search_job::stop_before_run_and_stop_during_actual_mechanics_preserve_resumable_history",
+    "test:srm_virtual_work::actual_frictional_plastic_fem_internal_work_matches_external_work_and_is_not_excluded",
+    "test:srm_virtual_work::actual_global_elastic_fem_and_independent_affine_solution_have_identical_virtual_work",
+    "test:srm_virtual_work::davis_effective_strength_and_rankine_superset_are_explicit_and_conservative",
+    "test:srm_virtual_work::distributed_support_bounds_match_the_closed_form_for_tet4_and_tet10",
+    "test:srm_virtual_work::even_tiny_supported_displacement_and_unsupported_oblique_reactions_cannot_make_an_upper",
+    "test:srm_virtual_work::fresh_search_uses_a_verified_distributed_support_upper_and_retains_honest_numerical_unknowns",
+    "test:srm_virtual_work::full_3d_tensor_rotation_preserves_work_capacity_and_eigenvalue_order",
+    "test:srm_virtual_work::heterogeneous_material_capacities_are_integrated_without_an_average_yield_domain",
+    "test:srm_virtual_work::invalid_data_zero_strain_and_tresca_nonzero_trace_never_become_an_upper",
+    "test:srm_virtual_work::one_bad_gp_is_rejected_even_when_the_mean_strain_is_strictly_dual_feasible",
+    "test:srm_virtual_work::positive_scaling_and_streamed_point_observer_preserve_the_exclusion",
+    "test:srm_virtual_work::real_nonlinear_failure_with_unavailable_virtual_fields_stays_indeterminate_without_an_upper",
+    "test:stage_control::geostatic_and_initialization_endpoint_pause_keep_reference_and_all_history_on_resume",
+    "test:stage_control::observation_preserves_every_result_field_and_reports_actual_newton_linear_and_attempt_values",
+    "test:stage_control::observer_errors_remain_runtime_errors_and_never_trigger_physical_cutback",
+    "test:stage_control::requests_from_newton_or_rejected_trial_pause_only_after_acceptance_and_resume_exactly",
+    "test:stage_job::a_different_running_solver_cannot_claim_a_valid_foreign_solver_snapshot",
+    "test:stage_job::a_stop_request_for_another_job_is_refused_and_cannot_pause_the_running_job",
+    "test:stage_job::cli_pause_and_separate_process_resume_preserve_every_non_time_result_field",
+    "test:stage_job::durable_checkpoint_survives_abrupt_owned_child_exit_and_recovers_exact_history",
+    "test:stage_job::durable_interval_and_recovery_tampering_are_rejected_without_claiming_an_output",
+    "test:stage_job::durable_slots_and_snapshot_fork_preserve_all_non_time_result_fields",
+    "test:stage_job::immutable_input_changes_existing_output_and_second_execution_are_refused_before_solving",
+    "test:stage_job::invalid_material_and_numerical_failure_never_publish_success_or_a_false_checkpoint",
+    "test:stages_fem::no_load_does_not_reload_initial_gravity",
+    "test:stages_fem::preload_unload_and_excavation_preserve_plasticity_and_heave",
+    "test:stages_fem::real_nonconvergence_cutback_and_exhaustion_are_not_success",
+    "test:stages_fem::rejected_plastic_and_excavation_trials_restore_entire_committed_history",
+    "test:stages_fem::sparse_assembly_sums_tied_plane_dofs_and_matches_dense_oedometer",
+    "test:stages_fem::tiny_elastic_pressure_matches_constrained_modulus_theory",
+    "test:surface_projection::curved_triangle_rain_projection_crossing_zero_normal_matches_exact_integral",
+    "test:surface_projection::planar_projection_handles_vertical_downward_and_scaled_shifted_geometry",
+    "test:tet10::general_surface_load_connects_to_mcc_newton_and_matches_pressure_stage",
+    "test:tet10::nonaxis_displacement_constraints_and_explicit_supports_work_in_mcc",
+    "test:tet10::prescribed_displacement_mcc_stages_restore_offset_and_plastic_history_on_restart",
+    "test:tet10::quadratic_k0_state_is_in_nodal_equilibrium_and_stores_every_material_point",
+    "test:tet10::quadratic_mcc_excavation_cutback_and_checkpoint_restore_all_quadrature_history",
+    "test:tet10::quadratic_mesh_rejects_inconsistent_edges_and_hidden_inversion",
+    "test:tet10::quadratic_uniform_constrained_compression_matches_theory",
+    "test:water_stages::hydrostatic_drawdown_flooding_and_buoyant_excavation_follow_column_theory",
+    "test:water_stages::intermediate_water_head_rebuilds_actual_pressure_and_does_not_interpolate_endpoint_loads",
+    "test:water_stages::plastic_water_history_and_partial_excavation_resume_exactly_and_reject_tampering",
+    "test:wet_structures::wet_flow_transition_with_active_plate_and_beam_resumes_exactly",
+    "test:wet_structures::wet_joint_plate_beam_keeps_physical_pressure_separate_through_flow_and_removal"
+  ],
+  "artifacts": [
+    {
+      "target": "lib:soil_fem_3d",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/soil_fem_3d-8e5b6078918236ba",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/soil_fem_3d-8e5b6078918236ba",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "beams::storage::tests::sparse_constraint_projection_matches_independent_dense_products",
+        "beams::storage::tests::storage_arithmetic_overflow_and_invalid_budgets_are_rejected",
+        "beams::storage::tests::uncached_and_evicted_compilations_reproduce_identical_schur_matrices",
+        "benchmark::tests::real_tet4_grid_assembly_solves_manufactured_field",
+        "checkpoint::tests::standard_sha256_vector_and_canonical_json_are_stable",
+        "elastic::tests::affine_patch_and_rigid_body_modes",
+        "elastic::tests::rejects_invalid_geometry_and_material",
+        "elements::tests::jacobian_certificate_rejects_fold_outside_integration_points",
+        "elements::tests::positive_quadrature_integrates_all_degree_five_monomials",
+        "elements::tests::tet10_partition_affine_patch_and_six_rigid_modes",
+        "elements::tests::tri6_integrates_constant_traction_and_linear_pressure",
+        "epoch_srm_control::tests::all_attempt_roundtrips_match_the_complete_direct_report_bytes",
+        "epoch_srm_control::tests::altered_origin_specification_and_producer_identity_are_rejected",
+        "epoch_srm_control::tests::callback_error_is_terminal_control_and_previous_saved_snapshot_remains_usable",
+        "epoch_srm_control::tests::distributed_support_limit_has_real_rejections_accepted_rollback_and_unknown_result",
+        "epoch_srm_control::tests::invalid_budget_and_advance_after_finished_are_rejected",
+        "epoch_srm_control::tests::post_cut_dormant_history_and_final_report_match_uninterrupted_direct_search",
+        "epoch_srm_control::tests::resealed_completed_trial_and_origin_audit_evidence_are_semantically_checked",
+        "epoch_srm_control::tests::resealed_finished_requirement_interval_and_safety_claims_are_recomputed",
+        "epoch_srm_control::tests::resealed_frozen_load_metadata_fails_even_when_all_outer_hashes_are_updated",
+        "epoch_srm_control::tests::resealed_pending_factor_and_target_path_cannot_cross_factor_history",
+        "epoch_srm_control::tests::stop_before_an_attempt_keeps_the_whole_snapshot_byte_exact",
+        "epoch_srm_control::tests::stop_from_a_nonlinear_callback_finishes_only_the_current_attempt_and_resumes",
+        "joints::predictor_tests::cold_elastic_prediction_matches_a_closed_sticking_physical_increment",
+        "joints::predictor_tests::neutral_predictor_returns_an_overshot_sliding_trial_to_the_elastic_interior",
+        "linalg::tests::a01_residual_observation_preserves_success_and_failure",
+        "linalg::tests::compiled_scatter_preserves_duplicate_order_cancellation_and_unsymmetric_values",
+        "linalg::tests::compiled_scatter_rejects_foreign_pattern_sequence_counts_and_nonfinite_values",
+        "linalg::tests::condensed_interface_above_256_preserves_full_unsymmetric_operator",
+        "linalg::tests::condensed_symbolic_blocks_match_legacy_boundaries_without_filling_elsewhere",
+        "linalg::tests::duplicate_assembly_preserves_unsymmetric_entries_and_matches_dense",
+        "linalg::tests::ilut_fill_caps_both_triangles_and_drops_without_changing_matrix",
+        "linalg::tests::ilut_reduces_diffusion_iterations_and_respects_iteration_limit",
+        "linalg::tests::invalid_pivot_limit_and_cancellation_have_distinct_failures",
+        "linalg::tests::restarted_nonnormal_indefinite_system_matches_independent_pivoted_lu",
+        "linalg::tests::row_scaling_does_not_replace_original_residual_acceptance",
+        "mcc::tests::algorithmic_tangent_matches_half_step_and_independent_direction",
+        "mcc::tests::arbitrary_basis_rotation_and_plastic_work",
+        "mcc::tests::invalid_state_and_failed_trial_are_not_committed",
+        "mcc::tests::isotropic_compression_unloading_follows_lambda_kappa",
+        "mcc::tests::pure_shear_is_rotation_equivalent_and_refines",
+        "mcc::tests::restart_retains_all_hardening_and_plastic_history",
+        "plane_strain_2d::tests::archived_slope_failure_files_are_unchanged",
+        "plane_strain_2d::tests::ci_column_records_five_percent_without_closing_the_slope_or_p6",
+        "plane_strain_2d::tests::documented_crest_stays_inside_the_archived_theory_band",
+        "plane_strain_2d::tests::nested_monitor_separates_a_coarse_miss_from_the_continuum",
+        "plane_strain_2d::tests::non_nested_series_stays_indeterminate_and_keeps_discrete_failures",
+        "plane_strain_2d::tests::plateau_away_from_the_2d_value_is_not_called_a_pass",
+        "solver::tests::constrained_tetra_has_analytic_settlement_and_reaction",
+        "spatial_convergence::tests::ci_profile_reports_orders_without_closing_p6",
+        "spatial_convergence::tests::existing_single_tet_settlement_is_unchanged",
+        "spatial_convergence::tests::manufactured_stress_matches_its_body_force",
+        "stages::mixed::ordering::tests::volume_first_rcm_preserves_unsymmetric_saddle_equations_and_matches_dense",
+        "stages::mixed::tests::compiled_projected_soil_scatter_is_bit_exact_to_original_and_matches_residual_jacobian",
+        "stages::mixed::tests::compiled_projected_structure_scatter_is_bit_exact_to_original_and_matches_residual_jacobian",
+        "stages::mixed::tests::full_three_field_jacobian_matches_residual_directional_differences",
+        "stages::mixed::tests::material_strain_includes_independent_volume_and_initial_domain_uses_cumulative_history",
+        "stages::mixed::tests::mixed_beam_plate_jacobian_includes_nonlocal_structural_tangent",
+        "stages::mixed::tests::projected_beam_plate_jacobian_includes_nonlocal_structural_tangent",
+        "stages::mixed::tests::projected_three_field_jacobian_matches_all_residual_blocks",
+        "stages::predictor_tests::parallel_material_errors_choose_first_input_failure_and_leave_all_committed_histories_unchanged",
+        "stages::predictor_tests::parallel_material_states_tangents_partitions_and_order_match_serial_without_history_mutation",
+        "stages::predictor_tests::temporary_sparse_and_dense_gauges_do_not_certify_the_original_equations"
+      ]
+    },
+    {
+      "target": "test:plates6_offset",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/plates6_offset-f98f24adf8954556",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/plates6_offset-f98f24adf8954556",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "offset_cantilever_and_simply_supported_eccentric_axial_load_analytic",
+        "offset_checkpoint_replays_and_refuses_rehashed_type_offset_axes_and_reference",
+        "offset_global_rotation_and_normal_sign_are_objective",
+        "offset_load_virtual_work_and_neutral_plane_moment",
+        "offset_rejects_outside_scope_and_requires_explicit_selection",
+        "offset_rigid_modes_rank_patch_energy_and_trace",
+        "offset_zero_is_bit_identical_to_planar_kernel"
+      ]
+    },
+    {
+      "target": "test:mcc_midpoint",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_midpoint-261d0ef8ca2fd45b",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_midpoint-261d0ef8ca2fd45b",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "adaptive_partition_and_its_consistent_tangent_use_the_identical_material_map",
+        "arbitrary_rotation_preserves_stress_plastic_history_and_directional_tangent",
+        "both_global_schemes_start_nearly_hydrostatic_elastic_newton_steps",
+        "elastic_reversal_and_permitted_positive_drift_unloading_retain_pc_without_projection",
+        "full_partition_tangent_includes_first_yield_hardening_and_opposite_reyield",
+        "global_displacement_and_both_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms",
+        "global_midpoint_cutback_checkpoint_restores_plastic_history_and_binds_scheme",
+        "invalid_midpoint_trials_leave_committed_material_history_unchanged",
+        "ocr_first_yield_and_unloading_converge_quadratically_to_closed_form",
+        "optional_scheme_preserves_legacy_json_and_rejects_unknown_integration"
+      ]
+    },
+    {
+      "target": "test:replay",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/replay-cdbc038d3dfab6c2",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/replay-cdbc038d3dfab6c2",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "policy_errors_and_numerical_incompleteness_do_not_produce_stability_bounds",
+        "selected_strength_and_policies_are_explicit_and_mcc_is_rejected",
+        "stage_gate_numeric_incompleteness_preserves_rejected_history_without_stability_bounds",
+        "stage_gate_prefix_factor_one_and_factor_order_preserve_independent_histories",
+        "stage_gate_validates_bounds_and_keeps_original_suffix_diagnostics_and_policy_errors",
+        "unit_factor_is_exact_and_plastic_histories_do_not_leak_between_factor_orders"
+      ]
+    },
+    {
+      "target": "example:wet_joint_step_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_step_probe-40c0ce0bd40470ca",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_step_probe-40c0ce0bd40470ca",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mcc_split",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_split-d608566804835773",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_split-d608566804835773",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "elastic_split_has_exact_bulk_and_deviatoric_moduli",
+        "plastic_split_reconstructs_all_history_and_unsymmetrized_full_tangent",
+        "rotated_plastic_response_and_failed_trials_preserve_committed_state",
+        "split_blocks_predict_independent_directional_derivatives"
+      ]
+    },
+    {
+      "target": "test:anchors",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/anchors-2b84f7dc0307a1ae",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/anchors-2b84f7dc0307a1ae",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "anchor_affine_tension_rigid_motion_and_distributed_transfer_preserve_work",
+        "anchor_jack_lock_slack_and_plastic_soil_restore_exactly_on_cutback_and_restart",
+        "anchor_tangent_and_energy_match_independent_perturbations",
+        "excavation_with_retained_anchor_and_beam_releases_only_removed_soil_stress",
+        "installation_reference_and_lost_host_are_atomic_and_explicit",
+        "jacking_lockoff_slack_and_reloading_follow_free_length_theory"
+      ]
+    },
+    {
+      "target": "test:mechanics",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mechanics-ca70536baa7753e4",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mechanics-ca70536baa7753e4",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "nodal_force_totals_and_underconstrained_components_are_checked",
+        "nonzero_displacement_lifting_recovers_reaction_and_energy",
+        "signed_surface_pressure_and_rotated_direction_constraints_are_objective",
+        "tet10_cantilever_pure_bending_matches_exact_quadratic_solution",
+        "two_material_series_bar_has_correct_interface_force_and_compliance"
+      ]
+    },
+    {
+      "target": "test:construction",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/construction-04930c78faaca255",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/construction-04930c78faaca255",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "inconsistent_replacement_born_active_wet_or_aged_material_is_rejected",
+        "material_density_change_rebuilds_gravity_and_matches_layered_column_theory",
+        "mcc_foundation_accepts_mc_fill_and_rejects_implicit_history_conversion",
+        "plastic_birth_history_material_ids_and_holding_load_resume_exactly",
+        "rebirth_placement_distinguishes_cad_nodes_from_archived_excavated_displacements",
+        "stress_free_fill_and_material_change_match_oedometer_theory_and_restore_rejected_trials"
+      ]
+    },
+    {
+      "target": "example:a04_checkpoint_rehash",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/a04_checkpoint_rehash-8f650daf12959b8a",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/a04_checkpoint_rehash-8f650daf12959b8a",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mixed_mechanics",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mixed_mechanics-bb7bf20fea486447",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mixed_mechanics-bb7bf20fea486447",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "affine_strain_pressure_and_rigid_motion_are_exact_on_straight_and_curved_cells",
+        "near_incompressible_uniaxial_stress_sparse_and_dense_match_theory",
+        "two_material_column_preserves_pressure_jump_and_series_compliance",
+        "unsupported_linear_cells_underintegration_and_exact_incompressibility_are_rejected"
+      ]
+    },
+    {
+      "target": "test:embedding",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/embedding-b03b043aedd380ab",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/embedding-b03b043aedd380ab",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "curved_tet10_inverse_and_interface_hosts_keep_coordinate_and_activity",
+        "embedding_rejects_missing_host_body_outside_and_nonconforming_overlap",
+        "tet4_and_tet10_embedding_preserve_affine_fields_force_moment_and_work"
+      ]
+    },
+    {
+      "target": "test:one_way",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/one_way-e415291da304c04c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/one_way-e415291da304c04c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "bishop_zero_one_and_separate_exterior_pressure_match_exact_elastic_limits",
+        "checkpoints_replay_initialization_and_physical_periods_and_reject_resealed_changes",
+        "declared_compressible_water_mass_includes_positive_storage_and_closed_head_is_preserved",
+        "genuine_mechanical_exhaustion_does_not_commit_the_successful_hydraulic_trial",
+        "initial_unsaturated_column_matches_independent_continuous_elastic_integrals",
+        "invalid_closure_porosity_exterior_and_mixed_stage_policies_are_rejected",
+        "plastic_coupled_cutbacks_restore_both_histories_and_same_accepted_times_replay_exactly",
+        "raw_hydraulic_quadrature_transfers_water_mass_and_symmetric_pore_force_without_double_counting",
+        "saturated_limit_recovers_existing_pore_pressure_displacement_increments"
+      ]
+    },
+    {
+      "target": "test:epoch_srm_gate_job",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_gate_job-aa22d3e09a49dd2d",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_gate_job-aa22d3e09a49dd2d",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "exclusion_and_nonconvergence_remain_distinct_and_do_not_start_the_later_stage",
+        "paused_gate_recovery_matches_the_continuous_gate_and_the_unreduced_solve",
+        "prepared_stop_invalid_budget_and_second_launch_keep_the_saved_checkpoint"
+      ]
+    },
+    {
+      "target": "example:joint_ext_checkpoint_rehash",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/joint_ext_checkpoint_rehash-98e855d884c7770e",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/joint_ext_checkpoint_rehash-98e855d884c7770e",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "example:wet_joint_local_path_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_local_path_probe-ad53c7c3a6dfe46f",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_local_path_probe-ad53c7c3a6dfe46f",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:epoch_srm_search",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_search-d52e8ef9f6419a93",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_search-d52e8ef9f6419a93",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "accepted_origin_search_brackets_four_over_three_and_keeps_every_factor_independent",
+        "changed_producer_inputs_and_unbound_loads_cannot_define_an_origin",
+        "cli_creates_a_bound_epoch_report_refuses_foreign_producer_and_preserves_existing_output",
+        "factor_trial_limit_is_reported_without_claiming_the_requested_interval_width",
+        "incomplete_epoch_paths_stay_unknown_and_cannot_create_an_attained_side",
+        "malformed_schema_prefix_path_controls_and_virtual_dimensions_are_refused",
+        "plastic_preload_unload_epoch_fields_match_confined_column_compliance_and_separate_path",
+        "post_excavation_trials_keep_all_dormant_history_and_reject_resealed_frozen_metadata",
+        "required_factor_above_limit_has_independent_exclusion_without_an_epoch"
+      ]
+    },
+    {
+      "target": "test:free_contact",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/free_contact-a0349405ec5e1ea8",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/free_contact-a0349405ec5e1ea8",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "free_frictionless_or_overcapacity_blocks_never_commit_a_false_equilibrium",
+        "free_upper_block_closes_without_physical_pins_and_restores_predictor_history"
+      ]
+    },
+    {
+      "target": "test:one_way_lifecycle",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/one_way_lifecycle-6c9dfffc0552eb66",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/one_way_lifecycle-6c9dfffc0552eb66",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "birth_water_source_includes_declared_positive_pressure_storage",
+        "excavated_mcc_can_be_replaced_while_inactive_and_reborn_as_wet_fresh_mc_without_losing_archive",
+        "impossible_water_preserving_change_keeps_the_previous_accepted_state_and_archive",
+        "lifecycle_checkpoints_restore_birth_reference_material_ids_porosity_and_mass_sources",
+        "lifecycle_rejections_restore_ledgers_and_same_clean_release_path_is_exact",
+        "material_set_preserve_head_uses_new_water_law_and_accounts_for_added_water",
+        "material_set_preserve_water_inverts_head_and_retains_unchanged_primary_cells_exactly",
+        "new_born_surface_missing_water_law_and_inherited_plastic_history_are_rejected_before_work",
+        "rejected_birth_with_genuine_plastic_history_replays_the_same_clean_path_exactly",
+        "time_zero_cut_keeps_clock_zero_and_nonzero_holding_checkpoint_resumes_exactly",
+        "wet_stress_free_birth_matches_closed_saturated_oedometer_theory_and_added_water",
+        "zero_storage_saturated_change_requires_a_physical_pressure_reference"
+      ]
+    },
+    {
+      "target": "example:joint_a02_projection_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/joint_a02_projection_probe-3054291ba7ded949",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/joint_a02_projection_probe-3054291ba7ded949",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:geostatic_affine",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/geostatic_affine-ba271ce427360ab2",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/geostatic_affine-ba271ce427360ab2",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "affine_global_tensor_uses_all_coordinates_material_ncl_and_rejects_invalid_recipes",
+        "affine_seed_matches_original_plastic_history_and_checkpoint_without_mesh_point_values"
+      ]
+    },
+    {
+      "target": "test:richards",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/richards-3715379f39ff0662",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/richards-3715379f39ff0662",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "atmospheric_face_opens_for_outflow_and_closes_without_inventing_inflow",
+        "closed_saturated_storage_gains_exactly_the_injected_volume_without_a_head_gauge",
+        "consistent_hydraulic_flux_derivative_matches_independent_directional_difference",
+        "finite_width_reservoir_converges_without_changing_local_mass_or_atmospheric_gates",
+        "hydraulic_inputs_reject_overlapping_inactive_boundaries_invalid_materials_and_insufficient_budgets",
+        "mixed_saturated_affine_tensor_flow_is_exact_on_straight_tet4_and_tet10",
+        "nonlinear_exhaustion_keeps_the_initial_field_and_steady_nonuniqueness_is_not_success",
+        "rain_pause_restart_checkpoints_restore_all_heads_storage_faces_and_step_history",
+        "rainfall_changes_unsaturated_storage_and_failed_trials_restore_the_last_accepted_field",
+        "retention_matches_independent_100_digit_decimal_values_and_preserves_wet_mass_difference",
+        "rt0_mass_matches_exact_simplex_moments_and_piola_preserves_curved_face_fluxes",
+        "tight_flow_regression_uses_original_residual_increments_and_conductivity_tangent",
+        "unsaturated_hydrostatic_head_has_zero_flux_and_retention_varies_with_height",
+        "zero_storage_saturated_closed_domain_does_not_certify_an_undetermined_pressure_reference"
+      ]
+    },
+    {
+      "target": "test:hardening_fem",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/hardening_fem-efe4813af1b38fd7",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/hardening_fem-efe4813af1b38fd7",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "idh_cap_shear_void_ratio_and_release_histories_restore_after_cutback_and_all_phase_restarts",
+        "idh_initial_cap_is_distinct_from_mcc_ocr_and_tampered_history_is_rejected",
+        "idh_preload_unload_reload_and_excavation_satisfy_current_force_and_sparse_dense_gates"
+      ]
+    },
+    {
+      "target": "example:nc_newton_trace",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/nc_newton_trace-e0ae3ac81709bf8d",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/nc_newton_trace-e0ae3ac81709bf8d",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:seepage_stages",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/seepage_stages-08823ba09b2d491d",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/seepage_stages-08823ba09b2d491d",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "mcc_seepage_cutback_and_each_phase_checkpoint_restore_pressure_and_plastic_history",
+        "unsaturated_candidate_does_not_change_the_committed_mechanical_state",
+        "upward_downward_flow_excavation_and_dewatering_match_column_theory"
+      ]
+    },
+    {
+      "target": "test:hydrostatic",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/hydrostatic-001866ed58219162",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/hydrostatic-001866ed58219162",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "curved_partial_face_matches_independent_root_and_all_six_nodal_integrals",
+        "invalid_geometry_controls_and_unresolved_domain_are_rejected",
+        "planar_partial_water_force_and_moment_match_closed_polynomial_integrals",
+        "wet_dry_limits_reversed_normal_and_world_translation_are_consistent",
+        "wet_interior_island_is_detected_when_all_six_surface_nodes_are_dry"
+      ]
+    },
+    {
+      "target": "example:wet_joint_transient_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_transient_probe-9b8391e98181f0d1",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_transient_probe-9b8391e98181f0d1",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:srm_search",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/srm_search-7c0d9d8f41c6229a",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/srm_search-7c0d9d8f41c6229a",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "actual_nonlinear_failure_is_indeterminate_without_a_fabricated_upper",
+        "actual_rejected_loading_trial_restores_history_for_every_fresh_replay",
+        "assembled_nodal_witness_matches_surface_loads_and_rejects_inactive_node_forces",
+        "different_trial_order_reproduces_the_full_same_factor_plastic_state",
+        "distributed_support_and_actual_plastic_history_never_invent_a_physical_upper",
+        "intermediate_prefix_keeps_the_original_unreduced_continuation_state",
+        "invalid_search_controls_and_unsupported_water_davis_or_unknown_policies_reject",
+        "real_fem_search_brackets_independent_unconfined_strength_and_evaluates_requested_factor",
+        "reconstructed_endpoint_restores_the_actual_nonzero_geostatic_reference",
+        "requested_factor_above_the_closed_form_limit_is_independently_excluded",
+        "saved_endpoint_reconstruction_rejects_changed_load_stress_and_mesh"
+      ]
+    },
+    {
+      "target": "test:ilut",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/ilut-b6f6105659ad1b9c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/ilut-b6f6105659ad1b9c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "checkpoint_binds_ilut_drop_fill_and_preconditioner_choice",
+        "ilut_checkpoint_rejects_rehashed_saved_state_and_saved_settings",
+        "ilut_rejects_invalid_ranges_types_and_unknown_options",
+        "ilut_solves_unsymmetric_operator_using_original_residual",
+        "legacy_options_json_has_identical_bytes_when_ilut_is_absent"
+      ]
+    },
+    {
+      "target": "test:srm_search_job",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/srm_search_job-9510d8dc133baaf9",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/srm_search_job-9510d8dc133baaf9",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "actual_cli_alternating_snapshots_pause_recovery_and_one_shot_match_closed_form",
+        "foreign_pointer_path_corruption_wrong_stop_and_immutable_changes_are_rejected",
+        "fresh_stop_after_final_geostatic_acceptance_is_a_checkpoint_not_a_failed_origin",
+        "real_nonlinear_failure_completes_an_indeterminate_search_without_an_upper",
+        "snapshot_write_failure_keeps_previous_pointer_and_completed_report_can_be_recovered",
+        "stop_already_requested_at_completed_geostatic_checkpoint_keeps_every_saved_byte",
+        "stop_arriving_after_resume_precheck_never_rewinds_accepted_plastic_construction",
+        "stop_before_resuming_plastic_construction_keeps_history_and_matches_uninterrupted_result",
+        "stop_before_run_and_stop_during_actual_mechanics_preserve_resumable_history"
+      ]
+    },
+    {
+      "target": "example:c03_bulk_cause_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/c03_bulk_cause_probe-76ef22f34291a55d",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/c03_bulk_cause_probe-76ef22f34291a55d",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:joint_birth_law",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_birth_law-55a6d1125e22f4d0",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_birth_law-55a6d1125e22f4d0",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "inherited_energy_work_and_stress_free_reference_obey_independent_increments"
+      ]
+    },
+    {
+      "target": "test:stage_control",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/stage_control-99558eca51e13eda",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/stage_control-99558eca51e13eda",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "geostatic_and_initialization_endpoint_pause_keep_reference_and_all_history_on_resume",
+        "observation_preserves_every_result_field_and_reports_actual_newton_linear_and_attempt_values",
+        "observer_errors_remain_runtime_errors_and_never_trigger_physical_cutback",
+        "requests_from_newton_or_rejected_trial_pause_only_after_acceptance_and_resume_exactly"
+      ]
+    },
+    {
+      "target": "test:joint_ext_combos",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_ext_combos-7c5528d3d6b4d9fd",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_ext_combos-7c5528d3d6b4d9fd",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "hydrostatic_birth_requires_fresh_explicit_state_and_regenerates_covered_interface",
+        "richards_wet_joint_infiltration_drainage_and_two_way_remain_rejected",
+        "tip_birth_checkpoints_replay_every_position_and_refuse_rehashed_force_reference_and_generation",
+        "tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer",
+        "tip_global_modes_have_equilibrium_and_fresh_generations",
+        "tip_mode_b_stores_the_actual_near_tip_reference_and_freezes_sliding_generation"
+      ]
+    },
+    {
+      "target": "example:nc_material_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/nc_material_probe-c8d978aa6907706f",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/nc_material_probe-c8d978aa6907706f",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "tests::diagnostic_keeps_primal_return_and_committed_state"
+      ]
+    },
+    {
+      "target": "test:stages_fem",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/stages_fem-8b5f62aba21728af",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/stages_fem-8b5f62aba21728af",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "no_load_does_not_reload_initial_gravity",
+        "preload_unload_and_excavation_preserve_plasticity_and_heave",
+        "real_nonconvergence_cutback_and_exhaustion_are_not_success",
+        "rejected_plastic_and_excavation_trials_restore_entire_committed_history",
+        "sparse_assembly_sums_tied_plane_dofs_and_matches_dense_oedometer",
+        "tiny_elastic_pressure_matches_constrained_modulus_theory"
+      ]
+    },
+    {
+      "target": "test:joint_law",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_law-98b9ff8aef6fb8b0",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_law-98b9ff8aef6fb8b0",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "algorithmic_tangent_is_nonsymmetric_and_matches_half_step",
+        "global_rotation_and_restart_preserve_all_interface_history",
+        "normal_compression_stick_and_opening_obey_unilateral_friction_and_work",
+        "numerical_dissipation_refines_and_failed_history_does_not_mutate_state",
+        "open_motion_is_not_plastic_sliding_and_recontact_starts_unloaded",
+        "two_direction_reversal_preserves_residual_slip_and_positive_dissipation"
+      ]
+    },
+    {
+      "target": "example:nc_dense_lu_diagnostic",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/nc_dense_lu_diagnostic-da01ee8775069226",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/nc_dense_lu_diagnostic-da01ee8775069226",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "tests::malformed_and_singular_systems_are_rejected",
+        "tests::original_nonsymmetric_system_is_retained"
+      ]
+    },
+    {
+      "target": "test:tet10",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/tet10-c8e8b8cf66ac9518",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/tet10-c8e8b8cf66ac9518",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "general_surface_load_connects_to_mcc_newton_and_matches_pressure_stage",
+        "nonaxis_displacement_constraints_and_explicit_supports_work_in_mcc",
+        "prescribed_displacement_mcc_stages_restore_offset_and_plastic_history_on_restart",
+        "quadratic_k0_state_is_in_nodal_equilibrium_and_stores_every_material_point",
+        "quadratic_mcc_excavation_cutback_and_checkpoint_restore_all_quadrature_history",
+        "quadratic_mesh_rejects_inconsistent_edges_and_hidden_inversion",
+        "quadratic_uniform_constrained_compression_matches_theory"
+      ]
+    },
+    {
+      "target": "test:joint_water",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_water-3fc85b423b24ade4",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_water-3fc85b423b24ade4",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "continuous_heads_pass_series_flow_through_split_displacement_nodes",
+        "death_after_wet_seepage_releases_interface_water_and_archives_contact_history",
+        "hydrostatic_contact_uses_effective_spring_pressure_and_total_equals_effective_plus_water",
+        "partial_submergence_integrates_actual_sloped_tri3_and_tri6_force_and_moment",
+        "pressure_survives_open_contact_and_does_not_enter_friction_twice",
+        "soil_structure_is_impermeable_and_prescribed_heads_are_not_averaged",
+        "staged_darcy_interface_policies_preserve_primary_pressure_and_exact_midstage_restart",
+        "wet_global_sliding_opening_recontact_preserves_water_load_and_rejected_slip_history",
+        "wet_stage_cutback_restores_pressure_contact_history_and_checkpoint"
+      ]
+    },
+    {
+      "target": "test:wet_structures",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/wet_structures-a3e42a98bf5167f3",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/wet_structures-a3e42a98bf5167f3",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "wet_flow_transition_with_active_plate_and_beam_resumes_exactly",
+        "wet_joint_plate_beam_keeps_physical_pressure_separate_through_flow_and_removal"
+      ]
+    },
+    {
+      "target": "test:local_excavation",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/local_excavation-9fd44ac2a855a39c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/local_excavation-9fd44ac2a855a39c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "buried_cavity_duplicate_cut_and_ambiguous_pressure_are_rejected",
+        "checkpoint_roundtrip_reproduces_plastic_and_excavation_history_after_every_increment",
+        "checkpoints_reject_changed_inputs_binary_and_corrupted_load_history",
+        "local_cut_keeps_surrounding_soil_and_removes_floor_surcharge",
+        "local_cutback_restores_plastic_history_loads_and_active_elements",
+        "local_failure_keeps_the_last_accepted_state",
+        "malformed_excavation_sets_and_ground_mapping_are_rejected",
+        "sequential_local_cuts_can_advance_from_the_existing_floor",
+        "sparse_local_cutback_retries_identically_and_linear_failure_is_not_committed",
+        "sparse_newton_matches_dense_for_plastic_local_excavation_and_reports_true_residual",
+        "submerged_cut_has_hydrostatic_wall_and_floor_tractions"
+      ]
+    },
+    {
+      "target": "example:wet_joint_path_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_path_probe-58c800cb05e3644c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_path_probe-58c800cb05e3644c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mc_epoch_checkpoint",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_epoch_checkpoint-195dd305e4789172",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_epoch_checkpoint-195dd305e4789172",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "accepted_plastic_epoch_roundtrip_and_later_continuation_are_exact",
+        "genuine_global_material_failure_preserves_both_history_and_parameter_epoch",
+        "tampering_and_resealed_wrong_material_load_origin_or_constraints_are_rejected"
+      ]
+    },
+    {
+      "target": "test:mc_epoch_path",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_epoch_path-0cbe54d05bde1cbe",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_epoch_path-0cbe54d05bde1cbe",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "actual_material_failures_cut_back_restore_parameters_and_resume_prefix_exactly",
+        "attempt_limit_and_invalid_controls_do_not_produce_stability_bounds",
+        "feasible_plastic_path_and_resume_match_exactly_and_closed_form",
+        "resealed_progress_increment_target_and_history_chain_tampering_are_rejected"
+      ]
+    },
+    {
+      "target": "example:joint_birth_points",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/joint_birth_points-81c8e35bbfb41edd",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/joint_birth_points-81c8e35bbfb41edd",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mc_material",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_material-757cf4b0f9bfa092",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_material-757cf4b0f9bfa092",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "davis_is_an_explicit_weaker_associated_comparison_and_tresca_is_supported",
+        "full_mc_tangent_is_nonsymmetric_and_matches_independent_direction",
+        "mc_face_edges_apex_and_zero_dilation_solvability_are_explicit",
+        "mc_rotation_repeated_eigenvalues_and_plastic_history_are_objective",
+        "rankine_tension_surfaces_return_without_silent_apex_clipping"
+      ]
+    },
+    {
+      "target": "test:plates6",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/plates6-e1e9970f68eb87f9",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/plates6-e1e9970f68eb87f9",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "mindlin_consistent_traction_force_moment_and_quadratic_virtual_work_reject_equal_six",
+        "mindlin_membrane_curvature_zero_shear_and_constant_shear_patches",
+        "mindlin_pure_bending_preserves_dkt_accuracy_across_thickness",
+        "mindlin_rejects_curved_nonplanar_and_implicit_six_node_inputs",
+        "mindlin_six_rigid_modes_rank_and_coordinate_objectivity",
+        "mindlin_thin_and_thick_cantilever_shear_force_converges_without_locking",
+        "tri6_trace_is_tet10_trace_for_all_translations_and_detects_legacy_difference"
+      ]
+    },
+    {
+      "target": "test:mc_parameter_transition",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_parameter_transition-244858e76084c567",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_parameter_transition-244858e76084c567",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "invalid_origins_parameter_switches_and_genuine_no_solution_leave_inputs_unchanged",
+        "nonassociated_face_rotation_and_algorithmic_tangent_match_independent_formulas",
+        "rankine_tension_parameter_jump_matches_uniaxial_multiplier_without_clearing_history",
+        "unchanged_parameters_match_ordinary_updates_and_davis_matches_explicit_effective_model",
+        "zero_strain_tresca_weakening_matches_closed_form_and_preserves_prior_history"
+      ]
+    },
+    {
+      "target": "example:c03_bulk_return_trace",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/c03_bulk_return_trace-0c8b6486d7617fe2",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/c03_bulk_return_trace-0c8b6486d7617fe2",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:projected_mcc",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/projected_mcc-f3ab2226b9057423",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/projected_mcc-f3ab2226b9057423",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "affine_plastic_cycle_dense_sparse_and_removed_history",
+        "altered_volume_offset_and_formulation_are_rejected_after_resealing",
+        "local_death_freezes_nonzero_compatibility_offset_and_restarts",
+        "pressure_unload_then_display_reset_preserves_exact_load_and_mixed_history"
+      ]
+    },
+    {
+      "target": "test:mcc_sensitivity",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_sensitivity-586516d203003a04",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_sensitivity-586516d203003a04",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "complete_tangent_matches_two_finite_difference_steps_and_hydrostatic_limit",
+        "critical_state_zero_volumetric_flow_and_elastic_reversal_have_finite_consistent_tangents",
+        "invalid_trials_and_zero_partitions_never_mutate_committed_history",
+        "nonisotropic_history_and_rotated_direction_preserve_objectivity",
+        "primal_histories_and_substeps_are_exact_on_nc_oc_loading_unloading_and_shear",
+        "report_material_tangent_timing_without_changing_acceptance_or_primal_values"
+      ]
+    },
+    {
+      "target": "example:wet_birth_a03_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_birth_a03_probe-6022b5bf93fa34f1",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_birth_a03_probe-6022b5bf93fa34f1",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mcc_stop_boundaries",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_stop_boundaries-7eb71503fd1d89fe",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mcc_stop_boundaries-7eb71503fd1d89fe",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "mixed_mcc_local_cut_early_and_late_stop_restore_every_accepted_history_bit",
+        "projected_mcc_local_cut_early_and_late_stop_restore_every_accepted_history_bit"
+      ]
+    },
+    {
+      "target": "test:beams",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/beams-ea8b8a01c0a09c9a",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/beams-ea8b8a01c0a09c9a",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "cantilever_axial_biaxial_bending_torsion_and_scaling_match_closed_forms",
+        "condensed_beam_is_coupled_to_mc_and_mcc_force_moment_and_exact_restart",
+        "distributed_loading_and_end_releases_recover_fixed_and_simply_supported_moments",
+        "explicit_storage_keeps_default500_limit_and_rejects_before_large_allocation",
+        "kernels_pass_six_rigid_modes_axial_patch_and_arbitrary_orientation",
+        "rehashed_checkpoint_rejects_corrupted_recovered_beam_kinematics",
+        "timoshenko_uniform_load_and_nonzero_constraint_lifting_match_theory",
+        "unsupported_torsion_and_invalid_geometry_are_rejected_without_stabilization"
+      ]
+    },
+    {
+      "target": "test:mixed_mcc",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mixed_mcc-c203fb9c9cdc111f",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mixed_mcc-c203fb9c9cdc111f",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "excavation_drops_inactive_pressure_dofs_and_freezes_removed_history",
+        "nearly_incompressible_elastic_pressure_matches_dense_sparse_and_column_theory",
+        "plastic_affine_patch_satisfies_material_and_volume_equations",
+        "plastic_geostatic_equilibration_and_restart_use_the_mixed_backend",
+        "rejection_and_checkpoint_retain_primary_pressure_volume_and_plastic_history",
+        "unsupported_water_and_underintegrated_cells_are_explicitly_rejected"
+      ]
+    },
+    {
+      "target": "test:darcy",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/darcy-fb74f29c74abab60",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/darcy-fb74f29c74abab60",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "balanced_neumann_and_volume_exchange_use_absolute_flow_for_water_balance",
+        "dense_and_sparse_backends_match_the_original_source_problem",
+        "each_disconnected_water_region_has_its_own_balance_and_needs_its_own_head",
+        "invalid_boundaries_materials_and_inactive_faces_are_rejected",
+        "layered_series_flow_matches_resistance_and_nodal_balance",
+        "malformed_head_interpolation_returns_errors_and_constant_large_head_stays_finite",
+        "original_rows_are_refined_after_prescribed_head_elimination_on_a_cad_mesh",
+        "quadratic_source_exact_solution_and_outflow_sign",
+        "rotated_anisotropic_affine_head_and_neumann_flux_on_curved_tet10",
+        "saturated_solver_preserves_negative_pressure_as_incomplete"
+      ]
+    },
+    {
+      "target": "example:nc_history_trace",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/nc_history_trace-f15f782e1e816c75",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/nc_history_trace-f15f782e1e816c75",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:newton_diagnostics",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/newton_diagnostics-d6e43eb2ba06b104",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/newton_diagnostics-d6e43eb2ba06b104",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "diagnostics_preserve_full_run_and_sink_failure_is_terminal"
+      ]
+    },
+    {
+      "target": "test:epoch_srm_gate",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_gate-9fef2115c328eb05",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_gate-9fef2115c328eb05",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "fresh_history_srm_bracket_remains_four_thirds",
+        "independent_exclusion_stops_before_the_later_stage_and_keeps_the_unreduced_prefix",
+        "malformed_stage_list_and_fixed_through_stages_are_refused_before_solving",
+        "nonconvergence_is_indeterminate_and_does_not_exclude_or_continue",
+        "p2_foreign_completed_origin_cannot_borrow_target_identity_at_finish",
+        "p2_foreign_record_is_rejected_in_all_phases_and_saved_job_recovery",
+        "passed_gates_match_the_continuous_run_after_every_accepted_unit",
+        "stepped_full_case_keeps_material_ids",
+        "stop_at_an_accepted_unit_keeps_that_snapshot_and_resumes_to_the_direct_report",
+        "trial_limit_does_not_authorize_the_next_stage"
+      ]
+    },
+    {
+      "target": "example:wet_joint_plastic_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_plastic_probe-752b622bbb378433",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_plastic_probe-752b622bbb378433",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:one_way_construction",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/one_way_construction-ab92577b191f7d40",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/one_way_construction-ab92577b191f7d40",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "compressible_water_mass_removed_at_fixed_time_includes_positive_storage",
+        "construction_checkpoints_restore_nonzero_holding_domain_archive_and_next_physical_time",
+        "domain_death_retains_remaining_heads_storage_fluxes_traces_and_archives_removed_water",
+        "genuine_post_cut_hydraulic_exhaustion_preserves_the_last_accepted_domain_and_mass_archive",
+        "missing_cut_boundaries_overlap_reactivation_and_corrupt_origin_are_rejected",
+        "rejected_domain_candidate_restores_history_and_clean_release_path_is_exact",
+        "saturated_flooded_cut_matches_exact_oedometer_unloading_and_mass_theory",
+        "two_local_removals_preserve_separate_archives_and_cumulative_water_budget",
+        "unchanged_domain_reuses_geometry_but_applies_each_new_period_boundary"
+      ]
+    },
+    {
+      "target": "test:epoch_srm_job",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_job-73f7e80938b8b9c5",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/epoch_srm_job-73f7e80938b8b9c5",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "actual_cli_two_slot_pause_fork_and_complete_report_are_byte_exact_to_direct_search",
+        "complete_job_can_be_forked_without_recomputing_or_changing_its_report",
+        "concurrent_launches_allow_exactly_one_worker_claim",
+        "foreign_pointer_truncated_selected_slot_and_resealed_semantic_edit_are_refused",
+        "immutable_origin_and_wrong_job_stop_request_fail_without_replacing_the_saved_pointer",
+        "interrupted_part_files_are_ignored_and_invalid_budgets_do_not_claim_the_job",
+        "killed_owned_solver_recovers_only_its_last_fully_published_accepted_snapshot",
+        "numeric_attempt_limit_remains_unknown_even_when_the_disk_job_finishes",
+        "prepared_stop_and_existing_output_refusal_keep_the_exact_initial_checkpoint",
+        "stop_during_actual_plastic_material_continuation_preserves_and_resumes_all_report_bytes"
+      ]
+    },
+    {
+      "target": "example:a01_joint_cause_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/a01_joint_cause_probe-3a66638f17a2f79a",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/a01_joint_cause_probe-3a66638f17a2f79a",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:plates",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/plates-43e1cecd6912e27e",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/plates-43e1cecd6912e27e",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "dead_traction_preserves_global_force_and_moment_and_bad_inputs_are_rejected",
+        "dkt_membrane_curvature_patch_six_rigid_modes_and_energy_are_objective",
+        "plate_is_coupled_to_mc_mcc_and_mixed_forms_with_cutback_and_checkpoint_history",
+        "thin_cantilever_plate_matches_closed_form_without_shear_locking_or_drilling_dependence"
+      ]
+    },
+    {
+      "target": "test:exact_fs",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/exact_fs-dce674dc20a23d9a",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/exact_fs-dce674dc20a23d9a",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "completed_material_path_and_reconstructed_mean_stress_certify_only_the_uniaxial_interval",
+        "fresh_failed_trial_cannot_be_relabelled_as_physical_exclusion_or_equilibrium",
+        "fresh_history_report_is_reaudited_without_replaying_a_solve",
+        "missing_changed_or_fabricated_epoch_evidence_is_rejected",
+        "no_physical_upper_may_continue_requirement_gate_but_does_not_certify_exact_fs",
+        "trial_limit_and_incomplete_paths_never_become_exact_or_an_upper_bound"
+      ]
+    },
+    {
+      "target": "example:joint_combo_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/joint_combo_probe-2c746a5d303f7d1c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/joint_combo_probe-2c746a5d303f7d1c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:geostatic",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/geostatic-06bb49c40f1f8309",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/geostatic-06bb49c40f1f8309",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "excessive_initial_strain_preserves_seed_and_never_creates_an_equilibrated_frame",
+        "geostatic_partial_boundary_and_construction_checkpoints_restore_identically",
+        "integration_point_seed_import_checks_mesh_position_material_and_body_mapping",
+        "mc_and_mcc_form_plastic_geostatic_history_and_keep_a_separate_construction_reference",
+        "saturated_general_column_matches_effective_weight_and_rejects_internal_water_faces",
+        "sloping_exposed_surface_allows_excavation_without_a_horizontal_top_facet"
+      ]
+    },
+    {
+      "target": "test:reset",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/reset-efc0fe1b19746466",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/reset-efc0fe1b19746466",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "born_nodes_get_their_new_display_origin_after_reset",
+        "display_reset_preserves_every_physical_history_for_mc_and_mcc",
+        "explicit_state_reset_reequilibrates_without_resetting_constitutive_displacement",
+        "mcc_reset_uses_explicit_admissible_pc_and_void_ratio_then_forms_new_history"
+      ]
+    },
+    {
+      "target": "test:ground_initialization",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/ground_initialization-a6c4fbde7121dd90",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/ground_initialization-a6c4fbde7121dd90",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "detached_interface_and_sloping_layer_are_rejected",
+        "material_and_region_order_do_not_determine_assignment",
+        "rejects_yield_inconsistent_ocr_void_ratio_wrong_material_and_geometry",
+        "saturated_two_layer_k0_matches_analytic_stress_and_fe_equilibrium",
+        "surcharge_and_dry_state_have_correct_applied_resultant",
+        "vertical_ocr_requires_pc_and_is_not_silently_an_mcc_ratio"
+      ]
+    },
+    {
+      "target": "test:rigidity",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/rigidity-580fee6495972f54",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/rigidity-580fee6495972f54",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "contact_alone_never_restrains_global_motion_after_large_coordinate_translation",
+        "contact_support_counts_open_normal_stick_and_one_sided_limit_modes",
+        "explicit_contact_supported_column_releases_upper_side_without_artificial_clamps",
+        "inactive_contact_histories_are_validated_before_reporting",
+        "rigid_audit_rejects_malformed_geometry_and_nonlocal_or_nonorthogonal_transforms",
+        "shared_edge_and_vertex_retain_real_hinge_modes",
+        "weak_early_rigid_rows_are_repivoted_without_inventing_extra_constraints"
+      ]
+    },
+    {
+      "target": "test:hardening_material",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/hardening_material-4e9bf35291711845",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/hardening_material-4e9bf35291711845",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "a_dilative_return_can_recover_a_negative_elastic_predictor_without_pressure_clipping",
+        "closed_nonproportional_elastic_cycles_leave_no_residual_stress_or_work",
+        "invalid_pressure_history_and_failed_trials_do_not_modify_committed_idh_state",
+        "pressure_dependent_unloading_and_isotropic_hardening_follow_independent_integrals",
+        "shear_cap_corner_rotation_and_complete_increment_tangent_are_consistent",
+        "shear_hardening_constant_pressure_has_a_closed_form_and_elastic_reversal"
+      ]
+    },
+    {
+      "target": "example:wet_joint_diagnosis_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_diagnosis_probe-a80190db19ca0e63",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_diagnosis_probe-a80190db19ca0e63",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:srm_bound",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/srm_bound-9060e37beb80996c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/srm_bound-9060e37beb80996c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "body_weight_and_all_six_reactions_enter_the_first_moment",
+        "certificate_is_rotation_translation_and_nonassociated_flow_invariant",
+        "davis_uses_its_effective_strength_instead_of_the_untransformed_cohesion",
+        "distributed_or_singular_supports_cannot_be_misreported_as_physical_uppers",
+        "invalid_or_heterogeneous_inputs_never_become_an_upper_candidate",
+        "mean_stress_agrees_with_an_independent_elastic_global_fem_and_tet10",
+        "rankine_exclusion_is_distinct_from_mc_and_not_an_admissibility_sufficiency_claim",
+        "uniaxial_closed_form_excludes_only_after_the_strength_limit_without_a_solver_failure",
+        "unknown_water_policy_and_overflow_do_not_create_physical_exclusion"
+      ]
+    },
+    {
+      "target": "test:hydrostatic_volume",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/hydrostatic_volume-c4e9ce96ee39242d",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/hydrostatic_volume-c4e9ce96ee39242d",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "curved_mapping_and_invalid_data_do_not_take_affine_shortcut",
+        "fully_wet_quadratic_force_matches_polynomial_material_quadrature",
+        "partial_water_virtual_work_matches_analytic_pressure_integral"
+      ]
+    },
+    {
+      "target": "test:joint_birth",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_birth-d87f59ab377a2288",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_birth-d87f59ab377a2288",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "body_death_then_dry_rebirth_keeps_the_removed_slip_generation_frozen",
+        "death_freezes_slip_and_dissipation_and_rebirth_has_no_old_reference",
+        "dry_new_mc_body_and_contact_have_separate_births",
+        "every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected",
+        "every_nodal_projection_and_cone_rejection_is_checked_before_birth",
+        "mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy",
+        "mode_b_birth_reference_closes_by_pressure_over_kn",
+        "omitted_policy_active_soil_birth_and_wet_crack_tip_combinations_stay_rejected",
+        "water_birth_rebuilds_face_loads_and_rehashed_tampering_is_refused"
+      ]
+    },
+    {
+      "target": "test:srm_search_control",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/srm_search_control-00de00e20ec3e653",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/srm_search_control-00de00e20ec3e653",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "changed_material_mesh_full_case_specification_and_saved_history_are_rejected",
+        "distributed_frictional_virtual_upper_survives_all_restarts_without_history_transfer",
+        "genuine_nonlinear_failure_after_restarts_is_unknown_and_never_an_upper",
+        "observer_failure_leaves_last_saved_snapshot_valid_and_cannot_create_a_trial_failure",
+        "original_geostatic_and_each_factor_keep_their_own_accepted_checkpoint",
+        "restart_every_increment_matches_uninterrupted_closed_form_search_and_all_scientific_history"
+      ]
+    },
+    {
+      "target": "test:srm_virtual_work",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/srm_virtual_work-b988d15984a66d35",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/srm_virtual_work-b988d15984a66d35",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "actual_frictional_plastic_fem_internal_work_matches_external_work_and_is_not_excluded",
+        "actual_global_elastic_fem_and_independent_affine_solution_have_identical_virtual_work",
+        "davis_effective_strength_and_rankine_superset_are_explicit_and_conservative",
+        "distributed_support_bounds_match_the_closed_form_for_tet4_and_tet10",
+        "even_tiny_supported_displacement_and_unsupported_oblique_reactions_cannot_make_an_upper",
+        "fresh_search_uses_a_verified_distributed_support_upper_and_retains_honest_numerical_unknowns",
+        "full_3d_tensor_rotation_preserves_work_capacity_and_eigenvalue_order",
+        "heterogeneous_material_capacities_are_integrated_without_an_average_yield_domain",
+        "invalid_data_zero_strain_and_tresca_nonzero_trace_never_become_an_upper",
+        "one_bad_gp_is_rejected_even_when_the_mean_strain_is_strictly_dual_feasible",
+        "positive_scaling_and_streamed_point_observer_preserve_the_exclusion",
+        "real_nonlinear_failure_with_unavailable_virtual_fields_stays_indeterminate_without_an_upper"
+      ]
+    },
+    {
+      "target": "test:joint_crack_tip",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_crack_tip-78200cd55746d627",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_crack_tip-78200cd55746d627",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "a_branched_front_cannot_be_hidden_in_three_separate_joint_definitions",
+        "compression_opening_and_reversed_shear_have_consistent_tangents",
+        "declared_tip_cancels_exactly_and_preserves_virtual_work_force_and_moment",
+        "declared_tip_rejects_geometric_ambiguity_even_after_an_opposing_face_was_used",
+        "rehashed_checkpoint_cannot_change_tip_surface_or_owning_sides",
+        "shared_tip_edge_keeps_one_open_hinge_and_contact_only_closes_it_in_compression",
+        "undeclared_partial_wrong_owner_midpoint_duplicate_and_fully_tied_faces_are_rejected"
+      ]
+    },
+    {
+      "target": "example:hydrostatic_volume_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/hydrostatic_volume_probe-1d0a8c6197cec777",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/hydrostatic_volume_probe-1d0a8c6197cec777",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:stage_job",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/stage_job-86c45b9b08a064d3",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/stage_job-86c45b9b08a064d3",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "a_different_running_solver_cannot_claim_a_valid_foreign_solver_snapshot",
+        "a_stop_request_for_another_job_is_refused_and_cannot_pause_the_running_job",
+        "cli_pause_and_separate_process_resume_preserve_every_non_time_result_field",
+        "durable_checkpoint_survives_abrupt_owned_child_exit_and_recovers_exact_history",
+        "durable_interval_and_recovery_tampering_are_rejected_without_claiming_an_output",
+        "durable_slots_and_snapshot_fork_preserve_all_non_time_result_fields",
+        "immutable_input_changes_existing_output_and_second_execution_are_refused_before_solving",
+        "invalid_material_and_numerical_failure_never_publish_success_or_a_false_checkpoint"
+      ]
+    },
+    {
+      "target": "example:nc_input_roundtrip",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/nc_input_roundtrip-c760b8169d73cc33",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/nc_input_roundtrip-c760b8169d73cc33",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:joint_global_step",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_global_step-81cecb1199552153",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_global_step-81cecb1199552153",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "absent_and_null_control_preserve_the_pinned_legacy_case_hash",
+        "adaptive_global_equilibria_keep_anchors_reject_immutably_and_resume_exactly",
+        "invalid_resolution_and_unsupported_stage_are_refused"
+      ]
+    },
+    {
+      "target": "example:wet_joint_spatial_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_spatial_probe-e1f7e018bc40afc9",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_spatial_probe-e1f7e018bc40afc9",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:surface_projection",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/surface_projection-07674381c5083118",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/surface_projection-07674381c5083118",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "curved_triangle_rain_projection_crossing_zero_normal_matches_exact_integral",
+        "planar_projection_handles_vertical_downward_and_scaled_shifted_geometry"
+      ]
+    },
+    {
+      "target": "test:joint_path_error",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joint_path_error-a0662a1f1880e57f",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joint_path_error-a0662a1f1880e57f",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly",
+        "path_error_option_is_explicit_and_separate_from_legacy_switch_control"
+      ]
+    },
+    {
+      "target": "test:water_stages",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/water_stages-3fb3c9323e7b3cb4",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/water_stages-3fb3c9323e7b3cb4",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "hydrostatic_drawdown_flooding_and_buoyant_excavation_follow_column_theory",
+        "intermediate_water_head_rebuilds_actual_pressure_and_does_not_interpolate_endpoint_loads",
+        "plastic_water_history_and_partial_excavation_resume_exactly_and_reject_tampering"
+      ]
+    },
+    {
+      "target": "example:a01_joint_linear_replay",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/a01_joint_linear_replay-112aa7bc955f13dd",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/a01_joint_linear_replay-112aa7bc955f13dd",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:joints",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/joints-e99bc4c299ec7e6c",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/joints-e99bc4c299ec7e6c",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "contact_normal_points_from_side_a_into_side_b",
+        "excavation_of_contact_side_archives_history_and_releases_only_its_old_force",
+        "global_joint_closure_sliding_opening_recontact_cutback_and_restart",
+        "interface_assembly_tangent_matches_independent_direction_and_rejects_bad_layouts",
+        "opposing_tri3_tri6_transfer_three_direction_traction_work_and_moment"
+      ]
+    },
+    {
+      "target": "example:joint_combo_structure_loads",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/joint_combo_structure_loads-ccd04a5e94b88e7e",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/joint_combo_structure_loads-ccd04a5e94b88e7e",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:low_preload_cut",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/low_preload_cut-902e418cfdf4e9db",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/low_preload_cut-902e418cfdf4e9db",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "low_preload_nc_cut_checkpoint_resumes_exact_prefix_and_rejects_preload_change",
+        "low_preload_nc_partial_cut_freezes_removed_plastic_and_contact_history"
+      ]
+    },
+    {
+      "target": "test:mc_epoch_cli",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_epoch_cli-70a201379a7c751a",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_epoch_cli-70a201379a7c751a",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "material_failure_rejected_prefix_recovers_without_inventing_stability_bounds",
+        "owned_abrupt_exit_recovers_the_last_complete_plastic_epoch",
+        "product_cli_pause_recovery_and_durable_checkpoint_match_continuous",
+        "stop_before_run_one_shot_immutable_inputs_and_pointer_paths_are_guarded"
+      ]
+    },
+    {
+      "target": "bin:soil-fem-3d",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/soil_fem_3d-dd74fdf2150e726e",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/soil_fem_3d-dd74fdf2150e726e",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mc_fem",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_fem-64ada5be027bc208",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_fem-64ada5be027bc208",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "mc_checkpoint_restores_nonzero_plastic_history_and_rejects_state_model_mismatch",
+        "mc_initial_k0_has_no_fictitious_ocr_and_mcc_json_remains_compatible",
+        "mc_tet4_and_tet10_global_newton_match_series_column_theory",
+        "mcc_and_mc_share_one_mesh_without_sharing_history_fields"
+      ]
+    },
+    {
+      "target": "example:wet_joint_history_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_history_probe-f869ddbe9ec2cb7b",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/wet_joint_history_probe-f869ddbe9ec2cb7b",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    },
+    {
+      "target": "test:mc_parameter_global",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/deps/mc_parameter_global-39205c4cd2870e30",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/deps/mc_parameter_global-39205c4cd2870e30",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": [
+        "invalid_epoch_retains_parameters_and_history_and_rejects_wrong_origin",
+        "post_load_tresca_weakening_matches_confined_compression_closed_form",
+        "unit_epoch_preserves_loaded_plastic_origin_and_independent_controllers"
+      ]
+    },
+    {
+      "target": "example:joint_a02_history_probe",
+      "executable": "/workspace/solidcraft_soil_analysis/target/release/examples/joint_a02_history_probe-ee9ef930fd2f672b",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/joint_a02_history_probe-ee9ef930fd2f672b",
+        "--list",
+        "--format",
+        "terse"
+      ],
+      "test_names": []
+    }
+  ]
+}
