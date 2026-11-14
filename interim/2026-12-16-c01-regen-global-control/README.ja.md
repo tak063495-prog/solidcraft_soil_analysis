@@ -175,4 +175,7 @@ fmt・clippy（全target、警告をエラー）・locked release buildは成功
 旧証拠の欠落をskipで回避せず、必要なアーカイブを取得してから全件を実行する。
 単一主因や普遍的な因果比率を同定できなかったことも失敗記録に残す。
 
+
+検証JSONは固定commit `b1c87de7c31b016a6f31e0fbb619ea092066f482`へ保存してから台帳へ登録した。登録後のP6監査は整合性あり（289 sources）、P6関連76試験も成功・失敗/未実行/skip 0。これは全件748件への追加計上ではない。原文書・旧証拠を再封印せず保持した。最終ログSHAは`validation/final-logs.sha256`。
+
 C-01は未達、passed=false。
