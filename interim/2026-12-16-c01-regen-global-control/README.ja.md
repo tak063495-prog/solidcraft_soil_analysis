@@ -8,7 +8,7 @@ PR #13、`codex/plastic-spatial-convergence`、起点 `e8aebaba9f08655b626f8b6ac
 確認日: 2026-11-14（作業フォルダの日付は依頼された記録識別子）。検索断片と本文確認を区別する。以下は逐語引用ではなく短い要約。文献を本コードの精度証明に使わない。
 
 - Yastrebov, *Numerical Methods in Contact Mechanics* (2013), 著者公開本文 §4.1 の Fig.4.6、§5.2 pp.203–209: 2接線の摩擦円、trial traction、法線圧に依存する半径、trial 方向への radial return を確認。曲線のすべり経路を図示する。今回は円弧・方向転換の比較量（ベクトルすべり、traction、散逸）を選ぶ根拠に使う。§5.1の反復安定性を時間積分精度の証明へ転用しない。https://www.yastrebov.fr/LECTURES/Yastrebov_NMCM_Wiley_ISTE.pdf
-- Puso & Laursen, *A mortar segment-to-segment frictional contact method for large deformations*, CMAME 193 (2004) 4891–4913, DOI 10.1016/j.cma.2004.06.001。本文確認は LLNL 著者稿 UCRL-JRNL-200667（2003-10-30）、§1, §3, §6。数値的に客観的なすべりを導入し、開閉・stick/slip の活動制約決定を別の難点として扱う。今回は座標回転整合性と全体開閉対照を別に観測する根拠。mortar の結果を本コードへ直接移植しない。https://digital.library.unt.edu/ark%3A/67531/metadc1410676/m2/1/high_res_d/15013715.pdf
+- Puso & Laursen, *A mortar segment-to-segment frictional contact method for large deformations*, CMAME 193 (2004) 4891–4913, DOI 10.1016/j.cma.2004.06.001。本文確認は LLNL 著者稿 UCRL-JRNL-200667（2003-10-30）、§1, §6。数値的に客観的なすべりを導入し、開閉・stick/slip の活動制約決定を別の難点として扱う。今回は座標回転整合性と全体開閉対照を別に観測する根拠。mortar の結果を本コードへ直接移植しない。https://digital.library.unt.edu/ark%3A/67531/metadc1410676/m2/1/high_res_d/15013715.pdf
 - Abaqus 2026 公式 *FRIC*, DSLIP/SLIP, SED/SFD, DROT: 非回復すべりの増分／累積、弾性エネルギー／増分摩擦散逸、接線基底回転の扱いを区別している。今回は各量の履歴と回転整合性を分離して監査する。DROT の3次元剛体面に関する説明を一般大変形の証明にしない。https://docs.software.vt.edu/abaqusv2026/English/SIMACAESUBRefMap/simasub-c-fric.htm
 - Abaqus 2025 公式 *Energy computations in a contact analysis*, energy definitions と Results: 接触ばねの回復可能エネルギー、累積散逸、開閉や法線回転による接触不連続仕事を区別。刻みと力釣合いの精度がエネルギーへ影響する。今回は D と E を別々に評価し、記帳差を全体解の因果説明と同一視しない根拠。https://docs.software.vt.edu/abaqusv2025/English/SIMACAEEXARefMap/simaexa-c-contactenergy.htm
 - Abaqus 2026 公式 *Convergence Criteria for Nonlinear Problems*, Severe Discontinuity Iterations: 接触切替に関する判定と平衡残差の両方を扱う。今回は元の残差基準を維持して新規全体平衡を計算し、局所再生で代用しない根拠。文書の刻み制御は今回追加しない。https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-convergcriteria.htm
@@ -169,7 +169,7 @@ C-02〜C-04、NC-01、P6、A/B各項も未達のまま。
 文書末尾比較は`read_text`と実CRLFコピーで検査し、封印のSHAは生バイトのまま。
 P6-01台帳は旧登録を再生成せず、固定commit・SHA-256・Git blob・全boolean/null pointerを追記する。
 
-fmt/clippy/locked release build、Rust全件（all-targetsとdoc）、Python全発見IDの7群について、確定件数・終了コード・生ログを`validation.json`と`validation/`へ保存する。準備中の実行は最終件数へ二重計上しない。push後の新先端Windows CIは未確定で、Linux成功を転用しない。
+fmt・clippy（全target、警告をエラー）・locked release buildは成功。Rust全466件、Python全748件（追加9件を含む）が成功し、失敗・未実行・skipは各0件。Rust docは0件、filtered-outも0件。7群の実行IDの和集合が最終発見748 IDと重複なく一致することを検証し、確定件数・終了コード・生ログを`validation.json`と`validation/`へ保存した。準備中の実行は最終件数へ二重計上しない。push後の新先端Windows CIは未確定で、Linux成功を転用しない。
 
 通信切断・準備中の試験失敗・PowerShellの書込先設定不足を含む準備上の失敗は`failure-record.json`とvalidationログに保持する。
 旧証拠の欠落をskipで回避せず、必要なアーカイブを取得してから全件を実行する。
