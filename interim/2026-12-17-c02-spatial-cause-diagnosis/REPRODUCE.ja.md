@@ -29,6 +29,10 @@ $Old='interim/2026-11-19-wet-joint-spatial-convergence'
 
 Linux/WSLではvenvと実行版名から`.exe`を外す。クラウド環境のactivationは `/workspace/soil-environment/activate.sh`。途中ファイルは `work/` に置く。
 
+Linuxの全件試験にも既存のPowerShell試験が含まれる。今回と前回C-01で使ったportable 7.5.4を `work/powershell-7.5.4/` へ配置し、PATHに追加した。公式packageは [PowerShell 7.5.4 linux-x64](https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz)、SHA-256は `1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef`。`XDG_CONFIG_HOME`・`XDG_DATA_HOME`・`XDG_CACHE_HOME`・`DOTNET_CLI_HOME`・`DOTNET_BUNDLE_EXTRACT_BASE_DIR` はwork配下へ向け、HOMEは変更しない。NC固有の環境変数・設定は変更しない。PowerShell未配置による最初の通常群のskipは正式成功にせず、ログを保持して再実行した。これらは既存の小さいPowerShell単体試験で、大規模PC計算の実行ではない。
+
+今回の再実行で、既存の `test_main_thread_runtime_sigterm_reaps_real_child` がworker-pidの存在だけを待ち、内容書込み前の空文字を読む競合が一度発生した。失敗した全群ログを `validation/retained-core-pid-race/` に保持し、該当単独試験と全core0を逐次で再実行した。fixture・アサーション・実装を変えずに通ったが、競合を修正したとは扱わない。再現時にもログと全件結果を分けて記録する。
+
 通常の全件試験は既存CIの7 Python群・3 Rust群の分割を維持する。C-01専用群だけがZIPを絞り込む既存CI設定は変更していない。通常core群には新しい `evidence.zip.part*` が必要。全件試験前には少なくとも、各試験が読む旧アーカイブと `interim/2026-12-05-nc-independent-arc-residual/reference400-fixture.zip` の存在・SHAを確認する。ZIP除外を使ったcheckoutの後にfixtureを取り忘れない。未使用の `interim/2026-11-10-nc-postfold-branches/evidence.tar.gz.part*` だけは従来どおり除外できる。これは試験のskipではない。
 
 この作業では巨大な履歴一括fetchとbulk lazy fetchを中断し、固定commitのtreeから必要ファイルを選び、raw配信の生バイトをGit blob SHA-1と照合して取得した。旧アーカイブは改変しない。取得結果と固定台帳の17 commitの取得を `validation/` に記録した。通信・取得未完の失敗も残した。
@@ -53,6 +57,7 @@ python "$D/c02diag_extract.py" --output $Saved
 if ($LASTEXITCODE -ne 0) { throw 'old seal extraction failed' }
 python "$D/c02diag_driver.py" --mode measure --source $Saved --output work/NEW-c02-measure
 python "$D/c02diag_label_study.py" --source $Saved --output work/NEW-c02-labels
+python "$D/c02_label_mask_robustness_check.py" --labels work/NEW-c02-labels --output work/NEW-c02-label-mask-check
 python "$D/c02diag_replay.py" --source $Saved --output work/NEW-c02-replay
 ```
 

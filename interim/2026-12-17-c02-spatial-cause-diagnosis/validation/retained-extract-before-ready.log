@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-17-c02-spatial-cause-diagnosis/c02diag_extract.py", line 87, in <module>
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);a=p.parse_args();extract(a.output.resolve())
+                                                                                                                       ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-17-c02-spatial-cause-diagnosis/c02diag_extract.py", line 60, in extract
+    if p.stat().st_size!=item['bytes']:raise ValueError('ZIP part length mismatch')
+       ~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 515, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-11-19-wet-joint-spatial-convergence/evidence.zip.part000'
