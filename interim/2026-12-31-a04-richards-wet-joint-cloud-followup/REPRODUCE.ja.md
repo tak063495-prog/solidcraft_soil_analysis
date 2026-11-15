@@ -22,7 +22,11 @@ A-02/A-03追補のgit-recoveryと、今回validation/git-recoveryの実行ログ
 
 Python 3.13とrequirementsの既存固定版、Rust 1.99.1/rustfmt/clippyを使う。
 PowerShellがないLinuxでは公式SHA照合済みportable 7.5.4をwork/へ置ける。
-NC固有の環境設定を変更せず、PowerShell不在をskipで通さない。
+NC固有の環境設定を変更せず、PowerShell不在をskipで通さない。 LinuxのHOMEが読取専用の場合はHOMEを変更せず、
+`XDG_CACHE_HOME` / `XDG_CONFIG_HOME` / `XDG_DATA_HOME` をそれぞれwork/配下の書込可能な
+cache/config/dataへ指定してからPowerShell試験を実行する。これらは一般のランタイム格納先で、NC固有設定ではない。
+証拠再展開用の一時空き容量も必要。今回の初回全件は空き不足で失敗し、旧作業ファイルのGit blob一致を確認した上で
+再取得可能な単一blob promisorキャッシュだけを整理して約19.3GBを確保した。旧のファイル/参照値/コミットは保持した。
 
 ```powershell
 $Py = '.venv/Scripts/python.exe'

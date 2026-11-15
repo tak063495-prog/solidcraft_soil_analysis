@@ -51,7 +51,7 @@ C-04は別の12 Tet4/16節点/6接触GP、規定変動水位32・力学32・13�
 
 ノルムは時刻→物理要素/面→成分C-order、`math.fsum`。
 元の分母max(||reference||,1e-12)、相対場1e-7、節点力1e-10 kN等を保持する。
-Windowsの集計順差を許容値で吸収しない。仕事は元の端点仕事と固定順節点積を分ける。
+Windowsの集計順差を許容値で吸収しない。仕事は元の端点仕事と固定順節点積を分ける。`fixed_nodal_*`は全保存変位差からの観測積で、CAD配置の段差も含む。配置を除く元の`nodal_*_work_increment`/仕事の生値は保持し、この観測積を物理仕事の受入量へ置換しない。
 界面水頭・水量がない乾燥/処方JOINTではnullを0にしない。
 
 ## (1) h_z × dt × VG体積積分
@@ -191,9 +191,30 @@ A-01〜A-03、B-01〜B-03、C-01〜C-04、NC-01、P6も全体未達のまま。
 P6-01にはacceptance/measurements/validationを固定コミット・SHA256・Git blob・型付きbool/nullで追記登録する。
 旧ledgerを保持し、同じ作業で監査器の台帳SHAを更新する。SOURCE_NOT_INVENTORIEDを残さない。
 CIへ追加するのは軽い契約・固定順・実CRLF・封印SHA試験だけ。rust-integration-1へ重い追加は0。
-filtered取得・中断packの完全オブジェクト回収・固定blob取得のログも保持し、必要アーカイブの欠落をskipで回避しない。
+filtered取得・中断packの完全オブジェクト回収・固定blob取得のログも保持し、必要アーカイブの欠落をskipで回避しない。起点9,597パス中、旧9,521実ファイル・28,660,120,997 bytesは元Git blobと完全一致。既存CI除外のpostfold 74パスはGit参照を保持し、未展開のまま。残る既存2ファイルの変更は台帳末尾と監査器pinだけである。
 
-fmt/clippy/buildとRust全件・Python全件を実行し、確定件数はvalidation.jsonに保存する。ソフトウェア試験の成功をA-04の数値合格へ読み替えない。
+fmt、全ターゲットclippy、locked release全ターゲットbuildは終了0。
+Rust全ターゲット＋docは467件成功、Pythonはtoolsを含む既存7群の902件成功。
+失敗/error・未実行・skip・ignore・filter除外・expected-failure・unexpected-successは0。
+全発見IDと実行IDが一致し、欠落/重複0。全件中の1,552コード/設定ソースは開始/終了でSHA一致した。
+新規9件の単独スモークとPowerShell環境復旧後のschema6件、登録後再確認は全件の固有件数へ加算しない。
+
+|Python群|成功|実測秒（discoveryを含む）|
+|---|---:|---:|
+|python-core-0|408|379.607|
+|python-core-1|470|331.992|
+|python-mean-evidence|4|884.821|
+|python-spatial-evidence|4|139.886|
+|python-c01-switch|4|60.165|
+|python-c01-path|4|89.766|
+|python-c01-cause|8|77.619|
+
+ソフトウェア試験の成功をA-04の数値合格へ読み替えない。
+
+初回Python全件は、PowerShellの読取専用HOMEキャッシュと一時ディスク不足で不成功となった。
+全ログをretained-first-pythonへ保持し、成功へ換算しない。HOME・NCコード/設定は変更せず、一般のXDG格納先と
+再取得可能なGitキャッシュの整理で復旧する。旧の作業ファイルはGit blob SHA照合後もそのまま保持した。
+ストレージだけを修正した途中再試行も中断記録を保持し、全件の固有件数へ二重加算しない。
 
 当該push後のWindows CIは未確定。
 

@@ -1,0 +1,29 @@
+test_actual_coordinates_required_without_interpolation (test_c01_cause_diagnosis.CauseDiagnosticTests.test_actual_coordinates_required_without_interpolation) ... ok
+test_constant_pressure_return_and_work_balance (test_c01_cause_diagnosis.CauseDiagnosticTests.test_constant_pressure_return_and_work_balance) ... ok
+test_contact_rules_preserve_area_and_quadratic_patch (test_c01_cause_diagnosis.CauseDiagnosticTests.test_contact_rules_preserve_area_and_quadratic_patch) ... ok
+test_document_endings_accept_real_crlf (test_c01_cause_diagnosis.CauseDiagnosticTests.test_document_endings_accept_real_crlf) ... ok
+test_fixed_order_weighted_norm_has_analytic_value (test_c01_cause_diagnosis.CauseDiagnosticTests.test_fixed_order_weighted_norm_has_analytic_value) ... ok
+test_global_vector_basis_rotation_invariance (test_c01_cause_diagnosis.CauseDiagnosticTests.test_global_vector_basis_rotation_invariance) ... ok
+test_opening_endpoint_is_not_internal_dissipation_quadrature (test_c01_cause_diagnosis.CauseDiagnosticTests.test_opening_endpoint_is_not_internal_dissipation_quadrature) ... ok
+test_sealed_diagnostic_integrity_keeps_original_decision (test_c01_cause_diagnosis.CauseDiagnosticTests.test_sealed_diagnostic_integrity_keeps_original_decision) ... ERROR
+
+======================================================================
+ERROR: test_sealed_diagnostic_integrity_keeps_original_decision (test_c01_cause_diagnosis.CauseDiagnosticTests.test_sealed_diagnostic_integrity_keeps_original_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c01_cause_diagnosis.py", line 89, in test_sealed_diagnostic_integrity_keeps_original_decision
+    result = evidence.replay(Path(tmp)/'evidence')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-13-c01-cause-diagnosis/c01_cause_evidence.py", line 52, in replay
+    data = extract(output/'diagnostic')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-13-c01-cause-diagnosis/c01_cause_evidence.py", line 43, in extract
+    dest.parent.mkdir(parents=True,exist_ok=True)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/tmp/tmpuo0f6qm1/evidence/diagnostic/retained-failures/initial-experiments/switch-n32-q4'
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.516s
+
+FAILED (errors=1)

@@ -1,0 +1,39 @@
+test_absent_control_keeps_every_independent_numerical_field_exact (test_c01_global_step_control.GlobalStepControl.test_absent_control_keeps_every_independent_numerical_field_exact) ... ok
+test_document_pc_command_and_decision_survive_crlf (test_c01_global_step_control.GlobalStepControl.test_document_pc_command_and_decision_survive_crlf) ... ERROR
+test_reference_owns_its_rollback_and_prescribed_coordinates (test_c01_global_step_control.GlobalStepControl.test_reference_owns_its_rollback_and_prescribed_coordinates) ... ok
+test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused (test_c01_global_step_control.GlobalStepSavedEvidence.test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused) ... ERROR
+
+======================================================================
+ERROR: test_document_pc_command_and_decision_survive_crlf (test_c01_global_step_control.GlobalStepControl.test_document_pc_command_and_decision_survive_crlf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c01_global_step_control.py", line 51, in test_document_pc_command_and_decision_survive_crlf
+    with tempfile.TemporaryDirectory() as tmp:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/tempfile.py", line 887, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/tempfile.py", line 381, in mkdtemp
+    _os.mkdir(file, 0o700)
+    ~~~~~~~~~^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/tmp/tmp1cvrd9_f'
+
+======================================================================
+ERROR: test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused (test_c01_global_step_control.GlobalStepSavedEvidence.test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c01_global_step_control.py", line 65, in test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused
+    result=evidence.replay(evidence.extract(Path(tmp)/'replay'))
+                           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/evidence.py", line 37, in extract
+    target=output/path;target.parent.mkdir(parents=True,exist_ok=True)
+                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/tmp/tmpihrv9gtm/replay/paths/g256/restart-checkpoint-0896'
+
+----------------------------------------------------------------------
+Ran 4 tests in 12.753s
+
+FAILED (errors=2)
