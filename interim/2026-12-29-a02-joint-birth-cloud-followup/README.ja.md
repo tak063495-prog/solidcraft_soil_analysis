@@ -137,7 +137,7 @@ R=nativeの最大分割24、R=independentは12となり、**実際に接触分�
 ### (3) ULP・演算順・別ビルド/線形経路
 
 [cone-summary.json](cone-summary.json)と封印内の要求入力・生投影・全応答を参照。
-局所36要求、節点投影44要求、回転した境界126要求をrelease/dev両方で新規実行した。
+局所36要求、節点投影44要求、回転した境界近傍126要求をrelease/dev両方で新規実行した。
 206要求全てでrelease/dev応答は厳密一致し、OSを跨ぐ再現と区別する。
 単純な摩擦境界（30,0,-100および18,24,-100 kPa）と法線0境界は、
 -8/-4/-2/-1/0 ULPで既存則が受理、+1/+2/+4/+8で拒否した。
@@ -149,9 +149,11 @@ R=nativeの最大分割24、R=independentは12となり、**実際に接触分�
 独立GELSD/GELSSのtraction差は最大3.694822225952521e-13 kPa、全体cone判定の不一致0。
 投影を修正・クリップして境界を受理した結果ではない。
 
-回転126要求のうち6件では、**同じ入力で成分の逐次加算順を変えただけの観測判定**が変わった。
+回転した境界近傍126要求のうち6件では、**同じ入力で成分の逐次加算順を変えただけの観測判定**が変わった。
 摩擦超過の順序幅は最大7.105427357601002e-15 kPa。
 入力ULPでの不連続と、同一入力での丸め順依存を分けて観測した。
+要求力は全非ゼロ成分の同方向ULP対照と、traction x成分だけを動かしてから生成する対照。
+6順は法線内積とshearノルムの成分順を同時に置換した観測であり、両者の個別割合や実OS差の確定ではない。
 観測器の初版はPython3.13 builtin sumの補償付き集計だったため順序対照に不適切で、初版を保持したうえで明示的な逐次加算へ直した。
 既定カーネルの判定式・許容値・クリップを変更したのではない。
 
@@ -199,4 +201,31 @@ rust-integration-1への重い試験追加は0件。全Pythonの前に必要な�
 
 A-01、A-03、A-04、B-01〜B-03、C-01〜C-04、NC-01、P6は未達のまま。
 PC手順は [REPRODUCE.ja.md](REPRODUCE.ja.md)。PC実行はしていない。
+
+## Linux全件検証の確定記録
+
+fmt、probe/coneのrustfmt、clippy（locked/all-targets/-D warnings）、release全ターゲットbuildは終了0。
+**Rust 467件、Python 882件（toolsを含む）成功**。
+失敗/error・未実行・skip・ignored・filtered・expected-failure・unexpected-successは全て0。
+全発見/割当/実行IDが一致し、重複/欠落0。準備試行や単独3件/1件/10件、登録後の再確認を加算しない。
+
+|Python群|成功|実測秒（discovery込み）|
+|---|---:|---:|
+|python-c01-cause|8|63.194|
+|python-c01-path|4|79.493|
+|python-c01-switch|4|49.508|
+|python-core-0|399|404.710|
+|python-core-1|459|368.167|
+|python-mean-evidence|4|843.484|
+|python-spatial-evidence|4|125.032|
+
+全Python前後の1514コード/設定sourceはSHA一致。
+[validation.json](validation.json)のpassed=trueはソフトウェア検証だけで、A-02の受入を上書きしない。
+新封印668,660,830 bytes・27 part・2,675 entryの全SHAを新規展開で再検査し、主要6派生ファイルをバイト再現した。
+HTTP/2切断、pack prefix回収、単体取得の認証準備、sparse判定のconeモード不一致はvalidation/git-recovery/に保持した。
+原Git blobと照合済みの作業ファイルを保ち、そのblobだけのpromisor取得キャッシュ約24.8GBを整理した。
+生産Rust、NCコード/設定、旧数値/失敗/封印は変更していない。
+確定validationは固定コミットにした後でP6へ登録し、後段の監査・関連試験を別記する。
+**push後のWindows CIは未確定**。
+
 A-02は未達、passed=false。
