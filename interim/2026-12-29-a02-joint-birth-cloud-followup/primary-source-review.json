@@ -1,0 +1,17 @@
+{
+  "session_date_jst": "2026-11-15",
+  "folder_date_is_user_requested_label": true,
+  "prior_reviews": ["interim/2026-12-21-a02-joint-birth-cause-diagnosis/README.ja.md", "interim/2026-12-28-a01-joint-combo-cloud-followup/primary-source-review.json"],
+  "external_reference_values_introduced": false,
+  "book_body_claims_invented": false,
+  "sources": [
+    {"title":"SIMULIA Abaqus 2026, Element and Contact Pair Removal and Reactivation", "url":"https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-elemremovrepl.htm", "access":"本文取得・再確認", "confirmed":"strain-freeとwith-strainを区別し、前者は再活性化配置で履歴をリセットする。初期応力付き再活性化は別条件。", "use":"初期投影と後続接触積分を別観測にする。他製品の再活性化仕様を採用しない。"},
+    {"title":"SIMULIA Abaqus 2026, Solving Nonlinear Problems", "url":"https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-nonlineareqns.htm", "access":"本文取得、Automatic Incrementation Control", "confirmed":"増分末の平衡反復と、反復の状況に基づく増分の再試行・自動調整を区別する。", "use":"Newton方向と接触内分割・全体入力格子を分けて記録。他製品の既定数値は導入しない。"},
+    {"title":"SIMULIA Abaqus 2026, Convergence Criteria for Nonlinear Problems", "url":"https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-convergcriteria.htm", "access":"本文取得、12-28の確認を引継ぎ", "confirmed":"予測の外挿、接触の不連続、反復・line search・刻み調整は異なる制御。", "use":"P×R交換を測る。外挿を新しい合否に使わない。"},
+    {"title":"PLAXIS 3D 2025.1 Reference Manual", "url":"https://files.seequent.com/PLAXIS/Manuals/PLAXIS_3D/English/PLAXIS_3D_2_Reference%20Manual.pdf", "access":"検索断片のみ。本文取得はサイズ上限24643812 bytesで失敗。今回の自動刻み節は未取得・書誌だけ。", "use":"12-21で取得済みのVersion 8の内容を維持し、現在版の再活性化・自動刻みの新しい根拠にはしない。"},
+    {"title":"Wriggers, Computational Contact Mechanics, 2nd ed., 2006", "url":"https://doi.org/10.1007/978-3-540-32609-0", "access":"再取得はredirect先不可。12-21/12-28の書誌・目次のみを引継ぎ。本文未取得・書誌だけ。", "use":"具体的な活動集合更新式や予測子の根拠にはしない。"},
+    {"title":"Laursen, Computational Contact and Impact Mechanics", "url":"https://doi.org/10.1007/978-3-662-04864-1", "access":"再取得不可。12-28の書誌/公開要旨のみを引継ぎ。本文未取得・書誌だけ。", "use":"未確認のNewton更新式・定理を引用しない。"},
+    {"title":"Higham, Accuracy and Stability of Numerical Algorithms, 2nd ed., 2002, Chapter 4 Summation", "url":"https://epubs.siam.org/doi/10.1137/1.9780898718027.ch4", "access":"出版社の公開本文§4.1冒頭まで取得。章全体は未取得。", "confirmed":"再帰的加算の丸め誤差と結果は集計順に依存する。pairwise等の別の集計法がある。", "use":"入力ULP変化とは別に、同じ入力のノルム集計順を観測。既定の判定式を置換しない。"},
+    {"title":"Higham, The Accuracy of Floating Point Summation, SIAM J. Sci. Comput. 14(4), 783–799, 1993", "url":"https://nhigham.com/wp-content/uploads/2023/10/high93s.pdf", "doi":"10.1137/0914050", "access":"著者公開の本文17ページ取得、§2と結論を確認", "confirmed":"集計順に依存する誤差上界と実際の誤差は区別され、単一の集計法が一様に最良とはいえない。", "use":"固定順fsumによる観測値と既存カーネルの生値を両方残す。Windows差を新しい許容幅で吸収しない。"}
+  ]
+}

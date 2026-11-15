@@ -1,0 +1,34 @@
+{
+  "passed": false,
+  "a02_complete": false,
+  "diagnostic_only": true,
+  "three_requested_finite_diagnostics_completed": true,
+  "single_cause_completely_identified": false,
+  "cloud_diagnostics_remaining": true,
+  "cloud_remaining": [
+    "24 Tet10 B開閉、N=8・接触上限0.0005 mで両実装P×Rを追加し、N=4との相互作用を測る。",
+    "24 Tet10のopen最初の区間だけ入力二分で平衡を再求解し、すべり活動と開口の区間を狭める。"
+  ],
+  "pc_handoff": "Windowsで同じ24 Tet10と同じULP要求を新規求解。Linux二ビルドの一致をOS間再現にしない。",
+  "resource_limit": "768/6144要素・40GB超・1経路1日超の新計画なし。上限超の確認は規模上限のため確認不可・未達。",
+  "symptoms": {
+    "S1": "拒否・未定義仕様を保持。今回の新規数値寄与なし。",
+    "S2": "拒否・所有/活動/世代の仕様不足を保持。",
+    "S3": "境界のULPと順序依存を限定確認。引張初期力の許可なし。",
+    "S4": "境界のULP/投影/線形経路を限定確認。円外の許可・クリップなし。",
+    "S5": "旧零行・像空間不整合の診断を置換せず、生投影の新しい感度だけ追加。",
+    "S6": "旧数値・正規化を維持、新ゼロ/包括許容値なし。",
+    "S7": "交差差ベクトル・実接触P/R交換後も全体履歴感度が残る。単一原因未達。",
+    "S8": "準備停止・数値未完了・scope拒否・局所probeを別計数し全失敗保持。"
+  },
+  "future_user_decisions": [
+    "S1の初期応力/参照配置・拘束/重量/独立平衡",
+    "S2の部分面GP所有/活動/世代と面積/仕事/投影",
+    "S3/S4の物理過程・初期仕事/散逸と再平衡",
+    "S5の先端力受持ち・一意性・内容認証",
+    "厳密境界のOS間再現契約・未定義の全場基準"
+  ],
+  "new_specification_adopted": false,
+  "other_items_complete": false,
+  "windows_ci_after_push": "未確定"
+}

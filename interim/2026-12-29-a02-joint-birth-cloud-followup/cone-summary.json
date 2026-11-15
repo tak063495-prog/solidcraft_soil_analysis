@@ -1,0 +1,669 @@
+{
+  "passed": false,
+  "a02_complete": false,
+  "diagnostic_only": true,
+  "local_requests": 36,
+  "projection_requests": 44,
+  "rotated_requests": 126,
+  "build_profiles": [
+    "release",
+    "debug"
+  ],
+  "unchanged_formula_tolerance_clip": true,
+  "windows_reproduction_confirmed": false,
+  "windows_ci_after_push": "未確定",
+  "native_build_mismatches": 0,
+  "rejected_work_is_null": true,
+  "local": {
+    "friction-x": {
+      "accepted_ulp": [
+        -8,
+        -4,
+        -2,
+        -1,
+        0
+      ],
+      "rejected_ulp": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "work_minimum": 0.001375,
+      "work_maximum": 0.0013750000000000004,
+      "work_span": 4.336808689942018e-19,
+      "statuses": [
+        "stick"
+      ]
+    },
+    "friction-xy": {
+      "accepted_ulp": [
+        -8,
+        -4,
+        -2,
+        -1,
+        0
+      ],
+      "rejected_ulp": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "work_minimum": 0.001255,
+      "work_maximum": 0.0012550000000000003,
+      "work_span": 2.168404344971009e-19,
+      "statuses": [
+        "stick"
+      ]
+    },
+    "no-tension": {
+      "accepted_ulp": [
+        -8,
+        -4,
+        -2,
+        -1,
+        0
+      ],
+      "rejected_ulp": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "work_minimum": 7.500000000000001e-05,
+      "work_maximum": 7.500000000000001e-05,
+      "work_span": 0.0,
+      "statuses": [
+        "stick"
+      ]
+    },
+    "rotated-friction": {
+      "accepted_ulp": [
+        -8,
+        -4,
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        4,
+        8
+      ],
+      "rejected_ulp": [],
+      "work_minimum": 0.0008408132511343244,
+      "work_maximum": 0.0008408132511343244,
+      "work_span": 0.0,
+      "statuses": [
+        "slip"
+      ]
+    }
+  },
+  "projection": {
+    "friction-x": {
+      "requests": 22,
+      "native_accepted": 0,
+      "errors": [
+        "invalid input: JOINT BIRTH initial effective force violates no-tension/Coulomb cone"
+      ],
+      "maximum_input_change_kn": 1.1368683772161603e-13,
+      "maximum_native_projection_change_kpa": 9.237055564881302e-14,
+      "native_maximum_friction_excess_minimum_kpa": 2.0250467969162855e-13,
+      "native_maximum_friction_excess_maximum_kpa": 3.126388037344441e-13,
+      "maximum_gelsd_gelss_traction_change_kpa": 3.694822225952521e-13,
+      "gelsd_gelss_cone_disagreements": 0
+    },
+    "friction-xy": {
+      "requests": 22,
+      "native_accepted": 0,
+      "errors": [
+        "invalid input: JOINT BIRTH initial effective force violates no-tension/Coulomb cone"
+      ],
+      "maximum_input_change_kn": 1.1368683772161603e-13,
+      "maximum_native_projection_change_kpa": 1.0302869668521453e-13,
+      "native_maximum_friction_excess_minimum_kpa": 2.5934809855243657e-13,
+      "native_maximum_friction_excess_maximum_kpa": 3.161915174132446e-13,
+      "maximum_gelsd_gelss_traction_change_kpa": 2.984279490192421e-13,
+      "gelsd_gelss_cone_disagreements": 0
+    }
+  },
+  "rounding": {
+    "requests": 126,
+    "native_accepted": 61,
+    "same_input_order_gate_changes": 6,
+    "changed": [
+      {
+        "normal": [
+          1.0,
+          2.0,
+          3.0
+        ],
+        "axis": 1,
+        "ulp_steps": -4,
+        "orders": {
+          "permutations": [
+            {
+              "order": [
+                0,
+                1,
+                2
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000007,
+              "excess": 3.552713678800501e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                0,
+                2,
+                1
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                1,
+                0,
+                2
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000007,
+              "excess": 3.552713678800501e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                1,
+                2,
+                0
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                2,
+                0,
+                1
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                2,
+                1,
+                0
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            }
+          ],
+          "fixed_fsum": {
+            "normal": -100.00000000000001,
+            "shear_norm": 30.000000000000007,
+            "excess": 3.552713678800501e-15,
+            "cone": false
+          },
+          "order_changes_gate": true,
+          "gate_is_observation_only": true
+        },
+        "native_accepted": false
+      },
+      {
+        "normal": [
+          1.0,
+          3.0,
+          2.0
+        ],
+        "axis": 2,
+        "ulp_steps": 0,
+        "orders": {
+          "permutations": [
+            {
+              "order": [
+                0,
+                1,
+                2
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                0,
+                2,
+                1
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                1,
+                0,
+                2
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                1,
+                2,
+                0
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000004,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                2,
+                0,
+                1
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                2,
+                1,
+                0
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000004,
+              "excess": 0.0,
+              "cone": true
+            }
+          ],
+          "fixed_fsum": {
+            "normal": -100.0,
+            "shear_norm": 30.000000000000007,
+            "excess": 7.105427357601002e-15,
+            "cone": false
+          },
+          "order_changes_gate": true,
+          "gate_is_observation_only": true
+        },
+        "native_accepted": false
+      },
+      {
+        "normal": [
+          2.0,
+          1.0,
+          3.0
+        ],
+        "axis": 0,
+        "ulp_steps": 0,
+        "orders": {
+          "permutations": [
+            {
+              "order": [
+                0,
+                1,
+                2
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                0,
+                2,
+                1
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000004,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                1,
+                0,
+                2
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                1,
+                2,
+                0
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                2,
+                0,
+                1
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000004,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                2,
+                1,
+                0
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            }
+          ],
+          "fixed_fsum": {
+            "normal": -100.0,
+            "shear_norm": 30.000000000000007,
+            "excess": 7.105427357601002e-15,
+            "cone": false
+          },
+          "order_changes_gate": true,
+          "gate_is_observation_only": true
+        },
+        "native_accepted": false
+      },
+      {
+        "normal": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "axis": 0,
+        "ulp_steps": -4,
+        "orders": {
+          "permutations": [
+            {
+              "order": [
+                0,
+                1,
+                2
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                0,
+                2,
+                1
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000007,
+              "excess": 3.552713678800501e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                1,
+                0,
+                2
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                1,
+                2,
+                0
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                2,
+                0,
+                1
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000007,
+              "excess": 3.552713678800501e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                2,
+                1,
+                0
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            }
+          ],
+          "fixed_fsum": {
+            "normal": -100.00000000000001,
+            "shear_norm": 30.000000000000007,
+            "excess": 3.552713678800501e-15,
+            "cone": false
+          },
+          "order_changes_gate": true,
+          "gate_is_observation_only": true
+        },
+        "native_accepted": true
+      },
+      {
+        "normal": [
+          3.0,
+          1.0,
+          2.0
+        ],
+        "axis": 2,
+        "ulp_steps": -4,
+        "orders": {
+          "permutations": [
+            {
+              "order": [
+                0,
+                1,
+                2
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                0,
+                2,
+                1
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                1,
+                0,
+                2
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                1,
+                2,
+                0
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000007,
+              "excess": 3.552713678800501e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                2,
+                0,
+                1
+              ],
+              "normal": -100.00000000000003,
+              "shear_norm": 30.000000000000007,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                2,
+                1,
+                0
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000007,
+              "excess": 3.552713678800501e-15,
+              "cone": false
+            }
+          ],
+          "fixed_fsum": {
+            "normal": -100.00000000000001,
+            "shear_norm": 30.000000000000007,
+            "excess": 3.552713678800501e-15,
+            "cone": false
+          },
+          "order_changes_gate": true,
+          "gate_is_observation_only": true
+        },
+        "native_accepted": true
+      },
+      {
+        "normal": [
+          3.0,
+          2.0,
+          1.0
+        ],
+        "axis": 1,
+        "ulp_steps": 0,
+        "orders": {
+          "permutations": [
+            {
+              "order": [
+                0,
+                1,
+                2
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000004,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                0,
+                2,
+                1
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                1,
+                0,
+                2
+              ],
+              "normal": -100.00000000000001,
+              "shear_norm": 30.000000000000004,
+              "excess": 0.0,
+              "cone": true
+            },
+            {
+              "order": [
+                1,
+                2,
+                0
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                2,
+                0,
+                1
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            },
+            {
+              "order": [
+                2,
+                1,
+                0
+              ],
+              "normal": -100.0,
+              "shear_norm": 30.000000000000007,
+              "excess": 7.105427357601002e-15,
+              "cone": false
+            }
+          ],
+          "fixed_fsum": {
+            "normal": -100.0,
+            "shear_norm": 30.000000000000007,
+            "excess": 7.105427357601002e-15,
+            "cone": false
+          },
+          "order_changes_gate": true,
+          "gate_is_observation_only": true
+        },
+        "native_accepted": true
+      }
+    ],
+    "maximum_excess_order_span_kpa": 7.105427357601002e-15,
+    "explicit_sequential_addition": true,
+    "python_builtin_sum_not_used_for_order_probe": true,
+    "diagnostic_order_variants_are_not_adopted": true
+  }
+}
