@@ -34,7 +34,10 @@ def native(values,out,probe,predictor,repartition,steps=8):
                 assert state['stage_index']==phase and diag['stage']==phase and diag['progress']==progress
                 sink(dict(stage=names[phase],stage_index=phase,progress=progress,factor=state['boundary_factor']),fields.native_fields(model,state,diag,report));count+=1
         result['accepted_states']=count
-    else:result.update(complete=False,accepted_states=0,failure_reason='diagnostic process incomplete; partials retained')
+    else:
+        prefix=out/'native/accepted.jsonl'
+        accepted=sum(1 for _ in prefix.open()) if prefix.exists() else 0
+        result.update(complete=False,accepted_states=accepted,failure_reason='diagnostic process incomplete; partials retained')
     write(out/'result.json',result)
     return result
 

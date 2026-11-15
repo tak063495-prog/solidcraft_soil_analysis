@@ -2,6 +2,8 @@
 import importlib, json
 from pathlib import Path
 import sys, tempfile, unittest
+from unittest import mock
+import subprocess
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -98,5 +100,29 @@ class A01CloudFollowup(unittest.TestCase):
         result=verify(HERE)
         self.assertIs(result['all_sha_verified'],True)
         self.assertEqual(result['entries'],len(read('archive-index.json')['entries']))
+
+    def test_native_timeout_kills_solver_and_keeps_actual_prefix_count(self):
+        from a01follow_run import native
+        class Process:
+            pid=123
+            returncode=None
+            killed=False
+            def wait(self,timeout=None):
+                if timeout is not None:raise subprocess.TimeoutExpired('diagnostic-probe',timeout)
+                self.returncode=-9
+            def kill(self):self.killed=True
+        with tempfile.TemporaryDirectory() as temp:
+            out=Path(temp)/'result';process=Process()
+            def start(*args,**kwargs):
+                folder=out/'native';folder.mkdir()
+                (folder/'accepted.jsonl').write_text('{}\n{}\n',encoding='utf-8')
+                return process
+            with mock.patch('a01follow_run.subprocess.Popen',side_effect=start):
+                result=native(({}, {}, {}),out,Path('unused-probe'),'native','native')
+            self.assertTrue(process.killed)
+            self.assertIs(result['timed_out'],True)
+            self.assertIs(result['complete'],False)
+            self.assertEqual(result['accepted_states'],2)
+            self.assertTrue((out/'native/accepted.jsonl').exists())
 
 if __name__=='__main__':unittest.main()

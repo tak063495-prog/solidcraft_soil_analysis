@@ -36,7 +36,9 @@ def main():
         with (out/(name+'.log')).open('x') as log:
             p=subprocess.Popen(args,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
             timed_out=False
-            try:code=p.wait(timeout=900)
+            # Native workers own a 900 s solver timeout; let them kill the
+            # solver and seal its prefix before the outer worker deadline.
+            try:code=p.wait(timeout=960 if engine=='native' else 900)
             except subprocess.TimeoutExpired:
                 timed_out=True;p.kill();code=p.wait()
                 folder=out/name

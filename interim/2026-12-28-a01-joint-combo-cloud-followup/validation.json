@@ -1,0 +1,284 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "a01_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "b383aa007afd99e74f5988060335b2e07c8d341f",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 872,
+    "executed": 872,
+    "passed": 872,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 5090,
+      "exit_code": 0,
+      "elapsed_seconds": 3.1647520310000345
+    },
+    "probe-fmt": {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "interim/2026-12-27-b03-offset-kink-cloud-followup/b03follow_probe.rs"
+      ],
+      "pid": 5117,
+      "exit_code": 0,
+      "elapsed_seconds": 0.14019984300011856
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 5123,
+      "exit_code": 0,
+      "elapsed_seconds": 30.482465150000053
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 5547,
+      "exit_code": 0,
+      "elapsed_seconds": 504.219947585
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 8828,
+      "exit_code": 0,
+      "elapsed_seconds": 2.5108232229999885
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 9293,
+      "exit_code": 0,
+      "elapsed_seconds": 964.1512637220001
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 628644,
+      "exit_code": 0,
+      "elapsed_seconds": 1.5708101919999535
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-core-0"
+      ],
+      "pid": 804426,
+      "exit_code": 0,
+      "elapsed_seconds": 277.38821521
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-core-1"
+      ],
+      "pid": 804427,
+      "exit_code": 0,
+      "elapsed_seconds": 337.5539597019997
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-mean-evidence"
+      ],
+      "pid": 935643,
+      "exit_code": 0,
+      "elapsed_seconds": 809.3637911960004
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-spatial-evidence"
+      ],
+      "pid": 979152,
+      "exit_code": 0,
+      "elapsed_seconds": 122.58624216499993
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-c01-switch"
+      ],
+      "pid": 979180,
+      "exit_code": 0,
+      "elapsed_seconds": 46.489698211999894
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-c01-path"
+      ],
+      "pid": 979181,
+      "exit_code": 0,
+      "elapsed_seconds": 73.78911969300043
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a01follow-validation-final/python/python-c01-cause"
+      ],
+      "pid": 979226,
+      "exit_code": 0,
+      "elapsed_seconds": 65.07362886099963
+    }
+  ],
+  "source_count": 1480,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true,
+  "new_rust_probe_format": {
+    "exit_code": 0,
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "--check",
+      "interim/2026-12-28-a01-joint-combo-cloud-followup/a01follow_service.rs",
+      "interim/2026-12-28-a01-joint-combo-cloud-followup/a01follow_contact_probe.rs"
+    ],
+    "source_sha256": {
+      "a01follow_service.rs": "efb5e89ad29dcb207349de2cbebc685576c070850ca0d3ae67098cf94fd1ece2",
+      "a01follow_contact_probe.rs": "c03d0693fde0e33d18c8b4929e32a19276a6cef2850b0d26fcd5dd73eac579ed"
+    }
+  },
+  "preparation_and_partial_attempts_excluded_from_unique_final_counts": true,
+  "retained_initial_python_attempt": "validation/retained-first-python-attempt/",
+  "preparation_outcomes": {
+    "initial_complete_python_groups": {
+      "tests_run": 851,
+      "passed": 849,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    "initial_powershell_smoke": {
+      "tests_run": 2,
+      "passed": 0,
+      "failures": 1,
+      "errors": 1,
+      "skipped": 0
+    },
+    "initial_analytic_smoke": {
+      "tests_run": 1,
+      "passed": 0,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "successful_powershell_smoke_not_added": {
+      "tests_run": 2,
+      "passed": 2
+    },
+    "successful_new_tests_smoke_not_added": {
+      "tests_run": 13,
+      "passed": 13
+    },
+    "other_partial_groups_retained_without_inventing_outcomes": true
+  },
+  "formal_scientific_runs": {
+    "fresh_formal_global_paths": 37,
+    "completed": 27,
+    "incomplete": 10,
+    "accepted_states_including_incomplete_prefixes": 2740,
+    "main_exchange_paths": 24,
+    "main_exchange_accepted_states": 2304,
+    "partial_boost_paths": 3,
+    "stacked_policy_paths": 8,
+    "stacked_step_controls": 2,
+    "baseline_cli_identity_controls": 3,
+    "baseline_cli_controls_included_in_formal_count": false,
+    "refusal_checks": 18,
+    "local_svd_tangent_factorials_and_replays_count_as_global_paths": false,
+    "prior_preparations_added_to_formal_count": false
+  }
+}
