@@ -266,4 +266,9 @@ acceptance/measurementsは固定コミットb20fcdf1f137c8e14d0b4169077dfa045a31
 確定validationも別の固定コミットとしてから同じ台帳へ追記し、登録後監査をvalidation/に残す。
 push後のWindows CIは未確定。A-01〜A-04、B-01/B-02、C-01〜C-04、NC-01、P6も未達のまま。
 
+最終P6監査は出典326、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+validationは固定コミット4b30cdd85e1021e469d29ce32420d81de5650551へSHA付き登録した。
+登録後の関連100件も成功し、467/846件の固有件数へ加算していない。
+詳細はvalidation/post-registration.jsonとvalidation/p601-final-audit.json。
+
 B-03は未達、passed=false。
