@@ -191,4 +191,32 @@ Windowsの差を新しい許容値で吸収しない。rust-integration-1への�
 実行手順とPC資源上限は[REPRODUCE.ja.md](REPRODUCE.ja.md)。
 A-01〜A-04、B-01/B-02、C-01〜C-04、NC-01、P6も未達のまま。
 
+## Linux全件検証の確定結果
+
+fmt、probe rustfmt、clippy（locked/all-targets/-D warnings）、release全ターゲットbuildは終了0。
+Rustはexamplesの3件を含め**467件成功**、Pythonはtoolsを含め**859件成功**。
+失敗/error・未実行・skip・ignored・filtered・expected-failure・unexpected-successはすべて0。
+発見/割当/実行の件数とIDが一致し、欠落/重複0。新規13件と最初の単独スモークを二重加算しない。
+全件前後の1,460コード/設定ソースはSHA一致。
+Rust源は起点から不変で、後段の台帳登録で変わる監査器はSHA定数だけを関連試験で再確認する。
+validationのpassed=trueはソフトウェア試験のみであり、B-03の受入はfalseのまま。
+
+|Python群|成功|実測秒（discovery込み）|
+|---|---:|---:|
+|python-core-0|391|358.583|
+|python-core-1|444|291.792|
+|python-mean-evidence|4|811.861|
+|python-spatial-evidence|4|123.360|
+|python-c01-switch|4|47.434|
+|python-c01-path|4|73.651|
+|python-c01-cause|8|59.032|
+
+起点8,741パスの配置済み8,667ファイルをGit blob/SHA-256/実行属性で照合し、
+既存変更は台帳追記と監査器の台帳SHA定数の2件だけ。残る8,665件はバイト一致。
+未配置74件は既存CIの旧postfold除外であり、Git木のエントリは保持する。
+新証拠23,840,771 bytes・2 part・223 entryのSHAを全検証し、封印展開からmeasurements.jsonをバイト再現した。
+科学記録acceptance/measurementsの固定コミットは78c047954d074b18eeda53e07c16dc30ae991c0e。
+確定validationも別の固定コミットで登録し、登録後監査と関連再確認はvalidation/へ別記する。
+push後のWindows CIは未確定。A群・B-01/B-02・C群・NC-01・P6も未達のまま。
+
 B-03は未達、passed=false。
