@@ -63,6 +63,10 @@
     {
       "event": "Commit method after verified cache reduction",
       "outcome": "Follow b383aa0: write-tree --missing-ok plus one-parent commit-tree, with original tree identities checked. Avoid re-fetching verified unchanged archive blobs merely to commit. No reference-value replacement or merge."
+    },
+    {
+      "event": "Sparse rules parser correction",
+      "outcome": "The zero selection also occurred after parts were tracked. check-rules --rules-file defaults to cone interpretation; adding --no-cone matches the actual CI non-cone patterns. The earlier untracked-only explanation was incorrect. No --skip-checks or CI rule relaxation used."
     }
   ],
   "preparation_is_not_scientific_failure_or_scope_rejection": true,
