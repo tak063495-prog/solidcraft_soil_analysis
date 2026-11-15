@@ -181,4 +181,7 @@ Rustは全ターゲット467件とdoc検査、Pythonはtoolsを含む全7群872�
 旧8,765パスの科学値・失敗・封印はSHA-256でバイト一致。既存側の変更はP6追記台帳と監査SHA定数だけ。
 ソフトウェア全件成功をA-01全体の数値合格にはしない。push後のWindows CIは未確定。
 
+最終P6監査は出典332、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+固定登録後の関連86件も成功（失敗/未実行/skip=0）し、全件の固有件数へ重複加算していない。
+
 A-01は未達、passed=false。
