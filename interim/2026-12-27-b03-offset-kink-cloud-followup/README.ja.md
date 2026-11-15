@@ -219,4 +219,9 @@ validationのpassed=trueはソフトウェア試験のみであり、B-03の受�
 確定validationも別の固定コミットで登録し、登録後監査と関連再確認はvalidation/へ別記する。
 push後のWindows CIは未確定。A群・B-01/B-02・C群・NC-01・P6も未達のまま。
 
+最終P6監査は出典329、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+確定validationの固定コミットはc0c556a27e14e39dfb3fbf35c40a1d554df1c25b。
+登録後の関連89件も成功し、467/859件の固有件数には加算していない。
+詳細はvalidation/registration-contract.json、validation/p601-final-audit.json、validation/post-registration.json。
+
 B-03は未達、passed=false。
