@@ -9,13 +9,14 @@ FIELDS = ('rigid-x', 'rigid-y', 'rigid-z', 'membrane', 'bending', 'load')
 
 
 def rotations():
-    def axis(a, degrees):
-        t = math.radians(degrees); c, s = math.cos(t), math.sin(t)
-        if a == 0: return np.array([[1,0,0],[0,c,-s],[0,s,c]], float)
-        if a == 1: return np.array([[c,0,s],[0,1,0],[-s,0,c]], float)
-        return np.array([[c,-s,0],[s,c,0],[0,0,1]], float)
-    return [('identity', np.eye(3)), ('rx37', axis(0,37)), ('rz61', axis(2,61)),
-            ('general', mm(mm(axis(2,29),axis(1,-31)),axis(0,17)))]
+    # Round-trip literals from the presolve plan: identical input matrices on Windows.
+    # General was formed by fixed-order fsum products Rz29 * Ry(-31) * Rx17.
+    return [
+        ('identity', np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]], dtype=float)),
+        ('rx37', np.array([[1.0, 0.0, 0.0], [0.0, 0.7986355100472928, -0.6018150231520483], [0.0, 0.6018150231520483, 0.7986355100472928]], dtype=float)),
+        ('rz61', np.array([[0.4848096202463371, -0.8746197071393957, 0.0], [0.8746197071393957, 0.4848096202463371, 0.0], [0.0, 0.0, 1.0]], dtype=float)),
+        ('general', np.array([[0.7496954135095478, -0.5953282200694695, -0.28903476841318815], [0.4155629535409689, 0.7633991118871661, -0.49449896624178324], [0.5150380749100542, 0.2506114649388633, 0.8197131663174273]], dtype=float)),
+    ]
 
 
 def patch(kind):
