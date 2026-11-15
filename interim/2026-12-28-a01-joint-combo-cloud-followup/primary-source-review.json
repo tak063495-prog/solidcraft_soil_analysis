@@ -1,0 +1,58 @@
+{
+  "session_date_jst": "2026-11-15",
+  "prior_review": "interim/2026-12-20-a01-joint-combo-cause-diagnosis/primary-source-review.txt",
+  "prior_findings_retained_not_relabelled_as_new_body_access": true,
+  "sources": [
+    {
+      "title": "SIMULIA Abaqus 2026, Convergence Criteria for Nonlinear Problems",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-convergcriteria.htm",
+      "access": "本文取得",
+      "sections": ["Controlling Iteration", "Extrapolation", "Severe Discontinuity Iterations", "Improving the Efficiency of the Solution by Using the Line Search Algorithm"],
+      "confirmed": "反復状況に応じた刻み直し、前増分からの外挿、接触のsevere discontinuityに伴う刻み直し、有限のline search反復を別々に制御する。",
+      "use": "初期推定、活動枝、再分割、有限候補枯渇を別観測にする。他製品の条件や既定値を採用しない。"
+    },
+    {
+      "title": "SIMULIA Abaqus 2026, Generally Applicable Contact Controls in Abaqus/Standard",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEITNRefMap/simaitn-c-contactcontrolsstd.htm",
+      "access": "本文取得",
+      "sections": ["Automatic Stabilization of Rigid Body Motions in Contact Problems"],
+      "confirmed": "接触成立前に剛体運動が残り得ることと、接触安定化が粘性減衰を加える別の操作であることを説明している。",
+      "use": "枝依存の拘束ランクと数値的な接線を区別する。安定化、支持、減衰は追加しない。"
+    },
+    {
+      "title": "Wriggers, Computational Contact Mechanics, 2nd ed., Springer, 2006",
+      "url": "https://link.springer.com/book/10.1007/978-3-540-32609-0",
+      "chapter_url": "https://link.springer.com/chapter/10.1007/978-3-540-32609-0_10",
+      "access": "書誌・目次/章ページのみ。Solution Algorithms pp.309–364の本文は未取得（再取得timeout）。",
+      "use": "書誌だけ。具体的予測子や活動集合更新式を本文確認済みとはしない。"
+    },
+    {
+      "title": "Laursen, Computational Contact and Impact Mechanics, Springer, copyright 2003 (hardcover公開2002は前回記録のまま)",
+      "url": "https://link.springer.com/book/10.1007/978-3-662-04864-1",
+      "chapter_url": "https://link.springer.com/chapter/10.1007/978-3-662-04864-1_5",
+      "access": "書誌とFinite Element Implementation of Contact Interaction pp.145–209の公開要旨のみ。本文未取得。",
+      "use": "書誌/要旨だけ。Newton更新の具体式や安定性定理は引用しない。"
+    },
+    {
+      "title": "Nocedal & Wright, Numerical Optimization, 2nd ed., Springer, 2006",
+      "url": "https://users.iems.northwestern.edu/~nocedal/book/toc.html",
+      "access": "著者公開の目次のみ。§3.1/§3.5/§11.2の位置を確認。本文未取得（大学ミラーPDFの取得はtimeout）。",
+      "attempted_body_url": "https://people.vts.su.ac.rs/~papzoli/Optimalizacio/Irodalom/Nocedal_Wright_Numerical%20Optimization.pdf",
+      "use": "書誌だけ。今回のr^T J pの恒等式は保存方程式を直接微分した自前の会計であり、未取得本文の引用ではない。"
+    },
+    {
+      "title": "Dennis & Schnabel, Numerical Methods for Unconstrained Optimization and Nonlinear Equations, SIAM reprint 1996, chapter 6 pp.111–154",
+      "url": "https://epubs.siam.org/doi/10.1137/1.9781611971200.ch6",
+      "access": "出版社書誌・公開abstractのみ。本文は有料アクセスで未取得。",
+      "use": "書誌/要旨だけ。line search枯渇の具体式を確認済みとはしない。"
+    },
+    {
+      "title": "PLAXIS 3D 2025.1 Reference Manual, automatic step size / load advancement",
+      "url": "https://files.seequent.com/PLAXIS/Manuals/PLAXIS_3D/English/PLAXIS_3D_2_Reference%20Manual.pdf",
+      "access": "今回必要な自動刻み節の本文は未取得。web取得はサイズ上限、curlは403。2024.1公式配布もtimeout。",
+      "use": "新しい自動刻みの根拠には使わない。前回取得した界面の節の説明を今回の未取得節へ拡張しない。"
+    }
+  ],
+  "external_reference_values_introduced": false,
+  "book_body_claims_invented": false
+}
