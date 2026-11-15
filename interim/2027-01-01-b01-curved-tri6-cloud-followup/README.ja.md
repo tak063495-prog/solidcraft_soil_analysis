@@ -62,6 +62,8 @@ x=.5に沿って z=.2|x−.5| とした2平面の多面体対照1点を使う。
 内積・ノルム・観測行列積・組立・座標変換は、節点→DOF/要素→評価点→成分の固定順 `math.fsum`。
 LAPACKの固有値/直接解内部は別演算である。Windowsの集計順差を許容値で吸収しない。
 並進力kNと回転モーメントkN mは分離する。混在DOFの相対残差・行列ノルム・条件数は**代数的観測**で、物理力基準にしない。
+全体生配列は節点ごとの6成分で、先頭3成分が並進/力、後半3成分が回転/偶力。
+比較表と符号付き効果では `*_force_kn` / `*_moment_kn_m`、`*_translation_m` / `*_rotation_rad` へ分離する。
 
 ## 回転と歪みの分離
 
@@ -182,5 +184,40 @@ A-01〜A-04、B-02〜B-03、C-01〜C-04、NC-01、P6も未達のまま。
 その後の限定blob取得はvalidation/git-recoveryへ保存する。必要アーカイブ欠落をskipで回避しない。
 読取専用HOMEを変更せず、PowerShell用XDG格納先だけをwork配下へ指定する。
 ソフトウェア試験結果はvalidation.jsonへ件数を分離記録する。**push後のWindows CIは未確定**。
+
+## Linux全件検証の確定結果
+
+fmt、全ターゲットclippy、locked release全ターゲットbuildは終了0。
+Rust全ターゲット＋docは467件成功（doc内の試験0件）。Pythonはtests/toolsの913固有件成功。
+最終選択結果の失敗/error・未実行・skip・ignore・filter除外・expected-failure・unexpected-successは0。
+全発見ID・割当ID・実行IDが一致し、欠落/重複0。全件中の1,564コード/設定ソースは開始/終了でSHA一致。
+後から保存した取得・保存・結果集計オーケストレーションは別時点として扱う。
+
+|Python群|成功|実測秒（discoveryを含む）|
+|---|---:|---:|
+|python-core-0|426|431.777|
+|python-core-1|463|599.388|
+|python-mean-evidence|4|1150.329|
+|python-spatial-evidence|4|160.246|
+|python-c01-switch|4|64.076|
+|python-c01-path|4|118.556|
+|python-c01-cause|8|105.996|
+
+**初回Python全件は912成功＋1 errorで不成功だった。** P6-03の過去コミット文書blob3個が欠け、
+GIT_NO_LAZY_FETCH=1で取得不足が露出した。固定OIDをfiltered/noop取得して元SHAを照合し、コード/基準を変えず復旧した。
+途中の通常fetchのbad revisionとP6-03単独19件の初回errorも保持する。
+復旧後のP6-03全19件とcore-0全426件は成功。他6群の初回成功と組み合わせ、同じ913固有IDが1回ずつ揃うことを確認した。
+全件群としての実行試行は1,339件（初回913＋再実行426）であり、成功の固有件数913へ二重加算しない。
+全初回ログ・インベントリはvalidation/retained-first-python、選択後はvalidation/full/pythonへ保存。
+単独スモーク、P6-03の復旧確認、登録後の関連再確認も913へ加算しない。
+
+封印は16,159,728 bytes・1 part・92エントリーを全SHA確認し、新規展開からmeasurements.jsonと符号付き交差差をバイト完全再現した。
+この再集計に追加物理求解はない。旧12,403起点パス中12,327実ファイル・29,406,169,025 bytesは
+元Git blob/実行属性と一致。既存除外74パスのGit参照を保持し、残る2実ファイルは旧台帳の厳密接頭部保持と監査器pinのみ。
+旧の数値・生証拠・失敗・封印・拒否・NC・生産Rustへの変更は0。
+
+科学値はa314136fcc680b6ff6ea8663500dfd983e2bfc07へ固定SHA登録した。
+validation.jsonも確定コミットへ保存後、同じ台帳へ固定SHA登録する。ソフトウェア試験成功をB-01の数値受入へ変えない。
+push後のWindows CIは未確定。B-01全体、他A/B/C、NC-01、P6は未達のまま。
 
 B-01は未達、passed=false。

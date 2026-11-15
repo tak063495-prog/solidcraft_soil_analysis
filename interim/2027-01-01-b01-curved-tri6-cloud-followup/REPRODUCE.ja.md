@@ -43,6 +43,16 @@ Python3.13、Rust1.99.1/rustfmt/clippy、PowerShellを使う。
 LinuxでHOMEが読取専用ならHOMEを変えず、XDG_CACHE_HOME/XDG_CONFIG_HOME/XDG_DATA_HOMEをwork配下の書込可能な場所へ指定する。
 NC固有設定は変更しない。PowerShellがなければ公式SHA確認済みportable版をworkへ置く。
 
+partial cloneでは現先端の実ファイルだけでは過去コミットの文書blobが不足する場合がある。
+今回の初回全件のP6-03はこの理由で1 errorとなった。固定出典を書き換えず、次を全件前に行える。
+取得後はbranch-sources.jsonのSHA256/Git blobと照合する。復旧はvalidation/git-recovery/p603-fixed-blobs-recovery.json参照。
+
+```powershell
+& $Py -c "import json,subprocess; m=json.load(open('interim/2026-12-07-p6-03-cloud-reconciliation/branch-sources.json',encoding='utf-8')); ids=sorted({v['git_blob_sha1'] for v in m['files']}); subprocess.run(['git','-c','fetch.negotiationAlgorithm=noop','-c','gc.auto=0','-c','maintenance.auto=false','fetch','--no-tags','--no-write-fetch-head','--filter=blob:none','--stdin','origin'],input=('\n'.join(ids)+'\n').encode('ascii'),check=True)"
+if ($LASTEXITCODE -ne 0) { throw '固定文書blobの取得未完了。全履歴取得やskipで代用しない' }
+```
+
+
 ## 同じ小型診断を新規実行
 
 ```powershell
