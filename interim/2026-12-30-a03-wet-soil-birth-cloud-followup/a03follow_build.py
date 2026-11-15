@@ -29,12 +29,14 @@ def build(out):
             *count = (*count).max(a03follow_minimum());
         }
         if dofs.transform.is_some() {''')
-    text += '''
+    text = replace(text, '#[cfg(test)]\nmod predictor_tests {', '''
 // Only the explicit isolated diagnostic build reads this switch.
 fn a03follow_minimum() -> usize {
     std::env::var("A03FOLLOW_MINIMUM").ok().map(|v| v.parse().unwrap()).unwrap_or(1)
 }
-'''
+
+#[cfg(test)]
+mod predictor_tests {''')
     (source/'src/stages.rs').write_text(text, encoding='utf-8', newline='\n')
     (out/'stages.patch').write_text(''.join(difflib.unified_diff(before.splitlines(True), text.splitlines(True))), encoding='utf-8')
     before = (source/'src/elements.rs').read_text(encoding='utf-8')

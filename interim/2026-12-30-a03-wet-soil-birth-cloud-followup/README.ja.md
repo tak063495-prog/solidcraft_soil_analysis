@@ -180,4 +180,36 @@ SOURCE_NOT_INVENTORIED=0を最終監査で確認する。
 
 A-01/02/04、B-01〜03、C-01〜04、NC-01、P6も全体未達のまま。
 
+## Linux全件検証の確定記録
+
+fmt、locked/all-targets clippy、release全ターゲットbuildは終了0。
+**Rust467件、Python893件（testsとtoolsの全7群）が成功**。
+失敗/error・未実行・skip・ignore・filter除外・expected-failure・unexpected-successは0。
+全発見/割当/実行IDが一致し、欠落・重複0。1529コード/設定ソースは全Pythonの前後でSHA一致した。
+準備・単独11件・後段の再確認はこの固有件数へ二重加算しない。
+
+|Python群|成功|実測秒（起動/discovery込み）|
+|---|---:|---:|
+|python-core-0|417|389.409|
+|python-core-1|452|433.458|
+|python-mean-evidence|4|902.033|
+|python-spatial-evidence|4|131.029|
+|python-c01-switch|4|72.947|
+|python-c01-path|4|100.742|
+|python-c01-cause|8|72.407|
+
+追加の隔離all-targets clippyでは、14個のinclude用JSON不足（22診断）、
+次いでテストモジュール後の補助関数配置という2回の停止を保持した。
+元のJSONを復元し、補助関数をテストモジュール前へ置いたv2はfmt/clippy/buildが成功。
+このbuild helperの配置修正は全Python完了後に行い、元の科学計算版を置き換えていない。
+修正後の4基準入力・128状態の全Runは、elapsed_secondsと版SHAだけを除き元版と厳密一致した。
+この4経路と再確認11試験は正式96経路/全件の固有数へ加算しない。
+古い求解ソース・実行版SHA・封印は維持し、v2のソース・実入力参照・全Runは
+validation/style-evidence.zipへ別封印した。allow属性やskipでlintを回避していない。
+
+正式封印263,188,146 bytes・11 part・1770エントリーは、新規展開で全SHA一致。
+主要4派生記録もバイト再現した。新しい求解版への指紋の付替えはない。
+全件と補助検査の結果はvalidation.jsonに区別して記録し、ソフトウェア成功をA-03の受入に転用しない。
+当該push後のWindows CIは未確定。
+
 A-03は未達、passed=false。

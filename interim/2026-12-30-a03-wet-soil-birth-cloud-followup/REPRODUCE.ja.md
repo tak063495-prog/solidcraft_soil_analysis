@@ -12,6 +12,7 @@ GPD WIN Max 2、使用可能約48GBを前提とする。以下は**Windows未実
 
 ```powershell
 git status --short
+git config --local core.autocrlf false
 git fetch origin codex/plastic-spatial-convergence
 git merge-base --is-ancestor 89e9dfc26cbe444199179d7faa1edb1437849309 HEAD
 if ($LASTEXITCODE -ne 0) { throw '指定起点の子孫ではありません' }
@@ -36,6 +37,10 @@ if ($LASTEXITCODE -ne 0) { throw '隔離診断ビルド失敗。ログを保持'
 ```
 
 生産Rustはコピーして読むだけで、切替は専用ビルドにしか入らない。
+現在のhelperは補助関数をcfg(test)モジュール前へ配置するv2。保存した主求解はv1で、
+元版の封印を保持したまま4基準Runの厳密一致を別検査した。指紋を付け替えない。
+隔離コピーのall-targets clippyも行う場合は、validation/isolated-fixture-restoration.jsonの14個の
+JSONを元のGit blob/SHAどおりsource/examplesへコピーする。fixture欠落をskipで回避しない。
 ビルドはメモリ2〜8GB、合計10〜90分の保守的な予算（Windows未実測）。
 通常checkoutには旧証拠を含む十分なディスク空きが必要。今回の取得・SHA照合と
 A-02のgit-recovery記録を参照し、欠落アーカイブをskipや合成値で代用しない。
