@@ -220,4 +220,10 @@ GIT_NO_LAZY_FETCH=1で取得不足が露出した。固定OIDをfiltered/noop取
 validation.jsonも確定コミットへ保存後、同じ台帳へ固定SHA登録する。ソフトウェア試験成功をB-01の数値受入へ変えない。
 push後のWindows CIは未確定。B-01全体、他A/B/C、NC-01、P6は未達のまま。
 
+最終P6監査は出典344件、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+validation.jsonはda2192491ed0e5466269f6ab29edf1ea09fd20f7へ固定SHA登録した。
+登録後のP6関連76件・物理付録5件・新診断11件も全件成功し、467/913固有件へ重複加算しない。
+全件後の再照合でも旧12,327実ファイル・29,406,169,025 bytesのGit blob/実行属性は一致した。
+詳細はvalidation/post-registration.json、validation/p601-final-audit.json、validation/final-base-preservation.json。
+
 B-01は未達、passed=false。
