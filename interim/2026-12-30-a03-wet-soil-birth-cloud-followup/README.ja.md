@@ -212,4 +212,15 @@ validation/style-evidence.zipへ別封印した。allow属性やskipでlintを�
 全件と補助検査の結果はvalidation.jsonに区別して記録し、ソフトウェア成功をA-03の受入に転用しない。
 当該push後のWindows CIは未確定。
 
+最終P6監査は338出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+科学記録の固定コミットは6e71083031b1a0c2ae3e2963444cd598931096ed、
+確定validationはd9a01ee834e44e5b98399ac969babae29a663ec4。
+登録後のP6関連57件と新契約11件も成功し、全件の固有件数へ加算していない。
+起点の配置済み9396ファイルを再照合し、9394件はバイト一致。
+残る2件は台帳の厳密な末尾追記と監査器のSHA定数だけである。
+既存CIで除外しているpostfold74 partもGitの旧パス/OIDを維持し、必要証拠の欠落やskipはない。
+追加4経路のprocess.jsonにあるreverse_face_pointsは本体用環境変数の値であり、
+独立workerはcontrols(5, True, 1)とhydro_order(True)を明示実行した。環境変数の値を独立の実効設定へ読み替えない。
+当該push後のWindows CIは未確定。
+
 A-03は未達、passed=false。
