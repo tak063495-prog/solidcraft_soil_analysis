@@ -228,4 +228,13 @@ HTTP/2切断、pack prefix回収、単体取得の認証準備、sparse判定の
 確定validationは固定コミットにした後でP6へ登録し、後段の監査・関連試験を別記する。
 **push後のWindows CIは未確定**。
 
+
+最終P6監査は出典335、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+科学記録の固定コミットはe359bfae8697e3ced087748550ecf493e478f684、確定validationはd7f6131c34e3d007ff6cc984a8964974caf2c025。
+登録後の関連75件も成功し、全件の固有件数へ加算していない。
+旧8,965 Gitパスのうち配置済み8891件を再照合し、8889件はバイト一致。
+既存変更2件はP6台帳の厳密な追記と監査器の台帳SHA定数だけ。
+詳細はvalidation/の固定登録・最終監査・保全・再確認を参照。
+push後のWindows CIは未確定。
+
 A-02は未達、passed=false。
