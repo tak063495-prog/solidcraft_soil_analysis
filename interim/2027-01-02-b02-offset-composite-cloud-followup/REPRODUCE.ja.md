@@ -7,7 +7,14 @@ GPD WIN Max 2、使えるメモリ約48GB。Windows PCでは未実行。
 
 ## 取得と準備
 
-初回は`git clone --filter=blob:none --no-checkout`、対象ブランチだけfiltered/depth=1で取得する。
+初回は下記の単一ブランチ・depth=1・filtered取得を使う（NEW-b02followは未存在の場所）。
+
+```powershell
+git clone --filter=blob:none --single-branch --branch codex/plastic-spatial-convergence --depth=1 --no-checkout https://github.com/tak063495-prog/solidcraft_soil_analysis.git NEW-b02follow
+Set-Location NEW-b02follow
+```
+
+対象ブランチだけを取得し、checkout前に下記のsparse設定を行う。
 必要なP6固定コミット/出典blobはOID単位でfiltered取得し、初回全履歴転送を避ける。
 小型入力の計算と全件試験の既存約29GBの証拠読取は別である。
 A-02〜B-01追補のgit-recoveryと今回validation/git-recoveryを参照する。
@@ -40,6 +47,16 @@ Python3.13、Rust1.99.1/rustfmt/clippy、PowerShellを用いる。HOME/NC固有�
 読取専用HOMEではXDG_CACHE_HOME/XDG_CONFIG_HOME/XDG_DATA_HOMEだけをwork内の書込可能な場所へ指定する。
 partial cloneのP6-03過去文書blob不足は、B-01追補REPRODUCEの固定blob filtered取得で先に防ぐ。
 P6-01の固定コミットtreeも必要分だけ取得し、台帳のSHA256/Git blobと照合する。skipで代用しない。
+今回の固定出典取得器は、レポジトリrootから次のように使える（work先は新しいclone内）。
+
+```powershell
+New-Item -ItemType Directory -Force work/b02follow-preparation | Out-Null
+# P6-03は文書blobに加えて固定BASEのcommit/treeが必要。depth=1では別に取得する。
+git -c fetch.negotiationAlgorithm=noop fetch --depth=1 --filter=blob:none --no-tags --no-write-fetch-head origin e3d830d8d1bdffd727c4ab7271755f52e556006d
+if ($LASTEXITCODE -ne 0) { throw 'P6-03固定BASE取得未完了' }
+& $Py "$D/validation/git-recovery/b02follow_fetch_fixed.py"
+if ($LASTEXITCODE -ne 0) { throw '固定コミット/過去文書blob取得未完了' }
+```
 
 ## 同じ感度対照を新規実行
 

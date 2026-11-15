@@ -17,3 +17,8 @@ cache-pruning-*.jsonはpack SHA、元OID、検証済み実ファイルを列挙�
 検証済みの旧tree参照を保持し、改変や全履歴の捏造ではない。
 生の各取得ログは封印のb02follow-preparation-sealed/fetches-v3/にも保持する。
 HOME/NC設定は変更せず、portable PowerShellのXDGだけworkに置く。
+
+初回core-0はP6-03の固定BASE e3d830d8のcommit/tree不足で1 error。
+29固有blobは先に取得済みだったが、depth=1ではBASE treeも別途必要だった。
+P603-base-recovery.jsonに固定BASEの限定取得と30パス/29固有blobの元SHA/Git blob照合を保持する。
+文書・基準・試験コードを変更せず、影響したcore-0全群を再実行する。初回ログも保持する。

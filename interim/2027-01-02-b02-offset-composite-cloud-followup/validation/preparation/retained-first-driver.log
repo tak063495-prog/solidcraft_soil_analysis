@@ -1,0 +1,11 @@
+tet12-h0.5-default True
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2027-01-02-b02-offset-composite-cloud-followup/b02follow_run.py", line 103, in <module>
+    a=p.parse_args();run(a.output.resolve(),a.observer.resolve())
+                     ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2027-01-02-b02-offset-composite-cloud-followup/b02follow_run.py", line 85, in run
+    command([binary,'solve',*base,folder/'native'],folder/'native.log')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-24-b02-offset-composite-cause-diagnosis/b02cause_driver.py", line 45, in command
+    raise RuntimeError('retained failed/incomplete process: '+str(log))
+RuntimeError: retained failed/incomplete process: /workspace/solidcraft_soil_analysis/work/b02follow-formal/tet12-h0.5-reverse/native.log
