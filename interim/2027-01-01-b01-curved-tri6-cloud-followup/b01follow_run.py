@@ -42,7 +42,7 @@ def spectrum(k,x):
                 physical_rigid_energy_kn_m=[.5*dot(r[:,i],residual[:,i]) for i in range(6)])
 
 
-def solve(k,x,boundary,targets,q):
+def solve(k,x,boundary,targets,q,planar):
     bd = [6*i+a for i in boundary for a in range(6)]; free = sorted(set(range(len(k)))-set(bd))
     reduced = k[np.ix_(free,free)]; rows = []
     for name in FIELDS:
@@ -67,7 +67,7 @@ def solve(k,x,boundary,targets,q):
             error = (d-targets[name]).reshape(-1,6)
             row.update(target=targets[name].tolist(),translation_error=metric(d.reshape(-1,6)[:,:3],targets[name].reshape(-1,6)[:,:3]),
                        rotation_error=metric(d.reshape(-1,6)[:,3:],targets[name].reshape(-1,6)[:,3:]),
-                       prescribed_field_is_exact_patch=not np.any(x[:,2]) or name.startswith('rigid'))
+                       prescribed_field_is_exact_patch=planar or name.startswith('rigid'))
         rows.append(row)
     return bd,free,rows,float(np.linalg.cond(reduced))
 
@@ -106,7 +106,8 @@ def run(output,probe):
             for a,i in enumerate(dofs):
                 for b,j in enumerate(dofs): terms.setdefault((i,j),[]).append(float(ke[a,b]))
         for (i,j),v in sorted(terms.items()): k[i,j]=math.fsum(v)
-        bd,free,solves,condition=solve(k,x,meta['boundary'],target_fields(meta['original'],q),q)
+        bd,free,solves,condition=solve(k,x,meta['boundary'],target_fields(meta['original'],q),q,
+                                     planar=not meta['shape'].startswith('faceted'))
         rec=dict(id=meta['id'],shape=meta['shape'],rotation=meta['rotation'],rotation_matrix=q.tolist(),
                  points=x.tolist(),elements=elements,boundary_nodes=meta['boundary'],boundary_dofs=bd,free_dofs=free,
                  stiffness=k.tolist(),spectrum=spectrum(k,x),reduced_mixed_dof_condition_number=condition,

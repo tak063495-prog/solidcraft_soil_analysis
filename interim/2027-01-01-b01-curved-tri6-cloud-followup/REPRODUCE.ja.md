@@ -54,6 +54,8 @@ if ($LASTEXITCODE -ne 0) { throw '数値未完了。途中入力・生出力・�
 if ($LASTEXITCODE -ne 0) { throw '集計未完了' }
 & $Py "$D/b01follow_precision.py" --formal work/NEW-b01follow-formal --measurements work/NEW-b01follow-measurements.json --output work/NEW-b01follow-precision
 if ($LASTEXITCODE -ne 0) { throw '同じ保存行列の高精度観測未完了' }
+# 精度観測をreport出力へ追加したmeasurementsを指定して、保存差の法線/接線分解も再現できる。
+# b01follow_components.py --formal ... --measurements ... --output work/NEW-components.json
 ```
 
 元の生産Kernelを直接呼ぶだけ。曲面ガードを外す手順はなく、新しいdirector/曲率/物理はない。
@@ -62,6 +64,8 @@ if ($LASTEXITCODE -ne 0) { throw '同じ保存行列の高精度観測未完了'
 数値が終わらなければ未完了として残し、拒否/物理破壊/合格へ変換しない。
 
 plan.jsonの32パッチ×6場=192直接解、許可256/拒否16要求、同入力別PID一致を見る。
+現行呼出器は回転前の形状からexact-patch付記を分類する。封印の初回出力では全体z=0の付記だったため、
+回転平面28場のメタデータだけが異なる。初回ソース/生フラグは封印に保持し、数値は訂正していない。
 assemblies/に全K、全固有値/零空間、実6剛体場、全変位/回転・力/偶力・反力を保存する。
 recovery-responses.jsonは全要素6点のひずみ・N/M/Q・drilling・4エネルギー。
 並進力kNと回転モーメントkN mを分離し、mixed_dof_*は代数観測と読む。
