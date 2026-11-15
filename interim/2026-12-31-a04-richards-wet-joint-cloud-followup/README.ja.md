@@ -216,6 +216,11 @@ Rust全ターゲット＋docは467件成功、Pythonはtoolsを含む既存7群�
 再取得可能なGitキャッシュの整理で復旧する。旧の作業ファイルはGit blob SHA照合後もそのまま保持した。
 ストレージだけを修正した途中再試行も中断記録を保持し、全件の固有件数へ二重加算しない。
 
+最終P6監査は出典341件、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+科学値は7ae79b5d7eb0f1e23abb1657cf05c54c607d2548、全件検証値は58b80a6f7873b7444edf3f530bf69e2e1c0182b8に固定した。
+登録後のP6関連76件・物理付録5件・新診断9件も全件成功し、902固有件へは加算しない。
+詳細はvalidation/post-registration.jsonとvalidation/p601-final-audit.jsonに記録する。
+
 当該push後のWindows CIは未確定。
 
 A-04は未達、passed=false。
