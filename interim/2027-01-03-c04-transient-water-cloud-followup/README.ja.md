@@ -223,4 +223,11 @@ Rust全ターゲット＋docは467成功（doc内0）。Pythonはtests/tools全�
 確定validation.jsonも固定コミットへ保存してから同じ作業内で登録する。
 **当該push後のWindows CIは未確定**。ソフトウェア成功でC-04や他項目の受入を作らない。
 
+確定validation.jsonは201f6b6172fff36433deede7105c5b4cd159b456へ固定し、P6-01へ登録した。
+全件試験の1,596コード/設定は751b8938179e99878d304ea010a659b2bf732b7cと全バイト一致する。
+最終登録後はP6関連76件・物理付録8件・新契約9件＝93件も成功し、929固有件へ重複加算していない。
+最終P6監査は350出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+validation/post-registration.json、validation/p601-final-audit.json、validation/test-source-commit.jsonを参照。
+当該push後のWindows CIは未確定。他A/B/C・NC-01・P6も全体未達のまま。
+
 C-04は未達、passed=false。

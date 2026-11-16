@@ -110,4 +110,8 @@ PCへ回すのはこの上限内入力のWindows再現だけ。未定義仕様�
 
 push後のWindows CIは未確定。他のA/B/C、NC-01、P6も全体未達のまま。
 
+保存済みLinux結果はRust467/Python929成功、失敗/error・未実行・skipは0。
+正式16履歴と、全件/登録後確認/封印再集計の件数を混ぜない。
+P6最終登録は350出典・SOURCE_NOT_INVENTORIED=0。Windows CIは当該push後未確定。
+
 C-04は未達、passed=false。
