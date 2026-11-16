@@ -74,6 +74,8 @@ fields.jsonl、raw/accepted.jsonl、raw/constitutive.jsonl、raw/run.json、独�
 本体受理状態のc04follow_decisionは実closed枝、独立rowのc04follow_decisionsは既存last_flow分類呼出しの観測。
 後者は元のpenultimate再構成に基づく分類であり、保存累積塑性すべりの差とは別である。
 両辺がnull/unchangedなら判定を再評価していない旨をそのまま読む。欠損を0に置換しない。
+各不一致レコードのactual_classification_operands.shortcut_conditionは本体の配列厳密一致の両辺、
+inherited_decisionは保持元の受理座標と実closed判定の両辺。現在0増分と保持元の非0流れを混同しない。
 
 measurements.jsonは絶対L2・生参照ノルム・分母・相対L2、全GP更新分割分布、P/R条件付き差と平均主効果を保存する。
 *-signed-effects.jsonには符号付き全成分を保存する。ノルムを足して100%の原因割合にしない。
