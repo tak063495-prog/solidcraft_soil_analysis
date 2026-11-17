@@ -148,4 +148,20 @@ P6-01台帳へ科学結果と検証結果をそれぞれ固定コミット・SHA
 Windows/autocrlfの文書比較はuniversal newline、封印バイトは無変換。
 **push後のWindows CIは未確定**。Linux成功をWindows成功やA-01全体受入へ転用しない。
 
+## 全件検証の確定値
+
+fmt、clippy --locked --all-targets -- -D warnings、locked release build --all-targetsは終了0。
+Rustは467件とdoc検査、Pythonはtoolsを含む全7群937件が成功した。
+失敗/error、未実行、skip/ignore/filter除外、expected-failure、unexpected-successは0。
+全発見IDと全実行IDは重複・欠落なく一致。1,605コード/設定ソースは全Python前後で一致し、
+試験開始前に固定した9b3037c7e661b13004481fd222d0da4a2db38d93とも全バイト一致する。
+新規8件の単独スモーク、site-packagesなしの8件、登録後再検査は937固有件へ重複加算しない。
+科学診断の新規全体求解は0件。全件ソフトウェア試験が従来どおり実行する小型求解とは分ける。
+
+旧12,745ファイルはGit blobとSHAで一致、必要アーカイブ欠落0。旧側の変更は台帳追記と監査SHA pinのみ。
+既存CIのpostfold74パスはGit参照を保持し、最終sparse除外もこの74パスだけ。
+取得時のキャッシュ競合を含む補助失敗はvalidation/environment-preparation.jsonとgit-recovery/transport.zipに保持する。
+一次ソフトウェアのライセンスはprimary-source-licenses/に同梱した。
+検証JSONも固定コミットへ保存してからP6へ追加登録する。push後のWindows CIは未確定。
+
 A-01は未達、passed=false。
