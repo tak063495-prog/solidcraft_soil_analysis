@@ -164,4 +164,12 @@ Rustは467件とdoc検査、Pythonはtoolsを含む全7群937件が成功した�
 一次ソフトウェアのライセンスはprimary-source-licenses/に同梱した。
 検証JSONも固定コミットへ保存してからP6へ追加登録する。push後のWindows CIは未確定。
 
+検証JSONは1545ad5d197285690719a3036f3d00573c127ad0へ固定した。
+集計器の複製validation/validation.jsonも同じ固定コミット・SHAで追加登録した。
+初回登録後のP6再検査は76件中2失敗（複製1件のSOURCE_NOT_INVENTORIED）で、そのログと監査を保持する。
+複製追加登録後はP6 76件・物理付録5件・新規契約8件の計89件が成功。全件937件へ加算しない。
+最終P6監査は354出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+validation/post-registration.json、validation/p601-final-audit.json、validation/final-base-preservation.jsonを参照。
+push後のWindows CIは未確定。
+
 A-01は未達、passed=false。
