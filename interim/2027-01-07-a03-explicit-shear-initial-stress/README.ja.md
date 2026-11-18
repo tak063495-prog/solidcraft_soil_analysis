@@ -170,9 +170,11 @@ A-03の元の全基準は満たしていない。A-01〜A-04、B-01〜B-03、C-0
 PowerShellは作業領域へ展開し、公式の対象ファイルSHAを照合した。NCコード/設定を変更せず既存試験を実行する。
 
 新科学証拠は **271,823,380 bytes・11 part・1309 member** の分割ZIPへ封印し、全part/結合ZIP/memberのSHAを確認した。
-差ベクトル352,194,525 bytesも封印内に保持する。
+差ベクトル352,194,525 bytesも封印内に保持する。全member SHAを照合して再展開した後、
+Linuxでmeasurementsと差ベクトルを再集計し、両方のバイト/SHAが一致した。これは再求解ではない。
 新試験は9件の入力・固定順・CRLF・保全・封印・POSIX/NULパス確認だけで、重いFEM再計算を追加しない。
 rust-integration-1への重い追加は0。旧Windows CI失敗を削除・成功に書き換えない。
+科学記録の固定コミットはe7bc441b1b6c8a4424ee1a372094c31a03df114f。科学記録登録後のP6監査は364出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
 P6-01へ科学記録と確定validationを固定コミット・Git blob・SHA-256・型付きboolで追記登録する。
 旧台帳の全バイト接頭部を維持し、監査器の変更は台帳SHA定数だけとする。
 全件検証を実行中。確定件数はvalidation.jsonと後続の固定出典登録に記録する。

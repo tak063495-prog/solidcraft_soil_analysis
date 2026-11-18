@@ -48,6 +48,7 @@ if ($LASTEXITCODE -ne 0) { throw '観測再現未完了' }
 ```
 
 工程→共通i/4の16座標→物理接続順→成分、C-order、math.fsum、left−rightを固定する。
+Linuxではmeasurementsとdifference-vectorsの両方が再展開・再集計でバイト一致した。
 差が出ればOS/バージョン/差分を保存し、一致確認は未達とする。Windowsの集計順差を許容値で吸収しない。
 再組立/SVDを含む最終ビットのOS間一致を保証しない。保存場の集計は新しい全体求解に数えない。
 
