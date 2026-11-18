@@ -24,7 +24,7 @@ $Stamp=(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').
 $Store="D:\Work\PCFAIL-objects-$Stamp"
 $Tree="D:\Work\PCFAIL-$Stamp"
 $Branch='codex/plastic-spatial-convergence'
-$Commit='18d54b140bf44b6ca20da2745c3b4dd367437277'
+$Commit='ce8ce8ddba71fba7fe4015696268669b6df72886'
 git clone --filter=blob:none --depth=1 --single-branch --branch $Branch --no-checkout https://github.com/tak063495-prog/solidcraft_soil_analysis.git $Store
 if ($LASTEXITCODE -ne 0) { throw '限定clone失敗' }
 git -C $Store fetch --filter=blob:none --depth=1 --no-tags origin $Commit
@@ -195,6 +195,9 @@ failure.json・soil.log・独立部分出力を保持する。Windows binary64�
 & $Py "$Diag/pcfail_run.py" --output "$Out/a04-precision-process" --timeout 1800 --memory-gib 4 -- `
   $Py "$Diag/pcfail_hydraulic.py" --output "$Out/a04-precision" --steps 4 --precision host
 ```
+
+本作業はportable高精度参照を実装していない。hostのnmantが52でmatrix未完了なら、32以降へ進まない。
+将来参照を修正するときは、その修正を含む検証済み固定SHAを別記し、今回の旧失敗出力を保持する。
 
 matrix目安1–10分/概算1GiB未満（旧PC18.0s、peak_ws170,000,384Bで途中停止）。
 精度観測は1分以内/概算1GiB未満。observation.jsonのexecution_complete=falseでも観測コマンド自体は
