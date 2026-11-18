@@ -1,11 +1,12 @@
 """Light saved-evidence contracts; no patch solves or online retrieval in CI."""
-import hashlib
 import json
 import math
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+
+from workflow_pin import prior_record_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 HERE = ROOT/'interim/2026-12-27-b03-offset-kink-cloud-followup'
@@ -117,7 +118,7 @@ class B03OffsetKinkCloudFollowup(unittest.TestCase):
 
     def test_old_records_and_production_sources_are_unchanged(self):
         for name, expected in json.loads((HERE/'prior-record-binding.json').read_text()).items():
-            self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(), expected, name)
+            self.assertEqual(prior_record_sha256(name, (ROOT/name).read_bytes()), expected, name)
 
     def test_document_suffix_accepts_actual_crlf(self):
         suffix = 'B-03は未達、passed=false。\n'

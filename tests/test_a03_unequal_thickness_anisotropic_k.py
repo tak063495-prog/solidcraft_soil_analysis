@@ -1,8 +1,10 @@
 """Small input/order/archive contracts; no FEM solve or new Rust integration work."""
-import hashlib, json
+import json
 from pathlib import Path, PureWindowsPath
 import subprocess, sys, tempfile, unittest
 import numpy as np
+from workflow_pin import prior_record_sha256
+
 ROOT=Path(__file__).resolve().parents[1]
 HERE=ROOT/'interim/2027-01-06-a03-unequal-thickness-anisotropic-k'
 sys.path.insert(0,str(HERE))
@@ -76,7 +78,7 @@ class A03UnequalAnisotropic(unittest.TestCase):
 
     def test_prior_records_sha_unchanged(self):
         for p,sha in read('prior-record-binding.json').items():
-            self.assertEqual(hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),sha,p)
+            self.assertEqual(prior_record_sha256(p, (ROOT/p).read_bytes()),sha,p)
 
     def test_ci_sparse_selects_new_archive(self):
         parts=[HERE/p['name'] for p in read('archive-index.json')['parts']]
