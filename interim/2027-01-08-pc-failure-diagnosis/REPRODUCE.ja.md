@@ -15,7 +15,7 @@ Windows Job Object経路は本作業のLinuxでは実行未確認、push後Windo
 
 cwd：`D:\Work`。初回取得もblob:none / depth1 / single-branch。
 既存のNEW-*リポジトリの設定や実行中作業ツリーを変えず、別のオブジェクト格納先を作る。
-`$Commit`は今回pushされた最終40桁SHAを指定する。枝の先端が後日動いたら同じSHAを用いる。
+`$Commit`はPC再現に必要なコード・科学証拠の固定SHA。後続の台帳/検証記録追加とは分け、枝が動いても同じSHAを用いる。
 
 ```powershell
 Set-Location D:\Work
@@ -24,7 +24,7 @@ $Stamp=(Get-Date -Format 'yyyyMMdd-HHmmss')+'-'+[guid]::NewGuid().ToString('N').
 $Store="D:\Work\PCFAIL-objects-$Stamp"
 $Tree="D:\Work\PCFAIL-$Stamp"
 $Branch='codex/plastic-spatial-convergence'
-$Commit='<今回pushした最終40桁SHA>'
+$Commit='18d54b140bf44b6ca20da2745c3b4dd367437277'
 git clone --filter=blob:none --depth=1 --single-branch --branch $Branch --no-checkout https://github.com/tak063495-prog/solidcraft_soil_analysis.git $Store
 if ($LASTEXITCODE -ne 0) { throw '限定clone失敗' }
 git -C $Store fetch --filter=blob:none --depth=1 --no-tags origin $Commit
@@ -84,10 +84,10 @@ cwd：`$Tree`。先行条件：手順0のソース配置とvenv。
 取得失敗やSHA不一致で止め、既存ファイルを削除する手順はない。
 
 ```powershell
-foreach ($Profile in @('b01','b01-cli','a01','a01-old')) {
-  & $Py "$Diag/pcfail_run.py" --output "$Out/fetch-$Profile-process" --timeout 1800 --memory-gib 4 -- `
-    $Py "$Diag/pcfail_evidence.py" --profile $Profile --fetch-commit $Commit --output "$Out/fetch-$Profile"
-  if ($LASTEXITCODE -ne 0) { throw "$Profile の証拠未達。独立項目は別に続行可能" }
+foreach ($EvidenceProfile in @('b01','b01-cli','a01','a01-old')) {
+  & $Py "$Diag/pcfail_run.py" --output "$Out/fetch-$EvidenceProfile-process" --timeout 1800 --memory-gib 4 -- `
+    $Py "$Diag/pcfail_evidence.py" --profile $EvidenceProfile --fetch-commit $Commit --output "$Out/fetch-$EvidenceProfile"
+  if ($LASTEXITCODE -ne 0) { Write-Host "$EvidenceProfile の証拠は未達。記録を保持し、次の独立群を確認する" }
 }
 & $Py "$Diag/pcfail_run.py" --output "$Out/b01-evidence-process" --timeout 1800 --memory-gib 4 -- `
   $Py "$Diag/pcfail_evidence.py" --profile b01 --output "$Out/b01-evidence" --extract "$Out/b01-unsealed"
@@ -145,7 +145,7 @@ if ($LASTEXITCODE -ne 0) { throw '観測器build未完了' }
 fresh_popen/invocation_id、Run全体と後続accepted列のexact（elapsedのみ除外）、元の各比較ゲート。
 同じPIDが後で現れても失敗にしない。別起動の同一invocation_id・状態改変・履歴改変は失敗。
 
-**次は自動チェーンへ登録しない。** n4の全工程・厳密再開検査が終了0で、元ゲートの未達を記録済み、
+**次は自動チェーンへ登録しない。** n4の全工程・厳密再開検査が終了0で、全caseのcomparison.existing_field_gates_passed=true、
 1子の実測時間/メモリから次も7500s/8GiB内と判断できた場合だけ、別コマンドとしてn8を選ぶ。
 n8完了と同じ資源条件を確認してからn16。上限外の見込みなら規模上限のため確認不可・未達。
 
@@ -237,7 +237,15 @@ if ($LASTEXITCODE -ne 0) { throw 'a04-128の元ゲート監査未達。次水準
 
 ## 6. 新しい軽量回帰試験と結果の読み方
 
+この試験は今回の封印も読むため、基本sparseで除外される今回の4part（61,109,258B）だけを
+追加で選択取得する。旧4群12partとは別。汎用fetch APIはmanifestのpartだけを固定blobから取得し、
+sparse規則の全面再適用や旧失敗出力の削除を行わない。
+
 ```powershell
+$NewEvidenceCode="import sys,json; from pathlib import Path; sys.path.insert(0,'$Diag'); from pcfail_evidence import fetch,verify; f=Path('$Diag').resolve(); m=json.loads((f/'archive-index.json').read_text(encoding='utf-8')); fetch(f,m,'$Commit'); r=verify(f,m); print(r); assert r['status']=='verified'"
+& $Py "$Diag/pcfail_run.py" --output "$Out/new-evidence-process" --timeout 1800 --memory-gib 4 -- `
+  $Py -c $NewEvidenceCode
+if ($LASTEXITCODE -ne 0) { throw '新試験用の4partが未達。欠落を試験成功へ変換しない' }
 & $Py "$Diag/pcfail_run.py" --output "$Out/new-tests-process" --timeout 1800 --memory-gib 4 -- `
   $Py -m unittest discover -s tests -p test_pc_failure_diagnosis.py -v
 ```

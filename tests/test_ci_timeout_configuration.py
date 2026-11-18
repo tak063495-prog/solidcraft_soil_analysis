@@ -34,7 +34,7 @@ class CITimeoutConfiguration(unittest.TestCase):
         text = self.workflow()
         block = text.split('          sparse-checkout: |\n', 1)[1].split('      - name:', 1)[0]
         templates = [line.strip() for line in block.splitlines() if line.strip()]
-        self.assertEqual(len(templates), 10)
+        self.assertEqual(len(templates), 11)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             def git(*args, **kwargs):
