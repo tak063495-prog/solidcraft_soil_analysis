@@ -55,6 +55,7 @@ jobs:
             ${{ (matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*' || '!/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*' }}
             ${{ (matrix.group == 'python-c01-cause') && '/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*' || '!/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*' }}
             ${{ (matrix.group == 'python-c01-path' || matrix.group == 'python-c01-cause') && '/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip' || '!/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip' }}
+            ${{ (matrix.group == 'python-core-0' || matrix.group == 'python-core-1') && '/interim/2027-01-08-pc-failure-diagnosis/evidence.zip.part*' || '!/interim/2027-01-08-pc-failure-diagnosis/evidence.zip.part*' }}
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
