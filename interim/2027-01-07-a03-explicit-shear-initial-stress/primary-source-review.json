@@ -1,0 +1,74 @@
+{
+  "client_date": "2026-11-18",
+  "timezone": "Asia/Tokyo",
+  "inherited_reviews": [
+    "interim/2026-12-22-a03-wet-soil-birth-cause-diagnosis/primary-source-review.json",
+    "interim/2026-12-30-a03-wet-soil-birth-cloud-followup/primary-source-review.json",
+    "interim/2027-01-06-a03-unequal-thickness-anisotropic-k/primary-source-review.json"
+  ],
+  "inherited_scope": "12-22/12-30/01-06で確認済みの再活性化、初期有効応力と水圧、定常と過渡、仕事と積分則だけを継承。今回の取得成功としない。",
+  "retrieval_attempts": [
+    {
+      "name": "sigini",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAESUBRefMap/simasub-c-sigini.htm",
+      "exit_code": 22,
+      "body_obtained": false,
+      "sha256": null
+    },
+    {
+      "name": "initial-types",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEPRCRefMap/simaprc-c-initialcond-t-SpecifyingTheTypeOfInitialConditionBeingDefined-sma-topic1.htm",
+      "exit_code": 22,
+      "body_obtained": false,
+      "sha256": null
+    },
+    {
+      "name": "geostatic",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-geostatstress.htm",
+      "exit_code": 22,
+      "body_obtained": false,
+      "sha256": null
+    },
+    {
+      "name": "reactivation",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-elemremovrepl.htm",
+      "exit_code": 22,
+      "body_obtained": false,
+      "sha256": null
+    },
+    {
+      "name": "calculix-initial",
+      "url": "https://raw.githubusercontent.com/Dhondtguido/CalculiX/refs/heads/master/ccx_2.23/doc/ccx/node232.html",
+      "exit_code": 22,
+      "body_obtained": false,
+      "sha256": null
+    }
+  ],
+  "additional_confirmed": [
+    {
+      "title": "Abaqus 2025 SIGINI",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAESUBRefMap/simasub-c-sigini.htm",
+      "access": "web openの本文、全78行中L18-L23確認",
+      "confirmed": "3D連続体でせん断を含む6成分を定義し、静的又は地盤応力工程で初期応力と外力/分布荷重の平衡を確認する。Abaqus成分順は11,22,33,12,13,23。本コードのxx,yy,zz,xy,yz,zxへ同じ順を転記しない。"
+    },
+    {
+      "title": "Abaqus 2025 Initial Condition Types",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEPRCRefMap/simaprc-c-initialcond-t-SpecifyingTheTypeOfInitialConditionBeingDefined-sma-topic1.htm",
+      "access": "web openとfindによる本文L482-L485, L528-L541確認",
+      "confirmed": "直接値は要素内一定。土の初期値は有効応力で初期配置へ作用する。非平衡なら平衡工程を置き、製品は人工的な逆向き応力を初工程で解放するRAMP/STEPを区別する。本件へ製品の算法を導入する根拠ではなく、入力内力と平衡化を区別する資料。"
+    },
+    {
+      "title": "Abaqus 2025 Element and Contact Pair Removal and Reactivation",
+      "url": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-elemremovrepl.htm",
+      "access": "web open本文L42-L48確認",
+      "confirmed": "strain-freeとwith-strainは配置基準を区別する。strain-freeのゼロ応力の説明を、本件の明示fresh非零応力の製品仕様と同一視しない。"
+    }
+  ],
+  "unavailable_scope": "2026版の直接curlは403、web openは503。検索抜粋は本文取得として扱わない。MIT 2017 SIGINIも本文を確認したが、今回の根拠は取得できた公式2025本文とする。CalculiX候補は404、根拠へ使わない。",
+  "bibliography_only": [
+    "Potts & Zdravkovic (1999/2001): 本文未取得・書誌だけ。",
+    "Wang et al. 2024, DOI 10.3390/jmse12050823: 継承した要旨/序論以外の方法本文は未取得・方法は書誌だけ。"
+  ],
+  "external_numerical_reference_values_introduced": false,
+  "new_redistribution_or_initialization_rule_introduced": false
+}
