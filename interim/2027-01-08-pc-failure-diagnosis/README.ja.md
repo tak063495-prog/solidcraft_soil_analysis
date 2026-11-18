@@ -245,4 +245,12 @@ Rustの独立一覧/実行IDと、Pythonの最終発見/選択IDはそれぞれ�
 P6登録に必要な監査器SHA pinの更新は、登録後の専用試験と最終監査で別に確認する。
 **push後のWindows CIは未確定。数値の全受入は未達。**
 
+確定validationは`607c66c89fd9093fd718828a408eba1bf7655777`に固定して同じ台帳へ登録した。
+最終監査は出典369件、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+登録後のP6/CI/新試験92件も全件成功し、467/979へは加算していない。
+[最終監査](final-p601-audit.json)、[登録後結果](post-registration.json)、[保全検証](preservation.json)を参照。
+旧台帳は元バイト接頭部を保持し、監査器はSHA pinだけの変更。旧不変ファイルはGit objectを保持し、
+参照121実ファイルは全SHA一致。29GBを展開して全実ファイルを再hashしたとの主張はない。
+PC実行0・PC実行中チェーンへの操作0・生産Rust/NC変更0。push後Windows CIは未確定。
+
 今回の限定確認を全体完了へ変更しない。
