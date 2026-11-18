@@ -212,4 +212,12 @@ Rust全ターゲット467件成功、doc検査も終了0（doc内0件）。Pytho
 検証済みの新規展開の重複だけをworkから整理し、原生データ・封印・旧証拠は保持した。
 push後のWindows CIは未確定。A-02と他A/B/C、NC-01、P6は全体未達のまま。
 
+確定validation.jsonはc5bd4f98d06c575871bf2a91285d9fdeb026f740に固定してP6-01へ登録した。
+最終監査は357出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+登録後はP6関連76件・物理付録5件・本診断8件、計89件も成功し、467/945固有件へ加算していない。
+全件後の変更は台帳の固定validation追記と監査器のSHA pinだけで、残る1,615コード/設定ソースは全件時と一致する。
+旧12,842実ファイル・29,965,660,977 bytesも最終に再照合し、Git blob/SHA/実行属性は一致した。
+詳細はvalidation/p601-final-audit.json、post-registration.json、final-registration-preservation.json、final-base-preservation.json。
+push後のWindows CIは未確定。
+
 A-02は未達、passed=false。
