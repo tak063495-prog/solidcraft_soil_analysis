@@ -203,7 +203,10 @@ fmt、locked/all-targets clippy、release全ターゲットbuild、Rust doctest�
 全件入力コードの固定コミットはd5ce82f4d165d407402596c0fcbef7abf2bf3e7e。
 確定validationとGL共通座標の固定コミットはed09b83ea368e863d309d7a3236f7796d5a6f7f5。
 両方をP6へ追記登録し、最終監査は366出典・integrity_ok=true・SOURCE_NOT_INVENTORIED=0。
-登録後の確認と最終保全照合は同validation/へ別保存し、全件の固有数へ加算しない。
+登録後のP6関連76件＋新診断9件、計85件も成功（失敗/未実行/skip 0）。全件の固有数へ加算していない。
+最終保全は旧13,044ファイルのバイト/モード一致を確認し、残る旧2件は台帳の厳密な末尾追記と監査器のSHA定数だけ。
+既存NCを含む全元Git treeエントリもOID/モードを照合し、上記2件以外は一致した。
+保存先validation/final-preservation.jsonと最終保全ZIPに証拠を残した。
 ソフトウェア成功をA-03の受入へ転用しない。**push後のWindows CIは未確定**。
 
 A-03は未達、passed=false。
