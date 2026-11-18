@@ -77,7 +77,13 @@ fmt、locked/all-targets clippy、release全ターゲットbuild、doctestは終
 
 全件ログ・ID一覧・process JSON・前後ソースSHAをfull-suite.zipへ封印し、full-suite-index.jsonでSHA固定した。
 修正と失敗記録の固定コミットは428e6d82b1f5af925ada61945c919dd15cee0981。
-確定validationを不変コミットへ保存してから同じP6台帳へ追記し、最終監査・保全・登録後検査を別記する。
+確定validationを759d8b39a659e1fe379fe6ed87ec282b6fbfc900へ固定してP6へ登録した。
+最終監査は362出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。旧台帳は厳密なバイト接頭部を維持。
+登録後のP6関連76件＋A-03の12件、計88件も成功し、全件957件へ重複加算していない。
+起点の配置対象13004ファイルのうち13001件はバイト/Gitモード一致。
+残る3件は対象試験（固定428e6d8のパッチと一致）、台帳の追記、監査器のSHA定数だけ。
+旧A-03フォルダの全ファイルSHAも一致し、旧数値・封印・失敗・NCを保持した。
+全件証拠と保全証拠のZIP/member SHAも再読込で確認した。
 push後の新しいWindows CIは未確定。全件ソフトウェア成功をA-03の全体受入へ転用しない。
 
 A-03は未達、passed=false。
