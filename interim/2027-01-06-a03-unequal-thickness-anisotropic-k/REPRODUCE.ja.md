@@ -47,7 +47,9 @@ if ($LASTEXITCODE -ne 0) { throw '観測再現未完了' }
 (Get-FileHash "$D/measurements.json" -Algorithm SHA256).Hash
 ```
 
-同じ封印から2つのSHAは一致する。difference-vectors.jsonも元のSHAと照合できる。
+同じLinux環境では2つのSHAとdifference-vectors.jsonのバイト一致を確認した。
+WindowsではこのSHA比較自体も未確認であり、不一致なら差分と実行環境を保存して一致確認は未達とする。
+再組立/拘束空間SVD等を含む最終ビットのOS間一致を保証せず、許容値で差を吸収しない。
 これは観測の再読込であり、新しい全体求解ではない。
 共通i/4の16座標、工程→物理接続順→成分、C-order、math.fsum、left−rightを固定する。
 Windowsの集計順差を許容値で吸収しない。

@@ -38,6 +38,7 @@ Wangら2024（DOI 10.3390/jmse12050823）も継承した要旨/序論を越え�
 z<=0.5をz'=2hz、z>0.5をz'=h+2(1-h)(z-0.5)で入力変換した。
 接続・中点次数・面集合・外枠[0,1]^3・元の側面ローラーは同一。
 領域boundsと体積は変換後の節点から更新し、全input-auditに各領域/ボディ・全体積を保存した。
+領域source_sha256は診断入力の変換定義の指紋で、外部CADの実測出典を称するものではない。
 
 |界面高さh m|Lower体積 m³|Upper体積 m³|全体積 m³|
 |---|---:|---:|---:|
@@ -59,6 +60,10 @@ N4/8/16を両実装が入力から新規に全体平衡求解する54経路2016�
 各9条件のN8だけ独立GL7で剛性・初期応力・水圧・重量を再積分/再求解する9経路288状態。
 **正式63経路・2304受理状態**、選択した正式行列の数値不収束/時間切れ0。
 独立側へ本体の解・接線・分割・受理列は渡さない。保存jumpの補間再生は行わない。
+独立結果のreference文字列のGL125は旧helperの固定表記である。実効次数はvolume_orderと入力だけの
+[組立監査](validation/quadrature-contract.json)で区別し、全18本のN8入力でGL5=125点/要素、GL7=343点/要素を実測した。
+出力の材料サンプル格子は両方27点/要素。この監査の新規平衡求解・受理状態は0で、正式数に加算しない。
+GL対照は12-30と同じ体積積分則の変更で、接触Tri6面則と静水圧専用面則は固定した。
 本体27経路の観測なしwhole（1008状態）はelapsed_seconds以外の全Runが厳密一致。
 通常CLI9経路288状態も、elapsed_secondsと実行版SHAを除いて一致する。
 観測なし36経路1296状態を正式数へ加算しない。
@@ -160,10 +165,35 @@ A-03は元基準を全て満たしていない。A-01〜A-04、B-01〜B-03、C-0
 初回/現在の実行版指紋を付け替えず、全9本の完成版CLI対照を別にSHA固定した。
 
 新科学証拠はarchive-indexと分割ZIPへ封印し、全part/結合ZIP/memberのSHAを検査する。
+封印は227,016,990 bytes・10 part・1351 memberで、展開後のmeasurementsと差ベクトルもバイト再現した。
 重い再計算は封印に残し、新試験は10件の入力・固定順・CRLF・SHA等だけ。rust-integration-1への重い追加0。
 P6-01へacceptance/measurements/確定validationを固定コミット・Git blob・SHA-256・型付きboolで追記登録する。
 旧台帳の全バイト接頭部を保持し、監査器は台帳SHA定数だけ更新する。
 全件検証の確定件数はvalidation.jsonへ記録し、登録後の監査・単独検査は重複加算しない。
 ソフトウェア試験成功をA-03の受入へ転用しない。**push後のWindows CIは未確定**。
+
+
+## Linux全件検証の確定記録
+
+fmt、locked/all-targets clippy、release全ターゲットbuild、Rust doctestは終了0。
+**Rust467件、Python955件（tests/toolsの全7群）が成功**。
+失敗/error・未実行・skip・ignore・filter除外・expected-failure・unexpected-successは0。
+全発見/割当/実行IDが一致し、欠落/重複0。Python全件中の1626コード/設定ソースは前後のSHAが一致した。
+準備の単独10件と登録後の確認は全件の固有数へ二重加算しない。
+ソフトウェア成功をA-03の数値受入へ転用しない。push後のWindows CIは未確定。
+
+|Python群|成功|実測秒（起動/discovery込み）|
+|---|---:|---:|
+|python-core-0|439|551.331|
+|python-core-1|492|491.769|
+|python-mean-evidence|4|913.947|
+|python-spatial-evidence|4|144.361|
+|python-c01-switch|4|63.648|
+|python-c01-path|4|94.677|
+|python-c01-cause|8|72.847|
+
+全件の生ログ・ID一覧・前後ソースSHA・process JSONはvalidation/full-suite.zipとindexへ保存した。
+科学記録の固定コミットは8e71b2ef30795353a164b3c97ce87ef62bcba2cc。
+確定validationを別コミットに固定してからP6へ追記登録し、最終監査と登録後試験を別記する。
 
 A-03は未達、passed=false。
