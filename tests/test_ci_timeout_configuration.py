@@ -20,6 +20,30 @@ class CITimeoutConfiguration(unittest.TestCase):
     def workflow(self):
         return (ROOT/'.github/workflows/fem-ci.yml').read_text(encoding='utf-8')
 
+    def test_historical_workflow_rejects_unapproved_changes(self):
+        from workflow_pin import NEXT_STEP, PC_EVIDENCE_RULE, WORKFLOW, prior_record_sha256
+
+        data = (ROOT / WORKFLOW).read_bytes()
+        for changed in (data.replace(PC_EVIDENCE_RULE, b''),
+                        data.replace(PC_EVIDENCE_RULE, PC_EVIDENCE_RULE * 2),
+                        data.replace(PC_EVIDENCE_RULE + NEXT_STEP, NEXT_STEP + PC_EVIDENCE_RULE),
+                        data.replace(PC_EVIDENCE_RULE, PC_EVIDENCE_RULE.replace(b"core-0", b"core-1"))):
+            with self.assertRaises(ValueError):
+                prior_record_sha256(WORKFLOW, changed)
+        self.assertNotEqual(prior_record_sha256(WORKFLOW, data + b' '),
+                            prior_record_sha256(WORKFLOW, data))
+
+    def test_pin_fix_documents_keep_terminal_status(self):
+        folder = ROOT/'interim/2027-01-09-ci-pcfail-workflow-pin-fix'
+        suffix = 'A-01〜A-04、B-01〜B-03、C-01〜C-04、NC-01、P6 は未達、passed=false。\n'
+        for name in ('README.ja.md', 'REPRODUCE.ja.md'):
+            text = (folder/name).read_text(encoding='utf-8')
+            self.assertTrue(text.endswith(suffix), name)
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp)/name
+                path.write_bytes(text.replace('\n', '\r\n').encode('utf-8'))
+                self.assertEqual(path.read_text(encoding='utf-8'), text)
+
     def test_workflow_runs_every_python_partition_and_keeps_exact_history(self):
         text = self.workflow()
         groups = re.search(r'        group: \[([^\]]+)\]', text)[1].split(', ')
