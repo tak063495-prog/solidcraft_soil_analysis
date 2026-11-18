@@ -185,4 +185,31 @@ fmt/clippy/build、Rust全件、toolsを含むPython全件の確定件数と実�
 単独スモーク・封印再読込・登録後確認を固有全件数へ重複加算しない。
 ソフトウェア検証のpassed=trueはA-02の未達を変更しない。push後のWindows CIは未確定。
 
+
+## Linux全件検証の確定記録
+
+fmt、locked全ターゲットclippy、locked release全ターゲットbuildは終了0。
+Rust全ターゲット467件成功、doc検査も終了0（doc内0件）。Pythonはtoolsを含む全7群945固有件が成功した。
+失敗/error・未実行・skip/ignore/filter除外・expected failure・unexpected successは全て0。
+全発見/割当/実行IDが一致し、欠落/重複0。全件開始/終了の1,617コード・設定ソースは全SHA一致した。
+全件Pythonのソースは9edf1ea49ef680a7438939abb70ec097d746be4bに固定し、生産Rustは起点612f0f6と不変。
+
+|Python群|成功|実測秒（discovery込み）|
+|---|---:|---:|
+|python-core-0|465|321.512|
+|python-core-1|456|362.982|
+|python-mean-evidence|4|854.565|
+|python-spatial-evidence|4|127.957|
+|python-c01-switch|4|55.309|
+|python-c01-path|4|86.855|
+|python-c01-cause|8|71.735|
+
+初回全件の全945件が成功した。単独スモーク8件・封印再読込・登録後検査を固有全件数へ加算しない。
+全件試験が従来から行う小型求解も、本診断の42経路へ混ぜない。
+科学記録acceptance/measurementsは9b24c3d7333c00894c1967e8e91e6df2c61ddef7へ固定し、P6へ登録済み。
+確定validation.jsonも固定コミットにして同じ台帳へ追加登録し、最終監査・保全・関連再確認を保存する。
+新封印は314,386,961 bytes・13 part・818 member。新規展開から4観測JSONが全SHA一致した。
+検証済みの新規展開の重複だけをworkから整理し、原生データ・封印・旧証拠は保持した。
+push後のWindows CIは未確定。A-02と他A/B/C、NC-01、P6は全体未達のまま。
+
 A-02は未達、passed=false。
