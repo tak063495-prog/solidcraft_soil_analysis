@@ -11,11 +11,16 @@ Windowsではcheckout前にcore.autocrlf=falseとし、文書比較はuniversal 
 ```powershell
 $Py='.venv/Scripts/python.exe'
 & $Py -m unittest discover -s tests -p test_a03_unequal_thickness_anisotropic_k.py -v
-& $Py interim/2027-01-07-a03-sparse-path-ci-fix/a03path_reproduce.py --output work/NEW-a03path-reproduction
 ```
 
-12件の契約検査と、Linuxでも実施できる旧Windows形式入力の引用再現。
-後者はWindows OSでの実行を代用しない。stdin/stdoutの生bytesと結果を新規保存先へ残す。
+上はWindows/Linux共通の12件の契約検査。次は本セッションで使用したLinux用の原因再現スクリプトで、
+Windows形式の論理パスをLinuxのGitへ直接渡す。保存JSONのLinux再現ラベルも含めた実行ソースを維持している。
+
+```bash
+.venv/bin/python interim/2027-01-07-a03-sparse-path-ci-fix/a03path_reproduce.py --output work/NEW-a03path-reproduction
+```
+
+このLinux対照はWindows OSでの実行を代用しない。stdin/stdoutの生bytesと結果を新規保存先へ残す。
 既存の保存先は上書きしない。NUL bytesはシェルのパイプへ流さずPythonからGitへ直接渡す。
 
 全件は既存の検証器を再使用する。PowerShellを必要とする既存試験にはPowerShellを準備し、

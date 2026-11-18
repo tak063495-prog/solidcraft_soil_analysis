@@ -3,7 +3,7 @@
 PR #13、codex/plastic-spatial-convergence、起点6ee03451c49b86bc9f238ba0bed2f21b15f4299cへの追記。マージしない。
 2027-01-07は保存先ラベル、作業日は2026-11-18 JST。
 **A-03は未達、passed=false。数値・許容値・参照値・合否・拒否域・生産Rust・NCを変更しない。**
-新しいFEM求解は0。12 Tet10の旧科学記録・生証拠・封印・失敗・数値を全て保持する。
+科学診断としての新しいFEM求解は0（既存全件試験内の求解は別）。12 Tet10の旧科学記録・生証拠・封印・失敗・数値を全て保持する。
 
 ## 失敗と原因
 
@@ -24,6 +24,9 @@ Pythonの失敗表示はさらにreprでバックスラッシュを表示する�
 親CIステップはPowerShell 7だが、問題の子Gitは`subprocess.run`の引数配列・既定の`shell=False`で直接起動している。
 PowerShell/cmdによる再引用や改行だけが原因ではない。
 LinuxでもPureWindowsPathで同じ入力を作り、直接Gitを呼ぶと同じ引用不一致を再現した。
+さらに[実際の試験本体の対照](actual-case-probe/result.json)では、Path.relative_toの返値だけをWindows形式にして実Gitを呼んだ。
+起点の旧試験は期待どおり1失敗、修正版は両core規則で成功した。旧失敗トレースも保持する。
+これはLinux上のWindowsパス対照であり、Windows CI実行そのものの成功とは区別する。
 LF/CRLF入力、元stdin/stdoutの生bytes、コマンドと結果を[reproduction](reproduction/)へ保持した。
 LinuxへCRLFを直接渡す対照をWindows CRTのtext変換そのものとは扱わない。
 
@@ -52,5 +55,29 @@ e541fe1 / 2026-12-10の方式を継承する。旧台帳は厳密なバイト接
 
 全件検証の実数は確定後のvalidation.jsonに保存し、このREADMEへ追記する。
 push後の新しいWindows CIは未確定。Linuxの成功・エミュレーションをWindows実行成功へ転用しない。
+
+
+## Linux全件検証の確定記録
+
+fmt、locked/all-targets clippy、release全ターゲットbuild、doctestは終了0。
+**Rust467件、Python957件が成功**。failure/error・未実行・skip・ignore・filtered-out・expected-failure・unexpected-successは0。
+全発見/割当/実行IDが一致し、欠落/重複0。全件中の1630コード/設定ソースは前後でSHA一致。
+単独12件、実試験本体の旧版失敗/新版成功対照、登録後の再確認はこの固有件数に加算しない。
+以前のLinux955件成功・Windows491成功/1失敗の記録はそのまま保持した。
+
+|Python群|成功|実測秒（起動/discovery込み）|
+|---|---:|---:|
+|python-core-0|439|436.769|
+|python-core-1|494|361.837|
+|python-mean-evidence|4|862.848|
+|python-spatial-evidence|4|130.422|
+|python-c01-switch|4|47.948|
+|python-c01-path|4|77.372|
+|python-c01-cause|8|65.597|
+
+全件ログ・ID一覧・process JSON・前後ソースSHAをfull-suite.zipへ封印し、full-suite-index.jsonでSHA固定した。
+修正と失敗記録の固定コミットは428e6d82b1f5af925ada61945c919dd15cee0981。
+確定validationを不変コミットへ保存してから同じP6台帳へ追記し、最終監査・保全・登録後検査を別記する。
+push後の新しいWindows CIは未確定。全件ソフトウェア成功をA-03の全体受入へ転用しない。
 
 A-03は未達、passed=false。

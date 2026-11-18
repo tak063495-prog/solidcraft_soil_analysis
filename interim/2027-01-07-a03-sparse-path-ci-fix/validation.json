@@ -1,0 +1,235 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "a03_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "6ee03451c49b86bc9f238ba0bed2f21b15f4299c",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 957,
+    "executed": 957,
+    "passed": 957,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 1308463,
+      "exit_code": 0,
+      "elapsed_seconds": 0.8351639180000348
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 1308474,
+      "exit_code": 0,
+      "elapsed_seconds": 0.16144526999960362
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 1308490,
+      "exit_code": 0,
+      "elapsed_seconds": 0.13666891200045939
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 1308534,
+      "exit_code": 0,
+      "elapsed_seconds": 0.08319356500032882
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 1308541,
+      "exit_code": 0,
+      "elapsed_seconds": 1111.3534104110004
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 2102816,
+      "exit_code": 0,
+      "elapsed_seconds": 2.363032793000457
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-core-0"
+      ],
+      "pid": 1421419,
+      "exit_code": 0,
+      "elapsed_seconds": 436.7693191390008
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-core-1"
+      ],
+      "pid": 1421420,
+      "exit_code": 0,
+      "elapsed_seconds": 361.83655757700035
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-mean-evidence"
+      ],
+      "pid": 1781450,
+      "exit_code": 0,
+      "elapsed_seconds": 862.8475248040013
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-spatial-evidence"
+      ],
+      "pid": 1891299,
+      "exit_code": 0,
+      "elapsed_seconds": 130.421939242
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-c01-switch"
+      ],
+      "pid": 1986425,
+      "exit_code": 0,
+      "elapsed_seconds": 47.94815595699947
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-c01-path"
+      ],
+      "pid": 1986769,
+      "exit_code": 0,
+      "elapsed_seconds": 77.37206298400088
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03path/full/python/python-c01-cause"
+      ],
+      "pid": 1991666,
+      "exit_code": 0,
+      "elapsed_seconds": 65.59705888700046
+    }
+  ],
+  "source_count": 1630,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true,
+  "fix_commit": "428e6d82b1f5af925ada61945c919dd15cee0981",
+  "new_scientific_fem_solves": 0,
+  "old_reference_values_changed": false,
+  "retained_windows_failure": {
+    "run_id": 44234435017,
+    "job_id": 134567021528,
+    "requested_branch_head": "6ee03451c49b86bc9f238ba0bed2f21b15f4299c",
+    "tested_pr_merge_from_log": "93a443ebfc3d9b34e73005b9c9f3e91012fb211c",
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/44234435017/job/134567021528",
+    "runner": "Microsoft Windows Server 2025",
+    "git_version": "2.56.0.windows.4",
+    "test": "test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_ci_sparse_selects_new_archive",
+    "executed": 492,
+    "passed": 491,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "log_sha256": "8ca578b04c390fab29b965d5d75d578fc793dfd79b76e46bbf935304f6f8b81d",
+    "log_representation": "connector-decoded text, saved as UTF-8 preserving BOM and CRLF; not the original service ZIP"
+  },
+  "targeted_pre_full": {
+    "passed": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "not_added_to_full_unique_count": true
+  },
+  "merge_performed": false
+}
