@@ -28,7 +28,7 @@ Defining Initial Stresses / Establishing Equilibrium本文も確認した。
 製品の人工逆応力のRAMP/STEPを、本実装の初期化契約や新しい補正則へ導入しない。
 [Reactivation 2025](https://docs.software.vt.edu/abaqusv2025/English/SIMACAEANLRefMap/simaanl-c-elemremovrepl.htm)の
 strain-free/with-strainの配置基準の違いを確認したが、製品のゼロ応力再活性化を本件の明示fresh非零応力と同一視しない。
-2026版curlは403、web openは503。検索抜粋を本文取得とせず、取得失敗ログも封印する。
+2026版curlは403、web openは503で本文未取得・書誌/URL情報だけ。検索抜粋を本文取得とせず、取得失敗ログも封印する。
 Potts & Zdravković (1999/2001)は本文未取得・書誌だけ。
 Wangら2024（DOI 10.3390/jmse12050823）は継承した要旨/序論以外の方法本文は未取得・方法は書誌だけ。
 外部の数値参照値や未取得の式は作らない。
@@ -112,8 +112,14 @@ u/σ′/tractionの刻み差最大絶対値は u=8.1532e-17, stress=1.75078e-11,
 
 |最大相対L2|u|σ′|traction|端点仕事|数値散逸|荷重仕事|
 |---|---:|---:|---:|---:|---:|---:|
-|GL5−GL7|1.47825e-14|7.66817e-15|1.42357e-14|2.85146e-14|2.85755e-14|1.486e-14|
+|GL5−GL7（全N8・補助32点）|1.47825e-14|7.66817e-15|1.42357e-14|2.85146e-14|2.85755e-14|1.486e-14|
+|GL5−GL7（共通i/4・主16点）|1.47969e-14|7.75402e-15|1.42635e-14|2.84633e-14|2.8584e-14|1.4807e-14|
 |本体−独立|7.00877e-14|5.1028e-14|1.04419e-13|2.05627e-13|3.4096e-13|6.25476e-14|
+
+GLの継承helper欄はN8全32点だったため、元のmeasurements/封印値を保持し、
+[共通i/4の16点](validation/gl-common-coordinates.json)と全生差をvalidation/gl-common-evidence.zipへ追補した。
+この作業で新規に解いた18本のGL5/7入力経路からの所定座標選択であり、新規求解数0・結論変更0。
+GLの主比較は16点、32点の値は補助記録である。
 
 既存のu/σ′/traction・力・カテゴリの照合ゲートは全27対照で維持された。新しい包括受入基準を作った結果ではない。
 
@@ -177,7 +183,25 @@ rust-integration-1への重い追加は0。旧Windows CI失敗を削除・成功
 科学記録の固定コミットはe7bc441b1b6c8a4424ee1a372094c31a03df114f。科学記録登録後のP6監査は364出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
 P6-01へ科学記録と確定validationを固定コミット・Git blob・SHA-256・型付きboolで追記登録する。
 旧台帳の全バイト接頭部を維持し、監査器の変更は台帳SHA定数だけとする。
-全件検証を実行中。確定件数はvalidation.jsonと後続の固定出典登録に記録する。
+fmt、locked/all-targets clippy、release全ターゲットbuild、Rust doctestは終了0。
+**Rust467件、Python966件（全7群）が成功**。
+全件のfailure/error・未実行・skip・ignore・filtered-out・expected-failure・unexpected-successは0。
+全発見/割当/実行IDが一致し、欠落/重複0。コード/設定1640件の全件前後SHAが一致した。
+初回軽量試験の8成功/1errorと、修正後9成功は別記し、全件固有数へ二重加算しない。
+
+|Python群|成功|実測秒（起動/discovery込み）|
+|---|---:|---:|
+|python-core-0|477|475.641|
+|python-core-1|465|538.660|
+|python-mean-evidence|4|939.807|
+|python-spatial-evidence|4|146.481|
+|python-c01-switch|4|66.675|
+|python-c01-path|4|108.978|
+|python-c01-cause|8|83.537|
+
+全件の生ログ・ID一覧・process JSON・前後ソースSHAをvalidation/full-suite.zipとindexへ保存した。
+全件入力コードの固定コミットはd5ce82f4d165d407402596c0fcbef7abf2bf3e7e。
+確定validationとGL共通座標の出典は、別の固定コミットからP6へ追加登録する。
 ソフトウェア成功をA-03の受入へ転用しない。**push後のWindows CIは未確定**。
 
 A-03は未達、passed=false。

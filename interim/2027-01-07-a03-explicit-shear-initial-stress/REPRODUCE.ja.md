@@ -52,6 +52,22 @@ Linuxではmeasurementsとdifference-vectorsの両方が再展開・再集計で
 差が出ればOS/バージョン/差分を保存し、一致確認は未達とする。Windowsの集計順差を許容値で吸収しない。
 再組立/SVDを含む最終ビットのOS間一致を保証しない。保存場の集計は新しい全体求解に数えない。
 
+## GLも共通i/4へ揃えた追補の再現
+
+元のmeasurements.jsonのGL欄は継承helperによるN8全32点の補助集計で、その値は保持した。
+主比較の共通16点はvalidation/gl-common-coordinates.jsonとgl-common-evidence.zipへ別封印した。
+ZIPとmemberのSHAはgl-common-evidence-index.json。追加の全体求解は0。
+
+```powershell
+$GlIndex=Get-Content "$D/validation/gl-common-evidence-index.json" -Raw | ConvertFrom-Json
+if ((Get-FileHash "$D/validation/gl-common-evidence.zip" -Algorithm SHA256).Hash.ToLowerInvariant() -ne $GlIndex.sha256) { throw 'GL封印SHA不一致' }
+& $Py -m zipfile -e "$D/validation/gl-common-evidence.zip" work/NEW-a03shear-gl-common
+& $Py work/NEW-a03shear-gl-common/gl_common.py --run work/NEW-a03shear-reopened/formal --output work/NEW-a03shear-gl-common-report
+if ($LASTEXITCODE -ne 0) { throw 'GL共通座標の集計未完了' }
+(Get-FileHash work/NEW-a03shear-gl-common-report/gl-common-coordinates.json -Algorithm SHA256).Hash
+(Get-FileHash "$D/validation/gl-common-coordinates.json" -Algorithm SHA256).Hash
+```
+
 ## 固定行列を入力から新規求解
 
 ```powershell
