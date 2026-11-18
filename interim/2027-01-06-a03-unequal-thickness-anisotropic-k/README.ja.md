@@ -194,6 +194,13 @@ fmt、locked/all-targets clippy、release全ターゲットbuild、Rust doctest�
 
 全件の生ログ・ID一覧・前後ソースSHA・process JSONはvalidation/full-suite.zipとindexへ保存した。
 科学記録の固定コミットは8e71b2ef30795353a164b3c97ce87ef62bcba2cc。
-確定validationを別コミットに固定してからP6へ追記登録し、最終監査と登録後試験を別記する。
+確定validationはace287ef8ca01cdb6d95dd45c81c8493d05e09e6へ固定し、P6へ追記登録した。
+最終P6監査は360出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。
+登録後のP6関連76件＋新診断10件、計86件も成功し、全件の固有件数へ加算していない。
+起点の配置対象12948ファイルは、12946件がバイト/モード一致し、残る2件は台帳の厳密な末尾追記と監査器のSHA定数だけ。
+全件の前後で旧12946件のSHA一覧自体もバイト一致し、旧数値・生証拠・失敗・封印・NCを保持した。
+通常git commitによる旧blob一括lazy取得は中断し、GIT_NO_LAZY_FETCHとwrite-tree --missing-ok/commit-tree/CASを用いた。
+この準備経路と失敗の要約はvalidation/git-recovery/commit-recovery.jsonへ別記した。
+push後のWindows CIは未確定。
 
 A-03は未達、passed=false。
