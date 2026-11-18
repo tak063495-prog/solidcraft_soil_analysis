@@ -1,0 +1,54 @@
+{
+  "session_date_jst": "2026-11-18",
+  "folder_date_is_requested_label": true,
+  "prior_reviews": [
+    "interim/2026-12-21-a02-joint-birth-cause-diagnosis/README.ja.md",
+    "interim/2026-12-29-a02-joint-birth-cloud-followup/primary-source-review.json"
+  ],
+  "external_reference_values_introduced": false,
+  "book_body_claims_invented": false,
+  "sources": [
+    {
+      "title": "SIMULIA Abaqus 2026, FRIC",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAESUBRefMap/simasub-c-fric.htm",
+      "access": "公式本文取得。Variables That Can Be Updated の DSLIP、PNEWDT と Variables Passed in for Information の DGAM、TAULM、SLIP を追加確認。web open、139行。",
+      "confirmed": "不可逆すべり増分は増分収束時に累積される。すべり増分と摩擦応力を用いたstick/slip判定、局所ルーチンからの全体増分再試行要求が説明されている。",
+      "use_and_limit": "受理終点カテゴリ、増分内すべり累積、全体刻み直しを別観測にする動機。製品のカテゴリ番号・戻り写像・既定・許容値を本件へ移植しない。"
+    },
+    {
+      "title": "Kuhn, Suzuki and Daouadji, Linear-frictional contact model for 3D discrete element (DEM) simulations of granular systems, arXiv:2002.10231v1",
+      "url": "https://arxiv.org/html/2002.10231",
+      "access": "著者公開本文のIntroduction、Algorithmを取得して追加確認。web open、217行。",
+      "confirmed": "単一増分の途中の接触成立・弾性からすべりへの移行と、その区間中の仕事を区別する。局所算法では増分内運動について仮定を置いている。",
+      "use_and_limit": "局所の増分内分割と、全体平衡を新規に解く入力二分を区別する根拠。DEMであり、本Tet10連成の参照解・切替根・収束率の証明ではない。論文の数値を参照値にしない。"
+    },
+    {
+      "title": "SIMULIA Abaqus 2026, Convergence Criteria for Nonlinear Problems / Solving Nonlinear Problems / Frictional Behavior",
+      "urls": [
+        "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-convergcriteria.htm",
+        "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-nonlineareqns.htm",
+        "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEITNRefMap/simaitn-c-friction.htm"
+      ],
+      "access": "今回の直接取得はproxy CONNECT 403、web openは503。検索抜粋は本文取得と区別。12-21・12-29で本文確認済みの範囲だけを継承。",
+      "use_and_limit": "反復平衡と刻み制御を分離する既確認範囲を継承。今回新しく取得した本文や収束定理とは呼ばない。"
+    },
+    {
+      "title": "Wriggers, Computational Contact Mechanics, 2nd ed., 2006",
+      "url": "https://doi.org/10.1007/978-3-540-32609-0",
+      "access": "12-21・12-29の取得限界を継承。本文未取得・書誌だけ。",
+      "use_and_limit": "未確認の切替位置決め式・定理・数値を引用しない。"
+    },
+    {
+      "title": "Laursen, Computational Contact and Impact Mechanics",
+      "url": "https://doi.org/10.1007/978-3-662-04864-1",
+      "access": "12-21・12-29の取得限界を継承。本文未取得・書誌だけ。",
+      "use_and_limit": "未確認の全体時間刻み収束式・数値を引用しない。"
+    },
+    {
+      "title": "PLAXIS 3D 2025.1 Reference Manual",
+      "url": "https://files.seequent.com/PLAXIS/Manuals/PLAXIS_3D/English/PLAXIS_3D_2_Reference%20Manual.pdf",
+      "access": "12-29の限界を継承。自動刻み節の本文未取得・書誌だけ。",
+      "use_and_limit": "12-21のVersion 8の既確認内容を現在版へ拡張しない。"
+    }
+  ]
+}
