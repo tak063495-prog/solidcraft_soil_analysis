@@ -83,3 +83,7 @@ python-mean-evidence の実出力は `ValueError: saved mean-stress/complement p
 python-spatial-evidence の実出力は `ValueError: remeasured JSON differs`、`Ran 0 tests in 268.106s`、`FAILED (errors=1)`。
 
 両方とも Linux の既存の setUpClass 失敗に一致し、各 4 件の本体は未実行。core の skip 2 件は PowerShell 不在の既存ゲートで、公式 runner の終了コードも保存した。各群の合計には軽量試験の単独実行を重複計上していない。[validation.json](validation.json)・[全出力・試験 ID・保全照合](linux-validation.zip)・[旧 A-02 の同じ Linux 症状](../2027-01-15-a02-open-interval-further-bisection/README.ja.md)
+
+科学記録は `301d41d2e614f7d8421664c365a5f72de6c6dc2d`、validation は `1e77c330d877a9f031680962d7327e89be984ad3` の Git blob と SHA-256 に固定した。最終 P6 監査は 386 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。Windows の FEM と PowerShell 互換性は PR 先端に対応する Actions が結果を記録する。[最終 P6 監査](p6-final.json)
+
+A-03 は未達、passed=false。
