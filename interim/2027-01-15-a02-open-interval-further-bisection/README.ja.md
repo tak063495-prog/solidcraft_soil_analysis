@@ -75,3 +75,7 @@ fmt、locked 全ターゲット clippy（警告をエラー化）、release 全�
 |合計|1002|992|0|2|8|2|—|
 
 mean-evidence の実出力は `ValueError: saved mean-stress/complement partition differs from own history`、`Ran 0 tests in 879.909s`。spatial-evidence は `ValueError: remeasured JSON differs`、`Ran 0 tests in 259.438s`。いずれも `FAILED (errors=1)`。B-01 の旧先端対照および B-02 と同じ Linux の既存失敗として記録した。core 両群は PowerShell 未導入による各 1 skip のため既存 runner が終了 1 を返した。Windows の結果は最終 push に対応する両 Actions 実行で別に確認する。[実行件数・未実行 ID](validation.json)・[実ログと一覧](linux-validation.zip)・[以前の Linux 対照](../2027-01-13-b01-highprec-eigenspace/README.ja.md)
+
+科学記録は `ead7e27b4685e7e3d8025d59f0f0e40517984ad8`、validation は `a8bcd873c468593669f2b5668f327ce9ae9a3926` のバイトに固定した。登録後の P6-01 は全 383 出典で integrity_ok=true、SOURCE_NOT_INVENTORIED=0。登録後の P6 試験 57 件と本診断 2 件も成功し、全件数には重ねて加えていない。[最終監査](p6-final.json)・[登録後の試験ログ](post-registration.log)
+
+A-02 は未達、passed=false。
