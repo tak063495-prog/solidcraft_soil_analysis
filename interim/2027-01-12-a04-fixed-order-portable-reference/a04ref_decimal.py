@@ -142,7 +142,8 @@ class Hydraulic:
             row = dict(period=period['name'],dt=dt,iteration=iteration,merit=str(merit),
                        norm=str(old_norm),trials=[])
             self.log.append(row)
-            if merit < dec(.01):
+            # Match the host driver's binary64 scalar comparison at the threshold.
+            if float(merit) < .01:
                 break
             jac = np.empty((len(x),len(x)),dtype=float)
             for col in range(len(x)):
