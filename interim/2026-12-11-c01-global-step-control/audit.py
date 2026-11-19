@@ -1,5 +1,5 @@
 """Previous all-field audit, with adaptive coordinates and the original force gates."""
-from study import operators, states, STAGES, np, probe
+from study import operators, states, STAGES, np, probe, fem
 
 def audit(folder, mesh, ground, case, rule, steps):
     op = operators(mesh, ground, case, rule); s = op.system
