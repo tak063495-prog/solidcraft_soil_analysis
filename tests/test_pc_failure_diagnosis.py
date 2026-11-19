@@ -14,6 +14,7 @@ import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 HERE=ROOT/'interim/2027-01-08-pc-failure-diagnosis'
+ISSUE_36=ROOT/'interim/2027-01-10-issue36-pcfail-runner-process-group'
 sys.path.insert(0,str(HERE))
 import pcfail_b02 as b02
 import pcfail_evidence as evidence
@@ -178,5 +179,37 @@ class PCFailureDiagnosis(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'README.ja.md';path.write_bytes(text.replace('\n','\r\n').encode())
             self.assertTrue(path.read_text(encoding='utf-8').endswith(marker))
+
+    def test_issue36_old_and_repaired_runner_digests(self):
+        record = json.loads((ISSUE_36/'acceptance.json').read_text(encoding='utf-8'))
+        runner = HERE/'pcfail_run.py'
+        name = runner.relative_to(ROOT).as_posix()
+        fix = record['runner']
+        self.assertEqual(fix['path'], name)
+        revision = f"{fix['before_commit']}:{name}"
+        args = ['git', '-C', str(ROOT)]
+        blob = subprocess.check_output([*args, 'rev-parse', revision]).decode().strip()
+        self.assertEqual(blob, fix['before_blob'])
+        old = subprocess.check_output([*args, 'show', revision])
+        before = hashlib.sha256(old).hexdigest()
+        self.assertEqual(before, fix['before_sha256'])
+        for manifest in ('final-code-binding.json', 'validation-code-binding.json'):
+            with self.subTest(manifest=manifest):
+                archived = json.loads((HERE/manifest).read_text(encoding='utf-8'))
+                self.assertEqual(archived[name], before)
+        self.assertEqual(hashlib.sha256(runner.read_bytes()).hexdigest(), fix['after_sha256'])
+        self.assertNotEqual(before, fix['after_sha256'])
+
+    def test_issue36_documents_end_with_unresolved_status_on_lf_and_crlf(self):
+        ending = 'A-01〜A-04、B-01〜B-03、C-01〜C-04、NC-01、P6 は未達、passed=false。\n'
+        with tempfile.TemporaryDirectory(prefix='issue 36 docs ') as tmp:
+            for name in ('README.ja.md', 'REPRODUCE.ja.md'):
+                text = (ISSUE_36/name).read_text(encoding='utf-8')
+                self.assertTrue(text.endswith(ending), name)
+                for newline in ('\n', '\r\n'):
+                    with self.subTest(name=name, newline=repr(newline)):
+                        copy_path = Path(tmp)/name
+                        copy_path.write_bytes(text.replace('\n', newline).encode('utf-8'))
+                        self.assertTrue(copy_path.read_text(encoding='utf-8').endswith(ending))
 
 if __name__=='__main__':unittest.main()
