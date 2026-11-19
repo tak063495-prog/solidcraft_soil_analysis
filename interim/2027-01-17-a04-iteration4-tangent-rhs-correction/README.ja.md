@@ -63,3 +63,5 @@ f460f56 から継承する本文確認は Hida・Li・Bailey の QD、ReproBLAS 
 元証拠を取得中に GitHub の Git HTTPS が HTTP 401 を返し、指定ブランチの再取得は5回とも認証失敗。起点の必要な 321 パスが欠けた状態で停止した。科学記録は 2146ee2ba9ed87da72e7f75c295b52053c86e84a、測定・判定の P6 登録は ae3a4c922abcfcbf5b4ae77297b7d7ec96df4481。40・55桁の封印からの再集計10ファイルは全バイト一致した。
 
 fmt・clippy は成功、release 全ターゲット build は中断。Rust は成功0・失敗0・skip 0、全件未実行（同じ Rust ソース・Cargo ターゲットの直前一覧は 467 件）。Python は今回の発見 1006 件中、成功 25、本体失敗0、skip 0、未実行 981。成功は CI 方式の C-01 3群で16件、Linux pytest 7 件、公式 core 群の外で単独実行した新規2件。両 NC 群は setup 中に中断し、今回は既報の ValueError を観測する前だった。PowerShell skip も今回は未観測。未完の全件検証、push、Windows CI に成功判定を付けていない。[検証記録](validation.json) ／ [中断時の生ログ・欠落 blob 一覧](linux-validation-interrupted.zip)
+
+中断時検証も固定コミット・blob・SHA-256 で登録した。最終 P6 監査は 389 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。[P6 監査](p6-final.json)
