@@ -76,3 +76,36 @@ interior-0.06 の identity と Rx37 の膜場では、支持後の各平面に�
 ## 停止記録 ZIP の初回固定
 
 interruption-record.zip には以前の封印値がなく、今回が初回固定。2026-11-19 に作業ツリーと Git インデックスのバイト一致および ZIP CRC を検査し、SHA-256 `727317c3cc3171b0423e489e76123cd48b377321626134a5b7e92d88aabb40ff` を archive-index.json の supplemental_archives に追記した。
+
+## Linux の履歴照合を旧先端と比較した結果
+
+旧先端 f460f56 と科学・台帳登録後の f74e09a5 で、同一 Linux 環境、同一依存の python-mean-evidence 群を別々に単独実行した。両方で `MeanStressEvidence.setUpClass` が `ValueError: saved mean-stress/complement partition differs from own history` を出した。旧先端は `Ran 0 tests in 721.750s`、登録後は `Ran 0 tests in 715.360s`。各 4 件の本体は未実行、setup error 1、skip 0、終了コード 1。旧先端当時の保存ログは同じ群で 4 件成功、終了コード 0。
+
+両コミットで NC の全証拠サブツリー、照合コード、実行器、依存ロック、試験ファイルの Git オブジェクトはそれぞれ一致した。727317c3… の追記先は本フォルダの archive-index.json。今回の追記に先立つ checkout でも同じ例外が起きる。以前に成功したホストとの差を生んだ個別の数値演算は特定できていない。
+
+成分差の読取専用診断は作成途中で停止した。封印内の make_free_contact.make が読む `sources/examples/joint-column-tet10-mesh.json` を一時ディレクトリへ展開しておらず、旧先端で FileNotFoundError、終了コード 1。元の封印目録には当該メッシュ、材料、ステージの JSON が登録されている。差の節点・成分・大きさは未測定。今回の追加実行はここで停止し、全群の再検証、validation の固定コミット登録、push、Windows CI は未実施。B-01 は未達のまま。[両実行の生ログ・完全な例外・Git オブジェクトの照合](linux-mean-comparison-interrupted.zip)
+
+## Linux の成分差（再開後の確定値）
+
+封印目録からメッシュ・材料・ステージの 3 入力もサイズと SHA-256 を照合して展開し、f74e09a5 の保存物で成分診断を 1 回実行した（終了 0）。各ケース自身の除荷履歴から取り出した応力は全件で保存応力と一致した。保持力を平均応力由来の力とその補成分に分け直すと、34 ケース中 29 ケース、計 483 成分で binary64 の保存値との差があった。
+
+| ケース | 節点（0 始まり）・方向 | 成分 | 保存値 kN | 再計算 kN | 再計算 − 保存 kN |
+|---|---|---|---:|---:|---:|
+| bounded-independent-complement-resumed（最初の差） | 0・x | 補成分 | −0.22290550351107863 | −0.22290550351107866 | −2.7755575615628914e−17 |
+| independent-complement-rate-resumed（最大絶対差の一例） | 19・z | 補成分 | −0.38230727079140936 | −0.38230727079140225 | +7.105427357601002e−15 |
+
+Linux の元の照合は差 0 を要求する。NC 証拠サブツリーの Git ID は両コミットとも `0f40d4fb83b1b7a0f6c630f0378ad72e9a0531b5`、試験ファイルはともに `278ca07a25f8061f52ac75660b205248d9841b4e`。旧先端でも同じ例外が再現するため、B-01 と無関係な Linux 環境依存の既存失敗として記録する。過去の成功環境との違いを生んだ具体的な演算は未特定。科学判定は引き続き `passed=false`。[全ケースの非一致成分・十六進値](nc-partition-differences.json) ／ [両コミットの標準出力・例外・Git オブジェクト](linux-mean-comparison-interrupted.zip)
+
+## Linux 全群の到達点と停止理由
+
+fmt、clippy、release 全ターゲット build はいずれも終了 0。Rust は core 63、integration-0 191、integration-1 210、examples 3 の計 467 件が成功し、実行ログと全件一覧が試験名・重複数まで一致した。Python 7 群は 991 件中 981 成功、PowerShell の skip 2、setup error 2 により本体未実行 8。Linux 専用 pytest の 7 成功を含めると 998 件中 988 成功。各群の件数と終了コードを validation.json に記録した。core-0 と単独 pytest は前回完走分、mean は両コミットでの単独実行ログを使用した。
+
+最後の python-spatial-evidence は再測定した JSON のバイト照合で停止した。SpatialEvidence.setUpClass の出力は `ValueError: remeasured JSON differs`、`Ran 0 tests in 179.791s`、`FAILED (errors=1)`、終了コード 1。spatial の旧先端による対照実行は今回行っていない。この失敗を mean の成分差に帰属させる証拠はない。指定の停止条件により validation のコミット・台帳登録、push、新しい Windows CI は未実施。[検証記録](validation.json) ／ [Linux 全群の生ログ](linux-validation-stopped-at-spatial.zip) ／ [前回の中断記録](linux-validation-interrupted.zip)
+
+## spatial 群の旧先端対照と確定件数
+
+旧先端 f460f56 の spatial 群を同じ Linux 環境で 1 回実行した。出力は `Ran 0 tests in 169.207s`。現先端 f74e09a5 の保存ログは `Ran 0 tests in 179.791s`。両群は `FAILED (errors=1)`、終了 1。旧先端の群では採取用ハードリンクが `OSError: [Errno 18] Invalid cross-device link` となり、照合行に到達しなかった。JSON 差分採取時に旧先端の未変更の setUpClass 内の呼出し（remeasure.run、Linux の元引数）を保存先指定で直接実行すると、現先端の群と同じ `ValueError: remeasured JSON differs` が同じ行で再現した。群自体は再実行していない。NC 空間証拠ツリーは両方とも `2f093479f0c46e194e14f007e2616f51c276d2cd`。mean と spatial はいずれも Linux 環境依存の既存失敗（B-01 と無関係、原因未特定）として記録した。
+
+旧先端で直接実行した元の照合が生成した JSON を保持し、保存 JSON と 1 回照合した。非一致の数値キーは 49 件。絶対差が最大のキーは `/paths/native-left256/remaining_holding_norm_kn` で、保存値 `3.883669499505146`、再測定値 `3.8836694995051464`、再測定 − 保存 `+4.4408920985006262e-16`。これは JSON に記録された各値の単位での数値差。異なる物理量を横断した誤差判定には使用しない。
+
+**未実行 8 件・setUpClass エラー 2 件（既存）**。Rust は 467/467 成功。Linux Python は 998 件中 988 成功、PowerShell の skip 2。旧先端での対照実行は本数に重ねて加えていない。B-01 は未達、`passed=false`。[両コミットの出力、再測定 JSON、全差分キーと実行スクリプト](linux-spatial-comparison.zip) ／ [確定した Linux 検証記録](validation.json)
