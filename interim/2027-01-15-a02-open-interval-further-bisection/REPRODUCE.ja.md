@@ -35,9 +35,11 @@ foreach ($name in @('first-events.csv','interval-differences.csv','measurements.
 
 ## 同じ入力での任意の Windows 求解
 
-対象は 81 節点、24 Tet10、32 接触 GP、通常接触上限 0.05 m、M=4、N=8 のみ。3 水準それぞれ本体・独立を順次解く。本体は観測なしの whole も各回に起動し、計 9 経路になる。01-05 のビルド器は指定の別フォルダにソースをコピーし、そのコピーから専用 probe を作成する。旧手順の小型ケース予算（ビルド 8 GB 以内・主経路 16 分以内）を参照した。Windows での時間・ピークメモリは実測していない。新規求解では各 OS の生値を別保存する。
+対象は 81 節点、24 Tet10、32 接触 GP、通常接触上限 0.05 m、M=4、N=8 のみ。3 水準それぞれ本体・独立を順次解く。本体は観測なしの whole も各回に起動し、計 9 経路になる。01-05 のビルド器は指定の別フォルダにソースをコピーし、そのコピーから専用 probe を作成する。旧手順の小型ケース予算（ビルド 8 GB 以内・主経路 16 分以内）を参照した。今回の Linux で本体の観測付き3プロセスは順に 124.43、191.29、268.32 秒。Windows での時間・ピークメモリは実測していない。新規求解では各 OS の生値を別保存する。
 
 ~~~powershell
+# 本体と whole の各プロセスに、01-05 の主経路予算と同じ16分の時間枠を与える。
+$env:A02_PROCESS_BUDGET_SECONDS='960'
 & $Py "$Old/a02n8_build.py" --output "$Run/build"
 if ($LASTEXITCODE -ne 0) { throw '隔離ビルド失敗' }
 New-Item -ItemType Directory -Path "$Run/formal" | Out-Null

@@ -53,3 +53,25 @@ traction は各受理終点の GP ごとの3成分（kPa）。瞬間仕事はそ
 小型2区間の追加二分は完了。同方向の追加二分をクラウド残件に積まない。根を定義する連続軌道や切替事象の仕様を、この有限の受理列から決めることはできない。先端を跨ぐボディ BIRTH、部分活動面の再誕生、不適格な初期力を受け入れる元の条件は未達。ユーザー判断事項は初期応力と参照配置・所有/世代・独立平衡（S1/S2）、引張・摩擦円外などに対する物理過程と仕事・散逸・再平衡（S3/S4）、先端力の受持ちと一意な投影・再現認証（S5）。PC に必須移管する診断はない。同じ 24 Tet10 の Windows 再現は任意。上限を超える確認は**規模上限のため確認不可・未達**。[todo の A-02](../2026-11-16-issue-triage/todo.ja.md)・[PC 再実行手順](REPRODUCE.ja.md)
 
 新封印は 192 member・4 part。結合 ZIP の SHA-256 は `43a82a42f303302cb369c9b0ad76fa2fd300c337943567fe7f2a39c04209eb04`。専用ソースコピー、入力、全受理場、本体の観測なし照合、全符号付き差、旧対照の出典と採取時の sparse fixture 不足ログを含む。fixture の Git blob を確認して再配置した後の新規6主経路は全て完走した。CI の新規回帰は CSV・封印 SHA の照合と保存された1細区間の再集計である。[封印索引](archive-index.json)・[判定と出典](acceptance.json)
+
+## 既存記録の照合と環境
+
+main 限定の追跡設定を確認し、対象ブランチを filtered fetch して指定 SHA から追跡なしの作業ブランチを作成した。Python 3.13.17 に固定 requirements と、リポジトリで版指定のない pytest 9.2.0 を導入した。新フォルダの一部が sparse-add 対象外と判定された際は、フォルダ内の全ファイルを含む規則を追加して照合・登録した。旧アーカイブ1 part の取得時に Git blob ID の不一致を検出し、該当 OID を no-filter 取得して照合した。partial clone の不要な再転送を避け、ステージ済み tree と親を指定して commit した。
+
+固定起点の旧13,241ファイル（31,264,852,089 bytes）は Git blob と実行属性まで一致した。既存 CI が展開対象外とする NC postfold 74 part は tree のまま保持。別の2ファイルは P6 台帳への追記と監査器の台帳 SHA pin である。既存の生産 Rust、NC のコード・設定、旧数値・失敗記録、CI ワークフローへの変更はない。照合結果と取得記録は Linux 検証ログに収録する。
+
+## Linux 全件検証
+
+fmt、locked 全ターゲット clippy（警告をエラー化）、release 全ターゲット build は終了 0。Rust は release 全ターゲットで一覧と実行済みの名前・重複数が 467 件すべて一致し、467 成功、失敗・未実行・ignore・filter は 0。doc-test は 0 件・終了 0。
+
+|Python 群|割当|成功|本体失敗|setup error|未実行|skip|終了|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|core-0|482|481|0|0|0|1|1|
+|core-1|489|488|0|0|0|1|1|
+|mean-evidence|4|0|0|1|4|0|1|
+|spatial-evidence|4|0|0|1|4|0|1|
+|c01-switch / path / cause|16|16|0|0|0|0|各 0|
+|Linux 専用 pytest|7|7|0|0|0|0|0|
+|合計|1002|992|0|2|8|2|—|
+
+mean-evidence の実出力は `ValueError: saved mean-stress/complement partition differs from own history`、`Ran 0 tests in 879.909s`。spatial-evidence は `ValueError: remeasured JSON differs`、`Ran 0 tests in 259.438s`。いずれも `FAILED (errors=1)`。B-01 の旧先端対照および B-02 と同じ Linux の既存失敗として記録した。core 両群は PowerShell 未導入による各 1 skip のため既存 runner が終了 1 を返した。Windows の結果は最終 push に対応する両 Actions 実行で別に確認する。[実行件数・未実行 ID](validation.json)・[実ログと一覧](linux-validation.zip)・[以前の Linux 対照](../2027-01-13-b01-highprec-eigenspace/README.ja.md)
