@@ -41,7 +41,7 @@ PR #13 の起点は `0048954815fd4f53310417e0c5a903c6ef99b913`。指定保存先
 
 ## 符号反転
 
-独立 N8 における Y(+τ)−Y(0)、Y(−τ)−Y(0) の成分別 L2。ベクトルは x/y/z、応力は xx/yy/zz/xy/yz/zx の順。各符号の全成分の符号付き生差と反対称欠損を封印内の retained/report/signed-differences.jsonl に収録した。絶対差・生分母・従来の分母下限 1e−12 を保持した。
+独立 N8 における Y(+τ)−Y(0)、Y(−τ)−Y(0) の成分別 L2。変位は m、traction と応力は kPa、反力は kN。ベクトルは x/y/z、応力は xx/yy/zz/xy/yz/zx の順。各符号の全成分の符号付き生差と反対称欠損を封印内の retained/report/signed-differences.jsonl に収録した。絶対差・生分母・従来の分母下限 1e−12 を保持した。
 
 |場|正側の変化|負側の変化|
 |---|---|---|
@@ -57,3 +57,29 @@ PR #13 の起点は `0048954815fd4f53310417e0c5a903c6ef99b913`。指定保存先
 同方向のクラウド残件は 0。PC への必須移管はなく、任意の Windows 再現は同じ 12 Tet10 に限る。一般空間確認のうち上限を超えるものは**規模上限のため確認不可・未達**。自由水面や Darcy 後 BIRTH の扱いは未達。ユーザー判断を要する事項は、Darcy 後の新領域の σ′/p・面所有・平衡化順序・移送水量、部分水没の初期水圧と面積分、新設 MCC の pc/e/OCR と形成史、旧材料の履歴・参照配置・保持力、水収支の定義。従来の拒否を維持し、流量・貯留・誕生水量・水収支の判定は null とした。[PC 再実行手順](REPRODUCE.ja.md)
 
 新封印 4 part、357 member、78,438,183 bytes。結合 SHA-256 は `b43cd4a47cd1d058b783ac14dea5678f8d548e214f7c24b95084b4610485bef6`。全 part・結合 ZIP・全 member を展開時に照合した。[封印索引](archive-index.json)
+
+## Linux 全件と旧証拠の保全
+
+起点の配置対象 13,263 ファイル（31,344,380,075 bytes）は Git blob と実行属性まで一致し、既存 CI の展開対象外の NC postfold 74 part は元の tree のまま保持した。旧ファイルの変更は P6 台帳への末尾追記と監査器の台帳 SHA 定数の 2 件。生産 Rust・NC・CI ワークフローに差分はない。Python 3.13 の requirements-reference.lock.txt の固定版を使用し、リポジトリで版指定のない pytest は 9.2.0 を導入した。
+
+封印から再集計した measurements.json と signed-differences.jsonl は採取時の SHA-256 と一致した。Windows 用の新規回帰 2 件は保存値・封印の照合と、独立 N8 の変位 3 成分の小さい再集計。科学求解は CI に追加していない。
+
+cargo fmt、locked/all-targets clippy（警告をエラー化）、release 全ターゲット build は終了 0。Rust は全ターゲット一覧と実行済みの名前・重複数が一致し、467 成功、失敗・未実行・skip・ignore・filter は 0、doc-test は 0 件。
+
+|Python 群|割当|成功|本体失敗|setup error|未実行|skip|終了|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|python-core-0|484|483|0|0|0|1|1|
+|python-core-1|489|488|0|0|0|1|1|
+|python-mean-evidence|4|0|0|1|4|0|1|
+|python-spatial-evidence|4|0|0|1|4|0|1|
+|python-c01-switch|4|4|0|0|0|0|0|
+|python-c01-path|4|4|0|0|0|0|0|
+|python-c01-cause|8|8|0|0|0|0|0|
+|linux-pytest|7|7|0|0|0|0|0|
+|合計|1004|994|0|2|8|2|—|
+
+python-mean-evidence の実出力は `ValueError: saved mean-stress/complement partition differs from own history`、`Ran 0 tests in 940.801s`、`FAILED (errors=1)`。
+
+python-spatial-evidence の実出力は `ValueError: remeasured JSON differs`、`Ran 0 tests in 268.106s`、`FAILED (errors=1)`。
+
+両方とも Linux の既存の setUpClass 失敗に一致し、各 4 件の本体は未実行。core の skip 2 件は PowerShell 不在の既存ゲートで、公式 runner の終了コードも保存した。各群の合計には軽量試験の単独実行を重複計上していない。[validation.json](validation.json)・[全出力・試験 ID・保全照合](linux-validation.zip)・[旧 A-02 の同じ Linux 症状](../2027-01-15-a02-open-interval-further-bisection/README.ja.md)
