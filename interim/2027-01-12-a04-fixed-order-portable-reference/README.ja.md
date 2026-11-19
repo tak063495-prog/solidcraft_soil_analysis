@@ -70,3 +70,7 @@ PR #13 の起点は `6b147977ef80f1ac41a9c9cfb14cd1eb63c263b2`。フォルダ名
 今回指定された二つの切り分けはクラウドで実測済み。第 5 の変位差を接線・有限差分・線形補正それぞれへ分解する場合は、直前反復の行列と右辺を固定した交差リプレイが小型のまま可能だが、今回の節点力ゲートの判定は既に未達である。既実施の h×dt、保存値の再集計、C-04 の交換試験を残作業に数えない。未定義の連成を受け入れるには上記の仕様判断が先に必要である。
 
 生証拠は 2,518 エントリ、231,580,596 バイト、10 part。全 part と展開内容の SHA-256 を再照合した。連結 ZIP の SHA-256 は `12c4f2dcd1ae8361f63810bd7ce69887e47d79251bc0031345d45612a8b212b8`。[封印索引](archive-index.json)
+
+## 全件検証
+
+Linux の fmt、clippy（locked、all-targets、警告をエラー化）、release 全ターゲット build が成功した。Rust は一覧の 467 ID と実行済み 467 ID が一致し、失敗・未実行・ignore・filter は 0、doc-test は 0 件。Python は CI の 7 群で 989 固有 ID、987 成功・2 skip。Linux 専用 pytest の 7 成功を加えて **994 成功、失敗 0、未実行 0、skip 2**。skip は PowerShell 不在の 2 件だけで、該当する公式 runner の終了値 1 も保持した。新しい強制 binary64 回帰は Python 群で 12 Tet4 の水理 1 ステップだけを実行する。検証環境には固定 requirements を使用し、リポジトリで版指定のない pytest は 9.2.0 を導入した。[件数と環境](validation.json) ／ [Linux 試験ログ・一覧](linux-validation.zip)
