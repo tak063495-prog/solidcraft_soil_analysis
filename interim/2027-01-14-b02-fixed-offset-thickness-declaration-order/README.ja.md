@@ -52,3 +52,14 @@ PC に回す項目は任意の同じ 12/96 ケースの Windows 再現。より�
 ### 実測時間と封印
 
 本体 1 履歴の Linux 実測は 5.85〜111.03 秒。独立 1 履歴の Linux 実測は 0.72〜4.45 秒。生証拠は 205 ファイル、7 part、結合 ZIP の SHA-256 は `4f7bd7ce46ff617db325f814b37deda02c365692b888a102009f1de3200cabeb`。全 part・全エントリを照合した。
+
+## Linux 検証
+
+format、clippy、release 全ターゲット build は終了 0。Rust 全ターゲットと doc は 467 成功、失敗・未実行・skip は 0。Python は 1000 件中 990 成功、テスト本体の失敗 0、PowerShell 未導入による skip 2。既存の setUpClass エラーは 2 件、これによる本体未実行は 8 件。
+
+- python-mean-evidence は 0 件実行・終了 1。実出力は `ValueError: saved mean-stress/complement partition differs from own history`。
+- python-spatial-evidence は 0 件実行・終了 1。実出力は `ValueError: remeasured JSON differs`。
+
+両群は f460f56 との旧対照と同じ例外。今回の出力・個別件数・未実行 ID・各群の実終了コードを保存した。Windows CI は最終 push の先端で別に判定する。[validation.json](validation.json) ／ [Linux ログ](linux-validation.zip)
+
+環境準備では、main 限定の追跡設定による前回の終了 128 の後、指定 SHA から追跡なしでブランチを用意した。既存の保存ファイル 1,711 件（30,633,833,048 bytes）を対象ツリーの Git blob ID と照合した。ステージ後の通常 commit が不足 blob 1,606 件の重複取得を開始したため転送を中断し、ステージ済みツリーから commit-tree で親を明示したコミットを作成した。起点との差分のパスと旧台帳の全バイト接頭部を照合した。
