@@ -161,6 +161,8 @@ def report(root,out):
         with joint.controls(folder.name.endswith('q1')):
             model=ref.Model(mesh,ground,case)
             assert not(model.frame or model.tendon)
+            if folder.name=='e0f0q0':
+                common_k=model.k.copy()
             with (folder/'iterates.jsonl').open() as stream:
                 rows=[observations(model,json.loads(line),cells) for line in stream]
         own=next(v for v in map(json.loads,(folder/'independent-fields.jsonl').read_text().splitlines())
@@ -176,6 +178,18 @@ def report(root,out):
                u_m=peak(row['u'],b['u']), load_kn=peak(row['load'],b['load']),
                reaction_kn=peak(row['reaction'],b['reaction']))
         path['vs_base_endpoint_kn']=peak(path['iterates'][-1]['reaction'],baseline[-1]['reaction'])
+        # All contact points are open at both ends. On this branch the
+        # independently assembled elastic K predicts the physical reaction change.
+        for key,current,base in (('fifth',path['iterates'][5],baseline[5]),
+                                 ('endpoint',path['iterates'][-1],baseline[-1])):
+            assert set(current['states_native'])==set(base['states_native'])=={'open'}
+            du=current['u']-base['u']
+            load_change=current['load']-base['load']
+            predicted=np.array([math.fsum(float(k)*float(d) for k,d in zip(row,du))
+                                for row in common_k])-load_change
+            measured=current['reaction']-base['reaction']
+            path[key+'_displacement_check']=dict(predicted_kn=predicted,measured_kn=measured,
+                maximum_prediction_error_kn=peak(predicted,measured))
     write(out,records)
 
 
