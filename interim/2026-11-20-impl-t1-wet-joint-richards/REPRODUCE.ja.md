@@ -57,3 +57,14 @@ python -m unittest discover -s tests -p test_a03_explicit_shear_initial_stress.p
 python -m unittest discover -s tests -p test_a03_unequal_thickness_anisotropic_k.py -v
 cargo test --locked --release --test wet_joint_richards --test one_way_construction
 ```
+
+Linux の全件 Python 試験には PC-4 の実プロセス試験を含む。PowerShell のない環境では、既存調査 `interim/2026-12-21-a02-joint-birth-cause-diagnosis/validation/powershell-runtime.json` の Linux x64 版を使用した。配布 tar.gz の SHA-256 は `1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef`。照合後に作業領域へ展開し、pwsh に実行属性を付け、そのディレクトリを PATH に追加する。書込制限のある環境では XDG_CONFIG_HOME、XDG_CACHE_HOME、XDG_DATA_HOME に書込可能な作業用ディレクトリを指定する。pwsh -NoProfile で 7.5.4 を確認してから7群を実行する。初回スキップのログと導入後の実行ログは別々に保存する。
+
+第2回の停止を個別に再現するコマンドを以下に示す。全件コマンドの終了コード101と最初の不一致は evidence/local-verification.zip の rust-all.log と joint-refusal.log に保存した。
+
+```text
+cargo test --locked --release --test joint_ext_combos richards_wet_joint_infiltration_drainage_and_two_way_remain_rejected -- --exact --nocapture
+cargo test --locked --release -- --list
+```
+
+ZIP のバイト列の SHA-256 を evidence/reassessment-at-stop.json の water_ledger_archive、test_logs、acceptance_results_archive と照合してから開く。accepted-water-ledgers.zip の t1、a04、c04 に各基準の JSON 行配列と集計を保存した。accepted-water-ledgers.zip から取り出したケースファイルは gzip 圧縮である。
