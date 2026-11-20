@@ -124,9 +124,13 @@ impl Material {
             || qn > 0.
             || shear.norm() > self.friction_coefficient * (-qn)
         {
-            return Err(Error::Input(
-                "JOINT BIRTH initial effective force violates no-tension/Coulomb cone".into(),
-            ));
+            return Err(Error::Input(format!(
+                "JOINT BIRTH initial effective force violates no-tension/Coulomb cone; p_kpa={} shear_kpa={:?} shear_norm_kpa={} friction_excess_kpa={}",
+                -qn,
+                shear.as_slice(),
+                shear.norm(),
+                shear.norm() - self.friction_coefficient * (-qn)
+            )));
         }
         let elastic =
             qn * n / self.normal_stiffness_kpa_m + shear / self.tangential_stiffness_kpa_m;

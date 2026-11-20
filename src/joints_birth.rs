@@ -11,16 +11,25 @@ impl Model {
         if !enabled && state.lifecycle.is_empty() {
             return Ok(());
         }
-        if state.lifecycle.len() != self.configuration.joints.len() {
+        let split = state.lifecycle.first().is_some_and(|l| l.region.is_some());
+        let count = if split {
+            self.faces.len()
+        } else {
+            self.configuration.joints.len()
+        };
+        if state.lifecycle.len() != count || state.points.len() != self.points.len() {
             return Err(Error::Input("JOINT BIRTH lifecycle layout mismatch".into()));
         }
-        for (di, (d, l)) in self
-            .configuration
-            .joints
-            .iter()
-            .zip(&state.lifecycle)
-            .enumerate()
-        {
+        for (slot, l) in state.lifecycle.iter().enumerate() {
+            let di = if split {
+                self.points[self.faces[slot].start].material
+            } else {
+                slot
+            };
+            let d = &self.configuration.joints[di];
+            if l.region != split.then(|| self.face_region(slot)) {
+                return Err(Error::Input("JOINT BIRTH face area/owners mismatch".into()));
+            }
             if l.joint_id != d.id
                 || l.policy != d.birth_policy
                 || (l.active && l.tied)
@@ -36,13 +45,13 @@ impl Model {
                 .points
                 .iter()
                 .enumerate()
-                .filter(|(_, p)| p.material == di)
+                .filter(|(_, p)| p.slot(state) == slot)
                 .map(|(i, _)| i)
                 .collect();
             let mut previous = 0;
             for a in &l.archived {
                 if a.generation == 0
-                    || a.generation <= previous
+                    || a.generation != previous + 1
                     || a.generation > l.generation
                     || a.points.iter().map(|(i, _)| *i).collect::<Vec<_>>() != indices
                 {
@@ -50,10 +59,28 @@ impl Model {
                         "JOINT BIRTH archived generation mismatch".into(),
                     ));
                 }
-                for (_, s) in &a.points {
+                if a.endpoint_work_kn_m != split.then(|| self.frozen_work(&a.points)) {
+                    return Err(Error::Input("JOINT BIRTH frozen face work mismatch".into()));
+                }
+                for (i, s) in &a.points {
+                    if s.normal != state.points[*i].normal || s.birth.is_none() {
+                        return Err(Error::Input(
+                            "JOINT BIRTH frozen point reference mismatch".into(),
+                        ));
+                    }
                     d.material.validate_state(s)?;
                 }
                 previous = a.generation;
+            }
+            if l.generation != previous + u64::from(l.active && d.birth_policy.is_some())
+                || (!l.active
+                    && l.archived
+                        .last()
+                        .is_some_and(|a| a.points.iter().any(|(i, s)| &state.points[*i] != s)))
+            {
+                return Err(Error::Input(
+                    "JOINT BIRTH frozen generation mismatch".into(),
+                ));
             }
             if d.birth_policy.is_some() {
                 for &i in &indices {
@@ -81,7 +108,8 @@ impl Model {
         self.validate_lifecycle(state)?;
         let mut pairs = BTreeSet::new();
         for p in &self.points {
-            if Self::active(p, active) && state.lifecycle.get(p.material).is_some_and(|l| l.tied) {
+            if Self::active(p, active) && state.lifecycle.get(p.slot(state)).is_some_and(|l| l.tied)
+            {
                 for (&a, &b) in p.info.nodes_a.iter().zip(&p.info.nodes_b) {
                     if a != b {
                         pairs.insert([a, b]);
@@ -112,39 +140,119 @@ impl Model {
             })
             .collect()
     }
-    fn archive(&self, state: &mut State, di: usize) {
-        let l = &mut state.lifecycle[di];
-        if l.generation > 0
-            && l.archived
-                .last()
-                .is_none_or(|a| a.generation != l.generation)
-        {
-            l.archived.push(Generation {
-                generation: l.generation,
-                points: self
-                    .points
-                    .iter()
-                    .enumerate()
-                    .filter(|(_, p)| p.material == di)
-                    .map(|(i, _)| (i, state.points[i].clone()))
-                    .collect(),
-            });
+    fn face_region(&self, slot: usize) -> FaceRegion {
+        let points = &self.points[self.faces[slot].clone()];
+        let p = &points[0].info;
+        FaceRegion {
+            face_index: p.face_index,
+            owner_a: p.owner_a,
+            owner_b: p.owner_b,
+            area_m2: points.iter().map(|p| p.info.weight_m2).sum(),
         }
+    }
+
+    fn frozen_work(&self, points: &[(usize, PointState)]) -> f64 {
+        points
+            .iter()
+            .map(|(i, s)| self.points[*i].info.weight_m2 * s.endpoint_work_kpa_m)
+            .sum()
+    }
+
+    // Convert the legacy whole-interface ledger only at a domain change.
+    // The fixed mesh partitions its old quadrature rows without interpolating history.
+    fn split_faces(&self, state: &mut State) {
+        if state.lifecycle.first().is_none_or(|l| l.region.is_some()) {
+            return;
+        }
+        state.lifecycle = self
+            .faces
+            .iter()
+            .enumerate()
+            .map(|(slot, indices)| {
+                let old = &state.lifecycle[self.points[indices.start].material];
+                let mut face = old.clone();
+                face.region = Some(self.face_region(slot));
+                for a in &mut face.archived {
+                    a.points.retain(|(i, _)| indices.contains(i));
+                    a.endpoint_work_kn_m = Some(self.frozen_work(&a.points));
+                }
+                face
+            })
+            .collect();
+    }
+
+    fn freeze(&self, state: &mut State, slot: usize) {
+        let points: Vec<_> = self
+            .points
+            .iter()
+            .enumerate()
+            .filter(|(_, p)| p.slot(state) == slot)
+            .map(|(i, _)| (i, state.points[i].clone()))
+            .collect();
+        let l = &mut state.lifecycle[slot];
+        l.archived.push(Generation {
+            generation: l.generation,
+            endpoint_work_kn_m: l.region.as_ref().map(|_| self.frozen_work(&points)),
+            points,
+        });
+        l.active = false;
+        l.tied = true;
     }
     pub fn death(&self, state: &State, ids: &[String]) -> Result<State> {
         self.validate_lifecycle(state)?;
         let mut next = state.clone();
         for di in self.selected_joints(ids)? {
-            if !next.lifecycle[di].active {
+            let slots: BTreeSet<_> = self
+                .points
+                .iter()
+                .filter(|p| p.material == di && state.lifecycle[p.slot(state)].active)
+                .map(|p| p.slot(state))
+                .collect();
+            if slots.is_empty() {
                 return Err(Error::Input("JOINT DEATH requires active contact".into()));
             }
-            self.archive(&mut next, di);
-            next.lifecycle[di].active = false;
-            next.lifecycle[di].tied = true;
+            for slot in slots {
+                self.freeze(&mut next, slot);
+            }
         }
         Ok(next)
     }
-    /// After a dry body BIRTH the interface remains tied until its own BIRTH.
+
+    pub fn freeze_removed_faces(
+        &self,
+        state: &State,
+        before: &[bool],
+        after: &[bool],
+    ) -> Result<State> {
+        self.validate_lifecycle(state)?;
+        if before.len() != self.element_count || after.len() != self.element_count {
+            return Err(Error::Input("JOINT domain layout mismatch".into()));
+        }
+        let removed: Vec<_> = self
+            .points
+            .iter()
+            .filter(|p| {
+                self.configuration.joints[p.material].birth_policy.is_some()
+                    && Self::active(p, before)
+                    && !Self::active(p, after)
+                    && state.lifecycle[p.slot(state)].active
+            })
+            .collect();
+        let mut next = state.clone();
+        if !removed.is_empty() {
+            self.split_faces(&mut next);
+            for slot in removed
+                .iter()
+                .map(|p| p.slot(&next))
+                .collect::<BTreeSet<_>>()
+            {
+                self.freeze(&mut next, slot);
+            }
+        }
+        Ok(next)
+    }
+
+    /// Domain activation supplies geometry. Explicit JOINT BIRTH supplies the policy.
     pub fn prepare_body_birth(
         &self,
         state: &State,
@@ -152,33 +260,39 @@ impl Model {
         after: &[bool],
     ) -> Result<State> {
         self.validate_lifecycle(state)?;
+        if before.len() != self.element_count || after.len() != self.element_count {
+            return Err(Error::Input("JOINT domain layout mismatch".into()));
+        }
         let mut next = state.clone();
-        for di in 0..self.configuration.joints.len() {
-            let changes = self
+        for (di, d) in self.configuration.joints.iter().enumerate() {
+            let added: Vec<_> = self
                 .points
                 .iter()
-                .any(|p| p.material == di && !Self::active(p, before) && Self::active(p, after));
-            if changes {
-                if self.configuration.joints[di].crack_tip.is_some() {
-                    return Err(Error::Input(
-                        "body BIRTH across a declared crack tip is unverified".into(),
-                    ));
+                .filter(|p| p.material == di && !Self::active(p, before) && Self::active(p, after))
+                .collect();
+            if added.is_empty() {
+                continue;
+            }
+            if d.birth_policy.is_none() {
+                return Err(Error::Input(
+                    "body BIRTH requires explicit JOINT birth_policy".into(),
+                ));
+            }
+            let partial = self
+                .points
+                .iter()
+                .any(|p| p.material == di && (Self::active(p, before) || !Self::active(p, after)));
+            if d.water.is_some() && partial {
+                return Err(Error::Input("partial JOINT BIRTH is unverified".into()));
+            }
+            if partial || d.crack_tip.is_some() {
+                self.split_faces(&mut next);
+            }
+            for slot in added.iter().map(|p| p.slot(&next)).collect::<BTreeSet<_>>() {
+                if next.lifecycle[slot].active {
+                    self.freeze(&mut next, slot);
                 }
-                if self.configuration.joints[di].birth_policy.is_none() {
-                    return Err(Error::Input(
-                        "body BIRTH requires explicit JOINT birth_policy".into(),
-                    ));
-                }
-                if self
-                    .points
-                    .iter()
-                    .any(|p| p.material == di && !Self::active(p, after))
-                {
-                    return Err(Error::Input("partial JOINT BIRTH is unverified".into()));
-                }
-                self.archive(&mut next, di);
-                next.lifecycle[di].active = false;
-                next.lifecycle[di].tied = true;
+                next.lifecycle[slot].tied = true;
             }
         }
         Ok(next)
@@ -203,21 +317,37 @@ impl Model {
         }
         let selected = self.selected_joints(ids)?;
         let mut next = state.clone();
-        let mut transfer = Vec::new();
-        for &di in &selected {
-            let l = &state.lifecycle[di];
-            if l.active
-                || !l.tied
-                || self
+        if selected.iter().any(|&di| {
+            self.configuration.joints[di].water.is_none()
+                && self
                     .points
                     .iter()
                     .any(|p| p.material == di && !Self::active(p, active))
+        }) {
+            self.split_faces(&mut next);
+        }
+        let mut transfer = Vec::new();
+        let mut born_points = Vec::new();
+        for &di in &selected {
+            let mut added = false;
+            for (i, p) in self
+                .points
+                .iter()
+                .enumerate()
+                .filter(|(_, p)| p.material == di)
             {
-                return Err(Error::Input(
-                    "JOINT BIRTH needs inactive contact and both active bodies".into(),
-                ));
-            }
-            for p in self.points.iter().filter(|p| p.material == di) {
+                let life = &next.lifecycle[p.slot(&next)];
+                if !Self::active(p, active) && life.region.is_some() {
+                    continue;
+                }
+                if life.active && life.region.is_some() {
+                    continue;
+                }
+                if life.active || !life.tied || !Self::active(p, active) {
+                    return Err(Error::Input(
+                        "JOINT BIRTH needs inactive contact and both active bodies".into(),
+                    ));
+                }
                 for (&a, &b) in p.info.nodes_a.iter().zip(&p.info.nodes_b) {
                     if (Vector3::from(u[a]) - Vector3::from(u[b])).norm() > 1e-10 {
                         return Err(Error::Input(
@@ -226,20 +356,16 @@ impl Model {
                         ));
                     }
                 }
-            }
-            if l.policy == Some(BirthPolicy::TransferForce) {
-                if !l.tied {
-                    return Err(Error::Input(
-                        "mode A requires a pre-birth equal-displacement constraint".into(),
-                    ));
+                added = true;
+                born_points.push(i);
+                if life.policy == Some(BirthPolicy::TransferForce) {
+                    transfer.push(i);
                 }
-                transfer.extend(
-                    self.points
-                        .iter()
-                        .enumerate()
-                        .filter(|(_, p)| p.material == di)
-                        .map(|(i, _)| i),
-                );
+            }
+            if !added {
+                return Err(Error::Input(
+                    "JOINT BIRTH needs inactive contact and both active bodies".into(),
+                ));
             }
         }
         let mut traction = BTreeMap::new();
@@ -301,10 +427,34 @@ impl Model {
             }
             let mut pair_matrix = DMatrix::<f64>::zeros(free.len(), 3 * pairs.len());
             let mut free_rhs = DVector::<f64>::zeros(free.len());
-            for &g in physical.keys() {
-                for &(r, w) in &free_rows[g] {
-                    free_rhs[free_index[&r]] += w * residual[g];
+            let mut outside = BTreeMap::<usize, f64>::new();
+            // T3 checks the complement of the selected patch too: contact must
+            // supply zero there. Legacy whole-interface cases retain their
+            // interface projection and the existing bulk equilibrium criterion.
+            let certify_global = transfer.iter().any(|&i| {
+                let p = &self.points[i];
+                self.configuration.joints[p.material].crack_tip.is_some()
+                    || next.lifecycle[p.slot(&next)].region.is_some()
+            });
+            for (g, terms) in free_rows.iter().enumerate() {
+                if !certify_global && !physical.contains_key(&g) {
+                    continue;
                 }
+                for &(r, w) in terms {
+                    if let Some(&row) = free_index.get(&r) {
+                        free_rhs[row] += w * residual[g];
+                    } else {
+                        *outside.entry(r).or_default() += w * residual[g];
+                    }
+                }
+            }
+            if let Some((row, force)) = outside
+                .iter()
+                .find(|(_, v)| !v.is_finite() || v.abs() > 1e-10)
+            {
+                return Err(Error::Input(format!(
+                    "mode A constraint transfer does not reproduce every free nodal residual; free row={row} requested_kn={force} reproduced_kn=0"
+                )));
             }
             for (j, &[a, b]) in pairs.iter().enumerate() {
                 for (node, sign) in [(a, -1.), (b, 1.)] {
@@ -315,20 +465,12 @@ impl Model {
                     }
                 }
             }
-            let multipliers = pair_matrix
-                .clone()
-                .svd(true, true)
-                .solve(&free_rhs, 1e-12)
-                .map_err(|_| Error::Input("mode A constraint transfer recovery failed".into()))?;
-            if (&pair_matrix * &multipliers - free_rhs)
-                .iter()
-                .any(|v| !v.is_finite() || v.abs() > 1e-10)
-            {
-                return Err(Error::Input(
-                    "mode A constraint transfer does not reproduce every free nodal residual"
-                        .into(),
-                ));
-            }
+            let multipliers = recover_forces(
+                &pair_matrix,
+                &free_rhs,
+                &free.iter().copied().collect::<Vec<_>>(),
+                "mode A constraint transfer does not reproduce every free nodal residual",
+            )?;
             let mut rhs = DVector::<f64>::zeros(physical.len());
             for (j, &[a, b]) in pairs.iter().enumerate() {
                 for axis in 0..3 {
@@ -346,43 +488,56 @@ impl Model {
                     }
                 }
             }
-            let q = matrix
-                .clone()
-                .svd(true, true)
-                .solve(&rhs, 1e-12)
-                .map_err(|_| Error::Input("mode A nodal transfer projection failed".into()))?;
-            if (&matrix * &q - &rhs)
-                .iter()
-                .any(|v| !v.is_finite() || v.abs() > 1e-10)
-            {
-                return Err(Error::Input(
-                    "mode A GP initial forces cannot reproduce every physical nodal transfer force"
-                        .into(),
-                ));
-            }
+            let q = recover_forces(
+                &matrix,
+                &rhs,
+                &physical.keys().copied().collect::<Vec<_>>(),
+                "mode A GP initial forces cannot reproduce every physical nodal transfer force",
+            )?;
+            let reproduced = &matrix * &q;
+            let mut violations = Vec::new();
             for (j, &pi) in transfer.iter().enumerate() {
                 let scale = self.points[pi].info.weight_m2.sqrt();
-                traction.insert(
-                    pi,
-                    [q[3 * j] / scale, q[3 * j + 1] / scale, q[3 * j + 2] / scale],
-                );
+                let value = [q[3 * j] / scale, q[3 * j + 1] / scale, q[3 * j + 2] / scale];
+                let point = &self.points[pi];
+                let material = &self.configuration.joints[point.material].material;
+                if let Err(err) =
+                    material.birth(point.info.normal, Self::jump(point, u).into(), value)
+                {
+                    violations.push(format!(
+                        "GP={pi} face={} q_kpa={value:?} {err}",
+                        point.info.face_index
+                    ));
+                }
+                traction.insert(pi, value);
+            }
+            if !violations.is_empty() {
+                return Err(Error::Input(format!(
+                    "JOINT BIRTH rejected trial: {}; physical_dofs={:?} requested_kn={:?} reproduced_kn={:?}",
+                    violations.join(", "),
+                    physical.keys().collect::<Vec<_>>(),
+                    rhs.as_slice(),
+                    reproduced.as_slice()
+                )));
             }
         }
-        for di in selected {
-            self.archive(&mut next, di);
-            for (i, p) in self
-                .points
-                .iter()
-                .enumerate()
-                .filter(|(_, p)| p.material == di)
-            {
-                next.points[i] = self.configuration.joints[di].material.birth(
-                    p.info.normal,
-                    Self::jump(p, u).into(),
-                    traction.get(&i).copied().unwrap_or([0.; 3]),
-                )?;
-            }
-            let l = &mut next.lifecycle[di];
+        let mut slots = BTreeSet::new();
+        for i in born_points {
+            let p = &self.points[i];
+            slots.insert(p.slot(&next));
+            let q = traction.get(&i).copied().unwrap_or([0.; 3]);
+            let material = &self.configuration.joints[p.material].material;
+            next.points[i] = material
+                .birth(p.info.normal, Self::jump(p, u).into(), q)
+                .map_err(|err| {
+                    Error::Input(format!(
+                        "{err}; trial GP={i} face={} q_kpa={q:?}",
+                        p.info.face_index
+                    ))
+                })?;
+        }
+        for slot in slots {
+            let l = &mut next.lifecycle[slot];
             l.active = true;
             l.tied = false;
             l.generation = l
@@ -393,4 +548,32 @@ impl Model {
         self.validate_state(&next, u, active)?;
         Ok(next)
     }
+}
+
+fn recover_forces(
+    matrix: &DMatrix<f64>,
+    rhs: &DVector<f64>,
+    rows: &[usize],
+    failure: &str,
+) -> Result<DVector<f64>> {
+    const CUTOFF: f64 = 1e-12;
+    let svd = matrix.clone().svd(true, true);
+    let solution = svd
+        .solve(rhs, CUTOFF)
+        .map_err(|e| Error::Input(format!("{failure}: {e}")))?;
+    let reproduced = matrix * &solution;
+    if reproduced
+        .iter()
+        .zip(rhs)
+        .any(|(a, b)| !(a - b).is_finite() || (a - b).abs() > 1e-10)
+    {
+        return Err(Error::Input(format!(
+            "{failure}; rows={rows:?} requested_kn={:?} reproduced_kn={:?} rank={} singular_values={:?} cutoff={CUTOFF}",
+            rhs.as_slice(),
+            reproduced.as_slice(),
+            svd.rank(CUTOFF),
+            svd.singular_values.as_slice()
+        )));
+    }
+    Ok(solution)
 }

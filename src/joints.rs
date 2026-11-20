@@ -317,13 +317,26 @@ pub enum BirthPolicy {
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct FaceRegion {
+    pub face_index: usize,
+    pub owner_a: usize,
+    pub owner_b: usize,
+    pub area_m2: f64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Generation {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub endpoint_work_kn_m: Option<f64>,
     pub generation: u64,
     pub points: Vec<(usize, PointState)>,
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Lifecycle {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub region: Option<FaceRegion>,
     pub joint_id: String,
     pub policy: Option<BirthPolicy>,
     pub active: bool,
@@ -395,13 +408,24 @@ pub struct Evaluation {
     pub report: Report,
 }
 struct Point {
+    face_slot: usize,
     info: PointInfo,
     material: usize,
     coefficients: Vec<(usize, f64)>,
 }
+impl Point {
+    fn slot(&self, state: &State) -> usize {
+        if state.lifecycle.first().is_some_and(|l| l.region.is_some()) {
+            self.face_slot
+        } else {
+            self.material
+        }
+    }
+}
 pub struct Model {
     pub configuration: Configuration,
     points: Vec<Point>,
+    faces: Vec<std::ops::Range<usize>>,
     positions: Vec<[f64; 3]>,
     element_count: usize,
     counterparts: BTreeMap<[usize; 3], usize>,
@@ -459,6 +483,7 @@ impl Model {
         let mut face_keys = BTreeSet::new();
         let mut points = Vec::new();
         let mut pairs = Vec::new();
+        let mut faces = Vec::new();
         let mut counterparts = BTreeMap::new();
         for (mi, d) in c.joints.iter().enumerate() {
             d.material.validate()?;
@@ -584,9 +609,15 @@ impl Model {
                 counterparts.insert(kb, oa);
                 let nb: Vec<_> = permutation.iter().map(|&i| nb[i]).collect();
                 let pa: Vec<_> = na.iter().map(|&n| mesh.nodes[n]).collect();
+                let first = points.len();
                 for q in elements::face_points(&pa)? {
                     let area = Vector3::from(q.area_vector);
                     let weight = area.norm();
+                    if !weight.is_finite() || weight <= 0. {
+                        return Err(Error::Input(
+                            "JOINT requires positive quadrature area".into(),
+                        ));
+                    }
                     let normal = area / weight;
                     let mut coefficients = BTreeMap::<usize, f64>::new();
                     for ((&a, &b), &w) in na.iter().zip(&nb).zip(&q.shape) {
@@ -604,6 +635,7 @@ impl Model {
                     }
                     coefficients.retain(|_, w| *w != 0.);
                     points.push(Point {
+                        face_slot: faces.len(),
                         info: PointInfo {
                             joint_id: d.id.clone(),
                             face_index: fi,
@@ -620,9 +652,11 @@ impl Model {
                         coefficients: coefficients.into_iter().collect(),
                     });
                 }
+                faces.push(first..points.len());
             }
         }
         Ok(Self {
+            faces,
             configuration,
             points,
             positions: mesh.nodes.clone(),
@@ -674,6 +708,7 @@ impl Model {
                     .joints
                     .iter()
                     .map(|d| Lifecycle {
+                        region: None,
                         joint_id: d.id.clone(),
                         policy: d.birth_policy,
                         active: d.birth_policy.is_none(),
@@ -708,7 +743,7 @@ impl Model {
             .collect()
     }
     fn contact_active(&self, state: &State, p: &Point, active: &[bool]) -> bool {
-        Self::active(p, active) && state.lifecycle.get(p.material).is_none_or(|l| l.active)
+        Self::active(p, active) && state.lifecycle.get(p.slot(state)).is_none_or(|l| l.active)
     }
     fn active(p: &Point, active: &[bool]) -> bool {
         active[p.info.owner_a] && active[p.info.owner_b]

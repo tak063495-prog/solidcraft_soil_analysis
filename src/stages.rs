@@ -5952,6 +5952,13 @@ fn solve_controlled(
             | Stage::RemoveAnchors { .. } => prepared.active_elements.clone(),
             Stage::Excavate { bodies, .. } => model.excavation(&origin, bodies)?,
         };
+        if matches!(stage, Stage::Excavate { .. })
+            && let (Some(j), Some(state)) = (&model.joints, &origin.joints)
+            && model.wet_joints.is_none()
+        {
+            prepared.joints =
+                Some(j.freeze_removed_faces(state, &origin.active_elements, &active)?);
+        }
         let flow_target = if let Stage::SteadySeepage { flow, .. } = stage {
             let solved = model.solve_flow(
                 flow,
@@ -6115,13 +6122,19 @@ fn solve_controlled(
                 end_joint_water.as_ref(),
             )?
         };
+        // A newly frozen face already contributes zero in the retained-domain
+        // assembly. The old-minus-retained correction belongs only to the
+        // removed-domain route below.
+        let reassemble_retained = matches!(stage, Stage::Excavate { .. })
+            && (case.is_projected_mcc() || prepared.joints != origin.joints);
         let mut release = if force_preserving_joint_birth {
             // Mode A already reproduces the full nodal transfer at the same
             // displacement. It needs no artificial construction holding load,
             // including at prescribed support DOFs.
             vec![0.; endload.len()]
-        } else if matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc() {
-            // Projection is domain-dependent: full minus removed work forces
+        } else if reassemble_retained {
+            // A cut through a contact removes its force even with one wall retained.
+            // Projection is also domain-dependent: full minus removed work forces
             // need not equal the restricted-domain work force. Reconstruct
             // the retained force without changing any GP material history.
             let dofs = model.dofs(
@@ -6202,6 +6215,7 @@ fn solve_controlled(
             vec![0.; endload.len()]
         };
         if matches!(stage, Stage::Excavate { .. })
+            && !reassemble_retained
             && let Some(joints) = &model.joints
         {
             // Split interfaces have different soil DOFs on their two sides.
@@ -6524,7 +6538,9 @@ fn solve_controlled(
                     .map(|t| (t, None))
             } else {
                 model.trial_with_path_error(
-                    if stage.is_transition() && progress == 0. {
+                    if (stage.is_transition() || matches!(stage, Stage::Excavate { .. }))
+                        && progress == 0.
+                    {
                         &prepared
                     } else {
                         &committed

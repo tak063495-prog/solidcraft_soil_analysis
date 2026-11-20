@@ -26,34 +26,46 @@ fn main() -> Result<()> {
     if let Some(owner) = request["inactive_owner"].as_u64() {
         active[owner as usize] = false;
     }
-    let result = if operation == "body_birth" {
-        let mut before = active.clone();
-        before[layout[0].owner_b] = false;
-        model.prepare_body_birth(&state, &before, &active)
-    } else {
-        model.birth(&state, &u, &active, &ids, &force, &rows)
+    let trial = || {
+        if operation == "body_birth" {
+            let mut before = active.clone();
+            before[layout[0].owner_b] = false;
+            model.prepare_body_birth(&state, &before, &active)
+        } else {
+            model.birth(&state, &u, &active, &ids, &force, &rows)
+        }
     };
-    let (accepted, error, output) = match result {
+    let before_bytes = serde_json::to_vec(&state)?;
+    let (accepted, error, output) = match trial() {
         Ok(born) => {
-            let repeat = model.birth(&state, &u, &active, &ids, &force, &rows)?;
+            let repeat = trial()?;
             assert_eq!(serde_json::to_vec(&born)?, serde_json::to_vec(&repeat)?);
-            let value = model.evaluate(&born, &u, &active, None, false)?;
-            let maximum = value
-                .internal_kn
-                .iter()
-                .zip(&force)
-                .map(|(a, b)| (a - b).abs())
-                .fold(0_f64, f64::max);
-            assert!(maximum <= 1e-10);
-            (
-                true,
-                None,
-                serde_json::json!({"state":born,"nodal_force_kn":value.internal_kn,
+            if operation == "body_birth" {
+                (
+                    true,
+                    None,
+                    serde_json::json!({"prepared_state":born, "exact_repeat":true}),
+                )
+            } else {
+                let value = model.evaluate(&born, &u, &active, None, false)?;
+                let maximum = value
+                    .internal_kn
+                    .iter()
+                    .zip(&force)
+                    .map(|(a, b)| (a - b).abs())
+                    .fold(0_f64, f64::max);
+                assert!(maximum <= 1e-10);
+                (
+                    true,
+                    None,
+                    serde_json::json!({"state":born,"nodal_force_kn":value.internal_kn,
                 "maximum_force_error_kn":maximum,"exact_repeat":true}),
-            )
+                )
+            }
         }
         Err(err) => (false, Some(err.to_string()), serde_json::Value::Null),
     };
+    assert_eq!(before_bytes, serde_json::to_vec(&state)?);
     // Keep the exact requested vector; never clip, smooth, or redistribute it.
     force.shrink_to_fit();
     let output = serde_json::json!({"pid":std::process::id(),"accepted":accepted,
