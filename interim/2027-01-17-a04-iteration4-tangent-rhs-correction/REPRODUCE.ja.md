@@ -59,3 +59,30 @@ if ($LASTEXITCODE -ne 0) { throw '新規求解の比較失敗' }
 ~~~
 
 同じ入力 SHA、順・接触状態・停止反復・生の成分差を新しい ID に保存する。環境が異なる新規求解は、保存した系を同じ順で再集計する手順と区別する。失敗時は出力・エラー・途中状態をそのまま残す。旧 PC の実行や失敗記録を再実行先にしない。
+
+## 全件検証の再実行（Linux クラウド）
+
+再開時の検証対象は `8da4c1d53d6552cbbbdac431cf83dd1a1ac59ef3`。中断ログの unavailable-base-blobs.json にある321パスは、4d8a0100 の tree から blob ID を取り、復元した生バイトの Git blob SHA-1 と照合した。全パス・長さ・blob ID は今回のログ ZIP の recovered-archives.json にある。CI の元来の checkout 条件で除く NC postfold 74 part を除き、配置した旧入力・証拠の保全結果も同じ ZIP に保存した。
+
+固定 requirements と指定 Rust toolchain の環境で、リポジトリ直下から実行する。次のコマンドの出力先は新しいディレクトリを使う。
+
+~~~bash
+export OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 OMP_NUM_THREADS=1
+export CARGO_BUILD_JOBS=2 RUST_TEST_THREADS=2 PYTHONUTF8=1 PYTHONIOENCODING=utf-8
+V=$(mktemp -d)
+cargo fmt --all --check
+cargo clippy --locked --all-targets -- -D warnings
+cargo build --locked --release --all-targets
+cargo test --locked --release --all-targets -- --list
+cargo test --locked --release --all-targets
+cargo test --locked --release --doc
+python -m pytest tests/linux -q
+for g in python-core-0 python-core-1 python-mean-evidence python-spatial-evidence python-c01-switch python-c01-path python-c01-cause; do
+    python tools/run_ci_python_evidence_shards.py --group "$g" --output "$V/$g" >"$V/$g.log" 2>&1
+    echo "$?" >"$V/$g.rc"
+done
+~~~
+
+各群の rc、実出力、割当と実行済み ID を突き合わせる。Linux では既報の2種類の setUpClass 失敗と PowerShell 不在の skip を個別に数える。
+
+今回のクラウド再実行は Rust 467 成功。Python は 1006 件中 996 成功、本体失敗 0、setup error 2、skip 2、未実行 8。[全件結果](full-validation/validation.json) ／ [実出力](full-validation/linux-validation.zip)

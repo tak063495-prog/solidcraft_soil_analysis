@@ -65,3 +65,40 @@ f460f56 から継承する本文確認は Hida・Li・Bailey の QD、ReproBLAS 
 fmt・clippy は成功、release 全ターゲット build は中断。Rust は成功0・失敗0・skip 0、全件未実行（同じ Rust ソース・Cargo ターゲットの直前一覧は 467 件）。Python は今回の発見 1006 件中、成功 25、本体失敗0、skip 0、未実行 981。成功は CI 方式の C-01 3群で16件、Linux pytest 7 件、公式 core 群の外で単独実行した新規2件。両 NC 群は setup 中に中断し、今回は既報の ValueError を観測する前だった。PowerShell skip も今回は未観測。未完の全件検証、push、Windows CI に成功判定を付けていない。[検証記録](validation.json) ／ [中断時の生ログ・欠落 blob 一覧](linux-validation-interrupted.zip)
 
 中断時検証も固定コミット・blob・SHA-256 で登録した。最終 P6 監査は 389 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。[P6 監査](p6-final.json)
+
+## Linux 全件検証
+
+fmt、locked all-targets clippy（警告をエラー化）、release 全ターゲット build は成功。Rust は全ターゲットの一覧と実行した ID が一致し 467 成功、失敗・未実行・skip・ignore・filter は各0、doc-test は0件。Python は CI と同じ7群を実行し、Linux pytest を加えた。新規2件の単独実行は合計に重複計上していない。
+
+|Linux のコマンド|終了コード|今回の出力・集計|
+|---|---:|---|
+|`cargo fmt --all --check`|0|出力なし|
+|`cargo clippy --locked --all-targets -- -D warnings`|0|Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s|
+|`cargo build --locked --release --all-targets`|0|Finished `release` profile [optimized] target(s) in 4m 11s|
+|`cargo test --locked --release --all-targets -- --list`|0|467 件|
+|`cargo test --locked --release --all-targets`|0|467 成功、失敗・skip・未実行 0|
+|`cargo test --locked --release --doc`|0|0 passed, 0 failed|
+
+|群|割当|成功|本体失敗|setup error|未実行|skip|終了コード|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|python-c01-cause|8|8|0|0|0|0|0|
+|python-c01-path|4|4|0|0|0|0|0|
+|python-c01-switch|4|4|0|0|0|0|0|
+|python-core-0|484|483|0|0|0|1|1|
+|python-core-1|491|490|0|0|0|1|1|
+|python-mean-evidence|4|0|0|1|4|0|1|
+|python-spatial-evidence|4|0|0|1|4|0|1|
+|linux-pytest|7|7|0|0|0|0|0|
+|合計|1006|996|0|2|8|2|—|
+
+python-mean-evidence の実出力は `ValueError: saved mean-stress/complement partition differs from own history`、`Ran 0 tests in 771.378s`、`FAILED (errors=1)`。
+
+python-spatial-evidence の実出力は `ValueError: remeasured JSON differs`、`Ran 0 tests in 201.790s`、`FAILED (errors=1)`。
+
+python-mean-evidence の setUpClass は既報の Linux 失敗に一致し、本体 4 件は未実行。
+
+python-spatial-evidence の setUpClass は既報の Linux 失敗に一致し、本体 4 件は未実行。
+
+core の skip は PowerShell 不在のゲート 2 件。割当全 ID、未実行 ID、公式 runner の終了値と生ログを保存した。[再開後の検証記録](full-validation/validation.json) ／ [Linux 全出力](full-validation/linux-validation.zip)
+
+再開時に不足していた 321 パス（319 個の blob、9,034,786,872 bytes）を固定 tree と照合した。初回中断時の記録は上の「Linux 全件検証の中断」にある。
