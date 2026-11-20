@@ -78,3 +78,18 @@ cargo test --locked --release --test wet_joint_richards joint_policy_is_checked_
 cargo test --locked --release --no-fail-fast
 cargo test --locked --release --examples --no-fail-fast
 ```
+
+最終再評価の acceptance.json に記載した source_commit で数値実行を再現する。各群の Python の出力先を分け、全件試験には上記の no-fail-fast を付ける。相対パスと SHA-256 は acceptance.json の archives にある。次のコードはリポジトリルートから保存した3アーカイブの全バイトと ZIP エントリを検査する。
+
+```python
+import hashlib, json, zipfile
+from pathlib import Path
+
+folder = Path('interim/2026-11-20-impl-t1-wet-joint-richards')
+report = json.loads((folder/'acceptance.json').read_text(encoding='utf-8'))
+for item in report['archives'].values():
+    path = folder/item['path']
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256']
+    with zipfile.ZipFile(path) as z:
+        assert len(z.infolist()) == item['entries'] and z.testzip() is None
+```
