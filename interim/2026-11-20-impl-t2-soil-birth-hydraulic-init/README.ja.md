@@ -81,3 +81,24 @@ A-04（S12）は土側の VG／飽和対照で各 4・8・16 分割、合計 272
 |saturated-n8|global|5.55112e-17|0.220372|6.66852e-17|5.35669e-16|合格／合格|
 
 各受理刻みの符号付き e、D、再組立 E、U、区分別上限と判定を evidence.zip に保存した。局所・全体の極値は同一刻みに発生するとは限らない。再実行方法は REPRODUCE.ja.md に記した。
+
+## 全件試験・台帳
+
+|Linux 検証|成功|本体失敗|未実行|備考|
+|---|---:|---:|---:|---|
+|Rust release（lib・CLI・integration・doc）|481|0|0|fmt・全対象 clippy（警告をエラー化）成功|
+|Rust release examples|3|0|0|全 example ターゲットを実行|
+|python-core-0（再試行）|488|0|0|全割当を実行|
+|python-core-1|494|0|0|全割当を実行|
+|python-mean-evidence|4|0|0|全割当を実行|
+|python-spatial-evidence|4|0|0|全割当を実行|
+|python-c01-switch|4|0|0|全割当を実行|
+|python-c01-path|4|0|0|全割当を実行|
+|python-c01-cause|8|0|0|全割当を実行|
+|Linux 専用 pytest|7|0|0|pytest 9.2.0|
+
+Python の7群は 1006 個の固有 ID。初回 core-0 は 487 成功・1 エラー。既存 SIGINT 試験で子プロセスの PID 用一時ファイルの作成直後に空文字を読み、整数変換で停止した。単独再試行1件と群全体の再試行は成功。初回ログを保存し、重複した試行を最終件数に加えていない。
+
+P6-01 は 80 項目・396 資料・171 証拠、integrity_ok=true。台帳の専用監査試験は57件、関連する P6-03 監査試験は19件成功（全件とは別掲）。受入 JSON の固定コミットは b48fe2e8915a31af1bc28b8b24573af25274cf11、SHA-256 は b81278fbc12d9314cf370018445337a54a5d91f110e0addfae04a83837699f34、Git blob は 79ddec3bdfe851957c791153cab305e8fd15d278。
+
+全件の出力、両回の core-0、試験 ID、台帳照合を verification.zip に収録した。SHA-256 は 2f6f36fabb5b1d8cd8ecc765d3c66b087976e898bde24b47d7c17e9209ed7f63。
