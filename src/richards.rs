@@ -1610,6 +1610,7 @@ pub(crate) fn transition_domain(
         after,
         selected,
         policy,
+        internal_donors,
     } = input;
     let models = |d: &crate::hydraulic_transition::Domain<'_>| match wet {
         Some(w) => Model::with_joints(
@@ -1828,6 +1829,83 @@ pub(crate) fn transition_domain(
             water_after += snapshots[&e].water_equivalent_volume_m3;
         }
     }
+    let mut internal_transfers = Vec::new();
+    if let Some(donors) = internal_donors {
+        if donors.keys().copied().collect::<BTreeSet<_>>() != chosen
+            || changed.iter().any(|c| c.before.is_some())
+        {
+            return Err(Error::Input(
+                "internal supply requires one donor for each new soil cell".into(),
+            ));
+        }
+        let mut debits = BTreeMap::new();
+        for receiver in &changed {
+            let e = receiver.element_index;
+            let donor = donors[&e];
+            if !snapshots.contains_key(&donor)
+                || !new.faces.iter().any(|f| {
+                    f.owners.len() == 2 && {
+                        let owners = f
+                            .owners
+                            .iter()
+                            .map(|o| new.cells[o[0]].element_index)
+                            .collect::<Vec<_>>();
+                        owners.contains(&e) && owners.contains(&donor)
+                    }
+                })
+            {
+                return Err(Error::Input(
+                    "internal water donor must be a retained adjacent cell".into(),
+                ));
+            }
+            let v = receiver.after.water_equivalent_volume_m3;
+            *debits.entry(donor).or_insert(0.) += v;
+            internal_transfers.push(crate::hydraulic_transition::CellTransfer {
+                donor_element: donor,
+                receiver_element: e,
+                volume_m3: v,
+            });
+        }
+        for (e, debit) in debits {
+            let prior = &snapshots[&e];
+            let i = new
+                .cells
+                .iter()
+                .position(|c| c.element_index == e)
+                .ok_or_else(|| Error::Input("missing donor cell".into()))?;
+            let reference = AffineHead {
+                head_m: new.datum + prior.relative_head_m,
+                gradient: [0.; 3],
+                reference_point_m: [0.; 3],
+            };
+            let h = storage_head(&new, i, prior.storage_offset_m3 - debit, &reference)?;
+            let local = new.local(i, h)?;
+            let q: [f64; 4] = (local.c
+                * Vector4::from_fn(|j, _| h - state.relative_face_head_m[new.cell_faces[i][j]]))
+            .into();
+            state.relative_cell_head_m[e] = Some(h);
+            state.cell_storage_offset_m3[e] = Some(local.storage);
+            state.cell_outflow_m3_s[e] = Some(q);
+            let water = new.materials[i].retention.saturated_water_content * prior.volume_m3
+                + local.storage;
+            water_after += water - prior.water_equivalent_volume_m3;
+            changed.push(ChangedCell {
+                element_index: e,
+                old_material_id: Some(after.material_ids[e]),
+                new_material_id: after.material_ids[e],
+                before: Some(prior.clone()),
+                after: RemovedCell {
+                    element_index: e,
+                    relative_head_m: h,
+                    outflow_m3_s: q,
+                    storage_offset_m3: local.storage,
+                    volume_m3: prior.volume_m3,
+                    water_equivalent_volume_m3: water,
+                },
+            });
+        }
+        added = 0.;
+    }
     let error = (water_after - water_before - added + removed).abs();
     if error > 1e-11 * water_before.max(water_after).max(1e-30) {
         return Err(Error::Solve(
@@ -1835,6 +1913,7 @@ pub(crate) fn transition_domain(
         ));
     }
     Ok(WaterChange {
+        internal_transfers,
         state,
         old_faces: original.faces,
         new_faces: new.faces,
@@ -2068,4 +2147,81 @@ fn advance(
         last_committed: state,
         runtime,
     })
+}
+
+#[cfg(test)]
+mod soil_construction_transfer_tests {
+    use super::*;
+    use crate::hydraulic_transition::{Domain, TransitionInput, WaterPolicy};
+
+    #[test]
+    fn adjacent_donor_loses_the_new_inventory_once_at_the_same_time() -> Result<()> {
+        let mesh: Mesh =
+            serde_json::from_str(include_str!("../examples/seepage-column-tet4-mesh.json"))?;
+        let input: crate::one_way::Case =
+            serde_json::from_str(include_str!("../examples/one-way-mc.json"))?;
+        let mut case = input.flow;
+        case.initial_head.head_m = 2.;
+        // A closed two-tank control with positive compressible storage and a small fill.
+        let (donor, receiver) = mesh
+            .tetrahedra
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| mesh.material_ids[*i] == 1)
+            .find_map(|(d, a)| {
+                mesh.tetrahedra
+                    .iter()
+                    .enumerate()
+                    .find(|(i, b)| {
+                        mesh.material_ids[*i] == 2
+                            && a.iter().filter(|n| b.contains(n)).count() == 3
+                    })
+                    .map(|(r, _)| (d, r))
+            })
+            .unwrap();
+        case.materials[0].retention.saturated_specific_storage_per_m = 0.05;
+        case.materials[1].retention.residual_water_content = 0.01;
+        case.materials[1].retention.saturated_water_content = 0.05;
+        let mut start = vec![false; mesh.tetrahedra.len()];
+        start[donor] = true;
+        let mut end = start.clone();
+        end[receiver] = true;
+        let model = Model::new(&mesh, &case, &start, None)?;
+        let old = model.initial(&case)?;
+        let donors = BTreeMap::from([(receiver, donor)]);
+        let change = transition_domain(
+            &mesh,
+            &case,
+            &old,
+            TransitionInput {
+                before: Domain {
+                    active: &start,
+                    material_ids: &mesh.material_ids,
+                },
+                after: Domain {
+                    active: &end,
+                    material_ids: &mesh.material_ids,
+                },
+                selected: &[receiver],
+                policy: &WaterPolicy::InitializeHead {
+                    value: case.initial_head.clone(),
+                },
+                internal_donors: Some(&donors),
+            },
+            None,
+        )?;
+        assert_eq!(change.state.time_s, old.time_s);
+        assert_eq!((change.water_added_m3, change.water_removed_m3), (0., 0.));
+        let v = change.internal_transfers[0].volume_m3;
+        assert!(v > 0.);
+        assert!((change.water_before_m3 - change.water_after_m3).abs() < 1e-12);
+        assert!(
+            (old.cell_storage_offset_m3[donor].unwrap()
+                - change.state.cell_storage_offset_m3[donor].unwrap()
+                - v)
+                .abs()
+                < 1e-12
+        );
+        Ok(())
+    }
 }

@@ -34,6 +34,7 @@ pub fn inspect(mesh: &Mesh, run: &Run) -> Result<Endpoint> {
         ));
     }
     let physical = model.physical_load(
+        state.stage_index,
         &state.active_elements,
         state.surface_pressure_kpa,
         run.case.pressure_on_original_surface_only,

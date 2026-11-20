@@ -44,6 +44,7 @@ pub mod richards;
 pub mod richards_checkpoint;
 pub mod rigidity;
 pub mod soil;
+pub mod soil_birth;
 pub mod solver;
 pub mod spatial_convergence;
 pub mod srm_bound;

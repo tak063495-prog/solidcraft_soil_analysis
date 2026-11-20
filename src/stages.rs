@@ -183,8 +183,44 @@ pub enum BirthPlacement {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum BirthHydraulicState {
+    RichardsPlacement {
+        material_id: u32,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        formation: Option<crate::soil_birth::Formation>,
+    },
     /// ONE_WAY, prescribed hydrostatic field, fully submerged fresh MC soil.
     Hydrostatic { level_m: f64 },
+    PostDarcy {
+        preceding_stage: String,
+        initial_head: crate::richards::AffineHead,
+        placement_water: crate::soil_birth::PlacementWater,
+    },
+    TwoRegion {
+        level_m: f64,
+        mixture: crate::soil_birth::Mixture,
+        placement_water: crate::soil_birth::PlacementWater,
+    },
+    SaturatedMcc {
+        level_m: f64,
+        formation: crate::soil_birth::Formation,
+        placement_water: crate::soil_birth::PlacementWater,
+    },
+}
+impl BirthHydraulicState {
+    fn placement_water(&self) -> Option<&crate::soil_birth::PlacementWater> {
+        match self {
+            Self::Hydrostatic { .. } | Self::RichardsPlacement { .. } => None,
+            Self::PostDarcy {
+                placement_water, ..
+            }
+            | Self::TwoRegion {
+                placement_water, ..
+            }
+            | Self::SaturatedMcc {
+                placement_water, ..
+            } => Some(placement_water),
+        }
+    }
 }
 impl Stage {
     fn is_transition(&self) -> bool {
@@ -500,6 +536,8 @@ pub struct FlowAudit {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransitionAudit {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub placed_water: Vec<crate::soil_birth::PlacedWater>,
     pub stage: String,
     pub selected_elements: Vec<usize>,
     /// Constitutive state after explicit replacement, before any equilibrium increment.
@@ -1517,7 +1555,7 @@ impl<'a> Model<'a> {
             });
             return Ok((prepared, vec![]));
         }
-        if matches!(stage, Stage::Birth { .. })
+        if matches!(stage, Stage::Birth { hydraulic_initialization, .. } if !matches!(hydraulic_initialization, Some(BirthHydraulicState::PostDarcy { .. })))
             && origin.pore_pressure_kpa.is_some()
             && !external_fluid
         {
@@ -1642,6 +1680,73 @@ impl<'a> Model<'a> {
         {
             return Err(Error::Input("wet BIRTH requires one fully submerged fresh soil body, cad_new_nodes, explicit matching hydrostatic level, and one mode-B CONTINUOUS all-soil interface; flow/Richards/structural combinations are unverified".into()));
         }
+        let richards_material =
+            if let Some(BirthHydraulicState::RichardsPlacement { material_id, .. }) =
+                birth_hydraulic
+            {
+                if !external_fluid {
+                    return Err(Error::Input(
+                        "Richards placement requires the transient construction controller".into(),
+                    ));
+                }
+                Some(*material_id)
+            } else {
+                None
+            };
+        let placement_water = birth_hydraulic.and_then(BirthHydraulicState::placement_water);
+        if let Some(water) = placement_water {
+            if external_fluid
+                || bodies.len() != 1
+                || !matches!(
+                    stage,
+                    Stage::Birth {
+                        placement: BirthPlacement::CadNewNodes,
+                        ..
+                    }
+                )
+                || water.water_source.reservoir_id.trim().is_empty()
+                || selected
+                    .iter()
+                    .any(|&i| !self.soil_points[self.elements[i].point_start])
+            {
+                return Err(Error::Input(
+                    "explicit soil placement requires one CAD soil body and a named water source"
+                        .into(),
+                ));
+            }
+            match birth_hydraulic {
+                Some(BirthHydraulicState::PostDarcy {
+                    preceding_stage,
+                    initial_head,
+                    ..
+                }) => {
+                    initial_head.validate()?;
+                    if origin.pore_pressure_kpa.is_none()
+                        || !matches!(self.case.stages.get(..origin.stage_index).and_then(|ss|ss.last()),Some(Stage::SteadySeepage{name,..}) if name==preceding_stage)
+                    {
+                        return Err(Error::Input(
+                            "placement requires the named committed steady Darcy stage".into(),
+                        ));
+                    }
+                }
+                Some(
+                    BirthHydraulicState::SaturatedMcc { level_m, .. }
+                    | BirthHydraulicState::TwoRegion { level_m, .. },
+                ) => {
+                    if !level_m.is_finite()
+                        || Some(*level_m)
+                            != origin
+                                .hydrostatic_water_level_m
+                                .or(self.ground.initialization.water_level_m)
+                    {
+                        return Err(Error::Input(
+                            "explicit placement level conflicts with committed water level".into(),
+                        ));
+                    }
+                }
+                _ => unreachable!(),
+            }
+        }
         let mut prepared = origin.clone();
         if matches!(
             stage,
@@ -1673,7 +1778,10 @@ impl<'a> Model<'a> {
             if birth && origin.active_elements[ei] {
                 return Err(Error::Input("BIRTH requires a wholly inactive body".into()));
             }
-            if let Some(id) = material_id {
+            if let Some(id) = material_id
+                .or(richards_material)
+                .or_else(|| placement_water.map(|w| w.material_id))
+            {
                 prepared.element_material_ids[ei] = id;
             }
             let mi = self.material_index(&prepared.element_material_ids, ei)?;
@@ -1696,7 +1804,33 @@ impl<'a> Model<'a> {
                 }
                 let state = &prepared.material_states[point];
                 if birth {
-                    if !matches!(model, soil::Model::MohrCoulomb(_))
+                    if let Some(
+                        BirthHydraulicState::SaturatedMcc { formation, .. }
+                        | BirthHydraulicState::RichardsPlacement {
+                            formation: Some(formation),
+                            ..
+                        },
+                    ) = birth_hydraulic
+                    {
+                        let (soil::Model::Mcc(parameters), soil::State::Mcc(seed)) = (model, state)
+                        else {
+                            return Err(Error::Input(
+                                "saturated MCC formation requires matching MCC material and seed"
+                                    .into(),
+                            ));
+                        };
+                        formation.validate(parameters, seed)?;
+                        if let Some(BirthHydraulicState::SaturatedMcc { level_m, .. }) =
+                            birth_hydraulic
+                            && !crate::soil_birth::saturated_element(self.mesh, ei, |p| {
+                                level_m - p[2]
+                            })
+                        {
+                            return Err(Error::Input(
+                                "MCC placement requires full saturation".into(),
+                            ));
+                        }
+                    } else if !matches!(model, soil::Model::MohrCoulomb(_))
                         || !matches!(state, soil::State::MohrCoulomb(_))
                     {
                         return Err(Error::Input("stress-free BIRTH requires a zero-stress-admissible model; MCC has zero bulk stiffness at p=0".into()));
@@ -1747,6 +1881,10 @@ impl<'a> Model<'a> {
             }
             prepared.joints = Some(history);
         }
+        if matches!(birth_hydraulic, Some(BirthHydraulicState::PostDarcy { .. })) {
+            prepared.pore_pressure_kpa =
+                self.stage_pore(origin, stage, &prepared.active_elements, None, 1.)?;
+        }
         self.ensure_supported(&prepared.active_elements)?;
         if birth && !prepared.display_reference_displacement_m.is_empty() {
             let mut existing = vec![false; self.mesh.nodes.len()];
@@ -1766,6 +1904,83 @@ impl<'a> Model<'a> {
             }
         }
         Ok((prepared, selected))
+    }
+    fn placed_water(
+        &self,
+        stage: &Stage,
+        prepared: &Committed,
+        selected: &[usize],
+    ) -> Result<Vec<crate::soil_birth::PlacedWater>> {
+        let Stage::Birth {
+            hydraulic_initialization: Some(init),
+            bodies,
+            ..
+        } = stage
+        else {
+            return Ok(vec![]);
+        };
+        let Some(placement) = init.placement_water() else {
+            return Ok(vec![]);
+        };
+        let generation = 1 + self
+            .case
+            .stages
+            .iter()
+            .take(prepared.stage_index)
+            .filter(|s| matches!(s,Stage::Birth{bodies:earlier,..} if earlier.contains(&bodies[0])))
+            .count();
+        selected
+            .iter()
+            .map(|&i| {
+                let e = &self.elements[i];
+                let ratio = prepared.material_states[e.point_start].void_ratio();
+                let n = ratio / (1. + ratio);
+                let gamma = self.ground.materials
+                    [self.material_index(&prepared.element_material_ids, i)?]
+                .unit_weight_kn_m3;
+                let (lower, sr, weights) = if let BirthHydraulicState::TwoRegion {
+                    level_m,
+                    mixture,
+                    ..
+                } = init
+                {
+                    if !crate::soil_birth::consistent(n, mixture.porosity) {
+                        return Err(Error::Input(
+                            "placement porosity conflicts with seed void ratio".into(),
+                        ));
+                    }
+                    let points: Vec<_> = self
+                        .mesh
+                        .cell_nodes(i)
+                        .iter()
+                        .map(|&n| self.mesh.nodes[n])
+                        .collect();
+                    (
+                        crate::hydrostatic_volume::wet_shape_volumes(&points, *level_m)?
+                            .iter()
+                            .sum::<f64>()
+                            .clamp(0., e.volume),
+                        mixture.upper_saturation,
+                        mixture.unit_weights(self.ground.initialization.water_unit_weight_kn_m3)?,
+                    )
+                } else {
+                    (e.volume, 1., [gamma, gamma])
+                };
+                let upper = e.volume - lower;
+                Ok(crate::soil_birth::PlacedWater {
+                    element_index: i,
+                    generation,
+                    material_id: placement.material_id,
+                    lower_volume_m3: lower,
+                    upper_volume_m3: upper,
+                    lower_water_m3: n * lower,
+                    upper_water_m3: n * sr * upper,
+                    lower_weight_kn: lower * weights[1],
+                    upper_weight_kn: upper * weights[0],
+                    water_source: placement.water_source.clone(),
+                })
+            })
+            .collect()
     }
     fn new(mesh: &'a Mesh, ground: &'a Ground, case: &'a StageCase) -> Result<Self> {
         if case.settings.mcc_integration.is_some()
@@ -2142,6 +2357,26 @@ impl<'a> Model<'a> {
         flow_target: Option<&[f64]>,
         progress: f64,
     ) -> Result<Option<Vec<f64>>> {
+        if let Stage::Birth {
+            hydraulic_initialization: Some(BirthHydraulicState::PostDarcy { initial_head, .. }),
+            ..
+        } = stage
+        {
+            let mut pressures = origin
+                .pore_pressure_kpa
+                .clone()
+                .ok_or_else(|| Error::Input("missing committed Darcy pressures".into()))?;
+            for (i, e) in self.elements.iter().enumerate() {
+                if active[i] && !origin.active_elements[i] {
+                    for (j, q) in e.points.iter().enumerate() {
+                        pressures[e.point_start + j] =
+                            self.ground.initialization.water_unit_weight_kn_m3
+                                * initial_head.relative(q.position, q.position[2]);
+                    }
+                }
+            }
+            return Ok(Some(pressures));
+        }
         if flow_target.is_none()
             && !(matches!(stage, Stage::HydrostaticWater { .. })
                 && origin.pore_pressure_kpa.is_some())
@@ -2209,12 +2444,41 @@ impl<'a> Model<'a> {
             .as_ref()
             .ok_or_else(|| Error::Input("missing committed JOINT water field".into()))?;
         if let Some(target) = flow {
+            if matches!(stage, Stage::Birth { .. }) {
+                return Ok(Some(target.clone()));
+            }
             return Ok(Some(wet.interpolate(old, target, active, progress)?));
         }
         if matches!(stage, Stage::JointBirth { .. } | Stage::Birth { .. }) {
             let level = self
                 .stage_water(origin, stage, progress)
                 .or(self.ground.initialization.water_level_m);
+            if matches!(stage, Stage::JointBirth { .. })
+                && self.case.stages[..origin.stage_index]
+                    .iter()
+                    .rev()
+                    .find(|s| {
+                        matches!(
+                            s,
+                            Stage::SteadySeepage { .. }
+                                | Stage::HydrostaticWater { .. }
+                                | Stage::Birth { .. }
+                        )
+                    })
+                    .is_some_and(|s| {
+                        matches!(
+                            s,
+                            Stage::Birth {
+                                hydraulic_initialization: Some(
+                                    BirthHydraulicState::PostDarcy { .. }
+                                ),
+                                ..
+                            }
+                        )
+                    })
+            {
+                return Ok(Some(wet.retain(old, active)?));
+            }
             let previous_water = self
                 .case
                 .stages
@@ -2342,6 +2606,7 @@ impl<'a> Model<'a> {
     #[allow(clippy::too_many_arguments)]
     fn physical_load(
         &self,
+        stage_count: usize,
         active: &[bool],
         pressure: f64,
         original_surface: bool,
@@ -2364,8 +2629,57 @@ impl<'a> Model<'a> {
         for (i, e) in self.elements.iter().enumerate() {
             if active[i] {
                 let nodes = self.mesh.cell_nodes(i);
-                let unit_weight =
+                let placement = self
+                    .case
+                    .stages
+                    .iter()
+                    .take(stage_count)
+                    .rev()
+                    .find_map(|stage| {
+                        let body = &self
+                            .mesh
+                            .regions
+                            .iter()
+                            .find(|r| r.id == self.mesh.region_ids[i])?
+                            .body;
+                        match stage {
+                            Stage::Birth {
+                                bodies,
+                                hydraulic_initialization,
+                                ..
+                            } if bodies.contains(body) => Some(hydraulic_initialization.as_ref()),
+                            Stage::MaterialSet { bodies, .. } if bodies.contains(body) => {
+                                Some(None)
+                            }
+                            _ => None,
+                        }
+                    })
+                    .flatten();
+                let mut unit_weight =
                     self.ground.materials[self.material_index(material_ids, i)?].unit_weight_kn_m3;
+                if let Some(BirthHydraulicState::TwoRegion {
+                    level_m, mixture, ..
+                }) = placement
+                {
+                    if Some(*level_m) != water_level.or(self.ground.initialization.water_level_m) {
+                        return Err(Error::Input(
+                            "two-region placement requires a fixed prescribed water level".into(),
+                        ));
+                    }
+                    let [upper, lower] =
+                        mixture.unit_weights(self.ground.initialization.water_unit_weight_kn_m3)?;
+                    if !crate::soil_birth::consistent(lower, unit_weight) {
+                        return Err(Error::Input(
+                            "placement saturated weight conflicts with material unit weight".into(),
+                        ));
+                    }
+                    unit_weight = upper;
+                    let points: Vec<_> = nodes.iter().map(|&n| self.mesh.nodes[n]).collect();
+                    let wet = crate::hydrostatic_volume::wet_shape_volumes(&points, *level_m)?;
+                    for (&node, volume) in nodes.iter().zip(wet) {
+                        load[3 * node + 2] -= (lower - upper) * volume;
+                    }
+                }
                 for q in &e.points {
                     for (j, &node) in nodes.iter().enumerate() {
                         load[3 * node + 2] -= q.weight_m3 * unit_weight * q.shape[j];
@@ -4262,6 +4576,7 @@ impl<'a> ExternalMechanics<'a> {
             .map(|wet| wet.empty_field())
             .transpose()?;
         let load = m.physical_load(
+            0,
             &active,
             m.ground.initialization.surface_surcharge_kpa,
             m.case.pressure_on_original_surface_only,
@@ -4461,6 +4776,7 @@ impl<'a> ExternalMechanics<'a> {
     pub fn dry_load(&self, state: &Committed, active: &[bool]) -> Result<Vec<f64>> {
         let empty = self.wet_joints().map(|w| w.empty_field()).transpose()?;
         self.model.physical_load(
+            0,
             active,
             state.surface_pressure_kpa,
             self.model.case.pressure_on_original_surface_only,
@@ -4737,6 +5053,7 @@ fn equilibrate(
         )?
         .internal;
     let physical = model.physical_load(
+        0,
         &seed.active_elements,
         seed.surface_pressure_kpa,
         model.case.pressure_on_original_surface_only,
@@ -4770,6 +5087,7 @@ fn equilibrate(
         let state = &saved.last_committed;
         let factor = saved.progress * cfg.initial_boundary_factor;
         let expected = model.physical_load(
+            0,
             &state.active_elements,
             state.surface_pressure_kpa,
             model.case.pressure_on_original_surface_only,
@@ -4906,6 +5224,7 @@ fn equilibrate(
         let active = report.last_committed.active_elements.clone();
         let factor = next * cfg.initial_boundary_factor;
         let physical = model.physical_load(
+            0,
             &active,
             report.last_committed.surface_pressure_kpa,
             model.case.pressure_on_original_surface_only,
@@ -5090,6 +5409,7 @@ fn equilibrate(
     report.complete = report.progress == 1.;
     if report.complete {
         let physical = model.physical_load(
+            0,
             &report.last_committed.active_elements,
             report.last_committed.surface_pressure_kpa,
             model.case.pressure_on_original_surface_only,
@@ -5312,6 +5632,7 @@ fn solve_controlled(
         })
         .transpose()?;
     let load = model.physical_load(
+        0,
         &active,
         ground.initialization.surface_surcharge_kpa,
         case.pressure_on_original_surface_only,
@@ -5484,6 +5805,7 @@ fn solve_controlled(
             geometry_check.joints.as_ref(),
         )?;
         model.physical_load(
+            geometry_check.stage_index,
             &geometry_check.active_elements,
             geometry_check.surface_pressure_kpa,
             case.pressure_on_original_surface_only,
@@ -5611,7 +5933,7 @@ fn solve_controlled(
         let origin = resumed
             .as_ref()
             .map_or_else(|| committed.clone(), |c| c.origin.clone());
-        let (prepared, selected) = model.prepare_transition(&origin, stage)?;
+        let (mut prepared, selected) = model.prepare_transition(&origin, stage)?;
         let active = match stage {
             Stage::Pressure { .. }
             | Stage::SteadySeepage { .. }
@@ -5698,7 +6020,42 @@ fn solve_controlled(
             origin.boundary_factor
         };
         let end_pressure = stage.pressure(origin.surface_pressure_kpa);
-        let joint_flow_target = if matches!(stage, Stage::SteadySeepage { .. }) {
+        let joint_flow_target = if let Stage::Birth {
+            hydraulic_initialization:
+                Some(BirthHydraulicState::PostDarcy {
+                    initial_head,
+                    preceding_stage,
+                    ..
+                }),
+            ..
+        } = stage
+        {
+            let audit = flow_audits
+                .last()
+                .filter(|a| {
+                    a.stage == *preceding_stage
+                        && a.stage_index + 1 == stage_index
+                        && a.solution.complete
+                })
+                .ok_or_else(|| {
+                    Error::Input("missing committed Darcy field for placement".into())
+                })?;
+            let old = audit
+                .joint_flow
+                .as_ref()
+                .map_or(&audit.solution.field, |f| &f.original_field);
+            let field = crate::soil_birth::extend_heads(mesh, old, &selected, initial_head)?;
+            let soil_active = match &model.wet_joints {
+                Some(w) => w.soil_domain(&active)?,
+                None => active.clone(),
+            };
+            field.validate(mesh, &soil_active)?;
+            model
+                .wet_joints
+                .as_ref()
+                .map(|wet| wet.from_heads(&active, &field, model.stage_water(&origin, stage, 1.)))
+                .transpose()?
+        } else if matches!(stage, Stage::SteadySeepage { .. }) {
             flow_audits
                 .last()
                 .and_then(|a| a.joint_flow.as_ref())
@@ -5719,6 +6076,15 @@ fn solve_controlled(
         };
         let end_joint_water =
             model.stage_joint_water(&origin, stage, &active, joint_flow_target.as_ref(), 1.)?;
+        if matches!(
+            stage,
+            Stage::Birth {
+                hydraulic_initialization: Some(BirthHydraulicState::PostDarcy { .. }),
+                ..
+            }
+        ) {
+            prepared.joint_water = end_joint_water.clone();
+        }
         let force_preserving_joint_birth = match stage {
             Stage::JointBirth { joints, .. } => case.joint_system.as_ref().is_some_and(|c| {
                 joints.iter().all(|id| {
@@ -5738,6 +6104,7 @@ fn solve_controlled(
             origin.applied_nodal_load_kn.clone()
         } else {
             model.physical_load(
+                stage_index + 1,
                 &active,
                 end_pressure,
                 case.pressure_on_original_surface_only,
@@ -5929,6 +6296,7 @@ fn solve_controlled(
                 .collect();
             let audit = TransitionAudit {
                 stage: stage.name().into(),
+                placed_water: model.placed_water(stage, &prepared, &selected)?,
                 selected_elements: selected,
                 prepared_state: prepared.clone(),
                 initial_holding_load_kn: release.clone(),
@@ -5968,6 +6336,7 @@ fn solve_controlled(
                 Stage::HydrostaticWater { .. } | Stage::SteadySeepage { .. }
             ) {
                 model.physical_load(
+                    stage_index + 1,
                     &active,
                     origin.surface_pressure_kpa,
                     case.pressure_on_original_surface_only,
@@ -6098,6 +6467,7 @@ fn solve_controlled(
                 Stage::HydrostaticWater { .. } | Stage::SteadySeepage { .. }
             ) {
                 model.physical_load(
+                    stage_index + 1,
                     &active,
                     origin.surface_pressure_kpa,
                     case.pressure_on_original_surface_only,

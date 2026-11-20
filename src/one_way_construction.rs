@@ -58,6 +58,12 @@ pub enum Action {
         states: BTreeMap<String, soil::State>,
         placement: stages::BirthPlacement,
         initial_head: richards::AffineHead,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        material_id: Option<u32>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        formation: Option<crate::soil_birth::Formation>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        internal_donors: Option<BTreeMap<usize, usize>>,
     },
     MaterialSet {
         bodies: Vec<String>,
@@ -86,13 +92,20 @@ impl Transition {
                 bodies,
                 states,
                 placement,
+                material_id,
+                formation,
                 ..
             } => stages::Stage::Birth {
                 name: self.name.clone(),
                 bodies: bodies.clone(),
                 states: states.clone(),
                 placement: placement.clone(),
-                hydraulic_initialization: None,
+                hydraulic_initialization: material_id.map(|material_id| {
+                    stages::BirthHydraulicState::RichardsPlacement {
+                        material_id,
+                        formation: formation.clone(),
+                    }
+                }),
                 initial_increment: self.initial_increment,
             },
             Action::MaterialSet {
@@ -107,6 +120,14 @@ impl Transition {
                 history: history.clone(),
                 initial_increment: self.initial_increment,
             },
+        }
+    }
+    fn internal_donors(&self) -> Option<&BTreeMap<usize, usize>> {
+        match &self.action {
+            Action::Birth {
+                internal_donors, ..
+            } => internal_donors.as_ref(),
+            _ => None,
         }
     }
     fn water(&self) -> water::WaterPolicy {
@@ -129,6 +150,9 @@ pub struct ArchivedPoint {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransitionRecord {
+    /// Initial soil is generation zero. Each accepted placement advances it once.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub placed_generations: BTreeMap<usize, u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub water_source: Option<water::ExternalWaterParty>,
     pub name: String,
@@ -160,6 +184,10 @@ fn zero_usize(v: &usize) -> bool {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExcavationRecord {
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub removed_generations: BTreeMap<usize, u64>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub removed_hydraulic_points: Vec<one_way::Sample>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub water_destination: Option<water::ExternalWaterParty>,
     pub name: String,
@@ -328,9 +356,10 @@ fn periods(case: &Case) -> Result<&[richards::Period]> {
                 .as_ref()
                 .is_none_or(|p| p.reservoir_id.trim().is_empty())
         }) || case.transitions.iter().any(|e| {
-            e.water_source
-                .as_ref()
-                .is_none_or(|p| p.reservoir_id.trim().is_empty())
+            e.internal_donors().is_none()
+                && e.water_source
+                    .as_ref()
+                    .is_none_or(|p| p.reservoir_id.trim().is_empty())
         }))
     {
         return Err(Error::Input(
@@ -374,6 +403,39 @@ fn periods(case: &Case) -> Result<&[richards::Period]> {
     let mut transition_names = BTreeSet::new();
     let mut prior = None;
     for event in &case.transitions {
+        if matches!(
+            event.action,
+            Action::Birth {
+                formation: Some(_),
+                material_id: None,
+                ..
+            }
+        ) {
+            return Err(Error::Input(
+                "MCC placement requires the calibrated material ID".into(),
+            ));
+        }
+        if event.internal_donors().is_some() && event.water_source.is_some() {
+            return Err(Error::Input(
+                "internal transfer cannot also have an external water source".into(),
+            ));
+        }
+        if matches!(
+            &event.action,
+            Action::Birth {
+                material_id: Some(_),
+                ..
+            }
+        ) && event.internal_donors().is_none()
+            && event
+                .water_source
+                .as_ref()
+                .is_none_or(|p| p.reservoir_id.trim().is_empty())
+        {
+            return Err(Error::Input(
+                "explicit placement requires a named event water source".into(),
+            ));
+        }
         let i = *map
             .get(event.before_period.as_str())
             .ok_or_else(|| Error::Input("unknown transition period".into()))?;
@@ -456,6 +518,14 @@ fn new_exposed(mesh: &Mesh, before: &[bool], after: &[bool]) -> BTreeSet<[usize;
         .map(|(k, _)| k)
         .collect()
 }
+fn generation(records: &[TransitionRecord], element: usize) -> u64 {
+    records
+        .iter()
+        .rev()
+        .find_map(|r| r.placed_generations.get(&element).copied())
+        .unwrap_or(0)
+}
+#[allow(clippy::too_many_arguments)]
 fn prepare_pending(
     kernel: &stages::ExternalMechanics<'_>,
     mesh: &Mesh,
@@ -464,6 +534,7 @@ fn prepare_pending(
     old: &State,
     event: &Transition,
     porosity: &[f64],
+    records: &[TransitionRecord],
 ) -> Result<PendingTransition> {
     let (mut prepared, selected) =
         kernel.prepare_external_transition(&old.mechanical, &event.stage())?;
@@ -484,9 +555,41 @@ fn prepare_pending(
             },
             selected: &selected,
             policy: &event.water(),
+            internal_donors: event.internal_donors(),
         },
         kernel.wet_joints(),
     )?;
+    if let Action::Birth {
+        formation: Some(f),
+        material_id: Some(id),
+        ..
+    } = &event.action
+    {
+        let law = &case
+            .one_way
+            .flow
+            .materials
+            .iter()
+            .find(|m| m.id == *id)
+            .ok_or_else(|| Error::Input("missing MCC hydraulic material".into()))?
+            .retention;
+        if !crate::soil_birth::consistent(f.hydraulic_porosity, law.saturated_water_content) {
+            return Err(Error::Input(
+                "MCC formation porosity conflicts with hydraulic material".into(),
+            ));
+        }
+        for &e in &selected {
+            let relative = change.state.relative_cell_head_m[e]
+                .ok_or_else(|| Error::Input("missing placed MCC head".into()))?;
+            if !crate::soil_birth::saturated_element(mesh, e, |p| {
+                case.one_way.flow.head_datum_m - p[2] + relative
+            }) {
+                return Err(Error::Input(
+                    "MCC placement requires full saturation".into(),
+                ));
+            }
+        }
+    }
     let layout = kernel.layout();
     let chosen = selected.into_iter().collect::<BTreeSet<_>>();
     if porosity.len() != layout.len() {
@@ -547,6 +650,14 @@ fn prepare_pending(
             .initial_increment
             .unwrap_or(case.one_way.mechanics.settings.initial_increment),
         record: TransitionRecord {
+            placed_generations: if matches!(event.action, Action::Birth { .. }) {
+                chosen
+                    .iter()
+                    .map(|&i| (i, generation(records, i) + 1))
+                    .collect()
+            } else {
+                BTreeMap::new()
+            },
             water_source: event.water_source.clone(),
             name: event.name.clone(),
             time_s: old.hydraulic.time_s,
@@ -1045,6 +1156,28 @@ fn advance(
                 active,
                 fluid,
                 record: ExcavationRecord {
+                    removed_generations: removal
+                        .removed_cells
+                        .iter()
+                        .map(|c| {
+                            (
+                                c.element_index,
+                                generation(&report.transitions, c.element_index),
+                            )
+                        })
+                        .collect(),
+                    removed_hydraulic_points: old
+                        .fluid
+                        .hydraulic_points
+                        .iter()
+                        .filter(|p| {
+                            removal
+                                .removed_cells
+                                .iter()
+                                .any(|c| c.element_index == p.element_index)
+                        })
+                        .cloned()
+                        .collect(),
                     water_destination: event.water_destination.clone(),
                     name: event.name.clone(),
                     time_s: old.hydraulic.time_s,
@@ -1075,6 +1208,7 @@ fn advance(
                 old,
                 event,
                 &rt.porosity_reference,
+                &report.transitions,
             ) {
                 Ok(mut p) => {
                     p.event_index = rt.transition_index;

@@ -42,22 +42,58 @@ def split(values):
     return (math.fsum(-v for v in values if v < 0), math.fsum(v for v in values if v > 0))
 
 
-def inventory(state):
+class MissingQuantity(ValueError):
+    """An active account lacks a quantity needed to judge it."""
+
+
+def required(mapping, key):
+    value = mapping.get(key)
+    if value is None:
+        raise MissingQuantity(str(key))
+    return value
+
+
+def inventory(state, expected_points=None):
     cells = defaultdict(list)
     volumes = defaultdict(list)
-    for point in state["fluid"]["hydraulic_points"]:
+    local_points = defaultdict(set)
+    for point in required(required(state, "fluid"), "hydraulic_points"):
         i = point["element_index"]
-        w = point["weight_m3"]
-        cells[i].append(w * point["water_equivalent_mass_per_volume"])
+        if expected_points is not None:
+            local = required(point, "local_index")
+            if local in local_points[i]:
+                raise ValueError("duplicate hydraulic integration point")
+            local_points[i].add(local)
+        w = required(point, "weight_m3")
+        cells[i].append(w * required(point, "water_equivalent_mass_per_volume"))
         volumes[i].append(w)
-    active = {i for i, h in enumerate(state["hydraulic"]["relative_cell_head_m"]) if h is not None}
+    hydraulic = required(state, "hydraulic")
+    heads = required(hydraulic, "relative_cell_head_m")
+    storage = required(hydraulic, "cell_storage_offset_m3")
+    active = {i for i, h in enumerate(heads) if h is not None}
+    if len(storage) != len(heads) or any(storage[i] is None for i in active):
+        raise MissingQuantity("active cell storage")
+    if expected_points is not None and any(local_points[i] != expected_points for i in active):
+        raise MissingQuantity("incomplete hydraulic quadrature")
     if cells.keys() != active:
-        raise ValueError("required hydraulic integration points missing")
+        raise MissingQuantity("required hydraulic integration points missing")
     return ({i: math.fsum(v) for i, v in cells.items()},
             {i: math.fsum(v) for i, v in volumes.items()})
 
 
 def audit(mesh, report, profile):
+    if profile not in LIMITS:
+        raise ValueError("unknown water-balance profile")
+    try:
+        if "stages" in report.get("case", {}):
+            raise MissingQuantity("steady or prescribed pressure has no elapsed flow volume or domain inventory")
+        return _audit(mesh, report, profile)
+    except MissingQuantity as error:
+        return dict(profile=profile, unit="m3", complete=report["complete"],
+                    interface_storage_m3=None, passed=None, rows=[], missing=str(error))
+
+
+def _audit(mesh, report, profile):
     case = report["case"].get("one_way", report["case"])
     sources = {m["id"]: m.get("volume_source_per_s", 0.) for m in case["flow"]["materials"]}
     construction = "initialization" in report
@@ -76,15 +112,25 @@ def audit(mesh, report, profile):
         value = accounts[label].record(start, end, p, n, profile)
         rows.append(dict(kind=kind, id=label, time_s=time, **value))
 
+    expected_points = set(range((mesh.get("quadrature_order") or 3)**3)) if "tetrahedra" in mesh else None
     for frame in frames:
         state = frame["state"]
         hydraulic = state["hydraulic"]
-        time = hydraulic["time_s"]
-        dt = time - prior["hydraulic"]["time_s"]
+        time = required(hydraulic, "time_s")
+        dt = time - required(prior["hydraulic"], "time_s")
         if dt < 0:
             raise ValueError("accepted time reversed")
-        old, _ = inventory(prior)
-        new, volumes = inventory(state)
+        old, _ = inventory(prior, expected_points)
+        new, volumes = inventory(state, expected_points)
+        if construction and "hydraulic_cell_element_indices" in frame:
+            ids = required(frame, "hydraulic_cell_element_indices")
+            if set(ids) != new.keys():
+                raise MissingQuantity("active hydraulic cell head or inventory")
+        elif not construction and "tetrahedra" in mesh:
+            structure_names = set((case["mechanics"].get("joint_system") or {}).get("structure_bodies", []))
+            excluded = {r["id"] for r in mesh["regions"] if r["body"] in structure_names}
+            if new.keys() != {i for i, rid in enumerate(mesh["region_ids"]) if rid not in excluded}:
+                raise MissingQuantity("active hydraulic cell head or inventory")
         event = frame.get("phase") in ("excavation_release", "material_transition")
         if dt == 0 and (not event or frame["name"] in events):
             if old != new:
@@ -96,20 +142,56 @@ def audit(mesh, report, profile):
             if dt != 0:
                 raise ValueError("event advanced physical time")
             events.add(frame["name"])
-            record = next(r for r in report["excavations"] + report.get("transitions", [])
-                          if r["name"] == frame["name"] and r["time_s"] == time)
+            records = [r for r in report["excavations"] + report.get("transitions", [])
+                       if r["name"] == frame["name"] and r["time_s"] == time]
+            if not records:
+                raise MissingQuantity("construction transfer record")
+            if len(records) != 1:
+                raise ValueError("duplicate construction transfer record")
+            record = records[0]
             moves = {}
             if "removal" in record:
-                for cell in record["removal"]["removed_cells"]:
-                    moves[cell["element_index"]] = -cell["water_equivalent_volume_m3"]
-                p, n = 0., record["removal"]["water_removed_m3"]
+                for cell in required(record["removal"], "removed_cells"):
+                    if cell["element_index"] in moves:
+                        raise ValueError("duplicate removed cell")
+                    moves[cell["element_index"]] = -required(cell, "water_equivalent_volume_m3")
+                if moves.keys() != old.keys() - new.keys():
+                    raise MissingQuantity("removed cell inventory")
+                p, n = 0., required(record["removal"], "water_removed_m3")
             else:
                 water = record["water"]
-                for cell in water["changed_cells"]:
-                    previous = cell["before"]
-                    moves[cell["element_index"]] = (cell["after"]["water_equivalent_volume_m3"]
-                        - (previous["water_equivalent_volume_m3"] if previous else 0.))
-                p, n = water["water_added_m3"], water["water_removed_m3"]
+                internal = water.get("internal_transfers", [])
+                for cell in required(water, "changed_cells"):
+                    index = cell["element_index"]
+                    if index in moves:
+                        raise ValueError("duplicate changed cell")
+                    previous = cell.get("before")
+                    if index in old and previous is None:
+                        raise MissingQuantity(f"cell {index} pre-event inventory")
+                    if index not in old and previous is not None:
+                        raise ValueError("inactive cell has live pre-event inventory")
+                    moves[cell["element_index"]] = (required(cell["after"], "water_equivalent_volume_m3")
+                        - (required(previous, "water_equivalent_volume_m3") if previous is not None else 0.))
+                if not (new.keys() - old.keys()) <= moves.keys():
+                    raise MissingQuantity("new cell inventory")
+                p, n = required(water, "water_added_m3"), required(water, "water_removed_m3")
+                if internal:
+                    if p or n or record.get("water_source") is not None:
+                        raise ValueError("internal and external supply counted together")
+                    net = defaultdict(list)
+                    receivers = set()
+                    for transfer in internal:
+                        donor, receiver = transfer["donor_element"], transfer["receiver_element"]
+                        amount = required(transfer, "volume_m3")
+                        if (donor not in old or receiver in old or receiver not in new or
+                                receiver in receivers or amount < 0 or not math.isfinite(amount)):
+                            raise ValueError("invalid internal construction transfer")
+                        receivers.add(receiver)
+                        net[donor].append(-amount)
+                        net[receiver].append(amount)
+                    if receivers != new.keys() - old.keys() or net.keys() != moves.keys():
+                        raise ValueError("incomplete construction transfer pair")
+                    moves = {i: math.fsum(v) for i, v in net.items()}
             inward.append(p)
             outward.append(n)
             for i in sorted(old.keys() | new.keys()):
@@ -130,7 +212,10 @@ def audit(mesh, report, profile):
                 source = sources[ids[i]] * volumes[i] * dt
                 inward.append(max(source, 0.))
                 outward.append(max(-source, 0.))
-                flows = [q * dt for q in hydraulic["cell_outflow_m3_s"][i]] + [-source]
+                q_face = required(hydraulic, "cell_outflow_m3_s")[i]
+                if q_face is None or len(q_face) != 4 or any(q is None for q in q_face):
+                    raise MissingQuantity(f"cell {i} outward flow")
+                flows = [q * dt for q in q_face] + [-source]
                 add("cell", (i,generations[i]), old[i], new[i], *split(flows))
             wall_faces = {}
             for point in state["fluid"].get("joint_traces", []):

@@ -338,6 +338,12 @@ fn wet_construction_archives_removed_generation_and_restarts_the_reinstalled_wal
         }
     }
     let cut = &run.excavations[0];
+    for (&element, &generation) in &run.transitions[0].placed_generations {
+        assert_eq!(generation, 1);
+        assert_eq!(cut.removed_generations[&element], 1);
+        assert_eq!(run.transitions[1].placed_generations[&element], 2);
+    }
+    assert!(!cut.removed_hydraulic_points.is_empty());
     assert_eq!(
         cut.water_destination.as_ref().unwrap().reservoir_id,
         "haul_water"

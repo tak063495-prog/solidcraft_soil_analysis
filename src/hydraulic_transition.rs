@@ -26,6 +26,8 @@ pub struct ChangedCell {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct WaterChange {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub internal_transfers: Vec<CellTransfer>,
     pub state: richards::State,
     pub old_faces: Vec<richards::Face>,
     pub new_faces: Vec<richards::Face>,
@@ -37,6 +39,13 @@ pub struct WaterChange {
     pub water_removed_m3: f64,
     pub absolute_mass_transfer_error_m3: f64,
 }
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CellTransfer {
+    pub donor_element: usize,
+    pub receiver_element: usize,
+    pub volume_m3: f64,
+}
 pub struct Domain<'a> {
     pub active: &'a [bool],
     pub material_ids: &'a [u32],
@@ -46,6 +55,7 @@ pub(crate) struct TransitionInput<'a> {
     pub after: Domain<'a>,
     pub selected: &'a [usize],
     pub policy: &'a WaterPolicy,
+    pub internal_donors: Option<&'a std::collections::BTreeMap<usize, usize>>,
 }
 pub fn change(
     mesh: &crate::mesh::Mesh,
@@ -65,6 +75,7 @@ pub fn change(
             after,
             selected,
             policy,
+            internal_donors: None,
         },
         None,
     )
