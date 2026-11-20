@@ -571,16 +571,28 @@ fn validate_domain(
     projected: &Mesh,
 ) -> Result<()> {
     let p = &periods(case)?[period];
-    let explicit = p
+    let faces = |name: &str| {
+        projected
+            .face_sets
+            .get(name)
+            .into_iter()
+            .flatten()
+            .map(|face| {
+                let mut key = *face;
+                key.sort_unstable();
+                key
+            })
+    };
+    let conditions: BTreeMap<_, _> = p
         .boundaries
         .iter()
-        .flat_map(|b| projected.face_sets.get(&b.face_set).into_iter().flatten())
-        .map(|f| {
-            let mut key = *f;
-            key.sort_unstable();
-            key
-        })
-        .collect::<BTreeSet<_>>();
+        .flat_map(|b| faces(&b.face_set).map(move |key| (key, &b.condition)))
+        .collect();
+    let levels: BTreeMap<_, _> = case.one_way.exterior_periods[period]
+        .reservoirs
+        .iter()
+        .flat_map(|r| faces(&r.face_set).map(move |key| (key, r.level_m)))
+        .collect();
     for (key, owners) in boundary::surface_owners(mesh) {
         if matches!(
             case.one_way.mechanics.settings.kinematics,
@@ -593,13 +605,32 @@ fn validate_domain(
         {
             return Err(Error::Input("oedometer domain changes require horizontal cuts; use 3D supports for local excavation".into()));
         }
-        if owners.len() == 2
-            && owners.iter().filter(|&&e| active[e]).count() == 1
-            && !explicit.contains(&key)
-        {
-            return Err(Error::Input(
-                "new cut faces require explicit water boundaries in every subsequent period".into(),
-            ));
+        if owners.len() == 2 && owners.iter().filter(|&&e| active[e]).count() == 1 {
+            let condition = conditions.get(&key).ok_or_else(|| {
+                Error::Input(
+                    "new cut faces require explicit water boundaries in every subsequent period"
+                        .into(),
+                )
+            })?;
+            if let Some(&level) = levels.get(&key) {
+                let nodes = mesh.face_nodes(owners[0], &key)?;
+                for n in nodes {
+                    let x = mesh.nodes[n];
+                    let consistent = match condition {
+                        richards::Condition::Head { value } => value.relative(x, level) == 0.,
+                        richards::Condition::Pressure { pressure_head_m } => {
+                            *pressure_head_m == level - x[2]
+                        }
+                        _ => true,
+                    };
+                    if !consistent {
+                        return Err(Error::Input(format!(
+                            "period {}: exterior reservoir and prescribed hydraulic head disagree on cut face {key:?}",
+                            p.name
+                        )));
+                    }
+                }
+            }
         }
     }
     Ok(())

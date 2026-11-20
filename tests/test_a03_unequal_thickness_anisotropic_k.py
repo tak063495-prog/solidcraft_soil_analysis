@@ -3,6 +3,7 @@ import json
 from pathlib import Path, PureWindowsPath
 import subprocess, sys, tempfile, unittest
 import numpy as np
+from diagnostic_source import diagnostic_bytes
 from workflow_pin import prior_record_sha256
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -77,8 +78,10 @@ class A03UnequalAnisotropic(unittest.TestCase):
         self.assertTrue(verify(HERE)['all_sha256_verified'])
 
     def test_prior_records_sha_unchanged(self):
+        # The observation probe is part of the historical diagnosis at this commit.
+        commit = '484f007490d4a042c7ad330de75881025c76a8df'
         for p,sha in read('prior-record-binding.json').items():
-            self.assertEqual(prior_record_sha256(p, (ROOT/p).read_bytes()),sha,p)
+            self.assertEqual(prior_record_sha256(p, diagnostic_bytes(ROOT, commit, p)),sha,p)
 
     def test_ci_sparse_selects_new_archive(self):
         parts=[HERE/p['name'] for p in read('archive-index.json')['parts']]

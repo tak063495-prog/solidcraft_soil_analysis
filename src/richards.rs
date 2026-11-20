@@ -45,7 +45,7 @@ impl AffineHead {
         }
         Ok(())
     }
-    fn relative(&self, p: [f64; 3], datum: f64) -> f64 {
+    pub(crate) fn relative(&self, p: [f64; 3], datum: f64) -> f64 {
         self.head_m - datum
             + (0..3)
                 .map(|a| self.gradient[a] * (p[a] - self.reference_point_m[a]))

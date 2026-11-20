@@ -1,0 +1,33 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/work/t1)
+    Finished `release` profile [optimized] target(s) in 4m 14s
+     Running tests/one_way_construction.rs (/workspace/work/target/release/deps/one_way_construction-ab92577b191f7d40)
+
+running 10 tests
+test compressible_water_mass_removed_at_fixed_time_includes_positive_storage ... ok
+test domain_death_retains_remaining_heads_storage_fluxes_traces_and_archives_removed_water ... ok
+test genuine_post_cut_hydraulic_exhaustion_preserves_the_last_accepted_domain_and_mass_archive ... ok
+test later_cut_reservoir_must_match_prescribed_head_on_the_same_physical_face ... ok
+test missing_cut_boundaries_overlap_reactivation_and_corrupt_origin_are_rejected ... ok
+test rejected_domain_candidate_restores_history_and_clean_release_path_is_exact ... ok
+test saturated_flooded_cut_matches_exact_oedometer_unloading_and_mass_theory ... ok
+test construction_checkpoints_restore_nonzero_holding_domain_archive_and_next_physical_time ... ok
+test unchanged_domain_reuses_geometry_but_applies_each_new_period_boundary ... ok
+test two_local_removals_preserve_separate_archives_and_cumulative_water_budget ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.08s
+
+     Running tests/wet_joint_richards.rs (/workspace/work/target/release/deps/wet_joint_richards-51682b1fba54ae8f)
+
+running 9 tests
+test continuous_transmission_matches_uncut_column_with_nonzero_crossflow ... ok
+test prescribed_history_splits_at_knot_and_loads_both_walls_at_endpoint ... ok
+test prescribed_independent_wall_integral_and_duplicate_exterior ... ok
+test rejected_endpoint_restores_contact_and_hydraulics ... ok
+test duplicate_wet_frames_keep_contact_labels_and_record_zero_slip_and_work ... ok
+test same_endpoint_continuous_rt0_and_opposing_outflows ... ok
+test soil_requires_declared_side_and_keeps_structure_dry ... ok
+test staggered_zero_feedback_reassembles_same_final_pair ... ok
+test wet_construction_archives_removed_generation_and_restarts_the_reinstalled_wall ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.73s
+

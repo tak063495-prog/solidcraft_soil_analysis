@@ -7,6 +7,8 @@ import sys
 import tempfile
 import unittest
 
+from diagnostic_source import diagnostic_bytes
+
 ROOT = Path(__file__).resolve().parents[1]
 HERE = ROOT/'interim/2026-12-26-b03-offset-kink-cause-diagnosis'
 _path = sys.path[:]
@@ -101,8 +103,10 @@ class B03OffsetKinkCauseDiagnosis(unittest.TestCase):
         for name, expected in binding.items():
             self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(), expected, name)
         binding = json.loads((HERE/'source-path-diagnosis.json').read_text())
+        # Bind the diagnosed code to the base in the B-03 report; current sources evolve.
+        commit = '3747630ab615b4be2117ca1aaa13e798cd436374'
         for name, value in binding.items():
-            self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(), value['sha256'], name)
+            self.assertEqual(hashlib.sha256(diagnostic_bytes(ROOT, commit, name)).hexdigest(), value['sha256'], name)
 
     def test_document_suffix_normalizes_real_crlf_only_for_text(self):
         suffix = 'B-03は未達、passed=false。\n'

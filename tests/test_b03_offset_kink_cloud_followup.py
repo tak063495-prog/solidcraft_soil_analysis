@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 
+from diagnostic_source import diagnostic_bytes
 from workflow_pin import prior_record_sha256
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -117,8 +118,11 @@ class B03OffsetKinkCloudFollowup(unittest.TestCase):
         self.assertTrue(all(not v.get('body_obtained', False) for v in r['supplemental_retrieval_attempts']))
 
     def test_old_records_and_production_sources_are_unchanged(self):
+        # The follow-up records its production and reference code at this base commit.
+        commit = '672824272e2baa1fe6ea776c8fc5889eacfc9a15'
         for name, expected in json.loads((HERE/'prior-record-binding.json').read_text()).items():
-            self.assertEqual(prior_record_sha256(name, (ROOT/name).read_bytes()), expected, name)
+            data = diagnostic_bytes(ROOT, commit, name)
+            self.assertEqual(prior_record_sha256(name, data), expected, name)
 
     def test_document_suffix_accepts_actual_crlf(self):
         suffix = 'B-03は未達、passed=false。\n'

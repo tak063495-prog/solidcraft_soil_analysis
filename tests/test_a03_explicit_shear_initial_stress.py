@@ -6,6 +6,7 @@ from pathlib import Path, PureWindowsPath
 import subprocess
 import sys
 import tempfile
+from diagnostic_source import diagnostic_bytes
 import unittest
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
@@ -78,8 +79,10 @@ class A03ExplicitShear(unittest.TestCase):
         self.assertEqual(sum(len(r) for r in m['raw'].values()),2304)
 
     def test_preserved_prior_source_sha(self):
+        # The observation probe is part of the historical diagnosis at this commit.
+        commit = 'cdaf850c0347c8d841decce7ddff608d03ae7933'
         for path,sha in read('prior-record-binding.json').items():
-            self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),sha,path)
+            self.assertEqual(hashlib.sha256(diagnostic_bytes(ROOT, commit, path)).hexdigest(),sha,path)
 
     def test_sealed_evidence_sha(self):
         self.assertTrue(verify(HERE)['all_sha256_verified'])

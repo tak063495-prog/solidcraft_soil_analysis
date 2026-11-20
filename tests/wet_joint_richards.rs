@@ -364,7 +364,8 @@ fn continuous_transmission_matches_uncut_column_with_nonzero_crossflow() -> Resu
     periods[0].boundaries.push(serde_json::from_value(json!({
         "face_set":"top","condition":{"kind":"head","value":{"head_m":2.0}}
     }))?);
-    let mut uncut: Mesh = serde_json::from_str(include_str!("../examples/mc-column-mesh.json"))?;
+    let mut uncut: Mesh =
+        serde_json::from_str(include_str!("../examples/seepage-column-tet4-mesh.json"))?;
     uncut.material_ids.clone_from(&mesh.material_ids);
     for (i, cell) in mesh.tetrahedra.iter().enumerate() {
         assert_eq!(

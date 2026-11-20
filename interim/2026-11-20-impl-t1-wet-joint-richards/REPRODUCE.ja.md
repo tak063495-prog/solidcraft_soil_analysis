@@ -45,3 +45,15 @@ B-03 の停止理由はリポジトリのルートで個別に確認できる。
 ```text
 python -m unittest -v test_b03_offset_kink_cause_diagnosis.B03OffsetKinkCauseDiagnosis.test_prior_record_and_production_source_bytes_remain_bound
 ```
+
+停止後の B-03 検査には各診断の起点コミットを含む履歴を用いる。blob の不足時はリポジトリのリモートから取得し、固定コミットに記録された ID と実バイトを照合する。T1 実装前の期待 SHA-256 は B-03 フォルダに保存されている。
+
+```text
+git rev-parse 3747630ab615b4be2117ca1aaa13e798cd436374:src/stages.rs
+git cat-file -t 8266b160714ec242215048e56d400434f3df5e3e
+python -m unittest discover -s tests -p test_b03_offset_kink_cause_diagnosis.py -v
+python -m unittest discover -s tests -p test_b03_offset_kink_cloud_followup.py -v
+python -m unittest discover -s tests -p test_a03_explicit_shear_initial_stress.py -v
+python -m unittest discover -s tests -p test_a03_unequal_thickness_anisotropic_k.py -v
+cargo test --locked --release --test wet_joint_richards --test one_way_construction
+```
