@@ -39,3 +39,9 @@ python "$T/study.py" c04 "$o/budget-c04" --run "$o/c04"
 ```
 
 Linux では仮想環境内の python と、同名で拡張子のない実行ファイルを使う。T1 の `study.py` は checkout の examples から入力を作り、CLI の結果から収支を集計する。各ケースの `*-verification.json.gz` と `*-practical.json.gz` は JSON 行配列で、時刻・区分・所有セル／面対／世代と P、N、ΔM、e、D、E、U、ΣD、実際の上下限を記録する。`budget-summary.json` は区分別最大値、最悪の刻み、判定件数。テストのログと Python の発見・割当・実行件数は全件を通して確認する。
+
+B-03 の停止理由はリポジトリのルートで個別に確認できる。PowerShell で `$env:PYTHONPATH='tests'` を設定し、次のコマンドを実行する。
+
+```text
+python -m unittest -v test_b03_offset_kink_cause_diagnosis.B03OffsetKinkCauseDiagnosis.test_prior_record_and_production_source_bytes_remain_bound
+```

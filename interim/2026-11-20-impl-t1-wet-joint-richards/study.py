@@ -160,6 +160,15 @@ def legacy_refusals(out, solver):
                                      capture_output=True, text=True)
                 results[folder.name] = dict(code=run.returncode, diagnostic=(run.stdout+run.stderr).strip(),
                                             produced=(d/'result.json').exists())
+            # Replay the earlier soil-only floor inconsistency from its archived input.
+            d = out / 'floor-conflict'
+            d.mkdir()
+            for file in ('mesh.json', 'case.json', 'ground.json'):
+                (d / file).write_bytes(archive.read('runs/formal-soil-02/saturated-n4/' + file))
+            proc = subprocess.run([solver, 'solve-one-way-construction', d/'mesh.json', d/'ground.json',
+                                   d/'case.json', d/'result.json'], capture_output=True, text=True)
+            write(d/'observation.json', dict(expected_refused=True, code=proc.returncode,
+                 diagnostic=(proc.stdout+proc.stderr).strip(), produced=(d/'result.json').exists()))
     if len(results) != 16:
         raise ValueError('incomplete A-04 refusal matrix')
     write(out/'refusal-results.json', results)
