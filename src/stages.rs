@@ -6125,14 +6125,16 @@ fn solve_controlled(
         // A newly frozen face already contributes zero in the retained-domain
         // assembly. The old-minus-retained correction belongs only to the
         // removed-domain route below.
-        let reassemble_retained = matches!(stage, Stage::Excavate { .. })
-            && (case.is_projected_mcc() || prepared.joints != origin.joints);
+        let face_frozen =
+            matches!(stage, Stage::Excavate { .. }) && prepared.joints != origin.joints;
         let mut release = if force_preserving_joint_birth {
             // Mode A already reproduces the full nodal transfer at the same
             // displacement. It needs no artificial construction holding load,
             // including at prescribed support DOFs.
             vec![0.; endload.len()]
-        } else if reassemble_retained {
+        } else if face_frozen
+            || (matches!(stage, Stage::Excavate { .. }) && case.is_projected_mcc())
+        {
             // A cut through a contact removes its force even with one wall retained.
             // Projection is also domain-dependent: full minus removed work forces
             // need not equal the restricted-domain work force. Reconstruct
@@ -6215,7 +6217,7 @@ fn solve_controlled(
             vec![0.; endload.len()]
         };
         if matches!(stage, Stage::Excavate { .. })
-            && !reassemble_retained
+            && !face_frozen
             && let Some(joints) = &model.joints
         {
             // Split interfaces have different soil DOFs on their two sides.
