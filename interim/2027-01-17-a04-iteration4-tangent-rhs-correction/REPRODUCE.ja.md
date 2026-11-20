@@ -86,3 +86,7 @@ done
 各群の rc、実出力、割当と実行済み ID を突き合わせる。Linux では既報の2種類の setUpClass 失敗と PowerShell 不在の skip を個別に数える。
 
 今回のクラウド再実行は Rust 467 成功。Python は 1006 件中 996 成功、本体失敗 0、setup error 2、skip 2、未実行 8。[全件結果](full-validation/validation.json) ／ [実出力](full-validation/linux-validation.zip)
+
+全件検証の記録を固定コミット・Git blob・SHA-256 で登録した。登録後の全件監査は 390 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。[P6-01 全件監査](full-validation/p6-final.json)
+
+A-04は未達、passed=false。

@@ -102,3 +102,7 @@ python-spatial-evidence の setUpClass は既報の Linux 失敗に一致し、�
 core の skip は PowerShell 不在のゲート 2 件。割当全 ID、未実行 ID、公式 runner の終了値と生ログを保存した。[再開後の検証記録](full-validation/validation.json) ／ [Linux 全出力](full-validation/linux-validation.zip)
 
 再開時に不足していた 321 パス（319 個の blob、9,034,786,872 bytes）を固定 tree と照合した。初回中断時の記録は上の「Linux 全件検証の中断」にある。
+
+全件検証の記録を固定コミット・Git blob・SHA-256 で登録した。登録後の全件監査は 390 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。[P6-01 全件監査](full-validation/p6-final.json)
+
+A-04は未達、passed=false。
