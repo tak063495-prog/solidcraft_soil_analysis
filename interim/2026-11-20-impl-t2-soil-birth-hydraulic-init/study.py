@@ -1,4 +1,5 @@
 """Run the small placement controls through the production CLI and audit the outputs."""
+import json
 import argparse
 import copy
 import math
@@ -68,7 +69,14 @@ def construction():
     return t1.read(ROOT/'examples/joint-water-column-mesh.json'), ground, case
 
 
-def check_restarts(solver, paths, folder, reference):
+def check_restarts(solver, paths, folder):
+    def read_numerical_report(path):
+        def omit_wall_time(fields):
+            fields.pop('elapsed_seconds', None)
+            return fields
+        return json.loads(path.read_bytes(), object_hook=omit_wall_time)
+
+    reference = read_numerical_report(folder / 'result.json')
     results = []
     for count in (6, 8, 12, 14):
         checkpoint = folder / f'checkpoint-{count}.json'
@@ -81,9 +89,8 @@ def check_restarts(solver, paths, folder, reference):
                                   text=True, timeout=3600)
             (folder / f'{command}-{count}.log').write_text(proc.stdout + proc.stderr, encoding='utf-8')
             proc.check_returncode()
-        restored = t1.read(resumed)
-        fields = ('frames', 'attempts', 'excavations', 'transitions', 'last_committed', 'runtime')
-        identical = all(restored[key] == reference[key] for key in fields)
+        restored = read_numerical_report(resumed)
+        identical = restored == reference
         if not restored['complete'] or not identical:
             raise ValueError(f'restart disagrees with uninterrupted placement at frame {count}')
         results.append(dict(accepted_frames=count, identical=identical))
@@ -116,7 +123,7 @@ def main():
                 budget = {}
                 t1.record(kind, mesh, run, folder, budget)
                 item['budget'] = budget[kind]
-                item['checkpoint_restarts'] = check_restarts(args.solver, paths, folder, run)
+                item['checkpoint_restarts'] = check_restarts(args.solver, paths, folder)
                 item['events'] = [dict(name=r['name'], time_s=r['time_s'], generations=r['placed_generations'],
                                       added_m3=r['water']['water_added_m3']) for r in run['transitions']]
                 item['excavations'] = [dict(name=r['name'], time_s=r['time_s'], generations=r['removed_generations'],
