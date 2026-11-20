@@ -41,6 +41,12 @@ pub struct Domain<'a> {
     pub active: &'a [bool],
     pub material_ids: &'a [u32],
 }
+pub(crate) struct TransitionInput<'a> {
+    pub before: Domain<'a>,
+    pub after: Domain<'a>,
+    pub selected: &'a [usize],
+    pub policy: &'a WaterPolicy,
+}
 pub fn change(
     mesh: &crate::mesh::Mesh,
     case: &richards::Case,
@@ -50,5 +56,23 @@ pub fn change(
     selected: &[usize],
     policy: &WaterPolicy,
 ) -> Result<WaterChange> {
-    richards::transition_domain(mesh, case, before, after, old, selected, policy)
+    richards::transition_domain(
+        mesh,
+        case,
+        old,
+        TransitionInput {
+            before,
+            after,
+            selected,
+            policy,
+        },
+        None,
+    )
+}
+
+/// Physical party on the other side of an instantaneous soil inventory change.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ExternalWaterParty {
+    pub reservoir_id: String,
 }

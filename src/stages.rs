@@ -3673,7 +3673,31 @@ impl<'a> Model<'a> {
         }
         Ok(Frame {
             joint_support,
-            joint_results: eval.joints.map(|j| j.report),
+            joint_results: eval.joints.map(|j| {
+                let mut report = j.report;
+                if let (Some(before), Some(after)) = (&origin.joints, &state.joints) {
+                    for ((point, old), next) in report
+                        .points
+                        .iter_mut()
+                        .zip(&before.points)
+                        .zip(&after.points)
+                    {
+                        let fresh = old.birth != next.birth;
+                        point.interval = Some(crate::joints::ContactInterval {
+                            status: next.status.clone(),
+                            slip_m: next.accumulated_plastic_slip_m
+                                - if fresh {
+                                    0.
+                                } else {
+                                    old.accumulated_plastic_slip_m
+                                },
+                            endpoint_work_kpa_m: next.endpoint_work_kpa_m
+                                - if fresh { 0. } else { old.endpoint_work_kpa_m },
+                        });
+                    }
+                }
+                report
+            }),
             anchor_results: eval.anchors.map(|a| a.report),
             beam_results: eval.beams.map(|b| b.report),
             global_moment_balance_error_kn_m,
@@ -4171,8 +4195,14 @@ impl<'a> ExternalMechanics<'a> {
         mesh.validate()?;
         ground.validate()?;
         case.validate()?;
+        if case.joint_system.is_some() && !ground.is_general() {
+            return Err(Error::Input("ONE_WAY requires dry-reference weights and general geostatic equilibration for split JOINT displacements".into()));
+        }
         if !case.stages.is_empty()
-            || case.joint_system.is_some()
+            || case
+                .joint_system
+                .as_ref()
+                .is_some_and(|c| c.joints.iter().any(|d| d.water.is_none()))
             || case.beam_system.is_some()
             || case.anchor_system.is_some()
             || !case.initially_inactive_bodies.is_empty()
@@ -4189,6 +4219,17 @@ impl<'a> ExternalMechanics<'a> {
         Ok(Self {
             model: Model::new(mesh, ground, case)?,
         })
+    }
+    pub fn set_head_histories(
+        &mut self,
+        histories: &BTreeMap<String, crate::joint_water::rt0::HeadHistory>,
+    ) {
+        if let Some(wet) = &mut self.model.wet_joints {
+            wet.histories = histories.clone();
+        }
+    }
+    pub fn wet_joints(&self) -> Option<&crate::joint_water::Model> {
+        self.model.wet_joints.as_ref()
     }
     pub fn seed(&self) -> Result<Committed> {
         let m = &self.model;
@@ -4208,6 +4249,11 @@ impl<'a> ExternalMechanics<'a> {
             .geostatic
             .as_ref()
             .map_or(0., |g| g.initial_boundary_factor);
+        let joint_water = m
+            .wet_joints
+            .as_ref()
+            .map(|wet| wet.empty_field())
+            .transpose()?;
         let load = m.physical_load(
             &active,
             m.ground.initialization.surface_surcharge_kpa,
@@ -4216,14 +4262,14 @@ impl<'a> ExternalMechanics<'a> {
             &[],
             None,
             None,
-            None,
+            joint_water.as_ref(),
         )?;
         Ok(Committed {
             mixed_mcc: None,
-            joint_water: None,
+            joint_water,
             pore_pressure_kpa: Some(vec![0.; m.point_count]),
             hydrostatic_water_level_m: None,
-            joints: None,
+            joints: m.joints.as_ref().map(|j| j.initial_state()).transpose()?,
             anchors: None,
             beams: None,
             display_reference_displacement_m: vec![],
@@ -4256,6 +4302,56 @@ impl<'a> ExternalMechanics<'a> {
     }
     pub fn body_selection(&self, bodies: &[String]) -> Result<Vec<usize>> {
         self.model.selected_bodies(bodies)
+    }
+    pub fn birth_new_walls(&self, old: &Committed, prepared: &mut Committed) -> Result<()> {
+        let Some(model) = &self.model.joints else {
+            return Ok(());
+        };
+        let ids = model
+            .layout()
+            .into_iter()
+            .filter(|p| {
+                (!old.active_elements[p.owner_a] || !old.active_elements[p.owner_b])
+                    && prepared.active_elements[p.owner_a]
+                    && prepared.active_elements[p.owner_b]
+            })
+            .map(|p| p.joint_id)
+            .collect::<BTreeSet<_>>();
+        if !ids.is_empty() {
+            let stage = Stage::JointBirth {
+                name: "Richards BIRTH".into(),
+                joints: ids.into_iter().collect(),
+                initial_increment: None,
+            };
+            prepared.joints = self
+                .model
+                .prepare_transition_mode(prepared, &stage, false)?
+                .0
+                .joints;
+        }
+        Ok(())
+    }
+    pub fn freeze_removed_walls(&self, origin: &mut Committed, after: &[bool]) -> Result<()> {
+        if let (Some(model), Some(history)) = (&self.model.joints, &origin.joints) {
+            let ids = model
+                .layout()
+                .into_iter()
+                .filter(|p| {
+                    origin.active_elements[p.owner_a]
+                        && origin.active_elements[p.owner_b]
+                        && !(after[p.owner_a] && after[p.owner_b])
+                        && history
+                            .lifecycle
+                            .iter()
+                            .any(|l| l.joint_id == p.joint_id && l.active && l.policy.is_some())
+                })
+                .map(|p| p.joint_id)
+                .collect::<BTreeSet<_>>();
+            if !ids.is_empty() {
+                origin.joints = Some(model.death(history, &ids.into_iter().collect::<Vec<_>>())?);
+            }
+        }
+        Ok(())
     }
     pub fn prepare_external_transition(
         &self,
@@ -4356,6 +4452,7 @@ impl<'a> ExternalMechanics<'a> {
         self.model.excavation(old, bodies)
     }
     pub fn dry_load(&self, state: &Committed, active: &[bool]) -> Result<Vec<f64>> {
+        let empty = self.wet_joints().map(|w| w.empty_field()).transpose()?;
         self.model.physical_load(
             active,
             state.surface_pressure_kpa,
@@ -4364,7 +4461,7 @@ impl<'a> ExternalMechanics<'a> {
             &state.element_material_ids,
             None,
             None,
-            None,
+            empty.as_ref(),
         )
     }
     pub fn cut_holding(
@@ -4386,7 +4483,7 @@ impl<'a> ExternalMechanics<'a> {
             .zip(active)
             .map(|(a, b)| *a && !b)
             .collect::<Vec<_>>();
-        let removed_force = m
+        let mut removed_force = m
             .evaluate(
                 old,
                 &old.displacement_m,
@@ -4396,6 +4493,18 @@ impl<'a> ExternalMechanics<'a> {
                 EvaluationMode::plain(),
             )?
             .internal;
+        if let (Some(model), Some(history)) = (&m.joints, &old.joints) {
+            // The mask containing only removed cells omits a contact spring joining
+            // a removed wall to a retained one. Release that spring exactly once.
+            let evaluate =
+                |mask: &[bool]| model.evaluate(history, &old.displacement_m, mask, None, false);
+            let all = evaluate(&old.active_elements)?.internal_kn;
+            let stay = evaluate(active)?.internal_kn;
+            let gone = evaluate(&removed)?.internal_kn;
+            for (((f, a), b), c) in removed_force.iter_mut().zip(all).zip(stay).zip(gone) {
+                *f += a - b - c;
+            }
+        }
         let mut holding = old
             .applied_nodal_load_kn
             .iter()
@@ -4442,7 +4551,7 @@ impl<'a> ExternalMechanics<'a> {
         let mut trial = self.model.trial(
             old,
             Target {
-                joint_water: None,
+                joint_water: old.joint_water.clone(),
                 pore_pressure_kpa: old.pore_pressure_kpa.clone(),
                 water_level: None,
                 anchor_control: None,
@@ -4467,14 +4576,20 @@ impl<'a> ExternalMechanics<'a> {
             linear_solves: trial.linear_solves,
         })
     }
-    pub fn trial(&self, old: &Committed, rhs: Vec<f64>, name: String) -> Result<ExternalTrial> {
+    pub fn trial(
+        &self,
+        old: &Committed,
+        rhs: Vec<f64>,
+        name: String,
+        water: Option<crate::joint_water::Field>,
+    ) -> Result<ExternalTrial> {
         if rhs.len() != self.model.mesh.nodes.len() * 3 || !rhs.iter().all(|v| v.is_finite()) {
             return Err(Error::Input("invalid external mechanical RHS".into()));
         }
         let trial = self.model.trial(
             old,
             Target {
-                joint_water: None,
+                joint_water: water,
                 pore_pressure_kpa: old.pore_pressure_kpa.clone(),
                 water_level: None,
                 anchor_control: None,

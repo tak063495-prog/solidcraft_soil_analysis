@@ -1,7 +1,10 @@
 //! Physical interface pressure is a pair of external forces, separate from
 //! effective contact springs. Displacement nodes never merge here.
 use crate::{Error, Result, darcy, ground::Ground, hydrostatic, joints, mesh::Mesh};
+#[path = "joint_richards.rs"]
+pub(crate) mod rt0;
 use nalgebra::Vector3;
+pub use rt0::{PointTraces, Trace};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -52,6 +55,7 @@ struct Face {
     owner_b: usize,
 }
 pub struct Model {
+    pub(crate) histories: BTreeMap<String, rt0::HeadHistory>,
     mesh: Mesh,
     configuration: joints::Configuration,
     layout: Vec<joints::PointInfo>,
@@ -148,6 +152,7 @@ impl Model {
             }
         }
         Ok(Self {
+            histories: BTreeMap::new(),
             mesh: mesh.clone(),
             configuration,
             layout,

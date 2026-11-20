@@ -354,7 +354,16 @@ pub struct PointInfo {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct ContactInterval {
+    pub status: crate::joint_law::Status,
+    pub slip_m: f64,
+    pub endpoint_work_kpa_m: f64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct PointReport {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interval: Option<ContactInterval>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hydraulic: Option<crate::joint_water::PointReport>,
     pub index: usize,
@@ -1039,6 +1048,7 @@ impl Model {
             }
             let tangential = Vector3::from(s.jump_m) - gn * n;
             reports.push(PointReport {
+                interval: None,
                 hydraulic: None,
                 index: i,
                 active: is_active,

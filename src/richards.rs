@@ -255,6 +255,8 @@ struct Model {
     materials: Vec<Material>,
     inverse_k: Vec<Matrix3<f64>>,
     faces: Vec<Face>,
+    wall_histories: BTreeMap<[usize; 3], crate::joint_water::rt0::HeadHistory>,
+    wall_conditions: BTreeMap<[usize; 3], Bc>,
     cell_faces: Vec<[usize; 4]>,
     active: Vec<bool>,
     ids: Vec<u32>,
@@ -283,6 +285,15 @@ struct Evaluated {
 
 impl Model {
     fn new(mesh: &Mesh, case: &Case, active: &[bool], ids: Option<&[u32]>) -> Result<Self> {
+        Self::with_joints(mesh, case, active, ids, &[])
+    }
+    fn with_joints(
+        mesh: &Mesh,
+        case: &Case,
+        active: &[bool],
+        ids: Option<&[u32]>,
+        pairs: &[crate::joint_water::rt0::Pair],
+    ) -> Result<Self> {
         mesh.validate()?;
         case.initial_head.validate()?;
         case.settings.linear_solver.validate()?;
@@ -356,6 +367,53 @@ impl Model {
                 }
             }
         }
+        let mut wall_histories = BTreeMap::new();
+        let mut wall_conditions = BTreeMap::new();
+        for pair in pairs {
+            use crate::joint_water::Policy;
+            match &pair.policy {
+                Policy::Continuous => {
+                    let b = owners
+                        .remove(&pair.b.corners)
+                        .ok_or_else(|| Error::Input("missing continuous b face".into()))?;
+                    let a = owners
+                        .get_mut(&pair.a.corners)
+                        .ok_or_else(|| Error::Input("missing continuous a face".into()))?;
+                    if a.len() != 1 || b.len() != 1 {
+                        return Err(Error::Input(
+                            "continuous wall already has another owner".into(),
+                        ));
+                    }
+                    a.extend(b);
+                    wall_conditions.insert(pair.a.corners, Bc::Internal);
+                }
+                policy => {
+                    let condition = match policy {
+                        Policy::Prescribed { level_m: Some(h) } => Bc::Head(h - case.head_datum_m),
+                        Policy::Prescribed { level_m: None } if pair.history.is_some() => {
+                            Bc::Head(pair.history.as_ref().unwrap().at(0.)? - case.head_datum_m)
+                        }
+                        Policy::Soil { .. } => Bc::Flux(0.),
+                        _ => {
+                            return Err(Error::Input(
+                                "explicit Richards reservoir head required".into(),
+                            ));
+                        }
+                    };
+                    for w in [&pair.a, &pair.b].into_iter().filter(|w| active[w.element]) {
+                        if let Some(h) = &pair.history {
+                            wall_histories.insert(w.corners, h.clone());
+                        }
+                        if wall_conditions
+                            .insert(w.corners, condition.clone())
+                            .is_some()
+                        {
+                            return Err(Error::Input("duplicate hydraulic wall".into()));
+                        }
+                    }
+                }
+            }
+        }
         let mut faces = Vec::new();
         let mut cell_faces = vec![[0; 4]; cells.len()];
         for (key, o) in owners {
@@ -392,11 +450,24 @@ impl Model {
             materials,
             inverse_k,
             faces,
+            wall_histories,
+            wall_conditions,
             cell_faces,
             active: active.to_vec(),
             ids,
             datum: case.head_datum_m,
         })
+    }
+    fn owner_face_map(&self) -> BTreeMap<(usize, usize), usize> {
+        self.faces
+            .iter()
+            .enumerate()
+            .flat_map(|(fi, f)| {
+                f.owners
+                    .iter()
+                    .map(move |&[c, j]| ((self.cells[c].element_index, j), fi))
+            })
+            .collect()
     }
     fn boundaries(&self, mesh: &Mesh, definitions: &[Boundary]) -> Result<Vec<Bc>> {
         let face_map: BTreeMap<_, _> = self
@@ -409,7 +480,9 @@ impl Model {
             .faces
             .iter()
             .map(|f| {
-                if f.owners.len() == 2 {
+                if let Some(condition) = self.wall_conditions.get(&f.corners) {
+                    condition.clone()
+                } else if f.owners.len() == 2 {
                     Bc::Internal
                 } else {
                     Bc::Flux(0.)
@@ -448,7 +521,8 @@ impl Model {
                     Error::Input("inactive/unknown Richards boundary face".into())
                 })?;
                 let f = &self.faces[i];
-                if f.owners.len() != 1 || !used.insert(i) {
+                if self.wall_conditions.contains_key(&key) || f.owners.len() != 1 || !used.insert(i)
+                {
                     return Err(Error::Input(
                         "overlapping/internal Richards boundary".into(),
                     ));
@@ -684,9 +758,12 @@ impl Model {
         }
         // Projection of the specified initial affine field on each reference face.
         for (fi, f) in self.faces.iter().enumerate() {
-            state.relative_face_head_m[fi] = case
-                .initial_head
-                .relative(f.reference_position_m, self.datum);
+            state.relative_face_head_m[fi] = match self.wall_conditions.get(&f.corners) {
+                Some(Bc::Head(head)) => *head,
+                _ => case
+                    .initial_head
+                    .relative(f.reference_position_m, self.datum),
+            };
         }
         for (i, c) in self.cells.iter().enumerate() {
             let h = state.relative_cell_head_m[c.element_index].unwrap_or(0.);
@@ -1077,7 +1154,15 @@ impl Stepper {
         Self::initial_on_domain(mesh, case, &vec![true; mesh.tetrahedra.len()])
     }
     pub fn initial_on_domain(mesh: &Mesh, case: &Case, active: &[bool]) -> Result<Self> {
-        let model = Model::new(mesh, case, active, None)?;
+        Self::initial_with_joints(mesh, case, active, &[])
+    }
+    pub(crate) fn initial_with_joints(
+        mesh: &Mesh,
+        case: &Case,
+        active: &[bool],
+        pairs: &[crate::joint_water::rt0::Pair],
+    ) -> Result<Self> {
+        let model = Model::with_joints(mesh, case, active, None, pairs)?;
         let boundaries = validated_boundaries(&model, mesh, case)?;
         if !matches!(case.analysis, Analysis::Transient { .. }) {
             return Err(Error::Input(
@@ -1110,54 +1195,38 @@ impl Stepper {
     }
     /// Validate only the period applicable to this construction domain. Earlier
     /// and later periods may prescribe faces that are not exposed here.
-    pub fn for_domain(mesh: &Mesh, case: &Case, active: &[bool], period: usize) -> Result<Self> {
-        Self::for_domain_materials(mesh, case, active, None, period)
-    }
-    pub fn for_domain_materials(
+    pub fn construction_domain(
         mesh: &Mesh,
         case: &Case,
         active: &[bool],
         ids: Option<&[u32]>,
         period: usize,
+        pairs: &[crate::joint_water::rt0::Pair],
+        initialize: bool,
     ) -> Result<Self> {
         let Analysis::Transient { periods } = &case.analysis else {
             return Err(Error::Input("construction needs transient flow".into()));
         };
-        let model = Model::new(mesh, case, active, ids)?;
+        let model = Model::with_joints(mesh, case, active, ids, pairs)?;
         let boundaries = one_period_boundaries(&model, mesh, periods, period)?;
-        let state = model.initial(case)?;
-        let initial = model.frame(
-            "domain_initial_guess".into(),
-            state.clone(),
-            &state,
-            None,
-            &boundaries[period].2,
-            &case.settings,
-        )?;
-        Ok(Self {
-            model: Arc::new(model),
-            boundaries,
-            settings: case.settings.clone(),
-            initial: Some(Arc::new(initial)),
-        })
-    }
-    pub fn deferred_domain(
-        mesh: &Mesh,
-        case: &Case,
-        active: &[bool],
-        ids: Option<&[u32]>,
-        period: usize,
-    ) -> Result<Self> {
-        let Analysis::Transient { periods } = &case.analysis else {
-            return Err(Error::Input("construction needs transient flow".into()));
+        let initial = if initialize {
+            let state = model.initial(case)?;
+            Some(Arc::new(model.frame(
+                "domain_initial_guess".into(),
+                state.clone(),
+                &state,
+                None,
+                &boundaries[period].2,
+                &case.settings,
+            )?))
+        } else {
+            None
         };
-        let model = Model::new(mesh, case, active, ids)?;
-        let boundaries = one_period_boundaries(&model, mesh, periods, period)?;
         Ok(Self {
             model: Arc::new(model),
             boundaries,
             settings: case.settings.clone(),
-            initial: None,
+            initial,
         })
     }
     /// Immutable domain and its specified initial field are shared across
@@ -1203,6 +1272,18 @@ impl Stepper {
                     "hydraulic trial crosses physical period boundary".into(),
                 ));
             }
+            let mut timed;
+            let bc = if self.model.wall_histories.is_empty() {
+                bc
+            } else {
+                timed = bc.clone();
+                for (fi, f) in self.model.faces.iter().enumerate() {
+                    if let Some(h) = self.model.wall_histories.get(&f.corners) {
+                        timed[fi] = Bc::Head(h.at(old.time_s + dt)? - self.model.datum);
+                    }
+                }
+                &timed
+            };
             let next = self
                 .model
                 .trial(old, Some(dt), bc, &self.settings, &mut log)?;
@@ -1295,6 +1376,27 @@ pub(crate) fn remove_domain_materials(
     ids: Option<&[u32]>,
     old: &State,
 ) -> Result<DomainRemoval> {
+    remove_joint_domain(mesh, case, before, after, ids, old, None)
+}
+pub(crate) fn remove_joint_domain(
+    mesh: &Mesh,
+    case: &Case,
+    before: &[bool],
+    after: &[bool],
+    ids: Option<&[u32]>,
+    old: &State,
+    wet: Option<&crate::joint_water::Model>,
+) -> Result<DomainRemoval> {
+    let make = |active: &[bool]| match wet {
+        Some(w) => Model::with_joints(
+            mesh,
+            case,
+            &w.soil_domain(active)?,
+            ids,
+            &w.richards_pairs(active)?,
+        ),
+        None => Model::new(mesh, case, active, ids),
+    };
     if before.len() != after.len()
         || before.len() != mesh.tetrahedra.len()
         || before.iter().zip(after).any(|(a, b)| !a && *b)
@@ -1304,8 +1406,10 @@ pub(crate) fn remove_domain_materials(
             "hydraulic DEATH requires a strict remaining subdomain".into(),
         ));
     }
-    let original = Model::new(mesh, case, before, ids)?;
-    let remaining = Model::new(mesh, case, after, ids)?;
+    let original = make(before)?;
+    let remaining = make(after)?;
+    let before = &original.active;
+    let after = &remaining.active;
     let n = before.len();
     if !old.time_s.is_finite()
         || old.time_s < 0.
@@ -1370,17 +1474,13 @@ pub(crate) fn remove_domain_materials(
             state.cell_outflow_m3_s[e] = None;
         }
     }
-    let old_map: BTreeMap<_, _> = original
-        .faces
-        .iter()
-        .enumerate()
-        .map(|(i, f)| (f.corners, i))
-        .collect();
+    let old_map = original.owner_face_map();
     let mut mapping = vec![];
     let mut newly_exposed = vec![];
     for f in &remaining.faces {
+        let [c, j] = f.owners[0];
         let i = *old_map
-            .get(&f.corners)
+            .get(&(remaining.cells[c].element_index, j))
             .ok_or_else(|| Error::Input("DEATH created an unknown face".into()))?;
         mapping.push(i);
         if f.owners.len() == 1 && original.faces[i].owners.len() == 2 {
@@ -1500,13 +1600,37 @@ fn storage_head(model: &Model, i: usize, target: f64, reference: &AffineHead) ->
 pub(crate) fn transition_domain(
     mesh: &Mesh,
     case: &Case,
-    before: crate::hydraulic_transition::Domain<'_>,
-    after: crate::hydraulic_transition::Domain<'_>,
     old: &State,
-    selected: &[usize],
-    policy: &crate::hydraulic_transition::WaterPolicy,
+    input: crate::hydraulic_transition::TransitionInput<'_>,
+    wet: Option<&crate::joint_water::Model>,
 ) -> Result<crate::hydraulic_transition::WaterChange> {
-    use crate::hydraulic_transition::{ChangedCell, WaterChange, WaterPolicy};
+    use crate::hydraulic_transition::{ChangedCell, TransitionInput, WaterChange, WaterPolicy};
+    let TransitionInput {
+        before,
+        after,
+        selected,
+        policy,
+    } = input;
+    let models = |d: &crate::hydraulic_transition::Domain<'_>| match wet {
+        Some(w) => Model::with_joints(
+            mesh,
+            case,
+            &w.soil_domain(d.active)?,
+            Some(d.material_ids),
+            &w.richards_pairs(d.active)?,
+        ),
+        None => Model::new(mesh, case, d.active, Some(d.material_ids)),
+    };
+    let original = models(&before)?;
+    let new = models(&after)?;
+    let before = crate::hydraulic_transition::Domain {
+        active: &original.active,
+        material_ids: before.material_ids,
+    };
+    let after = crate::hydraulic_transition::Domain {
+        active: &new.active,
+        material_ids: after.material_ids,
+    };
     let n = mesh.tetrahedra.len();
     let chosen = selected.iter().copied().collect::<BTreeSet<_>>();
     if before.active.len() != n
@@ -1547,8 +1671,7 @@ pub(crate) fn transition_domain(
         WaterPolicy::PreserveWater { reference_head } => reference_head.validate()?,
         _ => {}
     }
-    let original = Model::new(mesh, case, before.active, Some(before.material_ids))?;
-    let new = Model::new(mesh, case, after.active, Some(after.material_ids))?;
+
     if !old.time_s.is_finite()
         || old.time_s < 0.
         || old.relative_cell_head_m.len() != n
@@ -1600,16 +1723,15 @@ pub(crate) fn transition_domain(
             },
         );
     }
-    let map = original
-        .faces
-        .iter()
-        .enumerate()
-        .map(|(i, f)| (f.corners, i))
-        .collect::<BTreeMap<_, _>>();
+    let map = original.owner_face_map();
     let mapping = new
         .faces
         .iter()
-        .map(|f| map.get(&f.corners).copied())
+        .map(|f| {
+            f.owners
+                .iter()
+                .find_map(|&[c, j]| map.get(&(new.cells[c].element_index, j)).copied())
+        })
         .collect::<Vec<_>>();
     let mut state = old.clone();
     state.relative_face_head_m = new
@@ -1617,7 +1739,11 @@ pub(crate) fn transition_domain(
         .iter()
         .zip(&mapping)
         .map(|(f, i)| {
-            if let Some(i) = i {
+            if let Some(h) = new.wall_histories.get(&f.corners) {
+                Ok(h.at(old.time_s)? - new.datum)
+            } else if let Some(Bc::Head(value)) = new.wall_conditions.get(&f.corners) {
+                Ok(*value)
+            } else if let Some(i) = i {
                 Ok(old.relative_face_head_m[*i])
             } else if let WaterPolicy::InitializeHead { value } = policy {
                 Ok(value.relative(f.reference_position_m, new.datum))
