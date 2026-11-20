@@ -30,7 +30,13 @@ class SoilWaterTest(unittest.TestCase):
     def test_required_null_defers_both_profiles(self):
         report = tanks()
         report['frames'][0]['state']['fluid']['hydraulic_points'][0]['water_equivalent_mass_per_volume'] = None
+        missing_state = tanks()
+        missing_state['frames'][0]['state']['hydraulic'] = None
+        missing_endpoint = tanks()
+        del missing_endpoint['transitions'][0]['water']['changed_cells'][1]['after']
         for profile in LIMITS:
+            self.assertIsNone(audit({}, missing_state, profile)['passed'])
+            self.assertIsNone(audit({}, missing_endpoint, profile)['passed'])
             self.assertIsNone(audit({}, report, profile)['passed'])
             self.assertIsNone(audit({}, {'complete':True, 'case':{'stages':[]}}, profile)['passed'])
 

@@ -47,7 +47,7 @@ class MissingQuantity(ValueError):
 
 
 def required(mapping, key):
-    value = mapping.get(key)
+    value = mapping.get(key) if mapping is not None else None
     if value is None:
         raise MissingQuantity(str(key))
     return value
@@ -58,7 +58,7 @@ def inventory(state, expected_points=None):
     volumes = defaultdict(list)
     local_points = defaultdict(set)
     for point in required(required(state, "fluid"), "hydraulic_points"):
-        i = point["element_index"]
+        i = required(point, "element_index")
         if expected_points is not None:
             local = required(point, "local_index")
             if local in local_points[i]:
@@ -95,14 +95,16 @@ def audit(mesh, report, profile):
 
 def _audit(mesh, report, profile):
     case = report["case"].get("one_way", report["case"])
-    sources = {m["id"]: m.get("volume_source_per_s", 0.) for m in case["flow"]["materials"]}
+    # An omitted optional source in the input schema denotes a physical zero.
+    sources = {m["id"]: m.get("volume_source_per_s", 0.)
+               for m in required(required(case, "flow"), "materials")}
     construction = "initialization" in report
     if construction:
-        prior = report["initialization"]["last_committed"]
-        frames = report["frames"]
+        prior = required(report["initialization"], "last_committed")
+        frames = required(report, "frames")
     else:
-        prior = report["seed"]
-        frames = report["frames"]
+        prior = required(report, "seed")
+        frames = required(report, "frames")
     rows, accounts, generations, events = [], {}, defaultdict(int), set()
 
     def add(kind, key, start, end, p, n):
@@ -114,10 +116,10 @@ def _audit(mesh, report, profile):
 
     expected_points = set(range((mesh.get("quadrature_order") or 3)**3)) if "tetrahedra" in mesh else None
     for frame in frames:
-        state = frame["state"]
-        hydraulic = state["hydraulic"]
+        state = required(frame, "state")
+        hydraulic = required(state, "hydraulic")
         time = required(hydraulic, "time_s")
-        dt = time - required(prior["hydraulic"], "time_s")
+        dt = time - required(required(prior, "hydraulic"), "time_s")
         if dt < 0:
             raise ValueError("accepted time reversed")
         old, _ = inventory(prior, expected_points)
@@ -159,7 +161,7 @@ def _audit(mesh, report, profile):
                     raise MissingQuantity("removed cell inventory")
                 p, n = 0., required(record["removal"], "water_removed_m3")
             else:
-                water = record["water"]
+                water = required(record, "water")
                 internal = water.get("internal_transfers", [])
                 for cell in required(water, "changed_cells"):
                     index = cell["element_index"]
@@ -170,7 +172,7 @@ def _audit(mesh, report, profile):
                         raise MissingQuantity(f"cell {index} pre-event inventory")
                     if index not in old and previous is not None:
                         raise ValueError("inactive cell has live pre-event inventory")
-                    moves[cell["element_index"]] = (required(cell["after"], "water_equivalent_volume_m3")
+                    moves[cell["element_index"]] = (required(required(cell, "after"), "water_equivalent_volume_m3")
                         - (required(previous, "water_equivalent_volume_m3") if previous is not None else 0.))
                 if not (new.keys() - old.keys()) <= moves.keys():
                     raise MissingQuantity("new cell inventory")
@@ -206,13 +208,14 @@ def _audit(mesh, report, profile):
             active = sorted(new)
             if old.keys() != new.keys():
                 raise ValueError("unbooked activity change")
-            faces = frame["hydraulic_faces"] if construction else report["hydraulic_faces"]
+            faces = required(frame if construction else report, "hydraulic_faces")
             ids = state["mechanical"].get("element_material_ids") or mesh["material_ids"]
             for i in active:
-                source = sources[ids[i]] * volumes[i] * dt
+                source = required(sources, ids[i]) * volumes[i] * dt
                 inward.append(max(source, 0.))
                 outward.append(max(-source, 0.))
-                q_face = required(hydraulic, "cell_outflow_m3_s")[i]
+                all_outflow = required(hydraulic, "cell_outflow_m3_s")
+                q_face = all_outflow[i] if i < len(all_outflow) else None
                 if q_face is None or len(q_face) != 4 or any(q is None for q in q_face):
                     raise MissingQuantity(f"cell {i} outward flow")
                 flows = [q * dt for q in q_face] + [-source]
