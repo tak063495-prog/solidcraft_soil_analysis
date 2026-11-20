@@ -68,6 +68,28 @@ def construction():
     return t1.read(ROOT/'examples/joint-water-column-mesh.json'), ground, case
 
 
+def check_restarts(solver, paths, folder, reference):
+    results = []
+    for count in (6, 8, 12, 14):
+        checkpoint = folder / f'checkpoint-{count}.json'
+        resumed = folder / f'resumed-{count}.json'
+        for command, source, output in (
+            ('checkpoint-one-way-construction', str(count), checkpoint),
+            ('resume-one-way-construction', checkpoint, resumed),
+        ):
+            proc = subprocess.run([solver, command, *paths, source, output], capture_output=True,
+                                  text=True, timeout=3600)
+            (folder / f'{command}-{count}.log').write_text(proc.stdout + proc.stderr, encoding='utf-8')
+            proc.check_returncode()
+        restored = t1.read(resumed)
+        fields = ('frames', 'attempts', 'excavations', 'transitions', 'last_committed', 'runtime')
+        identical = all(restored[key] == reference[key] for key in fields)
+        if not restored['complete'] or not identical:
+            raise ValueError(f'restart disagrees with uninterrupted placement at frame {count}')
+        results.append(dict(accepted_frames=count, identical=identical))
+    return results
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('output', type=Path)
@@ -94,6 +116,7 @@ def main():
                 budget = {}
                 t1.record(kind, mesh, run, folder, budget)
                 item['budget'] = budget[kind]
+                item['checkpoint_restarts'] = check_restarts(args.solver, paths, folder, run)
                 item['events'] = [dict(name=r['name'], time_s=r['time_s'], generations=r['placed_generations'],
                                       added_m3=r['water']['water_added_m3']) for r in run['transitions']]
                 item['excavations'] = [dict(name=r['name'], time_s=r['time_s'], generations=r['removed_generations'],
