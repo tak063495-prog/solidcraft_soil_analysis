@@ -175,6 +175,60 @@ def compare_path(folder,solver,run,states,rehash):
     return rows
 
 
+def projection_controls(folder, probe):
+    """Check the same physical nodal force and its work after relabeling the patch."""
+    results = {}
+    for label in ('translated', 'rotated', 'swapped_sides', 'reversed_elements'):
+        mesh = read(folder/'mesh.json')
+        case = read(folder/'case.json')
+        request = read(folder/'good-request.json')
+        xyz = np.asarray(mesh['nodes'])
+        target = np.asarray(request['residual_kn']).reshape(-1, 3)
+        joint = case['joint_system']['joints'][0]
+        pairs = joint['crack_tip']['faces']
+        if label == 'translated':
+            mesh['nodes'] = (xyz + [1., 2., -3.]).tolist()
+        elif label == 'rotated':
+            mesh['nodes'] = xyz[:, [2, 0, 1]].tolist()
+            target = target[:, [2, 0, 1]]
+        elif label == 'swapped_sides':
+            joint['side_a'], joint['side_b'] = joint['side_b'], joint['side_a']
+            for pair in pairs:
+                for name in ('owner', 'face'):
+                    a, b = name+'_a', name+'_b'
+                    pair[a], pair[b] = pair[b], pair[a]
+        else:
+            count = len(mesh['tetrahedra'])
+            for name in ('tetrahedra', 'tetrahedra10', 'region_ids', 'material_ids'):
+                mesh[name].reverse()
+            for pair in pairs:
+                for name in ('owner_a', 'owner_b'):
+                    pair[name] = count-1-pair[name]
+        request['residual_kn'] = target.ravel().tolist()
+        out = folder/label
+        out.mkdir()
+        files = []
+        for name, obj in [('mesh', mesh), ('case', case), ('request', request)]:
+            path = out/(name+'.json')
+            path.write_text(json.dumps(obj), encoding='utf-8')
+            files.append(path)
+        subprocess.run([probe, *files, out/'result.json'], check=True, capture_output=True, timeout=7200)
+        result = read(out/'result.json')
+        assert result['accepted']
+        virtual = np.sin(np.arange(target.size)).reshape(target.shape)
+        virtual /= np.sum(np.abs(virtual))
+        point_work = 0.
+        for p, state in zip(result['layout'], result['result']['state']['points'], strict=True):
+            jump = np.asarray(p['shape']) @ (virtual[p['nodes_b']]-virtual[p['nodes_a']])
+            point_work += p['weight_m2'] * (np.asarray(state['traction_kpa']) @ jump)
+        forces = np.asarray(result['result']['nodal_force_kn']).reshape(target.shape)
+        force_error = float(np.max(np.abs(forces-target)))
+        work_error = float(abs(point_work-np.sum(target*virtual)))
+        assert force_error <= 1e-10 and work_error <= 1e-10
+        results[label] = dict(maximum_nodal_difference_kn=force_error, virtual_work_difference_kn_m=work_error)
+    return results
+
+
 def whole_face_controls(out, history):
     # Import the archived all-owner comparison unchanged, including its gates.
     import importlib.util
@@ -270,7 +324,22 @@ def main():
         if label in ('tension','outside-circle','balanced-unreproducible-tip'):
             assert not row['accepted'] and data['result'] is None
         rows['projection/'+label] = row
+    rows['projection_controls'] = projection_controls(folder,probe)
     rows['whole_faces'] = whole_face_controls(out,history)
+    rows['a02_complete'] = False
+    rows['passed'] = False
+    rows['water_balance_applicable'] = False
+    # The same dimensional gates are used for the reported construction fields.
+    # No additional acceptance limit is assigned to slip, work or path convergence.
+    for label in ('body-across-tip-stress_free','partial-face-rebirth'):
+        checks = rows[label]['state_comparison']
+        frames = rows[label]['frames']
+        rows[label]['limited_field_gates_passed'] = (
+            rows[label]['complete'] and
+            all(max(r[k] for k in ('u_relative','stress_relative','traction_relative'))<1e-7
+                and max(r['load_max_difference_kn'],r['max_internal_difference_kn'])<1e-10 for r in checks)
+            and all(f['native_relative_force_residual']<1e-8 and f['max_tip_contact_kn']==0. for f in frames)
+        )
     (out/'results.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 
 
