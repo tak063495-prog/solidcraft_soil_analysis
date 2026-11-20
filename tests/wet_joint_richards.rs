@@ -41,6 +41,23 @@ fn fixture(policy: Value) -> Result<(Mesh, Ground, one_way::Case)> {
 }
 
 #[test]
+fn joint_policy_is_checked_before_split_displacement_equilibration() -> Result<()> {
+    let (mesh, _, mut case) = fixture(json!({"kind": "continuous"}))?;
+    let ground: Ground = serde_json::from_str(include_str!("../examples/ground-one-way-mc.json"))?;
+    let with_policy = one_way::solve(&mesh, ground.clone(), case.clone())
+        .unwrap_err()
+        .to_string();
+    assert!(with_policy.contains("general geostatic equilibration for split JOINT displacements"));
+    assert!(with_policy.contains("construction/structures need their coupled policies"));
+
+    case.mechanics.joint_system.as_mut().unwrap().joints[0].water = None;
+    let without_policy = one_way::solve(&mesh, ground, case).unwrap_err().to_string();
+    assert!(without_policy.contains("construction/structures need their coupled policies"));
+    assert!(!without_policy.contains("general geostatic equilibration"));
+    Ok(())
+}
+
+#[test]
 fn same_endpoint_continuous_rt0_and_opposing_outflows() -> Result<()> {
     let (mesh, ground, case) = fixture(json!({"kind":"continuous"}))?;
     let run = one_way::solve(&mesh, ground, case)?;

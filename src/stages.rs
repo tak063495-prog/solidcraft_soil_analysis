@@ -4195,9 +4195,7 @@ impl<'a> ExternalMechanics<'a> {
         mesh.validate()?;
         ground.validate()?;
         case.validate()?;
-        if case.joint_system.is_some() && !ground.is_general() {
-            return Err(Error::Input("ONE_WAY requires dry-reference weights and general geostatic equilibration for split JOINT displacements".into()));
-        }
+        const COUPLED_POLICIES: &str = "construction/structures need their coupled policies";
         if !case.stages.is_empty()
             || case
                 .joint_system
@@ -4214,7 +4212,16 @@ impl<'a> ExternalMechanics<'a> {
                 .as_ref()
                 .is_some_and(|g| !g.hydrostatic_face_sets.is_empty() || g.verification_reject_once)
         {
-            return Err(Error::Input("ONE_WAY requires dry-reference weights, explicit fluid/exterior loads and fixed active soil; construction/structures need their coupled policies".into()));
+            return Err(Error::Input(format!(
+                "ONE_WAY requires dry-reference weights, explicit fluid/exterior loads and fixed active soil; {COUPLED_POLICIES}"
+            )));
+        }
+        if case.joint_system.is_some() && !ground.is_general() {
+            // A wet JOINT with a declared policy still needs equilibrium on its split DOFs.
+            // Keep the historical diagnostic category alongside the more specific cause.
+            return Err(Error::Input(format!(
+                "ONE_WAY requires dry-reference weights and general geostatic equilibration for split JOINT displacements; {COUPLED_POLICIES}"
+            )));
         }
         Ok(Self {
             model: Model::new(mesh, ground, case)?,

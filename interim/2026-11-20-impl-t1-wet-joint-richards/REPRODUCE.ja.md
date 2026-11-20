@@ -68,3 +68,13 @@ cargo test --locked --release -- --list
 ```
 
 ZIP のバイト列の SHA-256 を evidence/reassessment-at-stop.json の water_ledger_archive、test_logs、acceptance_results_archive と照合してから開く。accepted-water-ledgers.zip の t1、a04、c04 に各基準の JSON 行配列と集計を保存した。accepted-water-ledgers.zip から取り出したケースファイルは gzip 圧縮である。
+
+検証順序の修正後は、旧契約と追加した検査を次のコマンドで別々に再現できる。
+
+```text
+git diff 50fb7617 -- src/stages.rs
+cargo test --locked --release --test joint_ext_combos richards_wet_joint_infiltration_drainage_and_two_way_remain_rejected -- --exact
+cargo test --locked --release --test wet_joint_richards joint_policy_is_checked_before_split_displacement_equilibration -- --exact
+cargo test --locked --release --no-fail-fast
+cargo test --locked --release --examples --no-fail-fast
+```
