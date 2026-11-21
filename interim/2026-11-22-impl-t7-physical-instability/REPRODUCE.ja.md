@@ -57,6 +57,7 @@ python "$T/parallel.py" "$O/mesh-144" "$cli" "$bridge" --elements 144
 
 ```sh
 python "$T/compare.py" "$O" "$bridge"
+python "$T/scan_accepted.py" "$O" "$bridge" "$O/accepted-spectra.json"
 ```
 
 compare.py は同じ open 進捗で、同じ活動枝の単調区間内に実際の平衡を求める。分岐、開閉や世代をまたぐ補間は行わない。支持・反力・応力・接触すべりの単位、残差の分母、臨界区間の補正行列と右辺は対応する経路の JSON に含まれる。再開・刻み依存の確認では parent、result_checkpoint、generation と進行方向を照合する。規模上限を超える768／6144要素の手順は設けていない。
@@ -66,12 +67,16 @@ compare.py は同じ open 進捗で、同じ活動枝の単調区間内に実際
 ```sh
 cargo test --locked --release --all-targets --no-fail-fast
 cargo test --locked --release --doc
+all_groups=0
 for group in python-core-0 python-core-1 python-mean-evidence python-spatial-evidence python-c01-switch python-c01-path python-c01-cause; do
-  python tools/run_ci_python_evidence_shards.py --group "$group" --output "$O/$group"
-  echo "$group $?" >> "$O/python-exit-codes.txt"
+  rc=0
+  python tools/run_ci_python_evidence_shards.py --group "$group" --output "$O/$group" || rc=$?
+  echo "$group $rc" >> "$O/python-exit-codes.txt"
+  if [ "$rc" -ne 0 ]; then all_groups=1; fi
 done
 python -m pytest -q tests/linux
 python interim/2026-12-06-p6-01-status-reconciliation/audit_status.py --root .
+test "$all_groups" -eq 0
 ```
 
 各群の python-test-inventory.json で発見件数・割当・実行・成功・失敗・エラーを確認する。P6-01 は出典 JSON の固定コミット、SHA-256、Git blob、状態キー、未登録資料件数を確認する。Windows CI は push した PR 先端に紐付けて確認する。

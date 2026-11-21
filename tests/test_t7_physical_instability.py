@@ -5,6 +5,7 @@ import hashlib
 import zipfile
 import json
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 
@@ -25,6 +26,7 @@ from continuation import (
     trace,
 )
 from references import euler
+from scan_accepted import scan
 
 
 def polynomial(power):
@@ -158,6 +160,12 @@ class PhysicalInstability(unittest.TestCase):
                 all(sign * x > 0 and abs(x * x - p) < 1e-11 for x, p in branch)
             )
 
+        samples = [dict(z=[0, load], state={}, event=()) for load in (-0.25, 0.25)]
+        located = scan(ev, samples, 1e-11, lambda state: state)["branch_candidates"]
+        self.assertEqual(len(located), 1)
+        self.assertEqual(located[0]["kind"], "bifurcation")
+        np.testing.assert_allclose(located[0]["z"], [0, 0], atol=1e-13)
+
     def test_5_restart_preserves_history_and_records_rejections(self):
         ev = polynomial(2)
         parent = {"generation": [1, 1]}
@@ -211,10 +219,16 @@ class PhysicalInstability(unittest.TestCase):
         self.assertAlmostEqual(series[-1]["mode"][-1], 1.0)
 
     def test_6_original_mesh_and_eight_children(self):
-        from parallel import fixtures, refine
-
-        mesh, _, _ = fixtures.stacked(steps=8)
-        fine = refine(mesh)
+        # Each historical study imports its own fixture modules. Use the same
+        # isolated entry point as the numerical runs, even in full discovery.
+        cmd = (
+            "import json; from parallel import fixtures, refine; "
+            "mesh, _, _ = fixtures.stacked(steps=8); "
+            "print(json.dumps([mesh, refine(mesh)]))"
+        )
+        mesh, fine = json.loads(
+            subprocess.check_output([sys.executable, "-c", cmd], cwd=HERE)
+        )
         self.assertEqual((len(mesh["tetrahedra"]), len(fine["tetrahedra"])), (18, 144))
         xyz = np.asarray(fine["nodes"])
         for i, cell in enumerate(mesh["tetrahedra"]):
