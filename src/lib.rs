@@ -34,6 +34,7 @@ pub mod mesh;
 pub mod mixed_flow;
 pub mod mixed_mcc;
 pub mod mixed_mechanics;
+pub mod offset_composite;
 pub mod one_way;
 pub mod one_way_construction;
 pub mod plane_strain_2d;
