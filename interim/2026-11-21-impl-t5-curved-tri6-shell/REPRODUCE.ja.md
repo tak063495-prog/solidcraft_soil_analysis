@@ -32,6 +32,7 @@ python -m unittest discover -s tests -p test_t5_curved_shell.py
 python "$T/modes.py" target/release/examples/curved_shell_operators "$O/modal"
 python "$T/manufactured.py" target/release/soil-fem-3d "$O/mms"
 python "$T/standard.py" target/release/soil-fem-3d "$O/standard"
+python "$T/section_work.py" "$O/section-work.tsv" "$O/mms" "$O/standard"
 python "$T/attached.py" target/release/soil-fem-3d "$O/attached"
 ```
 
