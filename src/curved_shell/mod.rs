@@ -1,6 +1,7 @@
 //! Small-rotation shell on the actual attachment surface, with strain tying
 //! in the centroid basis (Kim & Bathe 2009, Fig. 1 and equations 10–13).
 pub mod geometry;
+pub mod kink;
 pub mod path;
 pub mod soil;
 use crate::plates::{Section, mindlin};

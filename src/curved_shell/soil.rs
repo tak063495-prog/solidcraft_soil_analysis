@@ -30,7 +30,7 @@ pub(super) struct Domain {
     pub rows: Vec<[usize; 3]>,
 }
 impl Domain {
-    pub fn new(case: &Case) -> Result<Self> {
+    pub fn new(case: &Case, joint: Option<&super::kink::Joint>) -> Result<Self> {
         let mut size = 6 * case.nodes.len();
         let Some(input) = &case.soil else {
             return Ok(Self {
@@ -64,7 +64,12 @@ impl Domain {
                 .ok_or_else(|| Error::Input("missing curved shell exposed side".into()))?;
             if ![-1, 1].contains(&sigma)
                 || (input.tie_at_physical_surface
-                    && f.offset_m != -f64::from(sigma) * case.section.thickness_m / 2.)
+                    && f.offset_m
+                        != -f64::from(sigma)
+                            * joint
+                                .map_or(&case.section, |j| j.section(case, &f.group))
+                                .thickness_m
+                            / 2.)
             {
                 return Err(Error::Input(
                     "curved shell physical attachment side and offset disagree".into(),
@@ -102,6 +107,12 @@ impl Domain {
                 }
             }
             for (&shell, &soil) in f.nodes.iter().zip(&owner.nodes) {
+                if let Some(j) = joint
+                    && let Some(&other) = bindings.get(&soil)
+                    && other != shell
+                {
+                    return Err(j.shared_tie_error(case, soil, other, shell));
+                }
                 if shell >= case.nodes.len()
                     || mesh.nodes[soil] != case.nodes[shell]
                     || bindings.insert(soil, shell).is_some_and(|n| n != shell)

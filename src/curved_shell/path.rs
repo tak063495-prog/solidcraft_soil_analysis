@@ -1,5 +1,6 @@
 //! Structural shell path. Accepted install/load/remove events follow the dry
 //! offset composite convention. Each installation owns its reference geometry.
+use super::kink::{Input, Joint, Line, Reduction, State};
 use super::{
     Field, Kernel, Q36, Tying,
     geometry::{Director, Face, Geometry, V, geometries},
@@ -50,6 +51,8 @@ pub struct ElementState {
 pub struct Generation {
     pub generation: u64,
     pub installation: Vec<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub joint: Option<State>,
     pub elements: Vec<ElementState>,
     pub plate_cumulative_load_work_kn_m: f64,
 }
@@ -94,16 +97,25 @@ fn gather(x: &DVector<f64>, rows: &[usize; 36]) -> Q36 {
     Q36::from_fn(|i, _| x[rows[i]])
 }
 struct Model {
+    line: Option<Line>,
     elements: Vec<Kernel>,
     geometry: Vec<Geometry>,
     stiffness: DMatrix<f64>,
 }
 impl Model {
-    fn new(case: &Case, g: &[Geometry], n: usize) -> Result<Self> {
+    fn new(case: &Case, g: &[Geometry], old: &Frame, joint: Option<&Joint>) -> Result<Self> {
+        let n = old.configuration.len();
+        let line = joint
+            .map(|j| j.install(case, g, &old.configuration))
+            .transpose()?;
         let mut stiffness = DMatrix::zeros(n, n);
+        if let Some((l, j)) = line.as_ref().zip(joint) {
+            l.add_spring(j, &mut stiffness);
+        }
         let mut elements = vec![];
         for (geo, f) in g.iter().zip(&case.faces) {
-            let k = Kernel::new(geo, &case.section, Tying::default())?;
+            let section = joint.map_or(&case.section, |j| j.section(case, &f.group));
+            let k = Kernel::new(geo, section, Tying::default())?;
             let idx = indices(f);
             for (i, &a) in idx.iter().enumerate() {
                 for (j, &b) in idx.iter().enumerate() {
@@ -113,6 +125,7 @@ impl Model {
             elements.push(k);
         }
         Ok(Self {
+            line,
             elements,
             geometry: g.to_vec(),
             stiffness,
@@ -132,6 +145,7 @@ impl Model {
         &self,
         case: &Case,
         index: usize,
+        joint: Option<&Joint>,
         uniform: [f64; 3],
         load: &mut DVector<f64>,
     ) -> Result<()> {
@@ -154,7 +168,9 @@ impl Model {
             }
             let f = super::surface_action(
                 &self.geometry[i],
-                case.section.thickness_m,
+                joint
+                    .map_or(&case.section, |j| j.section(case, &case.faces[i].group))
+                    .thickness_m,
                 entry.z_m,
                 V::from(entry.traction_kpa),
                 entry.pressure_kpa,
@@ -188,7 +204,7 @@ impl Model {
     }
 }
 
-fn install(case: &Case, old: &Frame) -> Result<(Model, Generation)> {
+fn install(case: &Case, old: &Frame, joint: Option<&Joint>) -> Result<(Model, Generation)> {
     let x: Vec<_> = case
         .nodes
         .iter()
@@ -209,7 +225,7 @@ fn install(case: &Case, old: &Frame) -> Result<(Model, Generation)> {
         })
         .collect();
     let g = geometries(&x, &case.faces, &explicit)?;
-    let model = Model::new(case, &g, old.configuration.len())?;
+    let model = Model::new(case, &g, old, joint)?;
     let elements = case
         .faces
         .iter()
@@ -239,12 +255,13 @@ fn install(case: &Case, old: &Frame) -> Result<(Model, Generation)> {
         Generation {
             generation: 1 + old.archived.len() as u64,
             installation: old.configuration.clone(),
+            joint: None,
             elements,
             plate_cumulative_load_work_kn_m: 0.,
         },
     ))
 }
-fn solve_supported(k: DMatrix<f64>, rhs: &DVector<f64>) -> Result<DVector<f64>> {
+pub(super) fn solve_supported(k: DMatrix<f64>, rhs: &DVector<f64>) -> Result<DVector<f64>> {
     let scale = k.diagonal().map(|v| 1. / v.sqrt());
     let scaled = DMatrix::from_fn(k.nrows(), k.ncols(), |i, j| scale[i] * k[(i, j)] * scale[j]);
     let factor = scaled
@@ -297,6 +314,7 @@ fn step(
     model: &mut Option<Model>,
     old: &Frame,
     step: &Step,
+    joint: Option<&Joint>,
 ) -> Result<Frame> {
     let mut next = old.clone();
     let mut q = v(&old.configuration);
@@ -304,13 +322,14 @@ fn step(
     let mut applied = v(&old.applied);
     let mut plate = v(&old.plate_load);
     let mut free = &[][..];
+    let mut reduction: Option<Reduction> = None;
     next.holder = None;
     match step {
         Step::Install { contacts, holder } => {
             if model.is_some() || holder.trim().is_empty() || !contacts.is_empty() {
                 return Err(Error::Input("shell installation requires absent shell, holding support and no contact pairs".into()));
             }
-            let (m, g) = install(case, old)?;
+            let (m, g) = install(case, old, joint)?;
             plate = m.loads(case, [0.; 3]);
             applied += &plate;
             *model = Some(m);
@@ -356,16 +375,27 @@ fn step(
             free = free_dofs;
             let mut rhs = applied.clone() - soil.force(&q);
             if let (Some(m), Some(g)) = (model.as_ref(), &next.active) {
+                if let Some((line, joint)) = m.line.as_ref().zip(joint) {
+                    let map = line.reduction(joint, free)?;
+                    map.enforce(&mut q, &g.installation);
+                    rhs = &applied - soil.force(&q);
+                    reduction = Some(map);
+                }
                 plate = m.loads(case, *plate_traction_kpa);
+                if let Some((line, joint)) = m.line.as_ref().zip(joint) {
+                    line.loads(joint, old.accepted_index + 1, &mut plate);
+                }
                 m.face_actions(
                     case,
                     old.accepted_index + 1,
+                    joint,
                     *plate_traction_kpa,
                     &mut plate,
                 )?;
                 applied += &plate;
                 rhs += &plate - &m.stiffness * (&q - v(&g.installation));
-            } else if case.face_loads.contains_key(&(old.accepted_index + 1))
+            } else if joint.is_some_and(|j| j.loads.contains_key(&(old.accepted_index + 1)))
+                || case.face_loads.contains_key(&(old.accepted_index + 1))
                 || *plate_traction_kpa != [0.; 3]
                 || (soil.stiffness.is_none() && (!free.is_empty() || applied.norm() != 0.))
                 || free.iter().any(|i| *i < 6 * case.nodes.len() && i % 6 >= 3)
@@ -375,7 +405,14 @@ fn step(
                     "uninstalled shell cannot carry load or free rotations".into(),
                 ));
             }
-            if !free.is_empty() {
+            if let Some(map) = &reduction {
+                let k = &model.as_ref().unwrap().stiffness;
+                if let Some(soil_k) = &soil.stiffness {
+                    map.solve(&(k + soil_k), &rhs, &mut q)?;
+                } else {
+                    map.solve(k, &rhs, &mut q)?;
+                }
+            } else if !free.is_empty() {
                 let sub = |k: &DMatrix<f64>| k.select_rows(free).select_columns(free);
                 let mut k = soil
                     .stiffness
@@ -396,6 +433,24 @@ fn step(
     let mut reaction = soil.force(&q) - &applied;
     if let (Some(m), Some(g)) = (model.as_ref(), &mut next.active) {
         reaction += m.recover(g, &q);
+        if let Some((line, joint)) = m.line.as_ref().zip(joint) {
+            let (spring, energy) = line.spring_force(joint, &(&q - v(&g.installation)));
+            reaction += &spring;
+            let transfer = reduction
+                .as_ref()
+                .map(|map| map.internal_transfer(&reaction));
+            if let Some(t) = &transfer {
+                reaction -= t;
+            }
+            // Outward nodal residual of the wing alone, including the
+            // equal/opposite spring moments transmitted at the common line.
+            let wing_transfer = transfer.map(|t| t - spring);
+            let mut state = line.state(joint, g, &q, wing_transfer.as_ref(), energy);
+            if let Some(loads) = joint.loads.get(&(old.accepted_index + 1)) {
+                state.line_load_ids = loads.iter().map(|l| l.id.clone()).collect();
+            }
+            g.joint = Some(state);
+        }
         g.plate_cumulative_load_work_kn_m += 0.5 * (&plate + v(&old.plate_load)).dot(&delta);
     }
     if reaction.select_rows(free).norm() > 1e-8 * applied.select_rows(free).norm().max(1.) {
@@ -415,6 +470,12 @@ fn step(
     Ok(next)
 }
 pub fn run(case: &Case, until: usize, resume: Option<&Run>) -> Result<Run> {
+    run_path(case, None, until, resume)
+}
+pub fn run_kink(input: &Input, until: usize, resume: Option<&Run>) -> Result<Run> {
+    run_path(&input.shell, Some(&input.joint), until, resume)
+}
+fn run_path(case: &Case, joint: Option<&Joint>, until: usize, resume: Option<&Run>) -> Result<Run> {
     if until > case.steps.len() || case.faces.is_empty() || case.nodes.is_empty() {
         return Err(Error::Input(
             "empty curved shell or invalid accepted index".into(),
@@ -429,8 +490,12 @@ pub fn run(case: &Case, until: usize, resume: Option<&Run>) -> Result<Run> {
     }
     case.section.validate()?;
     geometries(&case.nodes, &case.faces, &case.directors)?;
-    let soil = super::soil::Domain::new(case)?;
+    let soil = super::soil::Domain::new(case, joint)?;
     let n = soil.size;
+    if let Some(j) = joint {
+        let geometry = geometries(&case.nodes, &case.faces, &case.directors)?;
+        j.install(case, &geometry, &vec![0.; n])?;
+    }
     let initial = Frame {
         accepted_index: 0,
         event: "initial".into(),
@@ -447,11 +512,19 @@ pub fn run(case: &Case, until: usize, resume: Option<&Run>) -> Result<Run> {
         cumulative_reaction_work_kn_m: 0.,
     };
     let mut run = Run {
-        schema: "curved-tri6-shell/1".into(),
+        schema: if joint.is_some() {
+            "offset-kink-joint/1"
+        } else {
+            "curved-tri6-shell/1"
+        }
+        .into(),
         units: "m-kN-kPa".into(),
         section: case.section.clone(),
         rotation_convention: "global-small-rotation".into(),
-        input_sha256: checkpoint::hash_json(case)?,
+        input_sha256: match joint {
+            Some(j) => checkpoint::hash_json(&(case, j))?,
+            None => checkpoint::hash_json(case)?,
+        },
         solver_binary_sha256: checkpoint::hash_file(&std::env::current_exe()?)?,
         frames: vec![initial],
     };
@@ -473,6 +546,7 @@ pub fn run(case: &Case, until: usize, resume: Option<&Run>) -> Result<Run> {
                 &mut model,
                 run.frames.last().unwrap(),
                 event,
+                joint,
             )?);
         }
         if checkpoint::hash_json(saved)? != checkpoint::hash_json(&run)? {
@@ -489,6 +563,7 @@ pub fn run(case: &Case, until: usize, resume: Option<&Run>) -> Result<Run> {
             &mut model,
             run.frames.last().unwrap(),
             event,
+            joint,
         )?);
     }
     Ok(run)
