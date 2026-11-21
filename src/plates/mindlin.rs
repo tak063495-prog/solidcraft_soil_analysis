@@ -263,7 +263,7 @@ impl Kernel {
         }
     }
 }
-fn quadrature() -> impl Iterator<Item = ([f64; 3], f64)> {
+pub(crate) fn quadrature() -> impl Iterator<Item = ([f64; 3], f64)> {
     POINTS.into_iter().enumerate().map(|(i, l)| {
         (
             l,

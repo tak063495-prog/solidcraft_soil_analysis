@@ -17,7 +17,7 @@ pub struct Face {
 }
 
 impl Face {
-    fn validate(&self, mesh: &Mesh) -> Result<()> {
+    pub(crate) fn validate(&self, mesh: &Mesh) -> Result<()> {
         let key = [self.nodes[0], self.nodes[1], self.nodes[2]];
         if self.cell >= mesh.tetrahedra.len() || mesh.tetrahedra10.is_empty() {
             return Err(Error::Input(

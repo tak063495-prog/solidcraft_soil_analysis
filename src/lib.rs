@@ -4,6 +4,7 @@ pub mod beams;
 pub mod benchmark;
 pub mod boundary;
 pub mod checkpoint;
+pub mod curved_shell;
 pub mod darcy;
 pub mod elastic;
 pub mod elements;

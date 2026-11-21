@@ -129,9 +129,55 @@ fn add_matrix(k: &mut DMatrix<f64>, local: &DMatrix<f64>, rows: &[usize]) {
         }
     }
 }
-struct Cell {
+pub(crate) struct Cell {
     rows: Vec<usize>,
     stress: Vec<DMatrix<f64>>,
+}
+pub(crate) fn assemble_soil(
+    mesh: &Mesh,
+    materials: &BTreeMap<u32, Soil>,
+    nd: usize,
+    node_rows: &[[usize; 3]],
+) -> Result<(DMatrix<f64>, Vec<Cell>)> {
+    let mut k_soil = DMatrix::zeros(nd, nd);
+    let mut cells = Vec::new();
+    for (i, id) in mesh.material_ids.iter().enumerate() {
+        let soil = materials
+            .get(id)
+            .ok_or_else(|| Error::Input("missing dry elastic soil properties".into()))?;
+        let d = elastic::constitutive(soil.young_kpa, soil.poisson)?;
+        let rows: Vec<_> = mesh
+            .cell_nodes(i)
+            .into_iter()
+            .flat_map(|n| node_rows[n])
+            .collect();
+        let mut stress = Vec::new();
+        for gp in mesh.integration(i)? {
+            let stress_operator = d * &gp.b;
+            let stiffness = gp.b.transpose() * &stress_operator * gp.weight_m3;
+            stress.push(DMatrix::from_column_slice(
+                6,
+                rows.len(),
+                stress_operator.as_slice(),
+            ));
+            add_matrix(&mut k_soil, &stiffness, &rows);
+        }
+        cells.push(Cell { rows, stress });
+    }
+    Ok((k_soil, cells))
+}
+
+impl Cell {
+    pub(crate) fn stresses(&self, q: &DVector<f64>) -> Vec<[f64; 6]> {
+        let u = gather(q, &self.rows);
+        self.stress
+            .iter()
+            .map(|b| {
+                let sig = b * &u;
+                std::array::from_fn(|i| sig[i])
+            })
+            .collect()
+    }
 }
 struct Trial {
     force: DVector<f64>,
@@ -148,32 +194,10 @@ impl<'a> Domain<'a> {
         let patch = Patch::new(mesh, &case.plate)?;
         let soil_dofs = mesh.nodes.len() * 3;
         let nd = soil_dofs + 18;
-        let mut k_soil = DMatrix::zeros(nd, nd);
-        let mut cells = Vec::new();
-        for (i, id) in mesh.material_ids.iter().enumerate() {
-            let soil = case
-                .soil
-                .get(id)
-                .ok_or_else(|| Error::Input("missing dry elastic soil properties".into()))?;
-            let d = elastic::constitutive(soil.young_kpa, soil.poisson)?;
-            let rows: Vec<_> = mesh
-                .cell_nodes(i)
-                .into_iter()
-                .flat_map(|n| 3 * n..3 * n + 3)
-                .collect();
-            let mut stress = Vec::new();
-            for gp in mesh.integration(i)? {
-                let stress_operator = d * &gp.b;
-                let stiffness = gp.b.transpose() * &stress_operator * gp.weight_m3;
-                stress.push(DMatrix::from_column_slice(
-                    6,
-                    rows.len(),
-                    stress_operator.as_slice(),
-                ));
-                add_matrix(&mut k_soil, &stiffness, &rows);
-            }
-            cells.push(Cell { rows, stress });
-        }
+        let node_rows: Vec<_> = (0..mesh.nodes.len())
+            .map(|i| [3 * i, 3 * i + 1, 3 * i + 2])
+            .collect();
+        let (k_soil, cells) = assemble_soil(mesh, &case.soil, nd, &node_rows)?;
         let mut plate_rows = Vec::with_capacity(36);
         for (i, &node) in case.plate.soil_a.nodes.iter().enumerate() {
             plate_rows.extend(3 * node..3 * node + 3);
@@ -496,20 +520,7 @@ impl<'a> Domain<'a> {
                 .uniform_load(average)
                 .dot(&gather(&delta, &self.plate_rows));
         }
-        next.soil_stress_kpa = self
-            .cells
-            .iter()
-            .map(|c| {
-                let u = gather(&d, &c.rows);
-                c.stress
-                    .iter()
-                    .map(|operator| {
-                        let stress = operator * &u;
-                        std::array::from_fn(|i| stress[i])
-                    })
-                    .collect()
-            })
-            .collect();
+        next.soil_stress_kpa = self.cells.iter().map(|c| c.stresses(&d)).collect();
         next.applied = applied.as_slice().to_vec();
         next.reactions = reactions.as_slice().to_vec();
         next.configuration = d.as_slice().to_vec();
