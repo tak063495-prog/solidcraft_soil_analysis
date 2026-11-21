@@ -11,6 +11,17 @@ PR #13 の起点は `d390fb7327f11cdbf38739be46187068a0997601`。2026-11-21 21:0
 |5　荷重・仕事・施工|T4/T5 の面・体積・設置世代の組立を共用し、線荷重は区間を切って所有翼に一度配分する。T5 の曲面厚さ写像を重心・付着面への代用で置換する経路は設けていない。実際の表面 traction と圧力、自重、部分辺の力・偶力を、全節点の合力・共通原点モーメントと照合した。外力・支持の累積台形仕事、ばね蓄積、GP から再組立した残差を使用する。乾燥12 Tet10 の段差付着パッチで、付着並進差は 0 m、4保存点の別プロセス再開は終端バイト一致、再設置は世代2、旧世代は完全一致した。|
 |6　参照と規模|剛体運動、偶力、ばね、部分線荷重は手計算で検査した。構造単独の独立 Python は入力座標から平面殻の膜・曲げ・横せん断を組み、厚さ多項式を解析積分する。荷重も元の区間から原始関数で組み、別の拘束行 C と乗数を持つ不定系を解く。本体の行列・節点 RHS を参照解に与えない。規則・歪みの 16/64/256 Tri6 で節点、線反力、支持反力、全 GP の応力・断面量・仕事を比較した。|
 
+[単体試験](../../tests/test_t6_offset_kink.py) での対応は次のとおり。
+
+|論点|試験メソッド|
+|---|---|
+|1| `test_signed_arms_same_physical_points_all_rigid_modes`、`test_three_wing_sections_and_declaration_order`、`test_input_rank_trim_and_edge_ownership` |
+|2| `test_released_and_spring_axial_moments`（軸反転を含む）|
+|3| `test_projected_five_dof_and_artificial_work` |
+|4| `test_one_sided_sections_and_line_densities` |
+|5| `test_surface_body_and_partial_line_wrench_once`（6荷重基底の仮想仕事を含む）、`test_generation_freeze_soil_tie_and_process_resume` |
+|6| `test_independent_multiplier_and_coordinate_covariance`（平行・直角・鈍角、座標回転、共通原点での偶力）|
+
 物理単位は並進 m、回転 rad、力 kN、偶力 kN·m。N と Q は kN/m、M は kN·m/m。点の偶力と単位長さ当たりの断面モーメントはそれぞれの欄で比較する。入力・単位・再現コマンドは [REPRODUCE.ja.md](REPRODUCE.ja.md)、生の全場と入力は [evidence.zip](evidence.zip)、実行版とアーカイブの SHA-256 は [measurements.json](measurements.json)。
 
 ## 構造単独の結果
@@ -38,10 +49,24 @@ PR #13 の起点は `d390fb7327f11cdbf38739be46187068a0997601`。2026-11-21 21:0
 
 Maunder, Izzuddin & Ramsay (2012), “An Equilibrium Shell Element for Folded Plate Structures”, IASS-IACM, Sarajevo, §§4–5, Figs. 4, 6–8 に、各4 m角、厚さ0.25 mの直角折れ板、AB/BC の soft simple support、Fに隣接する0.5 m区間の線荷重がある。文献の板ねじりモーメント解放と、この入力の線軸ヒンジは異なる境界条件である。T6 調査で確認した条件を照合した。原数表・読図誤差、今回の段差・支持と一致するエネルギー／GH 断面値は**未確認**。今回の公開 PDF 再取得は HTTP 403。査読版 Maunder & Izzuddin (2013), *International Journal for Numerical Methods in Engineering*, Abstract も数値ゲートに使っていない。[2012年著者公開版](https://www.ramsay-maunder.co.uk/downloads/IASS2012_eawmetal.pdf) ／ [2013年査読版 DOI](https://doi.org/10.1002/nme.4507)
 
-有限幅の接合材料そのもの、局部の3D応力、曲がった非適合辺、切詰め・所有不明の体積、履歴ばね、一般の5/6自由度混在、接触開閉・塑性土・水・実 CAD を含む全施工経路は未達。構造3翼の剛結を確認した。独立に回る複数の翼対のネットワークは未確認。共有土並進による階数追加・従属の診断を設けた。共有土節点を含むすべてのヒンジを受理する仕様、有限厚の交差領域のモデル誤差、包括許容値は未確認。768／6144要素メッシュは**規模上限のため確認不可・未達**。T7 の物理不安定判定は対象外。
+有限幅の接合材料そのもの、局部の3D応力、曲がった非適合辺、切詰め・所有不明の体積、履歴ばね、一般の5/6自由度混在、接触開閉・塑性土・水・実 CAD を含む全施工経路は未達。構造3翼の剛結を確認した。独立に回る複数の翼対のネットワークは未確認。同じ Tet10 辺の土並進を共有し、付着線からずれた J がヒンジを固定する例では、追加階数1/3と対象 ID を出して拒否した。共有土節点を含むすべてのヒンジを受理する仕様、有限厚の交差領域のモデル誤差、包括許容値は未確認。768／6144要素メッシュは**規模上限のため確認不可・未達**。T7 の物理不安定判定は対象外。
 
 ## B-03 既存受入
 
 3a20ac2 の旧入口で34入力を再実行した。受理対照6件は完走、拒否28件のうち26件は従来の診断に一致した。土節点ごと動かす曲がり2件は従来どおり CAD 体積検査が先に拒否し、元の期待診断との不一致を表す false を保持した。補助10入力は従来の拒否と受理を再現した。PR #25 の294幾何条件は accepted=null、ベクトル差の最大 1.11e−16 m。b383aa0 までの S1～S12、3面の丸め境界・面順依存、欠測荷重欄は当時の記録を保持する。[3a20ac2 の受入記録](../2026-12-02-tri6-offset-kink-b03/README.ja.md) ／ [S1～S12](../2026-12-26-b03-offset-kink-cause-diagnosis/README.ja.md) ／ [追補](../2026-12-27-b03-offset-kink-cloud-followup/README.ja.md)
+
+旧入力 SHA が一致した21経路（12/96 Tet10、荷重刻み4/8/16）の820受理点、492,480土 GP 状態を照合した。21経路とも既存の限定ゲートを満たした。観測器・独立 Python・観測なしの本体を再実行した。観測器の native/accepted.jsonl は21経路とも旧封印 SHA と完全一致した。最終の本体 CLI でも全21経路を解き、異なる2実行版の識別 SHA をそれぞれ実物と照合した上で、計時を除く全 Run の物理場が観測なしの観測器実行と一致した。同一実行版での既存25再開では計時以外の全 Run と後続450状態が一致し、30改変を拒否した。[経路別の比較・旧値との差](b03-replay.json)
+
+本体の再組立残差最大は 3.2295607629917687e−11、真の線形残差最大は 8.796553608282296e−11 で旧値との差は0。独立再組立残差最大は旧 3.676243332588775e−12、今回 4.1211376321033265e−12、差 +4.448942995145518e−13。累積総仕事の本体対独立の最大絶対差は旧 1.933305946e−14、今回 1.915047981e−14 kN·m。独立ストリームのバイト差は21経路にあった。旧受入の入力生成器、独立コード、依存版指定は 3a20ac2 と同一。平面対照は現環境で Python 3.13 と旧記録の 3.12.14 の双方で同じ SHA、同じ3.13でも OpenBLAS の演算カーネルを切り替えると異なる SHA となった。変化は独立数値計算側に局在する。旧実行時の演算カーネル・ビルドにまで遡った単一原因は未確認。
+
+規則16/64/256要素の最終 CLI 単独実行で、Linux 最大常駐メモリは順に 9,592／29,580／276,888 KiB、経過 0.190／0.375／5.588 秒。3出力とも系列実行時の Run とバイト一致した。Windows PC での実測時間は未確認。
+
+## 全件試験と P6-01
+
+Linux で Rust の全ターゲット 510 件、Python の CI 全7群 1018 件と Linux 専用 pytest 7 件が成功した。各群とも失敗0、未実行0。Rust の doc test は 0 件。Python の内訳は core-0 が487、core-1 が507、mean・spatial が各4、C01 の switch・path・cause が順に4・4・8件。T6 の単体9件は core 群に含む。`cargo fmt --all --check` と `cargo clippy --locked --all-targets -- -D warnings` も通過した。
+
+過去診断5件の SHA-256 と固定コミットの blob を試験前に確認した。初回の core-0 では過去の分割アーカイブが不足していたため中断した。その記録を保存し、全群で必要なアーカイブ1,745ファイルを Git の blob と照合した後、core 両群を先頭から実行した。最終件数は完走した各群を1回ずつ数えた。旧本体の照合で実行版の識別値が異なった初回の記録も収録した。
+
+P6-01 の監査は80行・出典406件・証拠171件を検査し、`integrity_ok=true`。T6 の固定コミット `86274929857410806089a91ffce0ab0bbde35f2e` の `measurements.json` を SHA-256 `35dc7d104b626180833f8d0b75dd201603a7a8d5a6d9697fd374f8377f3b0f66`、Git blob `9fb95a773e845b41c214dadcfa1d6427a2ad8081` で照合した。群別の実行一覧、実行ログ、監査結果を収録した。SHA-256 `90b0b4f63beb404e50bd0d1425cefbe4dc4da2a78e3a4e4abcecc6e2a6c3c2f0`。[検証記録](verification.zip)
 
 B-03 は未達、passed=false。

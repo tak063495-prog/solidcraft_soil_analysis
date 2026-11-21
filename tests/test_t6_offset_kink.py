@@ -283,6 +283,50 @@ class OffsetKink(unittest.TestCase):
         c["joint"]["wings"][0]["edge_nodes"].reverse()
         self.execute(c, fail="nonconforming")
 
+        # Two exterior faces of Tet10 cell 10 share soil edge 8--41--9.
+        # Give each shell independent IDs. When J is displaced from their
+        # common attachment line, the shared translations would lock the hinge.
+        case, _ = attached()
+        shell = case["shell"]
+        soil = shell["soil"]
+        mesh = soil["mesh"]
+        owners = {"top": [8, 9, 11, 41, 43, 40], "side": [4, 9, 8, 42, 41, 39]}
+        shell["nodes"] = []
+        shell["faces"] = []
+        joint = case["joint"]
+        joint["wings"] = []
+        for group, ids in owners.items():
+            start = len(shell["nodes"])
+            shell["nodes"].extend(mesh["nodes"][n] for n in ids)
+            shell["faces"].append(
+                dict(
+                    id=group,
+                    group=group,
+                    nodes=list(range(start, start + 6)),
+                    offset_m=-0.05,
+                )
+            )
+            joint["wings"].append(
+                dict(group=group, edge_nodes=[start + ids.index(n) for n in [8, 41, 9]])
+            )
+        soil["owners"] = {g: dict(cell=10, nodes=ids) for g, ids in owners.items()}
+        soil["exposed_side"] = {g: 1 for g in owners}
+        joint.update(
+            rotation=dict(kind="hinge"),
+            line_m=[[x, -0.02, 1.0] for x in [0.0, 0.5, 1.0]],
+            loads={},
+            separators=[
+                dict(
+                    negative="side",
+                    positive="top",
+                    normal=[0.0, 1.0, 0.0],
+                    point_m=[0.0, 0.0, 1.0],
+                )
+            ],
+        )
+        shell["steps"] = []
+        self.execute(case, fail="shared tie adds rank 1/3")
+
     def test_three_wing_sections_and_declaration_order(self):
         c = patch(1)
         shell = c["shell"]

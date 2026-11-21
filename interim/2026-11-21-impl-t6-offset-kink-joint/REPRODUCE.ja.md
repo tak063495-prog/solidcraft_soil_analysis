@@ -64,6 +64,13 @@ python "$T/t6_convergence.py" "$O/structural"
 cmp "$O/end.json" "$O/structural/n2-distort0/run.json"
 ```
 
+付着パッチの入力は次のように再生成する。最終 Run の frames[3].active と frames[7].archived[0]、保存点2・3・4・6からの別プロセス終端、および付着土と構造の並進は上記の単体試験が検査する。
+
+```sh
+PYTHONPATH="$T" python -c 'import json,sys;from t6_attached import attached;from pathlib import Path;Path(sys.argv[1]).write_text(json.dumps(attached()[0]),encoding="utf-8")' "$O/attached-case.json"
+"$cli" offset-kink-joint "$O/attached-case.json" "$O/attached-full.json"
+```
+
 ## B-03 の旧ケースと全件試験
 
 ```sh
@@ -78,6 +85,7 @@ python "$B/rigid_modes.py" "$O/b03-formal" "$O/b03-rigid.json"
 python "$B/checkpoint_mutations.py" "$O/b03-formal" "$O/b03-mutations"
 python "$B/verify_contract.py" "$O/b03-formal" "$O/b03-probe/scope.json" "$O/b03-supplemental/supplemental.json" "$O/b03-mutations/mutations.json" "$O/b03-contract.json"
 python "$B/collect_b03.py" "$O/b03-formal" "$O/b03-probe/scope.json" "$O/b03-supplemental/supplemental.json" "$O/b03-mutations/mutations.json" "$O/b03-summary"
+python "$T/t6_legacy.py" "$cli" "$O/b03-formal" "$O/final-cli"
 cargo test --locked --release --all-targets --no-fail-fast
 cargo test --locked --release --doc
 for group in python-core-0 python-core-1 python-mean-evidence python-spatial-evidence python-c01-switch python-c01-path python-c01-cause; do
