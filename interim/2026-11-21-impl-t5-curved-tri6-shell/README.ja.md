@@ -77,4 +77,25 @@ n=2,4,8 は8、32、128要素。各欄の左は n=8 の絶対誤差、括弧内�
 
 測定記録を固定コミット `bb7f81fc1cc753fa2694ee47f8149d52d9c12447` から登録した。SHA-256 は `8fe61b79bda5c0564420bdf05f7184ec49ca269bd5655c962832469295d47d21`、Git blob ID は `17c2e5094828fd3f3b9c0bd56bbeb8cdfb0a11f7`。監査は80行・403資料・171証拠で integrity_ok=true。台帳の既存改変検査57件が成功した。
 
+## 全件検証
+
+Rust 試験に先立ち、保存対象の過去診断5ファイルを展開して固定版の Git blob と照合した。Python の C-01 群では分割アーカイブ等41ファイルを、core 群では過去診断を含む1,707ファイル（28,981,331,613バイト）を各群の開始前に照合した。Rust の fmt と clippy --locked --all-targets -- -D warnings は成功。Linux の実行ログと全件試験IDは [検証記録](verification.zip) に収録した。
+
+断面仕事の派生表の固定コミットは `64fe90b9ed4e7adab0acd447a2ef3a299946da62`、SHA-256 は `af0ba39924715be8124845a8e7c919e7b4bd19b8b80147e39bd297d404a76124`。
+
+|試験群|成功|失敗|セットアップエラー|未実行・無視|
+|---|---:|---:|---:|---:|
+|Rust release 全件|507|0|0|0|
+|Rust examples|3|0|0|0|
+|python-core-0|502|0|0|0|
+|python-core-1|483|0|0|0|
+|python-mean-evidence|4|0|0|0|
+|python-spatial-evidence|4|0|0|0|
+|python-c01-switch|4|0|0|0|
+|python-c01-path|4|0|0|0|
+|python-c01-cause|8|0|0|0|
+|Linux 専用 pytest|7|0|0|0|
+
+P6-01 改変検査57件と曲面単体試験は全件試験にも含まれる。
+
 B-01 は未達、passed=false。
