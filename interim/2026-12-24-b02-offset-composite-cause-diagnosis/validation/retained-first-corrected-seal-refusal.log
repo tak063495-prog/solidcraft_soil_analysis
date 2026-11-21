@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-24-b02-offset-composite-cause-diagnosis/b02cause_evidence.py", line 64, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-24-b02-offset-composite-cause-diagnosis/b02cause_evidence.py", line 61, in main
+    print(verify(a.verify,a.extract) if a.verify else seal(a.run,a.destination,a.retained))
+                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-24-b02-offset-composite-cause-diagnosis/b02cause_evidence.py", line 39, in seal
+    with zipfile.ZipFile(archive,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+         ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/zipfile/__init__.py", line 1414, in __init__
+    self.fp = io.open(file, filemode)
+              ~~~~~~~^^^^^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: 'work/b02cause-new-evidence.zip'

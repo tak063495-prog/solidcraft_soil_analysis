@@ -1,0 +1,362 @@
+{
+  "schema": "a02-joint-birth-cause-validation/1",
+  "base_commit": "7b254b1cdbe9c288989631944cd698aa861f83ac",
+  "tested_commit": "b5fb90043c396c41fc504a19f59e3043f11dc238",
+  "passed": false,
+  "a02_complete": false,
+  "software_tests_passed": true,
+  "rust": {
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "discovered": 467,
+    "skipped": 0,
+    "result_groups": 98,
+    "unexecuted": 0
+  },
+  "python": {
+    "success": 795,
+    "failed_test_cases": 0,
+    "test_errors": 0,
+    "fixture_errors": 0,
+    "runner_errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "discovered": 795,
+    "executed": 795,
+    "missing_test_ids": [],
+    "all_discovered_tests_assigned_exactly_once": true,
+    "tools_tests_included_without_double_counting": true
+  },
+  "rust_commands": [
+    {
+      "label": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.890478628999972
+    },
+    {
+      "label": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.13726048700005
+    },
+    {
+      "label": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.0921689100000549
+    },
+    {
+      "label": "rust",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1589.1567864980002
+    },
+    {
+      "label": "rust-examples",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--examples"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.4727029000000584
+    }
+  ],
+  "python_groups": {
+    "python-core-0": {
+      "assigned_total": 359,
+      "tests_run": 359,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 319.8903524359994
+    },
+    "python-core-1": {
+      "assigned_total": 412,
+      "tests_run": 412,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 267.1628189610001
+    },
+    "python-mean-evidence": {
+      "assigned_total": 4,
+      "tests_run": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 804.4941203170001
+    },
+    "python-spatial-evidence": {
+      "assigned_total": 4,
+      "tests_run": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 118.42681073900076
+    },
+    "python-c01-switch": {
+      "assigned_total": 4,
+      "tests_run": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 44.663712253000085
+    },
+    "python-c01-path": {
+      "assigned_total": 4,
+      "tests_run": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 74.62225682899953
+    },
+    "python-c01-cause": {
+      "assigned_total": 8,
+      "tests_run": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 58.69269329300005
+    }
+  },
+  "python_test_source_check": {
+    "source_count": 1311,
+    "changed": [],
+    "all_sha256_identical": true
+  },
+  "rust_sources_unchanged_from_base": true,
+  "formal_diagnostic_source_check": {
+    "source_count": 1305,
+    "all_sha256_identical": true
+  },
+  "archive_verification": "{'parts': 8, 'entries': 701, 'all_sha256_verified': True, 'integrity_only_not_fresh_solve': True}",
+  "sealed_derived_recomputation": {
+    "files": {
+      "projection-diagnosis.json": true,
+      "measurements.json": true,
+      "cause-assessment.json": true,
+      "reference-assessment.json": true,
+      "work-accounting.json": true,
+      "partition-global-controls.json": true,
+      "active-contact-controls.json": true
+    },
+    "all_object_exact": true,
+    "fresh_global_solves_rerun": false
+  },
+  "old_preservation": {
+    "base_commit": "7b254b1cdbe9c288989631944cd698aa861f83ac",
+    "checked_at_commit": "b5fb90043c396c41fc504a19f59e3043f11dc238",
+    "base_tracked_blobs": 8136,
+    "unchanged": 8134,
+    "changed_existing_paths": [
+      "interim/2026-12-06-p6-01-status-reconciliation/audit_status.py",
+      "interim/2026-12-10-ci-p601-inventory-fix/inventory.toml"
+    ],
+    "missing_paths": [],
+    "by_root": {
+      ".github": {
+        "files": 2,
+        "unchanged": 2
+      },
+      ".gitignore": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "Cargo.lock": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "Cargo.toml": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "README.md": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "THIRD_PARTY_NOTICES.md": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "docs": {
+        "files": 91,
+        "unchanged": 91
+      },
+      "examples": {
+        "files": 170,
+        "unchanged": 170
+      },
+      "integrations": {
+        "files": 14,
+        "unchanged": 14
+      },
+      "interim": {
+        "files": 7214,
+        "unchanged": 7212
+      },
+      "requirements-reference.lock.txt": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "requirements-verification-win-cp313.lock.txt": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "requirements.lock.txt": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "rust-toolchain.toml": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "scripts": {
+        "files": 39,
+        "unchanged": 39
+      },
+      "sources.lock.json": {
+        "files": 1,
+        "unchanged": 1
+      },
+      "src": {
+        "files": 70,
+        "unchanged": 70
+      },
+      "tests": {
+        "files": 195,
+        "unchanged": 195
+      },
+      "tools": {
+        "files": 331,
+        "unchanged": 331
+      }
+    },
+    "all_original_paths_present": true,
+    "all_protected_numeric_evidence_unchanged": true,
+    "production_rust_unchanged": true,
+    "nc_code_and_configuration_unchanged": true,
+    "old_hash_snapshot_and_failures_unchanged": true,
+    "registration_only_checks": {
+      "audit_changed_only_inventory_digest": true,
+      "old_inventory_is_exact_prefix": true
+    }
+  },
+  "initial_attempts": {
+    "initial_core_attempts": {
+      "python-core-0": {
+        "assigned_total": 359,
+        "tests_run": 359,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1,
+        "exit_code": 1
+      },
+      "python-core-1": {
+        "assigned_total": 412,
+        "tests_run": 412,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1,
+        "exit_code": 1
+      }
+    },
+    "reason": "real PowerShell absent from initial PATH; original tests skipped one case per core group",
+    "initial_powershell_smoke": {
+      "tests_run": 21,
+      "failures": 1,
+      "errors": 1,
+      "reason": "PowerShell attempted to create cache in readonly home"
+    },
+    "corrected_powershell_smoke": {
+      "tests_run": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "project_code_tests_and_nc_settings_changed": false,
+    "initial_and_smoke_counts_excluded_from_final_unique_totals": true
+  },
+  "powershell_runtime": {
+    "version": "7.5.4",
+    "source": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz",
+    "sha256": "1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef",
+    "official_release_hash_verified": true,
+    "official_hash_file_encoding": "utf-16",
+    "user_level_portable_runtime": true,
+    "nc_configuration_changed": false
+  },
+  "prior_smoke_tests_excluded_from_unique_totals": true,
+  "discovery_only_runs_excluded_from_success_counts": true,
+  "skipped_to_bypass_failures": false,
+  "numerical_tolerances_relaxed": false,
+  "old_values_rewritten": false,
+  "nc_code_or_settings_changed": false,
+  "a01_complete": false,
+  "a03_a04_complete": false,
+  "b_items_complete": false,
+  "c01_c04_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "pc_executed": false,
+  "cloud_diagnostics_remaining": true,
+  "windows_ci_after_push": "未確定",
+  "environment": {
+    "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  }
+}

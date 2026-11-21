@@ -1,0 +1,47 @@
+test_c01_replays_have_separate_jobs_without_changing_test_ids (test_ci_python_partition.PythonCIPartition.test_c01_replays_have_separate_jobs_without_changing_test_ids) ... ok
+test_loader_failure_is_not_counted_as_a_discovered_test (test_ci_python_partition.PythonCIPartition.test_loader_failure_is_not_counted_as_a_discovered_test) ... ok
+test_missing_or_duplicate_discovery_cannot_succeed (test_ci_python_partition.PythonCIPartition.test_missing_or_duplicate_discovery_cannot_succeed) ... ok
+test_union_is_exact_with_no_test_repeated (test_ci_python_partition.PythonCIPartition.test_union_is_exact_with_no_test_repeated) ... ok
+test_whole_modules_keep_class_and_module_fixtures_together (test_ci_python_partition.PythonCIPartition.test_whole_modules_keep_class_and_module_fixtures_together) ... ok
+test_ambiguous_or_empty_metadata_fails_closed (test_ci_rust_partition.Coverage.test_ambiguous_or_empty_metadata_fails_closed) ... ok
+test_core_retains_unit_binary_doc_and_example_checks (test_ci_rust_partition.Coverage.test_core_retains_unit_binary_doc_and_example_checks) ... ok
+test_real_metadata_is_covered_once_and_new_targets_are_not_lost (test_ci_rust_partition.Coverage.test_real_metadata_is_covered_once_and_new_targets_are_not_lost) ... ERROR
+test_new_document_decisions_survive_real_crlf_bytes (test_ci_timeout_configuration.CITimeoutConfiguration.test_new_document_decisions_survive_real_crlf_bytes) ... ok
+test_real_git_sparse_profiles_keep_all_sources_and_each_required_archive (test_ci_timeout_configuration.CITimeoutConfiguration.test_real_git_sparse_profiles_keep_all_sources_and_each_required_archive) ... ok
+test_workflow_runs_every_python_partition_and_keeps_exact_history (test_ci_timeout_configuration.CITimeoutConfiguration.test_workflow_runs_every_python_partition_and_keeps_exact_history) ... ok
+
+======================================================================
+ERROR: test_real_metadata_is_covered_once_and_new_targets_are_not_lost (test_ci_rust_partition.Coverage.test_real_metadata_is_covered_once_and_new_targets_are_not_lost)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_ci_rust_partition.py", line 15, in test_real_metadata_is_covered_once_and_new_targets_are_not_lost
+    meta = json.loads(subprocess.check_output(
+                      ~~~~~~~~~~~~~~~~~~~~~~~^
+        ['cargo', 'metadata', '--locked', '--no-deps', '--format-version', '1'], cwd=ROOT))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 473, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "/workspace/work/python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 555, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 1040, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 1992, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'cargo'
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.067s
+
+FAILED (errors=1)

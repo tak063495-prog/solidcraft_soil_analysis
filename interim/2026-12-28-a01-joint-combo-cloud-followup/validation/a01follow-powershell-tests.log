@@ -1,0 +1,52 @@
+test_powershell_gate_when_available (test_nc_pc_gate.RateArcGate.test_powershell_gate_when_available) ... FAIL
+test_real_rerun_saves_specific_failure_and_preserves_pc3 (test_nc_pc_gate_schema.PcGateSchema.test_real_rerun_saves_specific_failure_and_preserves_pc3) ... ERROR
+
+======================================================================
+ERROR: test_real_rerun_saves_specific_failure_and_preserves_pc3 (test_nc_pc_gate_schema.PcGateSchema.test_real_rerun_saves_specific_failure_and_preserves_pc3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_pc_gate_schema.py", line 158, in test_real_rerun_saves_specific_failure_and_preserves_pc3
+    failure = gate.read_json(output / 'pc4-failure.json')
+  File "/workspace/solidcraft_soil_analysis/tools/nc_pc_gate.py", line 47, in read_json
+    return json.loads(Path(path).read_text(encoding='utf-8-sig'),
+                      ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/PC-4 failure 日本語 o819yfk9/PC-4/pc4-failure.json'
+
+======================================================================
+FAIL: test_powershell_gate_when_available (test_nc_pc_gate.RateArcGate.test_powershell_gate_when_available)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_pc_gate.py", line 158, in test_powershell_gate_when_available
+    self.assertEqual(child.returncode, 0, child.stdout + child.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -6 != 0 : Unhandled exception. System.TypeInitializationException: The type initializer for 'System.Management.Automation.Configuration.PowerShellConfig' threw an exception.
+ ---> System.TypeInitializationException: The type initializer for 'System.Management.Automation.Platform' threw an exception.
+ ---> System.IO.IOException: Read-only file system : '/home/agent/.cache/powershell'
+   at System.IO.FileSystem.CreateDirectory(String fullPath, UnixFileMode unixCreateMode)
+   at System.IO.Directory.CreateDirectory(String path)
+   at System.Management.Automation.Platform.SelectProductNameForDirectory(XDG_Type dirpath)
+   at System.Management.Automation.Platform..cctor()
+   --- End of inner exception stack trace ---
+   at System.Management.Automation.Configuration.PowerShellConfig..ctor()
+   at System.Management.Automation.Configuration.PowerShellConfig..cctor()
+   --- End of inner exception stack trace ---
+   at System.Management.Automation.Utils.GetPolicySettingFromConfigFile[T](ConfigScope[] preferenceOrder)
+   at Microsoft.PowerShell.CommandLineParameterParser.GetConfigurationNameFromGroupPolicy()
+   at Microsoft.PowerShell.ConsoleHost.ParseCommandLine(String[] args)
+   at Microsoft.PowerShell.UnmanagedPSEntry.Start(String[] args, Int32 argc)
+   at Microsoft.PowerShell.ManagedPSEntry.Main(String[] args)
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 4.478s
+
+FAILED (failures=1, errors=1)

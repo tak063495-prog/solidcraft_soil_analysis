@@ -1,0 +1,40 @@
+{
+  "passed": false,
+  "expected_refused": true,
+  "actual_production_refused": false,
+  "actual_production_complete": true,
+  "excluded_from_limited_acceptance": true,
+  "new_acceptance_scope": false,
+  "input": "work/a04/formal-soil-02/saturated-n4/case.json",
+  "input_sha256": "743f9d620530b2966e5c27ed1df758f60e921aa2626b00bb90ae216363dc0d42",
+  "run": "work/a04/formal-soil-02/saturated-n4/native.json",
+  "run_sha256": "ed26167aa6e92e997ef99ca5549106e84eb1b224284953e348400205cd25ac9d",
+  "producer_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+  "process": {
+    "command": [
+      "/workspace/solidcraft_soil_analysis/work/a04/formal-soil-02/bin/solver",
+      "solve-one-way-construction",
+      "/workspace/solidcraft_soil_analysis/work/a04/formal-soil-02/saturated-n4/mesh.json",
+      "/workspace/solidcraft_soil_analysis/work/a04/formal-soil-02/saturated-n4/ground.json",
+      "/workspace/solidcraft_soil_analysis/work/a04/formal-soil-02/saturated-n4/case.json",
+      "/workspace/solidcraft_soil_analysis/work/a04/formal-soil-02/saturated-n4/native.json"
+    ],
+    "pid": 87125,
+    "exit_code": 0,
+    "timed_out": false,
+    "elapsed_seconds": 0.34990630200013584
+  },
+  "pairs": [
+    {
+      "period": "p2",
+      "hydraulic_floor_head_m": 1.8,
+      "reservoir_level_m": 2.2
+    },
+    {
+      "period": "p3",
+      "hydraulic_floor_head_m": 2.1,
+      "reservoir_level_m": 2.2
+    }
+  ],
+  "reason": "Existing soil ONE_WAY validates exterior schedule names but not reservoir/head value consistency. Earlier actual accepted solve is retained as a failed rejection expectation. No production guard or physics is changed."
+}

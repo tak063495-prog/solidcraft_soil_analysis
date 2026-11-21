@@ -14,6 +14,22 @@ from export_mc_epoch import accepted, fields, read_bytes, decode, sha, digest, w
 from export_solidcraft_view import boundary, clean, MAX_FILE, MAX_TOTAL
 
 
+def encode(value):
+    return (json.dumps(value,indent=2,ensure_ascii=False,allow_nan=False)+'\n').encode('utf-8')
+
+
+class ViewBudget:
+    """Account for the exact bytes emitted in view/, including its manifest."""
+    def __init__(self):
+        self.total = 0
+
+    def add(self, data):
+        if len(data) > MAX_FILE or self.total + len(data) > MAX_TOTAL:
+            raise ValueError('MC view exceeds unchanged display budgets')
+        self.total += len(data)
+        return data
+
+
 def source(root, name):
     parts = PurePosixPath(name)
     if (not name or '\\' in name or ':' in name or parts.is_absolute() or
@@ -52,7 +68,8 @@ def export(job, native_origin, output):
         copied[n] = sha(source(native_origin,n))
     if any(sha(source(native_origin,n)) != h for n,h in copied.items()):
         raise ValueError('Native origin source/packet checksum mismatch')
-    geometry = decode(read_bytes(source(native_origin,'view/'+native['geometry']),MAX_FILE))
+    geometry_data = read_bytes(source(native_origin,'view/'+native['geometry']),MAX_FILE)
+    geometry = decode(geometry_data)
     cells = np.asarray(mesh.get('tetrahedra10') or mesh['tetrahedra'])
     if (geometry['nodes_m'] != mesh['nodes'] or geometry['cells'] != cells.tolist() or
             geometry['cell_kind'] != ('tetra10' if cells.shape[1]==10 else 'tetra4')):
@@ -87,9 +104,9 @@ def export(job, native_origin, output):
             integration_point_ids=qp,element_ids=owners[qp],positions_m=positions,
             weights_m3=gp['integration_weight_m3'],fields=point_fields))
         prepared.append((frame,points))
-    encoded = [json.dumps(v,ensure_ascii=False,allow_nan=False).encode('utf-8') for pair in prepared for v in pair]
-    if any(len(v)>MAX_FILE for v in encoded) or sum(map(len,encoded))>MAX_TOTAL:
-        raise ValueError('MC view exceeds unchanged display budgets')
+    budget = ViewBudget()
+    budget.add(geometry_data)
+    encoded = [(budget.add(encode(frame)), budget.add(encode(points))) for frame,points in prepared]
     output.mkdir(parents=True,exist_ok=False);view=output/'view';view.mkdir()
     source_hashes={}
     def copy(src,name):
@@ -102,11 +119,11 @@ def export(job, native_origin, output):
     (output/'epoch/accepted-snapshot.json').write_bytes(snapshot_data)
     write_json(output/'epoch/verified.json',verified)
     for n in ('epoch/accepted-snapshot.json','epoch/verified.json'):source_hashes[n]=sha(output/n)
-    shutil.copyfile(source(native_origin,'view/'+native['geometry']),view/'geometry.json')
+    (view/'geometry.json').write_bytes(geometry_data)
     files={'geometry.json':sha(view/'geometry.json')};entries=[]
     for i,(frame,points) in enumerate(prepared):
-        for stem,value in (('frame',frame),('points',points)):
-            name=f'{stem}-{i:03}.json';write_json(view/name,value);files[name]=sha(view/name)
+        for stem,data in zip(('frame','points'),encoded[i],strict=True):
+            name=f'{stem}-{i:03}.json';(view/name).write_bytes(data);files[name]=digest(data)
         entries.append(dict(index=i,name=frame['name'],frame=f'frame-{i:03}.json',integration_points=f'points-{i:03}.json'))
     metadata=dict(origin_manifest='origin/view/view-manifest.json',snapshot='epoch/accepted-snapshot.json',
         origin='epoch/origin.json',mesh='epoch/mesh.json',job='epoch/job.json',verification='epoch/verified.json',
@@ -126,7 +143,8 @@ def export(job, native_origin, output):
         raise ValueError('Native origin changed while exporting MC packet')
     for n in ('inputs/mesh.json','inputs/origin.json'):
         if sha(job/n)!=immutable[n]:raise ValueError('MC input changed while exporting')
-    write_json(view/'view-manifest.json',manifest)
+    manifest_data = budget.add(encode(manifest))
+    (view/'view-manifest.json').write_bytes(manifest_data)
     write_json(output/'view-verification.json',dict(schema='soil-fem-mc-epoch-view-export/1',passed=True,
         input_sha256=native['input_sha256'],view_manifest_sha256=sha(view/'view-manifest.json'),
         mechanical_revalidation=verified,source_snapshot_exact=True,ordinary_run_not_synthesized=True,

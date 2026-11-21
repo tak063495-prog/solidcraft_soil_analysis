@@ -1,0 +1,29 @@
+    Checking soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis)
+error[E0425]: cannot find value `c` in this scope
+  --> src/joints.rs:60:12
+   |
+60 |         if c.joints.iter().any(|d| d.birth_policy.is_some())
+   |            ^ not found in this scope
+
+error[E0425]: cannot find value `c` in this scope
+  --> src/joints.rs:61:16
+   |
+61 |             && c.joints.iter().any(|d| d.crack_tip.is_some())
+   |                ^ not found in this scope
+
+error[E0282]: type annotations needed for `&_`
+   --> src/joints_birth.rs:269:23
+    |
+269 |                 .any(|v| !v.is_finite() || v.abs() > 1e-10)
+    |                       ^   - type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type, where the type for type parameter `T` is specified
+    |
+269 |                 .any(|v: &T| !v.is_finite() || v.abs() > 1e-10)
+    |                        ++++
+
+Some errors have detailed explanations: E0282, E0425.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `soil-fem-3d` (lib test) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `soil-fem-3d` (lib) due to 3 previous errors

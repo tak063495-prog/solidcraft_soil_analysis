@@ -1,0 +1,45 @@
+diff --git a/tests/test_a03_unequal_thickness_anisotropic_k.py b/tests/test_a03_unequal_thickness_anisotropic_k.py
+index 3e10ee9..6b1a894 100644
+--- a/tests/test_a03_unequal_thickness_anisotropic_k.py
++++ b/tests/test_a03_unequal_thickness_anisotropic_k.py
+@@ -1,6 +1,6 @@
+ """Small input/order/archive contracts; no FEM solve or new Rust integration work."""
+ import hashlib, json
+-from pathlib import Path
++from pathlib import Path, PureWindowsPath
+ import subprocess, sys, tempfile, unittest
+ import numpy as np
+ ROOT=Path(__file__).resolve().parents[1]
+@@ -85,7 +85,29 @@ class A03UnequalAnisotropic(unittest.TestCase):
+             with tempfile.TemporaryDirectory() as d:
+                 rules=Path(d)/'rules'
+                 rules.write_text('\n'.join(prior['actual_core_sparse_rules'][group]['rules'])+'\n')
+-                inputs=''.join(str(p.relative_to(ROOT))+'\n' for p in parts)
+-                r=subprocess.run(['git','sparse-checkout','check-rules','--no-cone','--rules-file',str(rules)],cwd=ROOT,input=inputs,text=True,capture_output=True)
++                paths=[p.relative_to(ROOT).as_posix() for p in parts]
++                inputs=b''.join(p.encode('utf-8')+b'\0' for p in paths)
++                r=subprocess.run(['git','sparse-checkout','check-rules','-z','--no-cone','--rules-file',str(rules)],cwd=ROOT,input=inputs,capture_output=True)
+                 self.assertEqual(r.returncode,0,r.stderr)
+-                self.assertEqual(r.stdout.splitlines(),inputs.splitlines())
++                self.assertEqual(r.stdout,inputs)
++
++    def test_sparse_nul_protocol_preserves_special_paths_and_exclusions(self):
++        # These are logical Git paths, not files created on either host OS.
++        paths=['kept/space name.zip', 'kept/quote"name.zip', 'kept/back\\slash.zip',
++               'kept/tab\tname.zip', 'kept/line\nname.zip', 'kept/日本語.zip',
++               'kept/duplicate.zip', 'kept/duplicate.zip', 'excluded/absent.zip']
++        inputs=b''.join(p.encode('utf-8')+b'\0' for p in paths)
++        expected=b''.join(p.encode('utf-8')+b'\0' for p in paths[:-1])
++        with tempfile.TemporaryDirectory() as d:
++            rules=Path(d)/'rules';rules.write_bytes(b'/kept/\n')
++            for quote in ('true','false'):
++                with self.subTest(core_quotePath=quote):
++                    r=subprocess.run(['git','-c','core.quotePath='+quote,'sparse-checkout','check-rules','-z','--no-cone','--rules-file',str(rules)],cwd=ROOT,input=inputs,capture_output=True)
++                    self.assertEqual(r.returncode,0,r.stderr)
++                    self.assertEqual(r.stdout,expected)
++
++    def test_sparse_windows_repo_paths_are_posix_before_git(self):
++        paths=[PureWindowsPath('interim')/HERE.name/p['name'] for p in read('archive-index.json')['parts']]
++        expected=[(HERE/p['name']).relative_to(ROOT).as_posix() for p in read('archive-index.json')['parts']]
++        self.assertEqual([p.as_posix() for p in paths],expected)
++        self.assertTrue(all('\\' in str(p) and '\\' not in p.as_posix() for p in paths))

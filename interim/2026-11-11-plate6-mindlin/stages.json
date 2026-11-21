@@ -1,0 +1,299 @@
+{
+  "schema": "soil-fem-stages/1",
+  "settings": {
+    "kinematics": "explicit",
+    "relative_force_tolerance": 1e-08,
+    "relative_linear_tolerance": 1e-10,
+    "maximum_newton_iterations": 35,
+    "initial_increment": 0.25,
+    "minimum_increment": 0.001953125,
+    "material_maximum_substep": 0.001,
+    "tangent_perturbation": 1e-07,
+    "maximum_free_dofs": 100000,
+    "linear_solver": {
+      "method": "sparse_gmres_ilu0",
+      "options": {
+        "restart": 60,
+        "maximum_iterations": 3000,
+        "pivot_tolerance": 1e-14
+      }
+    }
+  },
+  "boundary": {
+    "constraints": [
+      {
+        "node_set": "bottom",
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "value_m": 0.0
+      },
+      {
+        "node_set": "bottom",
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "value_m": 0.0
+      }
+    ]
+  },
+  "monitors": {
+    "top": 8.0
+  },
+  "monitor_sets": {
+    "surface": "top"
+  },
+  "pressure_on_original_surface_only": true,
+  "stages": [
+    {
+      "kind": "install_structures",
+      "name": "install",
+      "members": [
+        "wall_face0_part0",
+        "wall_face1_part0",
+        "strut"
+      ],
+      "placement": "cad_new_nodes"
+    },
+    {
+      "kind": "boundary",
+      "name": "load_plate_beam",
+      "target_factor": 1.0
+    },
+    {
+      "kind": "boundary",
+      "name": "unload_plate_beam",
+      "target_factor": 0.0
+    },
+    {
+      "kind": "remove_structures",
+      "name": "remove",
+      "members": [
+        "wall_face0_part0",
+        "wall_face1_part0",
+        "strut"
+      ]
+    }
+  ],
+  "verification_reject_once_stages": [
+    "install",
+    "load_plate_beam"
+  ],
+  "beam_system": {
+    "schema": "soil-fem-structures/1",
+    "nodes": [
+      {
+        "id": "plate_mesh_node_8",
+        "position_m": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:8"
+      },
+      {
+        "id": "plate_mesh_node_9",
+        "position_m": [
+          1.0,
+          0.0,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:9"
+      },
+      {
+        "id": "plate_mesh_node_11",
+        "position_m": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:11"
+      },
+      {
+        "id": "plate_mesh_node_41",
+        "position_m": [
+          0.5,
+          0.0,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:41"
+      },
+      {
+        "id": "plate_mesh_node_43",
+        "position_m": [
+          1.0,
+          0.5,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:43"
+      },
+      {
+        "id": "plate_mesh_node_40",
+        "position_m": [
+          0.5,
+          0.5,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:40"
+      },
+      {
+        "id": "plate_mesh_node_10",
+        "position_m": [
+          0.0,
+          1.0,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:10"
+      },
+      {
+        "id": "plate_mesh_node_38",
+        "position_m": [
+          0.0,
+          0.5,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:38"
+      },
+      {
+        "id": "plate_mesh_node_37",
+        "position_m": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "soil_node_set": "plate:mesh-node:37"
+      },
+      {
+        "id": "tip",
+        "position_m": [
+          2.0,
+          0.0,
+          1.0
+        ],
+        "match_soil_node": false
+      }
+    ],
+    "sections": [
+      {
+        "id": "strut_section",
+        "young_kpa": 200000000.0,
+        "poisson": 0.3,
+        "area_m2": 0.02,
+        "iy_m4": 0.0001,
+        "iz_m4": 0.0002,
+        "torsion_j_m4": 5e-05,
+        "unit_weight_kn_m3": 78.5,
+        "formulation": {
+          "kind": "euler_bernoulli"
+        }
+      }
+    ],
+    "members": [
+      {
+        "id": "strut",
+        "nodes": [
+          "plate_mesh_node_9",
+          "tip"
+        ],
+        "section_id": "strut_section",
+        "local_y": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "initially_active": false,
+        "boundary_line_load_kn_m": [
+          0.0,
+          0.0,
+          -0.2
+        ]
+      }
+    ],
+    "plate_sections": [
+      {
+        "id": "wall_section",
+        "young_kpa": 30000000.0,
+        "poisson": 0.2,
+        "thickness_m": 0.1,
+        "unit_weight_kn_m3": 24.0,
+        "drilling_factor": 0.0001
+      }
+    ],
+    "plates": [
+      {
+        "id": "wall_face0_part0",
+        "nodes": [
+          "plate_mesh_node_8",
+          "plate_mesh_node_9",
+          "plate_mesh_node_11",
+          "plate_mesh_node_41",
+          "plate_mesh_node_43",
+          "plate_mesh_node_40"
+        ],
+        "section_id": "wall_section",
+        "initially_active": false,
+        "formulation": "mindlin_tri6",
+        "constant_traction_kpa": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_traction_kpa": [
+          0.2,
+          -0.1,
+          -0.1
+        ]
+      },
+      {
+        "id": "wall_face1_part0",
+        "nodes": [
+          "plate_mesh_node_10",
+          "plate_mesh_node_8",
+          "plate_mesh_node_11",
+          "plate_mesh_node_38",
+          "plate_mesh_node_40",
+          "plate_mesh_node_37"
+        ],
+        "section_id": "wall_section",
+        "initially_active": false,
+        "formulation": "mindlin_tri6",
+        "constant_traction_kpa": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_traction_kpa": [
+          0.2,
+          -0.1,
+          -0.1
+        ]
+      }
+    ],
+    "rotation_length_scale_m": 2.0,
+    "maximum_condensed_dofs": 100,
+    "rotation_constraints": [],
+    "nodal_loads": [
+      {
+        "node_id": "tip",
+        "boundary_force_kn": [
+          0.0,
+          0.0,
+          -5.0
+        ]
+      }
+    ]
+  }
+}

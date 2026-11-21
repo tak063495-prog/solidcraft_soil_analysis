@@ -1,0 +1,55 @@
+test_normal_child_failure_unlocks (test_p2_resume_ownership.OwnedChild.test_normal_child_failure_unlocks) ... ok
+test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry (test_p2_resume_ownership.OwnedChild.test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry) ... FAIL
+test_status_exception_after_launch_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_status_exception_after_launch_stops_and_waits) ... FAIL
+test_unconfirmed_child_exit_retains_lock_with_owner_record (test_p2_resume_ownership.OwnedChild.test_unconfirmed_child_exit_retains_lock_with_owner_record) ... FAIL
+test_wait_exception_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_wait_exception_stops_and_waits) ... FAIL
+
+======================================================================
+FAIL: test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry (test_p2_resume_ownership.OwnedChild.test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 36, in test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry
+    self.assertFalse(alive(child),'owned child survives parent SIGINT')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : owned child survives parent SIGINT
+
+======================================================================
+FAIL: test_status_exception_after_launch_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_status_exception_after_launch_stops_and_waits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 78, in test_status_exception_after_launch_stops_and_waits
+    def test_status_exception_after_launch_stops_and_waits(self):self.injected('status')
+                                                                 ~~~~~~~~~~~~~^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 72, in injected
+    self.assertIn('terminate',events)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'terminate' not found in ['launch']
+
+======================================================================
+FAIL: test_unconfirmed_child_exit_retains_lock_with_owner_record (test_p2_resume_ownership.OwnedChild.test_unconfirmed_child_exit_retains_lock_with_owner_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 79, in test_unconfirmed_child_exit_retains_lock_with_owner_record
+    def test_unconfirmed_child_exit_retains_lock_with_owner_record(self):self.injected('wait',True)
+                                                                         ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 72, in injected
+    self.assertIn('terminate',events)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'terminate' not found in ['launch', 'wait']
+
+======================================================================
+FAIL: test_wait_exception_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_wait_exception_stops_and_waits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 77, in test_wait_exception_stops_and_waits
+    def test_wait_exception_stops_and_waits(self):self.injected('wait')
+                                                  ~~~~~~~~~~~~~^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_resume_ownership.py", line 72, in injected
+    self.assertIn('terminate',events)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'terminate' not found in ['launch', 'wait']
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.356s
+
+FAILED (failures=4)

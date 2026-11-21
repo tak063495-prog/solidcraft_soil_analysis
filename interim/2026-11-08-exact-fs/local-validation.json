@@ -1,0 +1,72 @@
+{
+  "base_commit": "9f6c228d3b40d02b32b2877f0ed3d0feb9279768",
+  "tested_implementation_commit": "35d1d52f2e6b2a045abc9e9f1b1a94d452bb90fa",
+  "fmt": {
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0
+  },
+  "clippy": {
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0
+  },
+  "release_build": {
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0
+  },
+  "rust_tests": {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "passed": 404,
+    "failed": 0,
+    "ignored": 0,
+    "new_tests": 6
+  },
+  "python_tests": {
+    "command": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "passed": 265,
+    "failed": 0,
+    "skipped": 0,
+    "new_tests": 4
+  },
+  "frozen_sources": 698,
+  "frozen_sources_unchanged_after_tests": true,
+  "production_solver_sha256": "afc5b3f542bd2bd68b9520f5a392780cb23fbf8cdc630f689f71a6ca57dd260e",
+  "measurement_solver_matches_final_release_build": true,
+  "real_section_srm_executed": false,
+  "slope_srm_search_or_virtual_work_recomputed": false,
+  "all_prior_failure_records_preserved": true
+}

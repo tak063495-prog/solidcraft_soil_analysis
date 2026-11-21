@@ -1,0 +1,39 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis)
+    Finished `release` profile [optimized] target(s) in 1m 46s
+     Running tests/joint_birth.rs (target/release/deps/joint_birth-d87f59ab377a2288)
+
+running 6 tests
+test death_freezes_slip_and_dissipation_and_rebirth_has_no_old_reference ... ok
+test every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected ... FAILED
+test every_nodal_projection_and_cone_rejection_is_checked_before_birth ... ok
+test mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy ... FAILED
+test dry_new_mc_body_and_contact_have_separate_births ... ok
+test mode_b_birth_reference_closes_by_pressure_over_kn ... FAILED
+
+failures:
+
+---- every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected stdout ----
+
+thread 'every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected' (2508) panicked at tests/joint_birth.rs:180:5:
+Some("unload: cutback exhausted: numerical solve failed: JOINT rigid mechanism: 1 unrestrained modes in 2 continuum components")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy stdout ----
+
+thread 'mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy' (2573) panicked at tests/joint_birth.rs:49:9:
+Some("unload: cutback exhausted: numerical solve failed: JOINT rigid mechanism: 1 unrestrained modes in 2 continuum components")
+
+---- mode_b_birth_reference_closes_by_pressure_over_kn stdout ----
+
+thread 'mode_b_birth_reference_closes_by_pressure_over_kn' (2622) panicked at tests/joint_birth.rs:87:5:
+Some("unload: cutback exhausted: numerical solve failed: JOINT rigid mechanism: 1 unrestrained modes in 2 continuum components")
+
+
+failures:
+    every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected
+    mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy
+    mode_b_birth_reference_closes_by_pressure_over_kn
+
+test result: FAILED. 3 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+
+error: test failed, to rerun pass `--test joint_birth`

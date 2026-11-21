@@ -1,0 +1,329 @@
+{
+  "schema": "c01-switch-event-study-validation/1",
+  "starting_commit": "2219f906431b66927fdbb39864372f2e8e2ad22d",
+  "passed": false,
+  "c01_decision": "未達",
+  "software_tests_passed": true,
+  "rust": {
+    "success": 463,
+    "failure": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "summary_groups": 72,
+    "checks": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.1796715209998183,
+        "log": "0-fmt.log"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 18.834864085999925,
+        "log": "1-clippy.log"
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 124.22469868200005,
+        "log": "2-build.log"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1886.053637132,
+        "log": "3-test.log"
+      }
+    ]
+  },
+  "python": {
+    "success": 718,
+    "failure": 0,
+    "error": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "expected_failure": 0,
+    "unexpected_success": 0,
+    "tools_tests_included": 2,
+    "discovered_ids": 718,
+    "all_ids_executed_exactly_once": true,
+    "groups": [
+      {
+        "group": "python-core-0",
+        "assigned": 347,
+        "logged": 347,
+        "log_ids_match_assigned": true
+      },
+      {
+        "group": "python-core-1",
+        "assigned": 363,
+        "logged": 363,
+        "log_ids_match_assigned": true
+      },
+      {
+        "group": "python-mean-evidence",
+        "assigned": 4,
+        "logged": 4,
+        "log_ids_match_assigned": true
+      },
+      {
+        "group": "python-spatial-evidence",
+        "assigned": 4,
+        "logged": 4,
+        "log_ids_match_assigned": true
+      }
+    ],
+    "commands": [
+      {
+        "group": "python-core-0",
+        "command": [
+          "python",
+          "tools/run_ci_python_tests.py",
+          "--group",
+          "python-core-0",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/validation-python/python-core-0"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 345.09997468299935
+      },
+      {
+        "group": "python-core-1",
+        "command": [
+          "python",
+          "tools/run_ci_python_tests.py",
+          "--group",
+          "python-core-1",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/validation-python/python-core-1"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 379.87580144799995
+      },
+      {
+        "group": "python-mean-evidence",
+        "command": [
+          "python",
+          "tools/run_ci_python_tests.py",
+          "--group",
+          "python-mean-evidence",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/validation-python/python-mean-evidence"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 877.5589049740001
+      },
+      {
+        "group": "python-spatial-evidence",
+        "command": [
+          "python",
+          "tools/run_ci_python_tests.py",
+          "--group",
+          "python-spatial-evidence",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/validation-python/python-spatial-evidence"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 133.96838155899968
+      }
+    ]
+  },
+  "source_fingerprints": {
+    "rust_files": 162,
+    "rust_unchanged_during_checks": true,
+    "python_and_shared_files": 4358,
+    "python_and_shared_unchanged_during_checks": true,
+    "python_tested_source_commit": "9aeabee382161a1599ca58a8f7ad45484daeddd0",
+    "post_test_registration_changes_expected": [
+      "interim/2026-12-10-ci-p601-inventory-fix/inventory.toml",
+      "interim/2026-12-06-p6-01-status-reconciliation/audit_status.py:SUPPLEMENTAL_SHA256 only"
+    ]
+  },
+  "preservation": {
+    "base_commit": "2219f906431b66927fdbb39864372f2e8e2ad22d",
+    "old_paths": 7183,
+    "old_jsons": 2725,
+    "old_jsons_unchanged": 2725,
+    "unchanged": 7178,
+    "changed_paths": [
+      "interim/2026-12-06-p6-01-status-reconciliation/audit_status.py",
+      "interim/2026-12-10-ci-p601-inventory-fix/inventory.toml",
+      "src/joints_global_step.rs",
+      "src/stages.rs",
+      "tests/joint_global_step.rs"
+    ],
+    "deleted": 0,
+    "mode_changes": 0,
+    "proof_sha256": "9aaf7578adae68d8e91ad37f233123e527906c13febce686a5410f3111e325a3"
+  },
+  "validation_files": {
+    "validation/initial-archive-replay.log": {
+      "bytes": 214,
+      "sha256": "1a08b9b864988f531d27c000d3ec2c7c51e0d87c84dbcf56fd07f8b951eb7781"
+    },
+    "validation/initial-inventory-audit.tsv": {
+      "bytes": 138,
+      "sha256": "06d1cba789f40d6a0c2f25f47d65ba07aebdcf5532b9c4557cd847030cad4f57"
+    },
+    "validation/preservation.tsv": {
+      "bytes": 900605,
+      "sha256": "9aaf7578adae68d8e91ad37f233123e527906c13febce686a5410f3111e325a3"
+    },
+    "validation/python/source-after.json": {
+      "bytes": 602779,
+      "sha256": "71206d6b4e316ec6f748bd03a520758fb9109c9461196b761c70cf76b213a178"
+    },
+    "validation/python/source-before.json": {
+      "bytes": 602779,
+      "sha256": "71206d6b4e316ec6f748bd03a520758fb9109c9461196b761c70cf76b213a178"
+    },
+    "validation/python-core-0/process.log": {
+      "bytes": 68889,
+      "sha256": "76010034a4e3609e27338258ca55045cfeb0f629e1ed107009ae012a7ffda093"
+    },
+    "validation/python-core-0/python-tests.log": {
+      "bytes": 58096,
+      "sha256": "0bdb0932fffad13c2651a0e3ee69e992d07d3b824c31d7e9e0056e9955ef2bf5"
+    },
+    "validation/python-core-0/validation.json": {
+      "bytes": 154411,
+      "sha256": "829eb72105af63460cdd6e0393e6b0da763e6980f6e5bf1032f48a34b2307914"
+    },
+    "validation/python-core-1/process.log": {
+      "bytes": 85336,
+      "sha256": "987f8d171d3cd8dd6b9d5157f7522142ac0a5ad300d90313f8084b43329b15a9"
+    },
+    "validation/python-core-1/python-tests.log": {
+      "bytes": 59657,
+      "sha256": "50cf962166f13d5a8b2fc4c1b84331ee41c4dceb88138b3e81d843803d7d64f2"
+    },
+    "validation/python-core-1/validation.json": {
+      "bytes": 154411,
+      "sha256": "7b8e8f0b02053373d315351968733baaec69a63fad537f7784509f34bbcb77f6"
+    },
+    "validation/python-mean-evidence/process.log": {
+      "bytes": 11058,
+      "sha256": "3c3d86259858a247b225b620c349cfb7be9217010a5917a6677b3aae7ea38935"
+    },
+    "validation/python-mean-evidence/python-tests.log": {
+      "bytes": 826,
+      "sha256": "f708a7c6a229fbb9b4d235cad3fa0cd40ef90b372a3fa5d9e98e15510c840ea7"
+    },
+    "validation/python-mean-evidence/validation.json": {
+      "bytes": 154414,
+      "sha256": "5f9881edb71925edcb29199b8aa16a9657ced3f84147239185d01d877ec6946c"
+    },
+    "validation/python-spatial-evidence/process.log": {
+      "bytes": 77653,
+      "sha256": "9532e00a13e3e931eb4387ed99dfb57f8f7f413527085b541ddf460ad7f9b61f"
+    },
+    "validation/python-spatial-evidence/python-tests.log": {
+      "bytes": 794,
+      "sha256": "32562167f0ba8730c9fe4c3de560dd596b80afff7d2590fe5d57f82b00da9662"
+    },
+    "validation/python-spatial-evidence/validation.json": {
+      "bytes": 154418,
+      "sha256": "2a0cfd7007bb62094a6590faa8fa3b3d716f726a16efd3306ed593278b128ac1"
+    },
+    "validation/rust/0-fmt.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation/rust/1-clippy.log": {
+      "bytes": 143,
+      "sha256": "3a065dcc73b16d7d74976f3a062b722c4e379121344d079afb5c0cb81b205c9b"
+    },
+    "validation/rust/2-build.log": {
+      "bytes": 133,
+      "sha256": "a8ec12454521ceb8d62e4815554abbd874ff181a0610d0048478e50fe4766a90"
+    },
+    "validation/rust/3-test.log": {
+      "bytes": 54929,
+      "sha256": "521b7624f9b15a141cc7682e4d40d449eb8bdca9c98abb3709b7d0d051815120"
+    },
+    "validation/rust/source-after.json": {
+      "bytes": 15437,
+      "sha256": "c567408f10f9a9de833f5459e5d50427bce0352989da91f6a5a3cf9eb68cd705"
+    },
+    "validation/rust/source-before.json": {
+      "bytes": 15437,
+      "sha256": "c567408f10f9a9de833f5459e5d50427bce0352989da91f6a5a3cf9eb68cd705"
+    }
+  },
+  "development_records": {
+    "not_added_to_final_counts": true,
+    "rust_prototype_tests": [
+      {
+        "success": 1,
+        "failure": 1
+      },
+      {
+        "success": 1,
+        "failure": 1
+      },
+      {
+        "success": 2,
+        "failure": 0
+      }
+    ],
+    "python_targeted_success": 3,
+    "retained_in": "retained-failures/",
+    "raw_log_final_blank_line_preserved": true,
+    "git_diff_whitespace_checked_for_source_text": true
+  },
+  "environment": {
+    "python": "3.13.17",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "packages": {
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "gmsh": "4.15.2",
+      "meshio": "5.3.5"
+    },
+    "powershell": "7.7.0",
+    "powershell_download_sha256": "c89d9c682d2c403dfe726f3df948e359675235a5bd6fab535776de69729ca0cb",
+    "openblas_threads": 1,
+    "mkl_threads": 1,
+    "omp_threads": 1,
+    "cargo_build_jobs": 2,
+    "rust_test_threads": 2
+  },
+  "c02_complete": false,
+  "c03_complete": false,
+  "c04_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "ab_items_completed": false,
+  "user_pc_runs_executed": false,
+  "post_registration_audit_file": "validation/final-inventory-audit.tsv",
+  "post_registration_audit_not_double_counted": true,
+  "windows_ci_after_push": "未確定",
+  "merge_performed": false
+}

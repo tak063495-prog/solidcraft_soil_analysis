@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+    "title": "[P2] interim安全停止の子孫判定が親PID再利用を見逃し、無関係processを所有扱いする",
+    "issue_number": 5,
+    "body": "## 対象・優先度\n- **P2（安全停止の所有process誤認。該当条件では無関係な作業を終了する危険）**\n- mainコミット `ff72bbac52f97e375626ce2fed892627dd1e7ccb` 内の**interim候補**。production数値solverの不具合とは区別します。\n- パス: `interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py`\n- blob: `daf8d4088dc2ae2fa1e359ee50a880da7317e457`\n\n## 根拠\n[所有集合の下向き拡張（151–155行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L151-L155) は、`ParentProcessId in owned` だけで子孫を追加します。現在そのPIDを使っている親の生成時刻と、子の生成時刻を比較していません。\n\n[上向き探索（143–148行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L143-L148) には逆転時刻の拒否が既にありますが、下向きにはありません。[後段の保持handle検査（173–188行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L173-L188) は各process自身のimage/生成時刻がCIM snapshotと一致することを確認するだけなので、snapshot取得前の**親PID再利用で誤った親子関係**までは検証しません。その後[550–555行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L550-L555) は保持したlive handle全件を `TerminateProcess` に渡します。特定登録solver jobに対するargv/保存チェックはありますが、すべてのhandleの親子関係を再検証するものではありません。\n\nMicrosoft公式 [Win32_Process / ParentProcessId](https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-process#properties) も、親PIDが終了後に再利用されて別processを指すことと、CreationDateで親子の時間順序を確認する方法を説明しています。\n\n## 発生条件・独立再現\n1. 無関係な旧processのPIDが100で、そこから子PID200が22:00に起動。\n2. 旧親100が終了し、その後23:00に起動した今回の正規所有processへPID100が再利用される。PID200は存続し、ParentProcessId=100のまま。\n3. 正規receiptで現在のPID100は正しく所有seedになる。\n4. 現行151–155行のループは、現在の親より古いPID200まで所有集合に追加。\n\n固定ソースから**当該ループをそのまま抽出した純データ試験**で確認しました：\n```text\nowned initially = {100}\nrecord 100: ParentProcessId=1,   Created=23:00\nrecord 200: ParentProcessId=100, Created=22:00\nexpected owned = {100}\nactual owned   = {100, 200}\n```\n当該processを終了させるOS呼出やsignalは一切実行していません。無関係なPID200自身はCIM取得後も存続しimage/生成時刻が変化しないので、上記handle identityチェックでは除外されません。実際に終了へ進むには `--execute`、利用率条件・事前保存等の他のguardが通り、handleを開ける条件も必要です。\n\n## 影響・既存Issueとの区別\n誤分類した無関係processが終了対象に入るため、その未保存作業を失う可能性があります。最後のreceiptの `unrelated_processes_touched=False` も、この条件では保証できません。\n既存 #1 の親SIGINT時にlive子を残してlockを解除する問題とは、対象ファイル・原因・修正点が異なります。また候補の未受入を指摘するだけでなく、既に実装された所有判定の具体的誤分類を示しています。\n\n## 修正案\n各親子edgeで、現に所有する親のidentityと生成時刻を確認し、少なくとも `parent.Created <= child.Created` を必須にしてください。不明・欠落・parse不能は所有扱いにしないfail-closedとし、既存の保持handleによる本人identity検査も維持してください。可能なら起動時にJob Object等で所有process treeを追跡し、PIDだけの事後推測を避けます。\n\n## 回帰試験・未検証範囲\n- PID再利用で「子が現在の親より古い」ケースを除外。\n- 正しい時刻順の子・孫は追加、excluded processは除外。\n- Created欠落/parse不能は拒否、CIM取得後の本人PID再利用も現行handle検査で拒否。\n- Windowsの実終了試験は隔離した使い捨てprocessだけで確認し、無関係processを終了しないこと。\n- **実行確認は所有集合計算の純データ試験のみ**。Windows CIM/handle/実停止、保存復旧の統合、実solver/Excelは未実行。終了経路は静的追跡で、作者の保存結果を独立実行確認と混同していません。\n",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 2,
+    "created_at": "2026-10-30T23:27:15Z",
+    "updated_at": "2026-11-09T23:23:04Z",
+    "closed_at": "2026-11-09T22:48:34Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+    "display_title": "[P2] interim安全停止の子孫判定が親PID再利用を見逃し、無関係processを所有扱いする"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+  "title": "[P2] interim安全停止の子孫判定が親PID再利用を見逃し、無関係processを所有扱いする",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+  "display_title": "[P2] interim安全停止の子孫判定が親PID再利用を見逃し、無関係processを所有扱いする"
+}

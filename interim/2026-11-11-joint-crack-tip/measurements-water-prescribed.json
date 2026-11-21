@@ -1,0 +1,163 @@
+{
+  "schema": "soil-fem-joint-crack-tip-water/1",
+  "passed": true,
+  "mode": "prescribed",
+  "results": {
+    "independent_water_audit": {
+      "schema": "soil-fem-wet-joint-independent-verification/1",
+      "passed": true,
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "relative_force_residual": 3.0803650485249514e-14,
+          "physical_load_component_error_kn": 1.4210854715202004e-14,
+          "maximum_normalized_yield": -1.7321173903188718,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 1.9999999999999996,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "wet_compression",
+          "relative_force_residual": 2.930618805133895e-14,
+          "physical_load_component_error_kn": 1.4210854715202004e-14,
+          "maximum_normalized_yield": -1.7321173903188718,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 1.9999999999999996,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "darcy",
+          "relative_force_residual": 2.927506979989028e-14,
+          "physical_load_component_error_kn": 1.4210854715202004e-14,
+          "maximum_normalized_yield": -1.7321173903188718,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 1.9999999999999996,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "hydrostatic",
+          "relative_force_residual": 2.813520074137925e-14,
+          "physical_load_component_error_kn": 1.432187701766452e-14,
+          "maximum_normalized_yield": -1.7321173903188718,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 1.9999999999999996,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "wet_remove",
+          "relative_force_residual": 3.021689854495817e-14,
+          "physical_load_component_error_kn": 1.432187701766452e-14,
+          "maximum_normalized_yield": -1.731967475405989,
+          "cut_surface_area_m2": 1.9999999999999996,
+          "loaded_surface_area_m2": 0.0,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            -39.2266
+          ]
+        }
+      ],
+      "independent_darcy_solutions": [
+        {
+          "maximum_head_error_m": 0.0,
+          "maximum_flux_error_m_s": 0.0,
+          "maximum_pressure_head_error_m": 4.440892098500626e-16,
+          "independent_water_balance": 0.0
+        }
+      ],
+      "maximum_physical_load_component_error_kn": 1.432187701766452e-14,
+      "maximum_exported_pressure_difference_kpa": 0.0,
+      "maximum_independent_hydraulic_head_difference_m": 0.0,
+      "scope": "Independent input-based head constraints and dense Darcy FEM, physical pressure trace and wet-face integration, stored material/contact stress and energy/force/rigid-support reassembly, output readback. No independent general plastic mechanics or unsaturated joint PDE is claimed."
+    },
+    "independent_3d": {
+      "passed": true,
+      "scope": "submerged closed stick; elastic MC soil/structure; hydrostatic, steady Darcy and one-side removal",
+      "frames": [
+        {
+          "frame": "initial_equilibrated",
+          "displacement_relative_l2": 7.698528352753107e-14,
+          "all_gp_stress_relative_l2": 3.5327740805111196e-15,
+          "all_gp_contact_relative_l2": 7.884940054692498e-14,
+          "linear_residual": 2.864592212369242e-16,
+          "reassembled_residual": 3.096778847866801e-14
+        },
+        {
+          "frame": "wet_compression",
+          "displacement_relative_l2": 7.698528352753107e-14,
+          "all_gp_stress_relative_l2": 3.5327740805111196e-15,
+          "all_gp_contact_relative_l2": 7.884940054692498e-14,
+          "linear_residual": 2.864592212369242e-16,
+          "reassembled_residual": 2.9462346780116744e-14
+        },
+        {
+          "frame": "darcy",
+          "displacement_relative_l2": 7.698953739914934e-14,
+          "all_gp_stress_relative_l2": 3.532352033080139e-15,
+          "all_gp_contact_relative_l2": 7.873026443140435e-14,
+          "linear_residual": 3.211347237837878e-16,
+          "reassembled_residual": 2.9431181655892836e-14
+        },
+        {
+          "frame": "hydrostatic",
+          "displacement_relative_l2": 7.654093683387674e-14,
+          "all_gp_stress_relative_l2": 3.6137363624900845e-15,
+          "all_gp_contact_relative_l2": 7.873397503248251e-14,
+          "linear_residual": 3.037887226584658e-16,
+          "reassembled_residual": 2.8381900803005052e-14
+        },
+        {
+          "frame": "wet_remove",
+          "displacement_relative_l2": 2.98861955230577e-14,
+          "all_gp_stress_relative_l2": 1.4686269624413703e-14,
+          "all_gp_contact_relative_l2": 7.873397503248251e-14,
+          "linear_residual": 8.953463445109016e-16,
+          "reassembled_residual": 3.0542147602828975e-14
+        }
+      ],
+      "head_max_abs_error_m": 0.0
+    },
+    "history": {
+      "restarts": [
+        {
+          "stage": "wet_compression",
+          "accepted_increment": 5,
+          "exact_except_elapsed_seconds": true
+        },
+        {
+          "stage": "darcy",
+          "accepted_increment": 9,
+          "exact_except_elapsed_seconds": true
+        },
+        {
+          "stage": "hydrostatic",
+          "accepted_increment": 11,
+          "exact_except_elapsed_seconds": true
+        },
+        {
+          "stage": "wet_remove",
+          "accepted_increment": 13,
+          "exact_except_elapsed_seconds": true
+        }
+      ],
+      "intended_rejections": 2,
+      "clean_accepted_path_exact": true
+    }
+  }
+}

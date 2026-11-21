@@ -1,0 +1,23 @@
+current small blobs materialized
+ledger keys ['schema', 'base_commit', 'recorded_date_jst', 'destination_label', 'sources', 'evidence', 'rows', 'claims', 'policy', 'document_observations', 'ci_records', 'external_references', 'provenance']
+Traceback (most recent call last):
+  File "/workspace/work/a04/prepare_git_sources.py", line 29, in <module>
+    print('pinned',len(list(pool.map(get,sources))),flush=True)
+                       ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/concurrent/futures/_base.py", line 625, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/concurrent/futures/_base.py", line 318, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/concurrent/futures/_base.py", line 453, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/concurrent/futures/_base.py", line 402, in __get_result
+    raise self._exception
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/workspace/work/a04/prepare_git_sources.py", line 19, in get
+    if p.returncode:raise RuntimeError((commit,path,p.stderr.decode()))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: ('8342762bd714e33523ce5fef772572699fc21881', 'docs/P6_STATUS.ja.md', '')

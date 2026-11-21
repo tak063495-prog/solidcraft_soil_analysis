@@ -1,0 +1,50 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.6882156990000112
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 7.069247819999987
+  },
+  {
+    "name": "build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 85.94814987500001
+  },
+  {
+    "name": "rust",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--all-targets"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1168.578043351
+  }
+]

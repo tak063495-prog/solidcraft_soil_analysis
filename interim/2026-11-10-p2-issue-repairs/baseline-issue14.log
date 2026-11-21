@@ -1,0 +1,230 @@
+test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) ... 
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', count=1, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', count=162, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', shape=[]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', shape=[0.0]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', shape=[[0.0, 0.0, 0.0]]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', count=1, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', count=162, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', shape=[]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', shape=[0.0]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', shape=[[0.0, 0.0, 0.0]]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', count=1, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', count=162, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', shape=[0.0]) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', shape=[[0.0, 0.0, 0.0]]) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', count=1, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', count=162, value=nan) ... FAIL
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', shape=[]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', shape=[0.0]) ... ERROR
+  test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', shape=[[0.0, 0.0, 0.0]]) ... ERROR
+test_normal_api_and_cli (test_p2_soil_source.SoilGP.test_normal_api_and_cli) ... ok
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', shape=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 58, in audit
+    max_h = max(max_h, abs(point['head_m']-head(z)))
+                           ~~~~~~~~~~~~~~~^~~~~~~~
+TypeError: unsupported operand type(s) for -: 'list' and 'float'
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', shape=[0.0])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 58, in audit
+    max_h = max(max_h, abs(point['head_m']-head(z)))
+                           ~~~~~~~~~~~~~~~^~~~~~~~
+TypeError: unsupported operand type(s) for -: 'list' and 'float'
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', shape=[[0.0, 0.0, 0.0]])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 58, in audit
+    max_h = max(max_h, abs(point['head_m']-head(z)))
+                           ~~~~~~~~~~~~~~~^~~~~~~~
+TypeError: unsupported operand type(s) for -: 'list' and 'float'
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', shape=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 59, in audit
+    max_p = max(max_p, abs(point['pressure_head_m']-(head(z)-z)))
+                           ~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'list' and 'float'
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', shape=[0.0])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 59, in audit
+    max_p = max(max_p, abs(point['pressure_head_m']-(head(z)-z)))
+                           ~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'list' and 'float'
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', shape=[[0.0, 0.0, 0.0]])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 59, in audit
+    max_p = max(max_p, abs(point['pressure_head_m']-(head(z)-z)))
+                           ~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~
+TypeError: unsupported operand type(s) for -: 'list' and 'float'
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', shape=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 56, in audit
+    z = point['position_m'][2]
+        ~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', shape=[0.0])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 56, in audit
+    z = point['position_m'][2]
+        ~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', shape=[[0.0, 0.0, 0.0]])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 56, in audit
+    z = point['position_m'][2]
+        ~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', count=1, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='head_m', count=162, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', count=1, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='pressure_head_m', count=162, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', count=1, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', count=162, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', shape=[0.0])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 62, in audit
+    assert head_error < 1e-8 and max_h < 1e-8 and max_p < 1e-8 and max_q < 1e-12
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='darcy_flux_m_s', shape=[[0.0, 0.0, 0.0]])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 61, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises(ValueError):audit(*values)
+                                       ~~~~~^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_soil_source_column.py", line 62, in audit
+    assert head_error < 1e-8 and max_h < 1e-8 and max_p < 1e-8 and max_q < 1e-12
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', count=1, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+======================================================================
+FAIL: test_nonfinite_mismatch_and_shape_api_and_cli (test_p2_soil_source.SoilGP.test_nonfinite_mismatch_and_shape_api_and_cli) (key='position_m', count=162, value=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_soil_source.py", line 55, in test_nonfinite_mismatch_and_shape_api_and_cli
+    with self.assertRaises((ValueError,AssertionError)):audit(*values)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>) not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 4.871s
+
+FAILED (failures=10, errors=9)

@@ -1,0 +1,128 @@
+{
+  "starting_commit": "113d83b8a37b3b68ce46eb00b6664f042334eae0",
+  "linux": {
+    "rust": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "passed": 414,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 0
+    },
+    "python": {
+      "unique_tests": 436,
+      "tests_directory_tests": 434,
+      "tools_directory_tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "groups": [
+        {
+          "group": "python-core-0",
+          "tests_run": 217,
+          "exit_code": 0,
+          "elapsed_seconds": 291.05638347600006
+        },
+        {
+          "group": "python-core-1",
+          "tests_run": 209,
+          "exit_code": 0,
+          "elapsed_seconds": 113.8771605500001
+        },
+        {
+          "group": "python-mean-evidence",
+          "tests_run": 4,
+          "exit_code": 0,
+          "elapsed_seconds": 800.599948988
+        },
+        {
+          "group": "python-spatial-evidence",
+          "tests_run": 4,
+          "exit_code": 0,
+          "elapsed_seconds": 118.31241996200015
+        }
+      ],
+      "supplementary_utf8_tests": 2,
+      "final_discovery_union_exact": true
+    },
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    "release_build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0
+    }
+  },
+  "sources": {
+    "root_sources_frozen_before_group_run": 776,
+    "unchanged_frozen_root_sources": 776,
+    "added_root_source": [
+      "tests/test_historical_utf8_isolation.py"
+    ],
+    "final_root_sources": 777,
+    "unchanged_preexisting_manual_drivers": 8,
+    "all_sources_frozen_before_all_tests": false,
+    "notes": "Rust sources/tests are unchanged from the starting commit. UTF-8 regression tests and two read-only postprocessors were added later; their actual validations are separately recorded."
+  },
+  "initial_incomplete_python_run": {
+    "tests_run": 420,
+    "errors": 4,
+    "exit_code": 1,
+    "cause": "Four missing historical archive files during sparse retrieval; data acquired before final groups. No assertion or tolerance changed."
+  },
+  "historical_utf8_fixed_child": {
+    "exit_code": 0,
+    "real_sealed_measurements_byte_identical": true,
+    "isolated_flag": 1,
+    "utf8_flag": 1,
+    "archive_entry_verified_extraction_reused": true
+  },
+  "non_numerical_setup_failure": {
+    "action": "copy supplemental historical streams via hardlink",
+    "error": "EXDEV between /tmp and workspace; before numerical child execution",
+    "resolution": "recreated the temporary hardlink tree within /tmp; fixed child succeeded"
+  },
+  "archive": {
+    "verified_entries": 2345,
+    "measurements_byte_identical": true,
+    "joint_propagation_checks_exact": true,
+    "numerical_acceptance": false
+  },
+  "windows": {
+    "starting_run_id": 42727298926,
+    "starting_python_cancelled": true,
+    "starting_python_utf8_error_observed": true,
+    "starting_aggregate_failed": true,
+    "current_head_success_confirmed": false
+  },
+  "numerical_acceptance": false
+}

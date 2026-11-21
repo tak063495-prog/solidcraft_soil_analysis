@@ -1,0 +1,56 @@
+{
+  "complete": true,
+  "archive_parts_verified": 5,
+  "entries_verified": 1462,
+  "measurements_object_exact": true,
+  "cause_diagnostics_object_exact": true,
+  "isolated_sealed_source": true,
+  "new_solve": false,
+  "real_checkpoint_resume_executed_by_replay": false,
+  "processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-c",
+        "import pathlib,runpy,sys;p=sys.argv[1];sys.path.insert(0,str(pathlib.Path(p).parent));sys.argv=sys.argv[1:];runpy.run_path(p,run_name='__main__')",
+        "/workspace/solidcraft_soil_analysis/work/c04/sealed-replay/unpacked/source/interim/2026-11-22-wet-joint-transient-water/measure.py",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04/sealed-replay/unpacked/data/final",
+        "--report",
+        "/workspace/solidcraft_soil_analysis/work/c04/sealed-replay/remeasured.json",
+        "--water-steps",
+        "8",
+        "16",
+        "32",
+        "--hydraulic-steps",
+        "4",
+        "8",
+        "16"
+      ],
+      "pid": 280420,
+      "exit_code": 0,
+      "elapsed_seconds": 119.08675856799982
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-I",
+        "-X",
+        "utf8",
+        "-c",
+        "import pathlib,runpy,sys;p=sys.argv[1];sys.path.insert(0,str(pathlib.Path(p).parent));sys.argv=sys.argv[1:];runpy.run_path(p,run_name='__main__')",
+        "/workspace/solidcraft_soil_analysis/work/c04/sealed-replay/unpacked/source/interim/2026-11-22-wet-joint-transient-water/diagnose.py",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04/sealed-replay/unpacked/data/final",
+        "--report",
+        "/workspace/solidcraft_soil_analysis/work/c04/sealed-replay/cause-diagnostics.json"
+      ],
+      "pid": 379151,
+      "exit_code": 0,
+      "elapsed_seconds": 1.9232690540002295
+    }
+  ]
+}

@@ -1,0 +1,294 @@
+{
+  "schema": "c02-cause-validation/1",
+  "platform": "Linux managed cloud",
+  "starting_commit": "026a4302fc5ed9b65eead8a493b1e11850b8b9ee",
+  "scientific_payload_commit": "5e8a21f6187d03b0cfb85d4396965126e0ba8342",
+  "registered_payload_commit": "f6d11e99af1b155a17e1c5cf1798d7f0a1dc5ed8",
+  "software_validation_passed": true,
+  "c02_passed": false,
+  "c02_judgement": "未達",
+  "c01_c03_c04_accepted": false,
+  "nc01_accepted": false,
+  "p6_complete": false,
+  "ab_items_completed": false,
+  "pc_executed": false,
+  "windows_ci": "push後の新先端Windows CIは未確定",
+  "rust": {
+    "discovered": 466,
+    "executed": 466,
+    "unexecuted": 0,
+    "doc_tests": 0,
+    "success": 466,
+    "failure": 0,
+    "skip": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "commands": [
+      {
+        "name": "fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.9348433079999268
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 16.076244023000072
+      },
+      {
+        "name": "build",
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 103.8721895220001
+      },
+      {
+        "name": "rust-inventory",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--all-targets",
+          "--",
+          "--list"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 702.012582891
+      },
+      {
+        "name": "rust-all-targets",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--all-targets"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 922.4885888640001
+      },
+      {
+        "name": "rust-doc",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--doc"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.6650160660001347
+      }
+    ]
+  },
+  "python": {
+    "discovered": 761,
+    "success": 761,
+    "failure": 0,
+    "error": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "expected_failure": 0,
+    "unexpected_success": 0,
+    "tools_tests_included": true,
+    "disjoint_complete_inventory_verified": true,
+    "groups": {
+      "python-core-0": {
+        "tests_run": 358,
+        "assigned_total": 358,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 253.64472222099994
+      },
+      "python-core-1": {
+        "tests_run": 379,
+        "assigned_total": 379,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 315.09182889299973
+      },
+      "python-mean-evidence": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 790.6718532900004
+      },
+      "python-spatial-evidence": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 118.4086692310002
+      },
+      "python-c01-switch": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 49.465452438000284
+      },
+      "python-c01-path": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 78.64334968799994
+      },
+      "python-c01-cause": {
+        "tests_run": 8,
+        "assigned_total": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 64.60682512400035
+      }
+    },
+    "new_test_count": 13
+  },
+  "retained_nonpassing_attempts": {
+    "python-core-0": {
+      "tests_run": 358,
+      "success": 357,
+      "assertion_failure": 0,
+      "error": 0,
+      "skip": 1,
+      "strict_runner_exit_code": 1,
+      "reason": "PowerShell unavailable; no source/test/NC setting was changed; complete group retried after portable runtime was added"
+    },
+    "python-core-1": {
+      "tests_run": 379,
+      "success": 378,
+      "assertion_failure": 0,
+      "error": 0,
+      "skip": 1,
+      "strict_runner_exit_code": 1,
+      "reason": "PowerShell unavailable; no source/test/NC setting was changed; complete group retried after portable runtime was added"
+    },
+    "python-core-0-pid-publication-race": {
+      "tests_run": 358,
+      "success": 357,
+      "assertion_failure": 0,
+      "error": 1,
+      "skip": 0,
+      "strict_runner_exit_code": 1,
+      "reason": "Existing worker fixture publishes its PID file before writing content; exists-only polling observed an empty file once. Source/tests/criteria unchanged. Single-test preflight and complete sequential group were rerun. Failed attempt and traceback retained."
+    }
+  },
+  "powershell": {
+    "version": "7.5.4",
+    "package_url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz",
+    "package_sha256": "1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef",
+    "binary_sha256": "e0c6c82153c6655a842602be4ea7607d4e3a137b1956668ef44d1b1b7bf939b8",
+    "portable_workspace_install": true,
+    "home_changed": false,
+    "nc_specific_environment_settings_changed": false
+  },
+  "separate_preflight": {
+    "pid_publication_preflight": {
+      "success": 1,
+      "failure": 0,
+      "unexecuted": 0,
+      "skip": 0
+    },
+    "powershell_gate_preflight": {
+      "success": 2,
+      "failure": 0,
+      "unexecuted": 0,
+      "skip": 0
+    },
+    "initial_math_before_target_branch": {
+      "success": 9,
+      "failure": 0,
+      "unexecuted": 0,
+      "skip": 0
+    },
+    "target_development_runs": [
+      {
+        "success": 9,
+        "failure": 0,
+        "unexecuted": 0,
+        "skip": 0
+      },
+      {
+        "success": 11,
+        "failure": 0,
+        "unexecuted": 0,
+        "skip": 0
+      },
+      {
+        "success": 13,
+        "failure": 0,
+        "unexecuted": 0,
+        "skip": 0
+      }
+    ],
+    "not_double_counted_in_full_suite": true
+  },
+  "sources": {
+    "full_verification_source_count": 898,
+    "frozen_before_full_python": true,
+    "full_source_fingerprints_unchanged": true,
+    "fingerprint_check_stage": "At completion of all seven successful formal Python groups, before final fixed-commit ledger registration. The subsequent sole audit_status.py pin update is verified by repeated P6 checks recorded separately.",
+    "numerical_source_count": 793,
+    "numerical_source_fingerprints_unchanged": true,
+    "rust_source_tree_identical_to_starting_commit": true,
+    "additional_mask_check": "A separate read-only robustness producer was added during the suite; it is not imported by any test. Its code and sealed-input/output SHA are recorded in validation/extra-mask-check-provenance.json. No discovered ID or imported numerical source changed."
+  },
+  "p601_payload_integrity_verified": true,
+  "new_equilibrium_paths_completed": 8,
+  "new_equilibrium_failures": 0,
+  "finite_local_replays_completed": 20,
+  "independent_finest_768_solved": false,
+  "cloud_required_diagnostics_remaining": false,
+  "nc_code_or_settings_changed": false,
+  "production_defaults_changed": false,
+  "old_records_preserved": true,
+  "preparation_failures": "Retained separately in failure-record.json and validation/preparation-followup.txt; no failed preparation attempt is counted as formal test success."
+}

@@ -1,0 +1,242 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "b01_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "c6b1176b1147b8f242ef979f6c4a6a70e6829579",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 913,
+    "executed": 913,
+    "passed": 913,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 6523,
+      "exit_code": 0,
+      "elapsed_seconds": 0.9123311729999841
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 6534,
+      "exit_code": 0,
+      "elapsed_seconds": 31.859781277000025
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 7080,
+      "exit_code": 0,
+      "elapsed_seconds": 1304.753628553
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 21822,
+      "exit_code": 0,
+      "elapsed_seconds": 3.33327761999999
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 22290,
+      "exit_code": 0,
+      "elapsed_seconds": 1306.561880919
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 875415,
+      "exit_code": 0,
+      "elapsed_seconds": 2.618451716999971
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-core0-retry"
+      ],
+      "pid": 586935,
+      "exit_code": 0,
+      "elapsed_seconds": 432.2486857409999,
+      "reason": "Historical fixed blob cache restored; no code or tolerance changed."
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-full/python/python-core-1"
+      ],
+      "pid": 20932,
+      "exit_code": 0,
+      "elapsed_seconds": 599.832292153
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-full/python/python-mean-evidence"
+      ],
+      "pid": 368461,
+      "exit_code": 0,
+      "elapsed_seconds": 1150.5022220390001
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-full/python/python-spatial-evidence"
+      ],
+      "pid": 452905,
+      "exit_code": 0,
+      "elapsed_seconds": 160.53747777699982
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-full/python/python-c01-switch"
+      ],
+      "pid": 553679,
+      "exit_code": 0,
+      "elapsed_seconds": 65.26133880799989
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-full/python/python-c01-path"
+      ],
+      "pid": 610025,
+      "exit_code": 0,
+      "elapsed_seconds": 118.7739206680003
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b01follow-full/python/python-c01-cause"
+      ],
+      "pid": 700106,
+      "exit_code": 0,
+      "elapsed_seconds": 106.17364588400005
+    }
+  ],
+  "source_count": 1564,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true,
+  "python_selection_policy": "One failed shard was repeated after restoring three SHA-verified historical blobs. Select that successful shard and the other six original successful shards, with identical discovery/assignment IDs.",
+  "python_retained_first_attempt": {
+    "discovered": 913,
+    "executed": 913,
+    "passed": 912,
+    "failures": 0,
+    "errors": 1,
+    "skipped": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "python_raw_execution_attempts_in_full_groups": 1339,
+  "python_retried_group": "python-core-0",
+  "python_retried_group_test_executions": 426,
+  "retained_non_full_preflight_attempts": [
+    {
+      "name": "P603 fixed-cache recovery initial retry",
+      "tests_run": 19,
+      "passed": 18,
+      "errors": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "P603 fixed-cache recovery verified retry",
+      "tests_run": 19,
+      "passed": 19,
+      "errors": 0,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "full_test_source_commit": "4b2e78b2d2beb24274ae168893981adecb0a3e5e",
+  "full_python_sources_unchanged": true
+}

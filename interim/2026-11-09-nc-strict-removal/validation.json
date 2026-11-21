@@ -1,0 +1,304 @@
+{
+  "schema": "soil-fem-nc-strict-followup-validation/1",
+  "passed": false,
+  "history_converged": false,
+  "software_checks_passed": true,
+  "rust_passed": 23,
+  "python_passed": 20,
+  "failed_tests_after_correction": 0,
+  "ignored_or_skipped_after_correction": 0,
+  "root_lib_filtered_out": 52,
+  "full_rust_suite_executed": false,
+  "full_python_suite_executed": false,
+  "processes": [
+    {
+      "name": "root-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.5659873110000717,
+      "rust_summaries": [],
+      "python_tests": null
+    },
+    {
+      "name": "root-linalg",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--lib",
+        "linalg::tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 37.97516488500003,
+      "rust_summaries": [
+        [
+          "ok",
+          "8",
+          "0",
+          "0",
+          "0",
+          "52"
+        ]
+      ],
+      "python_tests": null
+    },
+    {
+      "name": "root-midpoint",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "mcc_midpoint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.56190529200012,
+      "rust_summaries": [
+        [
+          "ok",
+          "10",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "python_tests": null
+    },
+    {
+      "name": "root-free-contact",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "free_contact"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 19.116970949000006,
+      "rust_summaries": [
+        [
+          "ok",
+          "2",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "python_tests": null
+    },
+    {
+      "name": "isolated-linear",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/retain/Cargo.toml",
+        "--target-dir",
+        "/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/target",
+        "--test",
+        "nc_linear_experiment"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 24.685367133,
+      "rust_summaries": [
+        [
+          "ok",
+          "3",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "python_tests": null
+    },
+    {
+      "name": "isolated-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/retain/Cargo.toml",
+        "--target-dir",
+        "/workspace/solidcraft_soil_analysis/work/nc-strict-removal/experiment/target",
+        "--example",
+        "linear_probe",
+        "--example",
+        "nc_stop_probe",
+        "--test",
+        "nc_linear_experiment",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 11.758086221999974,
+      "rust_summaries": [],
+      "python_tests": null
+    },
+    {
+      "name": "new-audit-guards",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "/workspace/solidcraft_soil_analysis/interim/2026-11-09-nc-strict-removal/test_audit.py",
+        "--evidence",
+        "/workspace/solidcraft_soil_analysis/work/nc-strict-removal",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6655547509999451,
+      "rust_summaries": [],
+      "python_tests": 6
+    },
+    {
+      "name": "test_nc_midpoint_resume.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_midpoint_resume.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.11402253699998255,
+      "rust_summaries": [],
+      "python_tests": 4
+    },
+    {
+      "name": "test_low_preload_nc_diagnosis.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_low_preload_nc_diagnosis.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.11410812700000861,
+      "rust_summaries": [],
+      "python_tests": 0
+    },
+    {
+      "name": "test_nc_newton_trace.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_newton_trace.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.11417592800012244,
+      "rust_summaries": [],
+      "python_tests": 2
+    },
+    {
+      "name": "test_low_preload_nc_followup.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_low_preload_nc_followup.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.277760918000013,
+      "rust_summaries": [],
+      "python_tests": 5
+    }
+  ],
+  "fixture_materialization_recheck": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_low_preload_nc_diagnosis.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.21059828600004948,
+    "fixture": "materialized unchanged tracked native-evidence.zip omitted by sparse checkout"
+  },
+  "initial_check_driver_exit_code": 1,
+  "initial_setup_error": "sparse checkout omitted an unchanged tracked native-evidence.zip fixture; 0 diagnosis tests ran before materialization, then 3/3 passed",
+  "development_postprocessing_failures": [
+    "audit.log: failed-result Run omits continuation; audit now uses the actual imported sealed checkpoint",
+    "new-tests.log: test fixture attribute shadowed unittest.run; corrected",
+    "new-tests-final.log: stress perturbation hit the existing yield guard before force reassembly; perturbation now stays inside yield surface"
+  ],
+  "initial_logs_retained_in_raw_evidence": true,
+  "windows_execution_performed": false,
+  "windows_ci_numerical_acceptance": false,
+  "large_prohibited_solves_executed": false,
+  "pr_merged": false,
+  "additional_credits_purchased": false,
+  "isolated_source_reproduction": {
+    "control_files": 212,
+    "retain_files": 212,
+    "all_exact": true
+  },
+  "production_build": {
+    "exit_code": 0,
+    "cargo_reported_duration": "1m 10s",
+    "separately_recorded_wall_seconds": null
+  },
+  "independent_linear_audits": {
+    "saved_gate_systems": 19,
+    "control_systems": 60,
+    "retention_systems": 20,
+    "retention_passed_systems": 19,
+    "retention_failed_systems": 1,
+    "precision_decimal_digits": 80
+  },
+  "fresh_archive_remeasurement": {
+    "passed": false,
+    "history_converged": false,
+    "solver_executed": false,
+    "material_map_executed": false,
+    "archive_entries_verified": 1710,
+    "exact_saved_json_matches": {
+      "control-linear-audit.json": true,
+      "control-trace-audit.json": true,
+      "gate-linear-audit.json": true,
+      "measurements.json": true,
+      "partial-field-comparisons.json": true,
+      "retain-trace-audit.json": true,
+      "trial-linear-audit.json": true
+    },
+    "all_matches": true
+  }
+}

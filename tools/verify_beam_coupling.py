@@ -31,7 +31,7 @@ def verify(run,output):
         assert json.loads(binding.read_text())['solver_sha256']==native['provenance']['solver_binary_sha256']==digest
         assert ref.normalize_stage_case(json.loads(stages.read_text()))==case
         assert native['ground']==ground
-        watched.extend([Path(__file__).with_name('plate_reference.py'),solver,binding,stages])
+        watched.extend([Path(__file__).with_name('plate_reference.py'),Path(__file__).with_name('plate6_reference.py'),solver,binding,stages])
     fingerprints={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in watched}
     assert all(s['kind'] in ('install_beams','remove_beams','boundary','excavate') for s in case['stages'])
     assert not case.get('initially_inactive_bodies') and ground['initialization']['method']=='equilibrate'
@@ -128,7 +128,7 @@ def verify(run,output):
         refs=float(np.max(np.abs(np.asarray(actual['beams']['reference_global_kinematics'])-state['reference_global_kinematics']),initial=0.))
         if plate_case:
             assert actual['beams']['active_plates']==state['active_plates']
-            plate_reference_error=float(np.max(np.abs(np.asarray(actual['beams']['plate_reference_global_kinematics'])-state['plate_reference_global_kinematics']),initial=0.))
+            plate_reference_error=max((float(np.max(np.abs(np.asarray(a)-b))) for a,b in zip(actual['beams']['plate_reference_global_kinematics'],state['plate_reference_global_kinematics'],strict=True)),default=0.)
             refs=max(refs,plate_reference_error)
         assert dr<1e-9 and db<1e-9 and refs<1e-9,(dr,db,refs)
         for ei,(qp,d,s0,e0) in enumerate(operators):
@@ -151,28 +151,31 @@ def verify(run,output):
             value=np.asarray(member['local_end_actions']);expected=br['members'][member['id']]['local_end_actions']
             error=max(error,float(np.max(np.abs(value-expected))))
             assert np.allclose(value,expected,atol=1e-6,rtol=1e-7),(value,expected)
+        plate_errors={}
         if plate_case:
             assert {p['id'] for p in frame['beam_results'].get('plates',[])}==set(br['plates'])
             for plate in frame['beam_results'].get('plates',[]):
                 expected=br['plates'][plate['id']]
-                for key in ('area_m2','local_axes','membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m'):
+                for key in ('area_m2','local_axes','membrane_energy_kn_m','bending_energy_kn_m','drilling_penalty_energy_kn_m')+ (('transverse_shear_energy_kn_m',) if 'transverse_shear_energy_kn_m' in expected else ()):
+                    plate_errors[key]=max(plate_errors.get(key,0.),float(np.max(np.abs(np.asarray(plate[key])-expected[key]))))
                     assert np.allclose(plate[key],expected[key],atol=1e-8,rtol=1e-7),(plate['id'],key)
                 for actual_point,reference_point in zip(plate['samples'],expected['samples'],strict=True):
                     for key in reference_point:
+                        plate_errors[key]=max(plate_errors.get(key,0.),float(np.max(np.abs(np.asarray(actual_point[key])-reference_point[key]))))
                         assert np.allclose(actual_point[key],reference_point[key],atol=1e-8,rtol=1e-7),(plate['id'],key)
         reports.append({'frame':frame['name'],'soil_free_dofs':count,'retained_frame_unknowns':qb.shape[1],
                         'relative_joint_system_residual':residual,'relative_3d_displacement_error':du,
                         'maximum_beam_displacement_error_m':db,'maximum_rotation_error_rad':dr,
                         'maximum_installation_reference_error':refs,'maximum_end_action_error':error,
                         'relative_all_point_stress_error':ds,'maximum_void_ratio_error':de,
-                        'global_moment_balance_kn_m':moment.tolist()})
+                        'global_moment_balance_kn_m':moment.tolist(), 'plate_maximum_absolute_errors':plate_errors})
         previous_soil_external=fsoil.copy()
     report={'schema':'soil-fem-independent-beam-coupling/1','reference':'full soil + frame direct NumPy solve, input seed and independently propagated installation references; all rotations and releases retained; section flexibility by virtual work; GL125 soil integration; SVD constraints',
             'frames':reports,'solver_sha256':native['provenance']['solver_binary_sha256'],
             'sha256':fingerprints}
     if plate_case:
         report.update(schema='soil-fem-independent-plate-beam-coupling/1',
-            reference='Full soil + plate/frame direct solve; 12 independent polynomial DKT constraints and GL25 surface integration; GL125 soil quadrature; SVD supports; no Rust solved field or installation reference generates the solution',
+            reference='Full soil + plate/frame direct solve; independent polynomial CST/DKT or covariant-moment Mindlin Tri6 and GL25 surface integration; GL125 soil quadrature; SVD supports; no Rust solved field or installation reference generates the solution',
             plate_samples_and_energies_checked=True,spatial_convergence_accepted=False,goal_complete=False,p6_complete=False)
     if release_reports:
         report.update(excavation_release_audits=release_reports,

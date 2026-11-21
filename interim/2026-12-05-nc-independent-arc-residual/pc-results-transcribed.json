@@ -1,0 +1,82 @@
+{
+  "schema": "nc-independent-arc-pc-transcription/1",
+  "source": "ユーザーがチャットに転記したPC-2出力。原ZIPはクラウドから見えず未取得。クラウドの新規求解ではない。",
+  "raw_archive_available": false,
+  "cloud_recomputed": false,
+  "raw_fields_or_sha_verified": false,
+  "platform": "Windows",
+  "worktree": "D:\\Work\\scsa_b069ec8",
+  "output": "runs\\NEW-nc-fold-confirmation-PC-2",
+  "completed_at": "2026-11-12T13:03:00+09:00",
+  "procedure_commit": "e940bad",
+  "procedure": "interim/2026-11-30-nc-fold-confirmation-pc-results/REPRODUCE.ja.md §1–5",
+  "actual_computation_head": "not supplied in transcription",
+  "section1": {
+    "fixed_inputs_match": true
+  },
+  "section2": {
+    "path_count": 6,
+    "all_verdicts": "local_fold_bracket",
+    "peak_lambda_approximate_ranges": {
+      "initial_increment_1/128": [
+        0.95140009637,
+        0.95140009642
+      ],
+      "initial_increment_1/256": [
+        0.95148223275,
+        0.95148223281
+      ]
+    },
+    "passed": false,
+    "static_limit_confirmed": false,
+    "full_removal_reached": false,
+    "nc01_complete": false,
+    "stop_reason": "bounded step count; inconclusive"
+  },
+  "section3": {
+    "initial_increment_denominators": [
+      128,
+      256
+    ],
+    "direct_samples": 512,
+    "split_samples": [
+      256,
+      256
+    ],
+    "all_saved_fields_exact": true,
+    "gp_tangents_exact": true,
+    "actual_linear_systems_exact": true,
+    "terminal_checkpoint_exact": true,
+    "continuation_only_audit": "undetermined",
+    "direct512_audit": "local_fold_bracket",
+    "evidence_scope": "reported by user; raw PC outputs not independently inspected"
+  },
+  "section4": {
+    "reference400": {
+      "return_code": 0
+    },
+    "independent_arc400": {
+      "samples_json_created": false,
+      "passed": false,
+      "equilibrium_samples": 0,
+      "stop_reason": "independent augmented linear residual exceeds existing 1e-10",
+      "maximum_bordered_true_linear_residual_approximate": 1.06345e-10,
+      "return_code": "not supplied"
+    },
+    "independent400_coarse": {
+      "return_code": 1,
+      "exception": "FileNotFoundError",
+      "missing": "rate-arc400\\samples.json"
+    },
+    "not_executed": [
+      "800",
+      "material substeps 4/8",
+      "§4.1 independent checkpoint comparison",
+      "§5 compare_nc_fold_reports.py"
+    ]
+  },
+  "conclusion": {
+    "nc01_complete": false,
+    "passed": false
+  }
+}

@@ -1,5 +1,5 @@
 //! Optional progress observation and cooperative pause for staged mechanics.
-//! Observers cannot access trial/committed material state. A pause is checked
+//! Optional diagnostics receive serialized copies, never mutable state. A pause is checked
 //! only after an accepted increment, including geostatic initialization.
 use crate::{Result, linalg::LinearReport};
 use serde::{Deserialize, Serialize};
@@ -36,6 +36,17 @@ pub struct Progress {
 /// failures that cause a smaller physical increment to be tried.
 pub trait Observer {
     fn on_progress(&self, progress: &Progress) -> Result<()>;
+    /// Opt-in, bounded small-case diagnostics. Disabled for production observers.
+    fn diagnostic_enabled(&self, _stage: usize, _progress: f64) -> bool {
+        false
+    }
+    fn on_diagnostic(&self, _value: &serde_json::Value) -> Result<()> {
+        Ok(())
+    }
+    /// Separate opt-in for A-01 cause records. Existing diagnostics are unchanged.
+    fn a01_joint_cause_enabled(&self) -> bool {
+        false
+    }
     fn stop_requested(&self) -> Result<bool> {
         Ok(false)
     }

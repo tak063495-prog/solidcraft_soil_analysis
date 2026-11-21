@@ -1,0 +1,108 @@
+{
+  "schema": "wet-joint-transition-regression/1",
+  "base_commit": "5d0d456393e324685d13964673c9422be1cf5b5a",
+  "passed": false,
+  "numerical_acceptance": false,
+  "issue_37": {
+    "passed": false,
+    "baseline": {
+      "reproduced": true,
+      "complete": true,
+      "frames": 16,
+      "excavations": 1,
+      "time_s": 0.375,
+      "seam_faces": [
+        [
+          4,
+          5,
+          7
+        ],
+        [
+          4,
+          6,
+          7
+        ]
+      ],
+      "richards_head_m": 2.0,
+      "exterior_level_m": 3.0
+    },
+    "regression_cases": 7,
+    "existing_floor_preflight_verified": true
+  },
+  "issue_38": {
+    "passed": false,
+    "baseline": {
+      "reproduced": true,
+      "time_s": 0.125,
+      "before_head_m": 2.0,
+      "birth_head_m": 2.25,
+      "retained_cell_ids": [
+        3,
+        4
+      ],
+      "outflow_before_and_at_birth_m3_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "fixed_and_interpolated_birth": {
+      "head_m": 2.25,
+      "retained_outflow_m3_s": {
+        "3": [
+          -8.709677419354828e-07,
+          -1.2096774193548374e-07,
+          6.290322580645152e-07,
+          -1.2096774193548358e-07
+        ],
+        "4": [
+          -8.709677419354835e-07,
+          6.290322580645159e-07,
+          -1.2096774193548382e-07,
+          -1.2096774193548374e-07
+        ]
+      }
+    },
+    "unchanged_birth": {
+      "head_m": 2.0,
+      "each_retained_outflow_m3_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "birth_water_m3": {
+      "addition": 0.20588235294117646,
+      "removal": 0.0,
+      "denominator": 0.20588235294117652,
+      "step_defect": 8.326672684688674e-17,
+      "cumulative_defect": 8.326672684688674e-17
+    },
+    "normalized_restart_equal_for_all_cases": true,
+    "independent_unit_tet_outflow_m3_s": [
+      -1.3333333333333333,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ]
+  },
+  "focused_rust_runs": {
+    "before": {
+      "passed_tests": 2,
+      "failed_tests": 0,
+      "ignored_tests": 0
+    },
+    "issue_37": {
+      "passed_tests": 21,
+      "failed_tests": 0,
+      "ignored_tests": 0
+    },
+    "issue_38": {
+      "passed_tests": 15,
+      "failed_tests": 0,
+      "ignored_tests": 0
+    }
+  }
+}

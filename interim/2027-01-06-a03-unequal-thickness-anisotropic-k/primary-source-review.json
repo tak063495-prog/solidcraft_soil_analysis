@@ -1,0 +1,47 @@
+{
+  "client_date": "2026-11-18",
+  "timezone": "Asia/Tokyo",
+  "inherited_review": "interim/2026-12-30-a03-wet-soil-birth-cloud-followup/primary-source-review.json",
+  "inherited_scope": "12-22/12-30の公式再活性化・水圧/初期応力・仕事精度・積分則の確認範囲を継承。今回の再取得成功とはしない。",
+  "retrieval_attempts": [
+    {
+      "name": "initial",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEPRCRefMap/simaprc-c-initialcond.htm",
+      "exit_code": 22,
+      "stderr": "curl: (22) The requested URL returned error: 403\n"
+    },
+    {
+      "name": "geostatic",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-geostatstress.htm",
+      "exit_code": 22,
+      "stderr": "curl: (22) The requested URL returned error: 403\n"
+    },
+    {
+      "name": "work",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEOUTRefMap/simaout-c-printfile.htm",
+      "exit_code": 22,
+      "stderr": "curl: (22) The requested URL returned error: 403\n"
+    },
+    {
+      "name": "reactivation",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-elemremovrepl.htm",
+      "exit_code": 22,
+      "stderr": "curl: (22) The requested URL returned error: 403\n"
+    }
+  ],
+  "additional_confirmed": [
+    {
+      "title": "MFEM v4.8 source: BoundaryLFIntegrator::AssembleRHSElementVect",
+      "url": "https://github.com/mfem/mfem/blob/v4.8/fem/lininteg.cpp#L127",
+      "sha256": "3bef24259114adbf9c2adff8051d5265832d96d6623e5725ffd30abb0f0f716c",
+      "access": "公式プロジェクトの公開ソース本文取得",
+      "confirmed": "127〜153行：各積分点でTr.SetIntPoint、Tr.Weight()、Q.Eval、ip.weight、形状関数から境界荷重を積算する。写像・位置依存圧力・重みを同時更新する根拠。異方的K0の活性化契約や今回の数値参照値を与える資料ではない。"
+    }
+  ],
+  "inaccessible_scope": "Abaqus初期条件/地盤応力の今回の候補URLはHTTP403で本文未取得。方向別K0の具体的初期化則は未確認・採用しない。仕事/再活性化URLの今回の再取得も403。",
+  "bibliography_only": [
+    "Potts & Zdravković (1999/2001): 本文未取得・書誌だけ（12-22/12-30継承）。",
+    "Wang et al. (2024), DOI 10.3390/jmse12050823: 継承した要旨/序論以外の方法本文は未取得・方法は書誌だけ。"
+  ],
+  "external_numerical_reference_values_introduced": false
+}

@@ -1,0 +1,18 @@
+test_prior_record_and_production_source_bytes_remain_bound (test_b03_offset_kink_cause_diagnosis.B03OffsetKinkCauseDiagnosis.test_prior_record_and_production_source_bytes_remain_bound) ... FAIL
+
+======================================================================
+FAIL: test_prior_record_and_production_source_bytes_remain_bound (test_b03_offset_kink_cause_diagnosis.B03OffsetKinkCauseDiagnosis.test_prior_record_and_production_source_bytes_remain_bound)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/t1/tests/test_b03_offset_kink_cause_diagnosis.py", line 105, in test_prior_record_and_production_source_bytes_remain_bound
+    self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(), value['sha256'], name)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '69f4879aa0a61e6b5f4ad0345441beffee7b93132fb8ca041a7b7c4d3215adca' != 'e7dda68068ced4d8ac16aadb73f1b4225bd4ee6c5ec6960e37bbcb24bbc301cb'
+- 69f4879aa0a61e6b5f4ad0345441beffee7b93132fb8ca041a7b7c4d3215adca
++ e7dda68068ced4d8ac16aadb73f1b4225bd4ee6c5ec6960e37bbcb24bbc301cb
+ : src/stages.rs
+
+----------------------------------------------------------------------
+Ran 1 test in 0.019s
+
+FAILED (failures=1)

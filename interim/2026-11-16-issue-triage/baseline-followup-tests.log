@@ -1,0 +1,150 @@
+test_normal_help_remains_read_only (test_issue_triage_followups.SafePauseEntry.test_normal_help_remains_read_only) ... ok
+test_optimized_execute_is_refused_before_process_or_filesystem_work (test_issue_triage_followups.SafePauseEntry.test_optimized_execute_is_refused_before_process_or_filesystem_work) ... 
+  test_optimized_execute_is_refused_before_process_or_filesystem_work (test_issue_triage_followups.SafePauseEntry.test_optimized_execute_is_refused_before_process_or_filesystem_work) (mode='-O') ... FAIL
+  test_optimized_execute_is_refused_before_process_or_filesystem_work (test_issue_triage_followups.SafePauseEntry.test_optimized_execute_is_refused_before_process_or_filesystem_work) (mode='env') ... FAIL
+test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) ... 
+  test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan) ... FAIL
+  test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan, mode='normal') ... FAIL
+  test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan, mode='-O') ... FAIL
+  test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan, mode='env') ... FAIL
+test_normal_complete_boundary_inventory_in_all_modes (test_issue_triage_followups.SoilBoundaryFlow.test_normal_complete_boundary_inventory_in_all_modes) ... ok
+test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) ... 
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf) ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf, mode='normal') ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf, mode='-O') ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf, mode='env') ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0) ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0, mode='normal') ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0, mode='-O') ... FAIL
+  test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0, mode='env') ... FAIL
+
+======================================================================
+FAIL: test_optimized_execute_is_refused_before_process_or_filesystem_work (test_issue_triage_followups.SafePauseEntry.test_optimized_execute_is_refused_before_process_or_filesystem_work) (mode='-O')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 152, in test_optimized_execute_is_refused_before_process_or_filesystem_work
+    self.assertIn('safe-pause requires Python optimization disabled', result.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'safe-pause requires Python optimization disabled' not found in 'Traceback (most recent call last):\n  File "<string>", line 10, in <module>\n    runpy.run_path(script, run_name=\'__main__\')\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen runpy>", line 294, in run_path\n  File "<frozen runpy>", line 98, in _run_module_code\n  File "<frozen runpy>", line 88, in _run_code\n  File "/tmp/tmpaw840_83/root/pause/scripts/safe-pause-latest102.py", line 147, in <module>\n    records = json.loads(subprocess.check_output([\'pwsh\',\'-NoProfile\',\'-Command\',ps], text=True, encoding=\'utf-8-sig\'))\n                         ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<string>", line 4, in forbidden\n    raise RuntimeError(\'unexpected process or filesystem operation\')\nRuntimeError: unexpected process or filesystem operation\n'
+
+======================================================================
+FAIL: test_optimized_execute_is_refused_before_process_or_filesystem_work (test_issue_triage_followups.SafePauseEntry.test_optimized_execute_is_refused_before_process_or_filesystem_work) (mode='env')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 152, in test_optimized_execute_is_refused_before_process_or_filesystem_work
+    self.assertIn('safe-pause requires Python optimization disabled', result.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'safe-pause requires Python optimization disabled' not found in 'Traceback (most recent call last):\n  File "<string>", line 10, in <module>\n    runpy.run_path(script, run_name=\'__main__\')\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen runpy>", line 294, in run_path\n  File "<frozen runpy>", line 98, in _run_module_code\n  File "<frozen runpy>", line 88, in _run_code\n  File "/tmp/tmp3gia3z69/root/pause/scripts/safe-pause-latest102.py", line 147, in <module>\n    records = json.loads(subprocess.check_output([\'pwsh\',\'-NoProfile\',\'-Command\',ps], text=True, encoding=\'utf-8-sig\'))\n                         ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<string>", line 4, in forbidden\n    raise RuntimeError(\'unexpected process or filesystem operation\')\nRuntimeError: unexpected process or filesystem operation\n'
+
+======================================================================
+FAIL: test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 94, in test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected
+    with self.assertRaises((ValueError, AssertionError, TypeError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>, <class 'TypeError'>) not raised
+
+======================================================================
+FAIL: test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan, mode='normal')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 99, in test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan, mode='-O')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 99, in test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) (kind='no_flow', end=-1, bad=nan, mode='env')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 99, in test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 107, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    with self.assertRaises((ValueError, AssertionError, TypeError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>, <class 'TypeError'>) not raised
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf, mode='normal')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 112, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf, mode='-O')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 112, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-inf, mode='env')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 112, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 107, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    with self.assertRaises((ValueError, AssertionError, TypeError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'ValueError'>, <class 'AssertionError'>, <class 'TypeError'>) not raised
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0, mode='normal')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 112, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0, mode='-O')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 112, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+======================================================================
+FAIL: test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) (bad=-1.0, mode='env')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/issue-triage-code/tests/test_issue_triage_followups.py", line 112, in test_reported_balance_error_must_be_finite_scalar_and_nonnegative
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : 
+
+----------------------------------------------------------------------
+Ran 5 tests in 19.147s
+
+FAILED (failures=14)

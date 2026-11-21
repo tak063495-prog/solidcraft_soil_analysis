@@ -1,0 +1,1531 @@
+{
+  "processes": {
+    "default": {
+      "argv": [
+        "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+        "solve",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/restarts/default"
+      ],
+      "pid": 102439,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 11.723528705999797,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ilut": {
+      "argv": [
+        "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+        "solve",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/restarts/ilut"
+      ],
+      "pid": 108243,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 173.24729261699986,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "restarts": [
+    {
+      "checkpoint": "ilut/checkpoint-2.json",
+      "checkpoint_sha256": "1bd5abe489edff672e9096a61dcb4d8d3d65b7adb0357ddc57c18c8fc03b3eba",
+      "producing_pid": 108243,
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/resume-2",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/ilut/checkpoint-2.json"
+        ],
+        "pid": 166308,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 161.43986691300006,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "separate_pid": true,
+      "later_states": 34,
+      "all_later_states_equal": true,
+      "whole_run_equal": true
+    },
+    {
+      "checkpoint": "ilut/checkpoint-34.json",
+      "checkpoint_sha256": "1917952e23f275e40cb77b85362c063389fcc89c50d808e8508453546f72da68",
+      "producing_pid": 108243,
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/resume-34",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/ilut/checkpoint-34.json"
+        ],
+        "pid": 236734,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 21.3471571099999,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "separate_pid": true,
+      "later_states": 2,
+      "all_later_states_equal": true,
+      "whole_run_equal": true
+    }
+  ],
+  "ordinary_cli": {
+    "create": {
+      "argv": [
+        "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+        "checkpoint-stages",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+        "34",
+        "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json"
+      ],
+      "pid": 248723,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 11.51802457299982,
+      "log_sha256": "3bede78377cfea6909f4f1a8e0241175a68ca55275bcc8f1503ffed4398664e7"
+    },
+    "resume": {
+      "argv": [
+        "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+        "resume-stages",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json",
+        "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-resumed.json"
+      ],
+      "pid": 252259,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 14.042442343999937,
+      "log_sha256": "7cb3a1c3f7e0d06c836af4e9d1e6d0df9ff06fc7e49a65e26c0bf7cd1cf6d3e4"
+    },
+    "separate_pid": true,
+    "whole_run_equal": true
+  },
+  "accepted_state_counts": {
+    "default": 36,
+    "ilut": 36
+  },
+  "common_accepted_states": 36,
+  "default_only": 0,
+  "ilut_only": 0,
+  "full_state_field_differences": [
+    {
+      "stage_index": 0,
+      "progress": 0.03125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.5845805405838654e-15,
+        "absolute_l2": 1.9146854792502058e-14,
+        "relative_l2": 1.0367147231050623e-11,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4152268246192534e-10,
+        "absolute_l2": 1.9279667946098774e-09,
+        "relative_l2": 1.6159050852321142e-11,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.0625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584593457836311e-15,
+        "absolute_l2": 1.914492100301782e-14,
+        "relative_l2": 5.183050086188632e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4157686134552705e-10,
+        "absolute_l2": 1.9278117035869367e-09,
+        "relative_l2": 8.078875486613873e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.09375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584906860026795e-15,
+        "absolute_l2": 1.9148042153429775e-14,
+        "relative_l2": 3.455930044249307e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.41528122554746e-10,
+        "absolute_l2": 1.927938804872565e-09,
+        "relative_l2": 5.386272086426867e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584868743544169e-15,
+        "absolute_l2": 1.915299613808727e-14,
+        "relative_l2": 2.5926181222845907e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4156764649442266e-10,
+        "absolute_l2": 1.9280659952492977e-09,
+        "relative_l2": 4.039970573010361e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.15625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584470638058959e-15,
+        "absolute_l2": 1.9148788165286892e-14,
+        "relative_l2": 2.073638812817816e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4152412575185735e-10,
+        "absolute_l2": 1.9280901352608506e-09,
+        "relative_l2": 3.232016923801679e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.1875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584064062244277e-15,
+        "absolute_l2": 1.9147937854340767e-14,
+        "relative_l2": 1.7279556099256919e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4149481586400725e-10,
+        "absolute_l2": 1.9278741380740114e-09,
+        "relative_l2": 2.693045710218558e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.21875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.585615826603647e-15,
+        "absolute_l2": 1.9151060560983458e-14,
+        "relative_l2": 1.4813463517934369e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4151346761082095e-10,
+        "absolute_l2": 1.928038597852701e-09,
+        "relative_l2": 2.308521809092012e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.25,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584604469264625e-15,
+        "absolute_l2": 1.914701034512359e-14,
+        "relative_l2": 1.2959039319602507e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.415405570526218e-10,
+        "absolute_l2": 1.9281173867653796e-09,
+        "relative_l2": 2.020039128078323e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.28125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584833168160384e-15,
+        "absolute_l2": 1.9145703191185795e-14,
+        "relative_l2": 1.1518359657262366e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.41572531475731e-10,
+        "absolute_l2": 1.9281633951564137e-09,
+        "relative_l2": 1.7956331821239576e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.3125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584633268384832e-15,
+        "absolute_l2": 1.9145916737908883e-14,
+        "relative_l2": 1.0366639317331664e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4148415772297085e-10,
+        "absolute_l2": 1.927952651448876e-09,
+        "relative_l2": 1.6158932312902707e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.34375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.5837489659878985e-15,
+        "absolute_l2": 1.9146594516864502e-14,
+        "relative_l2": 9.424551185158859e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4152412575185735e-10,
+        "absolute_l2": 1.9279194181154555e-09,
+        "relative_l2": 1.4689685246559132e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.58419281125226e-15,
+        "absolute_l2": 1.914178682506742e-14,
+        "relative_l2": 8.637002631820517e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4152412575185735e-10,
+        "absolute_l2": 1.927802380440815e-09,
+        "relative_l2": 1.3464727360215227e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.40625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.5841453774072135e-15,
+        "absolute_l2": 1.9142335253766677e-14,
+        "relative_l2": 7.972846236363597e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4148238136613145e-10,
+        "absolute_l2": 1.927950484657676e-09,
+        "relative_l2": 1.242993396320783e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.4375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.585656484185115e-15,
+        "absolute_l2": 1.9149244131781218e-14,
+        "relative_l2": 7.406029249368619e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4156942285126206e-10,
+        "absolute_l2": 1.9282874853872703e-09,
+        "relative_l2": 1.154409906309302e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.46875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584280902678774e-15,
+        "absolute_l2": 1.914911585537885e-14,
+        "relative_l2": 6.912247662202585e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4144596605092374e-10,
+        "absolute_l2": 1.9281373108145973e-09,
+        "relative_l2": 1.0773653343965902e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.5,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.585005962881624e-15,
+        "absolute_l2": 1.915103743741895e-14,
+        "relative_l2": 6.480882463874748e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4151435578924065e-10,
+        "absolute_l2": 1.9281590320883797e-09,
+        "relative_l2": 1.0100413794074867e-12,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.53125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.5839590301588176e-15,
+        "absolute_l2": 1.915070166303914e-14,
+        "relative_l2": 6.099547138653682e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4150725036188305e-10,
+        "absolute_l2": 1.928050885386583e-09,
+        "relative_l2": 9.505738617833248e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.5625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.583972582685974e-15,
+        "absolute_l2": 1.9145507886035682e-14,
+        "relative_l2": 5.75912107928806e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4154544203393016e-10,
+        "absolute_l2": 1.9279917512596606e-09,
+        "relative_l2": 8.977366679918366e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.59375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.585151652548552e-15,
+        "absolute_l2": 1.9146344578759337e-14,
+        "relative_l2": 5.456247880846178e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4149392768558755e-10,
+        "absolute_l2": 1.9281066332917867e-09,
+        "relative_l2": 8.505380471325705e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.582895156777066e-15,
+        "absolute_l2": 1.9146948287372637e-14,
+        "relative_l2": 5.183598927122033e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4153833660657256e-10,
+        "absolute_l2": 1.9278120940404317e-09,
+        "relative_l2": 8.078877122885678e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.65625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.5845417888265285e-15,
+        "absolute_l2": 1.914221887964502e-14,
+        "relative_l2": 4.935541474286448e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4149037497190875e-10,
+        "absolute_l2": 1.927782063131528e-09,
+        "relative_l2": 7.69404883088945e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.6875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.584094555430378e-15,
+        "absolute_l2": 1.9144505279730586e-14,
+        "relative_l2": 4.711761398729005e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.4147083504667535e-10,
+        "absolute_l2": 1.9277982109751467e-09,
+        "relative_l2": 7.344380857418295e-13,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.71875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.2959746043559335e-17,
+        "absolute_l2": 2.289840041793365e-16,
+        "relative_l2": 5.3905671814707034e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 1.0942358130705543e-12,
+        "absolute_l2": 1.8949215359377285e-11,
+        "relative_l2": 6.9052556060301124e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.75,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 2.6020852139652106e-18,
+        "absolute_l2": 1.175750040669123e-17,
+        "relative_l2": 2.652330625895249e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 2.4158453015843406e-13,
+        "absolute_l2": 2.453174915060638e-12,
+        "relative_l2": 8.566925317466546e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.78125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 1.734723475976807e-18,
+        "absolute_l2": 6.314344521542194e-18,
+        "relative_l2": 1.367248507654247e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 2.8421709430404007e-13,
+        "absolute_l2": 2.2436405207510053e-12,
+        "relative_l2": 7.521544636019076e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.8125,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 5.204170427930421e-18,
+        "absolute_l2": 2.330304059682219e-17,
+        "relative_l2": 4.850615227521864e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 2.8421709430404007e-13,
+        "absolute_l2": 3.252280511759627e-12,
+        "relative_l2": 1.0482754714558426e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.84375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 1.734723475976807e-18,
+        "absolute_l2": 7.184824651492497e-18,
+        "relative_l2": 1.4395926055412276e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 2.984279490192421e-13,
+        "absolute_l2": 2.8062069825603455e-12,
+        "relative_l2": 8.70856898699186e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 3.209238430557093e-17,
+        "absolute_l2": 2.3276144997924334e-16,
+        "relative_l2": 4.4944730376540374e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 6.110667527536862e-13,
+        "absolute_l2": 1.1274084654701468e-11,
+        "relative_l2": 3.3728372430667913e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.90625,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 1.734723475976807e-18,
+        "absolute_l2": 7.39839358288926e-18,
+        "relative_l2": 1.3781716962994664e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 4.831690603168681e-13,
+        "absolute_l2": 3.2691692885610614e-12,
+        "relative_l2": 9.439439772554671e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.9375,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 1.734723475976807e-18,
+        "absolute_l2": 6.9138232977090664e-18,
+        "relative_l2": 1.2434928818909531e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 5.684341886080801e-13,
+        "absolute_l2": 3.742898778998457e-12,
+        "relative_l2": 1.0441647821087296e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 0.96875,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 6.938893903907228e-18,
+        "absolute_l2": 5.070510304185028e-17,
+        "relative_l2": 8.81255346752965e-16,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 5.684341886080801e-13,
+        "absolute_l2": 5.566409246924214e-12,
+        "relative_l2": 1.5018760955554943e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 0,
+      "progress": 1.0,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 2.0166160408230382e-17,
+        "absolute_l2": 9.075419433700286e-17,
+        "relative_l2": 1.5255893542043564e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 7.815970093361102e-13,
+        "absolute_l2": 9.640433612540115e-12,
+        "relative_l2": 2.5181931743790712e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 1,
+      "progress": 0.25,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 2.0166160408230382e-17,
+        "absolute_l2": 9.075419433700286e-17,
+        "relative_l2": 1.5255893542043564e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 7.815970093361102e-13,
+        "absolute_l2": 9.640433612540115e-12,
+        "relative_l2": 2.5181931743790712e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 1,
+      "progress": 0.5,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 2.0166160408230382e-17,
+        "absolute_l2": 9.075419433700286e-17,
+        "relative_l2": 1.5255893542043564e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 7.815970093361102e-13,
+        "absolute_l2": 9.640433612540115e-12,
+        "relative_l2": 2.5181931743790712e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 1,
+      "progress": 0.75,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 2.0166160408230382e-17,
+        "absolute_l2": 9.075419433700286e-17,
+        "relative_l2": 1.5255893542043564e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 7.815970093361102e-13,
+        "absolute_l2": 9.640433612540115e-12,
+        "relative_l2": 2.5181931743790712e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    },
+    {
+      "stage_index": 1,
+      "progress": 1.0,
+      "displacement_m": {
+        "shape": [
+          135,
+          3
+        ],
+        "components": 405,
+        "maximum_absolute": 2.0166160408230382e-17,
+        "absolute_l2": 9.075419433700286e-17,
+        "relative_l2": 1.5255893542043564e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      },
+      "stress_kpa": {
+        "shape": [
+          1296,
+          6
+        ],
+        "components": 7776,
+        "maximum_absolute": 7.815970093361102e-13,
+        "absolute_l2": 9.640433612540115e-12,
+        "relative_l2": 2.5181931743790712e-15,
+        "comparison_criterion": null,
+        "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+      }
+    }
+  ],
+  "input_rejections": [
+    {
+      "label": "drop-negative",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/drop-negative/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/drop-negative/result.json"
+        ],
+        "pid": 256370,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.008551904000341892,
+        "log_sha256": "69b83a61559cf4151890a6f8c2538666ce343763dbd9cb4287c2f55681a1b385"
+      },
+      "expected": "ILUT requires",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "drop-too-large",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/drop-too-large/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/drop-too-large/result.json"
+        ],
+        "pid": 256379,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.003570303000287822,
+        "log_sha256": "69b83a61559cf4151890a6f8c2538666ce343763dbd9cb4287c2f55681a1b385"
+      },
+      "expected": "ILUT requires",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "fill-zero",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/fill-zero/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/fill-zero/result.json"
+        ],
+        "pid": 256388,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.004377350000140723,
+        "log_sha256": "69b83a61559cf4151890a6f8c2538666ce343763dbd9cb4287c2f55681a1b385"
+      },
+      "expected": "ILUT requires",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "fill-too-large",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/fill-too-large/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/fill-too-large/result.json"
+        ],
+        "pid": 256389,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.005330228000275383,
+        "log_sha256": "69b83a61559cf4151890a6f8c2538666ce343763dbd9cb4287c2f55681a1b385"
+      },
+      "expected": "ILUT requires",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "fill-fraction",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/fill-fraction/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/fill-fraction/result.json"
+        ],
+        "pid": 256390,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.0029387129998212913,
+        "log_sha256": "773f09af1ba5b50504b0b7c11c067065680e3bdcf6ad8963bf4ab37aac67c3d8"
+      },
+      "expected": "invalid type",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "unknown-option",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/unknown-option/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/unknown-option/result.json"
+        ],
+        "pid": 256395,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.004030593000152294,
+        "log_sha256": "ca5d2fcab1b19da45e32fbf38f782d230f4f56e28547f0a45bf3a0c26c357721"
+      },
+      "expected": "unknown field",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "mismatch-drop",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "resume-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mismatch-drop/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mismatch-drop/result.json"
+        ],
+        "pid": 256408,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.12226155899998048,
+        "log_sha256": "a7263dda6f46bbcc8e7f0bff4515cf6b35914a66ae00bb4a63ced7f16f28effd"
+      },
+      "expected": "checkpoint input/solver hash mismatch",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "mismatch-fill",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "resume-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mismatch-fill/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mismatch-fill/result.json"
+        ],
+        "pid": 256489,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.06956916199987973,
+        "log_sha256": "a7263dda6f46bbcc8e7f0bff4515cf6b35914a66ae00bb4a63ced7f16f28effd"
+      },
+      "expected": "checkpoint input/solver hash mismatch",
+      "result_exists": false,
+      "rejected_as_expected": true
+    },
+    {
+      "label": "mismatch-preconditioner",
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "resume-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mismatch-preconditioner/case.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mismatch-preconditioner/result.json"
+        ],
+        "pid": 256534,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.06687618199975986,
+        "log_sha256": "a7263dda6f46bbcc8e7f0bff4515cf6b35914a66ae00bb4a63ced7f16f28effd"
+      },
+      "expected": "checkpoint input/solver hash mismatch",
+      "result_exists": false,
+      "rejected_as_expected": true
+    }
+  ],
+  "mutations": [
+    {
+      "label": "checksum",
+      "rehash": null,
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-checksum/resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-checksum/raw.json"
+        ],
+        "pid": 256848,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 0.12186031100009131,
+        "log_sha256": "170f41241ba2c3ff392f3e7df5fec622730dbc4b746dafd7bc86d9775416ee90"
+      },
+      "expected": "checkpoint history/load checksum mismatch",
+      "rejected_as_expected": true
+    },
+    {
+      "label": "saved-drop",
+      "rehash": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "rehash",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-drop/raw.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-drop/rehashed.json"
+        ],
+        "pid": 257297,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.14334568300000683,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-drop/resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-drop/rehashed.json"
+        ],
+        "pid": 257385,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 6.531599794999693,
+        "log_sha256": "e1472dafa7cb7a8b3d34a9ab0e2f0531be3e9a17b5bbed4f4d4c11a5cc0d2e2c"
+      },
+      "expected": "checkpoint accepted-path replay mismatch",
+      "rejected_as_expected": true
+    },
+    {
+      "label": "saved-fill",
+      "rehash": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "rehash",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-fill/raw.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-fill/rehashed.json"
+        ],
+        "pid": 262257,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.07662980899976901,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-fill/resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-saved-fill/rehashed.json"
+        ],
+        "pid": 262310,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 7.191714818000037,
+        "log_sha256": "e1472dafa7cb7a8b3d34a9ab0e2f0531be3e9a17b5bbed4f4d4c11a5cc0d2e2c"
+      },
+      "expected": "checkpoint accepted-path replay mismatch",
+      "rejected_as_expected": true
+    },
+    {
+      "label": "displacement",
+      "rehash": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "rehash",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-displacement/raw.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-displacement/rehashed.json"
+        ],
+        "pid": 266050,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.14389005599969096,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-displacement/resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-displacement/rehashed.json"
+        ],
+        "pid": 266107,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 8.962294977000056,
+        "log_sha256": "e1472dafa7cb7a8b3d34a9ab0e2f0531be3e9a17b5bbed4f4d4c11a5cc0d2e2c"
+      },
+      "expected": "checkpoint accepted-path replay mismatch",
+      "rejected_as_expected": true
+    },
+    {
+      "label": "stress",
+      "rehash": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "rehash",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-stress/raw.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-stress/rehashed.json"
+        ],
+        "pid": 269808,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.13398496800027715,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-stress/resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-stress/rehashed.json"
+        ],
+        "pid": 269837,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 8.310234300999582,
+        "log_sha256": "e1472dafa7cb7a8b3d34a9ab0e2f0531be3e9a17b5bbed4f4d4c11a5cc0d2e2c"
+      },
+      "expected": "checkpoint accepted-path replay mismatch",
+      "rejected_as_expected": true
+    },
+    {
+      "label": "linear-history",
+      "rehash": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "rehash",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-linear-history/raw.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-linear-history/rehashed.json"
+        ],
+        "pid": 274240,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 0.17710860299985143,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "process": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/p602-observer",
+          "resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-linear-history/resume",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/mutate-linear-history/rehashed.json"
+        ],
+        "pid": 274333,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 9.094638530000339,
+        "log_sha256": "e1472dafa7cb7a8b3d34a9ab0e2f0531be3e9a17b5bbed4f4d4c11a5cc0d2e2c"
+      },
+      "expected": "checkpoint accepted-path replay mismatch",
+      "rejected_as_expected": true
+    }
+  ],
+  "observer_sha256": "4f23f9e75564249e25b435ee5e1c256ecd86b54ecb3a876ae1cf51461b1af6aa",
+  "cli_sha256": "e4ec829c32edb4cd79c33ca3ebb5b2dc8d473a133e6193a8ba2bd52569e0c6e5",
+  "passed": false,
+  "p6_complete": false
+}

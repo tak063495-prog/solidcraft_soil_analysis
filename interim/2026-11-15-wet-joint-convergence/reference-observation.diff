@@ -1,0 +1,139 @@
+--- interim/2026-11-08-wet-joint-finer-full-history/reference_history.py
++++ interim/2026-11-15-wet-joint-convergence/reference_probe.py
+@@ -1,10 +1,11 @@
+-"""Input-only, small 3D elastic MC + existing unilateral friction JOINT.
++"""Instrumented existing input-only wet JOINT reference (verification only).
+ 
+ Restricted to fixed hydrostatic water and boundary-factor cycles. No native
+ result or accepted increment sequence is an argument to the reference solve.
+ The existing independent Coulomb projector is shared with the dry verifier.
+ """
+ import copy
++from types import SimpleNamespace
+ import numpy as np
+ import fem_reference as fem
+ from joint_water_reference import Water
+@@ -64,10 +65,11 @@
+     return _reference(mesh, ground, case, steps, contact_steps, order, False, True, history_sink)
+ 
+ 
+-def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None):
++def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None):
+     assert isinstance(steps, int) and steps >= 2
+     assert isinstance(contact_steps, int) and contact_steps >= 1
+     assert order >= 3
++    assert maximum_m is None or (np.isfinite(maximum_m) and maximum_m > 0)
+     assert case['settings']['kinematics'] == 'explicit'
+     assert all(s['kind'] == 'boundary' for s in case['stages']), 'boundary cycle only'
+     assert not any(case.get(k) for k in ('beam_system', 'anchor_system', 'initially_inactive_bodies'))
+@@ -78,7 +80,7 @@
+                for j in case['joint_system']['joints']), 'fixed CONTINUOUS hydrostatic scope'
+     assert not case['joint_system'].get('structure_bodies')
+     xyz = np.asarray(mesh['nodes']); nd = xyz.size
+-    assert nd <= 300, 'existing small specimen only'
++    assert nd <= maximum_dofs <= 15000, 'bounded verification specimen only'
+     active = np.ones(len(mesh['tetrahedra']), dtype=bool)
+     water = Water(mesh, ground, case); system = water.contact
+     materials = {m['id']: m['mohr_coulomb'] for m in ground['materials']}
+@@ -137,23 +139,65 @@
+             np.testing.assert_allclose(np.asarray(a)@fixed[node], b, atol=1e-12, rtol=0)
+         return fixed.ravel()
+ 
++    def partition(target):
++        if maximum_m is None:
++            return np.full(len(jump), contact_steps, dtype=int)
++        delta = target-jump[:, None, :] if target.ndim == 3 else target-jump
++        length = np.linalg.norm(delta, axis=-1)
++        if length.ndim == 2:
++            length = length.max(axis=1)
++        counts = np.maximum(1, np.ceil(length/maximum_m).astype(int))
++        assert np.max(counts) <= 50000, 'existing JOINT partition budget exceeded'
++        return counts
++
++    def subset(mask):
++        return SimpleNamespace(**{k: getattr(system, k)[mask] for k in ('normal', 'kn', 'kt', 'mu')})
++
++    frozen_counts = np.ones(len(jump), dtype=int)
++
++    def project(target):
++        if maximum_m is None:
++            return contact(system, jump, traction, target, contact_steps)
++        counts = frozen_counts
++        shape = target.shape if target.ndim == 3 else (len(jump), 1, 3)
++        q = np.zeros(shape); flow = np.zeros(shape); cum = np.zeros(shape[:2])
++        for count in np.unique(counts):
++            mask = counts == count
++            q[mask], flow[mask], cum[mask] = contact(subset(mask), jump[mask], traction[mask], target[mask], int(count))
++        return q, flow, cum
++
++    def work_parts(target):
++        if maximum_m is None:
++            return contact_work(system, jump, traction, target, contact_steps)
++        counts = frozen_counts
++        pd = np.zeros(len(jump)); nd = pd.copy(); work = pd.copy()
++        for count in np.unique(counts):
++            mask = counts == count
++            pd[mask], nd[mask], work[mask] = contact_work(subset(mask), jump[mask], traction[mask], target[mask], int(count))
++        return pd, nd, work
++
+     def increment(load, factor, name, progress):
+-        nonlocal u, jump, traction, plastic, accumulated, maximum_residual
++        nonlocal u, jump, traction, plastic, accumulated, maximum_residual, frozen_counts
++        frozen_counts = np.ones(len(jump), dtype=int)
+         fixed = offset(factor); free = t.T@(u-fixed); scale = max(np.linalg.norm(load), 1.)
+         def evaluate(free):
+             candidate = fixed+t@free; target = np.einsum('qag,g->qa', system.c, candidate)
+-            q, slip, cum = contact(system, jump, traction, target, contact_steps)
++            q, slip, cum = project(target)
+             force = k@candidate+seed_force+np.einsum('qag,qa,q->g', system.c, q[:, 0], system.weight)
+             return candidate, target, q[:, 0], slip[:, 0], cum[:, 0], t.T@(force-load)
+         for iteration in range(60):
+             candidate, target, q, slip, cum, residual = evaluate(free)
+             relative = float(np.linalg.norm(residual)/scale)
+             if relative < 1e-10:
+-                pd, nd, work = contact_work(system, jump, traction, target, contact_steps)
++                if maximum_m is not None and np.any(partition(target) > frozen_counts):
++                    frozen_counts = np.maximum(frozen_counts, partition(target))
++                    continue
++                pd, nd, work = work_parts(target)
+                 plastic_work[:] += pd; numerical[:] += nd; endpoint_work[:] += work
+                 u = candidate; jump = target; traction = q; plastic += slip; accumulated += cum
+                 maximum_residual = max(maximum_residual, relative)
+                 path.append(dict(stage=name, progress=progress, factor=factor, relative_force_residual=relative,
++                                 contact_partition_counts=frozen_counts.tolist() if maximum_m is not None else [contact_steps]*len(jump),
+                                  open_points=int((np.einsum('qa,qa->q', jump, system.normal) > 0).sum()),
+                                  slipping_points=int((cum > 0).sum())))
+                 if history_sink is not None:
+@@ -162,7 +206,7 @@
+             h = 2e-9; perturb = np.repeat(target[:, None, :], 7, axis=1)
+             for axis in range(3):
+                 perturb[:, 1+2*axis, axis] += h; perturb[:, 2+2*axis, axis] -= h
+-            pq, _, _ = contact(system, jump, traction, perturb, contact_steps)
++            pq, _, _ = project(perturb)
+             tangent = np.stack([(pq[:, 1+2*a]-pq[:, 2+2*a])/(2*h) for a in range(3)], axis=2)
+             jac = kr+np.einsum('qai,qab,qbj,q->ij', cr, tangent, cr, system.weight, optimize=True)
+             correction = np.linalg.solve(jac, -residual)
+@@ -195,18 +239,18 @@
+                            endpoint_work=endpoint_work.copy(),
+                            physical_pressure=interface['pressure'].copy(), water_load=interface['load'].copy(),
+                            reaction=reaction.reshape(-1, 3), gap=normal)
+-    for step in range(1, steps+1):
+-        progress = step/steps
++    grids = progress_grids or {}
++    for progress in grids.get('geostatic', [i/steps for i in range(1, steps+1)]):
+         increment(base+(1-progress)*holding, 0., 'geostatic', progress)
+     frames.append(field_state('initial_equilibrated', base))
+     origin = 0.
+     for stage in case['stages']:
+-        for step in range(1, steps+1):
+-            progress = step/steps; factor = origin+(stage['target_factor']-origin)*progress
++        for progress in grids.get(stage['name'], [i/steps for i in range(1, steps+1)]):
++            factor = origin+(stage['target_factor']-origin)*progress
+             increment(base+factor*boundary, factor, stage['name'], progress)
+         origin = stage['target_factor']; frames.append(field_state(stage['name'], base+origin*boundary))
+     return dict(frames=frames, path=path, steps=steps, contact_steps=contact_steps,
+-                volume_order=order, maximum_relative_force_residual=maximum_residual,
++                volume_order=order, contact_maximum_m=maximum_m, maximum_relative_force_residual=maximum_residual,
+                 volume_rule=('affine_cut_hydrostatic' if cut_volume else
+                              'input_gauss_jacobi' if discrete_volume else 'independent_gauss_legendre'),
+                 reference_uses_native_results=False)

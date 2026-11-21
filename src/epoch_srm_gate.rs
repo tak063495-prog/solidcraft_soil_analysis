@@ -420,7 +420,7 @@ impl Snapshot {
                 "epoch SRM gate snapshot identity/specification/seal mismatch".into(),
             ));
         }
-        self.verify_records(mesh, spec)?;
+        self.verify_records(mesh, ground, case, spec)?;
         match &self.payload.phase {
             Phase::Done => self.verify_done(mesh, ground, case, spec),
             Phase::Construct(phase) => {
@@ -501,7 +501,13 @@ impl Snapshot {
         Ok(())
     }
 
-    fn verify_records(&self, mesh: &Mesh, spec: &Specification) -> Result<()> {
+    fn verify_records(
+        &self,
+        mesh: &Mesh,
+        ground: &Ground,
+        case: &StageCase,
+        spec: &Specification,
+    ) -> Result<()> {
         if self.payload.records.len() > spec.gate_after_stages.len() {
             return Err(Error::Input("epoch SRM gate has unexpected stages".into()));
         }
@@ -509,6 +515,7 @@ impl Snapshot {
             if gate.through_stages != spec.gate_after_stages[index] {
                 return Err(Error::Input("epoch SRM gate stage sequence changed".into()));
             }
+            self.verify_origin(mesh, ground, case, gate.through_stages, &gate.origin)?;
             gate.search.verify(
                 mesh,
                 &gate.origin,

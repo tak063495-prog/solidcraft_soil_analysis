@@ -1,0 +1,98 @@
+{
+  "checked_at_jst": "2026-11-14",
+  "folder_date_is_requested_label": "2026-12-17",
+  "sources": [
+    {
+      "id": "abaqus2026",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEITNRefMap/simaitn-c-contactpairform.htm",
+      "access": "full section",
+      "locator": "Discretization of Contact Pair Surfaces",
+      "finding": "NTS constrains secondary nodes at main-surface projections; STS averages constraints around secondary nodes. Pressure accuracy and side sensitivity differ. No universal spatial order is specified."
+    },
+    {
+      "id": "puso2004normal",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0045782503005802",
+      "access": "bibliography/search abstract only; full text HTTP 403",
+      "title": "A mortar segment-to-segment contact method for large deformation solid mechanics",
+      "authors": "M. A. Puso, T. A. Laursen",
+      "year": 2004,
+      "finding": "Full-text convergence claims not verified."
+    },
+    {
+      "id": "puso2004friction",
+      "url": "https://digital.library.unt.edu/ark:/67531/metadc1410676/m2/1/high_res_d/15013715.pdf",
+      "access": "full LLNL author manuscript UCRL-JRNL-200667, 2003-10-30; initial OSTI request failed 502, direct UNT PDF succeeded",
+      "title": "A Mortar Segment-to-Segment Frictional Contact Method for Large Deformations",
+      "authors": "M. Puso, T. Laursen",
+      "year": 2004,
+      "pages": "4891-4913",
+      "finding": "NTS force jumps/locking and active-set decisions are distinct. Integration requires overlap domains and depends on element interpolation; Appendix A explicitly restricts the scheme to linear tetrahedra/trilinear hexahedra and requires modifications for higher order elements. No universal pointwise slip/dissipation convergence order established. UNT catalog pages 4763-4783 differ from publisher bibliography; publisher pages are used.",
+      "doi": "10.1016/j.cma.2004.06.001",
+      "locator": "sections 1, 6, Appendix A (PDF pp.4-5,18-22)"
+    },
+    {
+      "id": "popp2012",
+      "url": "https://epubs.siam.org/doi/10.1137/110848190",
+      "access": "publisher abstract only; full text requires access",
+      "title": "Dual Quadratic Mortar Finite Element Methods for 3D Finite Deformation Contact",
+      "authors": "A. Popp, B. I. Wohlmuth, M. W. Gee, W. A. Wall",
+      "finding": "Dual multipliers and second-order interface interpolation (Tri6/Quad8/Quad9), nonconforming coupling. Does not establish an order for this code's saved GP histories."
+    },
+    {
+      "id": "hueberwohlmuth2005",
+      "url": "https://epubs.siam.org/doi/10.1137/S0036142903436678",
+      "access": "publisher abstract only",
+      "title": "An Optimal A Priori Error Estimate for Nonlinear Multibody Contact Problems",
+      "authors": "S. Hueber, B. I. Wohlmuth",
+      "finding": "Abstract gives h^(0.5+nu), 0<nu<=0.5, for linear dual mortar under regularity assumptions. The full theorem and norm not checked; do not transfer to plastic slip L2."
+    },
+    {
+      "id": "melenkwohlmuth2011",
+      "url": "https://www.tuwien.at/index.php?eID=dumpFile&f=190546&t=f&token=0bb0cbcee7676ce2d86e3ff860f4e6afad4bfa97",
+      "access": "full author report ASC 13/2011",
+      "title": "Quasi-optimal approximation of surface based Lagrange multipliers in finite element methods",
+      "locator": "Theorem 2.4, printed p.6 (PDF p.8)",
+      "finding": "Poisson mortar model, convexity, stable multiplier space, piecewise Besov regularity: multiplier L2 <= C h^k |log h|; H^-1/2 <= C h^(k+1/2)|log h| with additional convexity. Not a frictional-history theorem."
+    },
+    {
+      "id": "yastrebov2013",
+      "url": "https://cmet.yastrebov.fr/Lectures/Yastrebov_NMCM_Wiley_ISTE.pdf",
+      "access": "author-hosted full book; only section 1.2.2 used",
+      "title": "Numerical Methods in Contact Mechanics",
+      "authors": "V. A. Yastrebov",
+      "year": 2013,
+      "locator": "section 1.2.2, printed pp.10-12",
+      "finding": "Distinguishes NTN/NTS/STS, nonconforming patch-test issues and two-pass locking; consistent mortar coupling. Patch-test property is distinct from spatial/history convergence order."
+    },
+    {
+      "id": "wriggers2006",
+      "url": "https://link.springer.com/book/10.1007/978-3-540-32609-0",
+      "access": "bibliography and contents only; numerical chapters not acquired",
+      "title": "Computational Contact Mechanics",
+      "authors": "P. Wriggers",
+      "year": 2006,
+      "edition": 2,
+      "finding": "No unverified text or numerical order used."
+    },
+    {
+      "id": "fischerwriggers2006",
+      "url": "https://research.uni-hannover.de/en/publications/mortar-based-frictional-contact-formulation-for-higher-order-inte/",
+      "access": "author institution abstract and bibliography only",
+      "title": "Mortar based frictional contact formulation for higher order interpolations using the moving friction cone",
+      "authors": "K. A. Fischer, P. Wriggers",
+      "doi": "10.1016/j.cma.2005.09.025",
+      "pages": "5020-5036",
+      "finding": "Abstract describes quadratic contact interpolation and weak projection for 2D finite frictional contact; no slip/dissipation convergence order verified."
+    },
+    {
+      "id": "aster2013",
+      "url": "https://ericca.uqtr.ca/fr11.7/man_r/r5/r5.03.52.pdf",
+      "access": "full EDF reference document on university mirror; official v14/v16 URLs unavailable; official DocAster section 6.1.4-6.1.5 also acquired in follow-up",
+      "title": "Elements de contact derives d'une formulation hybride continue",
+      "revision": "11114, 10/06/2013",
+      "locator": "sections 6.1.4-6.1.5, printed pp.41-42",
+      "finding": "Status collocation and multiplier FE spaces differ. Nonmatching support makes unsegmented Gauss integration inexact; integration-only subdivision and multiple rules offered. Richer quadrature not universally better.",
+      "official_followup_url": "https://codeaster.gitlab.io/doc/docaster/manuals/man_r/r5/r5.03.52/Discr_tisation_de_la_formulation_variationnelle_mixte.html"
+    }
+  ]
+}

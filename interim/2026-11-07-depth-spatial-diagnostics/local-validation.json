@@ -1,0 +1,54 @@
+{
+  "observed_at_utc": "2026-11-07T13:53:45.591105+00:00",
+  "platform": "Linux",
+  "numerical_tool_test_and_workflow_source_commit": "bb6ce108b63292b878955d508195984a9f631f7d",
+  "current_data_documentation_commit": "9177605883c2d0fd7205d639087259d8583caa90",
+  "sources_match_ci_commit": true,
+  "rust_version": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "python_version": "Python 3.13.17",
+  "checks": [
+    {
+      "command": "cargo fmt --all --check",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --locked --all-targets -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo build --locked --release",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo test --locked --release",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m unittest discover -s tests -p 'test_*.py' -v",
+      "exit_code": 0
+    }
+  ],
+  "rust": {
+    "passed": 398,
+    "failed": 0,
+    "ignored": 0,
+    "suite_summaries": 58
+  },
+  "python": {
+    "passed": 239,
+    "failed": 0,
+    "skipped": 0,
+    "new_tests": 10,
+    "elapsed_seconds": 518.34
+  },
+  "solver_sha256": "56e4c9e5af6fe60b4b15d8bd696eb4e58887c7566eaa0d29d5c5c0ae9133afc9",
+  "log_sha256": {
+    "rustfmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clippy.log": "5be3deea5c032cbe39f7989a0a0f30874308920d887de125a77e2012f6eb1c6b",
+    "release-build.log": "765f1396d07f30f3a451cd3f9d9cad4e83c92c8e0aecf955ffc09061a6cf1e02",
+    "rust-tests.log": "d37630f313749586e0cadeee7a71cb28af553396d10679b3490e3a528c03c07c",
+    "python-tests.log": "4a01cbb461c51f956f5f9b33201bfd496f1a5e161d01e02ff8a9526d3954ec79"
+  },
+  "p6_complete": false,
+  "general_3d_spatial_convergence_demonstrated": false
+}

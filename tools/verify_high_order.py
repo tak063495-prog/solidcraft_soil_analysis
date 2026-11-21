@@ -27,7 +27,7 @@ def prepare(mesh,layout=None):
     return q,offset
 
 
-def internal(mesh,ground,states,active,q,offset,material_ids=None,pore_pressure_kpa=None):
+def internal(mesh,ground,states,active,q,offset,material_ids=None,pore_pressure_kpa=None,hydrostatic_cut=False):
     out=np.zeros((len(mesh['nodes']),3));max_yield=-np.inf
     materials={m['id']:m for m in ground['materials']}
     for ei in np.flatnonzero(active):
@@ -54,6 +54,9 @@ def internal(mesh,ground,states,active,q,offset,material_ids=None,pore_pressure_
         elif h is not None:total[:,:3]+=np.maximum(h-qp['position'][:,2],0)[:,None]*ground['initialization']['water_unit_weight_kn_m3']
         force=-np.einsum('qai,qa,q->i',qp['b'],total,qp['weight'])
         out[qp['nodes']]+=force.reshape(-1,3)
+    if hydrostatic_cut:
+        from hydrostatic_volume_audit import correction
+        out+=correction(mesh,active,q,ground['initialization']['water_level_m'],ground['initialization']['water_unit_weight_kn_m3'])
     return out,max_yield
 
 
@@ -230,7 +233,8 @@ def verify_stages(mesh_path,ground_path,result_path,exports,solver=None):
         frame_ground=ground
         if 'hydrostatic_water_level_m' in state:
             frame_ground={**ground,'initialization':{**ground['initialization'],'water_level_m':state['hydrostatic_water_level_m']}}
-        material_ids=state.get('element_material_ids');force,yield_value=internal(mesh,frame_ground,state['material_states'],active,q,offset,material_ids,state.get('pore_pressure_kpa'))
+        from hydrostatic_volume_audit import enabled
+        material_ids=state.get('element_material_ids');force,yield_value=internal(mesh,frame_ground,state['material_states'],active,q,offset,material_ids,state.get('pore_pressure_kpa'),enabled(run) and state.get('pore_pressure_kpa') is None)
         f,geometry=physical(mesh,frame_ground,active,state['surface_pressure_kpa'],case.get('pressure_on_original_surface_only',False),material_ids,joint_system)
         if case.get('boundary') and state.get('boundary_factor',0)!=0:
             f+=state['boundary_factor']*ref.conditions_load(mesh,case['boundary'],active)
@@ -299,7 +303,7 @@ def verify_stages(mesh_path,ground_path,result_path,exports,solver=None):
             for ei in np.flatnonzero(~active):
                 assert state['material_states'][offset[ei]:offset[ei+1]]==history_before['material_states'][offset[ei]:offset[ei+1]]
             if case['stages'][index-1]['kind']=='excavate':
-                removed=np.array(previous['active_elements'])&~active;removed_force,_=internal(mesh,frame_ground,previous['material_states'],removed,q,offset,previous.get('element_material_ids'),previous.get('pore_pressure_kpa'))
+                removed=np.array(previous['active_elements'])&~active;removed_force,_=internal(mesh,frame_ground,previous['material_states'],removed,q,offset,previous.get('element_material_ids'),previous.get('pore_pressure_kpa'),enabled(run) and previous.get('pore_pressure_kpa') is None)
                 expected_holding=np.array(previous['applied_nodal_load_kn']).reshape(-1,3)-f-removed_force
                 if joint_system is not None:
                     retained={**previous,'active_elements':active.tolist()}

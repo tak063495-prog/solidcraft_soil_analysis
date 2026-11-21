@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tools/verify_joint_birth.py", line 112, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/workspace/solidcraft_soil_analysis/tools/verify_joint_birth.py", line 59, in main
+    run,_,_=run_case(solver,output/name,mesh,ground,case);report['elastic'].append(dict(name=name,**audit_elastic(mesh,ground,run)))
+                                                                                                    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/joint_birth_reference.py", line 167, in audit_elastic
+    assert relative<1e-7,(frame['name'],relative)
+           ^^^^^^^^^^^^^
+AssertionError: ('initial_equilibrated', np.float64(1.0))

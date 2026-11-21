@@ -1,0 +1,135 @@
+{
+  "passed": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "software_tests_passed": true,
+  "platform": "Linux",
+  "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+  "source_sha256": {
+    "tools/nc_pc_gate.py": "87ed477d70c215a717abd32b528e638b198601725efed86cc25aa834a6be0730",
+    "tests/test_nc_pc_gate.py": "54261bc5fd4880087d24840d7463a9534f0239995b7b80fb7b5d386de924d7c6",
+    "tests/test_nc_pc_gate_schema.py": "3dc0f6094db72f1b963e21998bb7d36dba5181e8c0569f740e957b320f996e44",
+    "interim/2026-12-05-nc-independent-arc-residual/rerun-pc.ps1": "0fd7c9d02b58e67bbc2a8f67d4a4f0c24a3ec7c54b53b4ee11ce9a7663753ac1",
+    "interim/2026-12-08-pc3-rate-arc-gate-fix/test-rate-arc-gate.ps1": "f62f73cce79b7ffdaca22929a9d1ce0184fa1b488cf28a6d54e815f6451d60e4",
+    ".github/workflows/pc-rate-arc-gate.yml": "17c6d55e339b233e247eefa3752bc26e11444bc8669ae763c09edbb726c8a66d"
+  },
+  "source_unchanged_during_tests": true,
+  "groups": [
+    {
+      "module": "test_nc_pc_gate.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_pc_gate.py",
+        "-v"
+      ],
+      "return_code": 0,
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 1.818719604999842,
+      "log": "test_nc_pc_gate.log"
+    },
+    {
+      "module": "test_nc_pc_gate_schema.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_pc_gate_schema.py",
+        "-v"
+      ],
+      "return_code": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 34.34305363399994,
+      "log": "test_nc_pc_gate_schema.log"
+    },
+    {
+      "module": "test_nc_independent_arc_residual.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_independent_arc_residual.py",
+        "-v"
+      ],
+      "return_code": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 9.565172232000123,
+      "log": "test_nc_independent_arc_residual.log"
+    },
+    {
+      "module": "test_nc_fold_stability.py",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_fold_stability.py",
+        "-v"
+      ],
+      "return_code": 0,
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_seconds": 0.7865606369998659,
+      "log": "test_nc_fold_stability.log"
+    }
+  ],
+  "totals": {
+    "tests": 41,
+    "passed": 41,
+    "failed": 0,
+    "skipped": 0
+  },
+  "powershell_version": "7.4.6",
+  "initial_failure": {
+    "log": "initial-fold-fixture-error.log",
+    "passed": 13,
+    "failed": 1,
+    "skipped": 0,
+    "reason_ja": "疎配置で元native-evidence.zipが未配置。固定HEADの元blob復元後に14件を全再試験"
+  },
+  "scope_ja": "限定ゲートと再利用検査のソフトウェア検証。PC-4数値計算・NC-01/P6受入ではない。",
+  "source_parent_commit": "6b746fa05eafaef626d048270355fb512ab8c522",
+  "powershell_without_shell": {
+    "passed": 14,
+    "failed": 0,
+    "skipped": 1,
+    "log": "python-without-powershell.log"
+  },
+  "windows_compatibility": {
+    "state": "success",
+    "run_id": 43303337672,
+    "result": "windows-compatibility.json",
+    "initial_state": "pending at first push"
+  },
+  "post_linux_changes": {
+    "note_ja": "Linux検証後はCI起動設定だけを修正。ゲート・単体試験・PCスクリプトは検証時と同じSHA。",
+    "workflow_sha256": "743433e3e9a07885da1969cbcf392f20dcd2a3a727a1fcae3044093739ce23eb"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "client_date": "2026-11-16 JST",
+  "inherited": [
+    "interim/2026-12-19-c04-transient-water-cause-diagnosis/primary-source-review.txt",
+    "interim/2026-12-31-a04-richards-wet-joint-cloud-followup/primary-source-review.json"
+  ],
+  "inherited_bytes_bound_in": "prior-record-binding.json",
+  "new_literature_reference_numbers_adopted": 0,
+  "retrieval": "Cloud shell direct HTTP requests failed with proxy 403; retained in preparation/primary/retrieval.json. Connected web retrieval obtained official body text for the three sources below. No publisher PDF was inferred from metadata.",
+  "sources": [
+    {
+      "title": "Abaqus 2026 FRIC",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAESUBRefMap/simasub-c-fric.htm",
+      "scope": "公式本文 Variables That Can Be Updated: DSLIP/SFD、Variables to Be Defined: LM/TAU",
+      "confirmed": "DSLIPは不可逆すべり増分で、収束時にSLIPへ累積され、出力のstick/slip判定にも使用される。SFDは増分摩擦散逸。未指定時の発熱はすべり増分と摩擦応力の積から得る。最終局所判定・保存累積値の差・積算散逸を区別する動機とする。",
+      "limit": "本実装のstrict >0やサブステップ方針をAbaqusが保証すると主張しない。"
+    },
+    {
+      "title": "Abaqus 2026 Frictional Behavior",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEITNRefMap/simaitn-c-friction.htm",
+      "scope": "公式本文 Using the Basic Coulomb Friction Model、Shear Stress Versus Elastic Slip While Sticking",
+      "confirmed": "Coulombの限界せん断応力はμp、3D等価せん断応力は二接線成分のノルム。ペナルティでstick中にも有限の弾性すべりがあり得る。摩擦円余裕と不可逆すべりを別に観測する。",
+      "limit": "本文の製品定義や許容すべりを本実装の受入基準へ移植しない。サブステップ収束次数・経路独立性の証明はここから引用しない。"
+    },
+    {
+      "title": "Goldberg (1991), What Every Computer Scientist Should Know About Floating-Point Arithmetic, Oracle authorized edited reprint",
+      "url": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+      "scope": "公式許諾転載本文 Languages and Compilers / Ambiguity",
+      "confirmed": "浮動小数演算では結合則が一般に成り立たず、括弧と評価順が結果に関わる。今回の観測集計は固定順fsumとし、実判定の演算経路を別に保存する。"
+    }
+  ],
+  "unobtained_bodies_retained_as_bibliography_only": [
+    "Wriggers, Computational Contact Mechanics, 2nd ed. (2006), doi:10.1007/978-3-540-32609-0。書誌・目次のみ。",
+    "Laursen, Computational Contact and Impact Mechanics (2002; publisher copyright 2003), doi:10.1007/978-3-662-04864-1。書誌・目次のみ。",
+    "Simo & Laursen (1992), Computers & Structures 42, 97–116, doi:10.1016/0045-7949(92)90540-G。本文未取得、書誌のみ。",
+    "Return Mapping Procedure for Frictional Force Calculation: Some Insights (2005), doi:10.1061/(ASCE)0733-9399(2005)131:10(1004)。本文未取得、書誌のみ。",
+    "Lewis & Schrefler (1998), ISBN9780471928096。本文未取得、書誌のみ。",
+    "Celia, Bouloutas & Zarba (1990), doi:10.1029/WR026i007p01483。原著要旨・書誌のみ、本文未取得。"
+  ],
+  "other_prior_body_claims": "12-19のPLAXIS/Code_Aster/有効接触圧およびA-04のDLMFの確認範囲は旧記録を参照。今回それらの本文を再取得したとはしない。",
+  "path_dependence_evidence": "今回のP/R交換と保存ソースの小刻み積算からの実測に限定。未取得教科書の式や一般収束定理からの主張ではない。"
+}

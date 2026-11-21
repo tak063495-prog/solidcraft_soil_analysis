@@ -1,0 +1,17 @@
+setUpClass (test_nc_spatial_evidence.SpatialEvidence) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_nc_spatial_evidence.SpatialEvidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_spatial_evidence.py", line 22, in setUpClass
+    cls.integrity = replay.run(cls.folder,allow_platform_float_differences=sys.platform=='win32')
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-spatial-release/remeasure.py", line 144, in run
+    raise ValueError('remeasured JSON differs')
+ValueError: remeasured JSON differs
+
+----------------------------------------------------------------------
+Ran 0 tests in 178.758s
+
+FAILED (errors=1)

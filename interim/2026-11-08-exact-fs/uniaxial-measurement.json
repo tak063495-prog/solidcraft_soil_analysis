@@ -1,0 +1,117 @@
+{
+  "base_commit": "9f6c228d3b40d02b32b2877f0ed3d0feb9279768",
+  "case": "uniform unconfined 15 kPa, c=10 kPa, phi=psi=0; 6 straight Tet10, 27 nodes",
+  "analytical_ratio": 1.3333333333333333,
+  "slope_fs": false,
+  "real_section_srm_executed": false,
+  "solver_sha256": "afc5b3f542bd2bd68b9520f5a392780cb23fbf8cdc630f689f71a6ca57dd260e",
+  "epoch": {
+    "schema": "soil-fem-exact-fs-assessment/1",
+    "exact_fs_for_this_case": true,
+    "attained_equilibrium_factor": 1.3320312500000002,
+    "independently_excluded_factor": 1.3337890625000002,
+    "width": 0.0017578124999999556,
+    "absolute_factor_tolerance": 0.002,
+    "stop_reason": "factor_tolerance",
+    "source_report_sha256": "d8cdd3212ba4b03aaf7d1c7b4297f5c7ec8dbe1c8f99bffbfef21c39093fb033",
+    "continuum_stability_or_design_safety_certified": false
+  },
+  "fresh": {
+    "schema": "soil-fem-exact-fs-assessment/1",
+    "exact_fs_for_this_case": true,
+    "attained_equilibrium_factor": 1.3320312500000002,
+    "independently_excluded_factor": 1.3337890625000002,
+    "width": 0.0017578124999999556,
+    "absolute_factor_tolerance": 0.002,
+    "stop_reason": "factor_tolerance",
+    "source_report_sha256": "66c1b3a59c8fb83e494d4e38ae4f431ff02662cf4b249e2ed9033cca92914829",
+    "continuum_stability_or_design_safety_certified": false
+  },
+  "epoch_trials": 12,
+  "report_file_sha256": "6202664886ea820663936c5b909a2c04c3bca12158fc3504b9cc8bbf750c0005",
+  "commands": [
+    {
+      "args": [
+        "solve-stages",
+        "examples/exact-fs-uniaxial/mesh.json",
+        "examples/exact-fs-uniaxial/ground.json",
+        "examples/exact-fs-uniaxial/case.json",
+        "work/uniaxial-measurement/origin.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.035063308999951914,
+      "stdout": "Soil stages completed: 2 frames, 2 accepted / 1 rejected increments\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "search-mc-epoch-srm",
+        "examples/exact-fs-uniaxial/mesh.json",
+        "work/uniaxial-measurement/origin.json",
+        "examples/exact-fs-uniaxial/epoch-spec.json",
+        "work/uniaxial-measurement/epoch-report.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.36030014200002825,
+      "stdout": "Accepted-origin epoch SRM saved; inspect requirement, stop reason and independent evidence\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "verify-exact-epoch-fs",
+        "examples/exact-fs-uniaxial/mesh.json",
+        "work/uniaxial-measurement/origin.json",
+        "examples/exact-fs-uniaxial/epoch-spec.json",
+        "work/uniaxial-measurement/epoch-report.json",
+        "6202664886ea820663936c5b909a2c04c3bca12158fc3504b9cc8bbf750c0005",
+        "work/uniaxial-measurement/epoch-assessment.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7953030379999291,
+      "stdout": "Fs evidence verified; exact_fs_for_this_case=true\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "search-mc-srm",
+        "examples/exact-fs-uniaxial/mesh.json",
+        "examples/exact-fs-uniaxial/ground.json",
+        "examples/exact-fs-uniaxial/case.json",
+        "examples/exact-fs-uniaxial/fresh-spec.json",
+        "work/uniaxial-measurement/fresh-report.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.24973232100001042,
+      "stdout": "Fresh-history SRM search saved; inspect physical interval, requirement and limitations\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "verify-exact-fs",
+        "examples/exact-fs-uniaxial/mesh.json",
+        "examples/exact-fs-uniaxial/ground.json",
+        "examples/exact-fs-uniaxial/case.json",
+        "examples/exact-fs-uniaxial/fresh-spec.json",
+        "work/uniaxial-measurement/fresh-report.json",
+        "6709b8bcab7c19b14583db68a9a7bfda63b9582f9488419d1fc27710c74fddd5",
+        "work/uniaxial-measurement/fresh-assessment.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8841899259999764,
+      "stdout": "Fs evidence verified; exact_fs_for_this_case=true\n",
+      "stderr": ""
+    }
+  ],
+  "files_sha256": {
+    "examples/exact-fs-uniaxial/case.json": "c101aa2eb66c8d4abb595f2bd4b280f5c50e09904f49fec96312ab90d2cbbfb5",
+    "examples/exact-fs-uniaxial/epoch-spec.json": "6eaf867be5be8860c1b82d6f9d2ab61783c797958f90fb111a1d7d08b0a1942b",
+    "examples/exact-fs-uniaxial/ground.json": "6d3855a867fb60664acb53c5fadba0a04cf50379be481cc24344b9338da3ff7a",
+    "examples/exact-fs-uniaxial/mesh.json": "3a8f9c22b4a8c1c0353793f5a0c9fa853557654f445344fc2912a4ff51332cb3",
+    "examples/exact-fs-uniaxial/fresh-spec.json": "192161e37f312e97a214b8aa5b94c9082cdeb536e5b075dd7234f338c70966d0",
+    "work/uniaxial-measurement/fresh-assessment.json": "9baa24ae4eccb843e265528caf905281c4960067eadd7c7f517392e44a24f746",
+    "work/uniaxial-measurement/fresh-report.json": "6709b8bcab7c19b14583db68a9a7bfda63b9582f9488419d1fc27710c74fddd5",
+    "work/uniaxial-measurement/epoch-report.json": "6202664886ea820663936c5b909a2c04c3bca12158fc3504b9cc8bbf750c0005",
+    "work/uniaxial-measurement/origin.json": "c6d27a9c640456027b34b34dd7e831461e9eb922ac2c24e6e349d2bcccbbf8bb",
+    "work/uniaxial-measurement/epoch-assessment.json": "1d99765ac76a7c1562e200b757722c2555c8bc7e59c1452349bd6218bd958f8d"
+  }
+}

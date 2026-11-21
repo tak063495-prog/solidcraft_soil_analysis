@@ -1,0 +1,219 @@
+test_bound_cli_reports_and_changed_input_rejection (test_mcc_acoustic_cli.Cli.test_bound_cli_reports_and_changed_input_rejection) ... ok
+test_existing_outputs_are_preserved_by_both_clis (test_mcc_acoustic_cli.Cli.test_existing_outputs_are_preserved_by_both_clis) ... ok
+test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) ... 
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2]) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, 1, 1]) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, 999]) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, True]) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, 1.0]) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=['2', 1]) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=None) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids={}) ... FAIL
+  test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids='') ... FAIL
+test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) ... 
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='ground') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='implementation') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='weight') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='candidate_count') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='ground') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='implementation') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='weight') ... FAIL
+  test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='candidate_count') ... FAIL
+test_material_constants_same_id_and_legacy_fallback (test_p2_acoustic.MaterialInventory.test_material_constants_same_id_and_legacy_fallback) ... FAIL
+test_matset_before_after_and_exact_cli (test_p2_acoustic.MaterialInventory.test_matset_before_after_and_exact_cli) ... FAIL
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, 1, 1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, 999])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, True])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=[2, 1.0])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=['2', 1])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids={})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_bad_inventory_rejected_including_inactive_elements (test_p2_acoustic.MaterialInventory.test_bad_inventory_rejected_including_inactive_elements) (ids='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 50, in test_bad_inventory_rejected_including_inactive_elements
+    with self.subTest(ids=ids),self.assertRaises(ValueError):diagnose(data['mesh'],data['ground'],data['result'])
+                               ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='ground')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": 2.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='implementation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": 2.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='weight')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": -1.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='-O', mutation='candidate_count')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": 2.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='ground')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": 2.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='implementation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": 2.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='weight')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": -1.0}
+
+
+======================================================================
+FAIL: test_exact_changed_input_and_implementation_rejected_in_all_modes (test_p2_acoustic.MaterialInventory.test_exact_changed_input_and_implementation_rejected_in_all_modes) (mode='env', mutation='candidate_count')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 70, in test_exact_changed_input_and_implementation_rejected_in_all_modes
+    p=self.call('mcc_acoustic_exact_report.py',[sampled,output],mode);self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(output.exists())
+                                                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : {"elements": 2, "near_yield_candidates": 1, "sampled_negative_candidates": 1, "all_direction_negative_candidates": 1, "additional_candidates_not_detected_by577_directions": 0, "negative_volume_m3": 2.0}
+
+
+======================================================================
+FAIL: test_material_constants_same_id_and_legacy_fallback (test_p2_acoustic.MaterialInventory.test_material_constants_same_id_and_legacy_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 39, in test_material_constants_same_id_and_legacy_fallback
+    self.assertEqual(diagnose(changed['mesh'],changed['ground'],dict(changed['result'],frames=[changed['result']['frames'][-1]]))['frames'][0],diagnose(expected['mesh'],expected['ground'],dict(expected['result'],frames=[expected['result']['frames'][-1]]))['frames'][0])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'sta[82 chars]es': 0, 'softening_candidates': 0, 'invalid_pl[367 chars]00.0} != {'sta[82 chars]es': 1, 'softening_candidates': 1, 'invalid_pl[892 chars].9}}}
+Diff is 2432 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_matset_before_after_and_exact_cli (test_p2_acoustic.MaterialInventory.test_matset_before_after_and_exact_cli)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_acoustic.py", line 25, in test_matset_before_after_and_exact_cli
+    self.assertEqual([r['near_yield_candidates'] for r in report['frames']],[0,1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [0, 0] != [0, 1]
+
+First differing element 1:
+0
+1
+
+- [0, 0]
+?     ^
+
++ [0, 1]
+?     ^
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.257s
+
+FAILED (failures=19)

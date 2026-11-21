@@ -1,0 +1,51 @@
+{
+  "schema": "soil-fem-joint-crack-tip-acceptance-summary/1",
+  "passed": true,
+  "scope": {
+    "topology": "explicit matching Tet10 faces and owning elements, including same body; shared declared three-node front only",
+    "dry": "elastic bulk MC; compressed stick, open, reversed frictional slip; independent all nodes and all material/contact GPs",
+    "wet": "fully submerged elastic MC closed stick; CONTINUOUS, SOIL, PRESCRIBED; hydrostatic, steady Darcy, one-side removal"
+  },
+  "gates": {
+    "shared_jump_coefficients_cancel_exactly": true,
+    "virtual_work_force_and_moment": true,
+    "tangent_relative_tolerance": 1e-07,
+    "opening_hinge_unrestrained_modes": 1,
+    "independent_elastic_relative_tolerance": 1e-07,
+    "reassembly_tolerance": 1e-10,
+    "nonlinear_tolerance": 1e-08,
+    "linear_tolerance": 1e-10,
+    "constraint_tolerance_m": 1e-10,
+    "head_tolerance_m": 1e-08,
+    "construction_rejection_clean_path_and_separate_cli_restart": true,
+    "rehash_tip_face_owner_tampering_rejected": true,
+    "network_wide_branch_and_ambiguous_matching_rejected": true,
+    "local_h_comparisons_recorded": true,
+    "legacy_dry_and_wet_entire_run_exact_except_time_and_solver_sha": true,
+    "linux_all_tests_passed": true
+  },
+  "p6_complete": false,
+  "general_spatial_convergence_accepted": false,
+  "remaining": [
+    "low preload NC full removal",
+    "wet JOINT plastic sliding full-history convergence",
+    "general plastic/crack-tip CAD verification",
+    "Richards wet JOINT",
+    "JOINT plus BIRTH",
+    "crack propagation",
+    "element-interior termination",
+    "accurate tip singularity representation",
+    "large calculations and GUI/GPU on user PC"
+  ],
+  "evidence_json": [
+    "measurements-dry.json",
+    "measurements-holding.json",
+    "measurements-legacy.json",
+    "measurements-local-h.json",
+    "measurements-same-body.json",
+    "measurements-water-continuous.json",
+    "measurements-water-prescribed.json",
+    "measurements-water-soil.json"
+  ],
+  "solver_sha256": "35f7e6e4e6465538e7a43139c0bc36f85a5b324a0055952ca0f3e44d83fe2b40"
+}

@@ -1,0 +1,243 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "a03_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "cdaf850c0347c8d841decce7ddff608d03ae7933",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 966,
+    "executed": 966,
+    "passed": 966,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 45043,
+      "exit_code": 0,
+      "elapsed_seconds": 1.1146813540000267
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 46514,
+      "exit_code": 0,
+      "elapsed_seconds": 25.85052327400001
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 62051,
+      "exit_code": 0,
+      "elapsed_seconds": 1138.426141557
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 508612,
+      "exit_code": 0,
+      "elapsed_seconds": 3.158196726999904
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 509078,
+      "exit_code": 0,
+      "elapsed_seconds": 1267.6166219030001
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 1303679,
+      "exit_code": 0,
+      "elapsed_seconds": 2.874748088999695
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-core-0"
+      ],
+      "pid": 543791,
+      "exit_code": 0,
+      "elapsed_seconds": 476.1398811659999
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-core-1"
+      ],
+      "pid": 543793,
+      "exit_code": 0,
+      "elapsed_seconds": 539.1780235439999
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-mean-evidence"
+      ],
+      "pid": 923523,
+      "exit_code": 0,
+      "elapsed_seconds": 940.7023139000003
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-spatial-evidence"
+      ],
+      "pid": 964098,
+      "exit_code": 0,
+      "elapsed_seconds": 146.79423598799985
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-c01-switch"
+      ],
+      "pid": 1099904,
+      "exit_code": 0,
+      "elapsed_seconds": 66.85991030800005
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-c01-path"
+      ],
+      "pid": 1170373,
+      "exit_code": 0,
+      "elapsed_seconds": 109.35651919400016
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a03shear/full/python/python-c01-cause"
+      ],
+      "pid": 1187495,
+      "exit_code": 0,
+      "elapsed_seconds": 83.74831775800021
+    }
+  ],
+  "source_count": 1640,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true,
+  "full_suite_input_commit": "d5ce82f4d165d407402596c0fcbef7abf2bf3e7e",
+  "scientific_source_commit": "e7bc441b1b6c8a4424ee1a372094c31a03df114f",
+  "full_suite_unique_counts_exclude_preliminary_and_post_registration_repeats": true,
+  "full_suite_evidence_index": "validation/full-suite-index.json",
+  "preliminary_light_test_attempts": [
+    {
+      "executed": 9,
+      "passed": 8,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "unexecuted": 0,
+      "log": "validation/initial-light-test-failure/tests.log",
+      "status": "retained; diagnostic stage guard corrected"
+    },
+    {
+      "executed": 9,
+      "passed": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "unexecuted": 0,
+      "log": "validation/light-tests-retry.log",
+      "status": "valid 36 inputs unchanged; no new equilibrium solves"
+    }
+  ],
+  "primary_gl_comparison": {
+    "common_states_per_path": 16,
+    "source": "validation/gl-common-coordinates.json",
+    "sha256": "e6c2c44f40f3a46a9aa11bdd40ad97fa01d523e0e248edb9415080928d623b1d",
+    "original_n8_all_32_point_auxiliary_metrics_preserved": true,
+    "new_equilibrium_solves": 0
+  },
+  "production_rust_changed": false,
+  "nc_code_or_configuration_changed": false,
+  "old_values_rewritten": false
+}

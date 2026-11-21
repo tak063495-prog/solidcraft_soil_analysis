@@ -1,0 +1,163 @@
+{
+  "schema": "soil-fem-wet-structures-verification/1",
+  "passed": true,
+  "frames": [
+    {
+      "name": "initial_equilibrated",
+      "relative_displacement_error": 2.6845491097390954e-11,
+      "relative_increment_error": 0.0,
+      "relative_stress_error": 3.8384581232696116e-12,
+      "reference_true_residual": 2.854580609509564e-16,
+      "minimum_effective_contact_pressure_kpa": 104.99999999999964
+    },
+    {
+      "name": "install",
+      "relative_displacement_error": 2.644126920905906e-12,
+      "relative_increment_error": 3.471490722721888e-11,
+      "relative_stress_error": 5.591999000008261e-13,
+      "reference_true_residual": 4.4136251957369026e-15,
+      "minimum_effective_contact_pressure_kpa": 103.72717111892705
+    },
+    {
+      "name": "rise",
+      "relative_displacement_error": 2.791326263780886e-12,
+      "relative_increment_error": 3.748412866085977e-12,
+      "relative_stress_error": 5.628903015465886e-13,
+      "reference_true_residual": 4.805137925053183e-15,
+      "minimum_effective_contact_pressure_kpa": 101.22717111892706
+    },
+    {
+      "name": "load_plate_beam",
+      "relative_displacement_error": 1.9713323112177848e-12,
+      "relative_increment_error": 6.152602009463084e-13,
+      "relative_stress_error": 5.394528281012087e-13,
+      "reference_true_residual": 1.4670168596564533e-14,
+      "minimum_effective_contact_pressure_kpa": 99.4634486098838
+    },
+    {
+      "name": "flow",
+      "relative_displacement_error": 2.7436975264921574e-12,
+      "relative_increment_error": 3.988844371818528e-11,
+      "relative_stress_error": 8.52039172499723e-13,
+      "reference_true_residual": 1.777441395776979e-14,
+      "minimum_effective_contact_pressure_kpa": 104.46344860988384
+    },
+    {
+      "name": "unload_plate_beam",
+      "relative_displacement_error": 3.1110052347102827e-12,
+      "relative_increment_error": 5.726485964490002e-12,
+      "relative_stress_error": 6.006810513392969e-13,
+      "reference_true_residual": 4.829130906338936e-15,
+      "minimum_effective_contact_pressure_kpa": 106.22717111892709
+    },
+    {
+      "name": "reset_water",
+      "relative_displacement_error": 4.045441812633626e-12,
+      "relative_increment_error": 1.614992088672069e-11,
+      "relative_stress_error": 7.17488192875516e-13,
+      "reference_true_residual": 4.4136251957369026e-15,
+      "minimum_effective_contact_pressure_kpa": 103.72717111892705
+    },
+    {
+      "name": "remove",
+      "relative_displacement_error": 3.8309430404739044e-13,
+      "relative_increment_error": 8.573749470690529e-12,
+      "relative_stress_error": 6.658347384433558e-14,
+      "reference_true_residual": 2.854580609509564e-16,
+      "minimum_effective_contact_pressure_kpa": 104.99999999999964
+    }
+  ],
+  "independent_gl5_to_gl7_relative_difference": 1.1630766646304642e-14,
+  "clean_rejected_path_exact": true,
+  "checkpoints": [
+    {
+      "stage": "geostatic",
+      "accepted_count": 1,
+      "progress": 0.25,
+      "exact": true
+    },
+    {
+      "stage": "install",
+      "accepted_count": 5,
+      "progress": 0.125,
+      "exact": true
+    },
+    {
+      "stage": "rise",
+      "accepted_count": 13,
+      "progress": 0.25,
+      "exact": true
+    },
+    {
+      "stage": "load_plate_beam",
+      "accepted_count": 17,
+      "progress": 0.125,
+      "exact": true
+    },
+    {
+      "stage": "flow",
+      "accepted_count": 25,
+      "progress": 0.25,
+      "exact": true
+    },
+    {
+      "stage": "unload_plate_beam",
+      "accepted_count": 29,
+      "progress": 0.25,
+      "exact": true
+    },
+    {
+      "stage": "reset_water",
+      "accepted_count": 33,
+      "progress": 0.25,
+      "exact": true
+    },
+    {
+      "stage": "remove",
+      "accepted_count": 37,
+      "progress": 0.25,
+      "exact": true
+    }
+  ],
+  "inputs_sources_solver_sha256": {
+    "target/release/soil-fem-3d": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6",
+    "work/final-prescribed/mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+    "work/final-prescribed/ground.json": "767dcc453a0a9f9d68632804b09e4863873f9d6af0d38036dd430001d206dbdf",
+    "work/final-prescribed/stages.json": "e18da3f57f27e3c32ce3cd22e0cbee4983fa0d7e6054f930194922162ea066ad",
+    "tools/verify_wet_structures.py": "c88d31b4fe4febdcf0043d4a6739d7541793b41e76467a5e35d8d3ff7f884e89",
+    "tools/beam_reference.py": "af8e6721708f6d5a2ec6040273d2863facc06143dbf5fa710e317ff6577645a6",
+    "tools/plate_reference.py": "3b04078ea2873f5d9c40c8a6aea7cd82287ae735eb6a1330f6495015cf885cbd",
+    "tools/joint_water_reference.py": "c3659b97f3f2001e83ca24cee2822adc5f8920a5766312dbac36a883874e49ff",
+    "tools/joint_reference.py": "ef26b439a2481ae41a85400f79af65ab0c171cce4806a2d8b4d9528593516063",
+    "tools/fem_reference.py": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+    "tools/darcy_reference.py": "773cbec4e87585db5b199a1786c4f46c3c54aa577d12c6eeda8256cc8a5df3ea",
+    "tools/hydrostatic_reference.py": "1f4df89c9bb33b244061f76f2876cccf1a485a76137d575909659720cd507ec2",
+    "tools/verify_high_order.py": "fdce847d13fc15ae82567bcdd3d32f7cc9c7e8a6ef590e8a13e4bf37936f6541",
+    "tools/mc_reference.py": "2a7235dbbd0c33963eccbc5cf0ab8316509e1867a4f705ac22d0595f94e4c853",
+    "tools/verify_checkpoint.py": "b3fe1f5d18a780ce8e32cd781c644220c67dabc93c49dc70d89b7e711f5c9ef2",
+    "tools/export_stages.py": "753acd6364355b820e67caef273d294e7c763ed41e565b5e8685fd225031d38a",
+    "tools/high_order_io.py": "179f83c063042276f75badf03053337aee14cd05c7bcaff9f7c9a3e3904875dc",
+    "tools/beam_io.py": "d7d60b57906279ff1bade09af8a0446634ab43ac7b944a114ab467a2150c8154",
+    "tools/plate_io.py": "f9572fda67c029cec153a7aaa75e3ba6d94a1e423ff55ec6b0f1dc600b8ef09a",
+    "tools/joint_io.py": "2ef212c5552b2976c8661b47e629bd86cc5d4e8348aff1940a4ba1fe2cb582cb",
+    "examples/stages-joint-water-prescribed.json": "7d6c14f7fcfb8acdaf709a00f9a7f06d23ef353ccf77ef11a9d43c0369b0630f"
+  },
+  "result_sha256": "f3895d24616ae60fc6be65b18f0679851582512b9f250e81dbac42cc170c881f",
+  "output_roundtrip": {
+    "schema": "soil-fem-stage-export/2",
+    "result_sha256": "f3895d24616ae60fc6be65b18f0679851582512b9f250e81dbac42cc170c881f",
+    "mesh_sha256": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+    "vtu_roundtrip": "passed",
+    "integration_point_roundtrip": "passed",
+    "cell_field_meaning": "volume_average",
+    "frame_count": 8,
+    "joint_point_roundtrip": "passed",
+    "plate_sample_roundtrip": "passed"
+  },
+  "p6_complete": false,
+  "p3b_p4_rows_complete": false,
+  "water_modes": [
+    "prescribed"
+  ],
+  "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('prescribed',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance."
+}

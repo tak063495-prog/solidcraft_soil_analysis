@@ -1,0 +1,52 @@
+{
+  "platform": "Linux",
+  "starting_commit": "b235824ea55a0e70b8788e586ee8562549f8baf5",
+  "rust": {
+    "command": "cargo test --locked --release",
+    "passed": 414,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "exit_code": 0
+  },
+  "python": {
+    "discovered_total": 442,
+    "tests": 440,
+    "tools": 2,
+    "executed_total": 442,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "missing": 0,
+    "duplicated": 0,
+    "exit_code": 0
+  },
+  "tools_standalone": {
+    "command": "python -m unittest discover -s tools -p 'test_*.py' -v",
+    "passed": 2,
+    "exit_code": 0,
+    "counted_again_in_unique_total": false
+  },
+  "checks": [
+    {
+      "command": "cargo fmt --all --check",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --locked --all-targets -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo build --locked --release",
+      "exit_code": 0
+    }
+  ],
+  "ci_partition_after_checkout_change": {
+    "passed": 4,
+    "exit_code": 0
+  },
+  "release_binary_sha256": "7598ddc6282c56221dfbd33d14554afcec3e75db1d4b4f3fe444c30af9a6be06",
+  "source_freeze": "778 root sources frozen after Rust start and before all four Python groups; final CI-only change recorded separately",
+  "numerical_acceptance": false
+}

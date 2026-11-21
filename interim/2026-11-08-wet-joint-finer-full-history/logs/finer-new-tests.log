@@ -1,0 +1,29 @@
+test_wet_joint_finer_full_history (unittest.loader._FailedTest.test_wet_joint_finer_full_history) ... ERROR
+
+======================================================================
+ERROR: test_wet_joint_finer_full_history (unittest.loader._FailedTest.test_wet_joint_finer_full_history)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_wet_joint_finer_full_history
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/workspace/solidcraft_soil_analysis/tests/test_wet_joint_finer_full_history.py", line 16, in <module>
+    spec.loader.exec_module(study)
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-08-wet-joint-finer-full-history/study.py", line 18, in <module>
+    from diagnose_cut_volume_history import FIELDS, inputs, validate_path, summary, write
+  File "/workspace/solidcraft_soil_analysis/tools/diagnose_cut_volume_history.py", line 19, in <module>
+    from wet_joint_cycle_reference import cut_volume_reference, differences, serializable
+  File "/workspace/solidcraft_soil_analysis/tools/wet_joint_cycle_reference.py", line 12, in <module>
+    from verify_high_order import physical
+  File "/workspace/solidcraft_soil_analysis/tools/verify_high_order.py", line 5, in <module>
+    import meshio
+ModuleNotFoundError: No module named 'meshio'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

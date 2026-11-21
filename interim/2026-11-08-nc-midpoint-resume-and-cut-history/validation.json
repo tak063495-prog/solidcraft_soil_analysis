@@ -1,0 +1,124 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "starting_commit": "561afe93ab4ea82e9f56535bf9444f4cb3038577",
+  "software_checks_passed": true,
+  "numerical_acceptance_passed": false,
+  "checks": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "release-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "rust-targeted",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--test",
+        "free_contact",
+        "--test",
+        "mcc_midpoint",
+        "--test",
+        "joint_water",
+        "--test",
+        "stage_job"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 57.4000464259999
+    },
+    {
+      "name": "python-tools",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.08253198799991424
+    },
+    {
+      "name": "python-full",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "unittest_reported_seconds": 381.255
+    }
+  ],
+  "rust": {
+    "scope": "Four relevant integration-test binaries only; entire Rust suite not rerun",
+    "targets": [
+      "free_contact",
+      "mcc_midpoint",
+      "joint_water",
+      "stage_job"
+    ],
+    "passed": 29,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_in_selected_targets": 0
+  },
+  "python": {
+    "scope": "All tests/test_*.py",
+    "passed": 332,
+    "failed": 0,
+    "skipped": 0,
+    "new_tests_included": 8
+  },
+  "tools": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "saved_evidence_remeasurement": true,
+  "validated_source_files": 600,
+  "validated_source_bytes_unchanged": true,
+  "solver_sha256": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6",
+  "rust_version": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "python_version": "3.13.17",
+  "windows_ci": "unverified"
+}

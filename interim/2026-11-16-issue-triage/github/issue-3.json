@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+    "title": "[P2] MCC音響診断がMATSET後の材料IDを無視し、負候補を見落とす",
+    "issue_number": 3,
+    "body": "\n対象 main `51625d6bbd629e8c1dbec53bca78a7b5381bf98c`。\n\nMATSET後の確定材料IDを無視して初期材料のMCC定数で診断\n\n- [diagnostic L138–142](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/tools/mcc_acoustic_diagnostic.py#L138-L142) blob `aa27aaea071515bac7b23cdd589bb14c47532ee0`\n- [exact report L34–38](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/tools/mcc_acoustic_exact_report.py#L34-L38) blob `6a448d3416a28f807535488101f56f19aa3aa673`\n- 条件: 通常MCC施工でMCC→別MCCのMATSET後、frame.state.element_material_idsと初期mesh.material_idsが異なる。診断は全frameに同じ初期IDを適用する。\n- 到達可能性: [stages.rs L1186–1200](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/src/stages.rs#L1186-L1200) はMaterialSetを処理し、[L1235–1246](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/src/stages.rs#L1235-L1246)でelement_material_ids更新。新modelのstate妥当性は検査されるが通常MCC MATSETを一律禁止していない。mixed MCCのstage whitelistではMATSET非対応だが、診断CLIはmixed専用に限定されておらず通常結果も受理する。該当ソースを静的確認。\n- 独立再現: material_mapping_probe.py / .json。旧M=1.6、新M=1.4、lambda=.12,kappa=.025,nu=.2,e=.9、p=100,pc=400、q=1.4 sqrt(100*300)のextension応力。旧材料yield=-.0439453125（内側）、新材料yield≈6.96e−17（降伏面）なので両側admissible。mesh IDs=[1,1]、確定frame IDs=[2,1]、要素0のみactive。\n- 実結果: near_yield=0, sampled_negative=0。現在frame材料に解決した対照はnear_yield=1, sampled_negative=1。新定数で評価すべきsoftening/音響負候補を丸ごと落とす。M以外のK/G/硬化定数変更も誤評価を招く。\n- 修正案: frame.state.element_material_idsを優先し、古いschemaの空/欠落inventoryのみ明示仕様に従ってmesh IDsへfallback。長さ・未知ID・型を明示検査。sampled/exact共通の材料解決関数にし、各frameで解決。\n- 回帰: 上記preserve条件の旧/新M対照、MATSET前後の複数frame、lambda/kappa/nu変更、同一ID、legacy inventory fallback、未知ID/長さ不一致拒否。exact reportにも同じ正しい候補数を要求。\n- 実行区分: diagnosticの実Python再現済み＋RustのMATSET到達性は静的確認。実Rust solverで施工を通して生成したresultは未実行。誤った診断が本体FEMの応力/解を変更するものではない。\n\n\n追加の実CLI確認: `material_cli_probe.py/json` はbefore(ID1)→after(ID2)の2frameを生成してsampled→exactを実行。実装はsampled両frameとも0候補、exact最終0候補。最終frameの材料を正しく反映した1frame対照ではsampled/exactとも負候補1。legacyでelement_material_ids欠落のID1対照は0候補で変わらない。実FEM施工全体は未実行で、Python診断・CLI自体の独立再現とRust到達性静的確認を区別する。\n\n検証環境：Linux / Python 3.12.14、NumPy。合成fixtureを使用し、作者の保存結果・CI成功を独立実行とは扱っていません。実CAD・Windows/native GUI・実FEM通算および公開事例の診断誤りは未検証です。診断上の仮想塑性載荷分枝の候補見落としであり、全体安定性や実際の載荷分枝を確定する主張ではありません。\n",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 1,
+    "created_at": "2026-10-29T00:04:27Z",
+    "updated_at": "2026-11-09T22:49:01Z",
+    "closed_at": "2026-11-09T22:49:01Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+    "display_title": "[P2] MCC音響診断がMATSET後の材料IDを無視し、負候補を見落とす"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+  "title": "[P2] MCC音響診断がMATSET後の材料IDを無視し、負候補を見落とす",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+  "display_title": "[P2] MCC音響診断がMATSET後の材料IDを無視し、負候補を見落とす"
+}

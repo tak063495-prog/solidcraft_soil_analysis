@@ -1,0 +1,895 @@
+{
+  "schema": "ci-timeout-validation/1",
+  "starting_commit": "fa22e14701eaa5014b1d8268e768c1ab513db4a6",
+  "tested_code_commit": "368c983d1dadcfe0d426cc36786826eb07ce8f02",
+  "software_tests_passed": true,
+  "numerical_acceptance": false,
+  "rust": {
+    "discovered": 463,
+    "passed": 463,
+    "failed": 0,
+    "not_run": 0,
+    "skip": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered": 0,
+    "suites": 72,
+    "commands": [
+      {
+        "name": "fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.107938009999998,
+        "log": "validation/fmt/console.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 39.27627928400011,
+        "log": "validation/clippy/console.log",
+        "log_sha256": "52711d3f31d86d3c788dd239b4475052cc1b36b1e4da585338bcdb79d58c306d"
+      },
+      {
+        "name": "build",
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 167.1429074990001,
+        "log": "validation/build/console.log",
+        "log_sha256": "1a308899a8bb827339ac631620cc82326e96edf06421334fd736846a71f5e2ed"
+      },
+      {
+        "name": "rust",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 3045.8559274070003,
+        "suites": [
+          {
+            "result": "ok",
+            "passed": 62,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 0,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 8,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 10,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 10,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 10,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 7,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 11,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 10,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 5,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 1,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 12,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 7,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 7,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 14,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 7,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 11,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 9,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 12,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 4,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 8,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 6,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 7,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 3,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 2,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          },
+          {
+            "result": "ok",
+            "passed": 0,
+            "failed": 0,
+            "ignored": 0,
+            "measured": 0,
+            "filtered": 0
+          }
+        ],
+        "totals": {
+          "passed": 463,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered": 0
+        },
+        "log": "validation/rust/console.log",
+        "log_sha256": "4905f1a114c6f057423cc85d0d8b472b1477df74e7029aa825f4c7e996f50710"
+      }
+    ],
+    "inventory_command": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--",
+        "--list"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.77730966099989
+    },
+    "inventory_log": "validation/rust-inventory/console.log"
+  },
+  "python": {
+    "discovered": 730,
+    "passed": 730,
+    "failed": 0,
+    "errors": 0,
+    "not_run": 0,
+    "skip": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "original_726_tests_retained": true,
+    "added_regression_test_ids": [
+      "test_ci_python_partition.PythonCIPartition.test_c01_replays_have_separate_jobs_without_changing_test_ids",
+      "test_ci_timeout_configuration.CITimeoutConfiguration.test_new_document_decisions_survive_real_crlf_bytes",
+      "test_ci_timeout_configuration.CITimeoutConfiguration.test_real_git_sparse_profiles_keep_all_sources_and_each_required_archive",
+      "test_ci_timeout_configuration.CITimeoutConfiguration.test_workflow_runs_every_python_partition_and_keeps_exact_history"
+    ],
+    "all_assigned_ids_unique_and_complete": true,
+    "executed_ids": "validation/python-executed-ids.json",
+    "groups": [
+      {
+        "group": "python-core-0",
+        "passed": 323,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 755.008055329,
+        "log": "validation/python-core-0/python-tests.log",
+        "log_sha256": "ff6ca1ac1a6f0f4609bab785f48022cc958f05c531cf819083c06fbef5fb65d2",
+        "inventory": "validation/python-core-0/python-test-inventory.json"
+      },
+      {
+        "group": "python-core-1",
+        "passed": 383,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 671.0696336239998,
+        "log": "validation/python-core-1/python-tests.log",
+        "log_sha256": "8f6785d78346d5a16d9b108724e604834c0720a38fc799cbbf427a6636a0aa5c",
+        "inventory": "validation/python-core-1/python-test-inventory.json"
+      },
+      {
+        "group": "python-mean-evidence",
+        "passed": 4,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 1313.0891834109998,
+        "log": "validation/python-mean-evidence/python-tests.log",
+        "log_sha256": "fdb654788eca35c38da77a983287e6b09e25d8159caedbbfb769d5d91c3f857f",
+        "inventory": "validation/python-mean-evidence/python-test-inventory.json"
+      },
+      {
+        "group": "python-spatial-evidence",
+        "passed": 4,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 301.6888167070001,
+        "log": "validation/python-spatial-evidence/python-tests.log",
+        "log_sha256": "1b97cf35228c76b7e6ee60fb0ea49163e0ed52a8db7db2d7eefac8876e51d085",
+        "inventory": "validation/python-spatial-evidence/python-test-inventory.json"
+      },
+      {
+        "group": "python-c01-switch",
+        "passed": 4,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 89.09179702899974,
+        "log": "validation/python-c01-switch/python-tests.log",
+        "log_sha256": "ff97c21e2fef4b28cfa382a7522c7713bed6170b847e613da76e7d5cb544f940",
+        "inventory": "validation/python-c01-switch/python-test-inventory.json"
+      },
+      {
+        "group": "python-c01-path",
+        "passed": 4,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 122.75486590499986,
+        "log": "validation/python-c01-path/python-tests.log",
+        "log_sha256": "995c4c5874b1dee3ef288347ca2d61cc3e0dd7a0ec88afe495b25891011defc6",
+        "inventory": "validation/python-c01-path/python-test-inventory.json"
+      },
+      {
+        "group": "python-c01-cause",
+        "passed": 8,
+        "failed": 0,
+        "errors": 0,
+        "not_run": 0,
+        "skip": 0,
+        "elapsed_seconds": 115.21252390999962,
+        "log": "validation/python-c01-cause/python-tests.log",
+        "log_sha256": "bb9d29b02c41a33d39ed58611eeb132e2e5c7dae5b54d903811c6a015db1ebf4",
+        "inventory": "validation/python-c01-cause/python-test-inventory.json"
+      }
+    ],
+    "full_group_method_attempts": 1829
+  },
+  "c01_workflow_sparse_profiles_verified": true,
+  "legacy_runner_matches_pc3_fixed_blob": true,
+  "legacy_runner_blob": "6e6955765e12e2d0a2fc0e0fcbf967f3f0ff551d",
+  "rust_sources_unchanged_from_starting_commit": true,
+  "cancelled_test_id": "test_c01_path_error_control.GlobalPathErrorSavedEvidence.test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused",
+  "cancelled_test_now_passed": true,
+  "preliminary_failures": {
+    "first_ci_regression": {
+      "tests_run": 11,
+      "passed": 10,
+      "failed": 0,
+      "errors": 1,
+      "not_run": 0,
+      "skip": 0,
+      "reason": "cargo was not on PATH for this preparatory invocation",
+      "log": "validation/preliminary/ci-regression-no-cargo.log"
+    },
+    "first_core_1": {
+      "assigned": 383,
+      "methods_run": 377,
+      "passed": 374,
+      "failed": 0,
+      "method_errors": 3,
+      "class_setup_errors": 1,
+      "error_events": 4,
+      "not_run": 6,
+      "skip": 0,
+      "exit_code": 1,
+      "reason": "reference400-fixture.zip omitted from local sparse materialization; original fixed blob restored",
+      "restored_fixture": "interim/2026-12-05-nc-independent-arc-residual/reference400-fixture.zip",
+      "restored_blob": "49880b4356af9ca9dc7b3dfe6ab6ecbcc10ab7fa",
+      "replacement_code_or_settings_changed": false,
+      "log": "validation/preliminary/initial-implementation/preliminary/python-core-1-missing-fixture/python-tests.log"
+    },
+    "isolated_source_proof_without_powershell": {
+      "tests_run": 6,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "not_run": 0,
+      "skip": 1,
+      "accepted_as_full_suite_success": false,
+      "log": "validation/preliminary/initial-implementation/new-entrypoint-nc-source-proof.log"
+    },
+    "initial_core_0": {
+      "tests_run": 323,
+      "passed": 322,
+      "failed": 0,
+      "errors": 0,
+      "not_run": 0,
+      "skip": 1,
+      "exit_code": 1,
+      "reason": "PowerShell unavailable; completed runner correctly rejects skip",
+      "log": "validation/preliminary/initial-implementation/python-core-0/python-tests.log"
+    },
+    "frozen_legacy_runner_gate": {
+      "tests_run": 383,
+      "passed": 381,
+      "failed": 1,
+      "errors": 0,
+      "not_run": 0,
+      "skip": 1,
+      "exit_code": 1,
+      "reason": "existing PC-3 source proof correctly refused modification of tools/run_ci_python_tests.py; PowerShell absent",
+      "resolution": "legacy runner restored byte-identically, new entry point added, official portable PowerShell installed",
+      "log": "validation/preliminary/initial-implementation/python-core-1/python-tests.log"
+    }
+  },
+  "supplementary_checks": {
+    "actionlint_exit_code": 0,
+    "actionlint_log": "validation/actionlint.log",
+    "ci_regression_tests": 11,
+    "ci_regression_exit_code": 0,
+    "p601_before": {
+      "passed": 57,
+      "failed": 0,
+      "not_run": 0,
+      "skip": 0
+    },
+    "p603_before": {
+      "passed": 19,
+      "failed": 0,
+      "not_run": 0,
+      "skip": 0
+    },
+    "nc_source_proof_final": {
+      "passed": 6,
+      "failed": 0,
+      "not_run": 0,
+      "skip": 0,
+      "log": "validation/nc-source-proof.log"
+    },
+    "counts_not_added_to_unique_python_total": true
+  },
+  "post_registration_verification": "validation/post-registration.json",
+  "previous_windows_ci": {
+    "run_id": 43446323125,
+    "run_conclusion": "cancelled",
+    "cancelled_job_id": 131956600215,
+    "cancelled_job_conclusion": "cancelled",
+    "aggregate_job_conclusion": "failure",
+    "not_counted_as_success": true
+  },
+  "windows_ci": "push後の新先端のWindows CIは未確定",
+  "c01": {
+    "passed": false,
+    "decision": "未達",
+    "cause": "判定不能"
+  },
+  "c01_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "ab_items_completed": false,
+  "numerical_tolerances_reference_or_saved_values_changed": false,
+  "nc_code_or_settings_changed": false,
+  "environment": "validation/environment.json"
+}

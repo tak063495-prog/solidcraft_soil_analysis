@@ -1,0 +1,163 @@
+test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) ... 
+  test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='-O', mutation='moment') ... FAIL
+  test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='-O', mutation='axes') ... FAIL
+  test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='-O', mutation='force') ... FAIL
+  test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='env', mutation='moment') ... FAIL
+  test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='env', mutation='axes') ... FAIL
+  test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='env', mutation='force') ... FAIL
+test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) ... /workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/zipfile/__init__.py:1686: UserWarning: Duplicate name: 'mesh.json'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='hash') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='size') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='extra') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='duplicate') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='hash') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='size') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='extra') ... FAIL
+  test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='duplicate') ... FAIL
+
+======================================================================
+FAIL: test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='-O', mutation='moment')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 34, in test_structural_normal_and_mismatches_never_publish_manifest
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse((out/'view-manifest.json').exists())
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+
+
+======================================================================
+FAIL: test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='-O', mutation='axes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 34, in test_structural_normal_and_mismatches_never_publish_manifest
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse((out/'view-manifest.json').exists())
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+
+
+======================================================================
+FAIL: test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='-O', mutation='force')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 34, in test_structural_normal_and_mismatches_never_publish_manifest
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse((out/'view-manifest.json').exists())
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+
+
+======================================================================
+FAIL: test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='env', mutation='moment')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 34, in test_structural_normal_and_mismatches_never_publish_manifest
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse((out/'view-manifest.json').exists())
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+
+
+======================================================================
+FAIL: test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='env', mutation='axes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 34, in test_structural_normal_and_mismatches_never_publish_manifest
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse((out/'view-manifest.json').exists())
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+
+
+======================================================================
+FAIL: test_structural_normal_and_mismatches_never_publish_manifest (test_p2_optimized_validation.OptimizedChecks.test_structural_normal_and_mismatches_never_publish_manifest) (mode='env', mutation='force')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 34, in test_structural_normal_and_mismatches_never_publish_manifest
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse((out/'view-manifest.json').exists())
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='hash')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmpd8mdka9b/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='size')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmp3keqpzqz/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='extra')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmpt1xaa98x/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='-O', mutation='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmponwhvuq6/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='hash')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmpg5pz_yxa/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='size')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmp8l6ca3nw/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='extra')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmpz1hoc_lh/out
+
+
+======================================================================
+FAIL: test_unpack_inventory_bytes_and_hash_in_all_modes (test_p2_optimized_validation.OptimizedChecks.test_unpack_inventory_bytes_and_hash_in_all_modes) (mode='env', mutation='duplicate')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_p2_optimized_validation.py", line 50, in test_unpack_inventory_bytes_and_hash_in_all_modes
+    else:self.assertNotEqual(p.returncode,0,p.stdout);self.assertFalse(out.exists());self.assertNotIn('Exact verification inputs created',p.stdout)
+         ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : Exact verification inputs created: /tmp/tmp63_3ll0o/out
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 5.716s
+
+FAILED (failures=14)

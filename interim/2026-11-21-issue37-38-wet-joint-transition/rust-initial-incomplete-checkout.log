@@ -1,0 +1,417 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/work/wet-joint-transition/checkout)
+    Finished `release` profile [optimized] target(s) in 13m 17s
+     Running unittests src/lib.rs (target/release/deps/soil_fem_3d-8e5b6078918236ba)
+
+running 64 tests
+test beams::storage::tests::storage_arithmetic_overflow_and_invalid_budgets_are_rejected ... ok
+test beams::storage::tests::sparse_constraint_projection_matches_independent_dense_products ... ok
+test benchmark::tests::real_tet4_grid_assembly_solves_manufactured_field ... ok
+test checkpoint::tests::standard_sha256_vector_and_canonical_json_are_stable ... ok
+test elastic::tests::affine_patch_and_rigid_body_modes ... ok
+test elastic::tests::rejects_invalid_geometry_and_material ... ok
+test elements::tests::jacobian_certificate_rejects_fold_outside_integration_points ... ok
+test elements::tests::positive_quadrature_integrates_all_degree_five_monomials ... ok
+test elements::tests::tet10_partition_affine_patch_and_six_rigid_modes ... ok
+test elements::tests::tri6_integrates_constant_traction_and_linear_pressure ... ok
+test beams::storage::tests::uncached_and_evicted_compilations_reproduce_identical_schur_matrices ... ok
+test epoch_srm_control::tests::altered_origin_specification_and_producer_identity_are_rejected ... ok
+test epoch_srm_control::tests::callback_error_is_terminal_control_and_previous_saved_snapshot_remains_usable ... ok
+test epoch_srm_control::tests::distributed_support_limit_has_real_rejections_accepted_rollback_and_unknown_result ... ok
+test epoch_srm_control::tests::all_attempt_roundtrips_match_the_complete_direct_report_bytes ... ok
+test epoch_srm_control::tests::post_cut_dormant_history_and_final_report_match_uninterrupted_direct_search ... ok
+test epoch_srm_control::tests::invalid_budget_and_advance_after_finished_are_rejected ... ok
+test epoch_srm_control::tests::resealed_completed_trial_and_origin_audit_evidence_are_semantically_checked ... ok
+test epoch_srm_control::tests::resealed_frozen_load_metadata_fails_even_when_all_outer_hashes_are_updated ... ok
+test epoch_srm_control::tests::resealed_pending_factor_and_target_path_cannot_cross_factor_history ... ok
+test epoch_srm_control::tests::stop_before_an_attempt_keeps_the_whole_snapshot_byte_exact ... ok
+test epoch_srm_control::tests::stop_from_a_nonlinear_callback_finishes_only_the_current_attempt_and_resumes ... ok
+test joints::predictor_tests::cold_elastic_prediction_matches_a_closed_sticking_physical_increment ... ok
+test joints::predictor_tests::neutral_predictor_returns_an_overshot_sliding_trial_to_the_elastic_interior ... ok
+test linalg::tests::a01_residual_observation_preserves_success_and_failure ... ok
+test linalg::tests::compiled_scatter_preserves_duplicate_order_cancellation_and_unsymmetric_values ... ok
+test linalg::tests::compiled_scatter_rejects_foreign_pattern_sequence_counts_and_nonfinite_values ... ok
+test linalg::tests::condensed_interface_above_256_preserves_full_unsymmetric_operator ... ok
+test linalg::tests::condensed_symbolic_blocks_match_legacy_boundaries_without_filling_elsewhere ... ok
+test linalg::tests::duplicate_assembly_preserves_unsymmetric_entries_and_matches_dense ... ok
+test linalg::tests::ilut_fill_caps_both_triangles_and_drops_without_changing_matrix ... ok
+test linalg::tests::ilut_reduces_diffusion_iterations_and_respects_iteration_limit ... ok
+test linalg::tests::invalid_pivot_limit_and_cancellation_have_distinct_failures ... ok
+test linalg::tests::restarted_nonnormal_indefinite_system_matches_independent_pivoted_lu ... ok
+test linalg::tests::row_scaling_does_not_replace_original_residual_acceptance ... ok
+test mcc::tests::algorithmic_tangent_matches_half_step_and_independent_direction ... ok
+test mcc::tests::arbitrary_basis_rotation_and_plastic_work ... ok
+test mcc::tests::invalid_state_and_failed_trial_are_not_committed ... ok
+test mcc::tests::isotropic_compression_unloading_follows_lambda_kappa ... ok
+test mcc::tests::pure_shear_is_rotation_equivalent_and_refines ... ok
+test mcc::tests::restart_retains_all_hardening_and_plastic_history ... ok
+test plane_strain_2d::tests::archived_slope_failure_files_are_unchanged ... FAILED
+test epoch_srm_control::tests::resealed_finished_requirement_interval_and_safety_claims_are_recomputed ... ok
+test plane_strain_2d::tests::documented_crest_stays_inside_the_archived_theory_band ... ok
+test plane_strain_2d::tests::nested_monitor_separates_a_coarse_miss_from_the_continuum ... ok
+test plane_strain_2d::tests::non_nested_series_stays_indeterminate_and_keeps_discrete_failures ... ok
+test plane_strain_2d::tests::plateau_away_from_the_2d_value_is_not_called_a_pass ... ok
+test richards::soil_construction_transfer_tests::adjacent_donor_loses_the_new_inventory_once_at_the_same_time ... ok
+test solver::tests::constrained_tetra_has_analytic_settlement_and_reaction ... ok
+test spatial_convergence::tests::ci_profile_reports_orders_without_closing_p6 ... ok
+test spatial_convergence::tests::existing_single_tet_settlement_is_unchanged ... ok
+test spatial_convergence::tests::manufactured_stress_matches_its_body_force ... ok
+test stages::mixed::ordering::tests::volume_first_rcm_preserves_unsymmetric_saddle_equations_and_matches_dense ... ok
+test stages::mixed::tests::compiled_projected_soil_scatter_is_bit_exact_to_original_and_matches_residual_jacobian ... ok
+test stages::mixed::tests::compiled_projected_structure_scatter_is_bit_exact_to_original_and_matches_residual_jacobian ... ok
+test stages::mixed::tests::full_three_field_jacobian_matches_residual_directional_differences ... ok
+test stages::mixed::tests::material_strain_includes_independent_volume_and_initial_domain_uses_cumulative_history ... ok
+test stages::mixed::tests::mixed_beam_plate_jacobian_includes_nonlocal_structural_tangent ... ok
+test stages::mixed::tests::projected_beam_plate_jacobian_includes_nonlocal_structural_tangent ... ok
+test stages::mixed::tests::projected_three_field_jacobian_matches_all_residual_blocks ... ok
+test stages::predictor_tests::parallel_material_errors_choose_first_input_failure_and_leave_all_committed_histories_unchanged ... ok
+test stages::predictor_tests::parallel_material_states_tangents_partitions_and_order_match_serial_without_history_mutation ... ok
+test stages::predictor_tests::temporary_sparse_and_dense_gauges_do_not_certify_the_original_equations ... ok
+test plane_strain_2d::tests::ci_column_records_five_percent_without_closing_the_slope_or_p6 has been running for over 60 seconds
+test plane_strain_2d::tests::ci_column_records_five_percent_without_closing_the_slope_or_p6 ... ok
+
+failures:
+
+---- plane_strain_2d::tests::archived_slope_failure_files_are_unchanged stdout ----
+
+thread 'plane_strain_2d::tests::archived_slope_failure_files_are_unchanged' (42164) panicked at src/plane_strain_2d.rs:1111:45:
+interim/2026-10-30-Root635-full-audits-slope-reference/slope/coarse-field-FAILED.json: No such file or directory (os error 2)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    plane_strain_2d::tests::archived_slope_failure_files_are_unchanged
+
+test result: FAILED. 63 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 108.62s
+
+error: test failed, to rerun pass `--lib`
+     Running unittests src/main.rs (target/release/deps/soil_fem_3d-dd74fdf2150e726e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/anchors.rs (target/release/deps/anchors-2b84f7dc0307a1ae)
+
+running 6 tests
+test anchor_affine_tension_rigid_motion_and_distributed_transfer_preserve_work ... ok
+test anchor_tangent_and_energy_match_independent_perturbations ... ok
+test excavation_with_retained_anchor_and_beam_releases_only_removed_soil_stress ... ok
+test installation_reference_and_lost_host_are_atomic_and_explicit ... ok
+test jacking_lockoff_slack_and_reloading_follow_free_length_theory ... ok
+test anchor_jack_lock_slack_and_plastic_soil_restore_exactly_on_cutback_and_restart ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.76s
+
+     Running tests/beams.rs (target/release/deps/beams-ea8b8a01c0a09c9a)
+
+running 8 tests
+test cantilever_axial_biaxial_bending_torsion_and_scaling_match_closed_forms ... ok
+test distributed_loading_and_end_releases_recover_fixed_and_simply_supported_moments ... ok
+test explicit_storage_keeps_default500_limit_and_rejects_before_large_allocation ... ok
+test kernels_pass_six_rigid_modes_axial_patch_and_arbitrary_orientation ... ok
+test rehashed_checkpoint_rejects_corrupted_recovered_beam_kinematics ... ok
+test timoshenko_uniform_load_and_nonzero_constraint_lifting_match_theory ... ok
+test unsupported_torsion_and_invalid_geometry_are_rejected_without_stabilization ... ok
+test condensed_beam_is_coupled_to_mc_and_mcc_force_moment_and_exact_restart ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.45s
+
+     Running tests/construction.rs (target/release/deps/construction-04930c78faaca255)
+
+running 6 tests
+test material_density_change_rebuilds_gravity_and_matches_layered_column_theory ... ok
+test inconsistent_replacement_born_active_wet_or_aged_material_is_rejected ... ok
+test mcc_foundation_accepts_mc_fill_and_rejects_implicit_history_conversion ... ok
+test rebirth_placement_distinguishes_cad_nodes_from_archived_excavated_displacements ... ok
+test stress_free_fill_and_material_change_match_oedometer_theory_and_restore_rejected_trials ... ok
+test plastic_birth_history_material_ids_and_holding_load_resume_exactly ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.51s
+
+     Running tests/darcy.rs (target/release/deps/darcy-fb74f29c74abab60)
+
+running 10 tests
+test dense_and_sparse_backends_match_the_original_source_problem ... ok
+test balanced_neumann_and_volume_exchange_use_absolute_flow_for_water_balance ... ok
+test invalid_boundaries_materials_and_inactive_faces_are_rejected ... ok
+test layered_series_flow_matches_resistance_and_nodal_balance ... ok
+test malformed_head_interpolation_returns_errors_and_constant_large_head_stays_finite ... ok
+test each_disconnected_water_region_has_its_own_balance_and_needs_its_own_head ... ok
+test quadratic_source_exact_solution_and_outflow_sign ... ok
+test rotated_anisotropic_affine_head_and_neumann_flux_on_curved_tet10 ... ok
+test saturated_solver_preserves_negative_pressure_as_incomplete ... ok
+test original_rows_are_refined_after_prescribed_head_elimination_on_a_cad_mesh ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/embedding.rs (target/release/deps/embedding-b03b043aedd380ab)
+
+running 3 tests
+test embedding_rejects_missing_host_body_outside_and_nonconforming_overlap ... ok
+test tet4_and_tet10_embedding_preserve_affine_fields_force_moment_and_work ... ok
+test curved_tet10_inverse_and_interface_hosts_keep_coordinate_and_activity ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/epoch_srm_gate.rs (target/release/deps/epoch_srm_gate-9fef2115c328eb05)
+
+running 10 tests
+test fresh_history_srm_bracket_remains_four_thirds ... ok
+test malformed_stage_list_and_fixed_through_stages_are_refused_before_solving ... ok
+test nonconvergence_is_indeterminate_and_does_not_exclude_or_continue ... ok
+test p2_foreign_completed_origin_cannot_borrow_target_identity_at_finish ... ok
+test independent_exclusion_stops_before_the_later_stage_and_keeps_the_unreduced_prefix ... ok
+test p2_foreign_record_is_rejected_in_all_phases_and_saved_job_recovery has been running for over 60 seconds
+test p2_foreign_record_is_rejected_in_all_phases_and_saved_job_recovery ... ok
+test stepped_full_case_keeps_material_ids ... ok
+test passed_gates_match_the_continuous_run_after_every_accepted_unit has been running for over 60 seconds
+test passed_gates_match_the_continuous_run_after_every_accepted_unit ... ok
+test trial_limit_does_not_authorize_the_next_stage ... ok
+test stop_at_an_accepted_unit_keeps_that_snapshot_and_resumes_to_the_direct_report ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 132.92s
+
+     Running tests/epoch_srm_gate_job.rs (target/release/deps/epoch_srm_gate_job-aa22d3e09a49dd2d)
+
+running 3 tests
+test exclusion_and_nonconvergence_remain_distinct_and_do_not_start_the_later_stage ... ok
+test paused_gate_recovery_matches_the_continuous_gate_and_the_unreduced_solve ... ok
+test prepared_stop_invalid_budget_and_second_launch_keep_the_saved_checkpoint ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 64.49s
+
+     Running tests/epoch_srm_job.rs (target/release/deps/epoch_srm_job-73f7e80938b8b9c5)
+
+running 10 tests
+test actual_cli_two_slot_pause_fork_and_complete_report_are_byte_exact_to_direct_search ... ok
+test complete_job_can_be_forked_without_recomputing_or_changing_its_report ... ok
+test foreign_pointer_truncated_selected_slot_and_resealed_semantic_edit_are_refused ... ok
+test immutable_origin_and_wrong_job_stop_request_fail_without_replacing_the_saved_pointer ... ok
+test concurrent_launches_allow_exactly_one_worker_claim ... ok
+test interrupted_part_files_are_ignored_and_invalid_budgets_do_not_claim_the_job ... ok
+test numeric_attempt_limit_remains_unknown_even_when_the_disk_job_finishes ... ok
+test prepared_stop_and_existing_output_refusal_keep_the_exact_initial_checkpoint ... ok
+test killed_owned_solver_recovers_only_its_last_fully_published_accepted_snapshot ... ok
+test stop_during_actual_plastic_material_continuation_preserves_and_resumes_all_report_bytes ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 76.55s
+
+     Running tests/epoch_srm_search.rs (target/release/deps/epoch_srm_search-d52e8ef9f6419a93)
+
+running 9 tests
+test changed_producer_inputs_and_unbound_loads_cannot_define_an_origin ... ok
+test accepted_origin_search_brackets_four_over_three_and_keeps_every_factor_independent ... ok
+test factor_trial_limit_is_reported_without_claiming_the_requested_interval_width ... ok
+test incomplete_epoch_paths_stay_unknown_and_cannot_create_an_attained_side ... ok
+test malformed_schema_prefix_path_controls_and_virtual_dimensions_are_refused ... ok
+test cli_creates_a_bound_epoch_report_refuses_foreign_producer_and_preserves_existing_output ... ok
+test post_excavation_trials_keep_all_dormant_history_and_reject_resealed_frozen_metadata ... ok
+test plastic_preload_unload_epoch_fields_match_confined_column_compliance_and_separate_path ... ok
+test required_factor_above_limit_has_independent_exclusion_without_an_epoch ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.43s
+
+     Running tests/exact_fs.rs (target/release/deps/exact_fs-dce674dc20a23d9a)
+
+running 6 tests
+test fresh_failed_trial_cannot_be_relabelled_as_physical_exclusion_or_equilibrium ... ok
+test completed_material_path_and_reconstructed_mean_stress_certify_only_the_uniaxial_interval ... ok
+test fresh_history_report_is_reaudited_without_replaying_a_solve ... ok
+test no_physical_upper_may_continue_requirement_gate_but_does_not_certify_exact_fs ... ok
+test trial_limit_and_incomplete_paths_never_become_exact_or_an_upper_bound ... ok
+test missing_changed_or_fabricated_epoch_evidence_is_rejected ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.24s
+
+     Running tests/free_contact.rs (target/release/deps/free_contact-a0349405ec5e1ea8)
+
+running 2 tests
+test free_upper_block_closes_without_physical_pins_and_restores_predictor_history ... ok
+test free_frictionless_or_overcapacity_blocks_never_commit_a_false_equilibrium ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.49s
+
+     Running tests/geostatic.rs (target/release/deps/geostatic-06bb49c40f1f8309)
+
+running 6 tests
+test excessive_initial_strain_preserves_seed_and_never_creates_an_equilibrated_frame ... ok
+test integration_point_seed_import_checks_mesh_position_material_and_body_mapping ... ok
+test geostatic_partial_boundary_and_construction_checkpoints_restore_identically ... ok
+test saturated_general_column_matches_effective_weight_and_rejects_internal_water_faces ... ok
+test sloping_exposed_surface_allows_excavation_without_a_horizontal_top_facet ... ok
+test mc_and_mcc_form_plastic_geostatic_history_and_keep_a_separate_construction_reference ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+     Running tests/geostatic_affine.rs (target/release/deps/geostatic_affine-ba271ce427360ab2)
+
+running 2 tests
+test affine_global_tensor_uses_all_coordinates_material_ncl_and_rejects_invalid_recipes ... ok
+test affine_seed_matches_original_plastic_history_and_checkpoint_without_mesh_point_values ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/ground_initialization.rs (target/release/deps/ground_initialization-a6c4fbde7121dd90)
+
+running 6 tests
+test material_and_region_order_do_not_determine_assignment ... ok
+test detached_interface_and_sloping_layer_are_rejected ... ok
+test rejects_yield_inconsistent_ocr_void_ratio_wrong_material_and_geometry ... ok
+test saturated_two_layer_k0_matches_analytic_stress_and_fe_equilibrium ... ok
+test surcharge_and_dry_state_have_correct_applied_resultant ... ok
+test vertical_ocr_requires_pc_and_is_not_silently_an_mcc_ratio ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/hardening_fem.rs (target/release/deps/hardening_fem-efe4813af1b38fd7)
+
+running 3 tests
+test idh_initial_cap_is_distinct_from_mcc_ocr_and_tampered_history_is_rejected ... ok
+test idh_preload_unload_reload_and_excavation_satisfy_current_force_and_sparse_dense_gates ... ok
+test idh_cap_shear_void_ratio_and_release_histories_restore_after_cutback_and_all_phase_restarts ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 41.84s
+
+     Running tests/hardening_material.rs (target/release/deps/hardening_material-4e9bf35291711845)
+
+running 6 tests
+test a_dilative_return_can_recover_a_negative_elastic_predictor_without_pressure_clipping ... ok
+test closed_nonproportional_elastic_cycles_leave_no_residual_stress_or_work ... ok
+test invalid_pressure_history_and_failed_trials_do_not_modify_committed_idh_state ... ok
+test shear_cap_corner_rotation_and_complete_increment_tangent_are_consistent ... ok
+test shear_hardening_constant_pressure_has_a_closed_form_and_elastic_reversal ... ok
+test pressure_dependent_unloading_and_isotropic_hardening_follow_independent_integrals ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/hydrostatic.rs (target/release/deps/hydrostatic-001866ed58219162)
+
+running 5 tests
+test invalid_geometry_controls_and_unresolved_domain_are_rejected ... ok
+test planar_partial_water_force_and_moment_match_closed_polynomial_integrals ... ok
+test curved_partial_face_matches_independent_root_and_all_six_nodal_integrals ... ok
+test wet_dry_limits_reversed_normal_and_world_translation_are_consistent ... ok
+test wet_interior_island_is_detected_when_all_six_surface_nodes_are_dry ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/hydrostatic_volume.rs (target/release/deps/hydrostatic_volume-c4e9ce96ee39242d)
+
+running 3 tests
+test curved_mapping_and_invalid_data_do_not_take_affine_shortcut ... ok
+test partial_water_virtual_work_matches_analytic_pressure_integral ... ok
+test fully_wet_quadratic_force_matches_polynomial_material_quadrature ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/ilut.rs (target/release/deps/ilut-b6f6105659ad1b9c)
+
+running 5 tests
+test checkpoint_binds_ilut_drop_fill_and_preconditioner_choice ... ok
+test ilut_rejects_invalid_ranges_types_and_unknown_options ... ok
+test ilut_solves_unsymmetric_operator_using_original_residual ... ok
+test legacy_options_json_has_identical_bytes_when_ilut_is_absent ... ok
+test ilut_checkpoint_rejects_rehashed_saved_state_and_saved_settings ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/joint_birth.rs (target/release/deps/joint_birth-d87f59ab377a2288)
+
+running 9 tests
+test death_freezes_slip_and_dissipation_and_rebirth_has_no_old_reference ... ok
+test dry_new_mc_body_and_contact_have_separate_births ... ok
+test body_death_then_dry_rebirth_keeps_the_removed_slip_generation_frozen ... ok
+test every_nodal_projection_and_cone_rejection_is_checked_before_birth ... ok
+test mode_a_column_preserves_displacements_all_nodal_forces_and_fresh_energy ... ok
+test mode_b_birth_reference_closes_by_pressure_over_kn ... ok
+test omitted_policy_active_soil_birth_and_wet_crack_tip_combinations_stay_rejected ... ok
+test every_accepted_checkpoint_replays_and_rehashed_birth_fields_are_rejected ... ok
+test water_birth_rebuilds_face_loads_and_rehashed_tampering_is_refused ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.10s
+
+     Running tests/joint_birth_law.rs (target/release/deps/joint_birth_law-55a6d1125e22f4d0)
+
+running 1 test
+test inherited_energy_work_and_stress_free_reference_obey_independent_increments ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/joint_crack_tip.rs (target/release/deps/joint_crack_tip-78200cd55746d627)
+
+running 7 tests
+test a_branched_front_cannot_be_hidden_in_three_separate_joint_definitions ... ok
+test declared_tip_cancels_exactly_and_preserves_virtual_work_force_and_moment ... ok
+test declared_tip_rejects_geometric_ambiguity_even_after_an_opposing_face_was_used ... ok
+test compression_opening_and_reversed_shear_have_consistent_tangents ... ok
+test shared_tip_edge_keeps_one_open_hinge_and_contact_only_closes_it_in_compression ... ok
+test undeclared_partial_wrong_owner_midpoint_duplicate_and_fully_tied_faces_are_rejected ... ok
+test rehashed_checkpoint_cannot_change_tip_surface_or_owning_sides ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/joint_ext_combos.rs (target/release/deps/joint_ext_combos-7c5528d3d6b4d9fd)
+
+running 6 tests
+test richards_wet_joint_infiltration_drainage_and_two_way_remain_rejected ... ok
+test hydrostatic_birth_requires_fresh_explicit_state_and_regenerates_covered_interface ... ok
+test tip_force_projection_keeps_shared_nodes_zero_and_rejects_invalid_transfer ... ok
+test tip_global_modes_have_equilibrium_and_fresh_generations ... ok
+test tip_mode_b_stores_the_actual_near_tip_reference_and_freezes_sliding_generation ... ok
+test tip_birth_checkpoints_replay_every_position_and_refuse_rehashed_force_reference_and_generation has been running for over 60 seconds
+test tip_birth_checkpoints_replay_every_position_and_refuse_rehashed_force_reference_and_generation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 86.85s
+
+     Running tests/joint_global_step.rs (target/release/deps/joint_global_step-81cecb1199552153)
+
+running 3 tests
+test absent_and_null_control_preserve_the_pinned_legacy_case_hash ... ok
+test invalid_resolution_and_unsupported_stage_are_refused ... ok
+test adaptive_global_equilibria_keep_anchors_reject_immutably_and_resume_exactly ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 19.58s
+
+     Running tests/joint_law.rs (target/release/deps/joint_law-98b9ff8aef6fb8b0)
+
+running 6 tests
+test algorithmic_tangent_is_nonsymmetric_and_matches_half_step ... ok
+test global_rotation_and_restart_preserve_all_interface_history ... ok
+test normal_compression_stick_and_opening_obey_unilateral_friction_and_work ... ok
+test numerical_dissipation_refines_and_failed_history_does_not_mutate_state ... ok
+test open_motion_is_not_plastic_sliding_and_recontact_starts_unloaded ... ok
+test two_direction_reversal_preserves_residual_slip_and_positive_dissipation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/joint_path_error.rs (target/release/deps/joint_path_error-a0662a1f1880e57f)
+
+running 2 tests
+test path_error_option_is_explicit_and_separate_from_legacy_switch_control ... ok
+test global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly has been running for over 60 seconds
+test global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 88.46s
+
+     Running tests/joint_water.rs (target/release/deps/joint_water-3fc85b423b24ade4)
+
+running 9 tests
+test continuous_heads_pass_series_flow_through_split_displacement_nodes ... ok
+test hydrostatic_contact_uses_effective_spring_pressure_and_total_equals_effective_plus_water ... ok
+test partial_submergence_integrates_actual_sloped_tri3_and_tri6_force_and_moment ... ok
+test pressure_survives_open_contact_and_does_not_enter_friction_twice ... ok
+test soil_structure_is_impermeable_and_prescribed_heads_are_not_averaged ... ok
+test death_after_wet_seepage_releases_interface_water_and_archives_contact_history ... ok
+test wet_global_sliding_opening_recontact_preserves_water_load_and_rejected_slip_history ... ok
+test wet_stage_cutback_restores_pressure_contact_history_and_checkpoint ... ok
+test staged_darcy_interface_policies_preserve_primary_pressure_and_exact_midstage_restart ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.24s
+
+     Running tests/joints.rs (target/release/deps/joints-e99bc4c299ec7e6c)
+
+running 5 tests
+test contact_normal_points_from_side_a_into_side_b ... ok
+test excavation_of_contact_side_archives_history_and_releases_only_its_old_force ... ok
+test interface_assembly_tangent_matches_independent_direction_and_rejects_bad_layouts ... ok
+test opposing_tri3_tri6_transfer_three_direction_traction_work_and_moment ... ok

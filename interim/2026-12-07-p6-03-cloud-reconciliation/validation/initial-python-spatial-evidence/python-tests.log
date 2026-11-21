@@ -1,0 +1,24 @@
+setUpClass (test_nc_spatial_evidence.SpatialEvidence) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_nc_spatial_evidence.SpatialEvidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_nc_spatial_evidence.py", line 22, in setUpClass
+    cls.integrity = replay.run(cls.folder,allow_platform_float_differences=sys.platform=='win32')
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-spatial-release/remeasure.py", line 78, in run
+    p = HERE/part['name']; raw = p.read_bytes()
+                                 ~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 625, in read_bytes
+    with self.open(mode='rb') as f:
+         ~~~~~~~~~^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-11-10-nc-spatial-release/evidence.tar.gz.part000'
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.004s
+
+FAILED (errors=1)

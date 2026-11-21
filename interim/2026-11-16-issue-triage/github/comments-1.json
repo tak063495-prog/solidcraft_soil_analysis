@@ -1,0 +1,52 @@
+{
+  "comments": [
+    {
+      "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1#issuecomment-6429695368",
+      "body": "追加確認（同じ固定SHA `5d4afb45234c0781e86b63cb4d0b67a3d54b33f2`）：軽量fixtureで、親個別SIGINT後に同studyへ第2ラッパーを実際に起動し、2つの子が同時に生存し、同一 `initial.json` を出力先としていることまで確認しました。\n\n影響の限定：実参照の保存は [initial側](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/mcc_projected_volume_diagnostic.py#L249) と [cycle側](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/mcc_projected_cycle_diagnostic.py#L177) が `open('x')` を使うため、完成済み結果の上書きを確認したものではありません。重複した長時間計算、片側の保存失敗、進行記録との不一致が主な懸念です。実CADでのデータ破損は実証していません。",
+      "user": {
+        "login": "tak063495-prog",
+        "name": "tak063495-prog",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+        "id": 254234268
+      },
+      "id": 6429695368,
+      "pull_request_review_id": null,
+      "in_reply_to_id": null,
+      "created_at": null,
+      "updated_at": null,
+      "review": null,
+      "side": null,
+      "line": null,
+      "start_line": null,
+      "path": null,
+      "body_html": "<p dir=\"auto\">追加確認（同じ固定SHA <code class=\"notranslate\">5d4afb45234c0781e86b63cb4d0b67a3d54b33f2</code>）：軽量fixtureで、親個別SIGINT後に同studyへ第2ラッパーを実際に起動し、2つの子が同時に生存し、同一 <code class=\"notranslate\">initial.json</code> を出力先としていることまで確認しました。</p>\n<p dir=\"auto\">影響の限定：実参照の保存は <a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/mcc_projected_volume_diagnostic.py#L249\">initial側</a> と <a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/mcc_projected_cycle_diagnostic.py#L177\">cycle側</a> が <code class=\"notranslate\">open('x')</code> を使うため、完成済み結果の上書きを確認したものではありません。重複した長時間計算、片側の保存失敗、進行記録との不一致が主な懸念です。実CADでのデータ破損は実証していません。</p>"
+    },
+    {
+      "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1#issuecomment-6753569553",
+      "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\n起動済みPopenを保持し、起動中の協調signalをハンドル代入まで遅延させ、割込み/例外時は所有子だけをterminate/必要ならkillし、waitで終了確認後にunlockするようにしました。確認不能ならlockに親/子PID・中断・手動確認事項を残します。親だけのSIGINT/SIGTERM、起動途中signal、wait例外、起動直後status例外、終了確認不能、正常成功/子失敗と安全な再起動を新規Python7 test methodsで確認。Windows実終了は未実行。同名processの一括終了はしていません。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。",
+      "user": {
+        "login": "tak063495-prog",
+        "name": "tak063495-prog",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+        "id": 254234268
+      },
+      "id": 6753569553,
+      "pull_request_review_id": null,
+      "in_reply_to_id": null,
+      "created_at": null,
+      "updated_at": null,
+      "review": null,
+      "side": null,
+      "line": null,
+      "start_line": null,
+      "path": null,
+      "body_html": "<p dir=\"auto\">指定起点 <code class=\"notranslate\">f19ce642647207a87b9dda6cc31b006b85b5936c</code> で残存を再現し、その直接の子 <code class=\"notranslate\">5bee3b47f61878e614cae1e7268a57449d2f12d1</code> を同じ <code class=\"notranslate\">codex/plastic-spatial-convergence</code> へ反映しました。</p>\n<p dir=\"auto\">起動済みPopenを保持し、起動中の協調signalをハンドル代入まで遅延させ、割込み/例外時は所有子だけをterminate/必要ならkillし、waitで終了確認後にunlockするようにしました。確認不能ならlockに親/子PID・中断・手動確認事項を残します。親だけのSIGINT/SIGTERM、起動途中signal、wait例外、起動直後status例外、終了確認不能、正常成功/子失敗と安全な再起動を新規Python7 test methodsで確認。Windows実終了は未実行。同名processの一括終了はしていません。</p>\n<p dir=\"auto\">Linuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。</p>\n<p dir=\"auto\"><a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md\">日本語の修正・修正前再現・残件・PC手順</a> / <a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json\">試験件数・終了コード</a>。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。</p>\n<p dir=\"auto\">修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658\">Windows CI 42714778658</a> はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。</p>"
+    }
+  ],
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+  "title": "tak063495-prog/solidcraft_soil_analysis Issue #1 comments",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+  "display_title": "tak063495-prog/solidcraft_soil_analysis Issue #1 comments"
+}

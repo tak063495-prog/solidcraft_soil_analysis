@@ -114,7 +114,7 @@ pub struct State {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub active_plates: Vec<bool>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub plate_reference_global_kinematics: Vec<[f64; 18]>,
+    pub plate_reference_global_kinematics: Vec<Vec<f64>>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -393,9 +393,10 @@ struct MemberData {
     kernel: Kernel,
 }
 struct PlateData {
-    nodes: [usize; 3],
+    nodes: Vec<usize>,
     section: usize,
-    kernel: crate::plates::Kernel,
+    stiffness: DMatrix<f64>,
+    kernel: crate::plates::Element,
 }
 struct Compiled {
     active_nodes: Vec<bool>,
@@ -604,6 +605,7 @@ impl Model {
             });
         }
         let mut plates = Vec::new();
+        let mut attachment_shifts: Vec<Option<Vector3<f64>>> = vec![None; positions.len()];
         for plate in &c.plates {
             if plate.id.is_empty()
                 || !names.insert(plate.id.clone())
@@ -615,7 +617,14 @@ impl Model {
             {
                 return Err(Error::Input("invalid/duplicate plate member".into()));
             }
-            let mut nodes = [0; 3];
+            if plate.nodes.len() != plate.formulation.node_count()
+                || plate.nodes.iter().collect::<BTreeSet<_>>().len() != plate.nodes.len()
+            {
+                return Err(Error::Input(
+                    "plate formulation/node count mismatch or repeated nodes".into(),
+                ));
+            }
+            let mut nodes = vec![0; plate.nodes.len()];
             for (i, name) in plate.nodes.iter().enumerate() {
                 nodes[i] = *node_ids
                     .get(name)
@@ -624,11 +633,28 @@ impl Model {
             let section = *plate_sections
                 .get(&plate.section_id)
                 .ok_or_else(|| Error::Input("unknown plate section".into()))?;
-            let kernel = crate::plates::Kernel::new(
-                nodes.map(|i| positions[i]),
+            let kernel = crate::plates::Element::new_with_offset(
+                &nodes.iter().map(|&i| positions[i]).collect::<Vec<_>>(),
                 &c.plate_sections[section],
+                plate.formulation,
+                plate.attachment_offset_m,
             )?;
+            let p = nodes
+                .iter()
+                .map(|&i| Vector3::from(positions[i]))
+                .collect::<Vec<_>>();
+            let shift = (p[1] - p[0]).cross(&(p[2] - p[0])).normalize() * plate.attachment_offset_m;
+            for &node in &nodes {
+                if attachment_shifts[node].is_some_and(|previous| {
+                    (previous - shift).norm()
+                        > 64. * f64::EPSILON * c.plate_sections[section].thickness_m
+                }) {
+                    return Err(Error::Input("offset plates sharing a node require the same signed normal offset; folds/steps unverified".into()));
+                }
+                attachment_shifts[node] = Some(shift);
+            }
             plates.push(PlateData {
+                stiffness: kernel.stiffness(),
                 nodes,
                 section,
                 kernel,
@@ -697,13 +723,21 @@ impl Model {
                 .iter()
                 .map(|p| p.initially_active)
                 .collect(),
-            plate_reference_global_kinematics: vec![[0.; 18]; self.plates.len()],
+            plate_reference_global_kinematics: self
+                .plates
+                .iter()
+                .map(|p| vec![0.; 6 * p.nodes.len()])
+                .collect(),
         }
     }
     pub fn validate_state(&self, s: &State) -> Result<()> {
         if s.active_members.len() != self.members.len()
             || s.active_plates.len() != self.plates.len()
             || s.plate_reference_global_kinematics.len() != self.plates.len()
+            || s.plate_reference_global_kinematics
+                .iter()
+                .zip(&self.plates)
+                .any(|(r, p)| r.len() != 6 * p.nodes.len())
             || s.reference_global_kinematics.len() != self.members.len()
             || s.node_displacement_m.len() != self.positions.len()
             || s.node_rotation_rad.len() != self.positions.len()
@@ -743,7 +777,7 @@ impl Model {
         }
         for (i, p) in self.plates.iter().enumerate() {
             if s.active_plates[i] {
-                for n in p.nodes {
+                for &n in &p.nodes {
                     old_nodes[n] = true;
                 }
             }
@@ -837,13 +871,13 @@ impl Model {
         }
         for (i, p) in self.plates.iter().enumerate() {
             if state.active_plates[i] {
-                for node in p.nodes {
+                for &node in &p.nodes {
                     active_nodes[node] = true;
                 }
-                for a in 0..18 {
-                    for b in 0..18 {
+                for a in 0..6 * p.nodes.len() {
+                    for b in 0..6 * p.nodes.len() {
                         k[(6 * p.nodes[a / 6] + a % 6, 6 * p.nodes[b / 6] + b % 6)] +=
-                            p.kernel.stiffness[(a, b)];
+                            p.stiffness[(a, b)];
                     }
                 }
             }
@@ -998,10 +1032,9 @@ impl Model {
             });
             traction[2] -= section.unit_weight_kn_m3 * section.thickness_m;
             let load = p.kernel.uniform_load(traction);
-            let reference =
-                crate::plates::V18::from_row_slice(&s.plate_reference_global_kinematics[i]);
-            let constant = -p.kernel.stiffness * reference;
-            for a in 0..18 {
+            let reference = DVector::from_row_slice(&s.plate_reference_global_kinematics[i]);
+            let constant = -&p.stiffness * reference;
+            for a in 0..6 * p.nodes.len() {
                 loads[6 * p.nodes[a / 6] + a % 6] += load[a];
                 rest[6 * p.nodes[a / 6] + a % 6] += constant[a];
             }
@@ -1059,12 +1092,23 @@ impl Model {
             .chol
             .as_ref()
             .map_or_else(|| DVector::zeros(0), |chol| chol.solve(&rhs));
+        let residual_tolerance = if self.configuration.plates.iter().any(|p| {
+            matches!(
+                p.formulation,
+                crate::plates::Formulation::MindlinTri6
+                    | crate::plates::Formulation::MindlinTri6Offset
+            )
+        }) {
+            1e-10
+        } else {
+            1e-9
+        };
         let relative = if interior.is_empty() {
             0.
         } else {
             (&c.kqq * &interior - &rhs).norm() / rhs.norm().max(1.)
         };
-        if !relative.is_finite() || relative > 1e-9 {
+        if !relative.is_finite() || relative > residual_tolerance {
             return Err(Error::Solve(
                 "beam interior true residual exceeded tolerance".into(),
             ));
@@ -1074,7 +1118,7 @@ impl Model {
         let residual = &internal - &loads;
         let relative =
             (c.q.transpose() * &residual).norm() / (c.q.transpose() * &loads).norm().max(1.);
-        if !relative.is_finite() || relative > 1e-9 {
+        if !relative.is_finite() || relative > residual_tolerance {
             return Err(Error::Solve(
                 "beam physical interior equilibrium residual exceeded tolerance".into(),
             ));
@@ -1158,7 +1202,7 @@ impl Model {
             .enumerate()
             .filter(|(i, _)| s.active_plates[*i])
             .map(|(i, p)| {
-                let relative = crate::plates::V18::from_fn(|a, _| {
+                let relative = DVector::from_fn(6 * p.nodes.len(), |a, _| {
                     d[6 * p.nodes[a / 6] + a % 6] - s.plate_reference_global_kinematics[i][a]
                 });
                 p.kernel

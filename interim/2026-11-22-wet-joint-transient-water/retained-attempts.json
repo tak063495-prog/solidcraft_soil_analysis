@@ -1,0 +1,50 @@
+{
+  "formal_matrix_complete": true,
+  "formal_replaced_failed_trial": false,
+  "trial_failures": [
+    {
+      "path": "work/c04/trial/failure-hydraulic-1794417840200947059.json",
+      "failure": {
+        "complete": false,
+        "passed": false,
+        "error": "RuntimeError(('Richards incomplete', {'command': ['/workspace/solidcraft_soil_analysis/work/c04/trial/solver', 'solve-richards', '/workspace/solidcraft_soil_analysis/work/c04/trial/hydraulic-mesh.json', '/workspace/solidcraft_soil_analysis/work/c04/trial/hydraulic-h4/case.json', '/workspace/solidcraft_soil_analysis/work/c04/trial/hydraulic-h4/native.json'], 'pid': 2686, 'exit_code': 1, 'elapsed_seconds': 0.0016078410000091026}))"
+      },
+      "preserved": true
+    },
+    {
+      "path": "work/c04/trial/failure-hydraulic-1794417861886897583.json",
+      "failure": {
+        "complete": false,
+        "passed": false,
+        "error": "ArithmeticError(('hydraulic line search', 0.014681124882937295))"
+      },
+      "preserved": true
+    },
+    {
+      "path": "work/c04/trial2/failure-hydraulic-1794417923470878496.json",
+      "failure": {
+        "complete": false,
+        "passed": false,
+        "error": "TypeError('array type float128 is unsupported in linalg')"
+      },
+      "preserved": true
+    },
+    {
+      "path": "work/c04/trial2/failure-refusals-1794418000398186103.json",
+      "failure": {
+        "complete": false,
+        "passed": false,
+        "error": "AssertionError(\"['/workspace/solidcraft_soil_analysis/work/c04/trial2/solver', 'solve-one-way', '/workspace/solidcraft_soil_analysis/work/c04/trial2/mesh.json', '/workspace/solidcraft_soil_analysis/work/c04/trial2/scope-refusals/ground.json', '/workspace/solidcraft_soil_analysis/work/c04/trial2/scope-refusals/continuous.json', '/workspace/solidcraft_soil_analysis/work/c04/trial2/scope-refusals/continuous-result.json']\\ninvalid input: JOINT requires independent displacements and original-surface surcharge; BIRTH reactivation requires an explicit interface history policy\\n\")"
+      },
+      "preserved": true
+    }
+  ],
+  "notes": [
+    "Dense hydraulic input initially retained maximum_free_faces=300000, above dense budget; new-case budget corrected to1000 without changing tolerances.",
+    "Initial independent hydraulic arithmetic reached its strict rounding floor; stable storage and extended precision were added, not a relaxed gate.",
+    "NumPy LAPACK rejects float128 RHS; only the global correction solve uses a float64 cast, with the true linear residual checked.",
+    "Initial ONE_WAY refusal trial omitted original-surface surcharge and stopped earlier at input validation. The final valid three policies reach the capability refusal.",
+    "First new measure.py compile had unmatched parenthesis; corrected before any formal solve or full test.",
+    "Package inventory uses importlib.metadata because pip is absent in this preinstalled environment."
+  ]
+}

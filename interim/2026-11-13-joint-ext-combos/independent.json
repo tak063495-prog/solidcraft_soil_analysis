@@ -1,0 +1,508 @@
+{
+  "passed": true,
+  "profiles": {
+    "tip-elastic-stress_free": {
+      "reassembly": {
+        "passed": true,
+        "reference": "independent all-node reassembly of saved stress histories; separate from input-only elastic solution",
+        "maximum_native_linear_residual": 1.6061918505321465e-15,
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "reassembled_relative_residual": 3.14381219964735e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 6.776263578034403e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "contact",
+            "reassembled_relative_residual": 3.79769945867696e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 1.0587911840678754e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "reload",
+            "reassembled_relative_residual": 3.5769604879862344e-14,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "constraint_error_m": 1.0587911840678754e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "death",
+            "reassembled_relative_residual": 1.3565587716074455e-14,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "constraint_error_m": 6.776263578034403e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "rebirth",
+            "reassembled_relative_residual": 3.1109910583276486e-14,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "constraint_error_m": 1.0587911840678754e-21,
+            "water_load_error_kn": 0.0
+          }
+        ]
+      },
+      "elastic": {
+        "passed": true,
+        "reference": "input-only GL125 elasticity, Tri6, two independent SVD projections; all volume GP stresses",
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "displacement_relative": 2.968205174884128e-14,
+            "volume_gp_stress_relative": 2.066256191972873e-15,
+            "contact_gp_traction_relative": 0.0,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "independent_linear_residual": 1.119788379778388e-15
+          },
+          {
+            "name": "contact",
+            "displacement_relative": 6.810367193497128e-14,
+            "volume_gp_stress_relative": 4.016777236522631e-15,
+            "contact_gp_traction_relative": 9.321939554927298e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "independent_linear_residual": 4.072013918133981e-16
+          },
+          {
+            "name": "reload",
+            "displacement_relative": 6.810367193497128e-14,
+            "volume_gp_stress_relative": 4.016777236522631e-15,
+            "contact_gp_traction_relative": 9.321939554927298e-14,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "independent_linear_residual": 4.072013918133981e-16
+          },
+          {
+            "name": "death",
+            "displacement_relative": 8.11435350764916e-14,
+            "volume_gp_stress_relative": 7.790143313683488e-15,
+            "contact_gp_traction_relative": 0.0,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "independent_linear_residual": 1.119788379778388e-15
+          },
+          {
+            "name": "rebirth",
+            "displacement_relative": 6.097272927260719e-14,
+            "volume_gp_stress_relative": 3.388442827003746e-15,
+            "contact_gp_traction_relative": 8.69540881495674e-14,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "independent_linear_residual": 4.072013918133981e-16
+          }
+        ]
+      }
+    },
+    "tip-elastic-transfer_force": {
+      "reassembly": {
+        "passed": true,
+        "reference": "independent all-node reassembly of saved stress histories; separate from input-only elastic solution",
+        "maximum_native_linear_residual": 1.6061918505321465e-15,
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "reassembled_relative_residual": 3.14381219964735e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 6.776263578034403e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "contact",
+            "reassembled_relative_residual": 3.2468434955323824e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 1.0587911840678754e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "reload",
+            "reassembled_relative_residual": 3.05812269258412e-15,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "constraint_error_m": 1.0587911840678754e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "death",
+            "reassembled_relative_residual": 2.9613384698028266e-15,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "constraint_error_m": 1.3552527156068805e-20,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "rebirth",
+            "reassembled_relative_residual": 3.0585260275458162e-15,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "constraint_error_m": 1.0587911840678754e-21,
+            "water_load_error_kn": 0.0
+          }
+        ]
+      },
+      "elastic": {
+        "passed": true,
+        "reference": "input-only GL125 elasticity, Tri6, two independent SVD projections; all volume GP stresses",
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "displacement_relative": 2.968205174884128e-14,
+            "volume_gp_stress_relative": 2.066256191972873e-15,
+            "contact_gp_traction_relative": 0.0,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "independent_linear_residual": 1.119788379778388e-15
+          },
+          {
+            "name": "contact",
+            "displacement_relative": 2.969706481235855e-14,
+            "volume_gp_stress_relative": 2.0653461755746317e-15,
+            "contact_gp_traction_relative": 4.119608254207149e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "independent_linear_residual": 1.0342630598641369e-15
+          },
+          {
+            "name": "reload",
+            "displacement_relative": 2.969706481235855e-14,
+            "volume_gp_stress_relative": 2.0653461755746317e-15,
+            "contact_gp_traction_relative": 4.119608254207149e-15,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "independent_linear_residual": 1.0342630598641369e-15
+          },
+          {
+            "name": "death",
+            "displacement_relative": 2.973869178541682e-14,
+            "volume_gp_stress_relative": 2.066195450821474e-15,
+            "contact_gp_traction_relative": 0.0,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "independent_linear_residual": 1.119788379778388e-15
+          },
+          {
+            "name": "rebirth",
+            "displacement_relative": 2.9752047563019106e-14,
+            "volume_gp_stress_relative": 2.065309980610765e-15,
+            "contact_gp_traction_relative": 4.121868410636513e-15,
+            "nodal_load_error_kn": 2.1316282072803006e-14,
+            "independent_linear_residual": 1.0342630598641369e-15
+          }
+        ]
+      }
+    },
+    "tip-history-stress_free": {
+      "reassembly": {
+        "passed": true,
+        "reference": "independent all-node reassembly of saved stress histories; separate from input-only elastic solution",
+        "maximum_native_linear_residual": 3.3057666268680955e-15,
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "reassembled_relative_residual": 2.990728947530294e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 6.776263578034403e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "contact",
+            "reassembled_relative_residual": 1.9417444120996628e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "slide",
+            "reassembled_relative_residual": 2.2280109720037273e-12,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "unload",
+            "reassembled_relative_residual": 2.4327976873896075e-12,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "death",
+            "reassembled_relative_residual": 6.85319663212523e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 3.3881317890172014e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "rebirth",
+            "reassembled_relative_residual": 2.3972440377547896e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          }
+        ]
+      },
+      "complete_clean_path": {
+        "passed": true,
+        "complete_accepted_run_exact": true,
+        "excluded_only": [
+          "elapsed_seconds",
+          "rejected attempts",
+          "verification_reject_once_stages",
+          "selected stages initial_increment",
+          "case input fingerprint"
+        ]
+      }
+    },
+    "tip-history-transfer_force": {
+      "reassembly": {
+        "passed": true,
+        "reference": "independent all-node reassembly of saved stress histories; separate from input-only elastic solution",
+        "maximum_native_linear_residual": 3.605802450530813e-15,
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "reassembled_relative_residual": 2.990728947530294e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 6.776263578034403e-21,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "contact",
+            "reassembled_relative_residual": 3.110661954376869e-15,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "slide",
+            "reassembled_relative_residual": 2.1300391499910828e-12,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "unload",
+            "reassembled_relative_residual": 2.2425885318745264e-12,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "death",
+            "reassembled_relative_residual": 7.812030442497873e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 1.0164395367051604e-20,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "rebirth",
+            "reassembled_relative_residual": 7.811868947349362e-14,
+            "nodal_load_error_kn": 1.4210854715202004e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          }
+        ]
+      },
+      "complete_clean_path": {
+        "passed": true,
+        "complete_accepted_run_exact": true,
+        "excluded_only": [
+          "elapsed_seconds",
+          "rejected attempts",
+          "verification_reject_once_stages",
+          "selected stages initial_increment",
+          "case input fingerprint"
+        ]
+      }
+    },
+    "wet-elastic": {
+      "reassembly": {
+        "passed": true,
+        "reference": "independent all-node reassembly of saved stress histories; separate from input-only elastic solution",
+        "maximum_native_linear_residual": 9.037383531989506e-11,
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "reassembled_relative_residual": 2.180463690618125e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "fill",
+            "reassembled_relative_residual": 9.004083278289937e-16,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 6.927035442645668e-18,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "contact",
+            "reassembled_relative_residual": 3.4763740517771664e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "reload",
+            "reassembled_relative_residual": 6.200076937535292e-13,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          }
+        ]
+      },
+      "elastic": {
+        "passed": true,
+        "reference": "input-only GL125 placed-soil elasticity with independent initial pore/seed forces and placement origin",
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "displacement_relative": 2.711251416096899e-12,
+            "volume_gp_stress_relative": 4.7202987112678604e-12,
+            "contact_gp_traction_relative": 0.0,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "independent_linear_residual": 6.419574545170481e-16
+          },
+          {
+            "name": "fill",
+            "displacement_relative": 8.441938499330515e-13,
+            "volume_gp_stress_relative": 1.422271042202296e-12,
+            "contact_gp_traction_relative": 0.0,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "independent_linear_residual": 6.92965487123737e-16
+          },
+          {
+            "name": "contact",
+            "displacement_relative": 4.3578372245105025e-12,
+            "volume_gp_stress_relative": 4.686997795929701e-12,
+            "contact_gp_traction_relative": 5.079876774267678e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "independent_linear_residual": 5.782412295224971e-16
+          },
+          {
+            "name": "reload",
+            "displacement_relative": 1.1042185760152565e-12,
+            "volume_gp_stress_relative": 9.186756526239447e-13,
+            "contact_gp_traction_relative": 1.630133098592548e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "independent_linear_residual": 6.699093303456777e-16
+          }
+        ]
+      },
+      "holding": {
+        "passed": true,
+        "frames": [
+          {
+            "stage": "fill",
+            "all_nodal_holding_load_error_kn": 1.0658141036401503e-14,
+            "zero_release_relative_residual": 2.0649212922315013e-16,
+            "initial_pore_pressure_min_kpa": 5.035298155697774,
+            "initial_pore_pressure_max_kpa": 9.964701844302226,
+            "fresh_joint_water_load_norm_kn": 6.666666666666665
+          }
+        ]
+      }
+    },
+    "wet-hydrostatic": {
+      "reassembly": {
+        "passed": true,
+        "reference": "independent all-node reassembly of saved stress histories; separate from input-only elastic solution",
+        "maximum_native_linear_residual": 9.925779160772061e-11,
+        "frames": [
+          {
+            "name": "initial_equilibrated",
+            "reassembled_relative_residual": 1.927312183923937e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "fill",
+            "reassembled_relative_residual": 3.405101343256159e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 1.6263032587282567e-19,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "contact",
+            "reassembled_relative_residual": 8.197533567833335e-15,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "reload",
+            "reassembled_relative_residual": 7.774895395162394e-15,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "slide",
+            "reassembled_relative_residual": 2.123206147569982e-13,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "death",
+            "reassembled_relative_residual": 4.4280413135454626e-15,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 4.336808689942018e-19,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "rebirth",
+            "reassembled_relative_residual": 9.55686013654592e-16,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "remove_soil",
+            "reassembled_relative_residual": 1.1443303813959306e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 0.0
+          },
+          {
+            "name": "fill_again",
+            "reassembled_relative_residual": 3.4072089894231887e-12,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 2.303929616531697e-19,
+            "water_load_error_kn": 1.7763568394002505e-15
+          },
+          {
+            "name": "contact_again",
+            "reassembled_relative_residual": 1.1434918499421793e-15,
+            "nodal_load_error_kn": 1.0658141036401503e-14,
+            "constraint_error_m": 0.0,
+            "water_load_error_kn": 1.7763568394002505e-15
+          }
+        ]
+      },
+      "holding": {
+        "passed": true,
+        "frames": [
+          {
+            "stage": "fill",
+            "all_nodal_holding_load_error_kn": 1.7763568394002505e-14,
+            "zero_release_relative_residual": 3.0147045728853007e-16,
+            "initial_pore_pressure_min_kpa": 5.035298155697774,
+            "initial_pore_pressure_max_kpa": 9.964701844302226,
+            "fresh_joint_water_load_norm_kn": 6.666666666666665
+          },
+          {
+            "stage": "fill_again",
+            "all_nodal_holding_load_error_kn": 1.0658141036401503e-14,
+            "zero_release_relative_residual": 2.791321498696445e-16,
+            "initial_pore_pressure_min_kpa": 5.035298155697774,
+            "initial_pore_pressure_max_kpa": 9.964701844302226,
+            "fresh_joint_water_load_norm_kn": 6.666666666666665
+          }
+        ]
+      },
+      "complete_clean_path": {
+        "passed": true,
+        "complete_accepted_run_exact": true,
+        "excluded_only": [
+          "elapsed_seconds",
+          "rejected attempts",
+          "verification_reject_once_stages",
+          "selected stages initial_increment",
+          "case input fingerprint"
+        ]
+      }
+    }
+  }
+}

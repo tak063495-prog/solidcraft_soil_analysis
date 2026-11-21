@@ -1,0 +1,54 @@
+{
+  "schema": "c03-cause-failure-record/1",
+  "passed": false,
+  "single_primary_cause_identified": false,
+  "reason": "Contact local integration and global path sensitivities both remain; no unique additive causal split and no converged finest reference.",
+  "old_failures_deleted": false,
+  "original_acceptance_met": false,
+  "old_tolerances_relaxed": false,
+  "retained_preparation_failures": [
+    {
+      "kind": "format_preflight",
+      "exit_code": 1,
+      "log": "fmt-first.log",
+      "reason": "new observation example had not yet been formatted",
+      "resolved": "rustfmt only the new example; final cargo fmt returned zero"
+    },
+    {
+      "kind": "portable_powershell_preparation",
+      "exit_code": 134,
+      "reason": "PowerShell tried to create /home/agent/.cache/powershell on a read-only filesystem",
+      "resolved": "use writable XDG_CACHE_HOME, XDG_CONFIG_HOME, XDG_DATA_HOME under work; no NC-specific environment setting changed"
+    },
+    {
+      "kind": "initial_full_git_fetch",
+      "exit_code": 128,
+      "reason": "HTTP/2 INTERNAL_ERROR, unexpected disconnect, early EOF after 24473968639 received bytes",
+      "resolution": "salvage 4887 complete objects; Git index-pack verified; fetch only missing checkout objects"
+    },
+    {
+      "kind": "pack_recovery_preflight",
+      "exit_code": 1,
+      "reason": "initial guard expected more than 6000 objects; parser found 4887 complete objects and stopped before mutation",
+      "resolution": "salvage the complete prefix; Git verified indexed pack 170efa6dd41d94247a21dd389dff9765be52276f"
+    },
+    {
+      "kind": "tracking_setup",
+      "exit_code": 128,
+      "reason": "initial clone refspec tracked main only; tracking branch setup failed after checkout",
+      "resolution": "assert index tree equals immutable 1802c11; add exact target refspec and align branch HEAD"
+    },
+    {
+      "kind": "p601_metadata_preflight",
+      "exit_code": 1,
+      "reason": "274 BASE_EVIDENCE_MISSING findings; seven historical commit metadata objects were unavailable after interrupted fetch",
+      "resolution": "refetch exact fixed commits with blob:none; strict 301-source audit succeeded"
+    },
+    {
+      "kind": "ordinary_fixed_metadata_fetch",
+      "exit_code": 1,
+      "reason": "bad object during negotiation against an incomplete promisor history",
+      "resolution": "git fetch --refetch --filter=blob:none; exit 0"
+    }
+  ]
+}

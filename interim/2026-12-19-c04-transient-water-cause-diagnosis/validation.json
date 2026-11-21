@@ -1,0 +1,306 @@
+{
+  "schema": "c04-cause-validation/1",
+  "platform": "Linux managed cloud",
+  "starting_commit": "06695fccd549e3e1a89b18a8f60975da3359ed24",
+  "scientific_payload_commit": "6a23bb9706b901ff36f63368c03b670b9b8b3c17",
+  "initial_inventory_commit": "5a1b190cdccfae35be01952e317eb2dc7bad76eb",
+  "software_validation_passed": true,
+  "passed": false,
+  "c04_complete": false,
+  "a04_complete": false,
+  "c01_complete": false,
+  "c02_complete": false,
+  "c03_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "ab_items_completed": false,
+  "pc_executed": false,
+  "cloud_diagnostics_remaining": true,
+  "windows_ci": "push後の新先端Windows CIは未確定",
+  "rust": {
+    "discovered": 466,
+    "executed": 466,
+    "success": 466,
+    "failure": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "doc_tests": 0,
+    "standard": 463,
+    "examples": 3,
+    "unique_id_coverage_verified": true
+  },
+  "python": {
+    "discovered": 777,
+    "executed": 777,
+    "success": 777,
+    "failure": 0,
+    "error": 0,
+    "unexecuted": 0,
+    "skip": 0,
+    "expected_failure": 0,
+    "unexpected_success": 0,
+    "new_tests": 8,
+    "tools_tests_included": true,
+    "disjoint_complete_inventory_verified": true,
+    "groups": {
+      "python-core-0": {
+        "tests_run": 366,
+        "assigned_total": 366,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 260.2069206220003
+      },
+      "python-core-1": {
+        "tests_run": 387,
+        "assigned_total": 387,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 311.4933232070007
+      },
+      "python-mean-evidence": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 821.3648791690002
+      },
+      "python-spatial-evidence": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 133.41726508300007
+      },
+      "python-c01-switch": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 47.2050233330001
+      },
+      "python-c01-path": {
+        "tests_run": 4,
+        "assigned_total": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 78.43261682599996
+      },
+      "python-c01-cause": {
+        "tests_run": 8,
+        "assigned_total": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 65.76745506499992
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 2532,
+      "exit_code": 0,
+      "elapsed_seconds": 0.7793626640000184
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 2543,
+      "exit_code": 0,
+      "elapsed_seconds": 15.220099888999812
+    },
+    {
+      "name": "build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "pid": 2858,
+      "exit_code": 0,
+      "elapsed_seconds": 0.09371442500014382
+    },
+    {
+      "name": "rust-list",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--",
+        "--list"
+      ],
+      "pid": 2872,
+      "exit_code": 0,
+      "elapsed_seconds": 814.1201017370004
+    },
+    {
+      "name": "rust-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release"
+      ],
+      "pid": 7212,
+      "exit_code": 0,
+      "elapsed_seconds": 1014.0205606049999
+    },
+    {
+      "name": "rust-example-list",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--examples",
+        "--",
+        "--list"
+      ],
+      "pid": 651451,
+      "exit_code": 0,
+      "elapsed_seconds": 3.4141826059999403
+    },
+    {
+      "name": "rust-example-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--examples"
+      ],
+      "pid": 651931,
+      "exit_code": 0,
+      "elapsed_seconds": 0.08118232299966621
+    }
+  ],
+  "source_checks": {
+    "rust_sources_and_manifests": 166,
+    "rust_unchanged": true,
+    "core_root_snapshot_files": 902,
+    "core_root_snapshot_unchanged": true,
+    "core_interim_snapshot_files": 632,
+    "core_interim_snapshot_unchanged": true,
+    "dedicated_groups_started_before_initial_inventory_registration": true,
+    "added_after_full_test_start_observation_helper": "c04cause_displacement.py; executed against SHA-verified sealed histories at all 3 levels, identity defect zero; no existing tested code changed",
+    "formal_execution_sources_bound_before_start": true,
+    "preliminary_all_10_field_files_byte_identical_to_formal": true
+  },
+  "test_id_coverage": "validation/all-test-id-coverage.json",
+  "preservation": "validation/preservation-before-validation.json",
+  "scientific_solve_calls": {
+    "formal": 12,
+    "formal_accepted_states": 7008,
+    "preliminary_retained": 10,
+    "preliminary_accepted_states": 4832,
+    "total": 22,
+    "total_accepted_states": 11840,
+    "refused_cli_calls": 3
+  },
+  "sealed_verification": {
+    "parts": 4,
+    "entries": 1250,
+    "all_sha256_verified": true,
+    "new_solve": false,
+    "checkpoint_restart": false,
+    "passed": false
+  },
+  "new_test_smoke": {
+    "success": 8,
+    "failure": 0,
+    "error": 0,
+    "skip": 0,
+    "elapsed_seconds": 0.073,
+    "counted_again_in_full_total": false
+  },
+  "initial_pre_fixture_tests": {
+    "success": 3,
+    "failure": 0,
+    "error": 5,
+    "skip": 0,
+    "counted_in_final_total": false,
+    "log": "validation/preparation/new-tests-pre-fixture.log"
+  },
+  "preparation_failures_retained": true,
+  "original_criteria_or_references_changed": false,
+  "displacement_contributions": {
+    "report_sha256": "c10cf6a70dac0b0c57af8acfa43818a45f10526796b938affc7cb9f00d198814",
+    "source_sha256": "2186bcba72c2e036233a8b232662e3f4604e6e1598aa8a2eb71faee31bc15717",
+    "maximum_identity_defect": 0.0
+  },
+  "validation_snapshot_precedes_its_pinned_registration": true,
+  "final_registration_proof": "validation/post-registration.json",
+  "retained_initial_full_core_attempts": {
+    "core0": {
+      "executed": 366,
+      "success": 365,
+      "failure": 0,
+      "error": 0,
+      "skip": 1,
+      "exit_code": 1
+    },
+    "core1": {
+      "executed": 387,
+      "success": 386,
+      "failure": 0,
+      "error": 0,
+      "skip": 1,
+      "exit_code": 1
+    },
+    "counted_in_final_totals": false
+  },
+  "powershell": {
+    "version": "7.5.4",
+    "package_url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz",
+    "official_release": "https://github.com/PowerShell/PowerShell/releases/tag/v7.5.4",
+    "package_sha256": "1fd7983fe56ca9e6233f126925edb24bf6b6b33e356b69996d925c4db94e2fef",
+    "portable_workspace_install": true,
+    "home_changed": false,
+    "nc_specific_environment_settings_changed": false
+  }
+}

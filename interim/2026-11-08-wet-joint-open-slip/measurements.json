@@ -1,0 +1,3491 @@
+{
+  "schema": "soil-fem-wet-joint-cycle-diagnostics/1",
+  "passed": false,
+  "starting_commit": "b04c80e3e8f6608b82f5c4f8cc936abde62fdc07",
+  "independent_reference_completed": true,
+  "reference_uses_native_results": false,
+  "solver_sha256": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6",
+  "input_sha256": {
+    "examples/joint-water-column-tet10-mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+    "examples/ground-joint-water-mc.json": "bb3ffbba96527fb0edbb9a21dc6951fb779866ec08ceeb19889d9c333e47abef",
+    "examples/stages-joint-water-cycle.json": "5ca72b3857a18dcff9c3b68271e0a85adf70906fbdc90923f88aa934ed086388"
+  },
+  "reference_global_and_local_subincrements": [
+    32,
+    64
+  ],
+  "native_routes": {
+    "original": {
+      "frames": [
+        {
+          "frame": "initial_equilibrated",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 0,
+            "stick": 32
+          },
+          "minimum_gap_m": -9.022028395462201e-05,
+          "maximum_gap_m": -8.891373714485973e-05,
+          "maximum_accumulated_plastic_slip_m": 0.0
+        },
+        {
+          "frame": "shear",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -5.3882636506465465e-05,
+          "maximum_gap_m": -3.777645753267764e-05,
+          "maximum_accumulated_plastic_slip_m": 0.00044308912332396104
+        },
+        {
+          "frame": "open",
+          "points": 32,
+          "status_counts": {
+            "open": 32,
+            "slip": 0,
+            "stick": 0
+          },
+          "minimum_gap_m": 0.011026608823019212,
+          "maximum_gap_m": 0.011128946618512024,
+          "maximum_accumulated_plastic_slip_m": 0.0006611671199999012
+        },
+        {
+          "frame": "recontact",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -9.564521496424978e-05,
+          "maximum_gap_m": -8.216864325218785e-05,
+          "maximum_accumulated_plastic_slip_m": 0.0007302645115836121
+        },
+        {
+          "frame": "reverse",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -0.00021602185780166292,
+          "maximum_gap_m": -0.00017371426154545787,
+          "maximum_accumulated_plastic_slip_m": 0.0017723283348190537
+        },
+        {
+          "frame": "reload",
+          "points": 32,
+          "status_counts": {
+            "open": 32,
+            "slip": 0,
+            "stick": 0
+          },
+          "minimum_gap_m": 0.00022660882308319093,
+          "maximum_gap_m": 0.00032894661848595764,
+          "maximum_accumulated_plastic_slip_m": 0.0028768201722349767
+        },
+        {
+          "frame": "return",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -9.58265833498739e-05,
+          "maximum_gap_m": -8.207316085572728e-05,
+          "maximum_accumulated_plastic_slip_m": 0.003683938727443422
+        }
+      ],
+      "rejected_attempts": 3,
+      "all_rejections_preserve_committed_state": true
+    },
+    "h32": {
+      "frames": [
+        {
+          "frame": "initial_equilibrated",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 0,
+            "stick": 32
+          },
+          "minimum_gap_m": -9.022028395494959e-05,
+          "maximum_gap_m": -8.89137371445242e-05,
+          "maximum_accumulated_plastic_slip_m": 0.0
+        },
+        {
+          "frame": "shear",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -5.393941158937934e-05,
+          "maximum_gap_m": -3.7739165208037286e-05,
+          "maximum_accumulated_plastic_slip_m": 0.0004425584763450566
+        },
+        {
+          "frame": "open",
+          "points": 32,
+          "status_counts": {
+            "open": 32,
+            "slip": 0,
+            "stick": 0
+          },
+          "minimum_gap_m": 0.011026608823088264,
+          "maximum_gap_m": 0.011128946618484716,
+          "maximum_accumulated_plastic_slip_m": 0.0016867294586759445
+        },
+        {
+          "frame": "recontact",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -9.58261141728408e-05,
+          "maximum_gap_m": -8.207341905611048e-05,
+          "maximum_accumulated_plastic_slip_m": 0.002356366750239174
+        },
+        {
+          "frame": "reverse",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -0.00021601637761946882,
+          "maximum_gap_m": -0.00017372902847028404,
+          "maximum_accumulated_plastic_slip_m": 0.003397226727947347
+        },
+        {
+          "frame": "reload",
+          "points": 32,
+          "status_counts": {
+            "open": 32,
+            "slip": 0,
+            "stick": 0
+          },
+          "minimum_gap_m": 0.00022660882308951608,
+          "maximum_gap_m": 0.0003289466184892502,
+          "maximum_accumulated_plastic_slip_m": 0.00529877741859492
+        },
+        {
+          "frame": "return",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -9.582693870377121e-05,
+          "maximum_gap_m": -8.207273420972824e-05,
+          "maximum_accumulated_plastic_slip_m": 0.006165038249358648
+        }
+      ],
+      "rejected_attempts": 3,
+      "all_rejections_preserve_committed_state": true
+    },
+    "h64": {
+      "frames": [
+        {
+          "frame": "initial_equilibrated",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 0,
+            "stick": 32
+          },
+          "minimum_gap_m": -9.022028395497341e-05,
+          "maximum_gap_m": -8.891373714449928e-05,
+          "maximum_accumulated_plastic_slip_m": 0.0
+        },
+        {
+          "frame": "shear",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -5.39408275346856e-05,
+          "maximum_gap_m": -3.773814249618103e-05,
+          "maximum_accumulated_plastic_slip_m": 0.0004425454622985511
+        },
+        {
+          "frame": "open",
+          "points": 32,
+          "status_counts": {
+            "open": 32,
+            "slip": 0,
+            "stick": 0
+          },
+          "minimum_gap_m": 0.011026608823089331,
+          "maximum_gap_m": 0.011128946618488619,
+          "maximum_accumulated_plastic_slip_m": 0.001842857100727074
+        },
+        {
+          "frame": "recontact",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -9.58269943280754e-05,
+          "maximum_gap_m": -8.207281509695313e-05,
+          "maximum_accumulated_plastic_slip_m": 0.002656365482271454
+        },
+        {
+          "frame": "reverse",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -0.00021601639706791395,
+          "maximum_gap_m": -0.00017372909109957983,
+          "maximum_accumulated_plastic_slip_m": 0.0036972357123291532
+        },
+        {
+          "frame": "reload",
+          "points": 32,
+          "status_counts": {
+            "open": 32,
+            "slip": 0,
+            "stick": 0
+          },
+          "minimum_gap_m": 0.0002266088230899862,
+          "maximum_gap_m": 0.00032894661849088393,
+          "maximum_accumulated_plastic_slip_m": 0.005601525583174045
+        },
+        {
+          "frame": "return",
+          "points": 32,
+          "status_counts": {
+            "open": 0,
+            "slip": 32,
+            "stick": 0
+          },
+          "minimum_gap_m": -9.582697067290246e-05,
+          "maximum_gap_m": -8.207271364435477e-05,
+          "maximum_accumulated_plastic_slip_m": 0.006468126031344383
+        }
+      ],
+      "rejected_attempts": 3,
+      "all_rejections_preserve_committed_state": true
+    }
+  },
+  "native_vs_reference": {
+    "original": [
+      {
+        "frame": "initial_equilibrated",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "jump": {
+          "maximum_absolute": 1.558516362889102e-08,
+          "relative_l2": 0.00011620837034116573
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0010175376202013154,
+          "relative_l2": 1022.981407728961
+        },
+        "stress": {
+          "maximum_absolute": 0.02761909390599726,
+          "relative_l2": 6.363578471539348e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 1.0264638676649282e-08,
+          "relative_l2": 5.473678314217857e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 9.315451469918065e-07,
+          "relative_l2": 0.00010944291055382883
+        },
+        "void": {
+          "maximum_absolute": 4.796224439829189e-07,
+          "relative_l2": 1.6267815491687709e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 2.7830613053928e-08,
+          "relative_l2": 0.0005606435213466744
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0010170966148865717,
+          "relative_l2": 0.24967223774575778
+        },
+        "traction": {
+          "maximum_absolute": 0.010264638676645177,
+          "relative_l2": 5.845811409932172e-05
+        }
+      },
+      {
+        "frame": "shear",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0010944751907358283,
+          "relative_l2": 0.128769866397923
+        },
+        "jump": {
+          "maximum_absolute": 2.8681598333487593e-06,
+          "relative_l2": 0.002848086873767965
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.00203351114002358,
+          "relative_l2": 1181.5177312166861
+        },
+        "stress": {
+          "maximum_absolute": 0.46016600133616237,
+          "relative_l2": 0.0012190607733571675
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 1.2667483665078534e-07,
+          "relative_l2": 0.0013204703268792184
+        },
+        "elastic_energy": {
+          "maximum_absolute": 8.853345936416521e-06,
+          "relative_l2": 0.002694316321106696
+        },
+        "void": {
+          "maximum_absolute": 5.318798759423871e-06,
+          "relative_l2": 1.8605631223461748e-06
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 1.619720409418168e-06,
+          "relative_l2": 0.0009354117846669052
+        },
+        "accumulated": {
+          "maximum_absolute": 1.1876131279300872e-06,
+          "relative_l2": 0.0014533465455133826
+        },
+        "plastic_slip": {
+          "maximum_absolute": 5.415190504224769e-06,
+          "relative_l2": 0.006714379728515478
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0011962889560908265,
+          "relative_l2": 0.13070489959611092
+        },
+        "traction": {
+          "maximum_absolute": 0.5967876734371655,
+          "relative_l2": 0.0068906173119935125
+        }
+      },
+      {
+        "frame": "open",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.013416829035010285,
+          "relative_l2": 0.6482823899954444
+        },
+        "jump": {
+          "maximum_absolute": 4.272528496100658e-08,
+          "relative_l2": 1.448282954515896e-06
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.003839427082715411,
+          "relative_l2": 166.67176265215343
+        },
+        "stress": {
+          "maximum_absolute": 0.032385506926186025,
+          "relative_l2": 9.779881650874012e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 4.272528496100658e-08,
+          "relative_l2": 2.570454131821883e-06
+        },
+        "elastic_energy": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "void": {
+          "maximum_absolute": 5.392175659313381e-07,
+          "relative_l2": 1.8969828330552407e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.261857420439664e-08,
+          "relative_l2": 1.201897704417634e-06
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0010337840687042223,
+          "relative_l2": 0.6047260700582316
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.00088637520140598,
+          "relative_l2": 0.604709392999537
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.009740323624199125,
+          "relative_l2": 0.4434863725755586
+        },
+        "traction": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      {
+        "frame": "recontact",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.023350289500389407,
+          "relative_l2": 0.7218232187116894
+        },
+        "jump": {
+          "maximum_absolute": 4.271509033925715e-06,
+          "relative_l2": 0.00281052315041779
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.007964154978148476,
+          "relative_l2": 176.2834879845747
+        },
+        "stress": {
+          "maximum_absolute": 0.7771092816470713,
+          "relative_l2": 0.002020327542891419
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 2.166258395230403e-07,
+          "relative_l2": 0.0012283650895100475
+        },
+        "elastic_energy": {
+          "maximum_absolute": 2.9558760149603694e-05,
+          "relative_l2": 0.0025032006353956264
+        },
+        "void": {
+          "maximum_absolute": 9.567405589994138e-06,
+          "relative_l2": 3.4654332177207602e-06
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 2.416377668645203e-06,
+          "relative_l2": 0.0039452988415904664
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0017734248630856331,
+          "relative_l2": 0.694029991767819
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0003716876601441153,
+          "relative_l2": 0.3869635013171115
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.015480401916194902,
+          "relative_l2": 0.3542947693088077
+        },
+        "traction": {
+          "maximum_absolute": 1.0761694413641099,
+          "relative_l2": 0.00686730761347979
+        }
+      },
+      {
+        "frame": "reverse",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.021615070252060047,
+          "relative_l2": 0.252308928144223
+        },
+        "jump": {
+          "maximum_absolute": 8.521857862366805e-07,
+          "relative_l2": 0.0019234280495541466
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.009070084208338594,
+          "relative_l2": 192.93196000349505
+        },
+        "stress": {
+          "maximum_absolute": 0.11773237162509531,
+          "relative_l2": 0.00019178163857302516
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 3.1449572128358595e-08,
+          "relative_l2": 7.39915353056577e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 9.131084473795043e-06,
+          "relative_l2": 0.00014802791778257274
+        },
+        "void": {
+          "maximum_absolute": 1.3995535170785445e-06,
+          "relative_l2": 5.720833397786868e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.0554841398141635e-07,
+          "relative_l2": 0.00013532872636200753
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0017752869015271835,
+          "relative_l2": 0.49005053844453234
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0003747258130252175,
+          "relative_l2": 3.447749266758158
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.012900690771605064,
+          "relative_l2": 0.08779527541999299
+        },
+        "traction": {
+          "maximum_absolute": 0.1341734675818138,
+          "relative_l2": 0.0003949731617052547
+        }
+      },
+      {
+        "frame": "reload",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.029102784795956252,
+          "relative_l2": 0.26251710779727705
+        },
+        "jump": {
+          "maximum_absolute": 4.272530840693277e-08,
+          "relative_l2": 1.5984960813553317e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.020656404927234653,
+          "relative_l2": 321.49328679739233
+        },
+        "stress": {
+          "maximum_absolute": 0.03238549271947022,
+          "relative_l2": 9.779880628673036e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 4.272530840693277e-08,
+          "relative_l2": 0.00010332194165413989
+        },
+        "elastic_energy": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "void": {
+          "maximum_absolute": 5.392173947349477e-07,
+          "relative_l2": 1.8969825957973383e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.261849754306311e-08,
+          "relative_l2": 1.2319462929078423e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.002576596009679601,
+          "relative_l2": 0.47141539023957324
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.001001056438115569,
+          "relative_l2": 0.6673241618904467
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.011739366331877651,
+          "relative_l2": 0.08008904445104076
+        },
+        "traction": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      {
+        "frame": "return",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.02648461592815088,
+          "relative_l2": 0.2053804622956853
+        },
+        "jump": {
+          "maximum_absolute": 7.134835357648726e-08,
+          "relative_l2": 5.207770068645001e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.022829428300699582,
+          "relative_l2": 339.1570077921591
+        },
+        "stress": {
+          "maximum_absolute": 0.02936889233171769,
+          "relative_l2": 7.204438831622907e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.839908454831094e-09,
+          "relative_l2": 5.471765896615889e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 1.1746538858409261e-06,
+          "relative_l2": 0.00010785993851249202
+        },
+        "void": {
+          "maximum_absolute": 5.449035938021041e-07,
+          "relative_l2": 1.7892532922864566e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.4654740152973533e-08,
+          "relative_l2": 8.563957480398923e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0026369782861570866,
+          "relative_l2": 0.4171285955289445
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0009918954477794574,
+          "relative_l2": 1.1953889086722163
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.011793771559209909,
+          "relative_l2": 0.07135241399630808
+        },
+        "traction": {
+          "maximum_absolute": 0.009839908454793544,
+          "relative_l2": 8.672082261936834e-05
+        }
+      }
+    ],
+    "h32": [
+      {
+        "frame": "initial_equilibrated",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "jump": {
+          "maximum_absolute": 1.5585165824859934e-08,
+          "relative_l2": 0.00011620836970523456
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.000126321780348598,
+          "relative_l2": 126.99767597120494
+        },
+        "stress": {
+          "maximum_absolute": 0.027619094151319246,
+          "relative_l2": 6.363578505460282e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 1.0264638412239477e-08,
+          "relative_l2": 5.473678146659009e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 9.315451248628065e-07,
+          "relative_l2": 0.00010944290715877476
+        },
+        "void": {
+          "maximum_absolute": 4.79622442206562e-07,
+          "relative_l2": 1.626781561097074e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 2.7830613630682897e-08,
+          "relative_l2": 0.0005606435257240172
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.00012668320470854769,
+          "relative_l2": 0.030979765913210427
+        },
+        "traction": {
+          "maximum_absolute": 0.010264638412238014,
+          "relative_l2": 5.845811254261328e-05
+        }
+      },
+      {
+        "frame": "shear",
+        "plastic_dissipation": {
+          "maximum_absolute": 5.5466739197528384e-05,
+          "relative_l2": 0.006801959511539337
+        },
+        "jump": {
+          "maximum_absolute": 1.730666488978399e-07,
+          "relative_l2": 0.00019193623735175606
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.00016618122640830584,
+          "relative_l2": 101.45591303079625
+        },
+        "stress": {
+          "maximum_absolute": 0.030937469576869603,
+          "relative_l2": 9.61942352236453e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 1.066773674960258e-08,
+          "relative_l2": 0.00012977508457675532
+        },
+        "elastic_energy": {
+          "maximum_absolute": 7.477005522730368e-07,
+          "relative_l2": 0.0002657531670982057
+        },
+        "void": {
+          "maximum_absolute": 5.288022117966307e-07,
+          "relative_l2": 1.7614753919583922e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 1.1637424121528476e-07,
+          "relative_l2": 6.196149443738552e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 1.263801980455506e-07,
+          "relative_l2": 0.000145913879233916
+        },
+        "plastic_slip": {
+          "maximum_absolute": 3.7384311283566855e-07,
+          "relative_l2": 0.0004174323070134883
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0001317143113724207,
+          "relative_l2": 0.014643666624826569
+        },
+        "traction": {
+          "maximum_absolute": 0.04015529278713359,
+          "relative_l2": 0.0004148378827062737
+        }
+      },
+      {
+        "frame": "open",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.00017490953853903368,
+          "relative_l2": 0.009977058488587643
+        },
+        "jump": {
+          "maximum_absolute": 4.272530202374669e-08,
+          "relative_l2": 1.448282575390872e-06
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.00022798260027937726,
+          "relative_l2": 9.912025385248787
+        },
+        "stress": {
+          "maximum_absolute": 0.032385487910532085,
+          "relative_l2": 9.779880436988163e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 4.272530202374669e-08,
+          "relative_l2": 2.570451632207135e-06
+        },
+        "elastic_energy": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "void": {
+          "maximum_absolute": 5.392173370033504e-07,
+          "relative_l2": 1.896982547549371e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.261849161941612e-08,
+          "relative_l2": 1.2018974842345854e-06
+        },
+        "accumulated": {
+          "maximum_absolute": 1.957572355699641e-07,
+          "relative_l2": 5.297072259579278e-05
+        },
+        "plastic_slip": {
+          "maximum_absolute": 1.7127852069195176e-07,
+          "relative_l2": 4.79537314118703e-05
+        },
+        "endpoint_work": {
+          "maximum_absolute": 5.653221786634105e-05,
+          "relative_l2": 0.002401508097195394
+        },
+        "traction": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      {
+        "frame": "recontact",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0008362069529243739,
+          "relative_l2": 0.01517928079697384
+        },
+        "jump": {
+          "maximum_absolute": 5.123963626844658e-08,
+          "relative_l2": 3.8026989074011784e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0004306768820754273,
+          "relative_l2": 8.575200809986695
+        },
+        "stress": {
+          "maximum_absolute": 0.029294494073880628,
+          "relative_l2": 6.914876084612698e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.11926192125414e-09,
+          "relative_l2": 5.4402432734336874e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 1.1050316917095293e-06,
+          "relative_l2": 0.00010780268965724163
+        },
+        "void": {
+          "maximum_absolute": 5.462564180991336e-07,
+          "relative_l2": 1.7331263574336838e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.864767955907023e-08,
+          "relative_l2": 7.345192033688439e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0001473226244300711,
+          "relative_l2": 0.03738368304855281
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.00012743173155249925,
+          "relative_l2": 0.09373363136484537
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.00045042493086339813,
+          "relative_l2": 0.010147381029447402
+        },
+        "traction": {
+          "maximum_absolute": 0.00911926192111423,
+          "relative_l2": 7.437710812809705e-05
+        }
+      },
+      {
+        "frame": "reverse",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0006146835375325371,
+          "relative_l2": 0.004783734146764733
+        },
+        "jump": {
+          "maximum_absolute": 4.429633207483322e-08,
+          "relative_l2": 0.00010399991297669855
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0005596478056814395,
+          "relative_l2": 11.244886517129558
+        },
+        "stress": {
+          "maximum_absolute": 0.028762559994788717,
+          "relative_l2": 4.168116481780584e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.645937517970774e-09,
+          "relative_l2": 2.3501984420843782e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 2.4298126058176772e-06,
+          "relative_l2": 4.447667256546039e-05
+        },
+        "void": {
+          "maximum_absolute": 5.075218358907563e-07,
+          "relative_l2": 1.7209246667590307e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.02486866228147e-08,
+          "relative_l2": 1.293393285245293e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00014733358454966858,
+          "relative_l2": 0.02639911900026008
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.00012742342811753685,
+          "relative_l2": 0.8332263897474371
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0008698826929563752,
+          "relative_l2": 0.006326852130325795
+        },
+        "traction": {
+          "maximum_absolute": 0.00964593751780285,
+          "relative_l2": 2.366472109109664e-05
+        }
+      },
+      {
+        "frame": "reload",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0011345235114158664,
+          "relative_l2": 0.006012419135742321
+        },
+        "jump": {
+          "maximum_absolute": 4.272530549167576e-08,
+          "relative_l2": 1.5984959903339145e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.001973841164257174,
+          "relative_l2": 30.181921640862456
+        },
+        "stress": {
+          "maximum_absolute": 0.03238549050508954,
+          "relative_l2": 9.779880511147151e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 4.272530549167576e-08,
+          "relative_l2": 0.00010332193031256777
+        },
+        "elastic_energy": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "void": {
+          "maximum_absolute": 5.392173638707476e-07,
+          "relative_l2": 1.8969825732123472e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.26184915013465e-08,
+          "relative_l2": 1.231946219874082e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00017113666181857532,
+          "relative_l2": 0.02077524754694651
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0001236909445313369,
+          "relative_l2": 0.04693274346233465
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.002155241940614158,
+          "relative_l2": 0.0197164658196965
+        },
+        "traction": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      {
+        "frame": "return",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0007780315143294941,
+          "relative_l2": 0.004739797089061581
+        },
+        "jump": {
+          "maximum_absolute": 4.023081338758779e-08,
+          "relative_l2": 2.9901562606593326e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0022515933502873678,
+          "relative_l2": 33.00630718000887
+        },
+        "stress": {
+          "maximum_absolute": 0.02925134128887663,
+          "relative_l2": 6.771178160049437e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.746020046118992e-09,
+          "relative_l2": 5.3307858524359124e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 1.1634451522989087e-06,
+          "relative_l2": 0.00010439720653761323
+        },
+        "void": {
+          "maximum_absolute": 5.114745715850688e-07,
+          "relative_l2": 1.7126209795584092e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.4985608487445317e-08,
+          "relative_l2": 6.667202084847505e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00017321078123880198,
+          "relative_l2": 0.018402194787437102
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.00012409685653957633,
+          "relative_l2": 0.08920641916922431
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0027801041597832338,
+          "relative_l2": 0.022590380518501114
+        },
+        "traction": {
+          "maximum_absolute": 0.009746020046080162,
+          "relative_l2": 5.3508416808586625e-05
+        }
+      }
+    ],
+    "h64": [
+      {
+        "frame": "initial_equilibrated",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "jump": {
+          "maximum_absolute": 1.5585165981750765e-08,
+          "relative_l2": 0.00011620836966090545
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 6.266350607290704e-05,
+          "relative_l2": 62.99883798858165
+        },
+        "stress": {
+          "maximum_absolute": 0.027619094168713332,
+          "relative_l2": 6.363578507889681e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 1.0264638393184624e-08,
+          "relative_l2": 5.473678134901177e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 9.315451232668609e-07,
+          "relative_l2": 0.00010944290692044242
+        },
+        "void": {
+          "maximum_absolute": 4.796224455372311e-07,
+          "relative_l2": 1.6267815579237863e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 2.7830613672134995e-08,
+          "relative_l2": 0.0005606435260370426
+        },
+        "accumulated": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "endpoint_work": {
+          "maximum_absolute": 6.331240425052394e-05,
+          "relative_l2": 0.01535905451114995
+        },
+        "traction": {
+          "maximum_absolute": 0.010264638393181258,
+          "relative_l2": 5.8458112433399276e-05
+        }
+      },
+      {
+        "frame": "shear",
+        "plastic_dissipation": {
+          "maximum_absolute": 2.7211283774785863e-05,
+          "relative_l2": 0.0033519729822480892
+        },
+        "jump": {
+          "maximum_absolute": 6.800850631852014e-08,
+          "relative_l2": 0.00010847870873036784
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 8.264349063001474e-05,
+          "relative_l2": 50.42533537961669
+        },
+        "stress": {
+          "maximum_absolute": 0.02684875199071257,
+          "relative_l2": 7.948102325996623e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 8.84573058035934e-09,
+          "relative_l2": 0.00011460653978939937
+        },
+        "elastic_energy": {
+          "maximum_absolute": 6.918050110696697e-07,
+          "relative_l2": 0.0002390163402538751
+        },
+        "void": {
+          "maximum_absolute": 5.109884995135872e-07,
+          "relative_l2": 1.638183676147493e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.6484043733576314e-08,
+          "relative_l2": 3.9016731892559965e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 7.820875211247405e-08,
+          "relative_l2": 0.00010199317625584703
+        },
+        "plastic_slip": {
+          "maximum_absolute": 1.7172725455563112e-07,
+          "relative_l2": 0.0002121774877061345
+        },
+        "endpoint_work": {
+          "maximum_absolute": 6.572294287943495e-05,
+          "relative_l2": 0.007304293319457933
+        },
+        "traction": {
+          "maximum_absolute": 0.02074374964699288,
+          "relative_l2": 0.00022308402939396932
+        }
+      },
+      {
+        "frame": "open",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0008396809524615564,
+          "relative_l2": 0.021598634769194918
+        },
+        "jump": {
+          "maximum_absolute": 4.2725305059512775e-08,
+          "relative_l2": 1.448282691375223e-06
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.00019042631889607854,
+          "relative_l2": 5.5253088053930135
+        },
+        "stress": {
+          "maximum_absolute": 0.03238549011771763,
+          "relative_l2": 9.779880503084461e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 4.2725305059512775e-08,
+          "relative_l2": 2.570452022396755e-06
+        },
+        "elastic_energy": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "void": {
+          "maximum_absolute": 5.392173567653202e-07,
+          "relative_l2": 1.8969825434890203e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.261849154482301e-08,
+          "relative_l2": 1.2018975491128502e-06
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00015609516353000657,
+          "relative_l2": 0.0607250950907121
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.00013520457820202607,
+          "relative_l2": 0.060746546233518196
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0010301072713575533,
+          "relative_l2": 0.026495890514827272
+        },
+        "traction": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      {
+        "frame": "recontact",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0012220776771495606,
+          "relative_l2": 0.024485872702032247
+        },
+        "jump": {
+          "maximum_absolute": 4.005283119209134e-08,
+          "relative_l2": 2.946338967347573e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0004508307724189044,
+          "relative_l2": 8.156178762169741
+        },
+        "stress": {
+          "maximum_absolute": 0.028997409020128373,
+          "relative_l2": 6.77199766768039e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.705462334795491e-09,
+          "relative_l2": 5.325130765574085e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 1.1586025807875863e-06,
+          "relative_l2": 0.00010432094515000655
+        },
+        "void": {
+          "maximum_absolute": 5.092098633863174e-07,
+          "relative_l2": 1.714769116034034e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.2485465092615554e-08,
+          "relative_l2": 6.596067035050798e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00015608952769775083,
+          "relative_l2": 0.04243168954484518
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0001352053522383407,
+          "relative_l2": 0.10638814107807652
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0016721977280781675,
+          "relative_l2": 0.030440450672492188
+        },
+        "traction": {
+          "maximum_absolute": 0.00970546233465086,
+          "relative_l2": 5.3461269593096127e-05
+        }
+      },
+      {
+        "frame": "reverse",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.001330359162001235,
+          "relative_l2": 0.01110551715533356
+        },
+        "jump": {
+          "maximum_absolute": 4.0259129929244835e-08,
+          "relative_l2": 9.592579047575896e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.000511226937359923,
+          "relative_l2": 9.291939598091364
+        },
+        "stress": {
+          "maximum_absolute": 0.028900870756444874,
+          "relative_l2": 4.162816189525632e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.708566813763225e-09,
+          "relative_l2": 2.3481164120434248e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 2.445589372387924e-06,
+          "relative_l2": 4.43960711121244e-05
+        },
+        "void": {
+          "maximum_absolute": 5.055105696261109e-07,
+          "relative_l2": 1.7178908435980056e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.134307764126939e-08,
+          "relative_l2": 1.276712140105401e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00015608969440414214,
+          "relative_l2": 0.02996327536125959
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.00013520819498939943,
+          "relative_l2": 0.9456984810371102
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.0018401087476059702,
+          "relative_l2": 0.011891672932220432
+        },
+        "traction": {
+          "maximum_absolute": 0.009708566813571906,
+          "relative_l2": 2.3482697779203223e-05
+        }
+      },
+      {
+        "frame": "reload",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0011590435543411548,
+          "relative_l2": 0.007111871369016667
+        },
+        "jump": {
+          "maximum_absolute": 4.2725306786429995e-08,
+          "relative_l2": 1.598496043898572e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0012200242144554845,
+          "relative_l2": 18.260291086520606
+        },
+        "stress": {
+          "maximum_absolute": 0.03238549142555236,
+          "relative_l2": 9.779880539104218e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 4.2725306786429995e-08,
+          "relative_l2": 0.00010332193689166638
+        },
+        "elastic_energy": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "void": {
+          "maximum_absolute": 5.392173698659519e-07,
+          "relative_l2": 1.8969825649938396e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 5.2618491442365904e-08,
+          "relative_l2": 1.2319462472897306e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00015596133393995688,
+          "relative_l2": 0.019957062820664128
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0001352170504880317,
+          "relative_l2": 0.062236197461216836
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.002341941120791252,
+          "relative_l2": 0.01970207116713197
+        },
+        "traction": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        }
+      },
+      {
+        "frame": "return",
+        "plastic_dissipation": {
+          "maximum_absolute": 0.0013592313323722433,
+          "relative_l2": 0.008260919435337048
+        },
+        "jump": {
+          "maximum_absolute": 3.730313787280847e-08,
+          "relative_l2": 2.9630291059732908e-05
+        },
+        "numerical_dissipation": {
+          "maximum_absolute": 0.0013715169915223574,
+          "relative_l2": 19.67876757350527
+        },
+        "stress": {
+          "maximum_absolute": 0.029083823447564328,
+          "relative_l2": 6.774007500986335e-05
+        },
+        "plastic_strain": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "physical_pressure": {
+          "maximum_absolute": 0.0,
+          "relative_l2": 0.0
+        },
+        "gap": {
+          "maximum_absolute": 9.722556841947538e-09,
+          "relative_l2": 5.3216895468911404e-05
+        },
+        "elastic_energy": {
+          "maximum_absolute": 1.1606440331844714e-06,
+          "relative_l2": 0.00010420429203964559
+        },
+        "void": {
+          "maximum_absolute": 5.08329535575669e-07,
+          "relative_l2": 1.7140703944184156e-07
+        },
+        "water_load": {
+          "maximum_absolute": 4.440892098500626e-16,
+          "relative_l2": 5.230219673972605e-16
+        },
+        "u": {
+          "maximum_absolute": 4.321315943500801e-08,
+          "relative_l2": 6.62399811141376e-05
+        },
+        "accumulated": {
+          "maximum_absolute": 0.00015594226392020953,
+          "relative_l2": 0.017368804344438937
+        },
+        "plastic_slip": {
+          "maximum_absolute": 0.0001352461115824463,
+          "relative_l2": 0.11560234582757847
+        },
+        "endpoint_work": {
+          "maximum_absolute": 0.002730039026277997,
+          "relative_l2": 0.019766421929191817
+        },
+        "traction": {
+          "maximum_absolute": 0.009722556841907704,
+          "relative_l2": 5.326917715580062e-05
+        }
+      }
+    ]
+  },
+  "existing_displacement_and_traction_gates": {
+    "original": true,
+    "h32": true,
+    "h64": true
+  },
+  "independent_step_sensitivity": [
+    {
+      "frame": "initial_equilibrated",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "jump": {
+        "maximum_absolute": 1.2732599263126643e-16,
+        "relative_l2": 1.315032181004305e-12
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 2.9843046086139504e-06,
+        "relative_l2": 3.0000000000163167
+      },
+      "stress": {
+        "maximum_absolute": 1.5077716852829326e-11,
+        "relative_l2": 8.290494866776332e-14
+      },
+      "strain": {
+        "maximum_absolute": 1.4007892068512717e-16,
+        "relative_l2": 1.2773430955387141e-12
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 1.1476930517062556e-14,
+        "relative_l2": 2.632312360746538e-12
+      },
+      "gap": {
+        "maximum_absolute": 1.2732599263126643e-16,
+        "relative_l2": 1.316461047825436e-12
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 4.440892098500626e-16,
+        "relative_l2": 2.785894447987961e-16
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 6.591949208711867e-17,
+        "relative_l2": 1.3139171644738681e-12
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "plastic_slip": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "reaction": {
+        "maximum_absolute": 4.3435477437014924e-11,
+        "relative_l2": 1.0300996028846265e-11
+      },
+      "endpoint_work": {
+        "maximum_absolute": 2.9843046191373526e-06,
+        "relative_l2": 0.0007322431073439889
+      },
+      "traction": {
+        "maximum_absolute": 1.2747136679536197e-10,
+        "relative_l2": 1.3166500342655369e-12
+      }
+    },
+    {
+      "frame": "shear",
+      "plastic_dissipation": {
+        "maximum_absolute": 2.1904958293090387e-06,
+        "relative_l2": 0.00020592105144420528
+      },
+      "jump": {
+        "maximum_absolute": 1.8602146571034114e-08,
+        "relative_l2": 2.059358848348494e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 5.317002717460204e-06,
+        "relative_l2": 3.0318583757878055
+      },
+      "stress": {
+        "maximum_absolute": 0.003233255715159089,
+        "relative_l2": 7.812576638746017e-06
+      },
+      "strain": {
+        "maximum_absolute": 3.7636627033248854e-08,
+        "relative_l2": 2.710994508840827e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 4.872390703164649e-08,
+        "relative_l2": 1.4719568861501291e-05
+      },
+      "gap": {
+        "maximum_absolute": 6.962382004816457e-10,
+        "relative_l2": 7.195798439176389e-06
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 3.569540529824167e-08,
+        "relative_l2": 1.2003995837662797e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 9.892290954102451e-09,
+        "relative_l2": 6.777219143490406e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 1.1836163217777713e-08,
+        "relative_l2": 1.1265390089677797e-05
+      },
+      "plastic_slip": {
+        "maximum_absolute": 3.396654891488389e-08,
+        "relative_l2": 4.3343573696200444e-05
+      },
+      "reaction": {
+        "maximum_absolute": 0.00010106038567236908,
+        "relative_l2": 6.308251001956628e-06
+      },
+      "endpoint_work": {
+        "maximum_absolute": 4.058320085193086e-06,
+        "relative_l2": 0.0004400645264270236
+      },
+      "traction": {
+        "maximum_absolute": 0.003534681581831123,
+        "relative_l2": 4.058026733948456e-05
+      }
+    },
+    {
+      "frame": "open",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0004025728013606483,
+        "relative_l2": 0.01701537612768081
+      },
+      "jump": {
+        "maximum_absolute": 2.7755575615628914e-17,
+        "relative_l2": 6.685349530642452e-16
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.00012605206466688822,
+        "relative_l2": 3.971078493822516
+      },
+      "stress": {
+        "maximum_absolute": 9.336531547887716e-12,
+        "relative_l2": 2.6048091949302604e-14
+      },
+      "strain": {
+        "maximum_absolute": 1.3877787807814457e-16,
+        "relative_l2": 4.0373107857264383e-14
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 1.5612511283791264e-17,
+        "relative_l2": 6.458869288509656e-16
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 4.440892098500626e-16,
+        "relative_l2": 1.16743250574167e-16
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 2.7755575615628914e-17,
+        "relative_l2": 5.685778262279026e-16
+      },
+      "accumulated": {
+        "maximum_absolute": 6.951618214114108e-05,
+        "relative_l2": 0.019707362605793876
+      },
+      "plastic_slip": {
+        "maximum_absolute": 5.9500444957923245e-05,
+        "relative_l2": 0.01971128241368657
+      },
+      "reaction": {
+        "maximum_absolute": 2.2950530365051236e-12,
+        "relative_l2": 5.5344971809520657e-14
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0002879087067922774,
+        "relative_l2": 0.012377370456904076
+      },
+      "traction": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "frame": "recontact",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0011279985123870198,
+        "relative_l2": 0.02232521415698001
+      },
+      "jump": {
+        "maximum_absolute": 4.5961967683411445e-08,
+        "relative_l2": 3.145958637871283e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.00026788665516484875,
+        "relative_l2": 4.450152944792115
+      },
+      "stress": {
+        "maximum_absolute": 0.007302709687763809,
+        "relative_l2": 1.783663123927736e-05
+      },
+      "strain": {
+        "maximum_absolute": 7.46059994743151e-08,
+        "relative_l2": 5.911032324809836e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 1.8305462740758616e-07,
+        "relative_l2": 1.594414376494118e-05
+      },
+      "gap": {
+        "maximum_absolute": 1.340010691872149e-09,
+        "relative_l2": 7.794849186148322e-06
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 7.658925027520525e-08,
+        "relative_l2": 3.335604049449158e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 2.9649709811689975e-08,
+        "relative_l2": 3.996358495376597e-05
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0002170051006401552,
+        "relative_l2": 0.05089087813096343
+      },
+      "plastic_slip": {
+        "maximum_absolute": 7.843066873955515e-05,
+        "relative_l2": 0.060620263143577005
+      },
+      "reaction": {
+        "maximum_absolute": 0.00027357128914218265,
+        "relative_l2": 2.6926053001410328e-05
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0008963480257015363,
+        "relative_l2": 0.013127497845421793
+      },
+      "traction": {
+        "maximum_absolute": 0.006501523568188006,
+        "relative_l2": 4.9113420027196525e-05
+      }
+    },
+    {
+      "frame": "reverse",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0011173581828796408,
+        "relative_l2": 0.008556885473368447
+      },
+      "jump": {
+        "maximum_absolute": 1.2066308525455647e-08,
+        "relative_l2": 3.143830081925342e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.00027373156772400625,
+        "relative_l2": 4.377944161422874
+      },
+      "stress": {
+        "maximum_absolute": 0.0008382191199416411,
+        "relative_l2": 1.9730372875669978e-06
+      },
+      "strain": {
+        "maximum_absolute": 1.1856071197068399e-08,
+        "relative_l2": 4.177793427331663e-06
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 5.007706535553602e-08,
+        "relative_l2": 8.538758814431335e-07
+      },
+      "gap": {
+        "maximum_absolute": 1.621063290112995e-10,
+        "relative_l2": 4.2357697434336764e-07
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 9.636958342440494e-09,
+        "relative_l2": 6.172576195996665e-09
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 7.2230746521765796e-09,
+        "relative_l2": 1.986353787379845e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 0.00021701558717693997,
+        "relative_l2": 0.03593735027383232
+      },
+      "plastic_slip": {
+        "maximum_absolute": 7.846167710472675e-05,
+        "relative_l2": 0.5388730491384252
+      },
+      "reaction": {
+        "maximum_absolute": 9.466857047613075e-05,
+        "relative_l2": 2.8385011591198883e-06
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0008817936264501197,
+        "relative_l2": 0.004224659416272899
+      },
+      "traction": {
+        "maximum_absolute": 0.0008915291536872871,
+        "relative_l2": 2.606122633808889e-06
+      }
+    },
+    {
+      "frame": "reload",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.001410304952301586,
+        "relative_l2": 0.00822824613908831
+      },
+      "jump": {
+        "maximum_absolute": 3.903127820947816e-18,
+        "relative_l2": 1.0231748089190716e-15
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.0003329707931976867,
+        "relative_l2": 4.072873351545753
+      },
+      "stress": {
+        "maximum_absolute": 7.673861546209082e-13,
+        "relative_l2": 2.2726087386100483e-15
+      },
+      "strain": {
+        "maximum_absolute": 9.974659986866641e-18,
+        "relative_l2": 4.242798799885578e-15
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 2.3852447794681098e-18,
+        "relative_l2": 4.279666936305887e-15
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 2.220446049250313e-16,
+        "relative_l2": 2.4889744652094936e-17
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 4.336808689942018e-18,
+        "relative_l2": 7.565071655078867e-16
+      },
+      "accumulated": {
+        "maximum_absolute": 0.00021982929468301014,
+        "relative_l2": 0.026947523052882602
+      },
+      "plastic_slip": {
+        "maximum_absolute": 6.519414209006104e-05,
+        "relative_l2": 0.027278288318831518
+      },
+      "reaction": {
+        "maximum_absolute": 7.105427357601002e-14,
+        "relative_l2": 3.822521335177358e-15
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.001077334159104243,
+        "relative_l2": 0.0057753402546196235
+      },
+      "traction": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "frame": "return",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0014175904605673029,
+        "relative_l2": 0.007309973248417693
+      },
+      "jump": {
+        "maximum_absolute": 1.8969762557107493e-09,
+        "relative_l2": 1.7790197103049367e-06
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.000344495336774392,
+        "relative_l2": 4.037643577532426
+      },
+      "stress": {
+        "maximum_absolute": 0.00017258296063005218,
+        "relative_l2": 5.263454906796466e-07
+      },
+      "strain": {
+        "maximum_absolute": 1.6614570244773141e-09,
+        "relative_l2": 1.8254648029277742e-06
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 1.3533287875761024e-09,
+        "relative_l2": 9.717510733279287e-08
+      },
+      "gap": {
+        "maximum_absolute": 9.7392260272125e-12,
+        "relative_l2": 4.7916063655632486e-08
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.916932390599868e-09,
+        "relative_l2": 9.668325240269517e-10
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 1.0056093009897567e-09,
+        "relative_l2": 1.8308572340013974e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 0.00022203192092329176,
+        "relative_l2": 0.02377483237754089
+      },
+      "plastic_slip": {
+        "maximum_absolute": 6.778964743074612e-05,
+        "relative_l2": 0.05269802997539936
+      },
+      "reaction": {
+        "maximum_absolute": 1.3934065188792033e-05,
+        "relative_l2": 1.7338974628288005e-06
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0010730964771217544,
+        "relative_l2": 0.0047970762467362035
+      },
+      "traction": {
+        "maximum_absolute": 7.731824701906476e-05,
+        "relative_l2": 5.741280416362206e-07
+      }
+    }
+  ],
+  "independent_volume_order_sensitivity": [
+    {
+      "frame": "initial_equilibrated",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "jump": {
+        "maximum_absolute": 1.8856328711999715e-09,
+        "relative_l2": 1.3854222612183204e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 4.118914725478946e-11,
+        "relative_l2": 1.99074312310636e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.005885431864285806,
+        "relative_l2": 1.1135909034605478e-05
+      },
+      "strain": {
+        "maximum_absolute": 3.657874050091428e-08,
+        "relative_l2": 0.0001393459139050172
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 1.6871161368989251e-07,
+        "relative_l2": 1.990741588285409e-05
+      },
+      "gap": {
+        "maximum_absolute": 1.8856328711999715e-09,
+        "relative_l2": 9.927167993741791e-06
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.0101031322484744e-07,
+        "relative_l2": 2.8613602082397846e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 8.237800537511954e-09,
+        "relative_l2": 9.685507558793766e-05
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "plastic_slip": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "reaction": {
+        "maximum_absolute": 0.00013622859385264974,
+        "relative_l2": 4.42620212070353e-05
+      },
+      "endpoint_work": {
+        "maximum_absolute": 1.6875280299966794e-07,
+        "relative_l2": 1.9907415883031054e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.0018856328717333781,
+        "relative_l2": 1.0113967577193839e-05
+      }
+    },
+    {
+      "frame": "shear",
+      "plastic_dissipation": {
+        "maximum_absolute": 1.0858320557104173e-07,
+        "relative_l2": 1.0011934102544253e-05
+      },
+      "jump": {
+        "maximum_absolute": 5.4749588005039394e-09,
+        "relative_l2": 8.367290907454575e-06
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 1.8583494582100279e-10,
+        "relative_l2": 3.0135270482562883e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.006000958254105626,
+        "relative_l2": 1.3361681767873828e-05
+      },
+      "strain": {
+        "maximum_absolute": 3.480785021846289e-08,
+        "relative_l2": 2.3007377281906768e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 1.3180591065245148e-07,
+        "relative_l2": 4.040991582639748e-05
+      },
+      "gap": {
+        "maximum_absolute": 1.8795418859805183e-09,
+        "relative_l2": 1.976760341877433e-05
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.034357894891258e-07,
+        "relative_l2": 2.9163716656683717e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 7.874279693781752e-09,
+        "relative_l2": 5.1296746091833054e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 7.955397153210954e-09,
+        "relative_l2": 1.1183503538399248e-05
+      },
+      "plastic_slip": {
+        "maximum_absolute": 7.853571836586269e-09,
+        "relative_l2": 1.1669203994442536e-05
+      },
+      "reaction": {
+        "maximum_absolute": 0.00014469560893459743,
+        "relative_l2": 1.0265931021094259e-05
+      },
+      "endpoint_work": {
+        "maximum_absolute": 2.401414126145668e-07,
+        "relative_l2": 1.444238822584055e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.0018795418858204016,
+        "relative_l2": 1.9776576809683735e-05
+      }
+    },
+    {
+      "frame": "open",
+      "plastic_dissipation": {
+        "maximum_absolute": 8.27906651089394e-07,
+        "relative_l2": 2.3818668985932637e-05
+      },
+      "jump": {
+        "maximum_absolute": 9.446547747163359e-09,
+        "relative_l2": 2.0781412818896376e-07
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 1.970964611436093e-09,
+        "relative_l2": 3.958899514615035e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.006785776938230015,
+        "relative_l2": 1.6082551954319977e-05
+      },
+      "strain": {
+        "maximum_absolute": 4.0672135779087903e-08,
+        "relative_l2": 1.389145270204294e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 9.446547747163359e-09,
+        "relative_l2": 4.349121038559503e-07
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.0966596319939015e-07,
+        "relative_l2": 3.128785287926861e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 1.28251725489692e-08,
+        "relative_l2": 1.9998887413468364e-07
+      },
+      "accumulated": {
+        "maximum_absolute": 1.9496125069169354e-08,
+        "relative_l2": 5.5029405524678e-06
+      },
+      "plastic_slip": {
+        "maximum_absolute": 1.639735955176469e-08,
+        "relative_l2": 5.658332813634023e-06
+      },
+      "reaction": {
+        "maximum_absolute": 0.0001736807687038322,
+        "relative_l2": 4.780980976061472e-06
+      },
+      "endpoint_work": {
+        "maximum_absolute": 8.259814692872236e-07,
+        "relative_l2": 2.378074840789479e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "frame": "recontact",
+      "plastic_dissipation": {
+        "maximum_absolute": 1.2410605049369139e-06,
+        "relative_l2": 2.188065715188304e-05
+      },
+      "jump": {
+        "maximum_absolute": 6.31945437840932e-09,
+        "relative_l2": 4.710390495666477e-06
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 1.0155642843070686e-08,
+        "relative_l2": 5.1698561753004606e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.005977956715668142,
+        "relative_l2": 1.1450985270989353e-05
+      },
+      "strain": {
+        "maximum_absolute": 3.7163991218648607e-08,
+        "relative_l2": 1.9729024760025034e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 2.394947537735087e-07,
+        "relative_l2": 1.9548906863340823e-05
+      },
+      "gap": {
+        "maximum_absolute": 1.7531719303295196e-09,
+        "relative_l2": 9.372897493014593e-06
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.0136256123338683e-07,
+        "relative_l2": 2.8978648551493803e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 9.157138295681419e-09,
+        "relative_l2": 1.1124587760210318e-05
+      },
+      "accumulated": {
+        "maximum_absolute": 1.999279238863727e-08,
+        "relative_l2": 4.75181956946692e-06
+      },
+      "plastic_slip": {
+        "maximum_absolute": 1.5978761757642033e-08,
+        "relative_l2": 9.762472265032987e-06
+      },
+      "reaction": {
+        "maximum_absolute": 0.00013630644280926418,
+        "relative_l2": 1.4797296409903096e-05
+      },
+      "endpoint_work": {
+        "maximum_absolute": 1.4818295380816804e-06,
+        "relative_l2": 2.1490458668197413e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.0017531719301899784,
+        "relative_l2": 9.372898582542623e-06
+      }
+    },
+    {
+      "frame": "reverse",
+      "plastic_dissipation": {
+        "maximum_absolute": 1.7339695969897928e-06,
+        "relative_l2": 1.1999793703964447e-05
+      },
+      "jump": {
+        "maximum_absolute": 6.316417066931689e-09,
+        "relative_l2": 1.4849507536571697e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 1.0155642696784708e-08,
+        "relative_l2": 4.9273917918611896e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.005978027555471499,
+        "relative_l2": 7.028726954034935e-06
+      },
+      "strain": {
+        "maximum_absolute": 3.7167944601408653e-08,
+        "relative_l2": 7.495670407544949e-06
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 5.090465842703951e-07,
+        "relative_l2": 8.244317004451937e-06
+      },
+      "gap": {
+        "maximum_absolute": 1.753144465780872e-09,
+        "relative_l2": 4.1421836925456955e-06
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.0126328175985577e-07,
+        "relative_l2": 2.8999478819626032e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 9.157522209935973e-09,
+        "relative_l2": 2.141565198182175e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 1.999295806123444e-08,
+        "relative_l2": 3.3555603697145102e-06
+      },
+      "plastic_slip": {
+        "maximum_absolute": 1.5981648665694057e-08,
+        "relative_l2": 8.67735248544566e-05
+      },
+      "reaction": {
+        "maximum_absolute": 0.00013631140070202719,
+        "relative_l2": 4.217735485643464e-06
+      },
+      "endpoint_work": {
+        "maximum_absolute": 2.244290460279297e-06,
+        "relative_l2": 1.0877427222581105e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.001753144464800016,
+        "relative_l2": 4.1421838075674665e-06
+      }
+    },
+    {
+      "frame": "reload",
+      "plastic_dissipation": {
+        "maximum_absolute": 2.452099625696591e-06,
+        "relative_l2": 1.3746432155382455e-05
+      },
+      "jump": {
+        "maximum_absolute": 9.44654775762591e-09,
+        "relative_l2": 2.29368217667129e-06
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 1.0696338510258379e-08,
+        "relative_l2": 4.0268280000080394e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.006785776934790988,
+        "relative_l2": 1.608255193021896e-05
+      },
+      "strain": {
+        "maximum_absolute": 4.067213574873024e-08,
+        "relative_l2": 1.3891452705418489e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 9.44654775762591e-09,
+        "relative_l2": 1.7481497288279475e-05
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.0966596275530094e-07,
+        "relative_l2": 3.128785283554303e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 1.282517256458171e-08,
+        "relative_l2": 2.0498872635958133e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 3.529503244618232e-08,
+        "relative_l2": 3.3814121000449463e-06
+      },
+      "plastic_slip": {
+        "maximum_absolute": 2.8891774643720336e-08,
+        "relative_l2": 9.25968880660912e-06
+      },
+      "reaction": {
+        "maximum_absolute": 0.00017368076448320835,
+        "relative_l2": 4.780980925883465e-06
+      },
+      "endpoint_work": {
+        "maximum_absolute": 2.454535625237564e-06,
+        "relative_l2": 1.3753893123645307e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "frame": "return",
+      "plastic_dissipation": {
+        "maximum_absolute": 2.855565618964384e-06,
+        "relative_l2": 1.4263802822083732e-05
+      },
+      "jump": {
+        "maximum_absolute": 6.3167672760241e-09,
+        "relative_l2": 4.708908527980396e-06
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 1.094660524488119e-08,
+        "relative_l2": 3.899859803259933e-05
+      },
+      "stress": {
+        "maximum_absolute": 0.005978032074182238,
+        "relative_l2": 1.1450806617174716e-05
+      },
+      "strain": {
+        "maximum_absolute": 3.7167559162332164e-08,
+        "relative_l2": 1.9728646955629973e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "elastic_energy": {
+        "maximum_absolute": 2.394921884904533e-07,
+        "relative_l2": 1.954870618887014e-05
+      },
+      "gap": {
+        "maximum_absolute": 1.7531489543778662e-09,
+        "relative_l2": 9.372786187902793e-06
+      },
+      "pore": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 1.0136241401781376e-07,
+        "relative_l2": 2.8978223312057643e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 9.157548552958788e-09,
+        "relative_l2": 1.112382404736623e-05
+      },
+      "accumulated": {
+        "maximum_absolute": 3.7423151636600815e-08,
+        "relative_l2": 3.3950192087551594e-06
+      },
+      "plastic_slip": {
+        "maximum_absolute": 2.7069338717268e-08,
+        "relative_l2": 1.6189598273699343e-05
+      },
+      "reaction": {
+        "maximum_absolute": 0.00013631135994929267,
+        "relative_l2": 1.4797152446111072e-05
+      },
+      "endpoint_work": {
+        "maximum_absolute": 3.0971799279966294e-06,
+        "relative_l2": 1.4579995860742288e-05
+      },
+      "traction": {
+        "maximum_absolute": 0.0017531489540374423,
+        "relative_l2": 9.37278644325807e-06
+      }
+    }
+  ],
+  "native_step_sensitivity": [
+    {
+      "frame": "initial_equilibrated",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "jump": {
+        "maximum_absolute": 1.5689083062223053e-16,
+        "relative_l2": 8.532467322907811e-13
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 6.365827427569096e-05,
+        "relative_l2": 1.0000000000000757
+      },
+      "stress": {
+        "maximum_absolute": 1.4973977613408351e-10,
+        "relative_l2": 3.0190313698869474e-13
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 4.07524491582989e-17,
+        "relative_l2": 2.1906202673079065e-13
+      },
+      "elastic_energy": {
+        "maximum_absolute": 3.689756833402669e-15,
+        "relative_l2": 4.3877692772432785e-13
+      },
+      "void": {
+        "maximum_absolute": 1.5987211554602254e-14,
+        "relative_l2": 1.0741637792484314e-14
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 4.566049686786922e-16,
+        "relative_l2": 4.978866511232063e-12
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "plastic_slip": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "endpoint_work": {
+        "maximum_absolute": 6.365827427352519e-05,
+        "relative_l2": 0.01538461538465468
+      },
+      "traction": {
+        "maximum_absolute": 4.0756731323199347e-11,
+        "relative_l2": 2.7430768187959203e-13
+      }
+    },
+    {
+      "frame": "shear",
+      "plastic_dissipation": {
+        "maximum_absolute": 2.825545542274252e-05,
+        "relative_l2": 0.0034620686620419738
+      },
+      "jump": {
+        "maximum_absolute": 1.0505814257931977e-07,
+        "relative_l2": 9.809415185966246e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 8.354936156895426e-05,
+        "relative_l2": 0.9923531608266138
+      },
+      "stress": {
+        "maximum_absolute": 0.015041308665644237,
+        "relative_l2": 3.742222397863113e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 3.424369466345457e-09,
+        "relative_l2": 3.5570352688308964e-05
+      },
+      "elastic_energy": {
+        "maximum_absolute": 2.3960033086745103e-07,
+        "relative_l2": 7.278066497820509e-05
+      },
+      "void": {
+        "maximum_absolute": 1.7287088893702673e-07,
+        "relative_l2": 5.7678066094187724e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 5.989019748170845e-08,
+        "relative_l2": 3.101111677509217e-05
+      },
+      "accumulated": {
+        "maximum_absolute": 6.893135826388118e-08,
+        "relative_l2": 6.145751605170377e-05
+      },
+      "plastic_slip": {
+        "maximum_absolute": 2.0211585828003743e-07,
+        "relative_l2": 0.00021569783431901252
+      },
+      "endpoint_work": {
+        "maximum_absolute": 6.599136849298574e-05,
+        "relative_l2": 0.007287046215138508
+      },
+      "traction": {
+        "maximum_absolute": 0.019411543140140708,
+        "relative_l2": 0.00020589953812056807
+      }
+    },
+    {
+      "frame": "open",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0010138551386375191,
+        "relative_l2": 0.027867444426651497
+      },
+      "jump": {
+        "maximum_absolute": 1.5784248907912968e-14,
+        "relative_l2": 2.923381909888817e-13
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.0001281090757194661,
+        "relative_l2": 0.7123328569753591
+      },
+      "stress": {
+        "maximum_absolute": 6.941309749208813e-09,
+        "relative_l2": 1.715020877696058e-11
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 1.5784248907912968e-14,
+        "relative_l2": 5.768355033913963e-13
+      },
+      "elastic_energy": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 9.703349235223868e-14,
+        "relative_l2": 3.2408886823285555e-14
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 1.8615317620707117e-14,
+        "relative_l2": 2.571251368995422e-13
+      },
+      "accumulated": {
+        "maximum_absolute": 0.00015612764205112954,
+        "relative_l2": 0.057899135750229015
+      },
+      "plastic_slip": {
+        "maximum_absolute": 0.00013523347820884406,
+        "relative_l2": 0.057905302150538566
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0009826139004194302,
+        "relative_l2": 0.024391278974457392
+      },
+      "traction": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "frame": "recontact",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0020582846300739345,
+        "relative_l2": 0.03799019548413803
+      },
+      "jump": {
+        "maximum_absolute": 4.4834326964437836e-08,
+        "relative_l2": 3.0573082067739926e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 9.674983096962599e-05,
+        "relative_l2": 0.10644028110724409
+      },
+      "stress": {
+        "maximum_absolute": 0.0070039567066118025,
+        "relative_l2": 1.6946538878201637e-05
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 1.330607161007468e-09,
+        "relative_l2": 7.734875368744538e-06
+      },
+      "elastic_energy": {
+        "maximum_absolute": 1.8176230515837277e-07,
+        "relative_l2": 1.580903781856549e-05
+      },
+      "void": {
+        "maximum_absolute": 7.42724248770088e-08,
+        "relative_l2": 3.146019444734319e-08
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 2.825456031863233e-08,
+        "relative_l2": 3.8232236591034994e-05
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0003013242320723587,
+        "relative_l2": 0.07702898287885573
+      },
+      "plastic_slip": {
+        "maximum_absolute": 2.949457933256361e-05,
+        "relative_l2": 0.015778288502130318
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.00209275275866809,
+        "relative_l2": 0.03031871398578741
+      },
+      "traction": {
+        "maximum_absolute": 0.006452956911699559,
+        "relative_l2": 4.7252374609862655e-05
+      }
+    },
+    {
+      "frame": "reverse",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0019450426995337722,
+        "relative_l2": 0.013611597698811675
+      },
+      "jump": {
+        "maximum_absolute": 1.2557949022472975e-08,
+        "relative_l2": 3.336154712046815e-05
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.00015940656695012374,
+        "relative_l2": 0.20441285126799832
+      },
+      "stress": {
+        "maximum_absolute": 0.0008380373224383675,
+        "relative_l2": 2.05325065843525e-06
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 1.6439581198624854e-10,
+        "relative_l2": 4.3285353919499587e-07
+      },
+      "elastic_energy": {
+        "maximum_absolute": 5.0772394726006365e-08,
+        "relative_l2": 8.716889017521789e-07
+      },
+      "void": {
+        "maximum_absolute": 1.0229195490651932e-08,
+        "relative_l2": 6.404063799758197e-09
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 7.402338957399578e-09,
+        "relative_l2": 2.093892135058588e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 0.00030133562892705867,
+        "relative_l2": 0.05494560818127805
+      },
+      "plastic_slip": {
+        "maximum_absolute": 2.9480266307977117e-05,
+        "relative_l2": 0.172589387958617
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0019170476570983669,
+        "relative_l2": 0.008800012404980528
+      },
+      "traction": {
+        "maximum_absolute": 0.0008950115840349326,
+        "relative_l2": 2.6235532631524902e-06
+      }
+    },
+    {
+      "frame": "reload",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.002293567065757021,
+        "relative_l2": 0.012591035282165633
+      },
+      "jump": {
+        "maximum_absolute": 6.603848327554895e-15,
+        "relative_l2": 1.3378693478358755e-12
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.0008143582380677971,
+        "relative_l2": 0.6205225039001147
+      },
+      "stress": {
+        "maximum_absolute": 2.881254346220885e-09,
+        "relative_l2": 7.1144458765034156e-12
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 6.603848327554895e-15,
+        "relative_l2": 9.705428983160082e-12
+      },
+      "elastic_energy": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "void": {
+        "maximum_absolute": 5.773159728050814e-14,
+        "relative_l2": 2.0967953024157054e-14
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 7.80191883320569e-15,
+        "relative_l2": 1.0891822518760405e-12
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0003263585593680472,
+        "relative_l2": 0.039973249340496474
+      },
+      "plastic_slip": {
+        "maximum_absolute": 6.936858389151781e-05,
+        "relative_l2": 0.019710828679146628
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0016390169418328687,
+        "relative_l2": 0.008685320788913613
+      },
+      "traction": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    {
+      "frame": "return",
+      "plastic_dissipation": {
+        "maximum_absolute": 0.0021372628467017374,
+        "relative_l2": 0.009938314557748181
+      },
+      "jump": {
+        "maximum_absolute": 6.304997355916116e-09,
+        "relative_l2": 5.444766991469503e-06
+      },
+      "numerical_dissipation": {
+        "maximum_absolute": 0.0009484125908967764,
+        "relative_l2": 0.6463177666095384
+      },
+      "stress": {
+        "maximum_absolute": 0.0005387865887058751,
+        "relative_l2": 1.7328460143182288e-06
+      },
+      "plastic_strain": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "physical_pressure": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "gap": {
+        "maximum_absolute": 3.196913125392588e-11,
+        "relative_l2": 1.5946256799901117e-07
+      },
+      "elastic_energy": {
+        "maximum_absolute": 4.442081515121377e-09,
+        "relative_l2": 3.248609018659544e-07
+      },
+      "void": {
+        "maximum_absolute": 6.133455299206503e-09,
+        "relative_l2": 3.174216465171569e-09
+      },
+      "water_load": {
+        "maximum_absolute": 0.0,
+        "relative_l2": 0.0
+      },
+      "u": {
+        "maximum_absolute": 3.4089780477641884e-09,
+        "relative_l2": 5.720768208778903e-06
+      },
+      "accumulated": {
+        "maximum_absolute": 0.0003284019687467372,
+        "relative_l2": 0.0351684216582144
+      },
+      "plastic_slip": {
+        "maximum_absolute": 6.850305384534531e-05,
+        "relative_l2": 0.033898512195957776
+      },
+      "endpoint_work": {
+        "maximum_absolute": 0.0013984453657262391,
+        "relative_l2": 0.007926906255506658
+      },
+      "traction": {
+        "maximum_absolute": 0.00033241101904657455,
+        "relative_l2": 2.3368401970231196e-06
+      }
+    }
+  ],
+  "restart_checks": [
+    {
+      "stage": "geostatic",
+      "progress": 0.25,
+      "count": 1,
+      "checkpoint_sha256": "f4ae9fedcf80ce4b459edec215e63cbb2acff6ea92dbf54fe9dcaf5fa01a49fb",
+      "whole_run_exact_except_elapsed_seconds": true
+    },
+    {
+      "stage": "shear",
+      "progress": 0.5,
+      "count": 5,
+      "checkpoint_sha256": "b65d84bceaa5bb487998f92f98449a53c9fac69bce8825d2750de814b451d2c7",
+      "whole_run_exact_except_elapsed_seconds": true
+    },
+    {
+      "stage": "open",
+      "progress": 0.125,
+      "count": 7,
+      "checkpoint_sha256": "d3c4c16059cbd6f2572ece9c37476e9f173cdbeaccdac48dff6860314c069881",
+      "whole_run_exact_except_elapsed_seconds": true
+    },
+    {
+      "stage": "recontact",
+      "progress": 0.25,
+      "count": 15,
+      "checkpoint_sha256": "99d762f72d1a93281c6be06c2443deded15bcdcb79bbf282387a0fd9f0c63f9b",
+      "whole_run_exact_except_elapsed_seconds": true
+    },
+    {
+      "stage": "reverse",
+      "progress": 0.5,
+      "count": 19,
+      "checkpoint_sha256": "248a82826c077db4da93f601f5baf50569c43066c6972ea0a0e1992a159643bf",
+      "whole_run_exact_except_elapsed_seconds": true
+    },
+    {
+      "stage": "reload",
+      "progress": 0.25,
+      "count": 21,
+      "checkpoint_sha256": "516b761baa79bf13b4b232c42a63bc9bca2b1fe1ace822ca5c80eba211189408",
+      "whole_run_exact_except_elapsed_seconds": true
+    },
+    {
+      "stage": "return",
+      "progress": 0.25,
+      "count": 25,
+      "checkpoint_sha256": "f84850fe4f78ed71592a02b7dc44888db56afcbc2a2ee012bb8ad089508300de",
+      "whole_run_exact_except_elapsed_seconds": true
+    }
+  ],
+  "native_stored_field_and_output_audits": {
+    "original": {
+      "schema": "soil-fem-wet-joint-independent-verification/1",
+      "passed": true,
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "relative_force_residual": 3.8845529520085174e-12,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.806007195452829,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "shear",
+          "relative_force_residual": 9.779130985826216e-10,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6799538523629818,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "open",
+          "relative_force_residual": 1.000769752564566e-10,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6513593384269611,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "recontact",
+          "relative_force_residual": 2.6606831738678642e-15,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6940610712590982,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "reverse",
+          "relative_force_residual": 7.694605887304779e-12,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6871737354628824,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "reload",
+          "relative_force_residual": 1.0450699179098723e-11,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.651359338406823,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "return",
+          "relative_force_residual": 7.332526256982393e-12,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6941298542938725,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "independent_darcy_solutions": [],
+      "maximum_physical_load_component_error_kn": 1.0658141036401503e-14,
+      "maximum_exported_pressure_difference_kpa": 3.3306690738754696e-15,
+      "maximum_independent_hydraulic_head_difference_m": 0.0,
+      "scope": "Independent input-based head constraints and dense Darcy FEM, physical pressure trace and wet-face integration, stored material/contact stress and energy/force/rigid-support reassembly, output readback. No independent general plastic mechanics or unsaturated joint PDE is claimed."
+    },
+    "h32": {
+      "schema": "soil-fem-wet-joint-independent-verification/1",
+      "passed": true,
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "relative_force_residual": 4.86688318527327e-13,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.8060071954539796,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "shear",
+          "relative_force_residual": 2.8121675728362228e-09,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6799779428524642,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "open",
+          "relative_force_residual": 2.600119091992418e-11,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.651359338409759,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "recontact",
+          "relative_force_residual": 1.5234019135681216e-11,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.694129623614517,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "reverse",
+          "relative_force_residual": 4.4390114070083145e-11,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6872246581260435,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "reload",
+          "relative_force_residual": 1.0811450432863779e-11,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6513593384096834,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "return",
+          "relative_force_residual": 5.512168539157058e-09,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6941311044512524,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "independent_darcy_solutions": [],
+      "maximum_physical_load_component_error_kn": 1.0658141036401503e-14,
+      "maximum_exported_pressure_difference_kpa": 3.3306690738754696e-15,
+      "maximum_independent_hydraulic_head_difference_m": 0.0,
+      "scope": "Independent input-based head constraints and dense Darcy FEM, physical pressure trace and wet-face integration, stored material/contact stress and energy/force/rigid-support reassembly, output readback. No independent general plastic mechanics or unsaturated joint PDE is claimed."
+    },
+    "h64": {
+      "schema": "soil-fem-wet-joint-independent-verification/1",
+      "passed": true,
+      "frames": [
+        {
+          "name": "initial_equilibrated",
+          "relative_force_residual": 2.425005975982422e-13,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.806007195454062,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "shear",
+          "relative_force_residual": 2.454922059934862e-10,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6799812542402008,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "open",
+          "relative_force_residual": 1.2970655410496848e-11,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6513593384096898,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "recontact",
+          "relative_force_residual": 8.484292506002491e-13,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6941304848756724,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "reverse",
+          "relative_force_residual": 2.950659052190804e-12,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.6872248020157168,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "reload",
+          "relative_force_residual": 5.4107512994153866e-12,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.651359338409646,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "name": "return",
+          "relative_force_residual": 4.438462730680129e-10,
+          "physical_load_component_error_kn": 1.0658141036401503e-14,
+          "maximum_normalized_yield": -1.694131027899138,
+          "cut_surface_area_m2": 0.0,
+          "loaded_surface_area_m2": 0.9999999999999998,
+          "cut_water_force_kn": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "independent_darcy_solutions": [],
+      "maximum_physical_load_component_error_kn": 1.0658141036401503e-14,
+      "maximum_exported_pressure_difference_kpa": 3.3306690738754696e-15,
+      "maximum_independent_hydraulic_head_difference_m": 0.0,
+      "scope": "Independent input-based head constraints and dense Darcy FEM, physical pressure trace and wet-face integration, stored material/contact stress and energy/force/rigid-support reassembly, output readback. No independent general plastic mechanics or unsaturated joint PDE is claimed."
+    }
+  },
+  "limitation": "Fixed hydrostatic CONTINUOUS water and elastic MC bulk only. Full contact histories are measurements, not certified convergence. Partial volume wetting quadrature and global/local path sensitivity remain explicit. No beams, plates, Darcy flow or general plastic bulk acceptance.",
+  "nc": {
+    "executed": false,
+    "passed": false,
+    "reason": "No evidence-based fundamentally different short experiment; do not repeat precision/local-tolerance tuning."
+  },
+  "p3b_p4_rows_complete": false,
+  "structure_water_joint_complete": false,
+  "p6_complete": false,
+  "windows_ci": "unverified"
+}

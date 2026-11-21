@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "assembly": [
+    {
+      "frame": "initial_equilibrated",
+      "reassembled_relative_residual": 1.5346261361346955e-14,
+      "load_max_abs_kn": 1.4210854715202004e-14,
+      "constraint_error_m": 0.0
+    },
+    {
+      "frame": "same_body_compress",
+      "reassembled_relative_residual": 2.8009717231884498e-14,
+      "load_max_abs_kn": 1.4210854715202004e-14,
+      "constraint_error_m": 0.0
+    }
+  ],
+  "independent_3d": {
+    "reference": "input-only GL125 elastic 3D + independent Tri6/Coulomb Newton; one local substep in both implementations",
+    "maximum_independent_residual": 1.5528821612093314e-13,
+    "frames": [
+      {
+        "frame": "initial_equilibrated",
+        "all_node_displacement_relative_l2": 3.009687594993204e-13,
+        "all_volume_gp_stress_relative_l2": 1.5510480350360817e-14,
+        "all_contact_gp_traction_relative_l2": 3.8734362023534815e-13,
+        "all_contact_gp_history_errors": {
+          "plastic_slip_m": 0.0,
+          "accumulated_plastic_slip_m": 0.0
+        }
+      },
+      {
+        "frame": "same_body_compress",
+        "all_node_displacement_relative_l2": 5.233440375268057e-14,
+        "all_volume_gp_stress_relative_l2": 1.1930150044790184e-14,
+        "all_contact_gp_traction_relative_l2": 1.2627421392101704e-13,
+        "all_contact_gp_history_errors": {
+          "plastic_slip_m": 0.0,
+          "accumulated_plastic_slip_m": 0.0
+        }
+      }
+    ],
+    "passed": true
+  }
+}

@@ -1,0 +1,29 @@
+FF
+======================================================================
+FAIL: test_prior_records_sha_unchanged (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_prior_records_sha_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/ci-pcfail-workflow-pin-fix/tests/test_a03_unequal_thickness_anisotropic_k.py", line 79, in test_prior_records_sha_unchanged
+    self.assertEqual(hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),sha,p)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '2207dbc1e9ca37e7c30ef2f41f327faebc427498f96d6a4407ada4fc59620287' != 'cc0beddc1769051a2f68d33dee3057ec19c07df77bad8de5a982ea637346e2d5'
+- 2207dbc1e9ca37e7c30ef2f41f327faebc427498f96d6a4407ada4fc59620287
++ cc0beddc1769051a2f68d33dee3057ec19c07df77bad8de5a982ea637346e2d5
+ : .github/workflows/fem-ci.yml
+
+======================================================================
+FAIL: test_old_records_and_production_sources_are_unchanged (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_old_records_and_production_sources_are_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/ci-pcfail-workflow-pin-fix/tests/test_b03_offset_kink_cloud_followup.py", line 120, in test_old_records_and_production_sources_are_unchanged
+    self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(), expected, name)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '2207dbc1e9ca37e7c30ef2f41f327faebc427498f96d6a4407ada4fc59620287' != 'cc0beddc1769051a2f68d33dee3057ec19c07df77bad8de5a982ea637346e2d5'
+- 2207dbc1e9ca37e7c30ef2f41f327faebc427498f96d6a4407ada4fc59620287
++ cc0beddc1769051a2f68d33dee3057ec19c07df77bad8de5a982ea637346e2d5
+ : .github/workflows/fem-ci.yml
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.015s
+
+FAILED (failures=2)

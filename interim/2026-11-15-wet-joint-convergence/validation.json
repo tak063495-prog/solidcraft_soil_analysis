@@ -1,0 +1,164 @@
+{
+  "schema": "soil-fem-wet-joint-convergence-validation/1",
+  "passed": true,
+  "scope": "Software, stored-field integrity and remeasurement only; numerical acceptance remains false",
+  "finalized_at_jst": "2026-11-11T12:01:42.030218+09:00",
+  "starting_commit": "bc6eb1c39749559db91e20d2a4cba2d20679649c",
+  "rust_tests": 451,
+  "rust_summary_groups": 69,
+  "python_tests": 503,
+  "python_tools_tests": 2,
+  "python_total": 505,
+  "failed": 0,
+  "errors": 0,
+  "ignored": 0,
+  "skipped": 0,
+  "filtered_out": 0,
+  "expected_failures": 0,
+  "unexpected_successes": 0,
+  "python_inventory_union_exact": true,
+  "python_groups": {
+    "python-core-0": {
+      "tests_run": 256,
+      "exit_code": 0
+    },
+    "python-core-1": {
+      "tests_run": 235,
+      "exit_code": 0
+    },
+    "python-mean-evidence": {
+      "tests_run": 4,
+      "exit_code": 0
+    },
+    "python-spatial-evidence": {
+      "tests_run": 4,
+      "exit_code": 0
+    },
+    "python-new-convergence": {
+      "tests_run": 6,
+      "exit_code": 0
+    }
+  },
+  "checks": [
+    {
+      "name": "fmt",
+      "exit_code": 0,
+      "log": "validation/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "exit_code": 0,
+      "log": "validation/clippy.log",
+      "sha256": "077415788574a111e0d21c63f1a4fa43a5ebc2353cbdc32870abc5ef6c3a6b58"
+    },
+    {
+      "name": "rust-tests",
+      "exit_code": 0,
+      "log": "validation/rust-tests.log",
+      "sha256": "ebede9e950ad66d5a34bfc077e762f85427a3497333e12588da35775b942379c"
+    },
+    {
+      "name": "used-probe-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--example",
+        "wet_joint_history_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 17.21430159600004,
+      "log": "validation/final-probe/used-probe-build.log",
+      "sha256": "27ffc85ca779d84ec3abe86758ccb0220091187e0c5c00b7e8481eba55eb5259"
+    },
+    {
+      "name": "current-probe-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--example",
+        "wet_joint_history_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 18.54343838099976,
+      "log": "validation/final-probe/current-probe-build.log",
+      "sha256": "1261646729baacd22c8115f7c2d3529432e6f37484f640a5bf88744603834468"
+    },
+    {
+      "name": "production-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.29228908000004594,
+      "log": "validation/final-probe/production-build.log",
+      "sha256": "1ff8bbcb4151dc887e69b78a29bc241d5062cba4757aa5f4639926ae712a8181"
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.4569242449997546,
+      "log": "validation/final-probe/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.0608113730004334,
+      "log": "validation/final-probe/clippy.log",
+      "sha256": "efd8ac6b3bc3ccd67443d15b8b8a085adb269a41661f835c1f9cbcd31bf9f63b"
+    },
+    {
+      "name": "probe-test-compile",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--example",
+        "wet_joint_history_probe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.9055384889998095,
+      "log": "validation/final-probe/probe-test-compile.log",
+      "sha256": "8231e9f6c4945d583d66e6bd46afca883c2fc41fa0e4c033586434b5fbe2bb29"
+    }
+  ],
+  "all_frozen_numerical_sources_identical_after_checks": true,
+  "numerical_source_files": 545,
+  "numerical_source_manifest_sha256": "98fc5524e2b0890e6d5e863e7e388378fd72eef728378d5940111dc0bb9987b2",
+  "accepted_states_reaudited": 10416,
+  "archive_entries_sha256_verified": 1029,
+  "all_measurements_exact": true,
+  "isolated_sealed_source_remeasurement_exact": true,
+  "native_probe_used_source_binary_reproduction_exact": true,
+  "production_cli_byte_identical_to_base_verified_binary": true,
+  "production_cli_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+  "numerical_acceptance_passed": false,
+  "full_history_convergence_accepted": false,
+  "p6_complete": false,
+  "windows_ci_after_push": "unconfirmed",
+  "earlier_stopped_attempts": "retained-failures; excluded from successful counts; no stopped calculation counted as numerical acceptance"
+}

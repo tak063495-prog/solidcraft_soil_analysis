@@ -1,0 +1,345 @@
+{
+  "repository": "tak063495-prog/solidcraft_soil_analysis",
+  "query": "is:issue",
+  "repository_selector": "tak063495-prog/solidcraft_soil_analysis",
+  "limit": 100,
+  "returned": 9,
+  "initial_open": [
+    15
+  ],
+  "initial_closed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10,
+    11,
+    14
+  ],
+  "state_scope": "Read before any triage mutations; source issue text and full comment bodies retained.",
+  "issues": [
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+        "title": "[P2] 参照計算再開ラッパーの親中断で生存子を残したままstudyロックが解除される",
+        "issue_number": 1,
+        "body": "## 概要・優先度\n**P2 / 中断・再開の排他制御**。参照計算の再開ラッパーを、実行中の子プロセスとは別に中断すると、子が生存したまま study の排他ロックが削除されます。同じ study を再開する入口の二重起動防止が失われます。Rust FEM本体の誤計算を確認した指摘ではありません。\n\n## 対象版と根拠\n- main commit: `5d4afb45234c0781e86b63cb4d0b67a3d54b33f2`\n- `tools/resume_projected_sparse_study.py` blob: `5d9733dd4d35e251f815f9073295124e2444c455`\n- [ロック取得と所有者記録 L124–130](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/resume_projected_sparse_study.py#L124-L130)\n- [子の起動・待機と無条件ロック削除 L153–166](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/resume_projected_sparse_study.py#L153-L166)\n\n`process.wait()` が `KeyboardInterrupt` 等で離脱しても、子を停止して終了確認する処理がなく、`finally: lock.unlink()` が実行されます。\n\n## 発生条件・独立再現\nLinux/Pythonで固定版のラッパーを実行して独立再現しました（作者のCI・計算結果とは別）。\n1. 既存 `tests/test_reference_resume.py` のfixtureで、一時ディレクトリに有効な凍結studyを作成。\n2. 一時fixture内の参照子プログラムだけを「自身のPIDを記録し60秒sleepする」安全な代役に置換し、fixtureのsource hashも更新。実リポジトリや実studyは変更しない。\n3. 固定版ラッパーを子プロセスとして起動し、参照子のPID記録を待つ。\n4. **ラッパーの親PIDだけ**へ `SIGINT` を送信。プロセスグループ全体へのCtrl+Cとは区別する。\n5. 結果：`parent_exit=-2, child_alive=true, lock_exists=false`。確認後、試験で起動した子だけを終了。\n\n通常完了や子を含む一斉停止を対象にした指摘ではありません。所有プロセスを個別停止する操作等で生じる中断経路です。\n\n## 影響\n長時間の参照子が残っているのに、次のラッパーが同じstudyのロックを取得できる状態になります。重複した参照計算・同じphase出力への競合の危険があります。今回、実解析結果の破損や数値値の誤りまでは実証していません。\n\n## 修正案\n- 起動済み子の所有ハンドルを保持し、割込み・例外経路で所有子の停止と `wait` による終了確認を行ってからロックを解放する。\n- 子終了を確認できない場合はロックを保持し、親/子PID・中断状態・手動確認事項を記録する。単に同名プロセスを一括終了しない。\n- 子起動直後の進捗保存失敗も同じ後始末経路へ含める。\n\n## 回帰試験・未検証範囲\n親だけへのSIGINT、待機中例外、子起動直後のstatus書込例外を注入し、(a)子が終了するまで排他が維持されること、(b)同study再起動が生存子と重ならないこと、(c)通常成功/子失敗後に正しくロック解放されることを検査してください。\n今回実行確認したのはLinuxの軽量代役子によるラッパーのプロセス管理です。Windows固有の停止、実MCC長時間計算、強制killによるOS終了、実phase出力競合は未検証です。",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 2,
+        "created_at": "2026-10-26T23:19:10Z",
+        "updated_at": "2026-11-09T22:49:28Z",
+        "closed_at": "2026-11-09T22:49:28Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1",
+        "display_title": "[P2] 参照計算再開ラッパーの親中断で生存子を残したままstudyロックが解除される"
+      },
+      "comments": [
+        {
+          "id": 6429695368,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1#issuecomment-6429695368",
+          "body": "追加確認（同じ固定SHA `5d4afb45234c0781e86b63cb4d0b67a3d54b33f2`）：軽量fixtureで、親個別SIGINT後に同studyへ第2ラッパーを実際に起動し、2つの子が同時に生存し、同一 `initial.json` を出力先としていることまで確認しました。\n\n影響の限定：実参照の保存は [initial側](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/mcc_projected_volume_diagnostic.py#L249) と [cycle側](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/mcc_projected_cycle_diagnostic.py#L177) が `open('x')` を使うため、完成済み結果の上書きを確認したものではありません。重複した長時間計算、片側の保存失敗、進行記録との不一致が主な懸念です。実CADでのデータ破損は実証していません。"
+        },
+        {
+          "id": 6753569553,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/1#issuecomment-6753569553",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\n起動済みPopenを保持し、起動中の協調signalをハンドル代入まで遅延させ、割込み/例外時は所有子だけをterminate/必要ならkillし、waitで終了確認後にunlockするようにしました。確認不能ならlockに親/子PID・中断・手動確認事項を残します。親だけのSIGINT/SIGTERM、起動途中signal、wait例外、起動直後status例外、終了確認不能、正常成功/子失敗と安全な再起動を新規Python7 test methodsで確認。Windows実終了は未実行。同名processの一括終了はしていません。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2",
+        "title": "[P2] Python最適化時に構造表示の独立照査が消え、不一致reportでもcompleteを出力する",
+        "issue_number": 2,
+        "body": "## 概要・優先度\n**P2（Python最適化実行時に限定）/ 構造結果の独立照査欠落**。\n新しいnative構造表示の抽出経路は `beam_reference.verify_state` に依存していますが、その数値整合比較が `assert` で実装されているため、`python -O` または `PYTHONOPTIMIZE=1` で消えます。不一致の板曲げモーメント等を含むreportが、通常モードなら拒否されるのに、最適化モードでは `complete=true` の表示JSONへ出力されることを独立再現しました。\n\n通常モードの正常解が誤計算される指摘ではありません。また、既存のhash検査を破ったという指摘でもありません。既存assert基盤の問題が、今回追加された表示経路へ持ち込まれています。\n\n## 対象・根拠\n- main SHA: `5d4afb45234c0781e86b63cb4d0b67a3d54b33f2`\n- 新規 `tools/solidcraft_structure_fields.py` blob: `8d718aa3e8a681593f930d27d7066c946ce4729d`\n- [独立照査呼出と元reportを出力する処理 L45–73](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/solidcraft_structure_fields.py#L45-L73)\n- [比較がassertに依存する verify_state L201–220](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/beam_reference.py#L201-L220)\n- [表示exportからの呼出](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/export_solidcraft_view.py#L170-L174)\n- [native workerは環境変数を継承 L171–180](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5d4afb45234c0781e86b63cb4d0b67a3d54b33f2/tools/native_job.py#L171-L180)。PYTHONOPTIMIZEを除去・拒否していません（静的確認）。\n\n## 発生条件・独立再現\n固定版の実 `fields()` と `export_solidcraft_view.export()` をPythonで実行しました。\n- 既存テストの構造/transport fixtureを使用。板reportの `samples[0].bending_moment_kn[0]` に0.1を加え、既存回帰と同様にfixtureのreceipt/result hashを更新。\n- 正しいfixtureはnormal/最適化の両方で成功。\n- 不一致fixtureはnormalで `ValueError: structural report/history fails independent member equilibrium`、manifestは生成されない。\n- 同じfixtureを `-O` または `PYTHONOPTIMIZE=1` で実行すると受理し、`soil-fem-solidcraft-view/3`, `complete=true` を生成。\n- 関数単位ではglobal force+100、beam local_axes+1も同じnormal拒否/最適化受理を確認。\n\nreceipt未更新の単純改変は既存hash照査で拒否されます。本件は、整合したreceiptを持つ入力report自体に数値不整合があるときの、独立再計算との比較欠落を示します。外部攻撃や改竄防止全体の破綻を主張しません。\n\n## 影響・修正案\n最適化環境で構造照査が静かに弱まり、履歴から再計算した値と一致しない部材値を完了済み表示packetへ渡せます。呼出しているだけでは比較保証になりません。\n- 外部データの照査には `assert` でなく `if not condition: raise ValueError(...)` を使用してください。\n- または、最適化モードを非対応とするなら公開/監査entryで `sys.flags.optimize != 0` を明示拒否し、完了markerを生成しないでください。\n\n## 回帰試験と未検証\nnormal、`-O`、`PYTHONOPTIMIZE=1` の別プロセスで、正しいpacket、板moment、梁axes、global force、履歴変位の不一致を対照し、不一致が常に拒否されmanifestが残らないことを確認してください。\n独立実行は合成fixture＋実JSON exportです。fixture solverはdummy bytesで、Rust/本物のaccepted-run生成・Windows/native GUI/PowerShell・VTUは未実行。JSON経路のみを検証し、meshioはimport-only sentinel（API呼出は必ず例外）を使用、実際そのAPIは使われませんでした。作者CIの成功を本レビュー独立実行に算入していません。",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 3,
+        "created_at": "2026-10-26T23:22:14Z",
+        "updated_at": "2026-11-09T22:49:14Z",
+        "closed_at": "2026-11-09T22:49:14Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2",
+        "display_title": "[P2] Python最適化時に構造表示の独立照査が消え、不一致reportでもcompleteを出力する"
+      },
+      "comments": [
+        {
+          "id": 6456602044,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2#issuecomment-6456602044",
+          "body": "### 追加証拠：新しい入力展開スクリプトでも最適化時に整合検査が消失（条件付き・関連する軽微な問題）\n対象main SHA: `4ed9f40389417559e575ad1877e6d84765a9915a`。\n新規 `interim/2026-10-27-native-mcc-selector/unpack_inputs.py` blob: `0623752e7cb9141c77af5efd49e7126835bd8357`。\n[manifest/ZIP inventory・byte数・SHA256のassert検査 L7–15](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/4ed9f40389417559e575ad1877e6d84765a9915a/interim/2026-10-27-native-mcc-selector/unpack_inputs.py#L7-L15)、[展開と成功表示 L16–23](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/4ed9f40389417559e575ad1877e6d84765a9915a/interim/2026-10-27-native-mcc-selector/unpack_inputs.py#L16-L23)。\n\n**独立実行（Linux / Python 3.12.14）**：固定版の実スクリプトを一時ディレクトリへ置き、必要な5ファイルの合成ZIP/manifestを作成しました。manifestは全ファイルの内容 `{}`（2 bytes）のSHA256を記録し、ZIP内の `mesh.json` だけ同サイズの `[]` へ変更。公開アーカイブやリポジトリは変更していません。\n- 通常Python：SHA256のassertで終了コード1。出力ディレクトリなし。\n- 同じスクリプト・同じfixtureを `python -O`：終了コード0、`Exact verification inputs created` と表示し、不一致のmeshをcoarse/fineへコピー。\n\n**影響/優先度**：P3相当、最適化モードかつmanifest不一致入力の場合に限る関連検証欠落です。配布された公開ZIPが破損しているという指摘ではなく、正常データ・通常実行での誤解析も主張しません。展開後の別のFEM入力照査が拒否する可能性と、manifestによる同一版保証がこの入口で欠けることは別です。\n\n**修正案/回帰**：外部入力の整合条件を明示的な `if ...: raise ValueError(...)` に変更するか、この入口で最適化モードを明示拒否。正常ZIP、同サイズhash不一致、サイズ不一致、余分/重複memberをnormal・`-O`・`PYTHONOPTIMIZE=1`で対照し、不一致時には出力フォルダも成功表示も残さないことを確認してください。\n本追加はnormal/-Oの合成ZIP展開を実行確認済み。`PYTHONOPTIMIZE=1`でのこのscriptの直接実行、実公開ZIPの再展開、Windows/native GUI、後段の数値計算は未実行です。既存Issueの同根問題として追記し、別Issueは起票しません。"
+        },
+        {
+          "id": 6484021333,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2#issuecomment-6484021333",
+          "body": "\n対象main `51625d6bbd629e8c1dbec53bca78a7b5381bf98c`、mcc_acoustic_exact_report.py blob `6a448d3416a28f807535488101f56f19aa3aa673`。\n\nexact acoustic CLIでも -O/PYTHONOPTIMIZE がbindingを消す\n\n- [exact report L14–21](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/tools/mcc_acoustic_exact_report.py#L14-L21)、[L52–61](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/tools/mcc_acoustic_exact_report.py#L52-L61)。docstringはimmutable sampled diagnosticの再確認を明示、CLI testも変更input拒否を契約化。\n- optimized_probe.py/.json: 実CLIでsampled生成後ground lambda=.12→.13だけ変更。通常はexit1/outputなし。`-O` および `PYTHONOPTIMIZE=1` はexit0/output作成。新材料定数で計算したexact reportのsha256は古いground hashのまま残ることも確認。\n- 影響: sampled診断の固定入力と異なる構成則を用いながら、旧hashへ紐づくように報告。既存Issue2と同根なので重複新規起票不要。\n- 修正: 入力hash/実装hash/shape/正値/整合条件を明示例外にし、通常/-O/envの各実CLIで変更入力拒否・outputなしを試験する。全assert利用箇所の修正完了やIssue解消を意味しない。\n\n\n優先度P2（最適化時・固定入力変更時に限定）。Linux/Python 3.12.14、合成fixture＋固定版の実sampled/exact CLIで独立実行。公開データが破損しているとの主張ではなく、通常モードは拒否します。実Rust/実CAD/Windows/native GUIは未実行、作者保存結果・CIと独立実行を混同していません。関連Issue #3のMATSET材料解決とは別の検証欠落です。\n"
+        },
+        {
+          "id": 6753564994,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/2#issuecomment-6753564994",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\nbeam_referenceの外部照査を明示例外へ変更し、数値比較の形状・有限性も検査しました。コメントの指定interim unpack_inputs.pyとmcc_acoustic_exact_report.pyも実在を確認して修正しました。normal/-O/PYTHONOPTIMIZE=1の別processで構造moment/axes/global force/history、ZIP hash/size/extra/duplicate、exact入力hash/実装hash/shape/正値/候補整合の拒否と正常対照を確認。構造manifest、展開先/成功表示、exact outputは不一致時に生成されません。新規Python3 test methods。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+        "title": "[P2] MCC音響診断がMATSET後の材料IDを無視し、負候補を見落とす",
+        "issue_number": 3,
+        "body": "\n対象 main `51625d6bbd629e8c1dbec53bca78a7b5381bf98c`。\n\nMATSET後の確定材料IDを無視して初期材料のMCC定数で診断\n\n- [diagnostic L138–142](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/tools/mcc_acoustic_diagnostic.py#L138-L142) blob `aa27aaea071515bac7b23cdd589bb14c47532ee0`\n- [exact report L34–38](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/tools/mcc_acoustic_exact_report.py#L34-L38) blob `6a448d3416a28f807535488101f56f19aa3aa673`\n- 条件: 通常MCC施工でMCC→別MCCのMATSET後、frame.state.element_material_idsと初期mesh.material_idsが異なる。診断は全frameに同じ初期IDを適用する。\n- 到達可能性: [stages.rs L1186–1200](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/src/stages.rs#L1186-L1200) はMaterialSetを処理し、[L1235–1246](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/51625d6bbd629e8c1dbec53bca78a7b5381bf98c/src/stages.rs#L1235-L1246)でelement_material_ids更新。新modelのstate妥当性は検査されるが通常MCC MATSETを一律禁止していない。mixed MCCのstage whitelistではMATSET非対応だが、診断CLIはmixed専用に限定されておらず通常結果も受理する。該当ソースを静的確認。\n- 独立再現: material_mapping_probe.py / .json。旧M=1.6、新M=1.4、lambda=.12,kappa=.025,nu=.2,e=.9、p=100,pc=400、q=1.4 sqrt(100*300)のextension応力。旧材料yield=-.0439453125（内側）、新材料yield≈6.96e−17（降伏面）なので両側admissible。mesh IDs=[1,1]、確定frame IDs=[2,1]、要素0のみactive。\n- 実結果: near_yield=0, sampled_negative=0。現在frame材料に解決した対照はnear_yield=1, sampled_negative=1。新定数で評価すべきsoftening/音響負候補を丸ごと落とす。M以外のK/G/硬化定数変更も誤評価を招く。\n- 修正案: frame.state.element_material_idsを優先し、古いschemaの空/欠落inventoryのみ明示仕様に従ってmesh IDsへfallback。長さ・未知ID・型を明示検査。sampled/exact共通の材料解決関数にし、各frameで解決。\n- 回帰: 上記preserve条件の旧/新M対照、MATSET前後の複数frame、lambda/kappa/nu変更、同一ID、legacy inventory fallback、未知ID/長さ不一致拒否。exact reportにも同じ正しい候補数を要求。\n- 実行区分: diagnosticの実Python再現済み＋RustのMATSET到達性は静的確認。実Rust solverで施工を通して生成したresultは未実行。誤った診断が本体FEMの応力/解を変更するものではない。\n\n\n追加の実CLI確認: `material_cli_probe.py/json` はbefore(ID1)→after(ID2)の2frameを生成してsampled→exactを実行。実装はsampled両frameとも0候補、exact最終0候補。最終frameの材料を正しく反映した1frame対照ではsampled/exactとも負候補1。legacyでelement_material_ids欠落のID1対照は0候補で変わらない。実FEM施工全体は未実行で、Python診断・CLI自体の独立再現とRust到達性静的確認を区別する。\n\n検証環境：Linux / Python 3.12.14、NumPy。合成fixtureを使用し、作者の保存結果・CI成功を独立実行とは扱っていません。実CAD・Windows/native GUI・実FEM通算および公開事例の診断誤りは未検証です。診断上の仮想塑性載荷分枝の候補見落としであり、全体安定性や実際の載荷分枝を確定する主張ではありません。\n",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 1,
+        "created_at": "2026-10-29T00:04:27Z",
+        "updated_at": "2026-11-09T22:49:01Z",
+        "closed_at": "2026-11-09T22:49:01Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+        "display_title": "[P2] MCC音響診断がMATSET後の材料IDを無視し、負候補を見落とす"
+      },
+      "comments": [
+        {
+          "id": 6753560986,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3#issuecomment-6753560986",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\nsampled/exact共通の材料解決関数を導入し、各frameの確定element_material_idsを優先しました。空/欠落listのみlegacy fallback、型不正・長さ不一致・未知IDは明示拒否します。旧M=1.6/新M=1.4の前後frame、lambda/kappa/nu、同一ID、legacy、非活動要素も含む不正inventory、sampled→exact実CLIを確認。材料解決の新規Python4 test methods。実Rust MATSET施工全体の新しい受入とは区別しています。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4",
+        "title": "[P2] MC epoch view の容量検査と実際の JSON 保存形式が異なり、上限超過を成功扱いする",
+        "issue_number": 4,
+        "body": "## 対象・優先度\n- **P2（出力容量契約・大規模結果の表示用パケット）**\n- main: `ff72bbac52f97e375626ce2fed892627dd1e7ccb`。PR途中版ではありません。\n- `tools/export_mc_epoch_view.py` blob: `255beeb71da67d0c98ba0c140b6dee1238ee446a`。\n- 数値解そのものの誤りではなく、成功扱いとなる表示出力のサイズ検査不整合です。通常のPythonで発生し、既存 #2 の `-O` によるassert無効化とは別です。\n\n## 根拠・発生条件\n[容量事前検査（90–92行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_mc_epoch_view.py#L90-L92) は既定の `json.dumps` のUTF-8長を測りますが、[実保存（105–109行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_mc_epoch_view.py#L105-L109) では [`write_json`（167–169行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_mc_epoch.py#L167-L169) の `indent=2` を使います。大量の配列を含むframe/pointsでは保存バイト数が事前検査より大幅に増えます。\n\nまたコピーするgeometryと最後のmanifestが `MAX_TOTAL` に加算されていません。通常view exporterは[実際に書くバイトを検査して累積計上](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_solidcraft_view.py#L263-L271)しており、epoch側自身も「unchanged display budgets」として上限を強制しています。単なる推奨値の問題ではありません。\n\n## 独立再現結果\n1. 既存の小型transport fixtureを使い、力学受理部分のみmock、容量定数を縮小した同じproduction exporterを実行しました。事前検査の4ファイルは `[1475,1340,581,581]` bytes、実保存は `[2657,2522,1075,1075]` bytes。ファイル上限1475／総量3977 bytesでも `complete=True` で成功し、最大実ファイル2657 bytes、viewディレクトリ総量11006 bytesとなりました。\n2. **上限を変更しない実writerの確認**：6成分応力配列300万件を含む代表的JSON値について、productionと同じ事前encodingは **96,000,059 bytes**、production `export_mc_epoch.write_json` が実際にディスクへ書いたファイルは **282,000,077 bytes**。実上限 **268,435,456 bytes（256 MiB）**を超えました。保存ファイルSHA256: `9d774150c538df4a54372220877eae80b39f10fcb721e921a533f14165eda75f`。一時ファイルは確認後削除しました。\n\n2は代表的フィールドのserialization実行であり、300万GPの物理解析や完全なNative workflowを実行したという意味ではありません。1はtransport fixtureでのexport完了判定の確認です。\n\n## 影響\n配列の多い大規模出力では256 MiB/512 MiBの表示予算を超えるパケットに完了マーカー・成功receiptが付きます。容量制限を前提とする下流読込へ過大出力を渡し、表示失敗や予想外のメモリ使用につながる可能性があります。Native GUIでの拒否・メモリ消費は未実行であり、ここで確定しているのは出力サイズ検査の逸脱です。\n\n## 修正案\n実際に書くバイト列を一度だけ生成し、その同じバイト列の長さを検査して保存してください。geometry・frame・points・manifestの実バイトを累積計上し、上限を超える場合はcomplete/成功receiptを公開しないようにしてください。\n\n## 回帰試験・未検証範囲\n- 配列主体のJSONで事前計測値と保存ファイル長が一致すること。\n- 各ファイルが上限ちょうど／1 byte超、geometryを含む累積が総量上限ちょうど／1 byte超の境界試験。\n- 上限超過時に成功manifest/receiptが残らないこと。\n- 上記独立Python実行以外のRust力学、Windows/Native GUI、Excel、実大規模FEM・表示は未検証。作者のCI・保存結果を独立実行確認とは扱っていません。\n",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 1,
+        "created_at": "2026-10-30T23:25:46Z",
+        "updated_at": "2026-11-09T22:48:47Z",
+        "closed_at": "2026-11-09T22:48:47Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4",
+        "display_title": "[P2] MC epoch view の容量検査と実際の JSON 保存形式が異なり、上限超過を成功扱いする"
+      },
+      "comments": [
+        {
+          "id": 6753556765,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4#issuecomment-6753556765",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\nindent=2の実保存バイト列を一度生成し、同じバイト列を検査して保存するようにしました。geometry/frame/points/manifestを実バイトで累積し、manifest容量確認前にはcomplete/成功receiptを公開しません。配列主体payload・各種ファイル・個別/累積の上限ちょうどと1 byte超・成功マーカー未生成を新規Python2 test methodsで確認。transport fixtureで力学受理部分のみmockした試験であり、大規模FEMの新しい受入ではありません。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+        "title": "[P2] interim安全停止の子孫判定が親PID再利用を見逃し、無関係processを所有扱いする",
+        "issue_number": 5,
+        "body": "## 対象・優先度\n- **P2（安全停止の所有process誤認。該当条件では無関係な作業を終了する危険）**\n- mainコミット `ff72bbac52f97e375626ce2fed892627dd1e7ccb` 内の**interim候補**。production数値solverの不具合とは区別します。\n- パス: `interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py`\n- blob: `daf8d4088dc2ae2fa1e359ee50a880da7317e457`\n\n## 根拠\n[所有集合の下向き拡張（151–155行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L151-L155) は、`ParentProcessId in owned` だけで子孫を追加します。現在そのPIDを使っている親の生成時刻と、子の生成時刻を比較していません。\n\n[上向き探索（143–148行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L143-L148) には逆転時刻の拒否が既にありますが、下向きにはありません。[後段の保持handle検査（173–188行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L173-L188) は各process自身のimage/生成時刻がCIM snapshotと一致することを確認するだけなので、snapshot取得前の**親PID再利用で誤った親子関係**までは検証しません。その後[550–555行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L550-L555) は保持したlive handle全件を `TerminateProcess` に渡します。特定登録solver jobに対するargv/保存チェックはありますが、すべてのhandleの親子関係を再検証するものではありません。\n\nMicrosoft公式 [Win32_Process / ParentProcessId](https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-process#properties) も、親PIDが終了後に再利用されて別processを指すことと、CreationDateで親子の時間順序を確認する方法を説明しています。\n\n## 発生条件・独立再現\n1. 無関係な旧processのPIDが100で、そこから子PID200が22:00に起動。\n2. 旧親100が終了し、その後23:00に起動した今回の正規所有processへPID100が再利用される。PID200は存続し、ParentProcessId=100のまま。\n3. 正規receiptで現在のPID100は正しく所有seedになる。\n4. 現行151–155行のループは、現在の親より古いPID200まで所有集合に追加。\n\n固定ソースから**当該ループをそのまま抽出した純データ試験**で確認しました：\n```text\nowned initially = {100}\nrecord 100: ParentProcessId=1,   Created=23:00\nrecord 200: ParentProcessId=100, Created=22:00\nexpected owned = {100}\nactual owned   = {100, 200}\n```\n当該processを終了させるOS呼出やsignalは一切実行していません。無関係なPID200自身はCIM取得後も存続しimage/生成時刻が変化しないので、上記handle identityチェックでは除外されません。実際に終了へ進むには `--execute`、利用率条件・事前保存等の他のguardが通り、handleを開ける条件も必要です。\n\n## 影響・既存Issueとの区別\n誤分類した無関係processが終了対象に入るため、その未保存作業を失う可能性があります。最後のreceiptの `unrelated_processes_touched=False` も、この条件では保証できません。\n既存 #1 の親SIGINT時にlive子を残してlockを解除する問題とは、対象ファイル・原因・修正点が異なります。また候補の未受入を指摘するだけでなく、既に実装された所有判定の具体的誤分類を示しています。\n\n## 修正案\n各親子edgeで、現に所有する親のidentityと生成時刻を確認し、少なくとも `parent.Created <= child.Created` を必須にしてください。不明・欠落・parse不能は所有扱いにしないfail-closedとし、既存の保持handleによる本人identity検査も維持してください。可能なら起動時にJob Object等で所有process treeを追跡し、PIDだけの事後推測を避けます。\n\n## 回帰試験・未検証範囲\n- PID再利用で「子が現在の親より古い」ケースを除外。\n- 正しい時刻順の子・孫は追加、excluded processは除外。\n- Created欠落/parse不能は拒否、CIM取得後の本人PID再利用も現行handle検査で拒否。\n- Windowsの実終了試験は隔離した使い捨てprocessだけで確認し、無関係processを終了しないこと。\n- **実行確認は所有集合計算の純データ試験のみ**。Windows CIM/handle/実停止、保存復旧の統合、実solver/Excelは未実行。終了経路は静的追跡で、作者の保存結果を独立実行確認と混同していません。\n",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 2,
+        "created_at": "2026-10-30T23:27:15Z",
+        "updated_at": "2026-11-09T23:23:04Z",
+        "closed_at": "2026-11-09T22:48:34Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+        "display_title": "[P2] interim安全停止の子孫判定が親PID再利用を見逃し、無関係processを所有扱いする"
+      },
+      "comments": [
+        {
+          "id": 6753552523,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5#issuecomment-6753552523",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\n指定interimスクリプトの上下の各親子edgeでPID/image/parse可能なtimezone付きCreatedを確認し、parent.Created <= child.Createdを必須にしました。不明・欠落・parse不能は所有へ追加しません。親PID再利用、正しい子孫、excluded、identity不一致を純データ4 test methodsで試験。既存の保持handle本人image/生成時刻検査は保持しました。Windows CIM/実終了は未実行で、無関係processへのsignalは一切送っていません。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        },
+        {
+          "id": 6754184803,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5#issuecomment-6754184803",
+          "body": "追加確認です。対象は PR #13 の固定SHA `5bee3b47f61878e614cae1e7268a57449d2f12d1`。本件の「snapshot内で現在の親より古い子を所有扱いにする経路」は修正され、該当する純データ回帰も独立に通りました。\n\n別条件として、同じinterim停止候補に **P2相当・Python最適化時に限定した保持handle本人確認の欠落**が残っています。#2と同じassert消失が、停止対象の確認にもあります。\n\n- [L206–220](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L206-L220)では、`QueryFullProcessImageNameW` / `GetProcessTimes`の呼出自体がassert式内にあり、`-O` / `PYTHONOPTIMIZE=1`で消えます。入口に最適化の明示拒否はありません。\n- CIM観測後、OpenProcess前に正規所有processが終了し、そのPIDが別processへ再利用された場合、snapshotの親子時刻が正しくても、実handleのimage/生成時刻を再確認できません。`--execute`、利用率条件、必要なローカル配置・保存処理等が通ると、[L582–593](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L582-L593)で当該handleを終了対象にし、本人確認済みのreceiptも書きます。\n\n独立確認はLinux/Pythonの隔離fixtureです。固定ソース全文を変更せず `compile(..., optimize=0/1)` で実行し、CIMとWindows APIだけをmock化しました。image不一致・生成時刻不一致の両方で、通常は停止前に拒否しreceiptなし、最適化時は照合APIを呼ばずmockのTerminateProcessへ進み、`held_identity_verified=true` / `unrelated_processes_touched=false`を記録しました。実Windows API・実signal・実process終了は一切行っていません。\n\nこのassert部分は修正前の直接親と同一で、今回の修正による回帰とは主張しません。対象はREADMEにある検証時のローカル配置を前提としたinterim候補であり、実studyでの誤停止や本体数値結果の誤りを確認したものでもありません。\n\n本人確認のAPI呼出・戻り値・image/生成時刻の条件を明示例外へ変更するか、停止処理より前に最適化モードを明示拒否するのがよいと思います。normal/最適化の両方で不一致時に終了呼出と成功receiptへ進まない回帰を追加してください。\n"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10",
+        "title": "[P2] 参照なしRichardsonが振動収束を単調収束として外挿し、連続側5%を誤って合格にする",
+        "issue_number": 10,
+        "body": "## 対象・優先度\n**P2 / 数値収束の判定不整合**。main `175c260f5ccc1b2c5bd6c965a91ad18b657102c0`（PR #9反映済み）、`src/plane_strain_2d.rs` blob `6b064b0262ed9944ca7a6c49d5b9655649862010`。\n既存 #1–5 と重複しません。公開済み柱の個別計算結果が誤っていたという指摘ではなく、以下の振動収束系列を入力した場合の判定です。\n\n## 根拠\n[`reference_free_richardson` 578–589行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/plane_strain_2d.rs#L578-L589) は連続する差分を両方 `.abs()` にしてから次数を計算し、正の倍率 `2^p` を前提とするRichardson式に渡しています。差分の符号反転を検査しないため、単調収束と振動収束を区別できません。\n[公開 `judge_series` 236–268行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/plane_strain_2d.rs#L236-L268) は有限値・個数・非零参照値を確認しますが、この符号条件は検査しません。`nested_h_refinement=true` は同じ問題のh細分を意味しても、解の差分が同符号になることまでは保証しません。\n[455–477行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/plane_strain_2d.rs#L455-L477) はこの外挿値をそのまま連続側5%判定に使用します。\n\n## 発生条件・独立数値再現\n同一モニタについてh,h/2,h/4の系列を、公開judge形式で次のように与える場合です。\n```json\n{\n  \"schema\": \"soil-fem-plane-strain-2d-series/1\",\n  \"quantity\": \"signed displacement\",\n  \"reference\": -0.001,\n  \"values\": [-0.001, -0.0013, -0.00115],\n  \"nested_h_refinement\": true\n}\n```\nこの例は厳密に `u_n=-0.0012 + 0.0002*(-1/2)^n` という振動収束系列の最初の3値です。真の極限は `-0.0012`、参照に対する相対差は **20%** です。\n\n現実装の式を独立Python計算で追跡すると、\n- 差分絶対値は `0.0003, 0.00015`、比2より `p≈1`。\n- 正符号倍率を仮定した外挿値は `-0.001`。\n- 参照との差は丸め誤差程度になり、`continuum_verdict=pass` 相当の **5%合格**になります。\n\n正の変位の対応例でも同じ誤判定です。入力系列そのものは有限で、差分縮小率・次数範囲等の現行guardをすべて通ります。3点だけで一般の真の極限を認定できるという主張ではなく、**現行の単調Richardsonモデルと明らかに整合しない符号反転を除外しない**ことを示しています。\n\n## 影響・修正案\n振動するh細分結果から誤った連続推定を作り、元の2Dとの5%比較に合格を付ける可能性があります。solverの平衡計算そのもの、一般3D/P6の完了フラグとは別の問題です。\n\n少なくとも連続差分の同符号を確認し、符号反転する場合はこの単調Richardsonを使わず `Indeterminate` としてください。振動モデルを扱うなら、符号付き倍率に対応した別の外挿と妥当性条件を明示し、現在の正倍率式に混在させないでください。\n\n## 回帰試験・確認範囲\n- 上記正/負変位の振動系列を5%Passにしない。\n- 単調な既知次数系列は正しい外挿・判定を保つ。\n- 差分ゼロ、solver floor、発散、符号反転、非finite、2値しかない場合の判定。\n- 実CLI `plane-strain-2d judge SERIES.json NEW_REPORT.json` の結果を確認。\n\n**独立実行済みは上記数式のPython再計算です。Rust関数とCLI経路は固定ソースの静的確認であり、cargo/rustc/対応release実行ファイルがないためRust CLIは実行していません。** 作者のRust/Python試験・保存結果を独立実行と混同せず、実FEMメッシュでの振動例・Windows/GUI/Excelも未検証です。\n",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 1,
+        "created_at": "2026-10-31T23:45:19Z",
+        "updated_at": "2026-11-09T22:48:20Z",
+        "closed_at": "2026-11-09T22:48:20Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10",
+        "display_title": "[P2] 参照なしRichardsonが振動収束を単調収束として外挿し、連続側5%を誤って合格にする"
+      },
+      "comments": [
+        {
+          "id": 6753548281,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/10#issuecomment-6753548281",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\n連続差分の符号と有限性を確認してから正倍率の単調Richardsonを適用するようにしました。正/負の振動系列を実CLI plane-strain-2d judgeでIndeterminateとし、既知次数1/2/3の単調系列、差分ゼロ、solver floor、発散、非有限、2点の対照を確認しました。新規Python2 test methods。既存5%や参照値は変更していません。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11",
+        "title": "[P2] 工程SRM保存点の完了済gate起点が対象入力に結び付かず、別ケースの通過結果を受理し得る",
+        "issue_number": 11,
+        "body": "## 対象・優先度\n**P2 / 保存・復旧時の完了済み工程ゲートと入力の結び付け不足（静的指摘）**\n- main `175c260f5ccc1b2c5bd6c965a91ad18b657102c0`、PR #7反映済みのproduction経路。\n- `src/epoch_srm_gate.rs` blob `74b23a8c482cb3905a090685f8739d58165b3414`。\n- 既存 #1–5、#10 と原因が異なります。\n- **通常の未編集ジョブで自然発生したという報告ではありません。別入力の有効な保存payloadと対象入力の外側identityが組み合わされた状態への意味的検証不足です。** hash自体の暗号強度や認証境界への指摘でもありません。\n\n## 根拠と到達経路\n1. [`Snapshot::verify` 408–423行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L408-L423) は外側の `identity` を呼出対象mesh/ground/caseと照合し、`payload_sha256` をpayloadと照合します。しかし両者の結び付けは、この後の意味的検査に依存します。\n2. [完了済みrecord検査 512–534行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L512-L534) は `gate.search.verify(mesh, &gate.origin, ...)` と「埋込originのhash＝search reportのorigin hash」を検査するだけで、埋込originを対象ground/caseの工程接頭部と照合しません。\n3. 必要な検査自体は [`verify_origin` 537–557行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L537-L557) にありますが、[active Search phase 438–446行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L438-L446) だけから呼ばれています。完了済みrecordには呼ばれません。\n4. [Finish phase 453–477行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L453-L477) はgate数・Continue判定・工程数を検査し、`checkpoint=None` なら対象construction保存点の検証もしません。この状態は正常なゲート通過直後にも生成されます。\n5. [`finish_unit` 793–809行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L793-L809) は呼出対象caseで残りのconstruction処理を行います。一方、[最終decision 371–385行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate.rs#L371-L385) は保存された別入力のgate.effectから `Passed` を作ります。\n\nしたがって、完了済みgateが評価した施工起点と、最終reportの対象入力が異なる状態を受理する経路があります。[保存ジョブの選択検査 279–320行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate_job.rs#L279-L320) と [prepare_recovery 450–453行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/175c260f5ccc1b2c5bd6c965a91ad18b657102c0/src/epoch_srm_gate_job.rs#L450-L453) もこのverifierを利用し、完了recordの追加入力照合はありません。\n\n## 回帰用の具体的条件\n現在の単軸column fixtureと同じmesh/ground/executable、2工程（boundary荷重＋reset）、`gate_after_stages=[1]`、要求率1.6・最大率2を使います。\n- 入力A：荷重factor=1。既存試験の20/15≈1.333の排除境界から要求1.6は独立排除。\n- 入力B：荷重factor=0.5。同じモデルの境界は20/7.5≈2.667。要求1.6・最大2は釣合い側で、gateはContinue。\n- Bを最初のgateが完了した `Finish { checkpoint: None }` まで進め、その有効なpayloadを保持。\n- 外側Snapshotの `identity` だけをAのfresh Snapshotのidentityにする。他のstage数/specは同じ。**Bのpayloadとpayload_sha256は変更不要**です。\n- 現行コードでは上記検査条件をすべて満たし、Aのgateを再評価せずAのconstructionとBのContinue結果を組み合わせ得ます。\n\nディスク上の保存ジョブへこの混在状態を作る場合、外側ファイルhash等の通常の整合情報も再計算される条件です。単純なbit破損がhash検査を通るという主張ではありません。既存の意味的改変拒否テストと同様、hashが整合していても別入力の結果を受け付けないことが目的です。\n\n## 影響・修正案\n対象入力では要求率を満たしていないのに、別入力の完了gateを根拠に `Passed` として後続工程を続ける可能性があります。外側の `source_identity` が対象入力を指すため、結果と検証済みgateの対応が誤認されます。\n\n`verify_records` に対象ground/caseを渡し、**各完了recordにも** `verify_origin(mesh, ground, case, gate.through_stages, &gate.origin)` を適用してください。Search/Construct/Finish/Doneで共通に実施し、各recordを正しい未低減prefixへ結び付けます。\n\n## 回帰試験・検証状態\n- 上記A/Bの有効payload混在を `verify` / `advance` / 保存ジョブ検証・復旧で拒否する。\n- active Searchだけでなく、通過済recordを持つConstruct、Finish(checkpoint=None/Some)、Doneを確認。\n- 同一入力の正規中断/保存/復旧は連続結果との一致を維持。\n- ground変更、同じ工程数で荷重だけ変更、複数gateにも同じ拒否を確認。\n\n**2名の独立した固定ソース静的追跡で確認した指摘です。Rust回帰試験案は作成しましたが、cargo/rustcと対応CLIがないため未実行です。** 上記A/Bの実solver終了結果、実保存ファイルへの混在注入、Windows/GUI/Excelは独立実行していません。作者の試験結果を独立実行確認とは扱っていません。\n",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 1,
+        "created_at": "2026-10-31T23:46:21Z",
+        "updated_at": "2026-11-09T22:48:06Z",
+        "closed_at": "2026-11-09T22:48:06Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11",
+        "display_title": "[P2] 工程SRM保存点の完了済gate起点が対象入力に結び付かず、別ケースの通過結果を受理し得る"
+      },
+      "comments": [
+        {
+          "id": 6753543914,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/11#issuecomment-6753543914",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\nverify_recordsへ対象ground/caseを渡し、完了recordすべてにverify_originを共通適用しました。本文のA=荷重1/B=0.5・要求1.6/最大2の正しく封印された混在、groundのみの変更をverify/advance/保存ジョブ検証/復旧で拒否しました。複数gateのConstruct/Search/Finish(None/Some)/Doneでも完了recordだけを混在させて拒否し、同一入力の正規中断/保存/復旧一致を維持しました。新規Rust2 test methods。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14",
+        "title": "[P2] SOIL源項の独立照査がGPのNaNを誤差0として受理する",
+        "issue_number": 14,
+        "body": "## 対象\nPR #13 の head `90d24e4181016a1ba8211719ee16b284d82b5eef`（main ではなくPR差分）。`tools/verify_soil_source_column.py`、Git blob `fa9774de0b05b237224b61cb7e5e30ce5f217c37`。\n\n**P2 / 独立照査の偽合格**。通常のPython実行で再現し、`-O` や `PYTHONOPTIMIZE` は不要です。既存 #2 の最適化によるassert無効化とは原因が異なります。\n\n## 発生条件と原因\n`flow_audits[0].solution.points` のGP水頭・圧力水頭・Darcy流速のいずれかにNaNが入り、他の入力・節点水頭・水圧・収支が照査条件を満たす場合です。\n\n[誤差集計 L53–62](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L53-L62) は最大誤差を0で初期化し、各点で `max(現在値, abs(誤差))` を呼びます。Pythonでは `max(0.0, float('nan')) == 0.0` なのでNaNが比較から脱落し、全GPがNaNでも最大誤差0が残ります。\n\nそのまま[返却 L77–85](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L77-L85) は `passed: true` を返します。[単独CLI L88–95](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L88-L95) でも終了コード0で合格JSONを書き出します。\n\n## 独立実行した再現\n固定headの実ファイルをGit blob照合して使用。既存12 Tet10柱の入力から、解析式 `H(z)=2+z-z²`、`pressure_head=2-z²`、`qz=2e-4*(z-0.5)` と一致する合成fixtureを作りました。土領域162 GP、土体積0.5 m³、源項・底面流出1e-4 m³/sです。これはRustの出力ではありません。\n\n正常fixtureの照査後、次の3項目をそれぞれ独立に置換しました。\n- `head_m = NaN`\n- `pressure_head_m = NaN`\n- `darcy_flux_m_s = [NaN, NaN, NaN]`\n\n各項目について「先頭1 GPのみ」「全162 GP」の計6条件を、保存したJSONに対して実CLIで実行しました。\n\n```text\npython tools/verify_soil_source_column.py --evidence <fixture-directory> --output <new-report.json>\n```\n\n結果は**6条件すべて終了0・passed=true**。全GP置換時は対応する `maximum_gp_head_error_m` / `maximum_pressure_head_error_m` / `maximum_flux_error_m_s` が **0.0** でした。通常のPython JSON読み込みが受け付ける `NaN` トークンを使用しています。\n\n同じfixtureで水頭/圧力水頭を100、流速を[1,1,1]、各項目をInfinityにする計6対照はAPI照査で拒否されました。NaNだけが最大値集計で消えることを切り分けています。置換処理の要点は次のとおりです。\n\n```python\nbad = copy.deepcopy(native)\nfor point in bad[\"flow_audits\"][0][\"solution\"][\"points\"]:\n    point[\"head_m\"] = float(\"nan\")\nreport = audit(mesh, ground, case, bad)\n# 現状: report[\"passed\"] is True\n# 現状: report[\"frames\"][0][\"maximum_gp_head_error_m\"] == 0.0\n```\n\n## 影響・限定\n非有限なGP場を、独立解析解との一致が確認できた結果として報告してしまいます。保存証拠が破損・外部編集された場合の再照査や、API呼び出し元から渡された非有限場を拒否できません。\n\n**本体RustソルバーがNaNを実際に出したとの指摘ではありません。** 単独照査API/CLIの誤受理を実証したもので、統合 `verify_wet_structures.run` 全体、VTU出力、実解析の偽合格は実証していません。Windows/native求解・再開も未実行です。Python照査は通常モードで独立実行し、CLIには実meshio依存を用い、meshio APIを置き換えていません。作者の保存結果やCIを独立実行結果へ読み替えていません。\n\n## 修正案・回帰試験\n- 誤差集計前にGP座標・水頭・圧力水頭・流速の形状と有限性を `np.isfinite(...).all()` で明示検査し、非有限値は例外で拒否してください。受理条件に必要な検査はassertだけに依存させないでください。\n- 有限性を確認してから最大誤差を計算し、出力する最大誤差自体も有限であることを確認してください。\n- 3項目それぞれについて、1 GPだけ/全GPのNaN、±Infinity、有限の不一致、正常対照をAPIとCLIで試験してください。拒否時は非ゼロ終了・合格JSON未生成を確認してください。\n- [既存の破損拒否試験 L85–95](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tests/test_soil_source_wet_structures.py#L85-L95) は有限の改変を扱っていますが、このGPのNaN集計を検査していません。",
+        "state": "closed",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": "completed",
+        "comments": 2,
+        "created_at": "2026-11-08T23:14:52Z",
+        "updated_at": "2026-11-09T23:21:44Z",
+        "closed_at": "2026-11-09T22:47:34Z",
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14",
+        "display_title": "[P2] SOIL源項の独立照査がGPのNaNを誤差0として受理する"
+      },
+      "comments": [
+        {
+          "id": 6753533724,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14#issuecomment-6753533724",
+          "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\n誤差集計前に全GPの座標・水頭・圧力水頭・流速の形状と有限性を明示検査し、最大誤差も有限検査しました。1 GP/全162 GPのNaN・±Infinity・有限不一致、形状不正、正常対照をAPIと実CLIで試験し、拒否時は非ゼロ終了・report未生成を確認しました。新規Python2 test methods（条件別subTestを含む）。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。"
+        },
+        {
+          "id": 6754161460,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14#issuecomment-6754161460",
+          "body": "### 修正確認と残存経路：no_flow境界流量のNaNが最大値から脱落\n\n対象はPR #13先端 `5bee3b47f61878e614cae1e7268a57449d2f12d1`。元のGP水頭・圧力水頭・流速・座標の非有限値拒否と、関連Python計60 test methodsの成功を独立実行で確認しました。\n\n**同じ独立照査の境界流量には、P2相当の偽合格が残っています。** [L99–101](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/tools/verify_soil_source_column.py#L99-L101) は `no_flow` 面の `gradient_outflow_m3_s` を有限検査せず `max(abs(...))` に渡します。最初の値が0で後続値がNaNの場合、最大値は0のままです。この値は合否判定に使われ、[L102–110](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/tools/verify_soil_source_column.py#L102-L110) の合格reportへ `maximum_no_flow_face_outflow_m3_s: 0.0` として出力されます。未使用の付加情報ではありません。\n\n既存12 Tet10柱の解析式fixtureに、土領域の実外面構成から12境界面（head 2面、no_flow 10面）を生成しました。**末尾no_flow面の流量1項目だけをNaNに変更**すると、通常Python・`-O`・`PYTHONOPTIMIZE=1`の実CLIすべてで終了0、`passed=true`、上記最大値0.0でした。正常対照は合格します。同じ末尾項目を `1e-8`、`+Infinity`、`-Infinity` にした対照と、先頭no_flow項目をNaNにした対照は、全モードで終了1・report未生成です。\n\n最小の実CLI再現手順です。固定headのcheckoutで、通常のPython依存を用意して実行します。入力・出力は新しい一時ディレクトリだけに作成します。\n\n```python\nimport copy, itertools, json, pathlib, subprocess, sys, tempfile\nimport numpy as np\nsys.path[:0] = ['tests', 'tools']\nfrom test_p2_soil_source import fixture\nfrom joint_water_reference import Water\nimport fem_reference as fem\n\nvalues = fixture()\nmesh, ground, case, native = values\nxyz = np.asarray(mesh['nodes']); cells = fem.cells(mesh)\nowners = {}\nfor ei in np.flatnonzero(Water(mesh, ground, case).soil):\n    for face in itertools.combinations(cells[ei][:4], 3):\n        owners.setdefault(tuple(sorted(map(int, face))), []).append(int(ei))\nfaces = []\nfor face, live in sorted(owners.items()):\n    if len(live) != 1:\n        continue\n    ei = live[0]; a, b, c = xyz[list(face)]\n    center = (a+b+c)/3; area = np.cross(b-a, c-a)/2\n    if area @ (center-xyz[cells[ei][:4]].mean(axis=0)) < 0:\n        area = -area\n    kind = 'head' if np.all(xyz[list(face), 2] == 0) else 'no_flow'\n    flux = float(np.array([0., 0., 2e-4*(center[2]-.5)]) @ area)\n    faces.append(dict(corners=list(face), owner=ei, boundary_kind=kind,\n                      gradient_outflow_m3_s=flux,\n                      prescribed_outflow_m3_s=None if kind == 'head' else 0.))\nnative['flow_audits'][0]['solution']['boundary_fluxes'] = faces\nno_flow = [f for f in faces if f['boundary_kind'] == 'no_flow']\nassert len(faces) == 12 and len(no_flow) == 10\nno_flow[-1]['gradient_outflow_m3_s'] = float('nan')  # この1項目だけ変更\nfolder = pathlib.Path(tempfile.mkdtemp(prefix='soil-boundary-nan-'))\nfor name, value in zip(('mesh', 'ground', 'stages', 'stage-results'), values):\n    (folder/(name+'.json')).write_text(json.dumps(value), encoding='utf-8')\nout = folder/'report.json'\np = subprocess.run([sys.executable, 'tools/verify_soil_source_column.py',\n                    '--evidence', str(folder), '--output', str(out)])\nr = json.loads(out.read_text())\nprint(p.returncode, r['passed'], r['frames'][0]['maximum_no_flow_face_outflow_m3_s'])\n# 現状: 0 True 0.0\n```\n\nこの経路は[修正前90d24e4のL74–76](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L74-L76)でも独立再現済みです。今回の修正による新規regressionではなく、本Issueと同じNaN集計問題の残存として追記します。\n\n修正案は、境界流量を集計前に形状・有限検査し、返却する最大値にも有限性を要求することです。上記の先頭/後続NaN、±Infinity、有限不一致、正常対照をAPI・CLIで回帰化し、拒否時は合格reportを作らないことを確認してください。\n\n**確認範囲**：Linux/Python 3.12.14、NumPy 2.3.5、実meshio 5.3.5、解析式から作成した合成fixture＋固定版の実API/CLIです。Rust/native求解、Windows GUI、統合 `verify_wet_structures.run` の偽合格は実証していません。むしろ[本体DarcyのL874–902](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/src/darcy.rs#L874-L902)には非有限境界流量の出力拒否があり、本体がNaNを生成したとの指摘ではありません。保存データの破損・外部編集やAPI入力に対する単独再照査の問題です。\n"
+        }
+      ]
+    },
+    {
+      "issue": {
+        "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+        "title": "[P2] 修正前ソースを封印したNC証拠と現行HEADが不整合で全Python CIが停止する",
+        "issue_number": 15,
+        "body": "## 現行HEADと保存NC証拠のsource binding不整合\n\n対象は `5bee3b47f61878e614cae1e7268a57449d2f12d1` です。#11のorigin再検証修正そのものを再指摘するものではありません。修正後のcheckoutと、修正前ソースを封印したNC証拠の組合せが不整合です。\n\n### 確認結果・影響\n\n[Windows Python CI](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658/job/129493349763) は `test_nc_mean_stress_evidence.MeanStressEvidence.setUpClass` で次のエラーになり、416 tests / 807.851秒、errors=1・skipped=2で終了しています。CIのmerge commitと対象headのtree一致も確認済みです。\n\n```\nValueError: diagnostic source differs: sources/src/epoch_srm_gate.rs\n```\n\n[配布manifest L4995–4997](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-nc-mean-stress-release/archive-sha256.json#L4995-L4997) の旧ソースは29,470 bytes・SHA256 `40db0f40eadd71cf1b7549d0b123a0d41f877fedd9c805621b01db7a6a778e86`。現在は29,654 bytes・`4d32aa84e17c1974eab5eac60295c6de3b35375686d564f9283b3ec5190492c7`です。[verify_origin呼出し等の追加 L504–518](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/src/epoch_srm_gate.rs#L504-L518)を含むため、改行差ではありません。\n\n[remeasure.py L69–74](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L69-L74) はこの差を正しく拒否します。[試験 L16–21](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/tests/test_nc_mean_stress_evidence.py#L16-L21)は再計測前に止まるため、当該クラスの4試験は実行されません。\n\n固定headのcheckoutでの最小読取確認:\n\n```python\nimport hashlib, json\nfrom pathlib import Path\nd = Path('interim/2026-11-10-nc-mean-stress-release')\nm = json.loads((d / 'archive-sha256.json').read_text())\nb = Path('src/epoch_srm_gate.rs').read_bytes()\nprint(m['entries']['sources/src/epoch_srm_gate.rs'])\nprint({'size': len(b), 'sha256': hashlib.sha256(b).hexdigest()})\n```\n\n該当試験の実行コマンドは `python -m unittest discover -s tests -p test_nc_mean_stress_evidence.py -v` です。配布証拠約5.49 GBの検証を伴います。\n\n手元では旧commit `90d24e4181016a1ba8211719ee16b284d82b5eef` のsourceを独立取得し、manifestのhash/sizeとの完全一致を確認しました。その1ファイルだけの小さな検証archiveを作り、変更していない現行 `remeasure.run` に渡すPython再現でも同じ例外になりました。platform float差許容の有無で結果は同じです。配布archive全体の手元再実行やRust/native求解は行っていません。\n\nなお、手元で照合できた122 source中、少なくとも10件が旧snapshotと不一致です。epoch本体/試験、plane_strain_2d、beam_reference、export_mc_epoch_view、mcc_acoustic_diagnostic、mcc_acoustic_exact_report、resume_projected_sparse_study、solidcraft_structure_fields、verify_soil_source_columnが該当します。epochだけ直すと後続の不一致が残ります。\n\n### 修正・回帰案\n\n- 旧証拠と実際のsource/binary bindingは不変で保持してください。現行ソースで証拠を再生成して旧記録と併存させるか、旧証拠の再計測を明示した旧source環境へ結び付け、現行headの検証と分離する必要があります。\n- hash/snapshotだけを書き換えて旧実行を新sourceの実行に見せないでください。整合検査の削除、改行/float例外の拡張、試験skipでは解決しません。\n- 全source bindingの軽量事前照合、意図的source変更の拒否、CRLF/LFだけの対照、旧版の真正な再計測、現行headの試験を追加・再実行してください。\n\n新たな数値収束/物理安定性の不合格を主張するものではなく、配布証拠と現行CIの再現性の問題です。コード修正・push・mergeは含みません。\n",
+        "state": "open",
+        "user": {
+          "login": "tak063495-prog",
+          "name": "tak063495-prog",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+          "id": 254234268
+        },
+        "assignees": null,
+        "labels": null,
+        "milestone": null,
+        "state_reason": null,
+        "comments": 1,
+        "created_at": "2026-11-09T23:20:31Z",
+        "updated_at": "2026-11-11T00:08:11Z",
+        "closed_at": null,
+        "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+        "display_title": "[P2] 修正前ソースを封印したNC証拠と現行HEADが不整合で全Python CIが停止する"
+      },
+      "comments": [
+        {
+          "id": 6782865078,
+          "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15#issuecomment-6782865078",
+          "body": "修正確認の追記です。対象は PR #13 の固定SHA `cecbb39edf7359f02ca3968998532ebd8612d544` です。本Issueの「旧証拠と現行sourceの差で再計測前に停止する」経路は、確認した範囲で解消しています。\n\n- [保存sourceと現行checkoutの差は診断として記録](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L77-L101)し、archiveのhash・size・inventory検証を維持しています。\n- [検証済みの封印snapshotを `-I -X utf8` の別Pythonで実行](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L102-L132)します。spatial側の不足依存も、[旧fingerprintに一致するbytesだけを補完](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/cecbb39edf7359f02ca3968998532ebd8612d544/interim/2026-11-10-nc-spatial-release/remeasure.py#L23-L52)しています。\n\n独立確認は Linux/Python 3.12 の小さな合成archiveです。変更していないmean/spatial両方の `run` に対し、現行側に実行すると例外になる異なるsourceを置いても封印側のUTF-8出力を正しく再計測できました。各2モードの正常対照と、part破損・entry hash不一致・封印source欠落・離散値不一致の拒否を計12条件で確認しています。別途、実装付属のUTF-8隔離2試験とspatial隔離3試験も成功しました。\n\n配布archive全体については独立手元実行ではなく、現在のGitHub CIログを確認しました。[mean-evidence](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42925852344/job/130212008674) は1314 entries・4 tests成功、[spatial-evidence](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42925852344/job/130212008516) は411 entries・4 tests成功です。CI merge `15eadcc09ea08f74dc56a335347e3b92a978f012` と対象headのtreeは `cacd659a9490ebaaf928a67f3fc1d59aa73263c5` で一致します。\n\n両ログは `discrete_evidence_exact=true` ですが、Windowsの派生float差を記録しており `measurements_byte_identical=false` です。いずれも `numerical_acceptance=false` / `current_checkout_numerical_certification=false` を維持しています。今回の確認は歴史的証拠の再計測・CI停止の修正であり、現行FEMの収束やNC目標達成の認定ではありません。実Rust求解・配布archive全体の手元再演は未実施です。"
+        }
+      ]
+    }
+  ]
+}

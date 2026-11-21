@@ -1,0 +1,73 @@
+{
+  "schema": "soil-fem-wet-joint-convergence-acceptance/1",
+  "starting_commit": "bc6eb1c39749559db91e20d2a4cba2d20679649c",
+  "passed": false,
+  "diagnostic_completed": true,
+  "full_history_convergence_accepted": false,
+  "accepted_plastic_slip_convergence_subranges": [],
+  "existing_endpoint_gates": {
+    "h0-g32-m5e-05-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    },
+    "h0-g64-m5e-05-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    },
+    "h0-g128-m5e-05-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    },
+    "h0-g64-m0.0001-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    },
+    "h0-g64-m2.5e-05-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    },
+    "h1-g32-m5e-05-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    },
+    "h1-g64-m5e-05-cut": {
+      "passed": true,
+      "scope": "Existing displacement <0.005 and traction <0.01 at seven endpoints only"
+    }
+  },
+  "contact_only_observation": {
+    "observed_order": 0.9717724744946593,
+    "accepted": false,
+    "reason": "Local difference decay alone does not supply an existing all-history plastic-slip acceptance certificate."
+  },
+  "reasons": [
+    "Original refinement parameter is global load increments, not mesh h; global nonmonotone plastic-slip error persists in both implementations.",
+    "Fixed-coordinate global observed order is negative; postprocessed switch alignment does not remove the error.",
+    "Only two h levels and parent-face means are compared; contact GP locations differ and pointwise spatial convergence is unverified.",
+    "No existing plastic-slip full-history tolerance is added or relaxed. Endpoint displacement/traction gates and consistency audits are separate.",
+    "General bulk plasticity, structural integration and separate-process completion restart remain unverified."
+  ],
+  "unchanged_thresholds": {
+    "native_force_relative": 1e-08,
+    "independent_force_relative": 1e-10,
+    "endpoint_displacement_relative_l2": 0.005,
+    "endpoint_traction_relative_l2": 0.01
+  },
+  "references_rewritten": false,
+  "past_failures_deleted": false,
+  "nc_tuning_executed": false,
+  "native_physical_model_changed": false,
+  "p3b_p4_complete": false,
+  "structure_water_joint_complete": false,
+  "p6_complete": false,
+  "user_pc_work": {
+    "executed_in_cloud": false,
+    "items": [
+      ">=256 global increments",
+      ">=768 Tet10",
+      "real CAD",
+      "GUI/GPU"
+    ]
+  },
+  "windows_ci": "unconfirmed after push"
+}

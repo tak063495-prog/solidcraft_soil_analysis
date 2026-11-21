@@ -1,0 +1,129 @@
+{
+  "base_commit": "f460f562fa42ebfe72f11cd1e3cdbbb07a241762",
+  "tested_commit": "f74e09a5288f2d126894d40c322fb3e446946aae",
+  "measurement_commit": "fa11d601956d3aa6ed786ba98e5a5cffe383da88",
+  "passed": false,
+  "b01_complete": false,
+  "status": "Stopped when the required python-mean-evidence runner exited 1",
+  "p601_scientific_integrity_ok": true,
+  "scientific_audit_sources": 376,
+  "scientific_audit_SOURCE_NOT_INVENTORIED": 0,
+  "archives_verified_by_tree_blob": 1092,
+  "science_recomputed": false,
+  "interruption_record_first_pin": {
+    "name": "interruption-record.zip",
+    "size": 13359,
+    "sha256": "727317c3cc3171b0423e489e76123cd48b377321626134a5b7e92d88aabb40ff",
+    "first_pin": true,
+    "measured_on": "2026-11-19",
+    "worktree_matches_index": true,
+    "zip_crc_verified": true
+  },
+  "linux": {
+    "fmt_exit": 0,
+    "clippy_exit": 0,
+    "release_all_targets_build_exit": 0,
+    "rust": {
+      "discovered": 467,
+      "passed": 197,
+      "failed": 0,
+      "skipped": 0,
+      "without_final_outcome": 270,
+      "not_started": null,
+      "not_started_note": "Concurrent libtest records completions; unstarted and interrupted cases are not individually distinguishable in this log.",
+      "doctests_run": false
+    },
+    "python": {
+      "seven_groups": {
+        "assigned": 991,
+        "passed": 752,
+        "failed": 0,
+        "skipped": 1,
+        "interrupted": 1,
+        "not_started": 237,
+        "setup_errors": 1
+      },
+      "groups": {
+        "python-core-0": {
+          "assigned": 480,
+          "passed": 479,
+          "failed": 0,
+          "skipped": 1,
+          "interrupted": 0,
+          "not_started": 0,
+          "setup_errors": 0
+        },
+        "python-core-1": {
+          "assigned": 487,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0,
+          "interrupted": 1,
+          "not_started": 213,
+          "setup_errors": 0
+        },
+        "python-mean-evidence": {
+          "assigned": 4,
+          "passed": 0,
+          "failed": 0,
+          "skipped": 0,
+          "interrupted": 0,
+          "not_started": 4,
+          "setup_errors": 1
+        },
+        "python-spatial-evidence": {
+          "assigned": 4,
+          "passed": 0,
+          "failed": 0,
+          "skipped": 0,
+          "interrupted": 0,
+          "not_started": 4,
+          "setup_errors": 0
+        },
+        "python-c01-switch": {
+          "assigned": 4,
+          "passed": 0,
+          "failed": 0,
+          "skipped": 0,
+          "interrupted": 0,
+          "not_started": 4,
+          "setup_errors": 0
+        },
+        "python-c01-path": {
+          "assigned": 4,
+          "passed": 0,
+          "failed": 0,
+          "skipped": 0,
+          "interrupted": 0,
+          "not_started": 4,
+          "setup_errors": 0
+        },
+        "python-c01-cause": {
+          "assigned": 8,
+          "passed": 0,
+          "failed": 0,
+          "skipped": 0,
+          "interrupted": 0,
+          "not_started": 8,
+          "setup_errors": 0
+        }
+      },
+      "standalone_linux_pytest_passed": 7,
+      "standalone_B01_regression_passed": 2,
+      "standalone_B01_also_completed_in_seven_groups": 0,
+      "observed_distinct_passes_including_standalone": 761
+    },
+    "failure": {
+      "group": "python-mean-evidence",
+      "method": "test_nc_mean_stress_evidence.MeanStressEvidence.setUpClass",
+      "exit_code": 1,
+      "tests_run": 0,
+      "setup_errors": 1,
+      "message": "ValueError: saved mean-stress/complement partition differs from own history",
+      "mismatch_magnitude": null
+    }
+  },
+  "push_performed": false,
+  "new_windows_ci_run": false,
+  "linux_log_archive_sha256": "3a79370be5e55ae9c999d98134c1de93b6f2fba65ab88c870bce8443e192582f"
+}

@@ -1,0 +1,1985 @@
+﻿2026-11-10T02:57:53.7666651Z Current runner version: '2.338.2'
+2026-11-10T02:57:53.7703818Z ##[group]Runner Image Provisioner
+2026-11-10T02:57:53.7705249Z Hosted Compute Agent
+2026-11-10T02:57:53.7706732Z Version: 20261103.629
+2026-11-10T02:57:53.7707925Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-10T02:57:53.7709147Z Build Date: 2026-11-03T17:26:59Z
+2026-11-10T02:57:53.7710252Z Worker ID: {210fa362-f22f-4472-89c5-ee52503fc910}
+2026-11-10T02:57:53.7711460Z Region: eastus
+2026-11-10T02:57:53.7712252Z Cloud: Azure
+2026-11-10T02:57:53.7713102Z ##[endgroup]
+2026-11-10T02:57:53.7715508Z ##[group]Operating System
+2026-11-10T02:57:53.7716571Z Microsoft Windows Server 2025
+2026-11-10T02:57:53.7717525Z 10.0.26100
+2026-11-10T02:57:53.7718353Z Datacenter
+2026-11-10T02:57:53.7719238Z ##[endgroup]
+2026-11-10T02:57:53.7720055Z ##[group]Runner Image
+2026-11-10T02:57:53.7721074Z Image: windows-2025-vs2026
+2026-11-10T02:57:53.7722026Z Version: 20261103.298.1
+2026-11-10T02:57:53.7724662Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-10T02:57:53.7728058Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-10T02:57:53.7729760Z ##[endgroup]
+2026-11-10T02:57:53.7731580Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T02:57:53.7734516Z Contents: read
+2026-11-10T02:57:53.7735497Z Metadata: read
+2026-11-10T02:57:53.7736454Z ##[endgroup]
+2026-11-10T02:57:53.7739179Z Secret source: Actions
+2026-11-10T02:57:53.7740651Z Cache mode: write
+2026-11-10T02:57:53.7741797Z Prepare workflow directory
+2026-11-10T02:57:53.8163577Z Prepare all required actions
+2026-11-10T02:57:53.8211797Z Getting action download info
+2026-11-10T02:57:53.9516874Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-10T02:57:54.0838824Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-10T02:57:54.3368465Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-11-10T02:57:54.5411425Z Complete job name: verification on Windows
+2026-11-10T02:57:54.6915743Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-10T02:57:54.6917088Z with:
+2026-11-10T02:57:54.6917631Z   persist-credentials: false
+2026-11-10T02:57:54.6918220Z   sparse-checkout-cone-mode: false
+2026-11-10T02:57:54.6919083Z   sparse-checkout: /*
+!/interim/2026-11-10-nc-postfold-branches/evidence.tar.gz.part*
+
+2026-11-10T02:57:54.6920024Z   repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:54.6924022Z   token: ***
+2026-11-10T02:57:54.6924589Z   ssh-strict: true
+2026-11-10T02:57:54.6925084Z   ssh-user: git
+2026-11-10T02:57:54.6925559Z   clean: true
+2026-11-10T02:57:54.6926041Z   fetch-depth: 1
+2026-11-10T02:57:54.6926516Z   fetch-tags: false
+2026-11-10T02:57:54.6927035Z   show-progress: true
+2026-11-10T02:57:54.6927518Z   lfs: false
+2026-11-10T02:57:54.6927963Z   submodules: false
+2026-11-10T02:57:54.6928531Z   set-safe-directory: true
+2026-11-10T02:57:54.6929089Z   allow-unsafe-pr-checkout: false
+2026-11-10T02:57:54.6929954Z env:
+2026-11-10T02:57:54.6930455Z   CARGO_BUILD_JOBS: 2
+2026-11-10T02:57:54.6930983Z   RUST_TEST_THREADS: 2
+2026-11-10T02:57:54.6931501Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T02:57:54.6932003Z   MKL_NUM_THREADS: 1
+2026-11-10T02:57:54.6932508Z   OMP_NUM_THREADS: 1
+2026-11-10T02:57:54.6933457Z   PYTHONUTF8: 1
+2026-11-10T02:57:54.6933978Z   PYTHONIOENCODING: utf-8
+2026-11-10T02:57:54.6934523Z ##[endgroup]
+2026-11-10T02:57:54.8583015Z Syncing repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:54.8587246Z ##[group]Getting Git version info
+2026-11-10T02:57:54.8589014Z Working directory is 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-10T02:57:54.9611040Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T02:57:55.2865257Z git version 2.56.0.windows.4
+2026-11-10T02:57:55.2915076Z ##[endgroup]
+2026-11-10T02:57:55.2933992Z Temporarily overriding HOME='D:\a\_temp\6c23ce81-7c7d-4147-ab60-8d0e5b543b7e' before making global git config changes
+2026-11-10T02:57:55.2936690Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T02:57:55.2948021Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-10T02:57:55.3549330Z Deleting the contents of 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-10T02:57:55.3554111Z ##[group]Determining repository object format
+2026-11-10T02:57:55.3557255Z ##[endgroup]
+2026-11-10T02:57:55.3558472Z ##[group]Initializing the repository
+2026-11-10T02:57:55.3566136Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-10T02:57:55.4335931Z Initialized empty Git repository in D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/
+2026-11-10T02:57:55.4384237Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:55.5150713Z ##[endgroup]
+2026-11-10T02:57:55.5152702Z ##[group]Disabling automatic garbage collection
+2026-11-10T02:57:55.5154775Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-10T02:57:55.5479009Z ##[endgroup]
+2026-11-10T02:57:55.5480181Z ##[group]Setting up auth
+2026-11-10T02:57:55.5481163Z Removing SSH command configuration
+2026-11-10T02:57:55.5489942Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T02:57:55.5863581Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T02:57:56.9938464Z Removing HTTP extra header
+2026-11-10T02:57:56.9954041Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T02:57:57.0334819Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T02:57:57.5986786Z Removing includeIf entries pointing to credentials config files
+2026-11-10T02:57:57.5998454Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T02:57:57.6380327Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T02:57:58.2113491Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-10T02:57:58.2525001Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D:\a\_temp\git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T02:57:58.2939175Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D:\a\_temp\git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T02:57:58.3379150Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T02:57:58.3762841Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T02:57:58.4157528Z ##[endgroup]
+2026-11-10T02:57:58.4159121Z ##[group]Fetching the repository
+2026-11-10T02:57:58.4171123Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +260281fbbc09ec0402165339b4772bf423567d93:refs/remotes/pull/13/merge
+2026-11-10T02:57:59.1879285Z From https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:59.1880277Z  * [new ref]         260281fbbc09ec0402165339b4772bf423567d93 -> pull/13/merge
+2026-11-10T02:57:59.1927195Z ##[endgroup]
+2026-11-10T02:57:59.1928076Z ##[group]Determining the checkout info
+2026-11-10T02:57:59.1928784Z ##[endgroup]
+2026-11-10T02:57:59.1929383Z ##[group]Setting up sparse checkout
+2026-11-10T02:57:59.1938146Z [command]"C:\Program Files\Git\bin\git.exe" config core.sparseCheckout true
+2026-11-10T02:57:59.2333179Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --git-path info/sparse-checkout
+2026-11-10T02:57:59.2747271Z .git/info/sparse-checkout
+2026-11-10T02:57:59.2788293Z ##[endgroup]
+2026-11-10T02:57:59.2788690Z ##[group]Checking out the ref
+2026-11-10T02:57:59.2796781Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/13/merge
+2026-11-10T03:01:00.5015616Z Updating files:   0% (1/4562)
+2026-11-10T03:01:00.5159108Z Updating files:   1% (46/4562)
+2026-11-10T03:01:00.5266230Z Updating files:   2% (92/4562)
+2026-11-10T03:01:00.5374333Z Updating files:   3% (137/4562)
+2026-11-10T03:01:00.5482906Z Updating files:   4% (183/4562)
+2026-11-10T03:01:00.6367550Z Updating files:   5% (229/4562)
+2026-11-10T03:01:00.6501917Z Updating files:   6% (274/4562)
+2026-11-10T03:01:00.6512728Z Updating files:   6% (317/4562)
+2026-11-10T03:01:00.6637505Z Updating files:   7% (320/4562)
+2026-11-10T03:01:00.6764961Z Updating files:   8% (365/4562)
+2026-11-10T03:01:00.7077396Z Updating files:   9% (411/4562)
+2026-11-10T03:01:00.7357673Z Updating files:  10% (457/4562)
+2026-11-10T03:01:00.7534975Z Updating files:  11% (502/4562)
+2026-11-10T03:01:00.7651015Z Updating files:  12% (548/4562)
+2026-11-10T03:01:00.7818218Z Updating files:  13% (594/4562)
+2026-11-10T03:01:00.8028485Z Updating files:  14% (639/4562)
+2026-11-10T03:01:00.8138290Z Updating files:  15% (685/4562)
+2026-11-10T03:01:00.8673586Z Updating files:  16% (730/4562)
+2026-11-10T03:01:00.8998166Z Updating files:  17% (776/4562)
+2026-11-10T03:01:01.0053844Z Updating files:  18% (822/4562)
+2026-11-10T03:01:01.0813092Z Updating files:  19% (867/4562)
+2026-11-10T03:01:01.1291454Z Updating files:  20% (913/4562)
+2026-11-10T03:01:01.1499823Z Updating files:  21% (959/4562)
+2026-11-10T03:01:01.1958326Z Updating files:  22% (1004/4562)
+2026-11-10T03:01:01.2133608Z Updating files:  23% (1050/4562)
+2026-11-10T03:01:01.2568717Z Updating files:  24% (1095/4562)
+2026-11-10T03:01:01.4024900Z Updating files:  25% (1141/4562)
+2026-11-10T03:01:01.5396962Z Updating files:  26% (1187/4562)
+2026-11-10T03:01:01.5625226Z Updating files:  27% (1232/4562)
+2026-11-10T03:01:01.5853987Z Updating files:  28% (1278/4562)
+2026-11-10T03:01:01.6189703Z Updating files:  29% (1323/4562)
+2026-11-10T03:01:01.6653654Z Updating files:  30% (1369/4562)
+2026-11-10T03:01:01.6671577Z Updating files:  30% (1409/4562)
+2026-11-10T03:01:01.6796716Z Updating files:  31% (1415/4562)
+2026-11-10T03:01:01.7195966Z Updating files:  32% (1460/4562)
+2026-11-10T03:01:01.7429738Z Updating files:  33% (1506/4562)
+2026-11-10T03:01:01.7774522Z Updating files:  34% (1552/4562)
+2026-11-10T03:01:01.7950461Z Updating files:  35% (1597/4562)
+2026-11-10T03:01:01.8284183Z Updating files:  36% (1643/4562)
+2026-11-10T03:01:01.8517078Z Updating files:  37% (1688/4562)
+2026-11-10T03:01:01.8814625Z Updating files:  38% (1734/4562)
+2026-11-10T03:01:01.9040625Z Updating files:  39% (1780/4562)
+2026-11-10T03:01:01.9342618Z Updating files:  40% (1825/4562)
+2026-11-10T03:01:01.9510251Z Updating files:  41% (1871/4562)
+2026-11-10T03:01:01.9617642Z Updating files:  42% (1917/4562)
+2026-11-10T03:01:01.9984018Z Updating files:  43% (1962/4562)
+2026-11-10T03:01:02.0287790Z Updating files:  44% (2008/4562)
+2026-11-10T03:01:02.0464897Z Updating files:  45% (2053/4562)
+2026-11-10T03:01:02.0676631Z Updating files:  46% (2099/4562)
+2026-11-10T03:01:02.1267977Z Updating files:  47% (2145/4562)
+2026-11-10T03:01:02.1845253Z Updating files:  48% (2190/4562)
+2026-11-10T03:01:02.3527970Z Updating files:  49% (2236/4562)
+2026-11-10T03:01:02.4435754Z Updating files:  50% (2281/4562)
+2026-11-10T03:01:02.7959194Z Updating files:  51% (2327/4562)
+2026-11-10T03:01:02.8086420Z Updating files:  51% (2353/4562)
+2026-11-10T03:01:02.9530282Z Updating files:  52% (2373/4562)
+2026-11-10T03:01:03.0105576Z Updating files:  53% (2418/4562)
+2026-11-10T03:01:03.2003805Z Updating files:  54% (2464/4562)
+2026-11-10T03:01:03.2499131Z Updating files:  55% (2510/4562)
+2026-11-10T03:01:03.7195923Z Updating files:  56% (2555/4562)
+2026-11-10T03:01:03.8128019Z Updating files:  56% (2600/4562)
+2026-11-10T03:01:04.6855952Z Updating files:  57% (2601/4562)
+2026-11-10T03:01:05.1256474Z Updating files:  57% (2610/4562)
+2026-11-10T03:01:05.2169618Z Updating files:  58% (2646/4562)
+2026-11-10T03:01:05.3080098Z Updating files:  59% (2692/4562)
+2026-11-10T03:01:05.6853636Z Updating files:  60% (2738/4562)
+2026-11-10T03:01:05.8800300Z Updating files:  60% (2780/4562)
+2026-11-10T03:01:06.6904176Z Updating files:  61% (2783/4562)
+2026-11-10T03:01:07.5122652Z Updating files:  61% (2795/4562)
+2026-11-10T03:01:07.7094583Z Updating files:  62% (2829/4562)
+2026-11-10T03:01:08.7385627Z Updating files:  62% (2832/4562)
+2026-11-10T03:01:09.7411891Z Updating files:  62% (2847/4562)
+2026-11-10T03:01:10.5216064Z Updating files:  62% (2863/4562)
+2026-11-10T03:01:10.7905141Z Updating files:  63% (2875/4562)
+2026-11-10T03:01:11.7467394Z Updating files:  63% (2879/4562)
+2026-11-10T03:01:12.3341337Z Updating files:  63% (2894/4562)
+2026-11-10T03:01:12.7575373Z Updating files:  64% (2920/4562)
+2026-11-10T03:01:13.7619565Z Updating files:  64% (2949/4562)
+2026-11-10T03:01:13.9002263Z Updating files:  64% (2964/4562)
+2026-11-10T03:01:14.7752375Z Updating files:  65% (2966/4562)
+2026-11-10T03:01:15.7990200Z Updating files:  65% (2979/4562)
+2026-11-10T03:01:16.7975456Z Updating files:  65% (2994/4562)
+2026-11-10T03:01:16.9438562Z Updating files:  65% (3009/4562)
+2026-11-10T03:01:18.3117482Z Updating files:  66% (3011/4562)
+2026-11-10T03:01:18.8666826Z Updating files:  66% (3046/4562)
+2026-11-10T03:01:19.7943056Z Updating files:  66% (3048/4562)
+2026-11-10T03:01:20.1196927Z Updating files:  66% (3053/4562)
+2026-11-10T03:01:20.2406632Z Updating files:  67% (3057/4562)
+2026-11-10T03:01:21.0210354Z Updating files:  68% (3103/4562)
+2026-11-10T03:01:21.0265890Z Updating files:  68% (3128/4562)
+2026-11-10T03:01:21.8220987Z Updating files:  69% (3148/4562)
+2026-11-10T03:01:22.8662058Z Updating files:  69% (3178/4562)
+2026-11-10T03:01:23.2585523Z Updating files:  69% (3188/4562)
+2026-11-10T03:01:23.8644033Z Updating files:  70% (3194/4562)
+2026-11-10T03:01:25.0706835Z Updating files:  70% (3199/4562)
+2026-11-10T03:01:25.9119933Z Updating files:  70% (3211/4562)
+2026-11-10T03:01:26.8562946Z Updating files:  70% (3223/4562)
+2026-11-10T03:01:27.4287013Z Updating files:  70% (3232/4562)
+2026-11-10T03:01:27.8852574Z Updating files:  71% (3240/4562)
+2026-11-10T03:01:29.2379443Z Updating files:  71% (3242/4562)
+2026-11-10T03:01:29.8861124Z Updating files:  71% (3255/4562)
+2026-11-10T03:01:30.8830225Z Updating files:  71% (3264/4562)
+2026-11-10T03:01:32.0189641Z Updating files:  71% (3272/4562)
+2026-11-10T03:01:32.1686037Z Updating files:  71% (3283/4562)
+2026-11-10T03:01:32.8849763Z Updating files:  72% (3285/4562)
+2026-11-10T03:01:33.5171426Z Updating files:  72% (3327/4562)
+2026-11-10T03:01:33.9598066Z Updating files:  73% (3331/4562)
+2026-11-10T03:01:34.9422221Z Updating files:  73% (3337/4562)
+2026-11-10T03:01:40.0230523Z Updating files:  73% (3344/4562)
+2026-11-10T03:01:41.0255678Z Updating files:  73% (3354/4562)
+2026-11-10T03:01:41.2590011Z Updating files:  73% (3361/4562)
+2026-11-10T03:01:42.0211187Z Updating files:  74% (3376/4562)
+2026-11-10T03:01:42.7997507Z Updating files:  74% (3412/4562)
+2026-11-10T03:01:43.0256297Z Updating files:  75% (3422/4562)
+2026-11-10T03:01:44.0148282Z Updating files:  75% (3425/4562)
+2026-11-10T03:01:45.0782399Z Updating files:  75% (3438/4562)
+2026-11-10T03:01:45.9957590Z Updating files:  75% (3452/4562)
+2026-11-10T03:01:46.3064738Z Updating files:  75% (3464/4562)
+2026-11-10T03:01:47.0354174Z Updating files:  76% (3468/4562)
+2026-11-10T03:01:48.0042165Z Updating files:  76% (3477/4562)
+2026-11-10T03:01:49.0033961Z Updating files:  76% (3488/4562)
+2026-11-10T03:01:50.0704849Z Updating files:  76% (3501/4562)
+2026-11-10T03:01:50.2151374Z Updating files:  76% (3511/4562)
+2026-11-10T03:01:51.0823769Z Updating files:  77% (3513/4562)
+2026-11-10T03:01:52.2298831Z Updating files:  77% (3522/4562)
+2026-11-10T03:01:53.0410092Z Updating files:  77% (3535/4562)
+2026-11-10T03:01:54.0662976Z Updating files:  77% (3546/4562)
+2026-11-10T03:01:54.2893552Z Updating files:  77% (3556/4562)
+2026-11-10T03:01:55.0697778Z Updating files:  78% (3559/4562)
+2026-11-10T03:01:56.0571602Z Updating files:  78% (3565/4562)
+2026-11-10T03:01:57.0639064Z Updating files:  78% (3578/4562)
+2026-11-10T03:01:58.1216058Z Updating files:  78% (3587/4562)
+2026-11-10T03:01:58.7290939Z Updating files:  78% (3596/4562)
+2026-11-10T03:01:59.1064081Z Updating files:  79% (3604/4562)
+2026-11-10T03:02:00.1587182Z Updating files:  79% (3609/4562)
+2026-11-10T03:02:01.1755230Z Updating files:  79% (3616/4562)
+2026-11-10T03:02:02.2296801Z Updating files:  79% (3625/4562)
+2026-11-10T03:02:03.5756924Z Updating files:  79% (3634/4562)
+2026-11-10T03:02:03.9186121Z Updating files:  79% (3646/4562)
+2026-11-10T03:02:04.1558827Z Updating files:  80% (3650/4562)
+2026-11-10T03:02:05.1798748Z Updating files:  80% (3653/4562)
+2026-11-10T03:02:06.1876453Z Updating files:  80% (3661/4562)
+2026-11-10T03:02:07.2073800Z Updating files:  80% (3670/4562)
+2026-11-10T03:02:08.1607249Z Updating files:  80% (3679/4562)
+2026-11-10T03:02:09.0781632Z Updating files:  80% (3688/4562)
+2026-11-10T03:02:09.1714131Z Updating files:  81% (3696/4562)
+2026-11-10T03:02:10.2455703Z Updating files:  81% (3697/4562)
+2026-11-10T03:02:11.3154295Z Updating files:  81% (3705/4562)
+2026-11-10T03:02:12.4322641Z Updating files:  81% (3714/4562)
+2026-11-10T03:02:12.9509043Z Updating files:  81% (3724/4562)
+2026-11-10T03:02:13.1907377Z Updating files:  82% (3741/4562)
+2026-11-10T03:02:13.2582563Z Updating files:  83% (3787/4562)
+2026-11-10T03:02:14.2556617Z Updating files:  83% (3792/4562)
+2026-11-10T03:02:15.0298443Z Updating files:  83% (3827/4562)
+2026-11-10T03:02:15.4457798Z Updating files:  84% (3833/4562)
+2026-11-10T03:02:16.2826926Z Updating files:  84% (3836/4562)
+2026-11-10T03:02:17.3294588Z Updating files:  84% (3845/4562)
+2026-11-10T03:02:18.2679763Z Updating files:  84% (3855/4562)
+2026-11-10T03:02:19.0336078Z Updating files:  84% (3865/4562)
+2026-11-10T03:02:19.2832108Z Updating files:  85% (3878/4562)
+2026-11-10T03:02:19.8350498Z Updating files:  85% (3908/4562)
+2026-11-10T03:02:19.8632562Z Updating files:  86% (3924/4562)
+2026-11-10T03:02:19.8785157Z Updating files:  87% (3969/4562)
+2026-11-10T03:02:19.8935265Z Updating files:  88% (4015/4562)
+2026-11-10T03:02:19.9122813Z Updating files:  89% (4061/4562)
+2026-11-10T03:02:19.9509716Z Updating files:  90% (4106/4562)
+2026-11-10T03:02:19.9679496Z Updating files:  91% (4152/4562)
+2026-11-10T03:02:19.9859338Z Updating files:  92% (4198/4562)
+2026-11-10T03:02:20.0011124Z Updating files:  93% (4243/4562)
+2026-11-10T03:02:20.0407143Z Updating files:  94% (4289/4562)
+2026-11-10T03:02:20.0881848Z Updating files:  95% (4334/4562)
+2026-11-10T03:02:20.1178818Z Updating files:  96% (4380/4562)
+2026-11-10T03:02:20.1353370Z Updating files:  97% (4426/4562)
+2026-11-10T03:02:20.1510491Z Updating files:  98% (4471/4562)
+2026-11-10T03:02:20.1655967Z Updating files:  99% (4517/4562)
+2026-11-10T03:02:20.1792187Z Updating files: 100% (4562/4562)
+2026-11-10T03:02:20.2040960Z Updating files: 100% (4562/4562), done.
+2026-11-10T03:02:20.2530329Z Note: switching to 'refs/remotes/pull/13/merge'.
+2026-11-10T03:02:20.2533309Z 
+2026-11-10T03:02:20.2533692Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T03:02:20.2534587Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T03:02:20.2537155Z state without impacting any branches by switching back to a branch.
+2026-11-10T03:02:20.2537552Z 
+2026-11-10T03:02:20.2537794Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T03:02:20.2538378Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T03:02:20.2541125Z 
+2026-11-10T03:02:20.2642294Z   git switch -c <new-branch-name>
+2026-11-10T03:02:20.2642578Z 
+2026-11-10T03:02:20.2642731Z Or undo this operation with:
+2026-11-10T03:02:20.2642934Z 
+2026-11-10T03:02:20.2646273Z   git switch -
+2026-11-10T03:02:20.2646468Z 
+2026-11-10T03:02:20.2646777Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T03:02:20.2647164Z 
+2026-11-10T03:02:20.2647643Z HEAD is now at 260281f Merge 1c0d57b6943efbe0df85659f99ba47a7ffa15205 into 024835cea9a7c12ad12deda10203f4f45f1fd285
+2026-11-10T03:02:22.0393720Z ##[endgroup]
+2026-11-10T03:02:22.2904647Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-10T03:02:22.3255166Z 260281fbbc09ec0402165339b4772bf423567d93
+2026-11-10T03:02:22.3384743Z ##[group]Removing auth
+2026-11-10T03:02:22.3387642Z Removing SSH command configuration
+2026-11-10T03:02:22.3410627Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T03:02:22.3826318Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T03:02:23.0244324Z Removing HTTP extra header
+2026-11-10T03:02:23.0281667Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T03:02:23.0689960Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T03:02:23.6292312Z Removing includeIf entries pointing to credentials config files
+2026-11-10T03:02:23.6306001Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T03:02:23.6642653Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-10T03:02:23.6646280Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-10T03:02:23.6647070Z includeif.gitdir:/github/workspace/.git.path
+2026-11-10T03:02:23.6647622Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-10T03:02:23.6693312Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-10T03:02:23.7035445Z D:\a\_temp\git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T03:02:23.7090826Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D\:\\a\\_temp\\git\-credentials\-6c6c20f1\-0694\-4351\-b3ba\-483d6425ce99\.config
+2026-11-10T03:02:23.7472670Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-10T03:02:23.7870615Z D:\a\_temp\git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T03:02:23.7916356Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-6c6c20f1\-0694\-4351\-b3ba\-483d6425ce99\.config
+2026-11-10T03:02:23.8310239Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-10T03:02:23.8660421Z /github/runner_temp/git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T03:02:23.8701257Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-6c6c20f1\-0694\-4351\-b3ba\-483d6425ce99\.config
+2026-11-10T03:02:23.9076376Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-10T03:02:23.9428072Z /github/runner_temp/git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config
+2026-11-10T03:02:23.9466309Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-6c6c20f1\-0694\-4351\-b3ba\-483d6425ce99\.config
+2026-11-10T03:02:23.9839587Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T03:02:24.5634015Z Removing credentials config 'D:\a\_temp\git-credentials-6c6c20f1-0694-4351-b3ba-483d6425ce99.config'
+2026-11-10T03:02:24.5720805Z ##[endgroup]
+2026-11-10T03:02:24.8777895Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+2026-11-10T03:02:24.8778692Z with:
+2026-11-10T03:02:24.8778942Z   python-version: 3.13
+2026-11-10T03:02:24.8781223Z   cache: pip
+2026-11-10T03:02:24.8781924Z   cache-dependency-path: requirements.lock.txt
+requirements-reference.lock.txt
+
+2026-11-10T03:02:24.8784441Z   check-latest: false
+2026-11-10T03:02:24.8789645Z   token: ***
+2026-11-10T03:02:24.8792133Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-10T03:02:24.8792687Z   update-environment: true
+2026-11-10T03:02:24.8792980Z   allow-prereleases: false
+2026-11-10T03:02:24.8795699Z   freethreaded: false
+2026-11-10T03:02:24.8795979Z env:
+2026-11-10T03:02:24.8796203Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:02:24.8798817Z   RUST_TEST_THREADS: 2
+2026-11-10T03:02:24.8799088Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:02:24.8801057Z   MKL_NUM_THREADS: 1
+2026-11-10T03:02:24.8801357Z   OMP_NUM_THREADS: 1
+2026-11-10T03:02:24.8803783Z   PYTHONUTF8: 1
+2026-11-10T03:02:24.8804084Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:02:24.8804353Z ##[endgroup]
+2026-11-10T03:02:25.3224379Z ##[group]Installed versions
+2026-11-10T03:02:25.3541095Z Successfully set up CPython (3.13.17)
+2026-11-10T03:02:25.3544707Z ##[endgroup]
+2026-11-10T03:02:28.0734277Z Cache hit for: setup-python-Windows-x64-python-3.13.17-pip-c844d4bb1f478392485359569493f93acb18af9adb109ffe82641637bcb9ad74
+2026-11-10T03:02:28.8428233Z Received 93763187 of 93763187 (100.0%), 130.5 MBs/sec
+2026-11-10T03:02:28.8436764Z Cache Size: ~89 MB (93763187 B)
+2026-11-10T03:02:28.8530216Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/f03eb6d3-636b-4131-8672-c359615a8254/cache.tzst -P -C D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis --force-local --use-compress-program "zstd -d"
+2026-11-10T03:02:29.5927867Z Cache restored successfully
+2026-11-10T03:02:29.6019360Z Cache restored from key: setup-python-Windows-x64-python-3.13.17-pip-c844d4bb1f478392485359569493f93acb18af9adb109ffe82641637bcb9ad74
+2026-11-10T03:02:29.6662749Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null
+2026-11-10T03:02:29.6666299Z [36;1mNew-Item -ItemType Directory -Force runs/ci | Out-Null[0m
+2026-11-10T03:02:29.6666980Z [36;1mrustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy[0m
+2026-11-10T03:02:29.6667556Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:02:29.6670025Z [36;1mpython -m pip install --disable-pip-version-check -r requirements-reference.lock.txt[0m
+2026-11-10T03:02:29.6670872Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:02:29.6673162Z [36;1mpython tools/freeze_sources.py runs/ci[0m
+2026-11-10T03:02:29.6673610Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:02:29.6674098Z [36;1mrustc --version --verbose | Out-File runs/ci/rust-version.log[0m
+2026-11-10T03:02:29.6676994Z [36;1mpython -m pip freeze | Out-File runs/ci/python-packages.log[0m
+2026-11-10T03:02:29.7519385Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:02:29.7519978Z env:
+2026-11-10T03:02:29.7520284Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:02:29.7523143Z   RUST_TEST_THREADS: 2
+2026-11-10T03:02:29.7523512Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:02:29.7525909Z   MKL_NUM_THREADS: 1
+2026-11-10T03:02:29.7526429Z   OMP_NUM_THREADS: 1
+2026-11-10T03:02:29.7526760Z   PYTHONUTF8: 1
+2026-11-10T03:02:29.7529581Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:02:29.7530125Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:02:29.7533106Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:02:29.7533835Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:02:29.7534464Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:02:29.7537261Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:02:29.7537797Z ##[endgroup]
+2026-11-10T03:02:31.6837985Z info: syncing channel updates for 1.99.1-x86_64-pc-windows-msvc
+2026-11-10T03:02:32.2002672Z info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-10T03:02:32.2143906Z info: downloading 5 components
+2026-11-10T03:02:41.4589243Z 
+2026-11-10T03:02:41.4945239Z   1.99.1-x86_64-pc-windows-msvc installed - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-10T03:02:41.4945688Z 
+2026-11-10T03:02:43.9080899Z Collecting gmsh==4.15.2 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 1))
+2026-11-10T03:02:43.9105545Z   Using cached gmsh-4.15.2-py2.py3-none-win_amd64.whl.metadata (1.7 kB)
+2026-11-10T03:02:43.9984546Z Collecting markdown-it-py==4.2.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 2))
+2026-11-10T03:02:44.0004303Z   Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-10T03:02:44.0844475Z Collecting mdurl==0.1.2 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 3))
+2026-11-10T03:02:44.0870844Z   Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-11-10T03:02:44.1786797Z Collecting meshio==5.3.5 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 4))
+2026-11-10T03:02:44.1807080Z   Using cached meshio-5.3.5-py3-none-any.whl.metadata (11 kB)
+2026-11-10T03:02:44.4627649Z Collecting numpy==2.5.4 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 5))
+2026-11-10T03:02:44.4655004Z   Using cached numpy-2.5.4-cp313-cp313-win_amd64.whl.metadata (6.6 kB)
+2026-11-10T03:02:44.5500838Z Collecting Pygments==2.21.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 6))
+2026-11-10T03:02:44.5524633Z   Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-10T03:02:44.6478637Z Collecting rich==15.0.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 7))
+2026-11-10T03:02:44.6507274Z   Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-11-10T03:02:44.7940456Z Collecting ijson==3.6.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 8))
+2026-11-10T03:02:44.7964664Z   Using cached ijson-3.6.0-cp313-cp313-win_amd64.whl.metadata (24 kB)
+2026-11-10T03:02:44.9964286Z Collecting scipy==1.18.1 (from -r requirements-reference.lock.txt (line 2))
+2026-11-10T03:02:44.9991729Z   Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl.metadata (61 kB)
+2026-11-10T03:02:45.0234869Z Using cached gmsh-4.15.2-py2.py3-none-win_amd64.whl (42.2 MB)
+2026-11-10T03:02:45.0461153Z Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-11-10T03:02:45.0493371Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-11-10T03:02:45.0511919Z Using cached meshio-5.3.5-py3-none-any.whl (166 kB)
+2026-11-10T03:02:45.0533945Z Using cached numpy-2.5.4-cp313-cp313-win_amd64.whl (12.6 MB)
+2026-11-10T03:02:45.0616460Z Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-10T03:02:45.0641426Z Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+2026-11-10T03:02:45.0661341Z Using cached ijson-3.6.0-cp313-cp313-win_amd64.whl (54 kB)
+2026-11-10T03:02:45.0679831Z Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl (36.6 MB)
+2026-11-10T03:02:45.4972224Z Installing collected packages: gmsh, Pygments, numpy, mdurl, ijson, scipy, markdown-it-py, rich, meshio
+2026-11-10T03:03:01.1919408Z 
+2026-11-10T03:03:01.1939930Z Successfully installed Pygments-2.21.0 gmsh-4.15.2 ijson-3.6.0 markdown-it-py-4.2.0 mdurl-0.1.2 meshio-5.3.5 numpy-2.5.4 rich-15.0.0 scipy-1.18.1
+2026-11-10T03:03:01.8452218Z Frozen acceptance sources: 778
+2026-11-10T03:03:02.3929553Z ##[group]Run cargo build --locked --release
+2026-11-10T03:03:02.3932637Z [36;1mcargo build --locked --release[0m
+2026-11-10T03:03:02.4010618Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:03:02.4011090Z env:
+2026-11-10T03:03:02.4011327Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:03:02.4013870Z   RUST_TEST_THREADS: 2
+2026-11-10T03:03:02.4014154Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:03:02.4016398Z   MKL_NUM_THREADS: 1
+2026-11-10T03:03:02.4177007Z   OMP_NUM_THREADS: 1
+2026-11-10T03:03:02.4177381Z   PYTHONUTF8: 1
+2026-11-10T03:03:02.4177685Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:03:02.4178170Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:03:02.4179069Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:03:02.4179798Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:03:02.4180515Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:03:02.4181130Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:03:02.4181622Z ##[endgroup]
+2026-11-10T03:03:03.4955933Z     Updating crates.io index
+2026-11-10T03:03:03.7814679Z  Downloading crates ...
+2026-11-10T03:03:03.9420579Z   Downloaded cpufeatures v0.2.17
+2026-11-10T03:03:03.9566857Z   Downloaded digest v0.10.7
+2026-11-10T03:03:03.9763526Z   Downloaded num-integer v0.1.47
+2026-11-10T03:03:03.9925149Z   Downloaded paste v1.0.15
+2026-11-10T03:03:04.0267946Z   Downloaded sha2 v0.10.9
+2026-11-10T03:03:04.0544358Z   Downloaded serde_core v1.0.229
+2026-11-10T03:03:04.0762665Z   Downloaded thiserror-impl v2.0.21
+2026-11-10T03:03:04.0904843Z   Downloaded glam v0.16.0
+2026-11-10T03:03:04.1649544Z   Downloaded wide v0.7.33
+2026-11-10T03:03:04.2095127Z   Downloaded autocfg v1.5.1
+2026-11-10T03:03:04.2249345Z   Downloaded unicode-ident v1.0.27
+2026-11-10T03:03:04.2479168Z   Downloaded glam v0.19.0
+2026-11-10T03:03:04.3361692Z   Downloaded safe_arch v0.7.4
+2026-11-10T03:03:04.3767838Z   Downloaded cfg-if v1.0.5
+2026-11-10T03:03:04.3880664Z   Downloaded memchr v2.8.3
+2026-11-10T03:03:04.4335196Z   Downloaded glam v0.21.3
+2026-11-10T03:03:04.5472899Z   Downloaded glam v0.20.5
+2026-11-10T03:03:04.6358183Z   Downloaded syn v3.0.9
+2026-11-10T03:03:04.7151578Z   Downloaded nalgebra v0.34.2
+2026-11-10T03:03:04.9517899Z   Downloaded num-rational v0.4.2
+2026-11-10T03:03:04.9605557Z   Downloaded glam v0.30.10
+2026-11-10T03:03:05.5987999Z   Downloaded num-traits v0.2.19
+2026-11-10T03:03:05.6210525Z   Downloaded version_check v0.9.5
+2026-11-10T03:03:05.6337067Z   Downloaded block-buffer v0.10.4
+2026-11-10T03:03:05.6425101Z   Downloaded generic-array v0.14.7
+2026-11-10T03:03:05.6545299Z   Downloaded rawpointer v0.2.1
+2026-11-10T03:03:05.6619881Z   Downloaded glam v0.17.3
+2026-11-10T03:03:05.7323444Z   Downloaded simba v0.9.1
+2026-11-10T03:03:05.7559522Z   Downloaded serde v1.0.229
+2026-11-10T03:03:05.7828039Z   Downloaded glam v0.24.2
+2026-11-10T03:03:05.9103970Z   Downloaded approx v0.5.1
+2026-11-10T03:03:05.9310011Z   Downloaded glam v0.23.0
+2026-11-10T03:03:06.7820176Z   Downloaded serde_derive v1.0.229
+2026-11-10T03:03:06.8085852Z   Downloaded quote v1.0.47
+2026-11-10T03:03:06.8356611Z   Downloaded glam v0.15.2
+2026-11-10T03:03:06.9081510Z   Downloaded thiserror v2.0.21
+2026-11-10T03:03:06.9851869Z   Downloaded num-complex v0.4.6
+2026-11-10T03:03:06.9953584Z   Downloaded zmij v1.0.23
+2026-11-10T03:03:07.0104211Z   Downloaded glam v0.29.3
+2026-11-10T03:03:07.1719375Z   Downloaded bytemuck v1.25.2
+2026-11-10T03:03:07.2022944Z   Downloaded glam v0.14.0
+2026-11-10T03:03:07.2683724Z   Downloaded glam v0.18.0
+2026-11-10T03:03:07.3540395Z   Downloaded glam v0.31.1
+2026-11-10T03:03:07.5579948Z   Downloaded proc-macro2 v1.0.107
+2026-11-10T03:03:07.5842596Z   Downloaded itoa v1.0.18
+2026-11-10T03:03:07.5958439Z   Downloaded serde_json v1.0.154
+2026-11-10T03:03:07.6617346Z   Downloaded glam v0.27.0
+2026-11-10T03:03:07.8035752Z   Downloaded glam v0.32.1
+2026-11-10T03:03:08.1054436Z   Downloaded matrixmultiply v0.3.11
+2026-11-10T03:03:08.1337731Z   Downloaded typenum v1.20.1
+2026-11-10T03:03:08.1538915Z   Downloaded crypto-common v0.1.7
+2026-11-10T03:03:08.1618840Z   Downloaded glam v0.28.0
+2026-11-10T03:03:08.3164311Z   Downloaded nalgebra-macros v0.3.0
+2026-11-10T03:03:08.3258280Z   Downloaded syn v2.0.119
+2026-11-10T03:03:08.4033477Z   Downloaded num-bigint v0.4.8
+2026-11-10T03:03:08.4445579Z   Downloaded glam v0.22.0
+2026-11-10T03:03:08.5644307Z   Downloaded glam v0.25.0
+2026-11-10T03:03:08.8106104Z    Compiling autocfg v1.5.1
+2026-11-10T03:03:08.8106688Z    Compiling proc-macro2 v1.0.107
+2026-11-10T03:03:09.1715127Z    Compiling quote v1.0.47
+2026-11-10T03:03:11.2159682Z    Compiling unicode-ident v1.0.27
+2026-11-10T03:03:11.4369440Z    Compiling num-traits v0.2.19
+2026-11-10T03:03:11.7434742Z    Compiling version_check v0.9.5
+2026-11-10T03:03:12.3423233Z    Compiling generic-array v0.14.7
+2026-11-10T03:03:12.5492613Z    Compiling typenum v1.20.1
+2026-11-10T03:03:13.5398288Z    Compiling syn v3.0.9
+2026-11-10T03:03:14.1648477Z    Compiling paste v1.0.15
+2026-11-10T03:03:14.3770763Z    Compiling bytemuck v1.25.2
+2026-11-10T03:03:14.5712465Z    Compiling serde_core v1.0.229
+2026-11-10T03:03:14.8557394Z    Compiling safe_arch v0.7.4
+2026-11-10T03:03:15.6500107Z    Compiling matrixmultiply v0.3.11
+2026-11-10T03:03:15.8587121Z    Compiling zmij v1.0.23
+2026-11-10T03:03:16.4563975Z    Compiling wide v0.7.33
+2026-11-10T03:03:19.3771813Z    Compiling crypto-common v0.1.7
+2026-11-10T03:03:19.4626159Z    Compiling block-buffer v0.10.4
+2026-11-10T03:03:19.5475673Z    Compiling num-integer v0.1.47
+2026-11-10T03:03:19.5783105Z    Compiling num-complex v0.4.6
+2026-11-10T03:03:20.0963585Z    Compiling approx v0.5.1
+2026-11-10T03:03:20.1801572Z    Compiling syn v2.0.119
+2026-11-10T03:03:20.2123950Z    Compiling thiserror v2.0.21
+2026-11-10T03:03:20.4859579Z    Compiling serde v1.0.229
+2026-11-10T03:03:21.2597307Z    Compiling rawpointer v0.2.1
+2026-11-10T03:03:21.3213742Z    Compiling serde_json v1.0.154
+2026-11-10T03:03:24.4413353Z    Compiling nalgebra-macros v0.3.0
+2026-11-10T03:03:25.0051124Z    Compiling simba v0.9.1
+2026-11-10T03:03:25.4683296Z    Compiling num-rational v0.4.2
+2026-11-10T03:03:27.1183325Z    Compiling digest v0.10.7
+2026-11-10T03:03:27.3167892Z    Compiling thiserror-impl v2.0.21
+2026-11-10T03:03:28.5938618Z    Compiling serde_derive v1.0.229
+2026-11-10T03:03:30.5049390Z    Compiling cpufeatures v0.2.17
+2026-11-10T03:03:30.5484099Z    Compiling cfg-if v1.0.5
+2026-11-10T03:03:30.5912018Z    Compiling memchr v2.8.3
+2026-11-10T03:03:31.7841561Z    Compiling itoa v1.0.18
+2026-11-10T03:03:32.8532266Z    Compiling sha2 v0.10.9
+2026-11-10T03:03:35.0981693Z    Compiling nalgebra v0.34.2
+2026-11-10T03:03:42.3943653Z    Compiling soil-fem-3d v0.1.0 (D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis)
+2026-11-10T03:07:07.2909381Z     Finished `release` profile [optimized] target(s) in 4m 03s
+2026-11-10T03:07:07.4511489Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/wet-structures 2>&1 | Tee-Object -FilePath runs/ci/wet-structures.log
+2026-11-10T03:07:07.4512893Z [36;1mpython tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/wet-structures 2>&1 | Tee-Object -FilePath runs/ci/wet-structures.log[0m
+2026-11-10T03:07:07.4513789Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:07:07.4597772Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:07:07.4598223Z env:
+2026-11-10T03:07:07.4598475Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:07:07.4598732Z   RUST_TEST_THREADS: 2
+2026-11-10T03:07:07.4599019Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:07:07.4599386Z   MKL_NUM_THREADS: 1
+2026-11-10T03:07:07.4599631Z   OMP_NUM_THREADS: 1
+2026-11-10T03:07:07.4599872Z   PYTHONUTF8: 1
+2026-11-10T03:07:07.4600151Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:07:07.4601213Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:07.4601795Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:07:07.4602323Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:07.4602783Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:07.4603265Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:07.4603641Z ##[endgroup]
+2026-11-10T03:07:17.4106467Z Exported 8 tetra10 frames and raw integration-point frames: D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\runs\ci\wet-structures\exports
+2026-11-10T03:07:17.4139352Z {
+2026-11-10T03:07:17.4212788Z   "schema": "soil-fem-wet-structures-verification/1",
+2026-11-10T03:07:17.4215027Z   "passed": true,
+2026-11-10T03:07:17.4215901Z   "frames": [
+2026-11-10T03:07:17.4217047Z     {
+2026-11-10T03:07:17.4217953Z       "name": "initial_equilibrated",
+2026-11-10T03:07:17.4219860Z       "relative_displacement_error": 2.684826558269577e-11,
+2026-11-10T03:07:17.4272472Z       "relative_increment_error": 0.0,
+2026-11-10T03:07:17.4276050Z       "relative_stress_error": 3.838682259400444e-12,
+2026-11-10T03:07:17.4277210Z       "reference_true_residual": 4.2096730228772276e-16,
+2026-11-10T03:07:17.4278130Z       "minimum_effective_contact_pressure_kpa": 104.9999999999997
+2026-11-10T03:07:17.4278899Z     },
+2026-11-10T03:07:17.4279274Z     {
+2026-11-10T03:07:17.4279643Z       "name": "install",
+2026-11-10T03:07:17.4280387Z       "relative_displacement_error": 2.649810014563285e-12,
+2026-11-10T03:07:17.4281965Z       "relative_increment_error": 3.4706388431230176e-11,
+2026-11-10T03:07:17.4282733Z       "relative_stress_error": 5.600735019747666e-13,
+2026-11-10T03:07:17.4283493Z       "reference_true_residual": 3.74405597932547e-15,
+2026-11-10T03:07:17.4284196Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:17.4284982Z     },
+2026-11-10T03:07:17.4285355Z     {
+2026-11-10T03:07:17.4285912Z       "name": "rise",
+2026-11-10T03:07:17.4286489Z       "relative_displacement_error": 2.7973230688638476e-12,
+2026-11-10T03:07:17.4287161Z       "relative_increment_error": 3.746594004305118e-12,
+2026-11-10T03:07:17.4287991Z       "relative_stress_error": 5.639350162169753e-13,
+2026-11-10T03:07:17.4288620Z       "reference_true_residual": 3.686063606833274e-15,
+2026-11-10T03:07:17.4289477Z       "minimum_effective_contact_pressure_kpa": 101.22717111892744
+2026-11-10T03:07:17.4290110Z     },
+2026-11-10T03:07:17.4290632Z     {
+2026-11-10T03:07:17.4291092Z       "name": "load_plate_beam",
+2026-11-10T03:07:17.4292112Z       "relative_displacement_error": 1.981847334010059e-12,
+2026-11-10T03:07:17.4295788Z       "relative_increment_error": 5.778476752631476e-13,
+2026-11-10T03:07:17.4298133Z       "relative_stress_error": 5.421071210026606e-13,
+2026-11-10T03:07:17.4298832Z       "reference_true_residual": 9.189766115401628e-15,
+2026-11-10T03:07:17.4302576Z       "minimum_effective_contact_pressure_kpa": 99.46344860988445
+2026-11-10T03:07:17.4303337Z     },
+2026-11-10T03:07:17.4303668Z     {
+2026-11-10T03:07:17.4304018Z       "name": "flow",
+2026-11-10T03:07:17.4304494Z       "relative_displacement_error": 7.566358126971803e-12,
+2026-11-10T03:07:17.4305202Z       "relative_increment_error": 1.651324143541834e-11,
+2026-11-10T03:07:17.4305824Z       "relative_stress_error": 1.8635430904757767e-12,
+2026-11-10T03:07:17.4306406Z       "reference_true_residual": 1.2783453314284166e-14,
+2026-11-10T03:07:17.4307175Z       "minimum_effective_contact_pressure_kpa": 85.29678194321778
+2026-11-10T03:07:17.4307803Z     },
+2026-11-10T03:07:17.4308277Z     {
+2026-11-10T03:07:17.4308719Z       "name": "unload_plate_beam",
+2026-11-10T03:07:17.4309361Z       "relative_displacement_error": 4.767989299784395e-12,
+2026-11-10T03:07:17.4310013Z       "relative_increment_error": 1.4491279735714315e-11,
+2026-11-10T03:07:17.4312690Z       "relative_stress_error": 6.384319943109677e-13,
+2026-11-10T03:07:17.4313250Z       "reference_true_residual": 2.6303376984307526e-15,
+2026-11-10T03:07:17.4313884Z       "minimum_effective_contact_pressure_kpa": 87.06050445226077
+2026-11-10T03:07:17.4314399Z     },
+2026-11-10T03:07:17.4314695Z     {
+2026-11-10T03:07:17.4315007Z       "name": "reset_water",
+2026-11-10T03:07:17.4315491Z       "relative_displacement_error": 7.695044508147844e-12,
+2026-11-10T03:07:17.4316060Z       "relative_increment_error": 1.70124038815083e-11,
+2026-11-10T03:07:17.4316651Z       "relative_stress_error": 2.0114040381340626e-12,
+2026-11-10T03:07:17.4317292Z       "reference_true_residual": 3.74405597932547e-15,
+2026-11-10T03:07:17.4318359Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:17.4319202Z     },
+2026-11-10T03:07:17.4319543Z     {
+2026-11-10T03:07:17.4319855Z       "name": "remove",
+2026-11-10T03:07:17.4320322Z       "relative_displacement_error": 3.85321016118137e-13,
+2026-11-10T03:07:17.4320959Z       "relative_increment_error": 1.653506557251836e-11,
+2026-11-10T03:07:17.4321578Z       "relative_stress_error": 6.650980441275729e-14,
+2026-11-10T03:07:17.4322195Z       "reference_true_residual": 4.2096730228772276e-16,
+2026-11-10T03:07:17.4322914Z       "minimum_effective_contact_pressure_kpa": 104.9999999999997
+2026-11-10T03:07:17.4323493Z     }
+2026-11-10T03:07:17.4323842Z   ],
+2026-11-10T03:07:17.4324398Z   "independent_gl5_to_gl7_relative_difference": 3.941814544322973e-15,
+2026-11-10T03:07:17.4325212Z   "clean_rejected_path_exact": true,
+2026-11-10T03:07:17.4325687Z   "checkpoints": [
+2026-11-10T03:07:17.4326050Z     {
+2026-11-10T03:07:17.4326389Z       "stage": "geostatic",
+2026-11-10T03:07:17.4326852Z       "accepted_count": 1,
+2026-11-10T03:07:17.4327351Z       "progress": 0.25,
+2026-11-10T03:07:17.4327782Z       "exact": true
+2026-11-10T03:07:17.4328252Z     },
+2026-11-10T03:07:17.4328616Z     {
+2026-11-10T03:07:17.4328988Z       "stage": "install",
+2026-11-10T03:07:17.4329468Z       "accepted_count": 5,
+2026-11-10T03:07:17.4329931Z       "progress": 0.125,
+2026-11-10T03:07:17.4330442Z       "exact": true
+2026-11-10T03:07:17.4330828Z     },
+2026-11-10T03:07:17.4331203Z     {
+2026-11-10T03:07:17.4331587Z       "stage": "rise",
+2026-11-10T03:07:17.4332068Z       "accepted_count": 13,
+2026-11-10T03:07:17.4332549Z       "progress": 0.25,
+2026-11-10T03:07:17.4332985Z       "exact": true
+2026-11-10T03:07:17.4333385Z     },
+2026-11-10T03:07:17.4333783Z     {
+2026-11-10T03:07:17.4334180Z       "stage": "load_plate_beam",
+2026-11-10T03:07:17.4334692Z       "accepted_count": 17,
+2026-11-10T03:07:17.4335177Z       "progress": 0.125,
+2026-11-10T03:07:17.4335622Z       "exact": true
+2026-11-10T03:07:17.4336056Z     },
+2026-11-10T03:07:17.4336768Z     {
+2026-11-10T03:07:17.4337181Z       "stage": "flow",
+2026-11-10T03:07:17.4337679Z       "accepted_count": 25,
+2026-11-10T03:07:17.4338157Z       "progress": 0.25,
+2026-11-10T03:07:17.4338593Z       "exact": true
+2026-11-10T03:07:17.4340498Z     },
+2026-11-10T03:07:17.4340994Z     {
+2026-11-10T03:07:17.4341394Z       "stage": "unload_plate_beam",
+2026-11-10T03:07:17.4341929Z       "accepted_count": 29,
+2026-11-10T03:07:17.4342486Z       "progress": 0.25,
+2026-11-10T03:07:17.4342976Z       "exact": true
+2026-11-10T03:07:17.4343369Z     },
+2026-11-10T03:07:17.4343732Z     {
+2026-11-10T03:07:17.4344125Z       "stage": "reset_water",
+2026-11-10T03:07:17.4344606Z       "accepted_count": 33,
+2026-11-10T03:07:17.4345127Z       "progress": 0.25,
+2026-11-10T03:07:17.4345528Z       "exact": true
+2026-11-10T03:07:17.4345911Z     },
+2026-11-10T03:07:17.4346294Z     {
+2026-11-10T03:07:17.4346691Z       "stage": "remove",
+2026-11-10T03:07:17.4347129Z       "accepted_count": 37,
+2026-11-10T03:07:17.4347639Z       "progress": 0.25,
+2026-11-10T03:07:17.4348033Z       "exact": true
+2026-11-10T03:07:17.4348397Z     }
+2026-11-10T03:07:17.4348791Z   ],
+2026-11-10T03:07:17.4349745Z   "inputs_sources_solver_sha256": {
+2026-11-10T03:07:17.4350743Z     "target\\release\\soil-fem-3d.exe": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:07:17.4352094Z     "runs\\ci\\wet-structures\\mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:17.4353636Z     "runs\\ci\\wet-structures\\ground.json": "fe48b04bee231f26532c57ebf67692a4a296d53df1bd045c33581bafaa4aa430",
+2026-11-10T03:07:17.4355176Z     "runs\\ci\\wet-structures\\stages.json": "e28ec2f014a024a0708efd972f3d768760f119d4c60c01e5fca0eb6c89b4e802",
+2026-11-10T03:07:17.4356687Z     "tools\\verify_wet_structures.py": "565d7394671cbff49cba234fb13fa5849be30de152ca8b6edc537a5e844f4b19",
+2026-11-10T03:07:17.4358151Z     "tools\\beam_reference.py": "ddf63c755c79741244ddf45370c578a0a164b57f93b79d90fa6f44bba567d33c",
+2026-11-10T03:07:17.4359502Z     "tools\\plate_reference.py": "e19710edf6fb682fec7c28079415f7259bdada73f21c3385ad46c703b49a40bd",
+2026-11-10T03:07:17.4360889Z     "tools\\joint_water_reference.py": "4caf408bd2e811383b612c691c0bc94a48d367b729654aa43e891a007b6306c7",
+2026-11-10T03:07:17.4362333Z     "tools\\joint_reference.py": "b3e1ec7492467c8bdecfb47b181c64d1733b691d955060703751f7d2ab010b79",
+2026-11-10T03:07:17.4363652Z     "tools\\fem_reference.py": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+2026-11-10T03:07:17.4364984Z     "tools\\darcy_reference.py": "97c9862dad1ff4a2c375e4ed434924fb505fc9cc353c75ec6cc2a6369e580b84",
+2026-11-10T03:07:17.4366352Z     "tools\\hydrostatic_reference.py": "335cb2ee48674b8937f7f30f015c79cf84b54e37bb73b3dd3464b810899ce8ea",
+2026-11-10T03:07:17.4367767Z     "tools\\verify_high_order.py": "d5e1b55620ebba8494dc50192ec1f084a5306989156b12811607b7cac30816ac",
+2026-11-10T03:07:17.4369063Z     "tools\\mc_reference.py": "309619fa975d6df74094775da6af36dfe972f7f4ee8231f6dee65aa4238e5ed9",
+2026-11-10T03:07:17.4370830Z     "tools\\verify_checkpoint.py": "b3fe1f5d18a780ce8e32cd781c644220c67dabc93c49dc70d89b7e711f5c9ef2",
+2026-11-10T03:07:17.4372217Z     "tools\\export_stages.py": "753acd6364355b820e67caef273d294e7c763ed41e565b5e8685fd225031d38a",
+2026-11-10T03:07:17.4373546Z     "tools\\high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+2026-11-10T03:07:17.4374790Z     "tools\\beam_io.py": "d66add3a7c7d5e5a111d2b3ed6c28fcb559223e23b626dad0ce1be37b6b61221",
+2026-11-10T03:07:17.4375984Z     "tools\\plate_io.py": "bd7dc2f4142380385804eac9d6a5e1385446105aff78e7a346f204f01f21b8af",
+2026-11-10T03:07:17.4377298Z     "tools\\joint_io.py": "4f6187e128c897d911daf62031c321e7427028b8cc719bd20acafcbfc3246512"
+2026-11-10T03:07:17.4378176Z   },
+2026-11-10T03:07:17.4379122Z   "result_sha256": "15dae36064416048051a6260990d044551b4af6a217dbc8bed57d0ee93a07cb7",
+2026-11-10T03:07:17.4380065Z   "output_roundtrip": {
+2026-11-10T03:07:17.4380912Z     "schema": "soil-fem-stage-export/2",
+2026-11-10T03:07:17.4381800Z     "result_sha256": "15dae36064416048051a6260990d044551b4af6a217dbc8bed57d0ee93a07cb7",
+2026-11-10T03:07:17.4383164Z     "mesh_sha256": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:17.4384143Z     "vtu_roundtrip": "passed",
+2026-11-10T03:07:17.4387703Z     "integration_point_roundtrip": "passed",
+2026-11-10T03:07:17.4389070Z     "cell_field_meaning": "volume_average",
+2026-11-10T03:07:17.4392096Z     "frame_count": 8,
+2026-11-10T03:07:17.4395292Z     "joint_point_roundtrip": "passed",
+2026-11-10T03:07:17.4397838Z     "plate_sample_roundtrip": "passed"
+2026-11-10T03:07:17.4400247Z   },
+2026-11-10T03:07:17.4402820Z   "p6_complete": false,
+2026-11-10T03:07:17.4405341Z   "p3b_p4_rows_complete": false,
+2026-11-10T03:07:17.4408508Z   "water_modes": [
+2026-11-10T03:07:17.4412022Z     "continuous"
+2026-11-10T03:07:17.4415105Z   ],
+2026-11-10T03:07:17.4417622Z   "fixed_prescribed": false,
+2026-11-10T03:07:17.4420085Z   "soil_volume_source": false,
+2026-11-10T03:07:17.4424889Z   "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('continuous',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance."
+2026-11-10T03:07:17.4426765Z }
+2026-11-10T03:07:17.5500831Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-wet-structures --water-mode soil 2>&1 | Tee-Object -FilePath runs/ci/soil-wet-structures.log
+2026-11-10T03:07:17.5502471Z [36;1mpython tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-wet-structures --water-mode soil 2>&1 | Tee-Object -FilePath runs/ci/soil-wet-structures.log[0m
+2026-11-10T03:07:17.5503447Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:07:17.5577056Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:07:17.5577516Z env:
+2026-11-10T03:07:17.5577766Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:07:17.5578036Z   RUST_TEST_THREADS: 2
+2026-11-10T03:07:17.5578285Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:07:17.5578490Z   MKL_NUM_THREADS: 1
+2026-11-10T03:07:17.5578722Z   OMP_NUM_THREADS: 1
+2026-11-10T03:07:17.5578973Z   PYTHONUTF8: 1
+2026-11-10T03:07:17.5579340Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:07:17.5579716Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:17.5580239Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:07:17.5580742Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:17.5581206Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:17.5581672Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:17.5582049Z ##[endgroup]
+2026-11-10T03:07:28.7291519Z Exported 8 tetra10 frames and raw integration-point frames: D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\runs\ci\soil-wet-structures\exports
+2026-11-10T03:07:28.7295593Z {
+2026-11-10T03:07:28.7299167Z   "schema": "soil-fem-wet-structures-verification/1",
+2026-11-10T03:07:28.7302544Z   "passed": true,
+2026-11-10T03:07:28.7305511Z   "frames": [
+2026-11-10T03:07:28.7308674Z     {
+2026-11-10T03:07:28.7312111Z       "name": "initial_equilibrated",
+2026-11-10T03:07:28.7315123Z       "relative_displacement_error": 2.520439093606693e-11,
+2026-11-10T03:07:28.7318008Z       "relative_increment_error": 0.0,
+2026-11-10T03:07:28.7321188Z       "relative_stress_error": 3.634698125649699e-12,
+2026-11-10T03:07:28.7324106Z       "reference_true_residual": 5.360297662056727e-16,
+2026-11-10T03:07:28.7327075Z       "minimum_effective_contact_pressure_kpa": 104.99999999999967
+2026-11-10T03:07:28.7330252Z     },
+2026-11-10T03:07:28.7333211Z     {
+2026-11-10T03:07:28.7336327Z       "name": "install",
+2026-11-10T03:07:28.7339378Z       "relative_displacement_error": 2.964994265131104e-12,
+2026-11-10T03:07:28.7344589Z       "relative_increment_error": 3.350781757680771e-11,
+2026-11-10T03:07:28.7347287Z       "relative_stress_error": 6.372403641906417e-13,
+2026-11-10T03:07:28.7350378Z       "reference_true_residual": 3.701386291062512e-15,
+2026-11-10T03:07:28.7353081Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:28.7355493Z     },
+2026-11-10T03:07:28.7358142Z     {
+2026-11-10T03:07:28.7360959Z       "name": "rise",
+2026-11-10T03:07:28.7363752Z       "relative_displacement_error": 3.118276959575686e-12,
+2026-11-10T03:07:28.7366410Z       "relative_increment_error": 8.430946506025318e-12,
+2026-11-10T03:07:28.7369088Z       "relative_stress_error": 6.620571830123083e-13,
+2026-11-10T03:07:28.7371624Z       "reference_true_residual": 8.406945843730821e-15,
+2026-11-10T03:07:28.7374488Z       "minimum_effective_contact_pressure_kpa": 101.22717111892747
+2026-11-10T03:07:28.7376909Z     },
+2026-11-10T03:07:28.7379777Z     {
+2026-11-10T03:07:28.7382421Z       "name": "load_plate_beam",
+2026-11-10T03:07:28.7385224Z       "relative_displacement_error": 2.2071932151370444e-12,
+2026-11-10T03:07:28.7387895Z       "relative_increment_error": 1.2083703582708217e-12,
+2026-11-10T03:07:28.7391201Z       "relative_stress_error": 6.13103601161143e-13,
+2026-11-10T03:07:28.7397026Z       "reference_true_residual": 8.891749685582612e-15,
+2026-11-10T03:07:28.7398040Z       "minimum_effective_contact_pressure_kpa": 99.46344860988448
+2026-11-10T03:07:28.7398921Z     },
+2026-11-10T03:07:28.7401725Z     {
+2026-11-10T03:07:28.7404491Z       "name": "flow",
+2026-11-10T03:07:28.7407408Z       "relative_displacement_error": 2.792223528491755e-12,
+2026-11-10T03:07:28.7410417Z       "relative_increment_error": 8.475148631436843e-12,
+2026-11-10T03:07:28.7412768Z       "relative_stress_error": 7.686741975859074e-13,
+2026-11-10T03:07:28.7415564Z       "reference_true_residual": 1.8232908355006626e-14,
+2026-11-10T03:07:28.7418359Z       "minimum_effective_contact_pressure_kpa": 91.96344860988448,
+2026-11-10T03:07:28.7420691Z       "independent_darcy": {
+2026-11-10T03:07:28.7423429Z         "maximum_head_error_m": 0.0,
+2026-11-10T03:07:28.7426225Z         "maximum_flux_error_m_s": 0.0,
+2026-11-10T03:07:28.7429442Z         "maximum_pressure_head_error_m": 2.220446049250313e-16,
+2026-11-10T03:07:28.7431899Z         "independent_water_balance": 0.0
+2026-11-10T03:07:28.7434356Z       }
+2026-11-10T03:07:28.7437084Z     },
+2026-11-10T03:07:28.7439784Z     {
+2026-11-10T03:07:28.7442609Z       "name": "unload_plate_beam",
+2026-11-10T03:07:28.7445141Z       "relative_displacement_error": 3.850707262600761e-12,
+2026-11-10T03:07:28.7448650Z       "relative_increment_error": 4.492175974358119e-12,
+2026-11-10T03:07:28.7452249Z       "relative_stress_error": 6.749359558808915e-13,
+2026-11-10T03:07:28.7454919Z       "reference_true_residual": 3.646105817282249e-15,
+2026-11-10T03:07:28.7457592Z       "minimum_effective_contact_pressure_kpa": 93.72717111892747
+2026-11-10T03:07:28.7459903Z     },
+2026-11-10T03:07:28.7462601Z     {
+2026-11-10T03:07:28.7465488Z       "name": "reset_water",
+2026-11-10T03:07:28.7468525Z       "relative_displacement_error": 3.6350735055767727e-12,
+2026-11-10T03:07:28.7471160Z       "relative_increment_error": 8.354202004554564e-12,
+2026-11-10T03:07:28.7473667Z       "relative_stress_error": 7.961360991831881e-13,
+2026-11-10T03:07:28.7476477Z       "reference_true_residual": 3.701386291062512e-15,
+2026-11-10T03:07:28.7479144Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:28.7481471Z     },
+2026-11-10T03:07:28.7484012Z     {
+2026-11-10T03:07:28.7487061Z       "name": "remove",
+2026-11-10T03:07:28.7489876Z       "relative_displacement_error": 3.6902095809010394e-13,
+2026-11-10T03:07:28.7492432Z       "relative_increment_error": 7.817460923978206e-12,
+2026-11-10T03:07:28.7495123Z       "relative_stress_error": 6.595169466551775e-14,
+2026-11-10T03:07:28.7497659Z       "reference_true_residual": 5.360297662056727e-16,
+2026-11-10T03:07:28.7500459Z       "minimum_effective_contact_pressure_kpa": 104.99999999999967
+2026-11-10T03:07:28.7502828Z     }
+2026-11-10T03:07:28.7505594Z   ],
+2026-11-10T03:07:28.7509057Z   "independent_gl5_to_gl7_relative_difference": 4.647418029441248e-15,
+2026-11-10T03:07:28.7511241Z   "clean_rejected_path_exact": true,
+2026-11-10T03:07:28.7513880Z   "checkpoints": [
+2026-11-10T03:07:28.7516529Z     {
+2026-11-10T03:07:28.7519182Z       "stage": "geostatic",
+2026-11-10T03:07:28.7521713Z       "accepted_count": 1,
+2026-11-10T03:07:28.7524364Z       "progress": 0.25,
+2026-11-10T03:07:28.7527344Z       "exact": true
+2026-11-10T03:07:28.7530147Z     },
+2026-11-10T03:07:28.7532676Z     {
+2026-11-10T03:07:28.7535229Z       "stage": "install",
+2026-11-10T03:07:28.7537861Z       "accepted_count": 5,
+2026-11-10T03:07:28.7540469Z       "progress": 0.125,
+2026-11-10T03:07:28.7543066Z       "exact": true
+2026-11-10T03:07:28.7545885Z     },
+2026-11-10T03:07:28.7548829Z     {
+2026-11-10T03:07:28.7551192Z       "stage": "rise",
+2026-11-10T03:07:28.7554013Z       "accepted_count": 13,
+2026-11-10T03:07:28.7556643Z       "progress": 0.25,
+2026-11-10T03:07:28.7559259Z       "exact": true
+2026-11-10T03:07:28.7561792Z     },
+2026-11-10T03:07:28.7564621Z     {
+2026-11-10T03:07:28.7567383Z       "stage": "load_plate_beam",
+2026-11-10T03:07:28.7571992Z       "accepted_count": 17,
+2026-11-10T03:07:28.7572606Z       "progress": 0.125,
+2026-11-10T03:07:28.7575691Z       "exact": true
+2026-11-10T03:07:28.7578253Z     },
+2026-11-10T03:07:28.7581068Z     {
+2026-11-10T03:07:28.7583625Z       "stage": "flow",
+2026-11-10T03:07:28.7586191Z       "accepted_count": 25,
+2026-11-10T03:07:28.7589346Z       "progress": 0.25,
+2026-11-10T03:07:28.7591758Z       "exact": true
+2026-11-10T03:07:28.7594449Z     },
+2026-11-10T03:07:28.7597052Z     {
+2026-11-10T03:07:28.7600504Z       "stage": "unload_plate_beam",
+2026-11-10T03:07:28.7603677Z       "accepted_count": 29,
+2026-11-10T03:07:28.7607225Z       "progress": 0.25,
+2026-11-10T03:07:28.7609788Z       "exact": true
+2026-11-10T03:07:28.7612397Z     },
+2026-11-10T03:07:28.7614682Z     {
+2026-11-10T03:07:28.7617691Z       "stage": "reset_water",
+2026-11-10T03:07:28.7620586Z       "accepted_count": 33,
+2026-11-10T03:07:28.7624680Z       "progress": 0.25,
+2026-11-10T03:07:28.7628182Z       "exact": true
+2026-11-10T03:07:28.7630690Z     },
+2026-11-10T03:07:28.7633367Z     {
+2026-11-10T03:07:28.7636133Z       "stage": "remove",
+2026-11-10T03:07:28.7638720Z       "accepted_count": 37,
+2026-11-10T03:07:28.7641256Z       "progress": 0.25,
+2026-11-10T03:07:28.7643892Z       "exact": true
+2026-11-10T03:07:28.7646682Z     }
+2026-11-10T03:07:28.7649517Z   ],
+2026-11-10T03:07:28.7652040Z   "inputs_sources_solver_sha256": {
+2026-11-10T03:07:28.7655108Z     "target\\release\\soil-fem-3d.exe": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:07:28.7657759Z     "runs\\ci\\soil-wet-structures\\mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:28.7660469Z     "runs\\ci\\soil-wet-structures\\ground.json": "fe48b04bee231f26532c57ebf67692a4a296d53df1bd045c33581bafaa4aa430",
+2026-11-10T03:07:28.7662995Z     "runs\\ci\\soil-wet-structures\\stages.json": "2ea8e607338a0225648bb0e209b30c248f65c2e748718dd024a56c4a40b0f78b",
+2026-11-10T03:07:28.7665427Z     "tools\\verify_wet_structures.py": "565d7394671cbff49cba234fb13fa5849be30de152ca8b6edc537a5e844f4b19",
+2026-11-10T03:07:28.7668592Z     "tools\\beam_reference.py": "ddf63c755c79741244ddf45370c578a0a164b57f93b79d90fa6f44bba567d33c",
+2026-11-10T03:07:28.7671203Z     "tools\\plate_reference.py": "e19710edf6fb682fec7c28079415f7259bdada73f21c3385ad46c703b49a40bd",
+2026-11-10T03:07:28.7673867Z     "tools\\joint_water_reference.py": "4caf408bd2e811383b612c691c0bc94a48d367b729654aa43e891a007b6306c7",
+2026-11-10T03:07:28.7676273Z     "tools\\joint_reference.py": "b3e1ec7492467c8bdecfb47b181c64d1733b691d955060703751f7d2ab010b79",
+2026-11-10T03:07:28.7678958Z     "tools\\fem_reference.py": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+2026-11-10T03:07:28.7681676Z     "tools\\darcy_reference.py": "97c9862dad1ff4a2c375e4ed434924fb505fc9cc353c75ec6cc2a6369e580b84",
+2026-11-10T03:07:28.7684251Z     "tools\\hydrostatic_reference.py": "335cb2ee48674b8937f7f30f015c79cf84b54e37bb73b3dd3464b810899ce8ea",
+2026-11-10T03:07:28.7687030Z     "tools\\verify_high_order.py": "d5e1b55620ebba8494dc50192ec1f084a5306989156b12811607b7cac30816ac",
+2026-11-10T03:07:28.7689661Z     "tools\\mc_reference.py": "309619fa975d6df74094775da6af36dfe972f7f4ee8231f6dee65aa4238e5ed9",
+2026-11-10T03:07:28.7692351Z     "tools\\verify_checkpoint.py": "b3fe1f5d18a780ce8e32cd781c644220c67dabc93c49dc70d89b7e711f5c9ef2",
+2026-11-10T03:07:28.7694950Z     "tools\\export_stages.py": "753acd6364355b820e67caef273d294e7c763ed41e565b5e8685fd225031d38a",
+2026-11-10T03:07:28.7697565Z     "tools\\high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+2026-11-10T03:07:28.7700093Z     "tools\\beam_io.py": "d66add3a7c7d5e5a111d2b3ed6c28fcb559223e23b626dad0ce1be37b6b61221",
+2026-11-10T03:07:28.7702525Z     "tools\\plate_io.py": "bd7dc2f4142380385804eac9d6a5e1385446105aff78e7a346f204f01f21b8af",
+2026-11-10T03:07:28.7705233Z     "tools\\joint_io.py": "4f6187e128c897d911daf62031c321e7427028b8cc719bd20acafcbfc3246512",
+2026-11-10T03:07:28.7708427Z     "examples\\stages-joint-water-soil.json": "b3657eb7852c9244643b447dfca67a1bacfcc333032fe5f320736480990a8102"
+2026-11-10T03:07:28.7710508Z   },
+2026-11-10T03:07:28.7712994Z   "result_sha256": "aaeab09fe64dba1b2856a2542a4532a1b7db6ee6d8e0fe14c25f28e19a149842",
+2026-11-10T03:07:28.7715131Z   "output_roundtrip": {
+2026-11-10T03:07:28.7717368Z     "schema": "soil-fem-stage-export/2",
+2026-11-10T03:07:28.7719720Z     "result_sha256": "aaeab09fe64dba1b2856a2542a4532a1b7db6ee6d8e0fe14c25f28e19a149842",
+2026-11-10T03:07:28.7722122Z     "mesh_sha256": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:28.7724249Z     "vtu_roundtrip": "passed",
+2026-11-10T03:07:28.7726912Z     "integration_point_roundtrip": "passed",
+2026-11-10T03:07:28.7729152Z     "cell_field_meaning": "volume_average",
+2026-11-10T03:07:28.7731262Z     "frame_count": 8,
+2026-11-10T03:07:28.7733305Z     "joint_point_roundtrip": "passed",
+2026-11-10T03:07:28.7735371Z     "plate_sample_roundtrip": "passed"
+2026-11-10T03:07:28.7737408Z   },
+2026-11-10T03:07:28.7739548Z   "p6_complete": false,
+2026-11-10T03:07:28.7741762Z   "p3b_p4_rows_complete": false,
+2026-11-10T03:07:28.7743756Z   "water_modes": [
+2026-11-10T03:07:28.7745913Z     "soil"
+2026-11-10T03:07:28.7748478Z   ],
+2026-11-10T03:07:28.7751426Z   "fixed_prescribed": false,
+2026-11-10T03:07:28.7753526Z   "soil_volume_source": false,
+2026-11-10T03:07:28.7756479Z   "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('soil',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance."
+2026-11-10T03:07:28.7757737Z }
+2026-11-10T03:07:28.8685053Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-source-wet-structures --water-mode soil-source 2>&1 | Tee-Object -FilePath runs/ci/soil-source-wet-structures.log
+2026-11-10T03:07:28.8686789Z [36;1mpython tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/soil-source-wet-structures --water-mode soil-source 2>&1 | Tee-Object -FilePath runs/ci/soil-source-wet-structures.log[0m
+2026-11-10T03:07:28.8687755Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:07:28.8765887Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:07:28.8766277Z env:
+2026-11-10T03:07:28.8766467Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:07:28.8766677Z   RUST_TEST_THREADS: 2
+2026-11-10T03:07:28.8768034Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:07:28.8768250Z   MKL_NUM_THREADS: 1
+2026-11-10T03:07:28.8768449Z   OMP_NUM_THREADS: 1
+2026-11-10T03:07:28.8768692Z   PYTHONUTF8: 1
+2026-11-10T03:07:28.8768884Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:07:28.8769193Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:28.8769650Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:07:28.8770112Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:28.8770508Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:28.8770908Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:28.8771228Z ##[endgroup]
+2026-11-10T03:07:40.1601027Z Exported 8 tetra10 frames and raw integration-point frames: D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\runs\ci\soil-source-wet-structures\exports
+2026-11-10T03:07:40.1604132Z {
+2026-11-10T03:07:40.1607562Z   "schema": "soil-fem-wet-structures-verification/1",
+2026-11-10T03:07:40.1610469Z   "passed": true,
+2026-11-10T03:07:40.1613450Z   "frames": [
+2026-11-10T03:07:40.1616280Z     {
+2026-11-10T03:07:40.1619128Z       "name": "initial_equilibrated",
+2026-11-10T03:07:40.1621898Z       "relative_displacement_error": 2.520439093606693e-11,
+2026-11-10T03:07:40.1624751Z       "relative_increment_error": 0.0,
+2026-11-10T03:07:40.1627962Z       "relative_stress_error": 3.634698125649699e-12,
+2026-11-10T03:07:40.1631146Z       "reference_true_residual": 5.360297662056727e-16,
+2026-11-10T03:07:40.1633952Z       "minimum_effective_contact_pressure_kpa": 104.99999999999967
+2026-11-10T03:07:40.1636485Z     },
+2026-11-10T03:07:40.1639691Z     {
+2026-11-10T03:07:40.1643057Z       "name": "install",
+2026-11-10T03:07:40.1646047Z       "relative_displacement_error": 2.964994265131104e-12,
+2026-11-10T03:07:40.1651277Z       "relative_increment_error": 3.350781757680771e-11,
+2026-11-10T03:07:40.1653932Z       "relative_stress_error": 6.372403641906417e-13,
+2026-11-10T03:07:40.1656538Z       "reference_true_residual": 3.701386291062512e-15,
+2026-11-10T03:07:40.1659342Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:40.1661637Z     },
+2026-11-10T03:07:40.1664306Z     {
+2026-11-10T03:07:40.1666862Z       "name": "rise",
+2026-11-10T03:07:40.1669572Z       "relative_displacement_error": 3.118276959575686e-12,
+2026-11-10T03:07:40.1671927Z       "relative_increment_error": 8.430946506025318e-12,
+2026-11-10T03:07:40.1674451Z       "relative_stress_error": 6.620571830123083e-13,
+2026-11-10T03:07:40.1676900Z       "reference_true_residual": 8.406945843730821e-15,
+2026-11-10T03:07:40.1679476Z       "minimum_effective_contact_pressure_kpa": 101.22717111892747
+2026-11-10T03:07:40.1681594Z     },
+2026-11-10T03:07:40.1684466Z     {
+2026-11-10T03:07:40.1687286Z       "name": "load_plate_beam",
+2026-11-10T03:07:40.1689659Z       "relative_displacement_error": 2.2071932151370444e-12,
+2026-11-10T03:07:40.1692244Z       "relative_increment_error": 1.2083703582708217e-12,
+2026-11-10T03:07:40.1694885Z       "relative_stress_error": 6.13103601161143e-13,
+2026-11-10T03:07:40.1700512Z       "reference_true_residual": 8.891749685582612e-15,
+2026-11-10T03:07:40.1701193Z       "minimum_effective_contact_pressure_kpa": 99.46344860988448
+2026-11-10T03:07:40.1701726Z     },
+2026-11-10T03:07:40.1704632Z     {
+2026-11-10T03:07:40.1707482Z       "name": "flow",
+2026-11-10T03:07:40.1709933Z       "relative_displacement_error": 2.9554860181639743e-12,
+2026-11-10T03:07:40.1712227Z       "relative_increment_error": 8.667157433603915e-12,
+2026-11-10T03:07:40.1714803Z       "relative_stress_error": 8.211223184731056e-13,
+2026-11-10T03:07:40.1717165Z       "reference_true_residual": 2.0355308919711485e-14,
+2026-11-10T03:07:40.1720031Z       "minimum_effective_contact_pressure_kpa": 89.43226506415459,
+2026-11-10T03:07:40.1722186Z       "independent_darcy": {
+2026-11-10T03:07:40.1724788Z         "maximum_head_error_m": 6.661338147750939e-13,
+2026-11-10T03:07:40.1727797Z         "maximum_flux_error_m_s": 2.506810948058047e-16,
+2026-11-10T03:07:40.1730577Z         "maximum_pressure_head_error_m": 6.115108419635362e-13,
+2026-11-10T03:07:40.1732694Z         "independent_water_balance": 6.7762635780344e-17
+2026-11-10T03:07:40.1735302Z       }
+2026-11-10T03:07:40.1737858Z     },
+2026-11-10T03:07:40.1740310Z     {
+2026-11-10T03:07:40.1743058Z       "name": "unload_plate_beam",
+2026-11-10T03:07:40.1745808Z       "relative_displacement_error": 4.027460995374669e-12,
+2026-11-10T03:07:40.1748494Z       "relative_increment_error": 5.177619578046976e-12,
+2026-11-10T03:07:40.1750682Z       "relative_stress_error": 6.789402011229016e-13,
+2026-11-10T03:07:40.1753075Z       "reference_true_residual": 2.7415250807675915e-15,
+2026-11-10T03:07:40.1755533Z       "minimum_effective_contact_pressure_kpa": 91.19598757319758
+2026-11-10T03:07:40.1757716Z     },
+2026-11-10T03:07:40.1760360Z     {
+2026-11-10T03:07:40.1762891Z       "name": "reset_water",
+2026-11-10T03:07:40.1765702Z       "relative_displacement_error": 3.928272218739045e-12,
+2026-11-10T03:07:40.1768064Z       "relative_increment_error": 8.588524646391492e-12,
+2026-11-10T03:07:40.1770853Z       "relative_stress_error": 8.428452043959583e-13,
+2026-11-10T03:07:40.1773485Z       "reference_true_residual": 3.701386291062512e-15,
+2026-11-10T03:07:40.1776003Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:40.1778588Z     },
+2026-11-10T03:07:40.1780662Z     {
+2026-11-10T03:07:40.1783051Z       "name": "remove",
+2026-11-10T03:07:40.1786442Z       "relative_displacement_error": 3.6996780181484934e-13,
+2026-11-10T03:07:40.1788613Z       "relative_increment_error": 8.45341938152952e-12,
+2026-11-10T03:07:40.1791048Z       "relative_stress_error": 6.589950031663643e-14,
+2026-11-10T03:07:40.1793307Z       "reference_true_residual": 5.360297662056727e-16,
+2026-11-10T03:07:40.1795719Z       "minimum_effective_contact_pressure_kpa": 104.99999999999967
+2026-11-10T03:07:40.1798352Z     }
+2026-11-10T03:07:40.1800683Z   ],
+2026-11-10T03:07:40.1803443Z   "independent_gl5_to_gl7_relative_difference": 4.730670589481616e-15,
+2026-11-10T03:07:40.1805792Z   "clean_rejected_path_exact": true,
+2026-11-10T03:07:40.1808115Z   "checkpoints": [
+2026-11-10T03:07:40.1810441Z     {
+2026-11-10T03:07:40.1812982Z       "stage": "geostatic",
+2026-11-10T03:07:40.1815210Z       "accepted_count": 1,
+2026-11-10T03:07:40.1817856Z       "progress": 0.25,
+2026-11-10T03:07:40.1820224Z       "exact": true
+2026-11-10T03:07:40.1823197Z     },
+2026-11-10T03:07:40.1825711Z     {
+2026-11-10T03:07:40.1828287Z       "stage": "install",
+2026-11-10T03:07:40.1830712Z       "accepted_count": 5,
+2026-11-10T03:07:40.1833186Z       "progress": 0.125,
+2026-11-10T03:07:40.1835613Z       "exact": true
+2026-11-10T03:07:40.1838002Z     },
+2026-11-10T03:07:40.1885583Z     {
+2026-11-10T03:07:40.1885906Z       "stage": "rise",
+2026-11-10T03:07:40.1886259Z       "accepted_count": 13,
+2026-11-10T03:07:40.1886572Z       "progress": 0.25,
+2026-11-10T03:07:40.1886848Z       "exact": true
+2026-11-10T03:07:40.1887114Z     },
+2026-11-10T03:07:40.1888402Z     {
+2026-11-10T03:07:40.1888699Z       "stage": "load_plate_beam",
+2026-11-10T03:07:40.1889047Z       "accepted_count": 17,
+2026-11-10T03:07:40.1889350Z       "progress": 0.125,
+2026-11-10T03:07:40.1889625Z       "exact": true
+2026-11-10T03:07:40.1889872Z     },
+2026-11-10T03:07:40.1890082Z     {
+2026-11-10T03:07:40.1890331Z       "stage": "flow",
+2026-11-10T03:07:40.1890667Z       "accepted_count": 25,
+2026-11-10T03:07:40.1891006Z       "progress": 0.25,
+2026-11-10T03:07:40.1891311Z       "exact": true
+2026-11-10T03:07:40.1891592Z     },
+2026-11-10T03:07:40.1891824Z     {
+2026-11-10T03:07:40.1892064Z       "stage": "unload_plate_beam",
+2026-11-10T03:07:40.1892449Z       "accepted_count": 29,
+2026-11-10T03:07:40.1892786Z       "progress": 0.25,
+2026-11-10T03:07:40.1893112Z       "exact": true
+2026-11-10T03:07:40.1893621Z     },
+2026-11-10T03:07:40.1893862Z     {
+2026-11-10T03:07:40.1894120Z       "stage": "reset_water",
+2026-11-10T03:07:40.1894948Z       "accepted_count": 33,
+2026-11-10T03:07:40.1897744Z       "progress": 0.25,
+2026-11-10T03:07:40.1901884Z       "exact": true
+2026-11-10T03:07:40.1904617Z     },
+2026-11-10T03:07:40.1907358Z     {
+2026-11-10T03:07:40.1910144Z       "stage": "remove",
+2026-11-10T03:07:40.1912899Z       "accepted_count": 37,
+2026-11-10T03:07:40.1915455Z       "progress": 0.25,
+2026-11-10T03:07:40.1918316Z       "exact": true
+2026-11-10T03:07:40.1921907Z     }
+2026-11-10T03:07:40.1923732Z   ],
+2026-11-10T03:07:40.1926979Z   "inputs_sources_solver_sha256": {
+2026-11-10T03:07:40.1929848Z     "target\\release\\soil-fem-3d.exe": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:07:40.1932245Z     "runs\\ci\\soil-source-wet-structures\\mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:40.1934591Z     "runs\\ci\\soil-source-wet-structures\\ground.json": "fe48b04bee231f26532c57ebf67692a4a296d53df1bd045c33581bafaa4aa430",
+2026-11-10T03:07:40.1937323Z     "runs\\ci\\soil-source-wet-structures\\stages.json": "ced7ab26ce751a1bf64f858e3cad3f3ee43de4bb9767b37c7557c9e7b91063e3",
+2026-11-10T03:07:40.1939593Z     "tools\\verify_wet_structures.py": "565d7394671cbff49cba234fb13fa5849be30de152ca8b6edc537a5e844f4b19",
+2026-11-10T03:07:40.1941908Z     "tools\\beam_reference.py": "ddf63c755c79741244ddf45370c578a0a164b57f93b79d90fa6f44bba567d33c",
+2026-11-10T03:07:40.1944705Z     "tools\\plate_reference.py": "e19710edf6fb682fec7c28079415f7259bdada73f21c3385ad46c703b49a40bd",
+2026-11-10T03:07:40.1947293Z     "tools\\joint_water_reference.py": "4caf408bd2e811383b612c691c0bc94a48d367b729654aa43e891a007b6306c7",
+2026-11-10T03:07:40.1949556Z     "tools\\joint_reference.py": "b3e1ec7492467c8bdecfb47b181c64d1733b691d955060703751f7d2ab010b79",
+2026-11-10T03:07:40.1951993Z     "tools\\fem_reference.py": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+2026-11-10T03:07:40.1954470Z     "tools\\darcy_reference.py": "97c9862dad1ff4a2c375e4ed434924fb505fc9cc353c75ec6cc2a6369e580b84",
+2026-11-10T03:07:40.1956808Z     "tools\\hydrostatic_reference.py": "335cb2ee48674b8937f7f30f015c79cf84b54e37bb73b3dd3464b810899ce8ea",
+2026-11-10T03:07:40.1959108Z     "tools\\verify_high_order.py": "d5e1b55620ebba8494dc50192ec1f084a5306989156b12811607b7cac30816ac",
+2026-11-10T03:07:40.1962067Z     "tools\\mc_reference.py": "309619fa975d6df74094775da6af36dfe972f7f4ee8231f6dee65aa4238e5ed9",
+2026-11-10T03:07:40.1964256Z     "tools\\verify_checkpoint.py": "b3fe1f5d18a780ce8e32cd781c644220c67dabc93c49dc70d89b7e711f5c9ef2",
+2026-11-10T03:07:40.1966611Z     "tools\\export_stages.py": "753acd6364355b820e67caef273d294e7c763ed41e565b5e8685fd225031d38a",
+2026-11-10T03:07:40.1969002Z     "tools\\high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+2026-11-10T03:07:40.1971286Z     "tools\\beam_io.py": "d66add3a7c7d5e5a111d2b3ed6c28fcb559223e23b626dad0ce1be37b6b61221",
+2026-11-10T03:07:40.1973913Z     "tools\\plate_io.py": "bd7dc2f4142380385804eac9d6a5e1385446105aff78e7a346f204f01f21b8af",
+2026-11-10T03:07:40.1976146Z     "tools\\joint_io.py": "4f6187e128c897d911daf62031c321e7427028b8cc719bd20acafcbfc3246512",
+2026-11-10T03:07:40.1978824Z     "examples\\stages-joint-water-soil.json": "b3657eb7852c9244643b447dfca67a1bacfcc333032fe5f320736480990a8102",
+2026-11-10T03:07:40.1981881Z     "tools\\verify_soil_source_column.py": "7f844afd9f6603f7444660712d87526222c449b3b8a0619e9198e4f05dfe5d49"
+2026-11-10T03:07:40.1983639Z   },
+2026-11-10T03:07:40.1986273Z   "result_sha256": "ca450bf02213d35fdcd26fb84425a8d494afb064971f25f73306e5208a9de828",
+2026-11-10T03:07:40.1988732Z   "output_roundtrip": {
+2026-11-10T03:07:40.1991146Z     "schema": "soil-fem-stage-export/2",
+2026-11-10T03:07:40.1993801Z     "result_sha256": "ca450bf02213d35fdcd26fb84425a8d494afb064971f25f73306e5208a9de828",
+2026-11-10T03:07:40.1996146Z     "mesh_sha256": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:40.1998306Z     "vtu_roundtrip": "passed",
+2026-11-10T03:07:40.2000877Z     "integration_point_roundtrip": "passed",
+2026-11-10T03:07:40.2003656Z     "cell_field_meaning": "volume_average",
+2026-11-10T03:07:40.2006672Z     "frame_count": 8,
+2026-11-10T03:07:40.2009312Z     "joint_point_roundtrip": "passed",
+2026-11-10T03:07:40.2011655Z     "plate_sample_roundtrip": "passed"
+2026-11-10T03:07:40.2013824Z   },
+2026-11-10T03:07:40.2016048Z   "p6_complete": false,
+2026-11-10T03:07:40.2018169Z   "p3b_p4_rows_complete": false,
+2026-11-10T03:07:40.2020693Z   "water_modes": [
+2026-11-10T03:07:40.2023083Z     "soil"
+2026-11-10T03:07:40.2025390Z   ],
+2026-11-10T03:07:40.2027588Z   "fixed_prescribed": false,
+2026-11-10T03:07:40.2029647Z   "soil_volume_source": true,
+2026-11-10T03:07:40.2032542Z   "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('soil',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance.",
+2026-11-10T03:07:40.2034323Z   "analytic_soil_source": {
+2026-11-10T03:07:40.2036485Z     "schema": "soil-fem-soil-source-column-analytic/1",
+2026-11-10T03:07:40.2038449Z     "passed": true,
+2026-11-10T03:07:40.2040754Z     "frames": [
+2026-11-10T03:07:40.2042797Z       {
+2026-11-10T03:07:40.2045298Z         "stage": "flow",
+2026-11-10T03:07:40.2047531Z         "source_per_s": 0.0002,
+2026-11-10T03:07:40.2049685Z         "soil_volume_m3": 0.5,
+2026-11-10T03:07:40.2051883Z         "source_and_bottom_outflow_m3_s": 0.0001,
+2026-11-10T03:07:40.2054026Z         "head_at_seam_m": 2.25,
+2026-11-10T03:07:40.2056135Z         "physical_joint_pressure_kpa": 17.5,
+2026-11-10T03:07:40.2058422Z         "bottom_flux_m_s": -0.0001,
+2026-11-10T03:07:40.2060351Z         "seam_flux_m_s": 0.0,
+2026-11-10T03:07:40.2064283Z         "maximum_nodal_head_error_m": 6.661338147750939e-13,
+2026-11-10T03:07:40.2066854Z         "maximum_gp_head_error_m": 6.110667527536862e-13,
+2026-11-10T03:07:40.2069059Z         "maximum_pressure_head_error_m": 6.112887973586112e-13,
+2026-11-10T03:07:40.2071120Z         "maximum_flux_error_m_s": 2.506404372243365e-16,
+2026-11-10T03:07:40.2073190Z         "maximum_no_flow_face_outflow_m3_s": 3.006264084769251e-17
+2026-11-10T03:07:40.2075333Z       }
+2026-11-10T03:07:40.2077420Z     ],
+2026-11-10T03:07:40.2079973Z     "scope": "existing 12 Tet10 column; saturated SOIL source flow only; elastic closed sticking with 2 plates and 1 beam",
+2026-11-10T03:07:40.2082243Z     "p3b_p4_rows_complete": false,
+2026-11-10T03:07:40.2084545Z     "p6_complete": false
+2026-11-10T03:07:40.2086581Z   }
+2026-11-10T03:07:40.2088843Z }
+2026-11-10T03:07:40.3010147Z ##[group]Run python tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log
+2026-11-10T03:07:40.3012045Z [36;1mpython tools/verify_wet_structures.py --solver target/release/soil-fem-3d.exe --output runs/ci/fixed-prescribed-wet-structures --water-mode prescribed-fixed 2>&1 | Tee-Object -FilePath runs/ci/fixed-prescribed-wet-structures.log[0m
+2026-11-10T03:07:40.3013061Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:07:40.3089386Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:07:40.3089748Z env:
+2026-11-10T03:07:40.3089933Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:07:40.3090137Z   RUST_TEST_THREADS: 2
+2026-11-10T03:07:40.3090343Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:07:40.3090548Z   MKL_NUM_THREADS: 1
+2026-11-10T03:07:40.3090736Z   OMP_NUM_THREADS: 1
+2026-11-10T03:07:40.3090979Z   PYTHONUTF8: 1
+2026-11-10T03:07:40.3091172Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:07:40.3091465Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:40.3092478Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:07:40.3092955Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:40.3093357Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:40.3093752Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:40.3094073Z ##[endgroup]
+2026-11-10T03:07:48.5218838Z Exported 7 tetra10 frames and raw integration-point frames: D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\runs\ci\fixed-prescribed-wet-structures\exports
+2026-11-10T03:07:48.5222061Z {
+2026-11-10T03:07:48.5225765Z   "schema": "soil-fem-wet-structures-verification/1",
+2026-11-10T03:07:48.5228907Z   "passed": true,
+2026-11-10T03:07:48.5231779Z   "frames": [
+2026-11-10T03:07:48.5234454Z     {
+2026-11-10T03:07:48.5237327Z       "name": "initial_equilibrated",
+2026-11-10T03:07:48.5240141Z       "relative_displacement_error": 2.684826558269577e-11,
+2026-11-10T03:07:48.5243719Z       "relative_increment_error": 0.0,
+2026-11-10T03:07:48.5246513Z       "relative_stress_error": 3.838682259400444e-12,
+2026-11-10T03:07:48.5249371Z       "reference_true_residual": 4.2096730228772276e-16,
+2026-11-10T03:07:48.5252270Z       "minimum_effective_contact_pressure_kpa": 104.9999999999997
+2026-11-10T03:07:48.5255264Z     },
+2026-11-10T03:07:48.5257519Z     {
+2026-11-10T03:07:48.5260928Z       "name": "install",
+2026-11-10T03:07:48.5267402Z       "relative_displacement_error": 2.649810014563285e-12,
+2026-11-10T03:07:48.5270080Z       "relative_increment_error": 3.4706388431230176e-11,
+2026-11-10T03:07:48.5272621Z       "relative_stress_error": 5.600735019747666e-13,
+2026-11-10T03:07:48.5274932Z       "reference_true_residual": 3.74405597932547e-15,
+2026-11-10T03:07:48.5277673Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:48.5279930Z     },
+2026-11-10T03:07:48.5282979Z     {
+2026-11-10T03:07:48.5285689Z       "name": "load_plate_beam",
+2026-11-10T03:07:48.5288277Z       "relative_displacement_error": 1.8812198656303324e-12,
+2026-11-10T03:07:48.5290695Z       "relative_increment_error": 3.690456901667095e-13,
+2026-11-10T03:07:48.5293260Z       "relative_stress_error": 5.34517212103849e-13,
+2026-11-10T03:07:48.5295911Z       "reference_true_residual": 1.6129097761971734e-14,
+2026-11-10T03:07:48.5298244Z       "minimum_effective_contact_pressure_kpa": 101.9634486098844
+2026-11-10T03:07:48.5300514Z     },
+2026-11-10T03:07:48.5303683Z     {
+2026-11-10T03:07:48.5306255Z       "name": "flow",
+2026-11-10T03:07:48.5308854Z       "relative_displacement_error": 3.3358934733224747e-12,
+2026-11-10T03:07:48.5311250Z       "relative_increment_error": 1.9464041332020947e-11,
+2026-11-10T03:07:48.5317644Z       "relative_stress_error": 1.0219691300766185e-12,
+2026-11-10T03:07:48.5318385Z       "reference_true_residual": 1.1892432824154774e-14,
+2026-11-10T03:07:48.5319117Z       "minimum_effective_contact_pressure_kpa": 101.96344860988448,
+2026-11-10T03:07:48.5322334Z       "independent_darcy": {
+2026-11-10T03:07:48.5324935Z         "maximum_head_error_m": 1.1102230246251565e-15,
+2026-11-10T03:07:48.5327334Z         "maximum_flux_error_m_s": 1.4094628242311558e-18,
+2026-11-10T03:07:48.5329874Z         "maximum_pressure_head_error_m": 1.3322676295501878e-15,
+2026-11-10T03:07:48.5332376Z         "independent_water_balance": 1.0842021724855042e-16
+2026-11-10T03:07:48.5334658Z       }
+2026-11-10T03:07:48.5337379Z     },
+2026-11-10T03:07:48.5340067Z     {
+2026-11-10T03:07:48.5343080Z       "name": "unload_plate_beam",
+2026-11-10T03:07:48.5345757Z       "relative_displacement_error": 3.274415238348048e-12,
+2026-11-10T03:07:48.5348124Z       "relative_increment_error": 9.441771627948307e-12,
+2026-11-10T03:07:48.5350530Z       "relative_stress_error": 6.059504525010783e-13,
+2026-11-10T03:07:48.5353132Z       "reference_true_residual": 4.8961153209031704e-15,
+2026-11-10T03:07:48.5355760Z       "minimum_effective_contact_pressure_kpa": 103.72717111892747
+2026-11-10T03:07:48.5358166Z     },
+2026-11-10T03:07:48.5360705Z     {
+2026-11-10T03:07:48.5363870Z       "name": "reset_water",
+2026-11-10T03:07:48.5366442Z       "relative_displacement_error": 4.75443993740016e-12,
+2026-11-10T03:07:48.5368937Z       "relative_increment_error": 1.8830164185168292e-11,
+2026-11-10T03:07:48.5371477Z       "relative_stress_error": 8.859174150071376e-13,
+2026-11-10T03:07:48.5374033Z       "reference_true_residual": 3.74405597932547e-15,
+2026-11-10T03:07:48.5377058Z       "minimum_effective_contact_pressure_kpa": 103.72717111892744
+2026-11-10T03:07:48.5379226Z     },
+2026-11-10T03:07:48.5382228Z     {
+2026-11-10T03:07:48.5384810Z       "name": "remove",
+2026-11-10T03:07:48.5387581Z       "relative_displacement_error": 3.834162966883447e-13,
+2026-11-10T03:07:48.5389904Z       "relative_increment_error": 1.0067502430338846e-11,
+2026-11-10T03:07:48.5392547Z       "relative_stress_error": 6.657926974627322e-14,
+2026-11-10T03:07:48.5395282Z       "reference_true_residual": 4.2096730228772276e-16,
+2026-11-10T03:07:48.5398276Z       "minimum_effective_contact_pressure_kpa": 104.9999999999997
+2026-11-10T03:07:48.5400452Z     }
+2026-11-10T03:07:48.5402889Z   ],
+2026-11-10T03:07:48.5406123Z   "independent_gl5_to_gl7_relative_difference": 3.2093092867372104e-15,
+2026-11-10T03:07:48.5408622Z   "clean_rejected_path_exact": true,
+2026-11-10T03:07:48.5411421Z   "checkpoints": [
+2026-11-10T03:07:48.5413838Z     {
+2026-11-10T03:07:48.5416882Z       "stage": "geostatic",
+2026-11-10T03:07:48.5419820Z       "accepted_count": 1,
+2026-11-10T03:07:48.5422271Z       "progress": 0.25,
+2026-11-10T03:07:48.5424766Z       "exact": true
+2026-11-10T03:07:48.5427278Z     },
+2026-11-10T03:07:48.5429979Z     {
+2026-11-10T03:07:48.5432617Z       "stage": "install",
+2026-11-10T03:07:48.5434975Z       "accepted_count": 5,
+2026-11-10T03:07:48.5437765Z       "progress": 0.125,
+2026-11-10T03:07:48.5440478Z       "exact": true
+2026-11-10T03:07:48.5442941Z     },
+2026-11-10T03:07:48.5445445Z     {
+2026-11-10T03:07:48.5448033Z       "stage": "load_plate_beam",
+2026-11-10T03:07:48.5450573Z       "accepted_count": 13,
+2026-11-10T03:07:48.5453106Z       "progress": 0.125,
+2026-11-10T03:07:48.5455770Z       "exact": true
+2026-11-10T03:07:48.5458345Z     },
+2026-11-10T03:07:48.5461110Z     {
+2026-11-10T03:07:48.5463743Z       "stage": "flow",
+2026-11-10T03:07:48.5466186Z       "accepted_count": 21,
+2026-11-10T03:07:48.5468798Z       "progress": 0.25,
+2026-11-10T03:07:48.5471203Z       "exact": true
+2026-11-10T03:07:48.5473979Z     },
+2026-11-10T03:07:48.5476503Z     {
+2026-11-10T03:07:48.5479326Z       "stage": "unload_plate_beam",
+2026-11-10T03:07:48.5481939Z       "accepted_count": 25,
+2026-11-10T03:07:48.5484636Z       "progress": 0.25,
+2026-11-10T03:07:48.5488918Z       "exact": true
+2026-11-10T03:07:48.5489373Z     },
+2026-11-10T03:07:48.5492366Z     {
+2026-11-10T03:07:48.5494625Z       "stage": "reset_water",
+2026-11-10T03:07:48.5497328Z       "accepted_count": 29,
+2026-11-10T03:07:48.5500220Z       "progress": 0.25,
+2026-11-10T03:07:48.5502663Z       "exact": true
+2026-11-10T03:07:48.5505213Z     },
+2026-11-10T03:07:48.5507670Z     {
+2026-11-10T03:07:48.5510291Z       "stage": "remove",
+2026-11-10T03:07:48.5512806Z       "accepted_count": 33,
+2026-11-10T03:07:48.5515581Z       "progress": 0.25,
+2026-11-10T03:07:48.5517851Z       "exact": true
+2026-11-10T03:07:48.5520887Z     }
+2026-11-10T03:07:48.5523649Z   ],
+2026-11-10T03:07:48.5527352Z   "inputs_sources_solver_sha256": {
+2026-11-10T03:07:48.5530681Z     "target\\release\\soil-fem-3d.exe": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:07:48.5533830Z     "runs\\ci\\fixed-prescribed-wet-structures\\mesh.json": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:48.5536701Z     "runs\\ci\\fixed-prescribed-wet-structures\\ground.json": "fe48b04bee231f26532c57ebf67692a4a296d53df1bd045c33581bafaa4aa430",
+2026-11-10T03:07:48.5539462Z     "runs\\ci\\fixed-prescribed-wet-structures\\stages.json": "c413ebfc62afa6895ac26009dab88d149dca2c05f4d52345f3bbff613d413fa4",
+2026-11-10T03:07:48.5541982Z     "tools\\verify_wet_structures.py": "565d7394671cbff49cba234fb13fa5849be30de152ca8b6edc537a5e844f4b19",
+2026-11-10T03:07:48.5544363Z     "tools\\beam_reference.py": "ddf63c755c79741244ddf45370c578a0a164b57f93b79d90fa6f44bba567d33c",
+2026-11-10T03:07:48.5547942Z     "tools\\plate_reference.py": "e19710edf6fb682fec7c28079415f7259bdada73f21c3385ad46c703b49a40bd",
+2026-11-10T03:07:48.5550845Z     "tools\\joint_water_reference.py": "4caf408bd2e811383b612c691c0bc94a48d367b729654aa43e891a007b6306c7",
+2026-11-10T03:07:48.5554230Z     "tools\\joint_reference.py": "b3e1ec7492467c8bdecfb47b181c64d1733b691d955060703751f7d2ab010b79",
+2026-11-10T03:07:48.5556366Z     "tools\\fem_reference.py": "79b8602a8a8b9f75d33720db45b383b4ba7476eab515be824950fbe152f937d3",
+2026-11-10T03:07:48.5558506Z     "tools\\darcy_reference.py": "97c9862dad1ff4a2c375e4ed434924fb505fc9cc353c75ec6cc2a6369e580b84",
+2026-11-10T03:07:48.5561230Z     "tools\\hydrostatic_reference.py": "335cb2ee48674b8937f7f30f015c79cf84b54e37bb73b3dd3464b810899ce8ea",
+2026-11-10T03:07:48.5563515Z     "tools\\verify_high_order.py": "d5e1b55620ebba8494dc50192ec1f084a5306989156b12811607b7cac30816ac",
+2026-11-10T03:07:48.5565857Z     "tools\\mc_reference.py": "309619fa975d6df74094775da6af36dfe972f7f4ee8231f6dee65aa4238e5ed9",
+2026-11-10T03:07:48.5568217Z     "tools\\verify_checkpoint.py": "b3fe1f5d18a780ce8e32cd781c644220c67dabc93c49dc70d89b7e711f5c9ef2",
+2026-11-10T03:07:48.5570468Z     "tools\\export_stages.py": "753acd6364355b820e67caef273d294e7c763ed41e565b5e8685fd225031d38a",
+2026-11-10T03:07:48.5572829Z     "tools\\high_order_io.py": "f2325ade09523ccbd93eb29641f1bf59ef77972e881d82ffab8dd37345b226c8",
+2026-11-10T03:07:48.5575784Z     "tools\\beam_io.py": "d66add3a7c7d5e5a111d2b3ed6c28fcb559223e23b626dad0ce1be37b6b61221",
+2026-11-10T03:07:48.5578091Z     "tools\\plate_io.py": "bd7dc2f4142380385804eac9d6a5e1385446105aff78e7a346f204f01f21b8af",
+2026-11-10T03:07:48.5580463Z     "tools\\joint_io.py": "4f6187e128c897d911daf62031c321e7427028b8cc719bd20acafcbfc3246512",
+2026-11-10T03:07:48.5582925Z     "examples\\stages-joint-water-prescribed.json": "7d6c14f7fcfb8acdaf709a00f9a7f06d23ef353ccf77ef11a9d43c0369b0630f"
+2026-11-10T03:07:48.5584740Z   },
+2026-11-10T03:07:48.5587456Z   "result_sha256": "5bd42f08fd41705c7ce670fe77b8a3f672c204f23af1bb85ff59bb74bb17546b",
+2026-11-10T03:07:48.5589740Z   "output_roundtrip": {
+2026-11-10T03:07:48.5592061Z     "schema": "soil-fem-stage-export/2",
+2026-11-10T03:07:48.5595402Z     "result_sha256": "5bd42f08fd41705c7ce670fe77b8a3f672c204f23af1bb85ff59bb74bb17546b",
+2026-11-10T03:07:48.5597985Z     "mesh_sha256": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+2026-11-10T03:07:48.5599785Z     "vtu_roundtrip": "passed",
+2026-11-10T03:07:48.5602123Z     "integration_point_roundtrip": "passed",
+2026-11-10T03:07:48.5604403Z     "cell_field_meaning": "volume_average",
+2026-11-10T03:07:48.5606645Z     "frame_count": 7,
+2026-11-10T03:07:48.5609041Z     "joint_point_roundtrip": "passed",
+2026-11-10T03:07:48.5611362Z     "plate_sample_roundtrip": "passed"
+2026-11-10T03:07:48.5613891Z   },
+2026-11-10T03:07:48.5616296Z   "p6_complete": false,
+2026-11-10T03:07:48.5618607Z   "p3b_p4_rows_complete": false,
+2026-11-10T03:07:48.5620898Z   "water_modes": [
+2026-11-10T03:07:48.5623476Z     "prescribed"
+2026-11-10T03:07:48.5625702Z   ],
+2026-11-10T03:07:48.5627899Z   "fixed_prescribed": true,
+2026-11-10T03:07:48.5630126Z   "soil_volume_source": false,
+2026-11-10T03:07:48.5632988Z   "scope": "12 Tet10, 2 linear plates, 1 linear beam; hydrostatic and steady Darcy ('prescribed',) JOINT, elastic soil, closed sticking contact; full retained direct 3D reference. No plastic, Richards, BIRTH, crack-tip or general interface convergence acceptance."
+2026-11-10T03:07:48.5635082Z }
+2026-11-10T03:07:48.6528936Z ##[group]Run python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc --budget-seconds 20 --grace-seconds 5 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc.log
+2026-11-10T03:07:48.6530765Z [36;1mpython tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc --budget-seconds 20 --grace-seconds 5 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc.log[0m
+2026-11-10T03:07:48.6531718Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:07:48.6603527Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:07:48.6603896Z env:
+2026-11-10T03:07:48.6604075Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:07:48.6604276Z   RUST_TEST_THREADS: 2
+2026-11-10T03:07:48.6604479Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:07:48.6604680Z   MKL_NUM_THREADS: 1
+2026-11-10T03:07:48.6604861Z   OMP_NUM_THREADS: 1
+2026-11-10T03:07:48.6605038Z   PYTHONUTF8: 1
+2026-11-10T03:07:48.6605300Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:07:48.6605614Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:48.6606076Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:07:48.6606523Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:48.6607097Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:48.6607815Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:07:48.6608150Z ##[endgroup]
+2026-11-10T03:08:14.6868726Z {
+2026-11-10T03:08:14.6874112Z   "schema": "soil-fem-low-preload-nc-probe/1",
+2026-11-10T03:08:14.6875623Z   "passed": false,
+2026-11-10T03:08:14.6893126Z   "classification": "未検証",
+2026-11-10T03:08:14.6893590Z   "p3b04_complete": false,
+2026-11-10T03:08:14.6893979Z   "p6_complete": false,
+2026-11-10T03:08:14.6894365Z   "solver_complete": false,
+2026-11-10T03:08:14.6894806Z   "stop_reason": "wall_time_budget",
+2026-11-10T03:08:14.6895273Z   "owned_child_terminated": true,
+2026-11-10T03:08:14.6897734Z   "exit_code": 1,
+2026-11-10T03:08:14.6900549Z   "elapsed_seconds": 25.05232669999998,
+2026-11-10T03:08:14.6902919Z   "job_state": "running",
+2026-11-10T03:08:14.6905724Z   "snapshot": "recovery-checkpoint-1.json",
+2026-11-10T03:08:14.6908346Z   "resume_command": null,
+2026-11-10T03:08:14.6911476Z   "solver_sha256": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:08:14.6914689Z   "input_sha256": {
+2026-11-10T03:08:14.6917751Z     "mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf",
+2026-11-10T03:08:14.6920273Z     "ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:14.6926028Z     "stages.json": "14be5443f212cdc987599e86cf536f55a788a5086d6ffa11f0f175050208a400"
+2026-11-10T03:08:14.6928340Z   },
+2026-11-10T03:08:14.6931085Z   "input_condition": {
+2026-11-10T03:08:14.6933141Z     "seed_p_kpa": 100.0,
+2026-11-10T03:08:14.6935442Z     "seed_pc_kpa": 100.0,
+2026-11-10T03:08:14.6937977Z     "preload_kpa": 5.0,
+2026-11-10T03:08:14.6940580Z     "force_kn": [
+2026-11-10T03:08:14.6942824Z       1.0,
+2026-11-10T03:08:14.6945055Z       0.5,
+2026-11-10T03:08:14.6947831Z       0.0
+2026-11-10T03:08:14.6950180Z     ]
+2026-11-10T03:08:14.6952526Z   },
+2026-11-10T03:08:14.6955477Z   "numerical_controls": {
+2026-11-10T03:08:14.6957621Z     "excavation_increment": null,
+2026-11-10T03:08:14.6960243Z     "maximum_newton_iterations": null,
+2026-11-10T03:08:14.6962641Z     "minimum_increment": null,
+2026-11-10T03:08:14.6965030Z     "dense_lu": false,
+2026-11-10T03:08:14.6967540Z     "tangent_perturbation": null
+2026-11-10T03:08:14.6969839Z   },
+2026-11-10T03:08:14.6972518Z   "missing_acceptance_evidence": [
+2026-11-10T03:08:14.6975407Z     "全上部撤去の完了・全解放",
+2026-11-10T03:08:14.6983840Z     "独立塑性3D全場",
+2026-11-10T03:08:14.6984421Z     "両実装の刻み感度",
+2026-11-10T03:08:14.6984914Z     "全工程途中再開の連続経路一致"
+2026-11-10T03:08:14.6989993Z   ],
+2026-11-10T03:08:14.6990752Z   "observation": {
+2026-11-10T03:08:14.6991227Z     "accepted_increments": 17,
+2026-11-10T03:08:14.6994476Z     "completed_frames": [
+2026-11-10T03:08:14.6997369Z       "initial_equilibrated",
+2026-11-10T03:08:14.7000186Z       "load",
+2026-11-10T03:08:14.7002908Z       "unload"
+2026-11-10T03:08:14.7005432Z     ],
+2026-11-10T03:08:14.7008243Z     "stage_index": 3,
+2026-11-10T03:08:14.7010733Z     "stage_progress": 0.75,
+2026-11-10T03:08:14.7013815Z     "geostatic_progress": 1.0,
+2026-11-10T03:08:14.7016110Z     "pc_range_kpa": [
+2026-11-10T03:08:14.7018723Z       101.82526050681298,
+2026-11-10T03:08:14.7021387Z       111.74785647323907
+2026-11-10T03:08:14.7024065Z     ],
+2026-11-10T03:08:14.7026463Z     "plastic_points": 324,
+2026-11-10T03:08:14.7028918Z     "rejections": 3,
+2026-11-10T03:08:14.7031652Z     "rejected_plastic_trial_changed": true,
+2026-11-10T03:08:14.7034302Z     "rejected_contact_trial_changed": true,
+2026-11-10T03:08:14.7037328Z     "all_rejections_preserve_committed_state": true,
+2026-11-10T03:08:14.7039633Z     "stored_stress_force_checks": [
+2026-11-10T03:08:14.7042026Z       {
+2026-11-10T03:08:14.7044725Z         "frame": "initial_equilibrated",
+2026-11-10T03:08:14.7047501Z         "relative_force_residual": 1.4806795888809662e-13,
+2026-11-10T03:08:14.7050077Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:14.7052991Z         "maximum_normalized_mcc_yield": 6.201720852304539e-13
+2026-11-10T03:08:14.7055257Z       },
+2026-11-10T03:08:14.7057964Z       {
+2026-11-10T03:08:14.7060789Z         "frame": "load",
+2026-11-10T03:08:14.7063353Z         "relative_force_residual": 1.1833618989088064e-15,
+2026-11-10T03:08:14.7065704Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:14.7068291Z         "maximum_normalized_mcc_yield": 4.828495366413486e-13
+2026-11-10T03:08:14.7070791Z       },
+2026-11-10T03:08:14.7073894Z       {
+2026-11-10T03:08:14.7076677Z         "frame": "unload",
+2026-11-10T03:08:14.7079069Z         "relative_force_residual": 5.29540663783624e-13,
+2026-11-10T03:08:14.7081373Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:14.7083872Z         "maximum_normalized_mcc_yield": -0.016687482180963543
+2026-11-10T03:08:14.7086384Z       }
+2026-11-10T03:08:14.7088632Z     ],
+2026-11-10T03:08:14.7091205Z     "last_committed_force_check": {
+2026-11-10T03:08:14.7093674Z       "relative_force_residual": 4.335810176790212e-13,
+2026-11-10T03:08:14.7095986Z       "constraint_error_m": 0.0,
+2026-11-10T03:08:14.7098796Z       "maximum_normalized_mcc_yield": 6.982887283841598e-13
+2026-11-10T03:08:14.7101152Z     },
+2026-11-10T03:08:14.7103966Z     "independent_plastic_3d_displacement": false,
+2026-11-10T03:08:14.7106649Z     "zero_release_check": {
+2026-11-10T03:08:14.7109225Z       "relative_force_residual": 3.803273962507674e-13,
+2026-11-10T03:08:14.7112320Z       "constraint_error_m": 0.0,
+2026-11-10T03:08:14.7114824Z       "maximum_normalized_mcc_yield": -0.018801158098973723
+2026-11-10T03:08:14.7117124Z     },
+2026-11-10T03:08:14.7120187Z     "fully_released_and_frozen": false,
+2026-11-10T03:08:14.7123192Z     "removed_joint_and_material_history_frozen": true
+2026-11-10T03:08:14.7125958Z   },
+2026-11-10T03:08:14.7128077Z   "solver_failure_reason": "checkpoint_requested",
+2026-11-10T03:08:14.7132216Z   "evidence_sha256": {
+2026-11-10T03:08:14.7135516Z     "observed-run.json": "c98807e89ab21b57a7e557828bd7a0444ce7d7429a4ed1f82d4e503fcb40d839",
+2026-11-10T03:08:14.7138350Z     "prepare.log": "5fb1109fbe69076ba643007ba43f1dc09fdb87e134f3c4fcbcf6331e917764cd",
+2026-11-10T03:08:14.7140732Z     "solve.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+2026-11-10T03:08:14.7142730Z     "stop.log": "c69a2ac7af38609346e0f738f1b0fa16896e529bb655d845870581f476dc3b9e",
+2026-11-10T03:08:14.7145901Z     "input/ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:14.7150101Z     "input/mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf",
+2026-11-10T03:08:14.7153109Z     "input/stages.json": "14be5443f212cdc987599e86cf536f55a788a5086d6ffa11f0f175050208a400",
+2026-11-10T03:08:14.7155502Z     "job/job.json": "87b4031edb00c23ca9c406dacb9b09dc9573b716825a919875a5ee27070050f5",
+2026-11-10T03:08:14.7158793Z     "job/progress.jsonl": "b7b3a1c44827eab65783ecf133f9de40f3ae1cf771eb888ecec0f4b90875a090",
+2026-11-10T03:08:14.7161748Z     "job/recovery-checkpoint-0.json": "75a81ea08df03a86407627d46cdeb2409b0952d9b4857d9cac139af06c6d0e9e",
+2026-11-10T03:08:14.7165095Z     "job/recovery-checkpoint-1.json": "3440d1c1f33084b4ef202dc5ac5a43c7e4df514d01149f3fd0e434ceab29a1b1",
+2026-11-10T03:08:14.7167704Z     "job/recovery.json": "1e929be18d217d5ec76090ec6aef76a490ce0f13f024217781e72ce8fbc552c3",
+2026-11-10T03:08:14.7170412Z     "job/run.claim": "5eb4d8b05a6f2024ad5fa20a6e4d441c478e1ac855354887cd9e4706da915e66",
+2026-11-10T03:08:14.7172813Z     "job/status.json": "d3df9e5c2864d2840ab9c986b62391eae78ac5547c1621dbad6b33b18fd4d160",
+2026-11-10T03:08:14.7175222Z     "job/stop-request.json": "e39c64c16e1fd9acf3e82c501c639ffe7b3eaca621065283df4034f6aefe46e1",
+2026-11-10T03:08:14.7177943Z     "job/inputs/case.json": "14be5443f212cdc987599e86cf536f55a788a5086d6ffa11f0f175050208a400",
+2026-11-10T03:08:14.7180473Z     "job/inputs/ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:14.7182720Z     "job/inputs/mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf"
+2026-11-10T03:08:14.7184814Z   }
+2026-11-10T03:08:14.7187701Z }
+2026-11-10T03:08:14.7916398Z ##[group]Run python tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step32 --budget-seconds 60 --grace-seconds 5 --excavation-increment .03125 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step32.log
+2026-11-10T03:08:14.7918624Z [36;1mpython tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step32 --budget-seconds 60 --grace-seconds 5 --excavation-increment .03125 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step32.log[0m
+2026-11-10T03:08:14.7919860Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:08:14.7921078Z [36;1mpython tools/probe_low_preload_nc.py --solver target/release/soil-fem-3d.exe --output runs/ci/low-preload-nc-step64 --budget-seconds 60 --grace-seconds 5 --excavation-increment .015625 --maximum-newton-iterations 12 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-step64.log[0m
+2026-11-10T03:08:14.7922238Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:08:14.7923102Z [36;1mpython tools/low_preload_nc_reference.py --output runs/ci/low-preload-nc-reference128 --steps 128 --method rk4 --budget-seconds 120 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-reference128.log[0m
+2026-11-10T03:08:14.7923975Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:08:14.7924823Z [36;1mpython tools/low_preload_nc_reference.py --output runs/ci/low-preload-nc-reference256 --steps 256 --method rk4 --budget-seconds 120 2>&1 | Tee-Object -FilePath runs/ci/low-preload-nc-reference256.log[0m
+2026-11-10T03:08:14.7925707Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:08:14.8004186Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:08:14.8004535Z env:
+2026-11-10T03:08:14.8004714Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:08:14.8004916Z   RUST_TEST_THREADS: 2
+2026-11-10T03:08:14.8005140Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:08:14.8005349Z   MKL_NUM_THREADS: 1
+2026-11-10T03:08:14.8005532Z   OMP_NUM_THREADS: 1
+2026-11-10T03:08:14.8005717Z   PYTHONUTF8: 1
+2026-11-10T03:08:14.8005909Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:08:14.8006211Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:08:14.8006680Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:08:14.8007140Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:08:14.8007792Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:08:14.8008197Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:08:14.8008510Z ##[endgroup]
+2026-11-10T03:08:26.3471730Z {
+2026-11-10T03:08:26.3476118Z   "schema": "soil-fem-low-preload-nc-probe/1",
+2026-11-10T03:08:26.3479963Z   "passed": false,
+2026-11-10T03:08:26.3483381Z   "classification": "未検証",
+2026-11-10T03:08:26.3486078Z   "p3b04_complete": false,
+2026-11-10T03:08:26.3489040Z   "p6_complete": false,
+2026-11-10T03:08:26.3492014Z   "solver_complete": false,
+2026-11-10T03:08:26.3495070Z   "stop_reason": null,
+2026-11-10T03:08:26.3498062Z   "owned_child_terminated": false,
+2026-11-10T03:08:26.3501226Z   "exit_code": 1,
+2026-11-10T03:08:26.3504176Z   "elapsed_seconds": 10.567139099999963,
+2026-11-10T03:08:26.3507099Z   "job_state": "failed",
+2026-11-10T03:08:26.3509997Z   "snapshot": "incomplete.json",
+2026-11-10T03:08:26.3512777Z   "resume_command": null,
+2026-11-10T03:08:26.3516494Z   "solver_sha256": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:08:26.3519040Z   "input_sha256": {
+2026-11-10T03:08:26.3522644Z     "mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf",
+2026-11-10T03:08:26.3525520Z     "ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:26.3534423Z     "stages.json": "7db632b9986f23fbc3d9c5194b173d8fb0555d39ad64cf93e82a8e9b3d7a44cf"
+2026-11-10T03:08:26.3535179Z   },
+2026-11-10T03:08:26.3537217Z   "input_condition": {
+2026-11-10T03:08:26.3539550Z     "seed_p_kpa": 100.0,
+2026-11-10T03:08:26.3542051Z     "seed_pc_kpa": 100.0,
+2026-11-10T03:08:26.3544700Z     "preload_kpa": 5.0,
+2026-11-10T03:08:26.3547295Z     "force_kn": [
+2026-11-10T03:08:26.3550237Z       1.0,
+2026-11-10T03:08:26.3552985Z       0.5,
+2026-11-10T03:08:26.3556157Z       0.0
+2026-11-10T03:08:26.3558421Z     ]
+2026-11-10T03:08:26.3561102Z   },
+2026-11-10T03:08:26.3564001Z   "numerical_controls": {
+2026-11-10T03:08:26.3566584Z     "excavation_increment": 0.03125,
+2026-11-10T03:08:26.3569367Z     "maximum_newton_iterations": 12,
+2026-11-10T03:08:26.3572375Z     "minimum_increment": null,
+2026-11-10T03:08:26.3574985Z     "dense_lu": false,
+2026-11-10T03:08:26.3577943Z     "tangent_perturbation": null
+2026-11-10T03:08:26.3580538Z   },
+2026-11-10T03:08:26.3583352Z   "missing_acceptance_evidence": [
+2026-11-10T03:08:26.3586415Z     "全上部撤去の完了・全解放",
+2026-11-10T03:08:26.3588905Z     "独立塑性3D全場",
+2026-11-10T03:08:26.3591602Z     "両実装の刻み感度",
+2026-11-10T03:08:26.3594250Z     "全工程途中再開の連続経路一致"
+2026-11-10T03:08:26.3597149Z   ],
+2026-11-10T03:08:26.3599779Z   "observation": {
+2026-11-10T03:08:26.3602737Z     "accepted_increments": 79,
+2026-11-10T03:08:26.3605237Z     "completed_frames": [
+2026-11-10T03:08:26.3607779Z       "initial_equilibrated",
+2026-11-10T03:08:26.3610379Z       "load",
+2026-11-10T03:08:26.3613039Z       "unload"
+2026-11-10T03:08:26.3615562Z     ],
+2026-11-10T03:08:26.3618353Z     "stage_index": 3,
+2026-11-10T03:08:26.3621026Z     "stage_progress": 0.947265625,
+2026-11-10T03:08:26.3623947Z     "geostatic_progress": 1.0,
+2026-11-10T03:08:26.3626652Z     "pc_range_kpa": [
+2026-11-10T03:08:26.3629330Z       78.77712789136596,
+2026-11-10T03:08:26.3632056Z       154.70756043800142
+2026-11-10T03:08:26.3634716Z     ],
+2026-11-10T03:08:26.3637722Z     "plastic_points": 324,
+2026-11-10T03:08:26.3640157Z     "rejections": 7,
+2026-11-10T03:08:26.3643234Z     "rejected_plastic_trial_changed": true,
+2026-11-10T03:08:26.3645819Z     "rejected_contact_trial_changed": true,
+2026-11-10T03:08:26.3648938Z     "all_rejections_preserve_committed_state": true,
+2026-11-10T03:08:26.3651631Z     "stored_stress_force_checks": [
+2026-11-10T03:08:26.3654620Z       {
+2026-11-10T03:08:26.3656832Z         "frame": "initial_equilibrated",
+2026-11-10T03:08:26.3659449Z         "relative_force_residual": 1.4806795888809662e-13,
+2026-11-10T03:08:26.3662182Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:26.3664719Z         "maximum_normalized_mcc_yield": 6.201720852304539e-13
+2026-11-10T03:08:26.3667147Z       },
+2026-11-10T03:08:26.3669622Z       {
+2026-11-10T03:08:26.3672119Z         "frame": "load",
+2026-11-10T03:08:26.3674982Z         "relative_force_residual": 1.1833618989088064e-15,
+2026-11-10T03:08:26.3677708Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:26.3682488Z         "maximum_normalized_mcc_yield": 4.828495366413486e-13
+2026-11-10T03:08:26.3683616Z       },
+2026-11-10T03:08:26.3684893Z       {
+2026-11-10T03:08:26.3687949Z         "frame": "unload",
+2026-11-10T03:08:26.3690302Z         "relative_force_residual": 5.29540663783624e-13,
+2026-11-10T03:08:26.3692849Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:26.3695842Z         "maximum_normalized_mcc_yield": -0.016687482180963543
+2026-11-10T03:08:26.3698312Z       }
+2026-11-10T03:08:26.3700861Z     ],
+2026-11-10T03:08:26.3703736Z     "last_committed_force_check": {
+2026-11-10T03:08:26.3706045Z       "relative_force_residual": 3.009151366589865e-13,
+2026-11-10T03:08:26.3708425Z       "constraint_error_m": 0.0,
+2026-11-10T03:08:26.3710905Z       "maximum_normalized_mcc_yield": 7.520151432456379e-13
+2026-11-10T03:08:26.3713177Z     },
+2026-11-10T03:08:26.3715806Z     "independent_plastic_3d_displacement": false,
+2026-11-10T03:08:26.3718540Z     "zero_release_check": {
+2026-11-10T03:08:26.3722707Z       "relative_force_residual": 3.803273962507674e-13,
+2026-11-10T03:08:26.3724011Z       "constraint_error_m": 0.0,
+2026-11-10T03:08:26.3726368Z       "maximum_normalized_mcc_yield": -0.018801158098973723
+2026-11-10T03:08:26.3729072Z     },
+2026-11-10T03:08:26.3731560Z     "fully_released_and_frozen": false,
+2026-11-10T03:08:26.3734404Z     "removed_joint_and_material_history_frozen": true
+2026-11-10T03:08:26.3737101Z   },
+2026-11-10T03:08:26.3740776Z   "solver_failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: Newton iteration limit; material force residual=6.72285661470139e-4",
+2026-11-10T03:08:26.3743527Z   "evidence_sha256": {
+2026-11-10T03:08:26.3746288Z     "observed-run.json": "44b77f0cd9bc03e52b8996f06b9f14ef9b8bf282c8043707cff5d0ec39c5baae",
+2026-11-10T03:08:26.3748659Z     "prepare.log": "10cb63bb08f416675d8cc00ec064625825ccb4b9a3cd365ff5d06bb6c0f5273d",
+2026-11-10T03:08:26.3751100Z     "solve.log": "b4c6aa284269d4c8d9e41929a0ec4f123f34cd57fca934f1851f61de3df54cb2",
+2026-11-10T03:08:26.3753655Z     "input/ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:26.3756235Z     "input/mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf",
+2026-11-10T03:08:26.3758846Z     "input/stages.json": "7db632b9986f23fbc3d9c5194b173d8fb0555d39ad64cf93e82a8e9b3d7a44cf",
+2026-11-10T03:08:26.3761207Z     "job/incomplete.json": "22a8785ca1fee6dfa55360f008941161ac02d104b383b58dac2531545915c010",
+2026-11-10T03:08:26.3763443Z     "job/job.json": "658760041bdc252e3b9a4574b5ecf857f742e19166d5b293c5ba7f92fd52e2e8",
+2026-11-10T03:08:26.3765824Z     "job/progress.jsonl": "02812641e1eb6e822b7c073af25e6a1170f52a1b779a0c338ea981cf94a6eeff",
+2026-11-10T03:08:26.3768583Z     "job/recovery-checkpoint-0.json": "2d3e11f22fdac081ddf6a8962c51ce9b0c183c9d4c1196bfe87519de39a15754",
+2026-11-10T03:08:26.3770892Z     "job/recovery-checkpoint-1.json": "d60708eef52dc9a3fe9529ec16633576b35deffe2d96d92285c5e731db22c18a",
+2026-11-10T03:08:26.3773194Z     "job/recovery.json": "81511226f5f426d9d1d5e9a93fd6b5ab2d240e4d71ce868644ba3a5aa9f4723c",
+2026-11-10T03:08:26.3775416Z     "job/run.claim": "988ed7141779d79d56cb01f2fe11b78a4b94e204a6f90dc5cc45fff9f9156d1a",
+2026-11-10T03:08:26.3777984Z     "job/status.json": "ccdbc2e500c48e3cfb0cd697725124ead5bf1330291fe5215a89f9acc6d43703",
+2026-11-10T03:08:26.3780081Z     "job/inputs/case.json": "7db632b9986f23fbc3d9c5194b173d8fb0555d39ad64cf93e82a8e9b3d7a44cf",
+2026-11-10T03:08:26.3782348Z     "job/inputs/ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:26.3784596Z     "job/inputs/mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf"
+2026-11-10T03:08:26.3786608Z   }
+2026-11-10T03:08:26.3788782Z }
+2026-11-10T03:08:43.4422807Z {
+2026-11-10T03:08:43.4425191Z   "schema": "soil-fem-low-preload-nc-probe/1",
+2026-11-10T03:08:43.4428294Z   "passed": false,
+2026-11-10T03:08:43.4431919Z   "classification": "未検証",
+2026-11-10T03:08:43.4434258Z   "p3b04_complete": false,
+2026-11-10T03:08:43.4436884Z   "p6_complete": false,
+2026-11-10T03:08:43.4439626Z   "solver_complete": false,
+2026-11-10T03:08:43.4442470Z   "stop_reason": null,
+2026-11-10T03:08:43.4445279Z   "owned_child_terminated": false,
+2026-11-10T03:08:43.4448392Z   "exit_code": 1,
+2026-11-10T03:08:43.4451426Z   "elapsed_seconds": 16.423542699999985,
+2026-11-10T03:08:43.4454063Z   "job_state": "failed",
+2026-11-10T03:08:43.4456843Z   "snapshot": "incomplete.json",
+2026-11-10T03:08:43.4459726Z   "resume_command": null,
+2026-11-10T03:08:43.4463170Z   "solver_sha256": "739225852e11dafa013032cbbfa1c77d5b9e7d46717e971d537290048174e9b7",
+2026-11-10T03:08:43.4466010Z   "input_sha256": {
+2026-11-10T03:08:43.4469389Z     "mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf",
+2026-11-10T03:08:43.4472444Z     "ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:43.4478602Z     "stages.json": "c67332d8b841fdd8131e185c509d72cb76b2b6379a4e40aa5f0bf606f61f77f7"
+2026-11-10T03:08:43.4480812Z   },
+2026-11-10T03:08:43.4483609Z   "input_condition": {
+2026-11-10T03:08:43.4486579Z     "seed_p_kpa": 100.0,
+2026-11-10T03:08:43.4489558Z     "seed_pc_kpa": 100.0,
+2026-11-10T03:08:43.4492315Z     "preload_kpa": 5.0,
+2026-11-10T03:08:43.4495037Z     "force_kn": [
+2026-11-10T03:08:43.4497795Z       1.0,
+2026-11-10T03:08:43.4500615Z       0.5,
+2026-11-10T03:08:43.4503401Z       0.0
+2026-11-10T03:08:43.4505765Z     ]
+2026-11-10T03:08:43.4509552Z   },
+2026-11-10T03:08:43.4512338Z   "numerical_controls": {
+2026-11-10T03:08:43.4515079Z     "excavation_increment": 0.015625,
+2026-11-10T03:08:43.4517862Z     "maximum_newton_iterations": 12,
+2026-11-10T03:08:43.4520494Z     "minimum_increment": null,
+2026-11-10T03:08:43.4523168Z     "dense_lu": false,
+2026-11-10T03:08:43.4525905Z     "tangent_perturbation": null
+2026-11-10T03:08:43.4529321Z   },
+2026-11-10T03:08:43.4532088Z   "missing_acceptance_evidence": [
+2026-11-10T03:08:43.4534947Z     "全上部撤去の完了・全解放",
+2026-11-10T03:08:43.4537451Z     "独立塑性3D全場",
+2026-11-10T03:08:43.4540116Z     "両実装の刻み感度",
+2026-11-10T03:08:43.4542824Z     "全工程途中再開の連続経路一致"
+2026-11-10T03:08:43.4545272Z   ],
+2026-11-10T03:08:43.4548291Z   "observation": {
+2026-11-10T03:08:43.4551023Z     "accepted_increments": 138,
+2026-11-10T03:08:43.4553669Z     "completed_frames": [
+2026-11-10T03:08:43.4556440Z       "initial_equilibrated",
+2026-11-10T03:08:43.4559023Z       "load",
+2026-11-10T03:08:43.4561651Z       "unload"
+2026-11-10T03:08:43.4564342Z     ],
+2026-11-10T03:08:43.4567473Z     "stage_index": 3,
+2026-11-10T03:08:43.4570259Z     "stage_progress": 0.94921875,
+2026-11-10T03:08:43.4572931Z     "geostatic_progress": 1.0,
+2026-11-10T03:08:43.4575592Z     "pc_range_kpa": [
+2026-11-10T03:08:43.4578312Z       76.13702650379103,
+2026-11-10T03:08:43.4580979Z       158.9552703010365
+2026-11-10T03:08:43.4583639Z     ],
+2026-11-10T03:08:43.4586296Z     "plastic_points": 324,
+2026-11-10T03:08:43.4589577Z     "rejections": 6,
+2026-11-10T03:08:43.4592638Z     "rejected_plastic_trial_changed": true,
+2026-11-10T03:08:43.4595279Z     "rejected_contact_trial_changed": true,
+2026-11-10T03:08:43.4598148Z     "all_rejections_preserve_committed_state": true,
+2026-11-10T03:08:43.4600855Z     "stored_stress_force_checks": [
+2026-11-10T03:08:43.4603444Z       {
+2026-11-10T03:08:43.4606185Z         "frame": "initial_equilibrated",
+2026-11-10T03:08:43.4609294Z         "relative_force_residual": 1.4806795888809662e-13,
+2026-11-10T03:08:43.4612001Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:43.4614874Z         "maximum_normalized_mcc_yield": 6.201720852304539e-13
+2026-11-10T03:08:43.4617562Z       },
+2026-11-10T03:08:43.4620200Z       {
+2026-11-10T03:08:43.4622756Z         "frame": "load",
+2026-11-10T03:08:43.4625102Z         "relative_force_residual": 1.1833618989088064e-15,
+2026-11-10T03:08:43.4628638Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:43.4631365Z         "maximum_normalized_mcc_yield": 4.828495366413486e-13
+2026-11-10T03:08:43.4633922Z       },
+2026-11-10T03:08:43.4636474Z       {
+2026-11-10T03:08:43.4639013Z         "frame": "unload",
+2026-11-10T03:08:43.4641942Z         "relative_force_residual": 5.29540663783624e-13,
+2026-11-10T03:08:43.4644492Z         "constraint_error_m": 0.0,
+2026-11-10T03:08:43.4647787Z         "maximum_normalized_mcc_yield": -0.016687482180963543
+2026-11-10T03:08:43.4650285Z       }
+2026-11-10T03:08:43.4652934Z     ],
+2026-11-10T03:08:43.4655664Z     "last_committed_force_check": {
+2026-11-10T03:08:43.4658409Z       "relative_force_residual": 8.440799716488505e-10,
+2026-11-10T03:08:43.4660953Z       "constraint_error_m": 0.0,
+2026-11-10T03:08:43.4663746Z       "maximum_normalized_mcc_yield": 2.3349887071101805e-14
+2026-11-10T03:08:43.4666786Z     },
+2026-11-10T03:08:43.4669669Z     "independent_plastic_3d_displacement": false,
+2026-11-10T03:08:43.4672253Z     "zero_release_check": {
+2026-11-10T03:08:43.4675375Z       "relative_force_residual": 3.803273962507674e-13,
+2026-11-10T03:08:43.4677985Z       "constraint_error_m": 0.0,
+2026-11-10T03:08:43.4680496Z       "maximum_normalized_mcc_yield": -0.018801158098973723
+2026-11-10T03:08:43.4682860Z     },
+2026-11-10T03:08:43.4686135Z     "fully_released_and_frozen": false,
+2026-11-10T03:08:43.4688505Z     "removed_joint_and_material_history_frozen": true
+2026-11-10T03:08:43.4691334Z   },
+2026-11-10T03:08:43.4694559Z   "solver_failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: Newton iteration limit; material force residual=2.2422348675189878e-4",
+2026-11-10T03:08:43.4696229Z   "evidence_sha256": {
+2026-11-10T03:08:43.4699652Z     "observed-run.json": "512b9d7d7dccd8927686bd2d0212102dc9c401131f72b9be47d75926ffda0dd8",
+2026-11-10T03:08:43.4702258Z     "prepare.log": "80968a1b6b7f096d608ffe4b66fb7d504d95e9715b35922015292fa57d21fd77",
+2026-11-10T03:08:43.4705250Z     "solve.log": "b4c6aa284269d4c8d9e41929a0ec4f123f34cd57fca934f1851f61de3df54cb2",
+2026-11-10T03:08:43.4708447Z     "input/ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:43.4711137Z     "input/mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf",
+2026-11-10T03:08:43.4713822Z     "input/stages.json": "c67332d8b841fdd8131e185c509d72cb76b2b6379a4e40aa5f0bf606f61f77f7",
+2026-11-10T03:08:43.4716476Z     "job/incomplete.json": "da1541f34c177db0c8111430447c7b040f8a229a89c72c93fc8ea2abae8c7632",
+2026-11-10T03:08:43.4719152Z     "job/job.json": "5ea0bbb2c524228739a9829cc21711eeb47fb70c74522a8a253373a4ee282945",
+2026-11-10T03:08:43.4721873Z     "job/progress.jsonl": "f69f9e7ff4e08d53a3feef13fd9ef71cffcb341d6617f61eb698ee0b1de08b80",
+2026-11-10T03:08:43.4725406Z     "job/recovery-checkpoint-0.json": "e9d6690d10cdaad7067c4ff7578bb7da4834e4e890acfa9812aa82ead8b6aca1",
+2026-11-10T03:08:43.4728386Z     "job/recovery-checkpoint-1.json": "9772641e58ecdb4e6f7e9a940946369f48a094a64869f5b54415828e5e49b78d",
+2026-11-10T03:08:43.4731193Z     "job/recovery.json": "0394fa4ff66b3dbc65e68fd8335dd309c9e4f7047eeebb8ab720ecf0cf9fef63",
+2026-11-10T03:08:43.4733790Z     "job/run.claim": "5f38fe1cf549a39df1b6edd6c1631e61f41e6b4f899d3ea275d83c3d7f16e650",
+2026-11-10T03:08:43.4736392Z     "job/status.json": "83881983cd082546d6d6a0a59f12248d15fb5ec2a353d13ad9e84430133c396f",
+2026-11-10T03:08:43.4738931Z     "job/inputs/case.json": "c67332d8b841fdd8131e185c509d72cb76b2b6379a4e40aa5f0bf606f61f77f7",
+2026-11-10T03:08:43.4741561Z     "job/inputs/ground.json": "e83e98e9481920b0a91484c9489ade6d5308493e228f1736439cce99193e6abf",
+2026-11-10T03:08:43.4744329Z     "job/inputs/mesh.json": "2e4190d4fda3a4304170ce04743b265e6de57a1081f8a2809b8db913c7ed8ebf"
+2026-11-10T03:08:43.4746836Z   }
+2026-11-10T03:08:43.4749472Z }
+2026-11-10T03:08:57.0773704Z {
+2026-11-10T03:08:57.0775146Z   "schema": "soil-fem-low-preload-independent-rate-attempt/1",
+2026-11-10T03:08:57.0776681Z   "passed": false,
+2026-11-10T03:08:57.0778655Z   "complete": false,
+2026-11-10T03:08:57.0780465Z   "steps": 128,
+2026-11-10T03:08:57.0782413Z   "integration_method": "rk4",
+2026-11-10T03:08:57.0784190Z   "budget_seconds": 120.0,
+2026-11-10T03:08:57.0786634Z   "elapsed_seconds": 13.30867109999997,
+2026-11-10T03:08:57.0788684Z   "failure_reason": "independent contact/MCC linear residual exceeded existing tolerance: 4.51322026863304e-10",
+2026-11-10T03:08:57.0790348Z   "completed_frames": [
+2026-11-10T03:08:57.0792363Z     "initial_equilibrated",
+2026-11-10T03:08:57.0794502Z     "load",
+2026-11-10T03:08:57.0795583Z     "unload"
+2026-11-10T03:08:57.0797233Z   ],
+2026-11-10T03:08:57.0799405Z   "segments": [
+2026-11-10T03:08:57.0801298Z     {
+2026-11-10T03:08:57.0803168Z       "name": "initial_equilibrated",
+2026-11-10T03:08:57.0805010Z       "progress_from": 0.0,
+2026-11-10T03:08:57.0806784Z       "progress_to": 1.0,
+2026-11-10T03:08:57.0808686Z       "integration_method": "rk4",
+2026-11-10T03:08:57.0810560Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:08:57.0813796Z       "accepted_steps": 130,
+2026-11-10T03:08:57.0816962Z       "events": 3,
+2026-11-10T03:08:57.0818571Z       "maximum_normalized_yield_drift": 6.307867905315804e-14,
+2026-11-10T03:08:57.0820164Z       "minimum_progress_step": 0.0012000593615169406,
+2026-11-10T03:08:57.0822178Z       "rate_assemblies": 891,
+2026-11-10T03:08:57.0823697Z       "independent_pcg_iterations": 0,
+2026-11-10T03:08:57.0825229Z       "dense_fallbacks": 0,
+2026-11-10T03:08:57.0827028Z       "maximum_true_linear_residual": 4.060489332243051e-15
+2026-11-10T03:08:57.0829171Z     },
+2026-11-10T03:08:57.0830783Z     {
+2026-11-10T03:08:57.0832642Z       "name": "load",
+2026-11-10T03:08:57.0834275Z       "progress_from": 0.0,
+2026-11-10T03:08:57.0835911Z       "progress_to": 1.0,
+2026-11-10T03:08:57.0837646Z       "integration_method": "rk4",
+2026-11-10T03:08:57.0839423Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:08:57.0840868Z       "accepted_steps": 131,
+2026-11-10T03:08:57.0842728Z       "events": 3,
+2026-11-10T03:08:57.0844393Z       "maximum_normalized_yield_drift": 1.0000125506463229e-09,
+2026-11-10T03:08:57.0846029Z       "minimum_progress_step": 1.5227242893989677e-06,
+2026-11-10T03:08:57.0847594Z       "rate_assemblies": 1790,
+2026-11-10T03:08:57.0849465Z       "independent_pcg_iterations": 0,
+2026-11-10T03:08:57.0851099Z       "dense_fallbacks": 0,
+2026-11-10T03:08:57.0852910Z       "maximum_true_linear_residual": 4.7179920846940754e-14
+2026-11-10T03:08:57.0854529Z     },
+2026-11-10T03:08:57.0856204Z     {
+2026-11-10T03:08:57.0857780Z       "name": "unload",
+2026-11-10T03:08:57.0859872Z       "progress_from": 0.0,
+2026-11-10T03:08:57.0861061Z       "progress_to": 1.0,
+2026-11-10T03:08:57.0862688Z       "integration_method": "rk4",
+2026-11-10T03:08:57.0864348Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:08:57.0865897Z       "accepted_steps": 128,
+2026-11-10T03:08:57.0867587Z       "events": 0,
+2026-11-10T03:08:57.0869559Z       "maximum_normalized_yield_drift": 0.0,
+2026-11-10T03:08:57.0871239Z       "minimum_progress_step": 0.0078125,
+2026-11-10T03:08:57.0872861Z       "rate_assemblies": 2558,
+2026-11-10T03:08:57.0874579Z       "independent_pcg_iterations": 0,
+2026-11-10T03:08:57.0876222Z       "dense_fallbacks": 0,
+2026-11-10T03:08:57.0877982Z       "maximum_true_linear_residual": 4.7179920846940754e-14
+2026-11-10T03:08:57.0879520Z     },
+2026-11-10T03:08:57.0881305Z     {
+2026-11-10T03:08:57.0882814Z       "name": "excavate_upper",
+2026-11-10T03:08:57.0884873Z       "progress_from": 0.0,
+2026-11-10T03:08:57.0886032Z       "progress_to": 0.875,
+2026-11-10T03:08:57.0887571Z       "integration_method": "rk4",
+2026-11-10T03:08:57.0889390Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:08:57.0890950Z       "accepted_steps": 200,
+2026-11-10T03:08:57.0892870Z       "events": 118,
+2026-11-10T03:08:57.0894633Z       "maximum_normalized_yield_drift": 6.758819085575019e-09,
+2026-11-10T03:08:57.0896127Z       "minimum_progress_step": 1.7584753822821062e-05,
+2026-11-10T03:08:57.0897744Z       "rate_assemblies": 5632,
+2026-11-10T03:08:57.0899389Z       "independent_pcg_iterations": 0,
+2026-11-10T03:08:57.0901055Z       "dense_fallbacks": 0,
+2026-11-10T03:08:57.0902642Z       "maximum_true_linear_residual": 1.1461270468927978e-14
+2026-11-10T03:08:57.0904151Z     },
+2026-11-10T03:08:57.0905890Z     {
+2026-11-10T03:08:57.0907605Z       "name": "excavate_upper",
+2026-11-10T03:08:57.0909250Z       "progress_from": 0.875,
+2026-11-10T03:08:57.0910830Z       "progress_to": 0.9375,
+2026-11-10T03:08:57.0912823Z       "integration_method": "rk4",
+2026-11-10T03:08:57.0915031Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:08:57.0916677Z       "accepted_steps": 31,
+2026-11-10T03:08:57.0918089Z       "events": 29,
+2026-11-10T03:08:57.0919713Z       "maximum_normalized_yield_drift": 1.3834353560971503e-07,
+2026-11-10T03:08:57.0921350Z       "minimum_progress_step": 0.0015319600266809387,
+2026-11-10T03:08:57.0923293Z       "rate_assemblies": 7091,
+2026-11-10T03:08:57.0924740Z       "independent_pcg_iterations": 0,
+2026-11-10T03:08:57.0926526Z       "dense_fallbacks": 0,
+2026-11-10T03:08:57.0927878Z       "maximum_true_linear_residual": 6.630662359748432e-14
+2026-11-10T03:08:57.0929389Z     }
+2026-11-10T03:08:57.0931387Z   ],
+2026-11-10T03:08:57.0933558Z   "maximum_relative_free_force_residual": 7.422643334658648e-15,
+2026-11-10T03:08:57.0934460Z   "last_system_maximum_true_linear_residual": 4.51322026863304e-10,
+2026-11-10T03:08:57.0936365Z   "input_only": true,
+2026-11-10T03:08:57.0937961Z   "uses_native_fields_or_fractions": false,
+2026-11-10T03:08:57.0940392Z   "method": "existing compatible 3D MCC continuum rate + rk4 events; independently assembled closed-stick JOINT spring branch",
+2026-11-10T03:08:57.0941283Z   "limitations": [
+2026-11-10T03:08:57.0943691Z     "閉鎖固着枝のみ。開離・滑りは拒否",
+2026-11-10T03:08:57.0946019Z     "独立参照の刻み感度・全場比較前は受入不可",
+2026-11-10T03:08:57.0947529Z     "接触の数値散逸・端点仕事は離散経路依存。本体の履歴監査と区別"
+2026-11-10T03:08:57.0948931Z   ]
+2026-11-10T03:08:57.0950374Z }
+2026-11-10T03:09:15.4300056Z {
+2026-11-10T03:09:15.4300693Z   "schema": "soil-fem-low-preload-independent-rate-attempt/1",
+2026-11-10T03:09:15.4302616Z   "passed": false,
+2026-11-10T03:09:15.4303984Z   "complete": false,
+2026-11-10T03:09:15.4305104Z   "steps": 256,
+2026-11-10T03:09:15.4306846Z   "integration_method": "rk4",
+2026-11-10T03:09:15.4307897Z   "budget_seconds": 120.0,
+2026-11-10T03:09:15.4309297Z   "elapsed_seconds": 18.027553500000067,
+2026-11-10T03:09:15.4311242Z   "failure_reason": "independent contact/MCC linear residual exceeded existing tolerance: 4.315942482573961e-10",
+2026-11-10T03:09:15.4312075Z   "completed_frames": [
+2026-11-10T03:09:15.4313792Z     "initial_equilibrated",
+2026-11-10T03:09:15.4315475Z     "load",
+2026-11-10T03:09:15.4317156Z     "unload"
+2026-11-10T03:09:15.4318746Z   ],
+2026-11-10T03:09:15.4320603Z   "segments": [
+2026-11-10T03:09:15.4322563Z     {
+2026-11-10T03:09:15.4323952Z       "name": "initial_equilibrated",
+2026-11-10T03:09:15.4325536Z       "progress_from": 0.0,
+2026-11-10T03:09:15.4327658Z       "progress_to": 1.0,
+2026-11-10T03:09:15.4328816Z       "integration_method": "rk4",
+2026-11-10T03:09:15.4330294Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:09:15.4331700Z       "accepted_steps": 258,
+2026-11-10T03:09:15.4335571Z       "events": 3,
+2026-11-10T03:09:15.4337318Z       "maximum_normalized_yield_drift": 1.3756836910578088e-14,
+2026-11-10T03:09:15.4339321Z       "minimum_progress_step": 0.0008219878828517932,
+2026-11-10T03:09:15.4339745Z       "rate_assemblies": 1655,
+2026-11-10T03:09:15.4340105Z       "independent_pcg_iterations": 0,
+2026-11-10T03:09:15.4340850Z       "dense_fallbacks": 0,
+2026-11-10T03:09:15.4341658Z       "maximum_true_linear_residual": 4.188259561117227e-15
+2026-11-10T03:09:15.4342623Z     },
+2026-11-10T03:09:15.4343722Z     {
+2026-11-10T03:09:15.4344793Z       "name": "load",
+2026-11-10T03:09:15.4346474Z       "progress_from": 0.0,
+2026-11-10T03:09:15.4346854Z       "progress_to": 1.0,
+2026-11-10T03:09:15.4348770Z       "integration_method": "rk4",
+2026-11-10T03:09:15.4349495Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:09:15.4350557Z       "accepted_steps": 258,
+2026-11-10T03:09:15.4351315Z       "events": 3,
+2026-11-10T03:09:15.4353002Z       "maximum_normalized_yield_drift": 1.0000001197832414e-09,
+2026-11-10T03:09:15.4353715Z       "minimum_progress_step": 1.5227240316372524e-06,
+2026-11-10T03:09:15.4355912Z       "rate_assemblies": 3308,
+2026-11-10T03:09:15.4356455Z       "independent_pcg_iterations": 0,
+2026-11-10T03:09:15.4357305Z       "dense_fallbacks": 0,
+2026-11-10T03:09:15.4358234Z       "maximum_true_linear_residual": 5.529562914098789e-14
+2026-11-10T03:09:15.4360152Z     },
+2026-11-10T03:09:15.4362075Z     {
+2026-11-10T03:09:15.4362369Z       "name": "unload",
+2026-11-10T03:09:15.4364158Z       "progress_from": 0.0,
+2026-11-10T03:09:15.4365568Z       "progress_to": 1.0,
+2026-11-10T03:09:15.4366091Z       "integration_method": "rk4",
+2026-11-10T03:09:15.4368182Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:09:15.4368693Z       "accepted_steps": 256,
+2026-11-10T03:09:15.4369438Z       "events": 0,
+2026-11-10T03:09:15.4370629Z       "maximum_normalized_yield_drift": 0.0,
+2026-11-10T03:09:15.4372192Z       "minimum_progress_step": 0.00390625,
+2026-11-10T03:09:15.4373301Z       "rate_assemblies": 4844,
+2026-11-10T03:09:15.4374869Z       "independent_pcg_iterations": 0,
+2026-11-10T03:09:15.4375276Z       "dense_fallbacks": 0,
+2026-11-10T03:09:15.4376152Z       "maximum_true_linear_residual": 5.529562914098789e-14
+2026-11-10T03:09:15.4377064Z     },
+2026-11-10T03:09:15.4378757Z     {
+2026-11-10T03:09:15.4379942Z       "name": "excavate_upper",
+2026-11-10T03:09:15.4380956Z       "progress_from": 0.0,
+2026-11-10T03:09:15.4382472Z       "progress_to": 0.875,
+2026-11-10T03:09:15.4384200Z       "integration_method": "rk4",
+2026-11-10T03:09:15.4384876Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:09:15.4387067Z       "accepted_steps": 294,
+2026-11-10T03:09:15.4387445Z       "events": 118,
+2026-11-10T03:09:15.4389785Z       "maximum_normalized_yield_drift": 1.4894864382666358e-09,
+2026-11-10T03:09:15.4679896Z       "minimum_progress_step": 1.7584753052735275e-05,
+2026-11-10T03:09:15.4680937Z       "rate_assemblies": 6060,
+2026-11-10T03:09:15.4681842Z       "independent_pcg_iterations": 0,
+2026-11-10T03:09:15.4682426Z       "dense_fallbacks": 0,
+2026-11-10T03:09:15.4683287Z       "maximum_true_linear_residual": 1.1173181149112642e-14
+2026-11-10T03:09:15.4683827Z     },
+2026-11-10T03:09:15.4684444Z     {
+2026-11-10T03:09:15.4684756Z       "name": "excavate_upper",
+2026-11-10T03:09:15.4685598Z       "progress_from": 0.875,
+2026-11-10T03:09:15.4686580Z       "progress_to": 0.9375,
+2026-11-10T03:09:15.4687018Z       "integration_method": "rk4",
+2026-11-10T03:09:15.4687967Z       "event_localizer": "brentq_continuous_original_margins",
+2026-11-10T03:09:15.4688588Z       "accepted_steps": 35,
+2026-11-10T03:09:15.4689660Z       "events": 29,
+2026-11-10T03:09:15.4690570Z       "maximum_normalized_yield_drift": 1.1481360347351863e-08,
+2026-11-10T03:09:15.4691368Z       "minimum_progress_step": 0.001534325730320406,
+2026-11-10T03:09:15.4692298Z       "rate_assemblies": 7483,
+2026-11-10T03:09:15.4692751Z       "independent_pcg_iterations": 0,
+2026-11-10T03:09:15.4694143Z       "dense_fallbacks": 0,
+2026-11-10T03:09:15.4694659Z       "maximum_true_linear_residual": 8.28432352447472e-14
+2026-11-10T03:09:15.4695603Z     }
+2026-11-10T03:09:15.4695884Z   ],
+2026-11-10T03:09:15.4696628Z   "maximum_relative_free_force_residual": 7.675749688658093e-15,
+2026-11-10T03:09:15.4697406Z   "last_system_maximum_true_linear_residual": 4.315942482573961e-10,
+2026-11-10T03:09:15.4698466Z   "input_only": true,
+2026-11-10T03:09:15.4698854Z   "uses_native_fields_or_fractions": false,
+2026-11-10T03:09:15.4700311Z   "method": "existing compatible 3D MCC continuum rate + rk4 events; independently assembled closed-stick JOINT spring branch",
+2026-11-10T03:09:15.4701868Z   "limitations": [
+2026-11-10T03:09:15.4702870Z     "閉鎖固着枝のみ。開離・滑りは拒否",
+2026-11-10T03:09:15.4703388Z     "独立参照の刻み感度・全場比較前は受入不可",
+2026-11-10T03:09:15.4703895Z     "接触の数値散逸・端点仕事は離散経路依存。本体の履歴監査と区別"
+2026-11-10T03:09:15.4704607Z   ]
+2026-11-10T03:09:15.4704892Z }
+2026-11-10T03:09:15.5694552Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+2026-11-10T03:09:15.5695061Z with:
+2026-11-10T03:09:15.5695402Z   name: fem-windows-verification-260281fbbc09ec0402165339b4772bf423567d93
+2026-11-10T03:09:15.5697867Z   path: runs/ci/*.json
+runs/ci/*.log
+runs/ci/wet-structures/verification.json
+runs/ci/wet-structures/stage-results.json
+runs/ci/wet-structures/mesh.json
+runs/ci/wet-structures/ground.json
+runs/ci/wet-structures/stages.json
+runs/ci/soil-wet-structures/**
+runs/ci/soil-source-wet-structures/**
+runs/ci/fixed-prescribed-wet-structures/**
+runs/ci/low-preload-nc/**
+!runs/ci/low-preload-nc/job/solver/**
+runs/ci/low-preload-nc-step32/**
+runs/ci/low-preload-nc-step64/**
+!runs/ci/low-preload-nc-step32/job/solver/**
+!runs/ci/low-preload-nc-step64/job/solver/**
+runs/ci/low-preload-nc-reference128/**
+runs/ci/low-preload-nc-reference256/**
+
+2026-11-10T03:09:15.5700267Z   if-no-files-found: warn
+2026-11-10T03:09:15.5700478Z   retention-days: 14
+2026-11-10T03:09:15.5700730Z   compression-level: 6
+2026-11-10T03:09:15.5700935Z   overwrite: false
+2026-11-10T03:09:15.5701129Z   include-hidden-files: false
+2026-11-10T03:09:15.5701345Z   archive: true
+2026-11-10T03:09:15.5701518Z env:
+2026-11-10T03:09:15.5701675Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:09:15.5701865Z   RUST_TEST_THREADS: 2
+2026-11-10T03:09:15.5702052Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:09:15.5702253Z   MKL_NUM_THREADS: 1
+2026-11-10T03:09:15.5702429Z   OMP_NUM_THREADS: 1
+2026-11-10T03:09:15.5702612Z   PYTHONUTF8: 1
+2026-11-10T03:09:15.5702799Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:09:15.5703107Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:09:15.5703560Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:09:15.5704013Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:09:15.5704405Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:09:15.5704800Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:09:15.5705114Z ##[endgroup]
+2026-11-10T03:09:15.9890357Z With the provided path, there will be 419 files uploaded
+2026-11-10T03:09:15.9897356Z Artifact name is valid!
+2026-11-10T03:09:15.9898691Z Root directory input is valid!
+2026-11-10T03:09:16.2356404Z Uploading artifact: fem-windows-verification-260281fbbc09ec0402165339b4772bf423567d93.zip
+2026-11-10T03:09:16.2401691Z Beginning upload of artifact content to blob storage
+2026-11-10T03:09:17.7209461Z Uploaded bytes 8388608
+2026-11-10T03:09:18.8458826Z Uploaded bytes 16777216
+2026-11-10T03:09:19.5083326Z Uploaded bytes 21433654
+2026-11-10T03:09:19.5231922Z Finished uploading artifact content to blob storage!
+2026-11-10T03:09:19.5248274Z SHA256 digest of uploaded artifact is 966b03fd9fc103b42f7614fe50651342cb546fdc963b32cd923f3cf41eeaf6c6
+2026-11-10T03:09:19.5250838Z Finalizing artifact upload
+2026-11-10T03:09:19.8743624Z Artifact fem-windows-verification-260281fbbc09ec0402165339b4772bf423567d93 successfully finalized. Artifact ID 13731529016
+2026-11-10T03:09:19.8745512Z Artifact fem-windows-verification-260281fbbc09ec0402165339b4772bf423567d93 has been successfully uploaded! Final size is 21433654 bytes. Artifact ID is 13731529016
+2026-11-10T03:09:19.8760853Z Artifact download URL: https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42746232533/artifacts/13731529016
+2026-11-10T03:09:19.9250762Z Post job cleanup.
+2026-11-10T03:09:20.0995610Z Cache hit occurred on the primary key setup-python-Windows-x64-python-3.13.17-pip-c844d4bb1f478392485359569493f93acb18af9adb109ffe82641637bcb9ad74, not saving cache.
+2026-11-10T03:09:20.1430065Z Post job cleanup.
+2026-11-10T03:09:20.4202960Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T03:09:20.4609797Z git version 2.56.0.windows.4
+2026-11-10T03:09:20.4690989Z Temporarily overriding HOME='D:\a\_temp\86fc3fc2-c48e-4cc7-a1dc-bc39a957b977' before making global git config changes
+2026-11-10T03:09:20.4712490Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T03:09:20.4713839Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-10T03:09:20.5147827Z Removing SSH command configuration
+2026-11-10T03:09:20.5160846Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T03:09:20.5578287Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T03:09:21.2051608Z Removing HTTP extra header
+2026-11-10T03:09:21.2066140Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T03:09:21.2481566Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T03:09:21.8787080Z Removing includeIf entries pointing to credentials config files
+2026-11-10T03:09:21.8799956Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T03:09:21.9221145Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T03:09:22.5814323Z Cleaning up orphan processes
+2026-11-10T03:09:22.6042765Z Terminate orphan process: pid (5060) (vctip)
+

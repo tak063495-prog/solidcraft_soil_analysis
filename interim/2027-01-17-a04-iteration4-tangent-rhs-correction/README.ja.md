@@ -1,0 +1,108 @@
+# A-04　乾燥 JOINT open/.25 の第4反復
+
+**同じ第4反復状態で本体と独立参照の補正を比べると、差の主成分は線形求解に渡す前の接線にある。** 面順を変えた本体2経路でも、反復に入るときの変位差は右辺からの補正とほぼ相殺され、接線の差が第5候補に残った。A-04 は未達、`passed=false`。Richards 湿潤 JOINT の ONE_WAY・双方向の拒否を保持する。
+
+起点は PR #13 の `4d8a0100cb84e22902912f949a9c6e6d4ecd42fd`。日付は指定ラベル。f460f56 の停止反復差を作る対、基準順 000 と面宣言だけを反転した 010 を再実行した。既存の乾燥 stress_free、24 Tet10、81節点、接触32点、4分割の全履歴を使用した。反復番号はゼロ始まり。12 Tet4 は前回の水理参照の入力である。
+
+## 実際に解いた系と固定状態の照合
+
+- 本体は既存の隔離プローブで元の求解を完走した。open/.25 の各候補の変位・荷重・内力・接触履歴・分割数を記録し、第4反復では縮約接線の全153×153成分、荷重−内力の右辺153成分、dense LU の補正153成分、その後に受理した変位とステップ長を保存した。
+- 独立参照は元の入力から自力で解くと、両順とも反復番号2で停止した。停止時の相対残差は 000 が 4.25608723500327e-15、010 が 6.789902706172286e-15。**独立経路に第4反復の実測値は存在しない。** 自力経路の全候補と実在する線形系を保存した。
+- そこで本体の第4変位・荷重・旧接触履歴・分割数を固定し、独立実装の元の残差・接線評価と NumPy の線形求解で再計算した。固定変位を成分一致で復元し、前回の両側節点・owner・形状関数による相互一意対応を使用した。両順とも32点すべて open、最小 gap は 1.7486e-5 m。独立側の接触力・接線寄与は全成分ゼロ。独立側の全ステップ候補は観測用で、自力経路の受理履歴とは別に保存した。
+- 本体と独立側は縮約基底が違う。この入力ではどちらも自由物理成分の符号付き置換であることを検査し、節点番号、x/y/z の順に正確に移した。符号規約を `A Δu = b`、`b = 外力 − 内力` に揃えた。
+
+## 高精度参照と差の大きさ
+
+前回の40桁 Decimal **水理**計算の精度設定を継承した。今回は乾燥力学用に、全中間節点が辺の中点であることを確認し、直線辺 Tet10 上の線形ひずみ行列 B と弾性テンソル D を使った。重心座標の体積平均 `E[L_i L_j]=(1+δij)/20` で二次の BᵀDB と一次の種応力内力を積分し、実際の変位・実際の外力に対する open 弾性枝の右辺を求めた。binary64 入力を厳密に十進変換し、同じ順の部分ピボット付き消去で、観測行列・観測右辺ごとの高精度解も得た。外力そのものの真値や過去の増分の正しさはこの参照の対象外である。
+
+40桁と55桁を独立に実行した。全剛性の最大差は 1.23e-34 kN/m、右辺は 1.38e-36 kN 以下、記録した各系の高精度解は 1.87e-41 m 以下。下表は40桁に対する最大成分絶対差。線形解の列は**各側自身の**観測 A,b を高精度で解き直した値との差である。
+
+|順|観測側|接線差 kN/m|右辺差 kN|線形解の差 m|線形後退誤差（∞ノルム）|
+|---|---|---:|---:|---:|---:|
+|000|本体|1.47794e-6|1.95524e-13|3.04232e-18|8.85e-17|
+|000|独立・同一状態|1.08582e-10|2.64365e-13|1.60198e-18|5.95e-17|
+|010|本体|1.01524e-6|2.74517e-13|6.92077e-18|1.15e-16|
+|010|独立・同一状態|1.08582e-10|3.21341e-13|1.56073e-18|3.39e-17|
+
+接線最大成分は 338461.54 kN/m。その大きさの binary64 の 1 ULP で上表の差を割ると、独立側は 1.87、本体は 17,442〜25,391。右辺は両側とも最大成分の 6.88〜11.31 ULP、線形解は 3.60〜15.96 ULP だった。後退誤差は `max|b−Ax|/(‖A‖∞‖x‖∞+‖b‖∞)`。右辺と LU には複数の浮動小数演算の丸め水準の差がある。本体接線の差は行列成分の最終丸めの水準を超える。本体の MC 材料接線は h=1e-7 で応力の中央差分を取る。この差分と体積組立を合わせた段階までは特定できる。個々の積分点のどの減算が支配したかは今回の観測からは決まらない。ULP は規模を示す表示で、新しい合否閾値は設けていない。
+
+## 第4補正から第5候補へ
+
+同一状態の本体と独立側の高精度解を、片側の右辺を固定した交差求解で分解した。000 では補正差 1.43123e-14 m に対して接線項 1.43248e-14 m、右辺項 1.11554e-17 m、両 LU の誤差項 3.92931e-18 m。010 ではそれぞれ 8.31453e-15、8.32708e-15、1.07660e-17、6.85890e-18 m。数値は各ベクトルの最大絶対成分であり、符号付き成分ごとの和は封印にある。
+
+本体の 010−000 では右辺も 1.76772e-9 kN 異なるが、両者は別の第4変位から出発する。000 の右辺を固定して接線だけを 010 に替え、次に 010 の右辺へ替えた。順序を固定した成分分解は次のとおり。
+
+|第5候補の変位差への寄与|最大絶対成分 m|
+|---|---:|
+|反復に入る時点の変位差|1.47837e-14|
+|右辺を替えた効果|1.47843e-14|
+|上記2項を符号付きで足した残り|2.21076e-18|
+|接線を替えた効果|8.81073e-15|
+|両 LU の丸めの差|6.48666e-18|
+|変位更新の丸めの差|7.58942e-19|
+|実際の第5候補の変位差|8.80329e-15|
+
+両順とも第4補正を α=1 で受理した。第5候補の反力差は保存内力・荷重から 4.41503e-10 kN、高精度弾性剛性で変位差から予測すると 4.41496e-10 kN。成分ごとの予測誤差は最大 1.70e-13 kN。第5相対残差は 000 が 1.2331118892708753e-11、010 が 8.78273990035451e-12。元の 1e-11 で 010 は停止し、000 は第6へ進んだ。今回の保存内力・荷重による受理端点差は 3.9363723391971916e-10 kN。f460f56 の点寄与の厳密和での保存値は **3.93637678008929e-10 kN**。いずれも元の節点力ゲート **1e-10 kN** を超える。
+
+## 出典
+
+f460f56 から継承する本文確認は Hida・Li・Bailey の QD、ReproBLAS 2.1.0、SciPy の DCSRCH 移植。Nocedal・Wright、Celia ら、Kahan、Ogita ら、Demmel・Nguyen は前回も書誌のみである。今回の新規の本文確認は次の実装資料2件。[前回の出典と取得範囲](../2027-01-12-a04-fixed-order-portable-reference/README.ja.md)
+
+- PETSc の SNES/KSP 実装では、Eisenstat–Walker の版1が現在の非線形ノルムと前回の線形残差を使い、内部 KSP の相対許容値を設定する。線形系自体の残差を観測する先例として参照した。[固定版 PETSc](https://github.com/petsc/petsc/blob/b8825779fda20fe3916799eeae107f37e1d388be/src/snes/interface/snes.c#L5700-L5752)
+- MOOSE の MechanicalContactConstraint は非線形残差の評価時に接触集合を更新し、捕捉状態を確認する。Jacobian の成分計算は接触モデル・定式化に応じて分岐する。同じ接触枝を確認して接線を比べる際の実装上の先例である。[接触集合](https://github.com/idaholab/moose/blob/3904c64d7e2bba9a7888b60966ebbcfe5977166b/modules/contact/src/constraints/MechanicalContactConstraint.C#L475-L548) ／ [Jacobian](https://github.com/idaholab/moose/blob/3904c64d7e2bba9a7888b60966ebbcfe5977166b/modules/contact/src/constraints/MechanicalContactConstraint.C#L847-L891)
+- **今回の本文未取得、書誌のみ**。Dembo・Eisenstat・Steihaug, “Inexact Newton Methods”, SIAM J. Numer. Anal. 19 (1982), 400–408。Hintermüller・Ito・Kunisch, “The Primal-Dual Active Set Strategy as a Semismooth Newton Method”, SIAM J. Optim. 13 (2002), 865–888。文献由来の参照値を計算に使用していない。[Dembo ら](https://doi.org/10.1137/0719025) ／ [Hintermüller ら](https://doi.org/10.1137/S1052623401383558)
+
+## A-04 の判定と残件
+
+限定的に確認できたのは、乾燥対照の2経路での接触枝、全行列・右辺・補正、候補受理と停止の関係である。既存の土の部分ゲートは前回の記録に従う。Richards 湿潤 JOINT の ONE_WAY・双方向はともに未受入、A-04 は未達。この方向のクラウド診断はここで終了し、同方向の追加照合は残件にしない。PC への必須移管はない。同じ小型例の任意再現と封印照合のみを記載した。[PC 再現](REPRODUCE.ja.md)
+
+ユーザー判断が要るのは S1〜S3 の水頭の種類・両側 owner・物理時刻・界面流量と貯留収支、S4〜S7 の接触に渡す水理量・時間刻み・収束・ONE_WAY 各方針と双方向の制御、S12 の初期化・活動面・誕生/除去時の状態移送と再平衡。S8 の拒否、S9 の外面 H 不整合の既往失敗を維持する。S10 は既報の C-04 力学交換、S11 の一般空間収束は**規模上限のため確認不可・未達**。旧 PC 失敗記録を含む既存の証拠は元のコミットで保持する。
+
+## Linux 全件検証の中断
+
+元証拠を取得中に GitHub の Git HTTPS が HTTP 401 を返し、指定ブランチの再取得は5回とも認証失敗。起点の必要な 321 パスが欠けた状態で停止した。科学記録は 2146ee2ba9ed87da72e7f75c295b52053c86e84a、測定・判定の P6 登録は ae3a4c922abcfcbf5b4ae77297b7d7ec96df4481。40・55桁の封印からの再集計10ファイルは全バイト一致した。
+
+fmt・clippy は成功、release 全ターゲット build は中断。Rust は成功0・失敗0・skip 0、全件未実行（同じ Rust ソース・Cargo ターゲットの直前一覧は 467 件）。Python は今回の発見 1006 件中、成功 25、本体失敗0、skip 0、未実行 981。成功は CI 方式の C-01 3群で16件、Linux pytest 7 件、公式 core 群の外で単独実行した新規2件。両 NC 群は setup 中に中断し、今回は既報の ValueError を観測する前だった。PowerShell skip も今回は未観測。未完の全件検証、push、Windows CI に成功判定を付けていない。[検証記録](validation.json) ／ [中断時の生ログ・欠落 blob 一覧](linux-validation-interrupted.zip)
+
+中断時検証も固定コミット・blob・SHA-256 で登録した。最終 P6 監査は 389 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。[P6 監査](p6-final.json)
+
+## Linux 全件検証
+
+fmt、locked all-targets clippy（警告をエラー化）、release 全ターゲット build は成功。Rust は全ターゲットの一覧と実行した ID が一致し 467 成功、失敗・未実行・skip・ignore・filter は各0、doc-test は0件。Python は CI と同じ7群を実行し、Linux pytest を加えた。新規2件の単独実行は合計に重複計上していない。
+
+|Linux のコマンド|終了コード|今回の出力・集計|
+|---|---:|---|
+|`cargo fmt --all --check`|0|出力なし|
+|`cargo clippy --locked --all-targets -- -D warnings`|0|Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s|
+|`cargo build --locked --release --all-targets`|0|Finished `release` profile [optimized] target(s) in 4m 11s|
+|`cargo test --locked --release --all-targets -- --list`|0|467 件|
+|`cargo test --locked --release --all-targets`|0|467 成功、失敗・skip・未実行 0|
+|`cargo test --locked --release --doc`|0|0 passed, 0 failed|
+
+|群|割当|成功|本体失敗|setup error|未実行|skip|終了コード|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|python-c01-cause|8|8|0|0|0|0|0|
+|python-c01-path|4|4|0|0|0|0|0|
+|python-c01-switch|4|4|0|0|0|0|0|
+|python-core-0|484|483|0|0|0|1|1|
+|python-core-1|491|490|0|0|0|1|1|
+|python-mean-evidence|4|0|0|1|4|0|1|
+|python-spatial-evidence|4|0|0|1|4|0|1|
+|linux-pytest|7|7|0|0|0|0|0|
+|合計|1006|996|0|2|8|2|—|
+
+python-mean-evidence の実出力は `ValueError: saved mean-stress/complement partition differs from own history`、`Ran 0 tests in 771.378s`、`FAILED (errors=1)`。
+
+python-spatial-evidence の実出力は `ValueError: remeasured JSON differs`、`Ran 0 tests in 201.790s`、`FAILED (errors=1)`。
+
+python-mean-evidence の setUpClass は既報の Linux 失敗に一致し、本体 4 件は未実行。
+
+python-spatial-evidence の setUpClass は既報の Linux 失敗に一致し、本体 4 件は未実行。
+
+core の skip は PowerShell 不在のゲート 2 件。割当全 ID、未実行 ID、公式 runner の終了値と生ログを保存した。[再開後の検証記録](full-validation/validation.json) ／ [Linux 全出力](full-validation/linux-validation.zip)
+
+再開時に不足していた 321 パス（319 個の blob、9,034,786,872 bytes）を固定 tree と照合した。初回中断時の記録は上の「Linux 全件検証の中断」にある。
+
+全件検証の記録を固定コミット・Git blob・SHA-256 で登録した。登録後の全件監査は 390 出典、integrity_ok=true、SOURCE_NOT_INVENTORIED=0。[P6-01 全件監査](full-validation/p6-final.json)
+
+A-04は未達、passed=false。

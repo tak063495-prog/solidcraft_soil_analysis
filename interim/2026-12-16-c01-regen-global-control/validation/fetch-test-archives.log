@@ -1,0 +1,14 @@
+error: RPC failed; curl 92 HTTP/2 stream 3 was not closed cleanly: INTERNAL_ERROR (err 2)
+error: 3404 bytes of body are still expected
+fetch-pack: unexpected disconnect while reading sideband packet
+fatal: early EOF
+fatal: fetch-pack: invalid index-pack output
+fatal: could not fetch 6da2a1938f42ee6754748d78bfa71506083b408c from promisor remote
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/work/fetch-test-archives.py", line 6, in <module>
+    subprocess.run(['git','sparse-checkout','set','--no-cone','--stdin'],input='\n'.join(patterns)+'\n',text=True,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', 'sparse-checkout', 'set', '--no-cone', '--stdin']' returned non-zero exit status 128.

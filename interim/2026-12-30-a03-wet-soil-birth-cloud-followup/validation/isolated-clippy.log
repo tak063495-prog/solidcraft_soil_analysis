@@ -1,0 +1,181 @@
+   Compiling autocfg v1.5.1
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling num-traits v0.2.19
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+    Checking typenum v1.20.1
+   Compiling syn v3.0.9
+   Compiling paste v1.0.15
+    Checking bytemuck v1.25.2
+   Compiling serde_core v1.0.229
+    Checking safe_arch v0.7.4
+   Compiling matrixmultiply v0.3.11
+   Compiling zmij v1.0.23
+    Checking wide v0.7.33
+    Checking block-buffer v0.10.4
+    Checking crypto-common v0.1.7
+    Checking num-integer v0.1.47
+    Checking num-complex v0.4.6
+    Checking approx v0.5.1
+   Compiling syn v2.0.119
+    Checking rawpointer v0.2.1
+   Compiling serde_json v1.0.154
+   Compiling thiserror v2.0.21
+   Compiling serde v1.0.229
+    Checking simba v0.9.1
+   Compiling nalgebra-macros v0.3.0
+    Checking num-rational v0.4.2
+    Checking digest v0.10.7
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking cpufeatures v0.2.17
+    Checking cfg-if v1.0.5
+    Checking sha2 v0.10.9
+    Checking nalgebra v0.34.2
+    Checking soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis/work/a03follow-build/source)
+error: couldn't read `src/beams/../../examples/mc-column-mesh.json`: No such file or directory (os error 2)
+   --> src/beams/storage.rs:275:34
+    |
+275 |             serde_json::from_str(include_str!("../../examples/mc-column-mesh.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: there is a file with the same name in a different directory
+    |
+275 |             serde_json::from_str(include_str!("../../../../../examples/mc-column-mesh.json"))?;
+    |                                                      +++++++++
+
+error: couldn't read `src/../examples/srm-mean-stress-mesh.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:519:34
+    |
+519 |             serde_json::from_str(include_str!("../examples/srm-mean-stress-mesh.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/srm-mean-stress-problem.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:522:34
+    |
+522 |             serde_json::from_str(include_str!("../examples/srm-mean-stress-problem.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/ground-geostatic-mc-column.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:524:34
+    |
+524 |             serde_json::from_str(include_str!("../examples/ground-geostatic-mc-column.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-geostatic-column.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:532:34
+    |
+532 |             serde_json::from_str(include_str!("../examples/stages-geostatic-column.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/srm-search.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:540:43
+    |
+540 |         let search = serde_json::from_str(include_str!("../examples/srm-search.json"))?;
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/mc-column-mesh.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:551:47
+    |
+551 |         let mesh: Mesh = serde_json::from_str(include_str!("../examples/mc-column-mesh.json"))?;
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/ground-geostatic-mc-column.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:554:34
+    |
+554 |             serde_json::from_str(include_str!("../examples/ground-geostatic-mc-column.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-geostatic-column.json`: No such file or directory (os error 2)
+   --> src/epoch_srm_control.rs:568:34
+    |
+568 |             serde_json::from_str(include_str!("../examples/stages-geostatic-column.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/joint-column-tet10-mesh.json`: No such file or directory (os error 2)
+   --> src/joints.rs:174:34
+    |
+174 |             serde_json::from_str(include_str!("../examples/joint-column-tet10-mesh.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-joint-column.json`: No such file or directory (os error 2)
+   --> src/joints.rs:176:34
+    |
+176 |             serde_json::from_str(include_str!("../examples/stages-joint-column.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/joint-column-tet10-mesh.json`: No such file or directory (os error 2)
+   --> src/joints.rs:224:34
+    |
+224 |             serde_json::from_str(include_str!("../examples/joint-column-tet10-mesh.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-joint-column.json`: No such file or directory (os error 2)
+   --> src/joints.rs:226:34
+    |
+226 |             serde_json::from_str(include_str!("../examples/stages-joint-column.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-mixed-mcc.json`: No such file or directory (os error 2)
+   --> src/mixed_ordering.rs:173:34
+    |
+173 |             serde_json::from_str(include_str!("../examples/stages-mixed-mcc.json"))?;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/hardening-column-tet10-mesh.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1412:34
+     |
+1412 |             serde_json::from_str(include_str!("../examples/hardening-column-tet10-mesh.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/ground-mixed-mcc.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1414:34
+     |
+1414 |             serde_json::from_str(include_str!("../examples/ground-mixed-mcc.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-mixed-mcc.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1416:34
+     |
+1416 |             serde_json::from_str(include_str!("../examples/stages-mixed-mcc.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/ground-geostatic-mcc-column.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1426:34
+     |
+1426 |             serde_json::from_str(include_str!("../examples/ground-geostatic-mcc-column.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/hardening-column-tet10-mesh.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1506:34
+     |
+1506 |             serde_json::from_str(include_str!("../examples/hardening-column-tet10-mesh.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/ground-mixed-mcc.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1508:34
+     |
+1508 |             serde_json::from_str(include_str!("../examples/ground-mixed-mcc.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-mixed-mcc.json`: No such file or directory (os error 2)
+    --> src/stages_mixed.rs:1510:34
+     |
+1510 |             serde_json::from_str(include_str!("../examples/stages-mixed-mcc.json"))?;
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `src/../examples/stages-free-contact.json`: No such file or directory (os error 2)
+    --> src/stages.rs:6603:59
+     |
+6603 |                   serde_json::from_str::<serde_json::Value>(include_str!(
+     |  ___________________________________________________________^
+6604 | |                     "../examples/stages-free-contact.json"
+6605 | |                 ))?["settings"]
+     | |_________________^
+
+error: could not compile `soil-fem-3d` (lib test) due to 22 previous errors
+warning: build failed, waiting for other jobs to finish...

@@ -1,0 +1,69 @@
+{
+  "client_date": "2026-11-15",
+  "timezone": "Asia/Tokyo",
+  "inherited_from": "interim/2026-12-22-a03-wet-soil-birth-cause-diagnosis/README.ja.md",
+  "external_reference_values_introduced": false,
+  "book_body_claims_invented": false,
+  "sources": [
+    {
+      "title": "SIMULIA Abaqus 2026: Element and Contact Pair Removal and Reactivation",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-elemremovrepl.htm",
+      "access": "公式本文取得、12-22の確認範囲を継承しReactivating節を再確認",
+      "confirmed": "strain-freeは配置基準と初期状態をリセットし、with-strainとは異なる。対象の初期状態と新旧履歴を明示する動機に使う。製品の再活性化則を本件へ導入しない。"
+    },
+    {
+      "title": "Bentley PLAXIS: Initial degree of saturation for soil activated during staged construction",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0107818",
+      "access": "公式本文取得、12-22から継承・水圧生成方法の節を再確認",
+      "confirmed": "新設土の水分状態と既存土は別で、水圧生成方法によって初期飽和度指定の扱いが異なる。今回は明示静水圧だけであり定常流れへ延長しない。"
+    },
+    {
+      "title": "SIMULIA Abaqus 2026: Coupled Pore Fluid Diffusion and Stress Analysis",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEANLRefMap/simaanl-c-coupdiffstress.htm",
+      "access": "公式本文取得、Steady-State Analysis / Initial Conditions",
+      "confirmed": "定常は液相連続式の過渡効果を除く。初期有効応力と水圧は初期配置に作用するものとして与える。定常終点から誕生水量や過渡収支を決めない。"
+    },
+    {
+      "title": "SIMULIA Abaqus 2026: Energy balance",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAETHERefMap/simathe-c-energybalance.htm",
+      "access": "公式理論本文取得",
+      "confirmed": "外力の仕事率は面力と体積力の寄与を持ち、応力の内部仕事を時間積分してエネルギーを扱う。力平衡、離散仕事、散逸を別々に記録する動機であり本件の水理連成保存則を証明しない。"
+    },
+    {
+      "title": "SIMULIA Abaqus 2026: Output to the Data and Results Files",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEOUTRefMap/simaout-c-printfile.htm",
+      "access": "公式本文取得、External Work Calculation / Energy Computation Accuracy",
+      "confirmed": "エネルギー項の積算則が混在し得て、滑らかな場合の台形則と後退差分の次数は異なる。仕事の積算法を明記する根拠。AbaqusのALLWKや台形則へ本体を置換しない。"
+    },
+    {
+      "title": "MFEM: Integration",
+      "url": "https://mfem.org/integration/",
+      "access": "プロジェクト公式本文取得、Integration / Integration Rules",
+      "confirmed": "要素別積分は点・重み・写像Jacobianによる重み付き和。点と重みを組にした順序置換と、GL5/GL7による離散積分則の変更を区別する。"
+    },
+    {
+      "title": "NIST DLMF 3.5(i): Trapezoidal Rules",
+      "url": "https://dlmf.nist.gov/3.5",
+      "access": "公式本文取得、3.5.1〜3.5.3と必要な滑らかさの条件",
+      "confirmed": "複合台形則の誤差式には滑らかさの仮定がある。今回の有限差の率を一般塑性・自由水面へ拡張しない。端点接触仕事を台形則へ変更せず、外挿で合格を作らない。"
+    },
+    {
+      "title": "David Goldberg (1991): What Every Computer Scientist Should Know About Floating-Point Arithmetic",
+      "url": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+      "access": "Oracle公式再掲本文取得、丸め誤差の節",
+      "confirmed": "有限精度の表現と各算術演算の丸めを区別する。物理入力と集計順の置換を分ける動機。今回の実測の原因割合を文献から与えない。"
+    },
+    {
+      "title": "Potts & Zdravkovic: Finite Element Analysis in Geotechnical Engineering, Theory (1999), Application (2001)",
+      "url": "https://bookstore.emerald.com/media/flyers/9780727727534.pdf",
+      "access": "12-22の書誌・目次確認を継承。今回も本文未取得、書誌だけ",
+      "confirmed": "章中の式・初期化推奨・参照数値を使用しない。"
+    },
+    {
+      "title": "Wang et al. (2024): A Methodology to Evaluate the Real-Time Stability of Submarine Slopes under Rapid Sedimentation",
+      "url": "https://doi.org/10.3390/jmse12050823",
+      "access": "12-22の要旨・序論確認を継承。方法本文・PDF未取得、方法については書誌だけ",
+      "confirmed": "活性化の具体的初期化式、水量、定量的参照値へ使用しない。"
+    }
+  ]
+}

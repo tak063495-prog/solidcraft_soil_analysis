@@ -1,0 +1,207 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "a02_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "612f0f64c704f0ef0dee950a81a10f7e312a745c",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 945,
+    "executed": 945,
+    "passed": 945,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 23256,
+      "exit_code": 0,
+      "elapsed_seconds": 0.9714174730000309
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 23606,
+      "exit_code": 0,
+      "elapsed_seconds": 23.23657651100001
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 31769,
+      "exit_code": 0,
+      "elapsed_seconds": 1184.196660381
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 515162,
+      "exit_code": 0,
+      "elapsed_seconds": 3.4993887179998637
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 516895,
+      "exit_code": 0,
+      "elapsed_seconds": 1003.4688932540002
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 1157375,
+      "exit_code": 0,
+      "elapsed_seconds": 2.5638409129996944
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-core-0"
+      ],
+      "pid": 1157535,
+      "exit_code": 0,
+      "elapsed_seconds": 321.51240961400026
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-core-1"
+      ],
+      "pid": 1157536,
+      "exit_code": 0,
+      "elapsed_seconds": 362.982181117
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-mean-evidence"
+      ],
+      "pid": 1302911,
+      "exit_code": 0,
+      "elapsed_seconds": 854.5651049469998
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-spatial-evidence"
+      ],
+      "pid": 1332417,
+      "exit_code": 0,
+      "elapsed_seconds": 127.95674237200001
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-c01-switch"
+      ],
+      "pid": 1332435,
+      "exit_code": 0,
+      "elapsed_seconds": 55.308927593000135
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-c01-path"
+      ],
+      "pid": 1332462,
+      "exit_code": 0,
+      "elapsed_seconds": 86.85534348100009
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/a02n8-full/python/python-c01-cause"
+      ],
+      "pid": 1332474,
+      "exit_code": 0,
+      "elapsed_seconds": 71.73463713000001
+    }
+  ],
+  "source_count": 1617,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true
+}

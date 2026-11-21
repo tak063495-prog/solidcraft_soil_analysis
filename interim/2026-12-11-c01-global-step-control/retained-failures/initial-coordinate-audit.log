@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 156, in <module>
+    if __name__=='__main__': main()
+                             ~~~~^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 153, in main
+    if a.mode=='native': native(out,g,a.timeout,not a.legacy)
+                         ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 94, in native
+    write(folder/'native-audit.json',dict(physical=audit(folder/'native',mesh,ground,case,g),phases=summary,elapsed_seconds=time.monotonic()-started,command=cmd))
+                                                   ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-11-c01-global-step-control/study.py", line 56, in audit
+    result=namespace['adaptive_audit'](folder,mesh,ground,case,'cut',steps)
+  File "<string>", line 52, in adaptive_audit
+AssertionError: ('existing force audit', 0.5622294193926196, 1e-08)

@@ -1,0 +1,233 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "all_acceptance_complete": false,
+  "diagnostic_only": true,
+  "pc_executed": false,
+  "source_base": "520cecfce646200505d7fefabaa66ad1bda33f59",
+  "scientific_commit": "18d54b140bf44b6ca20da2745c3b4dd367437277",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "unexecuted": 0,
+    "skipped": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "doc_tests": 0,
+    "exact_discovered_executed_ids": true
+  },
+  "python": {
+    "discovered": 979,
+    "executed": 979,
+    "passed": 979,
+    "failures": 0,
+    "errors": 0,
+    "unexecuted": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "duplicate_ids": 0,
+    "new_tests_included": 13,
+    "tools_tests_included": 2,
+    "exact_discovered_executed_ids": true,
+    "selected_id_proof_sha256": "287b4adca4bc666db8fc49b48b47b9b67c7b95b4673766579838b7b0e1453a00"
+  },
+  "rust_checks": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    "all_targets": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    "doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "exit_code": 0
+    }
+  },
+  "initial_python_partial": {
+    "discovered": 977,
+    "completed_finalized_ids": 546,
+    "not_finalized": 431,
+    "interrupted": 1,
+    "process_exit_code": 130,
+    "raw_attempt_counts": {
+      "test_instances": 771,
+      "passed": 545,
+      "test_failures": 1,
+      "test_errors": 225,
+      "fixture_errors": 1,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "attempts": 772
+    },
+    "reason": "retain successes and resume with standard shared class fixtures; interrupted ID is recorded separately"
+  },
+  "resumed_python": {
+    "discovered": 979,
+    "assigned": 436,
+    "classes": 81,
+    "final_executed": 436,
+    "final_passed": 436,
+    "raw_attempt_counts": {
+      "test_instances": 442,
+      "passed": 439,
+      "test_failures": 0,
+      "test_errors": 3,
+      "fixture_errors": 73,
+      "skipped": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "class_attempts": 155
+    },
+    "overridden_initial_ids": [
+      "test_ci_timeout_configuration.CITimeoutConfiguration.test_new_document_decisions_survive_real_crlf_bytes",
+      "test_ci_timeout_configuration.CITimeoutConfiguration.test_real_git_sparse_profiles_keep_all_sources_and_each_required_archive",
+      "test_ci_timeout_configuration.CITimeoutConfiguration.test_workflow_runs_every_python_partition_and_keeps_exact_history"
+    ]
+  },
+  "standalone_preparation_and_regressions": [
+    {
+      "log": "work/validation/new-tests-final.log",
+      "executed": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "counted_in_main": false
+    },
+    {
+      "log": "work/validation/new-tests-first.log",
+      "executed": 11,
+      "passed": 10,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "counted_in_main": false
+    },
+    {
+      "log": "work/validation/new-tests-fixed.log",
+      "executed": 11,
+      "passed": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "counted_in_main": false
+    },
+    {
+      "log": "work/validation/new-tests-scientific-final.log",
+      "executed": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "counted_in_main": false
+    },
+    {
+      "log": "work/validation/new-tests-sealed.log",
+      "executed": 13,
+      "passed": 12,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "counted_in_main": false
+    }
+  ],
+  "source_binding": {
+    "scientific": "final-code-binding.json",
+    "validation": "validation-code-binding.json",
+    "validation_binding_captured": "during resumed suite; not claimed as pre-start freeze of the initial pass",
+    "intentional_code_changes_after_initial_pass": [
+      "tests/test_ci_timeout_configuration.py: sparse template count 10 -> 11",
+      "P6 inventory append and auditor SHA pin"
+    ],
+    "affected_checks_reexecuted": true
+  },
+  "prior_pc_failures": 6,
+  "prior_pc_skipped_unexecuted": [
+    "b02-n8",
+    "b02-n16",
+    "a04-steps-32",
+    "a04-steps-64",
+    "a04-steps-128"
+  ],
+  "windows_ci_after_push": "未確定",
+  "numerical_acceptance_all_met": false,
+  "post_registration": {
+    "report": "post-registration.json",
+    "separate_from_main_counts": true
+  },
+  "notes": [
+    "Missing archived dependencies produced retained nonzero trials before exact selective Git blob retrieval. No missing evidence was counted as a pass or skip.",
+    "Raw fixture errors with zero started tests are counted separately from test errors.",
+    "The initial interrupted test has no fabricated success/failure outcome.",
+    "Large legacy NC evidence is SHA-verified replay in the cloud, not a new PC calculation or numerical acceptance."
+  ],
+  "pc_code_commit": "ce8ce8ddba71fba7fe4015696268669b6df72886",
+  "full_suite_artifact": {
+    "archive": "full-suite.zip",
+    "archive_bytes": 12135145,
+    "archive_sha256": "d7b60a680ac9a4283b9b21e97303b0ef4f141c655921c22885de0b2ef06d65a7",
+    "entries": 1224,
+    "index_sha256": "e6ef16f2f252544e34d802a2ecab7d29ed10d815791b5ef9b3f6bde6f35b3151",
+    "all_members_sha256_verified": true
+  },
+  "scientific_archive": {
+    "index": "archive-index.json",
+    "bytes": 61109258,
+    "parts": 4,
+    "entries": 663,
+    "all_members_sha256_verified": true
+  },
+  "supplemental_observations": {
+    "factor-components-observation.json": "d98bb0bc651f683d23f190527f2b3fabd9afac7c5258de3d529f98ba4eedb810",
+    "factor-decimal-observation.json": "a57b8b24a370f3d590142d003804d8013408cdbd6584e16712723d05e0679ba6",
+    "precision-floor-observation.json": "22ea94d390466c39e5c13a2cfa5fdcd39f3cfa5634006ef487ffc8ba06020516",
+    "roof-cutback-algebra.json": "f10e9871026ee32dd9439ae7e6bd55dc97633a66d4a7f28bf328f8d461340700"
+  },
+  "validation_code_unchanged_at_completion": true
+}

@@ -1,0 +1,20 @@
+    Checking soil-fem-3d v0.1.0 (/workspace/work/t1)
+error: this function has too many arguments (8/7)
+    --> src/richards.rs:1600:1
+     |
+1600 | / pub(crate) fn transition_domain(
+1601 | |     mesh: &Mesh,
+1602 | |     case: &Case,
+1603 | |     before: crate::hydraulic_transition::Domain<'_>,
+...    |
+1608 | |     wet: Option<&crate::joint_water::Model>,
+1609 | | ) -> Result<crate::hydraulic_transition::WaterChange> {
+     | |_____________________________________________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#too_many_arguments
+     = note: `-D clippy::too-many-arguments` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(clippy::too_many_arguments)]`
+
+error: could not compile `soil-fem-3d` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `soil-fem-3d` (lib test) due to 1 previous error
