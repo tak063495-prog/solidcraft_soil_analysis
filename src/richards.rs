@@ -277,6 +277,11 @@ struct Local {
     capacity: f64,
     source: f64,
 }
+impl Local {
+    fn outflow(&self, head: f64, face_heads: &[f64], faces: [usize; 4]) -> Vector4<f64> {
+        self.c * Vector4::from_fn(|j, _| head - face_heads[faces[j]])
+    }
+}
 struct Evaluated {
     locals: Vec<Local>,
     fluxes: Vec<Vector4<f64>>,
@@ -621,9 +626,7 @@ impl Model {
             let h = state.relative_cell_head_m[e]
                 .ok_or_else(|| Error::Input("undefined hydraulic cell head".into()))?;
             let l = self.local(i, h)?;
-            let difference =
-                Vector4::from_fn(|j, _| h - state.relative_face_head_m[self.cell_faces[i][j]]);
-            let flux = l.c * difference;
+            let flux = l.outflow(h, &state.relative_face_head_m, self.cell_faces[i]);
             let rate = dt.map_or(0., |dt| {
                 (l.storage - old.cell_storage_offset_m3[e].unwrap_or(0.)) / dt
             });
@@ -767,8 +770,9 @@ impl Model {
         }
         for (i, c) in self.cells.iter().enumerate() {
             let h = state.relative_cell_head_m[c.element_index].unwrap_or(0.);
-            let q = self.local(i, h)?.c
-                * Vector4::from_fn(|j, _| h - state.relative_face_head_m[self.cell_faces[i][j]]);
+            let q = self
+                .local(i, h)?
+                .outflow(h, &state.relative_face_head_m, self.cell_faces[i]);
             state.cell_outflow_m3_s[c.element_index] = Some(q.into());
         }
         Ok(state)
@@ -1790,9 +1794,9 @@ pub(crate) fn transition_domain(
                 }
             };
             let local = new.local(i, h)?;
-            let q: [f64; 4] = (local.c
-                * Vector4::from_fn(|j, _| h - state.relative_face_head_m[new.cell_faces[i][j]]))
-            .into();
+            let q = local
+                .outflow(h, &state.relative_face_head_m, new.cell_faces[i])
+                .into();
             let water =
                 new.materials[i].retention.saturated_water_content * c.volume_m3 + local.storage;
             if !water.is_finite() || water < 0. {
@@ -1880,9 +1884,9 @@ pub(crate) fn transition_domain(
             };
             let h = storage_head(&new, i, prior.storage_offset_m3 - debit, &reference)?;
             let local = new.local(i, h)?;
-            let q: [f64; 4] = (local.c
-                * Vector4::from_fn(|j, _| h - state.relative_face_head_m[new.cell_faces[i][j]]))
-            .into();
+            let q = local
+                .outflow(h, &state.relative_face_head_m, new.cell_faces[i])
+                .into();
             state.relative_cell_head_m[e] = Some(h);
             state.cell_storage_offset_m3[e] = Some(local.storage);
             state.cell_outflow_m3_s[e] = Some(q);
@@ -1905,6 +1909,25 @@ pub(crate) fn transition_domain(
             });
         }
         added = 0.;
+    }
+    // Prescribed walls can change a retained cell's trace at the event even
+    // when its inventory is untouched. Publish the instantaneous RT0 rates
+    // without changing the fixed-time water transfer.
+    let updated: BTreeSet<_> = changed.iter().map(|c| c.element_index).collect();
+    for (i, cell) in new.cells.iter().enumerate() {
+        let e = cell.element_index;
+        let faces = new.cell_faces[i];
+        if !updated.contains(&e)
+            && faces.iter().enumerate().any(|(j, &f)| {
+                state.relative_face_head_m[f] != old.relative_face_head_m[map[&(e, j)]]
+            })
+        {
+            let head = snapshots[&e].relative_head_m;
+            let outflow = new
+                .local(i, head)?
+                .outflow(head, &state.relative_face_head_m, faces);
+            state.cell_outflow_m3_s[e] = Some(outflow.into());
+        }
     }
     let error = (water_after - water_before - added + removed).abs();
     if error > 1e-11 * water_before.max(water_after).max(1e-30) {

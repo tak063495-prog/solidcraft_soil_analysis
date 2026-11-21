@@ -453,6 +453,189 @@ fn split_cut_checks_exterior_level_against_prescribed_head() -> Result<()> {
     Ok(())
 }
 
+/// Analytic saturated Tet4 RT0 mass matrix from the uniform tetrahedron covariance.
+fn saturated_tet_outflow(
+    vertices: [[f64; 3]; 4],
+    conductivity: f64,
+    head_drop: [f64; 4],
+) -> [f64; 4] {
+    use nalgebra::{Matrix4, Vector3, Vector4};
+    let vertices = vertices.map(Vector3::from);
+    let [a, b, c, d] = vertices;
+    let volume = (b - a).cross(&(c - a)).dot(&(d - a)) / 6.;
+    let centroid = (a + b + c + d) / 4.;
+    let covariance_trace = vertices
+        .iter()
+        .map(|v| (v - centroid).norm_squared())
+        .sum::<f64>()
+        / 20.;
+    let mass = Matrix4::from_fn(|i, j| {
+        ((centroid - vertices[i]).dot(&(centroid - vertices[j])) + covariance_trace)
+            / (9. * volume * conductivity)
+    });
+    mass.lu().solve(&Vector4::from(head_drop)).unwrap().into()
+}
+
+#[test]
+fn independent_unit_tet_matches_birth_rt0_reference() {
+    let result = saturated_tet_outflow(
+        [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+        1.,
+        [-0.25, 0., 0., 0.],
+    );
+    for (q, expected) in result
+        .into_iter()
+        .zip([-4. / 3., 1. / 6., 1. / 6., 1. / 6.])
+    {
+        assert!((q - expected).abs() < 1e-14);
+    }
+}
+
+fn verify_prescribed_birth(
+    policy: Value,
+    history: Option<Value>,
+    expected_head: f64,
+) -> Result<()> {
+    use soil_fem_3d::one_way_construction as construction;
+    let (mesh, ground, mut input) = lifecycle_fixture(policy)?;
+    input["one_way"]["flow"]["materials"][0]["volume_source_per_s"] = json!(0.);
+    if let Some(history) = history {
+        input["one_way"]["joint_reservoir_heads"] = json!({"Seam":history});
+    }
+    let case: construction::Case = serde_json::from_value(input)?;
+    let conductivity = case.one_way.flow.materials[0].saturated_conductivity_m_s[0][0];
+    let theta = case.one_way.flow.materials[1]
+        .retention
+        .saturated_water_content;
+    let run = construction::solve(&mesh, ground.clone(), case.clone())?;
+    assert!(run.complete, "{:?}", run.failure_reason);
+    let index = run
+        .frames
+        .iter()
+        .position(|f| f.name == "place" && f.phase == "material_transition")
+        .unwrap();
+    let before = &run.frames[index - 1];
+    let birth = &run.frames[index];
+    let old = &before.state.hydraulic;
+    let new = &birth.state.hydraulic;
+    assert_eq!((old.time_s, new.time_s), (0.125, 0.125));
+    assert!(birth.hydraulic_balance.is_none());
+    assert!(
+        birth
+            .state
+            .fluid
+            .joint_traces
+            .iter()
+            .all(|p| p.time_s == new.time_s)
+    );
+
+    let mut owners = std::collections::BTreeSet::new();
+    for trace in birth
+        .state
+        .fluid
+        .joint_traces
+        .iter()
+        .filter_map(|p| p.side_a.as_ref())
+    {
+        assert_eq!(trace.total_head_m, expected_head);
+        assert_eq!(trace.local_face, 0);
+        let owner = trace.owner;
+        let flow = new.cell_outflow_m3_s[owner].unwrap();
+        assert_eq!(trace.outward_flow_m3_s, flow[trace.local_face]);
+        if !owners.insert(owner) {
+            continue;
+        }
+        assert_eq!(old.relative_cell_head_m[owner], Some(2.));
+        assert_eq!(new.relative_cell_head_m[owner], Some(2.));
+        assert_eq!(
+            old.cell_storage_offset_m3[owner],
+            new.cell_storage_offset_m3[owner]
+        );
+        assert_eq!(old.cell_outflow_m3_s[owner], Some([0.; 4]));
+        let new_face = birth.hydraulic_faces[trace.face].corners;
+        let old_face = before
+            .hydraulic_faces
+            .iter()
+            .position(|f| f.corners == new_face)
+            .unwrap();
+        assert_eq!(old.relative_face_head_m[old_face], 2.);
+        let expected = saturated_tet_outflow(
+            mesh.tetrahedra[owner].map(|n| mesh.nodes[n]),
+            conductivity,
+            [2. - expected_head, 0., 0., 0.],
+        );
+        for (q, expected) in flow.into_iter().zip(expected) {
+            assert!((q - expected).abs() < 1e-14, "{owner}: {flow:?}");
+        }
+        println!("head={expected_head} owner={owner} q={flow:?}");
+    }
+    assert_eq!(owners, [3, 4].into_iter().collect());
+
+    let water = &run.transitions[0].water;
+    assert_eq!(&water.state, new);
+    assert!(water.internal_transfers.is_empty());
+    assert!(water.changed_cells.iter().all(|c| c.before.is_none()));
+    assert_eq!(water.water_removed_m3, 0.);
+    let incoming = water.water_added_m3;
+    let before_volume = before.state.fluid.water_equivalent_mass_volume_m3;
+    let after_volume = birth.state.fluid.water_equivalent_mass_volume_m3;
+    let change = after_volume - before_volume;
+    let denominator = (incoming + change.abs()) / 2.;
+    let error = change - incoming;
+    assert!((incoming - 0.5 * theta).abs() <= 1e-12_f64.max(1e-7 * denominator));
+    assert_eq!(before.cumulative_net_water_inflow_m3, 0.);
+    let cumulative = after_volume - run.initial_water_m3 - incoming;
+    for (step_r, cumulative_r, floor) in [(1e-7, 1e-8, 1e-12_f64), (1e-3, 5e-4, 1e-9)] {
+        assert!(error.abs() <= floor.max(step_r * denominator));
+        // The hold has zero source and flow, so its D and unsigned defect are zero.
+        assert!(cumulative.abs().max(error.abs()) <= floor.max(cumulative_r * denominator));
+    }
+    for frame in run.frames[index..]
+        .iter()
+        .take_while(|f| f.state.hydraulic.time_s == new.time_s)
+    {
+        assert_eq!(
+            frame.cumulative_net_water_inflow_m3,
+            before.cumulative_net_water_inflow_m3
+        );
+        assert_eq!(frame.cumulative_added_water_m3, incoming);
+        assert_eq!(&frame.state.hydraulic, new);
+    }
+    println!(
+        "head={expected_head} birth_water={incoming} D={denominator} e={error} E={cumulative}"
+    );
+
+    let partial = construction::solve_until(&mesh, ground.clone(), case.clone(), index + 1)?;
+    assert_eq!(&partial.last_committed.hydraulic, new);
+    let saved = serde_json::to_vec(&construction::Checkpoint::seal(partial)?)?;
+    let checkpoint: construction::Checkpoint = serde_json::from_slice(&saved)?;
+    let resumed = checkpoint.resume(&mesh, ground, case, None)?;
+    assert_eq!(
+        construction::normalized(&run)?,
+        construction::normalized(&resumed)?
+    );
+    Ok(())
+}
+
+#[test]
+fn fixed_prescribed_birth_recomputes_all_retained_rt0_outflows() -> Result<()> {
+    verify_prescribed_birth(json!({"kind":"prescribed","level_m":2.25}), None, 2.25)
+}
+
+#[test]
+fn scheduled_prescribed_birth_recomputes_all_retained_rt0_outflows() -> Result<()> {
+    verify_prescribed_birth(
+        json!({"kind":"prescribed"}),
+        Some(json!([[0., 2.125], [0.25, 2.375], [0.5, 2.25]])),
+        2.25,
+    )
+}
+
+#[test]
+fn unchanged_prescribed_birth_keeps_zero_retained_rt0_outflows() -> Result<()> {
+    verify_prescribed_birth(json!({"kind":"prescribed","level_m":2.}), None, 2.)
+}
+
 #[test]
 fn continuous_transmission_matches_uncut_column_with_nonzero_crossflow() -> Result<()> {
     use soil_fem_3d::richards;
