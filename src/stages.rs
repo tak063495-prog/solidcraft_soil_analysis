@@ -22,6 +22,7 @@ mod joint_path_error;
 mod mixed;
 pub use joint_path_error::PathErrorAudit;
 pub(crate) mod srm_adapter;
+pub mod t7;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
