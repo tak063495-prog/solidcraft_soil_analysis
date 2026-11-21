@@ -40,3 +40,28 @@ B-03 の12要素16経路（平面、零腕折れ目、法線反転対、段差�
 各経路の3入力、比較量、実行・再開・拒否の記録、新パッチの確定履歴と改変入力は evidence.zip に収録した。SHA-256 は `23f867fd4b5a9500f4429cd5b6eecb8211d8804ae1a5f73cce380f535f35bcdf`。
 
 曲線中点の面内・面外2件とも、期待文字列は `Mindlin Tri6`、実際は先行する `geostatic mesh/CAD volume difference exceeds configured tolerance in UpperClay` で停止した。拒否した事実と診断契約の不一致を別に残す。元の B-03 診断、期待文字列、メッシュ体積検査を保持し、一般曲面を受入に含めない。
+
+## ソフトウェア検証と台帳
+
+|Linux で実行した試験|成功|失敗|エラー|未実行・無視|
+|---|---:|---:|---:|---:|
+|Rust release（lib・CLI・integration・doc）|493|0|0|0|
+|Rust examples|3|0|0|0|
+|python-core-0|488|0|0|0|
+|python-core-1|494|0|0|0|
+|python-mean-evidence|4|0|0|0|
+|python-spatial-evidence|4|0|0|0|
+|python-c01-switch|4|0|0|0|
+|python-c01-path|4|0|0|0|
+|python-c01-cause|8|0|0|0|
+|Linux 専用 pytest|7|0|0|0|
+
+追加した T4 試験6件は Rust release の内数。P6-01 専用監査57件は Python 全件にも含まれ、台帳登録後に別途再実行した。旧診断の固定バイト検査を含む B-03 の24件も再実行した。Linux の mean・spatial 両証拠群は今回いずれも完走した。fmt と clippy（--locked --all-targets -- -D warnings）、release の全 bins・examples ビルドはいずれも終了コード0。
+
+開発中の初回コンパイルはモジュール名の変更中に旧 import を参照して停止した。最終ソースで再ビルドし、初回のエラー出力も verification.zip に保存した。
+
+P6-01 は 80 項目・400 資料・171 証拠。integrity_ok=true、未登録資料0件。測定の固定コミットは `d9c35033cac35d00f077b02957654f7f6fe532a7`、SHA-256 は `cec36a5a1174f691644336dd625c6f13872b6d4c902abbff5933c58d5cb65ba6`、Git blob ID は `8a4b458842f2f38b1ee09221f091b03f3da9fb6b`。
+
+全件ログ、Python の割当と実行結果、監査結果は verification.zip（SHA-256 `e9f6d108fbeebad343d895934a0071ed1de69fa43dbb8ba1f4bc311af8680909`）。Windows の各ジョブは PR #13 の同一先端に対する Checks で追跡できる。
+
+B-02、B-03 は未達、passed=false。
