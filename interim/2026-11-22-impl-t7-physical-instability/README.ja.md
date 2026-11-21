@@ -64,4 +64,8 @@ open の λ は段階内進捗である。外部境界荷重の係数は 0.04 + 
 
 科学計算の12分割アーカイブには入力、旧経路の失敗を含む Run、全試行・臨界反復、再開セグメント、比較、資源測定を収めた。元の全ファイルは展開後に照合できる。P6-01 台帳の状態資料は固定コミット dd61fcfcd6503c0c138893ba85560f7ef51b2b16、SHA-256 99508628fd285a459995cba46c46f70674a9575c9db05b35fdc17ee60daaca7d、Git blob afb53f31bc842359377dd1bcdef15fd7031767ed。監査結果は80行・407出典、integrity_ok=true。[アーカイブ索引](archive-index.json)・[P6-01 台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
 
+Linux の最終検証では Rust 全ターゲット 510 件、Python 全7群 1028 件、Linux 専用 pytest 7 件が成功した。失敗0、未実行0。Rust の doc test は検出0件。T7 の単体10件は Python 全7群の内数である。core-0 は512、core-1 は492、mean／spatial は各4、C-01 の switch／path／cause は4／4／8件。初回 core-0 の追加メッシュ試験1件で診断モジュールの import エラーが発生した。実行環境を本番の診断と同じ別プロセスに隔離して全512件を再実行し、初回ログも保存した。過去診断5件の SHA と固定 blob、fmt、clippy（全ターゲット・警告をエラー化）、P6-01、全アーカイブの再展開を照合した。[検証ログ・全試験 ID](verification.zip)
+
+Windows の結果は push した先端について [PR #13 の Checks](https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13/checks) に表示される。
+
 A-01 (d) は未達、結論 D。
