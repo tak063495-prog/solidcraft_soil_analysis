@@ -267,10 +267,8 @@ fn duplicate_wet_frames_keep_contact_labels_and_record_zero_slip_and_work() -> R
     Ok(())
 }
 
-#[test]
-fn wet_construction_archives_removed_generation_and_restarts_the_reinstalled_wall() -> Result<()> {
-    use soil_fem_3d::one_way_construction as construction;
-    let (mesh, ground, base) = fixture(json!({"kind":"continuous"}))?;
+fn lifecycle_fixture(policy: Value) -> Result<(Mesh, Ground, Value)> {
+    let (mesh, ground, base) = fixture(policy)?;
     let mut one = serde_json::to_value(base)?;
     one["mechanics"]["joint_system"]["joints"][0]["birth_policy"] = json!("stress_free");
     let period_names = ["hold", "place", "remove", "replace"];
@@ -312,6 +310,13 @@ fn wet_construction_archives_removed_generation_and_restarts_the_reinstalled_wal
         "excavations":[{"name":"remove","before_period":"remove","bodies":["UpperClay"],
         "water_boundary_policy":"explicit_period_boundaries","cut_traction_policy":"explicit_period_reservoirs",
         "water_destination":{"reservoir_id":"haul_water"}}]});
+    Ok((mesh, ground, input))
+}
+
+#[test]
+fn wet_construction_archives_removed_generation_and_restarts_the_reinstalled_wall() -> Result<()> {
+    use soil_fem_3d::one_way_construction as construction;
+    let (mesh, ground, input) = lifecycle_fixture(json!({"kind":"continuous"}))?;
     let mut missing = input.clone();
     missing["transitions"][0]
         .as_object_mut()
@@ -374,6 +379,77 @@ fn wet_construction_archives_removed_generation_and_restarts_the_reinstalled_wal
         construction::normalized(&run)?,
         construction::normalized(&resumed)?
     );
+    Ok(())
+}
+
+#[test]
+fn split_cut_checks_exterior_level_against_prescribed_head() -> Result<()> {
+    use soil_fem_3d::{Error, one_way_construction as construction};
+    let (mut mesh, ground, input) = lifecycle_fixture(json!({"kind":"continuous"}))?;
+    mesh.face_sets
+        .insert("exterior_seam".into(), mesh.face_sets["Seam:a"].clone());
+    let head = json!({"kind":"head","value":{"head_m":2.}});
+    let pressure = json!({"kind":"pressure","pressure_head_m":1.5});
+    let flux = json!({"kind":"outward_flux","flux_m_s":0.});
+    for (condition, level, face_set, later, rejected) in [
+        (&head, 3., "Seam:a", false, true),
+        (&head, 2., "Seam:a", false, false),
+        (&head, 3., "exterior_seam", false, true),
+        (&head, 3., "exterior_seam", true, true),
+        (&pressure, 3., "exterior_seam", false, true),
+        (&pressure, 2., "exterior_seam", false, false),
+        (&flux, 3., "exterior_seam", false, false),
+    ] {
+        let mut case = input.clone();
+        let periods = case["one_way"]["flow"]["analysis"]["periods"]
+            .as_array_mut()
+            .unwrap();
+        let cut_boundary = periods[2]["boundaries"]
+            .as_array_mut()
+            .unwrap()
+            .iter_mut()
+            .find(|b| b["face_set"] == "Seam:a")
+            .unwrap();
+        cut_boundary["condition"] = condition.clone();
+        if later {
+            let mut exposed = periods[2].clone();
+            exposed["name"] = json!("still_exposed");
+            exposed["end_time_s"] = json!(0.5);
+            periods[3]["end_time_s"] = json!(0.625);
+            periods.insert(3, exposed);
+        }
+        let exterior = case["one_way"]["exterior_periods"].as_array_mut().unwrap();
+        let period = if later {
+            exterior[2]["reservoirs"] = json!([{"face_set":face_set,"level_m":2.}]);
+            exterior.insert(
+                3,
+                json!({
+                    "name":"still_exposed",
+                    "reservoirs":[{"face_set":face_set,"level_m":level}]
+                }),
+            );
+            "still_exposed"
+        } else {
+            exterior[2]["reservoirs"] = json!([{"face_set":face_set,"level_m":level}]);
+            "remove"
+        };
+        let result = construction::solve(&mesh, ground.clone(), serde_json::from_value(case)?);
+        if rejected {
+            let Err(Error::Input(reason)) = result else {
+                panic!("expected preflight rejection for {period}, {face_set}: {condition}");
+            };
+            assert!(
+                reason.contains(&format!(
+                    "period {period}: exterior reservoir and prescribed hydraulic head disagree on cut face"
+                )),
+                "{reason}"
+            );
+        } else {
+            let run = result?;
+            assert!(run.complete, "{:?}", run.failure_reason);
+            assert_eq!(run.excavations.len(), 1);
+        }
+    }
     Ok(())
 }
 

@@ -680,6 +680,7 @@ fn validate_domain(
     active: &[bool],
     period: usize,
     projected: &Mesh,
+    joint_exposed: &BTreeSet<[usize; 3]>,
 ) -> Result<()> {
     let p = &periods(case)?[period];
     let faces = |name: &str| {
@@ -705,41 +706,53 @@ fn validate_domain(
         .flat_map(|r| faces(&r.face_set).map(move |key| (key, r.level_m)))
         .collect();
     for (key, owners) in boundary::surface_owners(mesh) {
-        if matches!(
-            case.one_way.mechanics.settings.kinematics,
-            stages::Kinematics::Oedometer
-        ) && owners.len() == 2
-            && owners.iter().filter(|&&e| active[e]).count() == 1
+        let shared_cut = owners.len() == 2;
+        if !shared_cut && !joint_exposed.contains(&key) {
+            continue;
+        }
+        let mut remaining = owners.into_iter().filter(|&owner| active[owner]);
+        let Some(owner) = remaining.next() else {
+            continue;
+        };
+        if remaining.next().is_some() {
+            continue;
+        }
+        if shared_cut
+            && matches!(
+                case.one_way.mechanics.settings.kinematics,
+                stages::Kinematics::Oedometer
+            )
             && key
                 .iter()
                 .any(|&n| (mesh.nodes[n][2] - mesh.nodes[key[0]][2]).abs() > 1e-8)
         {
             return Err(Error::Input("oedometer domain changes require horizontal cuts; use 3D supports for local excavation".into()));
         }
-        if owners.len() == 2 && owners.iter().filter(|&&e| active[e]).count() == 1 {
-            let condition = conditions.get(&key).ok_or_else(|| {
-                Error::Input(
+        let condition = match conditions.get(&key) {
+            Some(condition) => condition,
+            None if shared_cut => {
+                return Err(Error::Input(
                     "new cut faces require explicit water boundaries in every subsequent period"
                         .into(),
-                )
-            })?;
-            if let Some(&level) = levels.get(&key) {
-                let nodes = mesh.face_nodes(owners[0], &key)?;
-                for n in nodes {
-                    let x = mesh.nodes[n];
-                    let consistent = match condition {
-                        richards::Condition::Head { value } => value.relative(x, level) == 0.,
-                        richards::Condition::Pressure { pressure_head_m } => {
-                            *pressure_head_m == level - x[2]
-                        }
-                        _ => true,
-                    };
-                    if !consistent {
-                        return Err(Error::Input(format!(
-                            "period {}: exterior reservoir and prescribed hydraulic head disagree on cut face {key:?}",
-                            p.name
-                        )));
+                ));
+            }
+            None => continue, // Missing JOINT boundaries are reported with the other exposed walls.
+        };
+        if let Some(&level) = levels.get(&key) {
+            for n in mesh.face_nodes(owner, &key)? {
+                let x = mesh.nodes[n];
+                let consistent = match condition {
+                    richards::Condition::Head { value } => value.relative(x, level) == 0.,
+                    richards::Condition::Pressure { pressure_head_m } => {
+                        *pressure_head_m == level - x[2]
                     }
+                    _ => true,
+                };
+                if !consistent {
+                    return Err(Error::Input(format!(
+                        "period {}: exterior reservoir and prescribed hydraulic head disagree on cut face {key:?}",
+                        p.name
+                    )));
                 }
             }
         }
@@ -834,6 +847,7 @@ fn advance(
     let mut previous_active = vec![];
     let mut previous_ids = vec![];
     let mut required_exposed = BTreeSet::new();
+    let mut joint_exposed = BTreeSet::new();
     for (i, p) in ps.iter().enumerate() {
         let before = dummy.active_elements.clone();
         if let Some(event) = case.excavations.iter().find(|e| e.before_period == p.name) {
@@ -917,13 +931,21 @@ fn advance(
                         pair.b
                     };
                     if wet.is_soil(retained.element) {
-                        required_exposed.insert(retained.corners);
+                        joint_exposed.insert(retained.corners);
                     }
                 }
             }
             required_exposed.retain(|key| !walls.contains(key));
+            joint_exposed.retain(|key| !walls.contains(key));
         }
-        validate_domain(mesh, &case, &dummy.active_elements, i, &projected)?;
+        validate_domain(
+            mesh,
+            &case,
+            &dummy.active_elements,
+            i,
+            &projected,
+            &joint_exposed,
+        )?;
         let explicit = ps[i]
             .boundaries
             .iter()
@@ -940,8 +962,8 @@ fn advance(
             .map(|(k, _)| k)
             .collect::<BTreeSet<_>>();
         if required_exposed
-            .intersection(&exposed)
-            .any(|k| !explicit.contains(k))
+            .union(&joint_exposed)
+            .any(|k| exposed.contains(k) && !explicit.contains(k))
         {
             return Err(Error::Input(
                 "new BIRTH surfaces require explicit water conditions in every exposed period"
