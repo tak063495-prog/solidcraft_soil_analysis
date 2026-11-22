@@ -37,6 +37,7 @@ def main():
     p.add_argument('--folder',default='baseline');p.add_argument('--other',default='independent')
     p.add_argument('--steps',type=int,default=32);p.add_argument('--material',type=float,default=1e-4)
     p.add_argument('--contact',type=float,default=1e-4);p.add_argument('--timeout',type=int,default=14400)
+    p.add_argument('--nonlinear-cutback',action='store_true',help='retry failed independent nonlinear increments from committed state')
     a=p.parse_args();os.environ['C03_USER_PC']='1';out=a.output.resolve()
     try:
         if a.mode=='init':
@@ -68,7 +69,20 @@ def main():
                 with (folder/'fields.jsonl').open('x',encoding='utf-8') as f:
                     def sink(row,fields):
                         f.write(json.dumps(dict(row=row,fields={k:v.tolist() for k,v in fields.items()}),allow_nan=False)+'\n');f.flush()
-                    result=run(model,a.steps,a.material,a.contact,sink)
+                    if a.nonlinear_cutback:
+                        with (folder/'attempts.jsonl').open('x',encoding='utf-8') as attempts, (folder/'substeps.jsonl').open('x',encoding='utf-8') as extra:
+                            def adaptive_sink(row,fields):
+                                if row['progress'] == round(row['progress'] * a.steps) / a.steps:
+                                    sink(row,fields)
+                                else:
+                                    extra.write(json.dumps(dict(row=row, fields={k:v.tolist() for k,v in fields.items()}),allow_nan=False)+'\n')
+                                    extra.flush()
+                            def log_attempt(record):
+                                attempts.write(json.dumps(record)+'\n')
+                                attempts.flush()
+                            result=run(model,a.steps,a.material,a.contact,adaptive_sink,cutback=True,attempt_sink=log_attempt)
+                    else:
+                        result=run(model,a.steps,a.material,a.contact,sink)
                 write(folder/'result.json',result);write(folder/'process.json',dict(pid=os.getpid(),elapsed_seconds=time.monotonic()-start,input_only=True))
     except Exception as exc:
         if out.exists():write(out/f'failure-pc-{time.time_ns()}.json',dict(passed=False,complete=False,error=repr(exc)))

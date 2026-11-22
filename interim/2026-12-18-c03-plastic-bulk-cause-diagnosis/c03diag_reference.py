@@ -106,15 +106,20 @@ class Model:
                     water_load=self.interface['load'].copy(),reaction=(self.internal(states,traction)-load).reshape(-1,3))
 
 
-def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tolerance=1e-10,fixed_material=None,fixed_contact=None):
+class NonlinearFailure(ArithmeticError):
+    """A global nonlinear trial failed before committing any fields."""
+
+
+def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tolerance=1e-10,fixed_material=None,fixed_contact=None,*,cutback=False,attempt_sink=None):
     assert isinstance(steps,int) and steps>=2 and 0<tolerance<=1e-10
     assert 1e-7<=material_maximum<=1e-3 and contact_maximum>=5e-6
     m=model;s=m.system;u=np.zeros(m.nd);states=copy.deepcopy(m.seeds);jump=np.zeros((len(s.points),3));traction=jump.copy()
     plastic=jump.copy();accumulated=np.zeros(len(jump));pd=accumulated.copy();nd=accumulated.copy();work=accumulated.copy()
     rows=[];origin=0.
     for phase,(name,end) in enumerate([('geostatic',0.)]+[(x['name'],x['target_factor']) for x in m.case['stages']]):
-        for index in range(1,steps+1):
-            progress=index/steps;factor=origin+(end-origin)*progress;load=m.base+(1-progress)*(m.seed_force-m.base) if phase==0 else m.base+factor*m.boundary
+        def attempt(progress):
+            nonlocal u, states, jump, traction, plastic, accumulated
+            factor=origin+(end-origin)*progress;load=m.base+(1-progress)*(m.seed_force-m.base) if phase==0 else m.base+factor*m.boundary
             fixed=m.offset(factor);free=m.t.T@(u-fixed);scale=max(np.linalg.norm(load),1.)
             counts=np.full(len(states),fixed_material or 1,dtype=int);jc=np.full(len(jump),fixed_contact or 1,dtype=int)
             def required(candidate,target):
@@ -179,8 +184,33 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                     try:trial_res=evaluate(trial)[0]
                     except ArithmeticError:continue
                     if np.linalg.norm(trial_res)<np.linalg.norm(res):free=trial;break
-                else:raise ArithmeticError(('independent line search',name,progress,iteration,relative))
-            else:raise ArithmeticError(('independent Newton limit',name,progress,relative))
+                else:raise NonlinearFailure(('independent line search',name,progress,iteration,relative))
+            else:raise NonlinearFailure(('independent Newton limit',name,progress,relative))
+        current = 0.
+        attempts = 0
+        for index in range(1, steps + 1):
+            anchor = index / steps
+            target = anchor
+            while current < anchor:
+                if cutback and attempts >= 2000:
+                    raise ArithmeticError('independent stage attempt budget')
+                attempts += 1
+                try:
+                    attempt(target)
+                except NonlinearFailure as error:
+                    if attempt_sink:
+                        attempt_sink(dict(stage=name, start=current, target=target, accepted=False, reason=str(error)))
+                    if not cutback:
+                        raise
+                    half = (target - current) / 2
+                    if half < model.case['settings']['minimum_increment'] or current + half == current:
+                        raise NonlinearFailure(('independent cutback exhausted', name, current, target, str(error))) from error
+                    target = current + half
+                    continue
+                if attempt_sink:
+                    attempt_sink(dict(stage=name, start=current, target=target, accepted=True))
+                current = target
+                target = anchor
         origin=end
     return dict(complete=True,reference_uses_native_results=False,rows=rows,steps=steps,material_maximum=material_maximum,
                 contact_maximum=contact_maximum,volume_rule='input Gauss-Jacobi; independent geometry/assembly')

@@ -433,6 +433,16 @@ pub struct Attempt {
     pub linear_solves: Vec<LinearReport>,
 }
 
+impl Attempt {
+    fn retry_increment(&self, span: f64) -> f64 {
+        self.joint_path_error
+            .as_ref()
+            .filter(|audit| audit.reject)
+            .and_then(|audit| audit.proposed_increment)
+            .unwrap_or(span * 0.5)
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ContactPredictor {
@@ -3271,6 +3281,18 @@ impl<'a> Model<'a> {
                 &active,
             )?;
             partitions[self.point_count..].copy_from_slice(&needed);
+            if let Some(minimum) = self
+                .case
+                .joint_system
+                .as_ref()
+                .and_then(|j| j.global_step_control.as_ref())
+                .and_then(|c| c.path_error.as_ref())
+                .and_then(|c| c.minimum_contact_substeps)
+            {
+                for count in &mut partitions[self.point_count..] {
+                    *count = (*count).max(minimum);
+                }
+            }
         }
         if dofs.transform.is_some() {
             for (ei, e) in self.elements.iter().enumerate() {
@@ -5173,7 +5195,7 @@ fn equilibrate(
                     injected = true;
                 }
                 increment = if global_control.is_some() {
-                    (target - cursor) * 0.5
+                    attempt.retry_increment(target - cursor)
                 } else {
                     increment * 0.5
                 };
@@ -5396,7 +5418,11 @@ fn equilibrate(
                     break;
                 }
                 report.next_increment = if global_control.is_some() {
-                    (next - report.progress) * 0.5
+                    report
+                        .attempts
+                        .last()
+                        .unwrap()
+                        .retry_increment(next - report.progress)
                 } else {
                     report.next_increment * 0.5
                 };
@@ -6742,7 +6768,7 @@ fn solve_controlled(
                     }
                     model.notify_attempt(stage_index + 1, attempts.last().unwrap())?;
                     increment = if global_control.is_some() {
-                        (next - progress) * 0.5
+                        attempts.last().unwrap().retry_increment(next - progress)
                     } else {
                         increment * 0.5
                     };

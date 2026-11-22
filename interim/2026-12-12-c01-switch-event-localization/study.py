@@ -33,7 +33,13 @@ def without_clock(v):
     return v
 
 
-def initialize(out,solver):
+def path_settings(event_proposal):
+    if event_proposal:
+        return dict(PATH_ERROR, event_proposal=True, minimum_contact_substeps=4)
+    return PATH_ERROR
+
+
+def initialize(out,solver,*,event_proposal=False):
     out.mkdir(parents=True,exist_ok=False)
     for name,source in [('mesh-h0.json','joint-water-column-tet10-mesh.json'),('ground.json','ground-joint-water-mc.json'),('stages.json','stages-joint-water-cycle.json')]:
         value=read(ROOT/'examples'/source)
@@ -41,7 +47,9 @@ def initialize(out,solver):
         if name=='stages.json': value=fem.normalize_stage_case(value)
         write(out/name,value)
     binary=out/('probe.exe' if solver.suffix=='.exe' else 'probe');shutil.copy2(solver,binary)
-    write(out/'identity.json',dict(starting_commit=BASE,solver_sha256=sha(binary),inputs={n:sha(out/n) for n in ('mesh-h0.json','ground.json','stages.json')},path_error=PATH_ERROR))
+    commit = subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip() if event_proposal else BASE
+    control = path_settings(event_proposal)
+    write(out/'identity.json',dict(starting_commit=commit,solver_sha256=sha(binary),inputs={n:sha(out/n) for n in ('mesh-h0.json','ground.json','stages.json')},path_error=control))
 
 
 def audit(folder,mesh,ground,case,steps):
@@ -55,12 +63,12 @@ def audit(folder,mesh,ground,case,steps):
     return result
 
 
-def native(out,g,timeout,enabled=True):
+def native(out,g,timeout,enabled=True,*,event_proposal=False):
     folder=out/f'g{g}';folder.mkdir(exist_ok=True)
     mesh=read(out/'mesh-h0.json');ground=read(out/'ground.json');case=read(out/'stages.json')
     cfg=prior.configuration(case,g,5e-5)
     if enabled:
-        cfg['joint_system']['global_step_control']={'path_error':PATH_ERROR}
+        cfg['joint_system']['global_step_control']={'path_error':path_settings(event_proposal)}
         cfg['settings']['minimum_increment']=min(cfg['settings']['minimum_increment'],1/(g*65536))
     write(folder/'native-stages.json',cfg)
     binary=out/('probe.exe' if (out/'probe.exe').exists() else 'probe')
@@ -98,19 +106,19 @@ def native(out,g,timeout,enabled=True):
     print('native complete',g,flush=True)
 
 
-def independent(out,g,enabled=True):
+def independent(out,g,enabled=True,*,event_proposal=False):
     folder=out/f'g{g}';folder.mkdir(exist_ok=True)
     writer=Writer(folder/'independent');started=time.monotonic()
     mesh=read(out/'mesh-h0.json');ground=read(out/'ground.json');case=read(out/'stages.json')
     cfg=prior.configuration(case,g,5e-5)
     if enabled:
-        cfg['joint_system']['global_step_control']={'path_error':PATH_ERROR}
+        cfg['joint_system']['global_step_control']={'path_error':path_settings(event_proposal)}
         cfg['settings']['minimum_increment']=min(cfg['settings']['minimum_increment'],1/(g*65536))
     with (folder/'independent-attempts.jsonl').open('x',encoding='utf-8',newline='\n') as stream:
         def record_attempt(row):
             stream.write(json.dumps(row,ensure_ascii=False,separators=(',',':'))+'\n');stream.flush()
         try:
-            value=reference._reference(mesh,ground,cfg,g,1,7,False,True,writer,maximum_m=5e-5,path_error=PATH_ERROR if enabled else None,attempt_sink=record_attempt)
+            value=reference._reference(mesh,ground,cfg,g,1,7,False,True,writer,maximum_m=5e-5,path_error=cfg['joint_system']['global_step_control']['path_error'] if enabled else None,attempt_sink=record_attempt)
         except Exception as error:
             write(folder/'independent-failure.json',dict(complete=False,passed=False,error_type=type(error).__name__,error=str(error)))
             raise
@@ -161,11 +169,13 @@ def main():
     p.add_argument('--output',type=Path,required=True);p.add_argument('--solver',type=Path,default=ROOT/'target/release/examples/wet_joint_path_probe')
     p.add_argument('--mode',choices=('init','native','independent','restart'),required=True);p.add_argument('--steps',type=int,nargs='+',default=STEPS)
     p.add_argument('--timeout',type=int,default=1800);p.add_argument('--legacy',action='store_true');p.add_argument('--pc-series',action='store_true')
+    p.add_argument('--event-proposal',action='store_true',help='locate gap events, fit increments to anchors, and integrate each contact path in at least four substeps')
     a=p.parse_args();out=a.output.resolve()
-    if a.mode=='init': initialize(out,a.solver.resolve());return
+    if a.event_proposal and a.legacy: p.error('--event-proposal requires path error control')
+    if a.mode=='init': initialize(out,a.solver.resolve(),event_proposal=a.event_proposal);return
     assert all(g in STEPS or (a.pc_series and g in (512,1024,2048)) for g in a.steps), 'long series requires explicit --pc-series on user PC'
     for g in a.steps:
-        if a.mode=='native': native(out,g,a.timeout,not a.legacy)
-        elif a.mode=='independent': independent(out,g,not a.legacy)
+        if a.mode=='native': native(out,g,a.timeout,not a.legacy,event_proposal=a.event_proposal)
+        elif a.mode=='independent': independent(out,g,not a.legacy,event_proposal=a.event_proposal)
         else: restart(out,g,a.timeout)
 if __name__=='__main__': main()

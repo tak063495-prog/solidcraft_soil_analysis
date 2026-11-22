@@ -23,6 +23,8 @@ pub struct PathErrorAudit {
     pub fine_relative_force_residual: f64,
     pub midpoint_linear_solves: Vec<LinearReport>,
     pub fine_linear_solves: Vec<LinearReport>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub proposed_increment: Option<f64>,
     pub reject: bool,
 }
 
@@ -173,7 +175,7 @@ impl Model<'_> {
             .zip(&d.points)
             .filter(|(c, d)| c.status != d.status)
             .count();
-        let audit = PathErrorAudit {
+        let mut audit = PathErrorAudit {
             midpoint_progress,
             base_increment: base,
             actual_increment: h,
@@ -193,9 +195,57 @@ impl Model<'_> {
             fine_relative_force_residual: fine.residual,
             midpoint_linear_solves: half.linear_solves,
             fine_linear_solves: fine.linear_solves,
+            proposed_increment: None,
             reject: maximum_slip_error_m > slip_budget_m
                 || maximum_dissipation_error_kpa_m > dissipation_budget_kpa_m,
         };
+        if control.event_proposal {
+            let next = if audit.reject {
+                let mut fraction = 1.;
+                for (i, ((left, mid), right)) in
+                    a.points.iter().zip(&b.points).zip(&d.points).enumerate()
+                {
+                    if audit.slip_errors_m[i]
+                        .iter()
+                        .all(|v| v.abs() <= slip_budget_m)
+                        && audit.dissipation_errors_kpa_m[i].abs() <= dissipation_budget_kpa_m
+                    {
+                        continue;
+                    }
+                    let n = nalgebra::Vector3::from(left.normal);
+                    let gaps = [left, mid, right].map(|point| n.dot(&point.elastic_jump()));
+                    for (j, pair) in gaps.windows(2).enumerate() {
+                        if (pair[0] > 0.) != (pair[1] > 0.) {
+                            let root = (j as f64 + pair[0] / (pair[0] - pair[1])) * 0.5;
+                            fraction = f64::min(fraction, root);
+                        }
+                    }
+                }
+                let fraction = if fraction < 1. {
+                    fraction.clamp(0.0625, 0.9375)
+                } else {
+                    0.5
+                };
+                (h * fraction).max(settings.minimum_increment.min(h * 0.5))
+            } else {
+                let ratio = (maximum_slip_error_m / slip_budget_m)
+                    .max(maximum_dissipation_error_kpa_m / dissipation_budget_kpa_m);
+                let desired = if ratio > 0. {
+                    (0.9 * h / ratio.sqrt()).min(base)
+                } else {
+                    base
+                };
+                let end = start + h;
+                let remaining = crate::joints::GlobalStepControl::next(end, base, base) - end;
+                if remaining > 0. {
+                    remaining / (remaining / desired).round().max(1.)
+                } else {
+                    desired
+                }
+                .max(settings.minimum_increment)
+            };
+            audit.proposed_increment = Some(next.min(base));
+        }
         Ok((coarse, Some(audit)))
     }
 }
@@ -203,6 +253,9 @@ impl Model<'_> {
 /// Predict a next trial size from the O(h^2) step-doubling estimate.
 /// This affects proposals only; every proposed step is solved and checked again.
 pub(super) fn next_increment(a: &PathErrorAudit, minimum: f64) -> f64 {
+    if let Some(size) = a.proposed_increment {
+        return size;
+    }
     let ratio = (a.maximum_slip_error_m / a.slip_budget_m)
         .max(a.maximum_dissipation_error_kpa_m / a.dissipation_budget_kpa_m);
     // A fixed local error budget on a prescribed base interval: for a smooth

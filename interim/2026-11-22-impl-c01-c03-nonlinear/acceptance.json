@@ -1,0 +1,183 @@
+{
+  "base": "0fcf4d6aea37c638ab7e5e25662980bd83aae2a5",
+  "passed": false,
+  "c01_complete": false,
+  "c03_complete": false,
+  "pc_executed": false,
+  "c01_independent_open_44_of_1024": {
+    "old": {
+      "steps": 1024,
+      "event_proposal": false,
+      "stop": "observation point",
+      "phase": "open",
+      "threshold": 0.04296875,
+      "last": {
+        "geostatic": 1.0,
+        "shear": 1.0,
+        "open": 0.04296875
+      },
+      "counts": {
+        "geostatic": {
+          "attempts": 1024,
+          "accepted": 1024
+        },
+        "shear": {
+          "attempts": 1568,
+          "accepted": 1568
+        },
+        "open": {
+          "attempts": 1730,
+          "rejected": 233,
+          "accepted": 1497
+        }
+      },
+      "maximum_force": 9.99982399778609e-11,
+      "seconds": 294.86431029400046,
+      "numerical_acceptance": false
+    },
+    "new": {
+      "steps": 1024,
+      "event_proposal": true,
+      "stop": "observation point",
+      "phase": "open",
+      "threshold": 0.04296875,
+      "last": {
+        "geostatic": 1.0,
+        "shear": 1.0,
+        "open": 0.04296875
+      },
+      "counts": {
+        "geostatic": {
+          "attempts": 1024,
+          "accepted": 1024
+        },
+        "shear": {
+          "attempts": 1438,
+          "accepted": 1329,
+          "rejected": 109
+        },
+        "open": {
+          "attempts": 1270,
+          "rejected": 91,
+          "accepted": 1179
+        }
+      },
+      "maximum_force": 9.348775236540582e-11,
+      "seconds": 151.77485707099913,
+      "numerical_acceptance": false
+    },
+    "local4": {
+      "steps": 1024,
+      "event_proposal": true,
+      "stop": "observation point",
+      "phase": "open",
+      "local_substeps": 4,
+      "threshold": 0.04296875,
+      "last": {
+        "geostatic": 1.0,
+        "shear": 1.0,
+        "open": 0.04296875
+      },
+      "counts": {
+        "geostatic": {
+          "attempts": 1024,
+          "accepted": 1024
+        },
+        "shear": {
+          "attempts": 1148,
+          "accepted": 1086,
+          "rejected": 62
+        },
+        "open": {
+          "attempts": 733,
+          "rejected": 93,
+          "accepted": 640
+        }
+      },
+      "maximum_force": 9.927110445645245e-11,
+      "seconds": 232.29930901899934,
+      "numerical_acceptance": false
+    }
+  },
+  "c03_tet4_n4": {
+    "old": {
+      "steps": 4,
+      "opening": 0.3,
+      "cutback": false,
+      "phase": "open",
+      "until": 0.25,
+      "stop": "('independent line search', 'open', 0.25, 10, 0.00622861012000329)",
+      "prefix_sha256": "101f9e5e4654969ecce5e0118afb1aad56af457131e99c0c4e1271eb1fe86ae7",
+      "accepted": 8,
+      "rejected": [
+        {
+          "stage": "open",
+          "start": 0.0,
+          "target": 0.25,
+          "accepted": false,
+          "reason": "('independent line search', 'open', 0.25, 10, 0.00622861012000329)"
+        }
+      ],
+      "last": {
+        "stage": "shear",
+        "progress": 1.0,
+        "reassembled_force": 7.560667070811779e-16
+      },
+      "observed_phase": [],
+      "maximum_reassembled_force": 4.815935010597395e-12,
+      "seconds": 11.277092759999505,
+      "numerical_acceptance": false
+    },
+    "new": {
+      "steps": 4,
+      "opening": 0.3,
+      "cutback": true,
+      "phase": "open",
+      "until": 0.25,
+      "stop": "observation point",
+      "prefix_sha256": "101f9e5e4654969ecce5e0118afb1aad56af457131e99c0c4e1271eb1fe86ae7",
+      "accepted": 11,
+      "rejected": [
+        {
+          "stage": "open",
+          "start": 0.0,
+          "target": 0.25,
+          "accepted": false,
+          "reason": "('independent line search', 'open', 0.25, 10, 0.00622861012000329)"
+        },
+        {
+          "stage": "open",
+          "start": 0.125,
+          "target": 0.25,
+          "accepted": false,
+          "reason": "('independent line search', 'open', 0.25, 7, 0.008677617425752605)"
+        }
+      ],
+      "last": {
+        "stage": "open",
+        "progress": 0.25,
+        "reassembled_force": 1.1554787566712637e-11
+      },
+      "observed_phase": [
+        {
+          "stage": "open",
+          "progress": 0.125,
+          "reassembled_force": 2.441259940024206e-14
+        },
+        {
+          "stage": "open",
+          "progress": 0.1875,
+          "reassembled_force": 3.056103664406581e-11
+        },
+        {
+          "stage": "open",
+          "progress": 0.25,
+          "reassembled_force": 1.1554787566712637e-11
+        }
+      ],
+      "maximum_reassembled_force": 3.056103664406581e-11,
+      "seconds": 29.27360384199892,
+      "numerical_acceptance": false
+    }
+  }
+}

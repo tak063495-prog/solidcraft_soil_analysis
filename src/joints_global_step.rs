@@ -20,6 +20,12 @@ fn is_zero(n: &u32) -> bool {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PathErrorControl {
+    /// Use signed-gap event localization and fit the proposal to the next base boundary.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub event_proposal: bool,
+    /// Lower bound on local return-map subdivisions for every coarse and half trial.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub minimum_contact_substeps: Option<usize>,
     pub slip_scale_m: f64,
     pub dissipation_scale_kpa_m: f64,
 }
@@ -35,6 +41,13 @@ impl GlobalStepControl {
                 || minimum > base * 0.5
             {
                 return Err(Error::Input("JOINT path error control requires positive finite scales, no switch_bisections, and minimum increment no greater than half the base".into()));
+            }
+            if c.minimum_contact_substeps
+                .is_some_and(|n| !(1..=50_000).contains(&n))
+            {
+                return Err(Error::Input(
+                    "JOINT minimum_contact_substeps outside existing partition budget".into(),
+                ));
             }
             return Ok(());
         }

@@ -62,11 +62,32 @@ fn path_error_option_is_explicit_and_separate_from_legacy_switch_control() -> Re
 
 #[test]
 fn global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly() -> Result<()> {
+    check_path_replay(false)
+}
+
+#[test]
+fn event_proposals_recheck_all_gates_and_checkpoint_replays_exactly() -> Result<()> {
+    check_path_replay(true)
+}
+
+fn check_path_replay(event_proposal: bool) -> Result<()> {
     let (mesh, ground, mut case) = fixture()?;
     case.settings.minimum_increment = 1. / (16. * 65536.);
     case.joint_system.as_mut().unwrap().global_step_control = Some(serde_json::from_value(
-        serde_json::json!({"path_error":{"slip_scale_m":1e-4,"dissipation_scale_kpa_m":1e-2}}),
+        serde_json::json!({"path_error":{"slip_scale_m":1e-4,"dissipation_scale_kpa_m":1e-2,"event_proposal":event_proposal}}),
     )?);
+    if event_proposal {
+        case.joint_system
+            .as_mut()
+            .unwrap()
+            .global_step_control
+            .as_mut()
+            .unwrap()
+            .path_error
+            .as_mut()
+            .unwrap()
+            .minimum_contact_substeps = Some(4);
+    }
     let whole = stages::solve(&mesh, ground.clone(), case.clone())?;
     assert!(whole.complete, "{:?}", whole.failure_reason);
     let attempts = whole
@@ -94,7 +115,10 @@ fn global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly()
                 .chain(&audit.fine_linear_solves)
                 .all(|l| l.true_relative_residual <= case.settings.relative_linear_tolerance)
         );
+        assert_eq!(audit.proposed_increment.is_some(), event_proposal);
         if a.accepted {
+            assert!(audit.maximum_slip_error_m <= audit.slip_budget_m);
+            assert!(audit.maximum_dissipation_error_kpa_m <= audit.dissipation_budget_kpa_m);
             assert!(!audit.reject);
         } else {
             assert!(a.committed_state_unchanged_on_rejection);

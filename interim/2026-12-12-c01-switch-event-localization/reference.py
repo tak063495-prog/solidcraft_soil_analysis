@@ -88,6 +88,33 @@ def endpoint_status(system, old_jump, old_traction, target, count):
         tau=np.where(closed[:,None],trial*scale[:,None],0); gap=end
     return status
 
+def event_proposal(audit, gaps, progress, steps, minimum):
+    h = audit['actual_increment']
+    base = audit['base_increment']
+    if audit['reject']:
+        fractions = []
+        for i, (left, mid, right) in enumerate(zip(*gaps)):
+            if (max(map(abs, audit['slip_errors_m'][i])) <= audit['slip_budget_m']
+                    and abs(audit['dissipation_errors_kpa_m'][i]) <= audit['dissipation_budget_kpa_m']):
+                continue
+            for j, (a, b) in enumerate(((left, mid), (mid, right))):
+                if (a > 0) != (b > 0):
+                    fractions.append((j + a / (a-b)) / 2)
+        first = min(fractions, default=1.)
+        fraction = min(.9375, max(.0625, first)) if first < 1 else .5
+        return max(h * fraction, min(minimum, h / 2))
+    ratio = max(audit['maximum_slip_error_m'] / audit['slip_budget_m'],
+                audit['maximum_dissipation_error_kpa_m'] / audit['dissipation_budget_kpa_m'])
+    desired = min(base, .9 * h / np.sqrt(ratio)) if ratio > 0 else base
+    anchor = (np.floor(progress * steps) + 1) / steps
+    if anchor <= progress + 16 * np.finfo(float).eps:
+        anchor += base
+    remaining = min(1., anchor) - progress
+    if remaining > 0:
+        desired = remaining / max(1, np.floor(.5 + remaining / desired))
+    return min(base, max(minimum, desired))
+
+
 def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None, switch_bisections=None, path_error=None, attempt_sink=None):
     assert isinstance(steps, int) and steps >= 2
     assert isinstance(contact_steps, int) and contact_steps >= 1
@@ -185,7 +212,10 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
     def subset(mask):
         return SimpleNamespace(**{k: getattr(system, k)[mask] for k in ('normal', 'kn', 'kt', 'mu')})
 
-    frozen_counts = np.ones(len(jump), dtype=int)
+    minimum_contact = (path_error or {}).get('minimum_contact_substeps', 1)
+    if type(minimum_contact) is not int or not 1 <= minimum_contact <= 50000:
+        raise ValueError('invalid minimum contact subdivisions')
+    frozen_counts = np.full(len(jump), minimum_contact, dtype=int)
 
     def project(target):
         if maximum_m is None:
@@ -210,7 +240,7 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
 
     def increment(load, factor, name, progress, previous=0., *, probe=False, start_load=None, start_factor=None):
         nonlocal u, jump, traction, plastic, accumulated, maximum_residual, frozen_counts, status
-        frozen_counts = np.ones(len(jump), dtype=int)
+        frozen_counts = np.full(len(jump), minimum_contact, dtype=int)
         fixed = offset(factor); free = t.T@(u-fixed); scale = max(np.linalg.norm(load), 1.)
         def evaluate(free):
             candidate = fixed+t@free; target = np.einsum('qag,g->qa', system.c, candidate)
@@ -268,6 +298,11 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                        endpoint_disagreement_points=int((new_status!=fine['status']).sum()),
                                        midpoint_relative_force_residual=half['residual'],
                                        fine_relative_force_residual=fine['residual'], reject=bool(rejected))
+                    if path_error.get('event_proposal'):
+                        gaps = [np.einsum('qa,qa->q', values, system.normal)
+                                for values in (jump, half['jump'], fine['jump'])]
+                        error_audit['proposed_increment'] = event_proposal(
+                            error_audit, gaps, progress, steps, case['settings']['minimum_increment'])
                 record_attempt(dict(stage=name, progress_from=previous, progress_to=progress,
                                      accepted=not rejected, relative_force_residual=relative,
                                      old_status=status.tolist(), trial_status=new_status.tolist(),
@@ -352,9 +387,9 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                     a=attempts[-1]['joint_path_error']
                     ratio=max(a['maximum_slip_error_m']/a['slip_budget_m'],a['maximum_dissipation_error_kpa_m']/a['dissipation_budget_kpa_m'])
                     factor=min(2.,max(.5,.8/float(np.sqrt(ratio)))) if ratio > 0 else 2.
-                    size=max(case['settings']['minimum_increment'],min(1/steps,a['actual_increment']*factor))
+                    size=a.get('proposed_increment', max(case['settings']['minimum_increment'],min(1/steps,a['actual_increment']*factor)))
             else:
-                size=(next_progress-progress)/2
+                size=attempts[-1].get('joint_path_error', {}).get('proposed_increment', (next_progress-progress)/2)
                 assert size >= case['settings']['minimum_increment'], 'independent cutback exhausted'
     phase('geostatic', 0., 0., True)
     frames.append(field_state('initial_equilibrated', base))
