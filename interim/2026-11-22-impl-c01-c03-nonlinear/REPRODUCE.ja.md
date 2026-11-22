@@ -73,4 +73,30 @@ if ($LASTEXITCODE) { throw 'C-03 比較未完了' }
 
 メモリの計画値は C-01 16〜32 GB、C-03 32 GB 以下。C-01 は同時1経路、逐次保存、試行記録最大14,000件で見積もった。C-03 は162変位自由度で、自由度削減前の162×162の倍精度行列でも1枚約0.21 MB。材料324点と数値接線、全履歴の入出力を含め、旧12要素手順の32 GB枠を用いる。空きディスクは C-01 1水準30〜60 GB、C-03 20 GBが目安。メモリ実測が40 GBに近づいたら経路を停止して途中記録を残す。96、768、6144要素への細分化は行わない。
 
+## クラウド比較の再現
+
+Linux では拡張子なしの実行ファイルを使う。独立参照は既存と同じ Python 3.13・固定版パッケージ、BLAS は1スレッドで実行する。probe の出力名は未使用のものを用意する。
+
+```sh
+T=interim/2026-11-22-impl-c01-c03-nonlinear
+O=work/NEW-cloud-c01-c03
+mkdir -p "$O"
+for n in 512 1024; do
+  python "$T/probe_c01.py" --steps "$n" --output "$O/independent-$n-old.json" || exit 1
+  python "$T/probe_c01.py" --steps "$n" --event-proposal --local-substeps 1 --output "$O/independent-$n-event.json" || exit 1
+  python "$T/probe_c01.py" --steps "$n" --event-proposal --local-substeps 4 --output "$O/independent-$n-new.json" || exit 1
+done
+python "$T/probe_c03.py" --output "$O/c03-tet4-old.json"
+python "$T/probe_c03.py" --cutback --output "$O/c03-tet4-new.json"
+```
+
+本体の観測用 `joint_path_window` は実 solver の Observer で指定位置の受理直後に停止する。既存の試行数を継承した単一の求解で、チェックポイントの書換えは行わない。入力は当該水準の `native-stages.json` を使う。以下は N512 の例で、N1024 は `open 0.04296875` に置き換える。
+
+```sh
+cargo build --locked --release --example joint_path_window
+target/release/examples/joint_path_window examples/joint-water-column-tet10-mesh.json examples/ground-joint-water-mc.json work/NEW-PC-c01-event4-512/g512/native-stages.json reload 0.921875 "$O/native-512.json"
+```
+
+`checkpoint_requested` のときは該当工程の最終受理座標を確認する。`stage attempt budget exceeded` は未達。C-03 の同じ12 Tet10 の参照を初期状態から検査する場合は、両方の probe コマンドに `--tet10` を加える。
+
 C-01・C-03 は未達、passed=false。

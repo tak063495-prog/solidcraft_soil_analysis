@@ -2,6 +2,7 @@
 import copy
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 import tempfile
 import unittest
@@ -28,6 +29,22 @@ class GlobalPathErrorControl(unittest.TestCase):
         for x,y in zip(a['frames'],b['frames']):
             for key in st.FIELDS: np.testing.assert_array_equal(x[key],y[key])
         self.assertEqual(a['maximum_relative_force_residual'],b['maximum_relative_force_residual'])
+
+    def test_default_path_controller_replays_pre_change_trials_and_fields(self):
+        inputs_at_start = inputs(8)
+        path = HERE / 'reference.py'
+        revision = '0fcf4d6aea37c638ab7e5e25662980bd83aae2a5:' + path.relative_to(ROOT).as_posix()
+        frozen = subprocess.check_output(['git', '-C', str(ROOT), 'show', revision])
+        with tempfile.TemporaryDirectory() as temp:
+            saved = Path(temp) / 'original.py'
+            saved.write_bytes(frozen)
+            spec = importlib.util.spec_from_file_location('baseline_path_reference', saved)
+            baseline = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(baseline)
+            def solve(module):
+                return module._reference(*inputs_at_start, 8, 1, 7, False, True,
+                                         maximum_m=5e-5, path_error=st.PATH_ERROR)
+            np.testing.assert_equal(solve(baseline), solve(st.reference))
 
     def test_reference_owns_its_rollback_and_prescribed_coordinates(self):
         mesh,ground,case=inputs(8)
