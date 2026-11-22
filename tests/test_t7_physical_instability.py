@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 import numpy as np
@@ -41,6 +42,26 @@ def polynomial(power):
         )
 
     return evaluate
+
+
+def scan_pitchfork(sign, loads, event=lambda _: ()):
+    lo, hi = min(loads), max(loads)
+
+    def evaluate(parent, z):
+        x, load = z
+        if not lo <= load <= hi:
+            raise AssertionError(f"trial load {load} outside accepted history")
+        return Evaluation(
+            np.array([x * (x * x + sign * load)]),
+            np.array([[3 * x * x + sign * load]]),
+            np.array([sign * x]),
+            {},
+            1.0,
+            event=event(load),
+        )
+
+    points = [dict(z=[0.0, load], state={}) for load in loads]
+    return scan(evaluate, points, 1e-11, lambda state: state)["branch_candidates"]
 
 
 class PhysicalInstability(unittest.TestCase):
@@ -165,6 +186,69 @@ class PhysicalInstability(unittest.TestCase):
         self.assertEqual(len(located), 1)
         self.assertEqual(located[0]["kind"], "bifurcation")
         np.testing.assert_allclose(located[0]["z"], [0, 0], atol=1e-13)
+
+    def test_4_pitchfork_with_and_without_accepted_critical_point(self):
+        for sign in (1, -1):
+            for loads in ((-0.25, 0.25), (-0.25, 0.0, 0.25), (0.25, 0.0, -0.25)):
+                with self.subTest(sign=sign, loads=loads):
+                    candidates = scan_pitchfork(sign, loads)
+                    self.assertEqual(len(candidates), 1)
+                    candidate = candidates[0]
+                    self.assertEqual(candidate["kind"], "bifurcation")
+                    self.assertEqual(
+                        candidate["accepted_indices"], list(range(len(loads)))
+                    )
+                    np.testing.assert_allclose(candidate["z"], [0, 0], atol=1e-13)
+                    self.assertEqual(len(candidate["branches"]), 2)
+                    for direction, branch in zip((-1, 1), candidate["branches"]):
+                        self.assertEqual(len(branch), 3)
+                        for x, load in branch:
+                            self.assertGreater(direction * x, 0)
+                            self.assertLess(sign * load, 0)
+                            self.assertLess(abs(x * (x * x + sign * load)), 1e-11)
+
+    def test_4_pitchfork_at_active_set_boundary_remains_d(self):
+        for sign in (1, -1):
+            with self.subTest(sign=sign):
+                candidates = scan_pitchfork(
+                    sign, (-0.25, 0.0, 0.25), event=lambda load: (load >= 0,)
+                )
+                self.assertEqual(
+                    candidates,
+                    [
+                        dict(
+                            accepted_indices=[0, 1, 2],
+                            kind="D",
+                            reason="active-set change",
+                        )
+                    ],
+                )
+
+    def test_4_pitchfork_outside_accepted_loads_remains_d(self):
+        for sign in (1, -1):
+            with self.subTest(sign=sign):
+                candidates = scan_pitchfork(sign, (0.0, sign * 0.25))
+                self.assertEqual(len(candidates), 1)
+                self.assertEqual(candidates[0]["kind"], "D")
+                self.assertEqual(
+                    candidates[0]["reason"], "outside the accepted parent interval"
+                )
+
+    def test_issue39_40_documents_have_same_status_with_lf_and_crlf(self):
+        folder = HERE.parent / "2026-11-22-issue39-40-input-check-scan"
+        status = (
+            "A-01 (d) は D（判定不能）、B-02 / B-03 は未達。\n"
+            "FEM の全項目は未達、passed=false。\n"
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            for name in ("README.ja.md", "REPRODUCE.ja.md"):
+                text = (folder / name).read_text(encoding="utf-8")
+                self.assertTrue(text.endswith(status), name)
+                windows_copy = Path(temp) / name
+                windows_copy.write_bytes(text.replace("\n", "\r\n").encode("utf-8"))
+                self.assertTrue(
+                    windows_copy.read_text(encoding="utf-8").endswith(status), name
+                )
 
     def test_5_restart_preserves_history_and_records_rejections(self):
         ev = polynomial(2)

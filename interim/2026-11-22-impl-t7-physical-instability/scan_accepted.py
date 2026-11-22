@@ -11,16 +11,19 @@ from scipy.optimize import brentq, root
 from continuation import TrialRejected, bifurcation, serial, spectrum
 
 
-def branch_in_interval(op, parent, za, zb, event, tol, left, right):
-    """Follow the locally single-valued parent and locate a zero of its bordered test."""
-    a, b = map(np.asarray, (za, zb))
-    lo, hi = sorted((a[-1], b[-1]))
+def branch_in_interval(op, parent, accepted, event, tol, mode):
+    """Recheck the locally single-valued parent and test for a simple branch point."""
+    left, right = mode
+    ordered = sorted(accepted, key=lambda z: z[-1])
+    segments = list(zip(ordered, ordered[1:]))
+    lo, hi = ordered[0][-1], ordered[-1][-1]
     if hi == lo:
         return dict(kind="D", reason="no monotone load interval")
 
     def parent_at(load):
         if not lo <= load <= hi:
             raise TrialRejected("outside the accepted parent interval")
+        a, b = next((a, b) for a, b in segments if load <= b[-1])
         seed = a[:-1] + (load - a[-1]) / (b[-1] - a[-1]) * (b[:-1] - a[:-1])
 
         def ev(x):
@@ -43,11 +46,18 @@ def branch_in_interval(op, parent, za, zb, event, tol, left, right):
         return np.linalg.solve(bordered, np.r_[np.zeros(len(x)), 1.0])[-1]
 
     try:
-        load = brentq(bordered_test, lo, hi, xtol=np.finfo(float).eps)
+        if len(ordered) == 3:
+            # The middle equilibrium exhibited a simple zero. Recheck all
+            # three points from the same checkpoint before seeding its modes.
+            parent_at(lo)
+            parent_at(hi)
+            load = ordered[1][-1]
+        else:
+            load = brentq(bordered_test, lo, hi, xtol=np.finfo(float).eps)
         z = np.r_[parent_at(load), load]
-        # The span is a predictor scale. A successful result must equilibrate
-        # on both sides at three smaller offsets with the original data.
-        eps = np.linalg.norm(b - a) / np.array([8.0, 16.0, 32.0])
+        # Use the shorter leg when a saved critical point splits the interval.
+        span = min(np.linalg.norm(b - a) for a, b in segments)
+        eps = span / np.array([8.0, 16.0, 32.0])
         result = bifurcation(op, parent, z, eps, parent_at, tol)
         return dict(z=z, offsets=eps, **result)
     except (TrialRejected, np.linalg.LinAlgError, ValueError) as exc:
@@ -55,8 +65,7 @@ def branch_in_interval(op, parent, za, zb, event, tol, left, right):
 
 
 def scan(op, points, tol, prepare):
-    rows, candidates = [], []
-    previous = None
+    rows, observations, candidates = [], [], []
     for i, point in enumerate(points):
         z = np.asarray(point["z"])
         prior = points[max(i - 1, 0)]
@@ -87,19 +96,44 @@ def scan(op, points, tol, prepare):
         row["work_kn_m"] = (ev.details or {}).get("work_kn_m")
         if "eigenvalues" in s:
             row["eigenvalues"] = s["eigenvalues"]
-        if previous is not None and previous["event"] == event:
-            pl, pr = previous["left"], previous["right"]
+        crossed = False
+        if observations and observations[-1]["event"] == event:
+            pl, pr = observations[-1]["mode"]
             row["weak_alignment"] = [float(pl @ left), float(pr @ right)]
-            # A sign change in the *oriented pair* or an observed simple
-            # null triggers localization; neither is a physical verdict.
+            # A change in the oriented pair triggers localization.
             crossed = (pl @ left) * (pr @ right) < 0
-            if crossed or s["nullity"] == 1 or previous["nullity"] == 1:
-                result = branch_in_interval(
-                    op, state, prior["z"], z, event, tol, pl, pr
-                )
-                candidates.append(dict(accepted_indices=[i - 1, i], **result))
         rows.append(row)
-        previous = dict(event=event, left=left, right=right, nullity=s["nullity"])
+        observations.append(
+            dict(z=z, event=event, mode=(left, right), nullity=s["nullity"], crossed=crossed)
+        )
+
+    i = 1
+    while i < len(observations):
+        start, stop = i - 1, i
+        first, second = observations[start : stop + 1]
+        if first["nullity"] == 0 and second["nullity"] == 1 and i + 1 < len(observations):
+            third = observations[i + 1]
+            a, b, c = (obs["z"][-1] for obs in (first, second, third))
+            if third["nullity"] == 0 and (a < b < c or a > b > c):
+                # Keep the saved zero inside one interval for the load probes.
+                stop += 1
+        interval = observations[start : stop + 1]
+        if second["crossed"] or any(obs["nullity"] == 1 for obs in interval):
+            if any(obs["event"] != first["event"] for obs in interval[1:]):
+                result = dict(kind="D", reason="active-set change")
+            else:
+                result = branch_in_interval(
+                    op,
+                    prepare(points[start]["state"]),
+                    [obs["z"] for obs in interval],
+                    first["event"],
+                    tol,
+                    first["mode"],
+                )
+            candidates.append(
+                dict(accepted_indices=list(range(start, stop + 1)), **result)
+            )
+        i = stop + 1
     return dict(accepted_points=rows, branch_candidates=candidates)
 
 

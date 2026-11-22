@@ -461,13 +461,14 @@ def bifurcation(evaluate, parent, critical, epsilons, parent_at, tol):
             target = sign * eps
 
             def equations(z):
+                parent_x = parent_at(z[-1])
                 e = evaluate(parent, z)
-                return np.r_[e.residual, v @ (z[:-1] - parent_at(z[-1])) - target]
+                return np.r_[e.residual, v @ (z[:-1] - parent_x) - target]
 
             result = root(equations, critical + np.r_[target * v, 0.0], tol=tol)
             z = result.x
-            e = evaluate(parent, z)
             main = evaluate(parent, np.r_[parent_at(z[-1]), z[-1]])
+            e = evaluate(parent, z)
             if (
                 np.linalg.norm(equations(z)) > tol
                 or not e.eligible
