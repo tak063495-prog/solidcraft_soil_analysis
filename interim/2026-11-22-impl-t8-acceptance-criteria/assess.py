@@ -44,12 +44,14 @@ def assess(work):
     c3=read(work/"c03/results.json")
     restart=read(work/"c03/matrix/restarts/verification.json")
     c4=read(work/"c04-results.json")
-    nc=read(next(HERE.parent.glob("*t9*/validation.json")))
+    nc=read(HERE.parent/"2026-11-22-spec-survey-t9-nc01-spec/validation.json")
     if nc["physical_classification"] != "D" or nc["nc01_complete"]:
         raise ValueError("NC-01 source classification changed")
     a2_transfer = (a2["projection/good"]["accepted"] and a2["projection/good"]["max_all_nodal_error_kn"] <= 1e-10
                    and all(not a2["projection/"+k]["accepted"] for k in ("outside-circle","tension","balanced-unreproducible-tip"))
-                   and all(v["virtual_work_difference_kn_m"] <= 1e-10 for v in a2["projection_controls"].values())
+                   and set(a2["projection_controls"]) == {"translated","rotated","swapped_sides","reversed_elements"}
+                   and all(v["maximum_nodal_difference_kn"] <= 1e-10 and abs(v["virtual_work_difference_kn_m"]) <= 1e-10
+                           for v in a2["projection_controls"].values())
                    and a2["whole_faces"]["transfer_force"]["existing_gates_passed"])
     placed = read(work/"t8-water/placement.json")
     # The closed-form tet/face unit controls have their original roundoff checks
@@ -73,6 +75,8 @@ def assess(work):
                             all(a2[k]["limited_field_gates_passed"] for k in ("body-across-tip-stress_free","partial-face-rebirth")))),
         "A-03":item("②",limited("12 Tet10 定常明示配置・12 Tet4 搬入/搬出・異世代再開",
                                all(a3[k]["complete"] for k in ("two_region","post_darcy","saturated_mcc","lifecycle"))
+                               and [row["level_m"] for row in placed]==[.625,.75,.875]
+                               and max(placement_errors.values())<1e-12
                                and all(v["passed"] for v in a3["lifecycle"]["budget"]["profiles"].values())
                                and all(v["identical"] for v in a3["lifecycle"]["checkpoint_restarts"])),
                     withheld("定常処方の全域積算水量")),
@@ -81,11 +85,12 @@ def assess(work):
                             len(a4)==6 and all(v["passed"] for x in a4.values() for v in x["profiles"].values())
                             and set(a4["staggered"]["iterations"])=={2})),
         "B-01":item("②",limited("12 Tet10・2 Tri6 の乾燥付着・凍結・別プロセス再開",
-                               flat["tie_max_m"]<=1e-10 and flat["frozen_equal"] and all(flat["byte_equal"])),
+                               flat["tie_max_m"]<=1e-10 and flat["frozen_equal"] and flat["byte_equal"] == [True]*4),
                     withheld("8/32/128枚の曲面変位・断面量・最低次数")),
         "B-02":item("①＋②",limited("12 Tet10・T4乾燥パッチの既存代数条件と再開",
                                len(dry_frames)>0 and max(abs(f["local_nodal_work_difference"]) for f in dry_frames)<1e-14
-                               and patch["altered_archive_rejected"] and all(r["identical"] for r in patch["restarts"])),
+                               and patch["altered_archive_rejected"] and len(patch["refusals"]) == 5
+                               and len(patch["restarts"]) == 3 and all(r["identical"] for r in patch["restarts"])),
                     dict(scope="12/96の共通物理点と固定面積のN/M/Q・仕事",status="限定確認"),
                     cap="旧768の全場・再組立を新実行版で確認不可・未達"),
         "B-03":item("①＋②限定",limited("旧共有節点の腕整合・既存21経路",original_joins["limited_gates"]==21),
@@ -98,7 +103,9 @@ def assess(work):
         "C-02":item("②",dict(scope="12/96 Tet10・7工程、共通160点・固定32/64/128、3写像、面積積分",status="限定確認"),
                     cap="元の3格子全場は768/6144を必要とし確認不可・未達"),
         "C-03":item("②",limited("12 Tet4・MC全7工程32増分、7地点の別PID再開",
-                               restart["complete"] and restart["real_files_separate_process"] and len(restart["checks"])==7),
+                               restart["complete"] and restart["real_files_separate_process"] and len(restart["checks"])==7
+                               and all(r["entire_run_exact_except_elapsed"] and r["baseline_pid"] != r["resume_pid"]
+                                       and r["suffix_states_exact"] > 0 for r in restart["checks"])),
                     withheld("材料・接触・全体刻みを変えた全内部変数の収束")),
         "C-04":item("②",dict(scope="12 Tet4・6GP、規定水位と力学刻み別の全13工程",status="限定確認"),
                     withheld("厳密カテゴリ・履歴仕事・散逸の受入幅")),

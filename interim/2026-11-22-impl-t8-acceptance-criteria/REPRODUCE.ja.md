@@ -93,7 +93,7 @@ python "$T/assess.py" "$W" "$W/report"
 python "$T/observations.py" --source "$W/report" --pack "$W"
 ```
 
-C-01 の独立128/256は旧 switch 封印、512は独立原因診断の switch-n512-q4。各 chunk の SHA を検査してデコードし、元の7工程・全32 GP の実在する i/N のみを比較する。試行上限の旧 path-error 512 は別経路。C-03 の新規独立全体求解は本体変位・局所分割数を入力に使わない。凍結経路の再生は `local-replay` に隔離した。C-04 の `boundary` は各不一致の工程・進捗・GP・終点ラベル・両公差余裕・直前小刻みの塑性増分を保持する。原本の不一致数は `preserved_mismatch_counts`、新規の厳密混同行列は `confusion`。旧3%案は両者の判定に使わない。
+C-01 の独立128/256は旧 switch 封印、512は独立原因診断の switch-n512-q4。各 chunk の SHA を検査してデコードし、元の7工程・全32 GP の実在する i/N のみを比較する。試行上限の旧 path-error 512 は別経路。C-03 の新規独立全体求解は本体変位・局所分割数を入力に使わない。凍結経路の再生は `local-replay` に隔離した。C-04 の `boundary` は各不一致の工程・進捗・GP・終点ラベル・両実装の摩擦円余裕・直前小刻みの塑性増分を保持する。原本の不一致数は `preserved_mismatch_counts`、新規の厳密混同行列は `confusion`。旧3%案は両者の判定に使わない。
 
 ## 状態監査と全試験
 
@@ -108,6 +108,8 @@ for group in python-core-0 python-core-1 python-c01-switch python-c01-path pytho
 done
 python -m pytest -q tests/linux
 ```
+
+保存した実行記録は `verification.zip` の `summary.json` に従って SHA-256 を検査する。各群の台帳で、その群に割り当てた試験IDと実行時間のある試験IDが一致すること、7群の和集合が core の最終発見IDを一度ずつ含むことを照合する。
 
 Linux の mean/spatial で許容されている既知の setUpClass エラーが出たときはログ・未実行件数を記録して次の群を実行する。成功件数に加えない。これは数値条件の例外ではない。
 

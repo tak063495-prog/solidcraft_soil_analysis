@@ -9,7 +9,7 @@ import numpy as np
 
 STUDY = Path(__file__).resolve().parents[1] / "interim/2026-11-22-impl-t8-acceptance-criteria"
 sys.path.insert(0, str(STUDY))
-from branches import paired
+from branches import paired, support_reason
 from refinement import richardson
 from two_mesh import metrics
 from observations import verify
@@ -60,6 +60,15 @@ class AcceptanceCriteria(unittest.TestCase):
                         dict(fields=fields|{"event":["stick","stick"]})):
             with self.subTest(altered=altered):
                 self.assertIsNotNone(paired(point, point | altered, .02))
+
+        mesh = dict(nodes=[[0, 0, 0]], node_sets={"top":[0]})
+        case = dict(stages=[dict(name="shear",kind="boundary",target_factor=0.),
+                            dict(name="open",kind="boundary",target_factor=1.)],
+                    boundary={"constraints":[dict(node_set="top",direction=[1,0,0],value_m=1.)]})
+        correct = dict(fields=fields | {"u":[.02,0.,0.]})
+        wrong = dict(fields=fields | {"u":[.01,0.,0.]})
+        self.assertIsNone(support_reason((correct, correct), case, mesh, .02))
+        self.assertIsNotNone(support_reason((correct, wrong), case, mesh, .02))
 
     def test_integral_cancellation_preserves_point_error_and_location(self):
         x = np.array([[[1.,0.],[-1.,0.]]])
