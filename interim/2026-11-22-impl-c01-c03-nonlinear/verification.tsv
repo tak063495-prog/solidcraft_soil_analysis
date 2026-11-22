@@ -1,0 +1,16 @@
+linux_command_or_ci_group	exit_code	tests_passed	log_or_report	sha256
+cargo fmt --all --check	0		final-fmt.log	e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+cargo clippy --locked --all-targets -- -D warnings	0		verified-clippy.log	a41051563a4cb5fc1b1bcdd9aa0ba28ca80f7736d629d90cc138218756e8e3a9
+cargo test --locked --release --all-targets --no-fail-fast	0	515	rust-tests.log	c107209ccca6cf74791eca9f58932cc758a47f17799cc10679c79e30de40ef09
+cargo test --locked --release --doc	0	0	rust-doc.log	aa786a5fe16dde654cf74296f781db4446d6a7b95091cc0ca75473005257de08
+python-core-0	0	512	python-core-0/python-test-inventory.json	95226f78a5b1f0f64c02889523213858f3c8b668eb113ab31e9cf6b7dcc922df
+python-core-1	0	515	python-core-1/python-test-inventory.json	9c27d9544ddf43fb64176393d5236ebf1c1f7b3d185efa40d51367f1829d4d55
+python-mean-evidence	0	4	python-mean-evidence/python-test-inventory.json	a32d492487bd1f99328e5b99546f9274610af13f6a4addf7ef3f49833975721e
+python-spatial-evidence	0	4	python-spatial-evidence/python-test-inventory.json	eb84cd64a703acdc4613a1a9362ea04848316388a7a05c96eb1b511c7952600c
+python-c01-switch	0	4	python-c01-switch/python-test-inventory.json	1e057d219b8d4bdb9bb873660e6c055c72a2d31e18bbd516ac5e8da61de4c793
+python-c01-path	0	5	python-c01-path/python-test-inventory.json	41fa88fc061fe074177abc52e87ea4bf6e91834a69c5751ede326baf66e687a3
+python-c01-cause	0	8	python-c01-cause/python-test-inventory.json	8405ca4139e6175863b00dbf698fc59e3f11bba5e95a035499553e2f84188c3f
+pytest -q tests/linux	0	7	linux-pytest.log	e4098159ab75b5151dd58d99e04ac7682915b7177fcb48b029b54dd53b2f225e
+P6-01 and P6-03 regression repeat (included above)	0	76	final-ledger-tests.log	3044eeec4e3178cc8f689ee5ed493acd6ac6b7a073204b8c7dd52fe5cea44f3b
+P6-01 integrity	0		p601-final.json	5143b696785dacc78166ecbb48917f27df83afca5ef09c227720deca18c97807
+P6-03 integrity	0		p603-final.json	0a6879b05c18e3b412601df41ef0d93a5a8698764b07379458763d4495e2b50e

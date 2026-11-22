@@ -59,6 +59,14 @@ C-03 の同一12 Tet10・g32・open=0.12では、旧方式と全体 Newton/線�
 
 改善前・切替予測のみ・採用方式の工程別試行数、最大残差、C-03 で実際に棄却した理由を [measurements.json](measurements.json) に保存した。
 
+## 限定受入と監査
+
+限定受入の範囲は表の C-01 四つの観測点、C-03 の12 Tet4開口対照と12 Tet10 reload 終端までの平衡、棄却時の履歴保全である。C-01 の細かい全経路、C-03 の native/independent 全場比較・刻み感度の判定はユーザーPCでの再実行まで未達とする。
+
+P6-01 は `e541fe1` の補助台帳方式で、[acceptance.json](acceptance.json) を `0fe40544b1b5c4c4e864a2a9f700c3970e590978`、[measurements.json](measurements.json) を `c858100ad3d84aec2d4c83634d2e757f9b8e8a99` に固定した。両ファイルの SHA-256・Git blob SHA-1・状態キーを検証した。P6-01 は80行・416ソース・171根拠、P6-03 は6行で、ともに `integrity_ok=true`。
+
+Linux 回帰試験は Rust 515件、Python の CI 全7群1,052件、別の Linux pytest 7件が成功し、失敗・スキップは0件。Rust doc-test は対象0件。`cargo fmt --all --check` と `cargo clippy --locked --all-targets -- -D warnings` が終了コード0。Python の mean・spatial 保存資料再計測はこの環境では各4件とも成功した。最終台帳に対する76件の再検査は上記件数に重複加算していない。[群別の実行件数とログ SHA-256](verification.tsv)
+
 ## 再実行と判定
 
 `probe_c01.py` は独立参照の実入力から指定観測点までを解き、全受理点で元の誤差予算・力残差と基準格子を検査する。`probe_c03.py` は各受理点で保存応力・接触力から自由度残差を再組立する。PC のコマンド、保全する出力、資源計画は [REPRODUCE.ja.md](REPRODUCE.ja.md) にある。
