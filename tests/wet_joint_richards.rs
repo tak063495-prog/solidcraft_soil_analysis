@@ -687,3 +687,52 @@ fn continuous_transmission_matches_uncut_column_with_nonzero_crossflow() -> Resu
     }
     Ok(())
 }
+
+#[test]
+fn filled_aperture_exchanges_water_and_restarts_at_the_accepted_endpoint() -> Result<()> {
+    let (mesh, ground, base) = fixture(json!({"kind":"continuous"}))?;
+    let mut json = serde_json::to_value(base)?;
+    json["schema"] = json!("soil-fem-staggered-transfer/1");
+    json["joint_aperture_storage_m"] = json!(0.001);
+    json["flow"]["materials"][0]["volume_source_per_s"] = json!(0.);
+    json["flow"]["settings"]["initial_time_step_s"] = json!(86400.);
+    json["flow"]["settings"]["maximum_time_step_s"] = json!(86400.);
+    json["flow"]["analysis"]["periods"][0]["end_time_s"] = json!(172800.);
+    json["flow"]["analysis"]["periods"][0]["boundaries"]
+        .as_array_mut()
+        .unwrap()
+        .push(json!({"face_set":"top","condition":{"kind":"head","value":{"head_m":2.0}}}));
+    let case: one_way::Case = serde_json::from_value(json)?;
+    let run = one_way::solve(&mesh, ground.clone(), case.clone())?;
+    assert!(run.complete);
+    let frames: Vec<_> = run
+        .frames
+        .iter()
+        .filter(|f| f.phase == "transient")
+        .collect();
+    assert_eq!(frames.len(), 2);
+    let previous = run
+        .frames
+        .iter()
+        .rfind(|f| f.phase == "initialization")
+        .unwrap();
+    for (fi, volume) in &frames[0].state.fluid.joint_water_volume_m3 {
+        let delta = volume - previous.state.fluid.joint_water_volume_m3[fi];
+        let point = frames[0]
+            .state
+            .fluid
+            .joint_traces
+            .iter()
+            .find(|p| p.side_a.as_ref().unwrap().face == *fi)
+            .unwrap();
+        let q = point.side_a.as_ref().unwrap().outward_flow_m3_s
+            + point.side_b.as_ref().unwrap().outward_flow_m3_s;
+        assert!(delta > 0. && q > 0.);
+        assert!((delta / 86400. - q).abs() < 1e-14);
+    }
+    let last = run.attempts.iter().filter(|a| a.accepted).count() - 1;
+    let partial = one_way::solve_until(&mesh, ground.clone(), case.clone(), last)?;
+    let resumed = one_way::Checkpoint::seal(partial)?.resume(&mesh, ground, case, None)?;
+    assert_eq!(one_way::normalized(&run)?, one_way::normalized(&resumed)?);
+    Ok(())
+}

@@ -313,7 +313,13 @@ pub struct Configuration {
 #[serde(rename_all = "snake_case")]
 pub enum BirthPolicy {
     TransferForce,
+    TransferForceFaceMean,
     StressFree,
+}
+impl BirthPolicy {
+    pub(crate) fn transfers_force(self) -> bool {
+        matches!(self, Self::TransferForce | Self::TransferForceFaceMean)
+    }
 }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

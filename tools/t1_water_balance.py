@@ -139,6 +139,9 @@ def _audit(mesh, report, profile):
                 raise ValueError("unbooked inventory change at fixed time")
             prior = state
             continue
+        storage_enabled = case.get("joint_aperture_storage_m") is not None
+        old_joint = required(prior["fluid"], "joint_water_volume_m3") if storage_enabled else {}
+        new_joint = required(state["fluid"], "joint_water_volume_m3") if storage_enabled else {}
         inward, outward = [], []
         if event:
             if dt != 0:
@@ -226,12 +229,21 @@ def _audit(mesh, report, profile):
                     trace = point[side]
                     if trace is not None:
                         wall_faces[trace["face"]] = (point["joint_id"],point["face_index"])
+            if storage_enabled:
+                expected = {str(i) for i in wall_faces}
+                if not expected or set(old_joint) != expected or set(new_joint) != expected:
+                    raise MissingQuantity("joint water inventory at each common trace")
             for fi, face in enumerate(faces):
                 owners = [(active[c], j) for c, j in face["owners"]]
                 values = [hydraulic["cell_outflow_m3_s"][i][j] * dt for i,j in owners]
                 if len(values) == 2:
                     key = tuple((i,j,generations[i]) for i,j in owners)
-                    add("face_pair", key, 0., 0., *split(values))
+                    if str(fi) in new_joint:
+                        # An outward flow from either owner enters the joint.
+                        add("joint_storage", key, old_joint[str(fi)], new_joint[str(fi)],
+                            *split([-v for v in values]))
+                    else:
+                        add("face_pair", key, 0., 0., *split(values))
                 elif len(values) == 1:
                     p, n = split(values)
                     inward.append(p)
@@ -246,11 +258,14 @@ def _audit(mesh, report, profile):
                             rows.append(dict(kind="reservoir",id=[i,j,generations[i]],time_s=time,P=p,N=n))
                 else:
                     raise ValueError("invalid RT0 owner count")
-        add("global", "domain", math.fsum(old.values()), math.fsum(new.values()),
+        add("global", "domain", math.fsum([*old.values(), *old_joint.values()]),
+            math.fsum([*new.values(), *new_joint.values()]),
             math.fsum(inward), math.fsum(outward))
         prior = state
     judgments = [r["passed"] for r in rows if "passed" in r]
-    return dict(profile=profile, unit="m3", complete=report["complete"], interface_storage_m3=None,
+    final_joint = prior["fluid"].get("joint_water_volume_m3", {})
+    return dict(profile=profile, unit="m3", complete=report["complete"],
+                interface_storage_m3=math.fsum(final_joint.values()) if final_joint else None,
                 passed=bool(report["complete"] and judgments and all(judgments)), rows=rows)
 
 

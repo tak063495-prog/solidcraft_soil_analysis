@@ -651,6 +651,13 @@ impl Model {
             if f.owners.len() == 1 {
                 boundary_outflow += q;
             }
+            // On an interior trace the prescribed sum of both outward fluxes
+            // fills the joint void. It is storage, with no exterior source.
+            if f.owners.len() == 2
+                && let Bc::Flux(rate) = bc[fi]
+            {
+                storage_rate += rate;
+            }
             let r = match bc[fi] {
                 Bc::Internal => q,
                 Bc::Flux(target) => q - target,
@@ -1252,47 +1259,88 @@ impl Stepper {
         self.model.faces.clone()
     }
     pub fn trial(&self, old: &State, period: usize, dt: f64) -> (Result<Frame>, Vec<Iteration>) {
+        self.trial_with_storage(old, period, dt, &BTreeMap::new())
+    }
+
+    fn storage_boundaries(
+        &self,
+        old: &State,
+        period: usize,
+        dt: f64,
+        rates: &BTreeMap<usize, f64>,
+    ) -> Result<(&str, std::borrow::Cow<'_, [Bc]>)> {
+        let (name, end, bc) = self
+            .boundaries
+            .get(period)
+            .ok_or_else(|| Error::Input("invalid hydraulic period".into()))?;
+        if bc.len() != self.model.faces.len() {
+            return Err(Error::Input("unprepared hydraulic domain period".into()));
+        }
+        let start = if period == 0 {
+            0.
+        } else {
+            self.boundaries[period - 1].1.unwrap_or(0.)
+        };
+        if !dt.is_finite()
+            || dt <= 0.
+            || old.time_s < start
+            || old.time_s + dt == old.time_s
+            || end.is_none_or(|end| old.time_s + dt > end)
+        {
+            return Err(Error::Input(
+                "hydraulic trial crosses physical period boundary".into(),
+            ));
+        }
+        let mut bc = std::borrow::Cow::Borrowed(bc.as_slice());
+        if !self.model.wall_histories.is_empty() {
+            for (fi, f) in self.model.faces.iter().enumerate() {
+                if let Some(h) = self.model.wall_histories.get(&f.corners) {
+                    bc.to_mut()[fi] = Bc::Head(h.at(old.time_s + dt)? - self.model.datum);
+                }
+            }
+        }
+        for (&fi, &rate) in rates {
+            if !rate.is_finite()
+                || !matches!(bc.get(fi), Some(Bc::Internal))
+                || self.model.faces[fi].owners.len() != 2
+            {
+                return Err(Error::Input("invalid internal JOINT storage trace".into()));
+            }
+            bc.to_mut()[fi] = Bc::Flux(rate);
+        }
+        Ok((name, bc))
+    }
+
+    pub(crate) fn balance_with_storage(
+        &self,
+        new: &State,
+        old: &State,
+        period: usize,
+        dt: f64,
+        rates: &BTreeMap<usize, f64>,
+    ) -> Result<Balance> {
+        let (_, bc) = self.storage_boundaries(old, period, dt, rates)?;
+        Ok(self
+            .model
+            .evaluate(new, old, Some(dt), &bc, &self.settings)?
+            .balance)
+    }
+
+    pub(crate) fn trial_with_storage(
+        &self,
+        old: &State,
+        period: usize,
+        dt: f64,
+        rates: &BTreeMap<usize, f64>,
+    ) -> (Result<Frame>, Vec<Iteration>) {
         let mut log = Vec::new();
         let result = (|| {
-            let (name, end, bc) = self
-                .boundaries
-                .get(period)
-                .ok_or_else(|| Error::Input("invalid hydraulic period".into()))?;
-            if bc.len() != self.model.faces.len() {
-                return Err(Error::Input("unprepared hydraulic domain period".into()));
-            }
-            let start = if period == 0 {
-                0.
-            } else {
-                self.boundaries[period - 1].1.unwrap_or(0.)
-            };
-            if !dt.is_finite()
-                || dt <= 0.
-                || old.time_s < start
-                || old.time_s + dt == old.time_s
-                || end.is_none_or(|end| old.time_s + dt > end)
-            {
-                return Err(Error::Input(
-                    "hydraulic trial crosses physical period boundary".into(),
-                ));
-            }
-            let mut timed;
-            let bc = if self.model.wall_histories.is_empty() {
-                bc
-            } else {
-                timed = bc.clone();
-                for (fi, f) in self.model.faces.iter().enumerate() {
-                    if let Some(h) = self.model.wall_histories.get(&f.corners) {
-                        timed[fi] = Bc::Head(h.at(old.time_s + dt)? - self.model.datum);
-                    }
-                }
-                &timed
-            };
+            let (name, bc) = self.storage_boundaries(old, period, dt, rates)?;
             let next = self
                 .model
-                .trial(old, Some(dt), bc, &self.settings, &mut log)?;
+                .trial(old, Some(dt), &bc, &self.settings, &mut log)?;
             self.model
-                .frame(name.clone(), next, old, Some(dt), bc, &self.settings)
+                .frame(name.to_owned(), next, old, Some(dt), &bc, &self.settings)
         })();
         (result, log)
     }

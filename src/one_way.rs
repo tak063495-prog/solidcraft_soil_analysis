@@ -56,6 +56,9 @@ pub struct ExteriorPeriod {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Case {
+    /// Fully water-filled aperture at zero mechanical jump, in metres.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub joint_aperture_storage_m: Option<f64>,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub joint_reservoir_heads: BTreeMap<String, crate::joint_water::rt0::HeadHistory>,
     pub schema: String,
@@ -96,6 +99,8 @@ pub struct Sample {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Fluid {
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub joint_water_volume_m3: BTreeMap<usize, f64>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub joint_traces: Vec<crate::joint_water::PointTraces>,
     pub hydraulic_points: Vec<Sample>,
@@ -474,6 +479,7 @@ impl<'a> Transfer<'a> {
             return Err(Error::Solve("non-finite ONE_WAY transfer".into()));
         }
         Ok(Fluid {
+            joint_water_volume_m3: BTreeMap::new(),
             joint_traces: vec![],
             hydraulic_points: raw,
             mechanical_points: mechanical,
@@ -542,6 +548,20 @@ pub(crate) fn validate(case: &Case) -> Result<&[richards::Period]> {
             "ONE_WAY needs transient Richards periods".into(),
         ));
     };
+    if let Some(aperture) = case.joint_aperture_storage_m
+        && (!aperture.is_finite()
+            || aperture <= 0.
+            || case.schema != "soil-fem-staggered-transfer/1"
+            || case.mechanics.joint_system.as_ref().is_none_or(|c| {
+                c.joints.is_empty()
+                    || c.joints.iter().any(|d| {
+                        !matches!(d.water, Some(crate::joint_water::Policy::Continuous))
+                            || d.birth_policy.is_some()
+                    })
+            }))
+    {
+        return Err(Error::Input("joint aperture storage requires positive reference aperture and active CONTINUOUS staggered joints".into()));
+    }
     if !(case.schema == "soil-fem-one-way/1"
         || (case.schema == "soil-fem-staggered-transfer/1"
             && case.mechanics.joint_system.is_some()))
@@ -752,6 +772,25 @@ fn advance(
         case.flow.head_datum_m,
         0.,
     )?;
+    let volumes = |wet: Option<&crate::joint_water::Model>,
+                   mechanics: &stages::Committed,
+                   fluid: &Fluid|
+     -> Result<BTreeMap<usize, f64>> {
+        match case.joint_aperture_storage_m {
+            Some(b0) => wet
+                .ok_or_else(|| Error::Input("missing wet joints".into()))?
+                .saturated_volumes(
+                    b0,
+                    mechanics
+                        .joints
+                        .as_ref()
+                        .ok_or_else(|| Error::Input("missing joint state".into()))?,
+                    &fluid.joint_traces,
+                ),
+            None => Ok(BTreeMap::new()),
+        }
+    };
+    fluid.joint_water_volume_m3 = volumes(kernel.wet_joints(), &seed_mechanics, &fluid)?;
     let internal = kernel.internal(&seed_mechanics)?;
     let mut initial_mechanics = seed_mechanics;
     initial_mechanics.applied_nodal_load_kn = internal.clone();
@@ -848,9 +887,11 @@ fn advance(
         let result = (|| -> Result<()> {
             let staggered = !initializing && case.schema == "soil-fem-staggered-transfer/1";
             let mut previous = None;
+            let mut rates = BTreeMap::new();
             for iteration in 1..=if staggered { 2 } else { 1 } {
-                let hydraulic = if let Some(dt) = dt {
-                    let (trial, log) = flow.trial(&old.hydraulic, rt.period_index, dt);
+                let mut hydraulic = if let Some(dt) = dt {
+                    let (trial, log) =
+                        flow.trial_with_storage(&old.hydraulic, rt.period_index, dt, &rates);
                     hydraulic_log.extend(log);
                     trial?
                 } else {
@@ -894,12 +935,41 @@ fn advance(
                 {
                     return Err(Error::Input("initial ONE_WAY engineering strain exceeds declared limit; no equilibrium accepted".into()));
                 }
+                fluid.joint_water_volume_m3 =
+                    volumes(kernel.wet_joints(), &trial.frame.state, &fluid)?;
+                if let Some(seconds) = dt
+                    && case.joint_aperture_storage_m.is_some()
+                {
+                    rates = fluid
+                        .joint_water_volume_m3
+                        .iter()
+                        .map(|(&fi, &v)| (fi, (v - old.fluid.joint_water_volume_m3[&fi]) / seconds))
+                        .collect();
+                    if iteration == 1 {
+                        continue;
+                    }
+                    // Check the original water equations with the actual endpoint
+                    // opening, rather than accepting the previous exchange iterate.
+                    hydraulic.balance = flow.balance_with_storage(
+                        &hydraulic.state,
+                        &old.hydraulic,
+                        rt.period_index,
+                        seconds,
+                        &rates,
+                    )?;
+                    if hydraulic.balance.maximum_scaled_residual > 1. {
+                        return Err(Error::Solve(
+                            "joint aperture storage exchange residual exceeds Richards criterion"
+                                .into(),
+                        ));
+                    }
+                }
                 let state = State {
                     hydraulic: hydraulic.state,
                     mechanical: trial.frame.state,
                     fluid,
                 };
-                if staggered {
+                if staggered && case.joint_aperture_storage_m.is_none() {
                     // With no reverse constitutive law the exchange operator is constant.
                     // Re-solve from n and require exactly the same final state (including
                     // the two subsolver fields and contact history) before committing.

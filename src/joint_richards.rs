@@ -136,6 +136,47 @@ impl Model {
             .collect()
     }
 
+    /// Water-filled void volume at the common RT0 trace. The normal jump is
+    /// positive in opening. Negative aperture is outside this constitutive law.
+    pub(crate) fn saturated_volumes(
+        &self,
+        b0: f64,
+        joint: &joints::State,
+        traces: &[PointTraces],
+    ) -> Result<BTreeMap<usize, f64>> {
+        let mut indices = BTreeMap::new();
+        for t in traces {
+            let side = t
+                .side_a
+                .as_ref()
+                .ok_or_else(|| Error::Input("missing wet joint wall".into()))?;
+            indices.insert((t.joint_id.as_str(), t.face_index), side);
+        }
+        if self.layout.len() != joint.points.len() {
+            return Err(Error::Input("invalid joint storage point layout".into()));
+        }
+        let mut volumes = BTreeMap::<usize, f64>::new();
+        for (p, state) in self.layout.iter().zip(&joint.points) {
+            let wall = indices
+                .get(&(p.joint_id.as_str(), p.face_index))
+                .ok_or_else(|| Error::Input("missing internal storage face".into()))?;
+            if p.nodes_a
+                .iter()
+                .any(|&node| wall.total_head_m < self.mesh.nodes[node][2])
+            {
+                return Err(Error::Solve(
+                    "joint aperture storage requires flooded faces".into(),
+                ));
+            }
+            let aperture = b0 + Vector3::from(p.normal).dot(&Vector3::from(state.jump_m));
+            if !aperture.is_finite() || aperture <= 0. {
+                return Err(Error::Solve("nonpositive hydraulic aperture".into()));
+            }
+            *volumes.entry(wall.face).or_default() += p.weight_m2 * aperture;
+        }
+        Ok(volumes)
+    }
+
     pub(crate) fn richards_field(
         &self,
         active: &[bool],

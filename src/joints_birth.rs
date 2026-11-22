@@ -358,7 +358,7 @@ impl Model {
                 }
                 added = true;
                 born_points.push(i);
-                if life.policy == Some(BirthPolicy::TransferForce) {
+                if life.policy.is_some_and(BirthPolicy::transfers_force) {
                     transfer.push(i);
                 }
             }
@@ -488,12 +488,52 @@ impl Model {
                     }
                 }
             }
-            let q = recover_forces(
-                &matrix,
-                &rhs,
-                &physical.keys().copied().collect::<Vec<_>>(),
-                "mode A GP initial forces cannot reproduce every physical nodal transfer force",
-            )?;
+            let rows: Vec<_> = physical.keys().copied().collect();
+            let failure =
+                "mode A GP initial forces cannot reproduce every physical nodal transfer force";
+            let mean_faces: BTreeSet<_> = transfer
+                .iter()
+                .filter_map(|&i| {
+                    let p = &self.points[i];
+                    (self.configuration.joints[p.material].birth_policy
+                        == Some(BirthPolicy::TransferForceFaceMean))
+                    .then_some((p.material, p.info.face_index))
+                })
+                .collect();
+            let q = if mean_faces.is_empty() {
+                recover_forces(&matrix, &rhs, &rows, failure)?
+            } else {
+                // Lift a constant traction per new face to the weighted GP space.
+                // Fit its virtual work on the physical nodes, then recover the exact
+                // remaining force in the same space as the legacy transfer.
+                let columns: BTreeMap<_, _> = mean_faces
+                    .into_iter()
+                    .enumerate()
+                    .map(|(i, k)| (k, i))
+                    .collect();
+                let mut lift = DMatrix::zeros(matrix.ncols(), 3 * columns.len());
+                for (j, &i) in transfer.iter().enumerate() {
+                    let p = &self.points[i];
+                    if let Some(&f) = columns.get(&(p.material, p.info.face_index)) {
+                        for axis in 0..3 {
+                            lift[(3 * j + axis, 3 * f + axis)] = p.info.weight_m2.sqrt();
+                        }
+                    }
+                }
+                let mean = (&matrix * &lift)
+                    .svd(true, true)
+                    .solve(&rhs, 1e-12)
+                    .map_err(|err| Error::Input(format!("face mean transfer: {err}")))?;
+                let seed = lift * mean;
+                let correction =
+                    recover_forces(&matrix, &(&rhs - &matrix * &seed), &rows, failure)?;
+                let field = seed + correction;
+                let error = &matrix * &field - &rhs;
+                if error.iter().any(|v| !v.is_finite() || v.abs() > 1e-10) {
+                    return Err(Error::Input(failure.into()));
+                }
+                field
+            };
             let reproduced = &matrix * &q;
             let mut violations = Vec::new();
             for (j, &pi) in transfer.iter().enumerate() {

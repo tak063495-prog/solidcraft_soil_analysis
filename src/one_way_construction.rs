@@ -325,6 +325,11 @@ pub fn domain_mesh(mesh: &Mesh, active: &[bool]) -> Result<Mesh> {
 
 fn periods(case: &Case) -> Result<&[richards::Period]> {
     one_way::validate(&case.one_way)?;
+    if case.one_way.joint_aperture_storage_m.is_some() {
+        return Err(Error::Input(
+            "joint aperture storage requires a fixed hydraulic domain".into(),
+        ));
+    }
     if case.schema != "soil-fem-one-way-construction/1"
         || (case.excavations.is_empty()
             && case.transitions.is_empty()

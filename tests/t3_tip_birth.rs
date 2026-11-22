@@ -319,3 +319,37 @@ fn active_tip_excavation_freezes_only_removed_face_and_balances_holding() -> Res
     }
     Ok(())
 }
+
+#[test]
+fn face_mean_transfer_recovers_constant_compression_at_the_shared_tip() -> Result<()> {
+    let patch = Patch::new(BirthPolicy::TransferForceFaceMean)?;
+    let initial = patch.model.initial_state()?;
+    let traction = [12., 5., -100.];
+    let state = patch.model.birth(
+        &initial,
+        &patch.u,
+        &patch.active,
+        &patch.ids,
+        &patch.force(traction),
+        &patch.rows,
+    )?;
+    for point in state.points {
+        assert!((Vector3::from(point.traction_kpa) - Vector3::from(traction)).amax() < 1e-10);
+    }
+    for bad in [[40., 0., -100.], [0., 0., 100.]] {
+        let error = patch
+            .model
+            .birth(
+                &initial,
+                &patch.u,
+                &patch.active,
+                &patch.ids,
+                &patch.force(bad),
+                &patch.rows,
+            )
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("Coulomb cone"));
+    }
+    Ok(())
+}

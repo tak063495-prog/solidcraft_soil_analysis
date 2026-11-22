@@ -6098,7 +6098,8 @@ fn solve_controlled(
                 joints.iter().all(|id| {
                     c.joints.iter().any(|d| {
                         &d.id == id
-                            && d.birth_policy == Some(crate::joints::BirthPolicy::TransferForce)
+                            && d.birth_policy
+                                .is_some_and(crate::joints::BirthPolicy::transfers_force)
                     })
                 })
             }),

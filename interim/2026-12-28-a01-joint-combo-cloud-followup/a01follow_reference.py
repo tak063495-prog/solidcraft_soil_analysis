@@ -115,7 +115,9 @@ class Model:
         return {k:np.asarray(v) for k,v in result.items()}
 
 
-def run(m,steps,sink,contact_maximum=None,*,fixed_parts=None,boost_nontrivial=False,observer=None,predictor="independent",repartition="independent",service=None):
+def run(m,steps,sink,contact_maximum=None,*,fixed_parts=None,boost_nontrivial=False,observer=None,predictor="independent",repartition="independent",service=None,birth_predictor="centered"):
+    if birth_predictor not in ("centered", "installed_stick"):
+        raise ValueError("unknown BIRTH predictor")
     if fixed_parts is not None and (type(fixed_parts) is not int or not 1<=fixed_parts<=64):
         raise ValueError('a01cause fixed parts outside 1..64')
     assert steps>=2
@@ -266,6 +268,21 @@ def run(m,steps,sink,contact_maximum=None,*,fixed_parts=None,boost_nontrivial=Fa
                                 continue
                             break
                         residual,jac=evaluate(free,True)
+                        # At a stress-free installation the spring is exactly at the
+                        # open/stick corner. Use its installed branch only to predict
+                        # the first correction. The line search and force gate below
+                        # always evaluate the original unilateral Coulomb residual.
+                        if (birth_predictor == "installed_stick" and kind == "joint_birth"
+                                and index == 1 and iteration == 0
+                                and all(d['birth_policy'] == 'stress_free'
+                                        for d in m.case['joint_system']['joints'])):
+                            normal = s.normal[:, :, None] * s.normal[:, None, :]
+                            stick = (s.kt[:, None, None] * np.eye(3)
+                                     + (s.kn - s.kt)[:, None, None] * normal)
+                            jac = matrix + np.einsum('qai,qab,qbj,q->ij', cr, stick, cr,
+                                                      s.weight, optimize=True)
+                            if ar:
+                                jac += soil_t.T @ ar[2] @ soil_t
                         observe('linear',stage=stage['name'],progress=progress,iteration=iteration,
                             matrix=jac.copy(),rhs=-residual.copy(),free=free.copy(),soil_t=soil_t.copy(),fixed=fixed.copy(),
                             constant=constant.copy(),bulk_matrix=matrix.copy(),old_u=m._a01follow_old_u.copy(),joint=copy.deepcopy(joint),
