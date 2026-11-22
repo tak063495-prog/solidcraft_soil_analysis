@@ -26,18 +26,23 @@ def richardson(values, widths, *, similar, complete, reference_converged,
     if min(r, s) <= 1 or abs(r - s) > max(math.ulp(r), math.ulp(s)):
         holds.append("unequal refinement ratios")
     a, b = coarse - middle, middle - fine
-    if a * b < 0:
+    if not (math.isfinite(a) and math.isfinite(b) and math.isfinite(r) and math.isfinite(s)):
+        holds.append("nonfinite differences or refinement ratios")
+    if (a < 0 < b) or (b < 0 < a):
         holds.append("signed differences reverse")
     if abs(a) <= max(math.ulp(coarse), math.ulp(middle)) or abs(b) <= max(math.ulp(middle), math.ulp(fine)):
         holds.append("roundoff-scale differences")
     if holds:
         return result
-    order = math.log(abs(a / b)) / math.log(r)
+    ratio = abs(a / b)
+    log_ratio = math.log(ratio) if 0 < ratio < math.inf else math.log(abs(a)) - math.log(abs(b))
+    order = log_ratio / math.log(r)
     result["observed_order"] = order
     if order <= 0:
         holds.append("non-positive order")
         return result
-    correction = (fine - middle) / math.expm1(order * math.log(r))
+    inverse_ratio = b / a
+    correction = (fine - middle) * (inverse_ratio / (1. - inverse_ratio))
     result["extrapolated"] = fine + correction
     result["dimensional_correction"] = abs(correction)
     if abs(fine) > max(math.ulp(coarse), math.ulp(middle), math.ulp(fine)):
