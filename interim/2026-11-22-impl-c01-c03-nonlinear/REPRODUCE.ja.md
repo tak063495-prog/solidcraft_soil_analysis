@@ -101,4 +101,22 @@ python "$T/audit_native_window.py" "$O/native-512.json"
 
 `checkpoint_requested` のときは該当工程の最終受理座標を確認する。`stage attempt budget exceeded` は未達。C-03 の同じ12 Tet10 の参照を初期状態から検査する場合は、両方の probe コマンドに `--tet10` を加える。
 
+## 実装と台帳の検証
+
+クラウドの試験はルートから次の入口で実行した。Python の CI 群はリポジトリ指定の依存関係、release の本体・examples、PowerShell、各群が検査する保存資料を使う。P6 台帳は数値判定とは別に、固定コミットの blob と SHA-256、状態キーを検査する。
+
+```sh
+cargo fmt --all --check
+cargo clippy --locked --all-targets -- -D warnings
+cargo build --locked --release --bins --examples
+cargo test --locked --release --all-targets --no-fail-fast
+cargo test --locked --release --doc
+for g in python-core-0 python-core-1 python-mean-evidence python-spatial-evidence python-c01-switch python-c01-path python-c01-cause; do
+  python tools/run_ci_python_evidence_shards.py --group "$g" --output "work/NEW-validation/$g" || exit 1
+done
+python -m pytest -q tests/linux
+python interim/2026-12-06-p6-01-status-reconciliation/audit_status.py
+python interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py
+```
+
 C-01・C-03 は未達、passed=false。
