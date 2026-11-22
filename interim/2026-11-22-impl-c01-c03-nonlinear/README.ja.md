@@ -25,6 +25,8 @@ PETSc のイベント実装で、符号変化区間を modified Anderson–Björ
 
 OpenSees の LoadControl::newStep は、前増分の反復数と指定反復数の比で荷重増分を調整する。MOOSE の IterationAdaptiveDT::computeFailedDT は失敗した解の刻みを縮小する。MOOSE の RadialReturnStressUpdate は、局所ひずみ増分を内分割して状態を逐次積分する。後者は応力積分の先行例で、摩擦接触精度の参照値には用いていない。[OpenSees](https://github.com/OpenSees/OpenSees/blob/master/SRC/analysis/integrator/LoadControl.cpp)・[MOOSE 刻み制御](https://github.com/idaholab/moose/blob/next/framework/src/timesteppers/IterationAdaptiveDT.C)・[MOOSE 局所積分](https://github.com/idaholab/moose/blob/next/modules/solid_mechanics/src/materials/RadialReturnStressUpdate.C)
 
+確認したファイルの Git blob は PETSc イベント `5201b4507bbc`、TSAdaptBasic `bc6f30d96cff`、SciPy `1ef49c8e4063`、OpenSees `3d0168349e76`、MOOSE の刻み制御 `09c7d8db8904`・局所積分 `1d97a5bd2fe8`。
+
 **未確認の出典**。前回の PETSc マニュアルと OpenSees LoadControl 公式文書サイトはプロキシ HTTP 403 で本文未確認。上記は今回 GitHub で読んだ別の一次資料である。
 
 ## 実装と合格条件
@@ -37,6 +39,7 @@ C-03 の `--nonlinear-cutback` は独立参照の全体 Newton 上限または�
 
 12 Tet4 の C-03 対照は、意図的な擬似棄却を使わず、open 係数0.30、N4、材料・接触上限各1e-4を両方式に与えた。旧方式は open 0→0.25 の反復10、相対残差0.00622861で線探索停止。新方式は同じ失敗後に0.125を受理し、0.25への再試行を1回棄却して0.1875、0.25に到達した。目標端点の保存場再組立残差は1.15548e-11、全受理11点の最大3.05611e-11。先行する geostatic・shear の全場と反復記録の SHA-256 は両方式で一致した。別対照の open 係数1.0 は二分後に真の線形残差2.3263e-6で停止した。この失敗も残す。
 
+C-01 独立参照 N512 は、旧方式が保存記録と同じ reload 0.916015625 で2,000試行を消費して停止した（1,832受理・168棄却）。イベント位置・格子整合のみでは目標0.921875まで1,597試行（1,507受理・90棄却）、接触内分割4を併用すると1,062試行（958受理・104棄却、全受理試行の粗・中・細解の力残差最大9.90785e-11未満）。
 
 C-01 独立参照 N1024 の open 44/1024 では、旧方式1,730試行（1,497受理）、イベント位置・格子整合のみ1,270試行（1,179受理）、接触内分割4も併用すると733試行（640受理）。最大力残差は順に9.99983e-11、9.34878e-11、9.92712e-11未満。旧方式と位置予測だけでは残る980個の必須基準点を各1試行で解いても2,000を超える。4内分割併用では当該位置でこの下限が1,713になる。後続の試行数はこの下限からは確定できない。
 

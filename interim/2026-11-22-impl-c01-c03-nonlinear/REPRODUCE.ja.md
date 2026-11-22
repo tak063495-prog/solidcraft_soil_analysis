@@ -96,6 +96,7 @@ python "$T/probe_c03.py" --cutback --output "$O/c03-tet4-new.json"
 cargo build --locked --release --example joint_path_window
 python "$T/probe_c01.py" --steps 512 --event-proposal --local-substeps 4 --native-input --output "$O/native-512-stages.json"
 target/release/examples/joint_path_window examples/joint-water-column-tet10-mesh.json examples/ground-joint-water-mc.json "$O/native-512-stages.json" reload 0.921875 "$O/native-512.json"
+python "$T/audit_native_window.py" "$O/native-512.json"
 ```
 
 `checkpoint_requested` のときは該当工程の最終受理座標を確認する。`stage attempt budget exceeded` は未達。C-03 の同じ12 Tet10 の参照を初期状態から検査する場合は、両方の probe コマンドに `--tet10` を加える。
