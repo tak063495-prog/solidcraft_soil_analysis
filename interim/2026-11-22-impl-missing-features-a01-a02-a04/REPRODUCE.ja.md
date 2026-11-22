@@ -50,8 +50,8 @@ python -c "import hashlib,json,pathlib,sys,zipfile; d=pathlib.Path(sys.argv[1]);
 cargo fmt --all --check
 cargo clippy --locked --all-targets -- -D warnings
 cargo build --release --locked --bins --examples
-cargo test --locked --all-targets
-cargo test --locked --doc
+cargo test --release --locked --all-targets --no-fail-fast
+cargo test --release --locked --doc
 $groups = 'python-core-0','python-core-1','python-mean-evidence','python-spatial-evidence','python-c01-switch','python-c01-path','python-c01-cause'
 foreach ($g in $groups) {
     python tools/run_ci_python_evidence_shards.py --group $g --output "$w/tests/$g"
@@ -59,4 +59,4 @@ foreach ($g in $groups) {
 python interim/2026-12-06-p6-01-status-reconciliation/audit_status.py
 ```
 
-Linux 専用の追加群は `python -m pytest -q tests/linux` で実行する。P6-01 の監査はソルバを起動せず、台帳に固定したコミット・Git blob・SHA-256 と保存状態値を照合する。
+Linux 専用の追加群は `python -m pip install pytest==9.2.0` の後、`python -m pytest -q tests/linux` で実行する。P6-01 の監査はソルバを起動せず、台帳に固定したコミット・Git blob・SHA-256 と保存状態値を照合する。
