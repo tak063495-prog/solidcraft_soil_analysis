@@ -30,7 +30,7 @@ foreach ($n in 512,1024) {
   $out="work/NEW-PC-c01-event4-$n"
   python $S1 --mode init --event-proposal --solver target/release/examples/wet_joint_path_probe.exe --output $out
   if ($LASTEXITCODE) { throw "C-01 初期化失敗 $n" }
-  python $S1 --mode native --event-proposal --pc-series --steps $n --timeout 21600 --output $out
+  python -c "import subprocess,sys; sys.exit(subprocess.run([sys.executable,*sys.argv[1:]],timeout=28800).returncode)" $S1 --mode native --event-proposal --pc-series --steps $n --timeout 21600 --output $out
   if ($LASTEXITCODE) { throw "C-01 native 未完了 $n。途中記録を保存" }
   python -c "import subprocess,sys; sys.exit(subprocess.run([sys.executable,*sys.argv[1:]],timeout=21600).returncode)" $S1 --mode independent --event-proposal --pc-series --steps $n --output $out
   if ($LASTEXITCODE) { throw "C-01 independent 未完了 $n。途中記録を保存" }
@@ -69,7 +69,7 @@ if ($LASTEXITCODE) { throw 'C-03 比較未完了' }
 
 ## 資源見積もり
 
-全コマンドを逐次実行する。対象は12要素のみ。C-01 は PC 実測の旧256・4,341受理・965秒を基準に、7工程×最大2,000試行、各試行の粗・中点・細解、増える接触内積分とファイル入出力を考慮し、各経路に6時間を割り当てた。native 子プロセスと independent 全プロセスはそれぞれ6時間で打ち切る。C-03 は既存12 Tet10の計画値0.5〜4時間を用い、独立ワーカーの上限は4時間。24時間以内の計算計画で、完走時間の保証はない。
+全コマンドを逐次実行する。対象は12要素のみ。C-01 は PC 実測の旧256・4,341受理・965秒を基準に、7工程×最大2,000試行、各試行の粗・中点・細解、増える接触内積分とファイル入出力を考慮し、各経路に6時間を割り当てた。native の求解子プロセスは6時間、後処理を含む native 全体は8時間、independent 全体は6時間で打ち切る。C-03 は既存12 Tet10の計画値0.5〜4時間を用い、独立ワーカーの上限は4時間。24時間以内の計算計画で、完走時間の保証はない。
 
 メモリの計画値は C-01 16〜32 GB、C-03 32 GB 以下。C-01 は同時1経路、逐次保存、試行記録最大14,000件で見積もった。C-03 は162変位自由度で、自由度削減前の162×162の倍精度行列でも1枚約0.21 MB。材料324点と数値接線、全履歴の入出力を含め、旧12要素手順の32 GB枠を用いる。空きディスクは C-01 1水準30〜60 GB、C-03 20 GBが目安。メモリ実測が40 GBに近づいたら経路を停止して途中記録を残す。96、768、6144要素への細分化は行わない。
 
