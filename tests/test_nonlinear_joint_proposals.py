@@ -23,6 +23,27 @@ class NonlinearJointProposals(unittest.TestCase):
         self.assertLess(new['maximum_reassembled_force'], 1e-10)
         self.assertFalse(new['numerical_acceptance'])
 
+    def test_mc_edge_rechecks_the_existing_principal_order_gate(self):
+        import numpy as np
+        import c03diag_mc as mc
+        mat = study.read(HERE.parents[1] / 'examples/ground-joint-water-mc.json')['materials'][0]['mohr_coulomb']
+        mat['cohesion_kpa'] = 30.
+        # Strain from an admissible edge stress to a trial just outside both shear faces.
+        bottom = (.5*82 - 2*30*np.cos(np.deg2rad(30))) / 1.5
+        old = dict(effective_stress_compression_positive_kpa=[82., 82., bottom, 0., 0., 0.],
+                   plastic_strain_compression_positive=[0.]*6, void_ratio=.7,
+                   equivalent_plastic_strain=0., plastic_work_kpa=0.)
+        nu = mat['poisson']
+        compliance = (np.eye(3)*(1+nu) - nu) / mat['young_kpa']
+        strain = np.r_[compliance @ [5e-6, 4.95e-6, -5e-6], [0.]*3]
+        with self.assertRaisesRegex(ArithmeticError, 'inadmissible principal order'):
+            mc.step(mat, old, strain)
+        result = mc.step(mat, old, strain, require_order=True)
+        stress = result['effective_stress_compression_positive_kpa']
+        self.assertGreaterEqual(stress[0], stress[1] - 1e-8*(82+5e-6))
+        self.assertLess(mc.normalized_yield(mat, stress), 1e-8)
+        self.assertEqual(old['plastic_strain_compression_positive'], [0.]*6)
+
     def test_independent_proposals_resolve_all_anchors_and_check_both_half_steps(self):
         path = HERE.parent / '2026-12-12-c01-switch-event-localization/study.py'
         spec = importlib.util.spec_from_file_location('nonlinear_c01_study', path)

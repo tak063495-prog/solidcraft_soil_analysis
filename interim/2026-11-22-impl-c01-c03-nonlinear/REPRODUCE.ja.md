@@ -43,7 +43,7 @@ foreach ($n in 512,1024) {
 
 ## C-03 stage 2 independent、g32-m0-c0.0001
 
-既存の12 Tet10 native と対になる入力を作る。native の計算結果を独立求解へ与える操作はない。`--nonlinear-cutback` は独立側の線探索失敗または全体 Newton 上限でだけ再試行する。材料・接触の内分割上限を従来と同じ値に固定する。
+既存の12 Tet10 native と対になる入力を作る。native の計算結果を独立求解へ与える操作はない。`--nonlinear-cutback` は独立側の主応力順序違反時に同じ目標で局所反復を再求解し、射影反復上限・線探索失敗・全体 Newton 上限では刻みを二分する。材料・接触の内分割上限を従来と同じ値に固定する。
 
 ```powershell
 $P='work/NEW-PC-c03-cutback-g32'

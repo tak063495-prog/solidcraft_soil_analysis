@@ -37,7 +37,7 @@ def main():
     p.add_argument('--folder',default='baseline');p.add_argument('--other',default='independent')
     p.add_argument('--steps',type=int,default=32);p.add_argument('--material',type=float,default=1e-4)
     p.add_argument('--contact',type=float,default=1e-4);p.add_argument('--timeout',type=int,default=14400)
-    p.add_argument('--nonlinear-cutback',action='store_true',help='retry failed independent nonlinear increments from committed state')
+    p.add_argument('--nonlinear-cutback',action='store_true',help='retry independent MC principal ordering and nonlinear failures from committed state')
     a=p.parse_args();os.environ['C03_USER_PC']='1';out=a.output.resolve()
     if a.nonlinear_cutback and a.mode not in ('independent', 'independent-worker'):
         p.error('--nonlinear-cutback requires independent mode')

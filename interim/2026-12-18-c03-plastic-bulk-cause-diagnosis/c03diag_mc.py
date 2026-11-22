@@ -28,7 +28,11 @@ def normalized_yield(p,s):
     return result
 
 
-def step(p,old,de):
+def principal_order_ok(stress, scale):
+    return np.all(stress[:-1]>=stress[1:]-1e-8*scale)
+
+
+def step(p,old,de,*,require_order=False):
     """Iterative principal-plane complementarity (projected Gauss-Seidel).
 
     Rust enumerates nonsingular active subsets with LU. This reference instead
@@ -54,10 +58,14 @@ def step(p,old,de):
             change=updated-multipliers[i]
             multipliers[i]=updated;stress-=dm[:,i]*change
         f=n@stress-limit
-        if np.max(f)<1e-13*scale and np.max(np.abs(multipliers*f))<1e-16*scale:break
+        if np.max(f)<1e-13*scale and np.max(np.abs(multipliers*f))<1e-16*scale:
+            # A tiny active multiplier can satisfy complementarity before an edge
+            # return satisfies the existing principal-order check.
+            if not require_order or principal_order_ok(stress, scale):
+                break
     else:raise ArithmeticError('independent projected complementarity iteration did not converge')
     assert np.min(multipliers)>=0, ('negative projected multiplier', multipliers)
-    if not np.all(stress[:-1]>=stress[1:]-1e-8*scale):
+    if not principal_order_ok(stress, scale):
         raise ArithmeticError(('inadmissible principal order',stress.tolist(),scale))
     dp=np.linalg.solve(d,values-stress);plastic=v@np.diag(dp)@v.T;full=v@np.diag(stress)@v.T
     voigt=lambda a:np.array([a[0,0],a[1,1],a[2,2],a[0,1],a[1,2],a[2,0]])

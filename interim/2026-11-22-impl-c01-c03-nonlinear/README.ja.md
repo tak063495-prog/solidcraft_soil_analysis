@@ -19,6 +19,7 @@
 |接触判定へのヒステリシス・活性集合固定・半平滑 Newton|今回は見送り。保存試行で支配的だったのは開閉点のすべり履歴差で、粗密の終点ラベルは一致していた。|
 |反復数による荷重増分調整|見送り。平衡反復数だけでは、平衡収束後に検出されるすべり・散逸の経路誤差を観測できない。|
 |C-03 独立参照の失敗時二分・確定履歴から再求解|採用。固定端点の非線形反復が停止したときだけ途中平衡を解き、元の指定端点と既存の残差判定を再検査できる。|
+|C-03 MC 稜線で既存の主応力順序も満たすまで射影反復を継続|採用。PCと同じ12 Tet10で、相補性の停止条件を先に満たしても主応力順序が不適格となる試行を観測した。同じ増分で両条件を同時に検査できる。|
 |拡大ラグランジュ法|今回は見送り。別の接触離散化・乗数更新を導入する根拠が、今回観測した停止理由からは得られなかった。|
 
 PETSc のイベント実装で、符号変化区間を modified Anderson–Björck 法で再分割する処理を確認した。今回使うのは既存の中点試行で区切った区間の割線予測で、PETSc の算法全体を移植していない。PETSc の TSAdaptBasic と SciPy RK は局所誤差から倍率を求め、後者は終端で実刻みを切り詰める。今回、各基準点を通過するために、残区間を予測刻みに最も近い整数個に等分する操作を加えた。[PETSc イベント実装](https://github.com/petsc/petsc/blob/main/src/ts/event/tsevent.c)・[PETSc TSAdaptBasic](https://github.com/petsc/petsc/blob/main/src/ts/adapt/impls/basic/adaptbasic.c)・[SciPy RK](https://github.com/scipy/scipy/blob/main/scipy/integrate/_ivp/rk.py)
@@ -27,13 +28,15 @@ OpenSees の LoadControl::newStep は、前増分の反復数と指定反復数�
 
 確認したファイルの Git blob は PETSc イベント `5201b4507bbc`、TSAdaptBasic `bc6f30d96cff`、SciPy `1ef49c8e4063`、OpenSees `3d0168349e76`、MOOSE の刻み制御 `09c7d8db8904`・局所積分 `1d97a5bd2fe8`。
 
+MOOSE の CappedMohrCoulombStressUpdate は最大・中間主応力が等しい稜線へのリターンを面へのリターンと区別する。MultiParameterPlasticityStressUpdate は非線形残差、反復数、乗数の符号を合わせて成功を判定し、失敗時は刻みを半分にする。今回の独立参照では既存の射影 Gauss–Seidel と主応力順序検査を用いた。確認した blob は順に `925eb5f78ab3`・`d0916ec385d6`。[MOOSE MC リターン](https://github.com/idaholab/moose/blob/next/modules/solid_mechanics/src/materials/CappedMohrCoulombStressUpdate.C)・[複数条件の判定と刻み戻し](https://github.com/idaholab/moose/blob/next/modules/solid_mechanics/src/materials/MultiParameterPlasticityStressUpdate.C)
+
 **未確認の出典**。前回の PETSc マニュアルと OpenSees LoadControl 公式文書サイトはプロキシ HTTP 403 で本文未確認。上記は今回 GitHub で読んだ別の一次資料である。
 
 ## 実装と合格条件
 
 C-01 の入力は `joint_system.global_step_control.path_error` 内の `event_proposal=true` と `minimum_contact_substeps=4`。個別の対照も可能。粗い解・中点・二分割終点の全体平衡を毎回求める。すべり・散逸誤差が予算を超えた接触点だけを対象に、旧・中点・二分割終点で符号が変わる半区間を探し、最も早いギャップゼロを線形予測する。縮小率を1/16〜15/16に収め、区間が見つからなければ二分する。受理後は無次元誤差比から刻みを提案し、次の基準点までを等分する。状態や荷重解の補間を受理する経路はない。各案は旧状態から再求解し、棄却中は履歴を確定しない。分割数の下限は粗・中点・細すべてに同じように適用し、元の5万上限も維持する。両設定を省略すると従来の入力・出力形式と制御を使う。
 
-C-03 の `--nonlinear-cutback` は独立参照の全体 Newton 上限または線探索失敗を受け取り、最後に確定した状態から残区間を二分する。中間点、元の指定端点とも材料の必要内分割を再確認し、力残差1e-10を満たした状態だけを確定する。試行上限2,000/工程、最小増分は入力値。真の線形残差失敗、特異行列、その他の例外は上位へ伝える。固定点の比較ファイルに加えて、途中平衡と棄却理由も保存する。線形解法・構成則・参照値に変更はない。
+C-03 の `--nonlinear-cutback` は独立参照の全体 Newton 上限または線探索失敗を受け取り、最後に確定した状態から残区間を二分する。中間点、元の指定端点とも材料の必要内分割を再確認し、力残差1e-10を満たした状態だけを確定する。試行上限2,000/工程、最小増分は入力値。主応力順序だけが不適格なときは、確定状態から同じ目標を再試行し、材料点の射影反復で既存の降伏・相補性・主応力順序のすべてを検査する。射影反復の従来上限20,000でも成立しない場合は増分を二分する。同じ目標の再試行も工程予算に含む。真の線形残差失敗、特異行列、その他の例外は上位へ伝える。固定点の比較ファイルに加えて、途中平衡と棄却理由も保存する。線形解法・構成則・参照値に変更はない。
 
 ## クラウドでの比較
 

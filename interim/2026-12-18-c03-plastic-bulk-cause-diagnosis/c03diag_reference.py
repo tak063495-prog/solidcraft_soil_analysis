@@ -24,10 +24,10 @@ RETURNS = ('elastic','shear_face','compression_edge','extension_edge','shear_ape
 CONTACT = ('open','stick','slip')
 
 
-def integrate(material, old, strain, count):
+def integrate(material, old, strain, count, *, require_order=False):
     state = old
     for _ in range(int(count)):
-        state = mc.step(material, state, np.asarray(strain)/count)
+        state = mc.step(material, state, np.asarray(strain)/count, require_order=require_order)
     return state
 
 
@@ -117,7 +117,7 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
     plastic=jump.copy();accumulated=np.zeros(len(jump));pd=accumulated.copy();nd=accumulated.copy();work=accumulated.copy()
     rows=[];origin=0.
     for phase,(name,end) in enumerate([('geostatic',0.)]+[(x['name'],x['target_factor']) for x in m.case['stages']]):
-        def attempt(progress):
+        def attempt(progress, require_order):
             nonlocal u, states, jump, traction, plastic, accumulated
             factor=origin+(end-origin)*progress;load=m.base+(1-progress)*(m.seed_force-m.base) if phase==0 else m.base+factor*m.boundary
             fixed=m.offset(factor);free=m.t.T@(u-fixed);scale=max(np.linalg.norm(load),1.)
@@ -133,7 +133,7 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                 return q,dp,da
             def evaluate(x,tangent=False):
                 candidate=fixed+m.t@x;target=np.einsum('qag,g->qa',s.c,candidate);de=-m.strains(candidate-u)
-                updated=[integrate(mat,old,e,c) for mat,old,e,c in zip(m.mats,states,de,counts)]
+                updated=[integrate(mat,old,e,c,require_order=require_order) for mat,old,e,c in zip(m.mats,states,de,counts)]
                 q,dp,da=projected(target);res=m.t.T@(m.internal(updated,q[:,0])-load)
                 if not tangent:return res,candidate,target,updated,q[:,0],dp[:,0],da[:,0]
                 jac=np.zeros((m.t.shape[1],)*2);h=1e-8
@@ -141,7 +141,7 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                     d=np.empty((6,6))
                     for a in range(6):
                         perturb=np.zeros(6);perturb[a]=h
-                        sp=integrate(mat,old,e+perturb,c)['effective_stress_compression_positive_kpa'];sm=integrate(mat,old,e-perturb,c)['effective_stress_compression_positive_kpa']
+                        sp=integrate(mat,old,e+perturb,c,require_order=require_order)['effective_stress_compression_positive_kpa'];sm=integrate(mat,old,e-perturb,c,require_order=require_order)['effective_stress_compression_positive_kpa']
                         d[:,a]=(np.asarray(sp)-sm)/(2*h)
                     br=b@m.t[ids];jac+=br.T@d@br*w
                 h=2e-9;targets=np.repeat(target[:,None,:],7,axis=1)
@@ -191,26 +191,36 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
         for index in range(1, steps + 1):
             anchor = index / steps
             target = anchor
+            require_order = False
             while current < anchor:
                 if cutback and attempts >= 2000:
                     raise ArithmeticError('independent stage attempt budget')
                 attempts += 1
                 try:
-                    attempt(target)
-                except NonlinearFailure as error:
+                    attempt(target, require_order)
+                except ArithmeticError as error:
+                    reason = error.args[0] if error.args else None
+                    order_failure = isinstance(reason, tuple) and reason[:1] == ('inadmissible principal order',)
+                    local_limit = reason == 'independent projected complementarity iteration did not converge'
+                    if not isinstance(error, NonlinearFailure) and not (cutback and (order_failure or local_limit)):
+                        raise
                     if attempt_sink:
                         attempt_sink(dict(stage=name, start=current, target=target, accepted=False, reason=str(error)))
                     if not cutback:
                         raise ArithmeticError(*error.args) from None
+                    if order_failure and not require_order:
+                        require_order = True
+                        continue  # Retry the same load, enforcing both existing local gates.
                     half = (target - current) / 2
                     if half < model.case['settings']['minimum_increment'] or current + half == current:
                         raise NonlinearFailure(('independent cutback exhausted', name, current, target, str(error))) from error
                     target = current + half
                     continue
                 if attempt_sink:
-                    attempt_sink(dict(stage=name, start=current, target=target, accepted=True))
+                    attempt_sink(dict(stage=name, start=current, target=target, accepted=True, ordered_return=require_order))
                 current = target
                 target = anchor
+                require_order = False
         origin=end
     return dict(complete=True,reference_uses_native_results=False,rows=rows,steps=steps,material_maximum=material_maximum,
                 contact_maximum=contact_maximum,volume_rule='input Gauss-Jacobi; independent geometry/assembly')
