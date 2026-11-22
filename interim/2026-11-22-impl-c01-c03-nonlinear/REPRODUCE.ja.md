@@ -90,11 +90,12 @@ python "$T/probe_c03.py" --output "$O/c03-tet4-old.json"
 python "$T/probe_c03.py" --cutback --output "$O/c03-tet4-new.json"
 ```
 
-本体の観測用 `joint_path_window` は実 solver の Observer で指定位置の受理直後に停止する。既存の試行数を継承した単一の求解で、チェックポイントの書換えは行わない。入力は当該水準の `native-stages.json` を使う。以下は N512 の例で、N1024 は `open 0.04296875` に置き換える。
+本体の観測用 `joint_path_window` は実 solver の Observer で指定位置の受理直後に停止する。既存の試行数を継承した単一の求解で、チェックポイントの書換えは行わない。同じ入力生成器で当該水準の工程 JSON を書き出す。以下は N512 の例で、N1024 は `open 0.04296875` に置き換える。
 
 ```sh
 cargo build --locked --release --example joint_path_window
-target/release/examples/joint_path_window examples/joint-water-column-tet10-mesh.json examples/ground-joint-water-mc.json work/NEW-PC-c01-event4-512/g512/native-stages.json reload 0.921875 "$O/native-512.json"
+python "$T/probe_c01.py" --steps 512 --event-proposal --local-substeps 4 --native-input --output "$O/native-512-stages.json"
+target/release/examples/joint_path_window examples/joint-water-column-tet10-mesh.json examples/ground-joint-water-mc.json "$O/native-512-stages.json" reload 0.921875 "$O/native-512.json"
 ```
 
 `checkpoint_requested` のときは該当工程の最終受理座標を確認する。`stage attempt budget exceeded` は未達。C-03 の同じ12 Tet10 の参照を初期状態から検査する場合は、両方の probe コマンドに `--tet10` を加える。

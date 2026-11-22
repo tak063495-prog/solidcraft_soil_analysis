@@ -201,7 +201,7 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                     if attempt_sink:
                         attempt_sink(dict(stage=name, start=current, target=target, accepted=False, reason=str(error)))
                     if not cutback:
-                        raise
+                        raise ArithmeticError(*error.args) from None
                     half = (target - current) / 2
                     if half < model.case['settings']['minimum_increment'] or current + half == current:
                         raise NonlinearFailure(('independent cutback exhausted', name, current, target, str(error))) from error

@@ -12,6 +12,7 @@ def main():
     parser.add_argument('--steps', type=int, choices=(512, 1024), required=True)
     parser.add_argument('--event-proposal', action='store_true')
     parser.add_argument('--local-substeps', type=int, choices=(1, 4), default=4)
+    parser.add_argument('--native-input', action='store_true', help='write the matching native case without solving')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     here = Path(__file__).resolve().parent
@@ -29,6 +30,9 @@ def main():
     if args.event_proposal:
         control.update(event_proposal=True, minimum_contact_substeps=args.local_substeps)
     case['joint_system']['global_step_control'] = dict(path_error=control)
+    if args.native_input:
+        study.write(args.output, case)
+        return
     name, threshold = ('reload', 472/512) if n == 512 else ('open', 44/1024)
     counts = collections.defaultdict(collections.Counter)
     maxima = collections.Counter()
