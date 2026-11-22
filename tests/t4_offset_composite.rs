@@ -389,3 +389,90 @@ fn ten_kn_neutral_plane_load_transports_its_moment_and_work() -> Result<()> {
     }
     Ok(())
 }
+
+fn duplicate_exposed_contact(mesh: &mut Mesh, case: &mut Case) {
+    let mut contact = case.plate.contacts[0].clone();
+    let source = contact.soil_b.cell;
+    let old = mesh.tetrahedra10[source];
+    let new = std::array::from_fn(|i| mesh.nodes.len() + i);
+    let coordinates = old.map(|node| mesh.nodes[node]);
+    mesh.nodes.extend(coordinates);
+    let remap = |node| new[old.iter().position(|&n| n == node).unwrap()];
+    let mut region = mesh.regions[1].clone();
+    region.id = 3;
+    region.body = "soil3".into();
+    contact.id = "coincident-B".into();
+    contact.soil_b.cell = mesh.tetrahedra.len();
+    contact.soil_b.nodes = contact.soil_b.nodes.map(remap);
+    mesh.tetrahedra.push(mesh.tetrahedra[source].map(remap));
+    mesh.tetrahedra10.push(new);
+    mesh.material_ids.push(mesh.material_ids[source]);
+    mesh.region_ids.push(region.id);
+    mesh.regions.push(region);
+    case.plate.contacts.push(contact);
+}
+
+fn compress_exposed_faces(mesh: &Mesh, case: &mut Case) -> Result<f64> {
+    let install = Step::Install {
+        contacts: case
+            .plate
+            .contacts
+            .iter()
+            .map(|contact| (contact.id.clone(), Placement::StressFree))
+            .collect(),
+        holder: "displacement supports".into(),
+    };
+    let mut d = vec![0.; mesh.nodes.len() * 3 + 18];
+    for contact in &case.plate.contacts {
+        for n in mesh.tetrahedra10[contact.soil_b.cell] {
+            d[3 * n + 2] = -0.01;
+        }
+    }
+    case.steps = vec![install, load(d)];
+    let run = path::run(mesh, case, 2, None)?;
+    Ok(case
+        .plate
+        .soil_a
+        .nodes
+        .iter()
+        .map(|n| run.frames[2].reactions[3 * n + 2])
+        .sum())
+}
+
+#[test]
+fn single_exposed_face_transfers_five_kn_to_fixed_plate() -> Result<()> {
+    let (mesh, mut case) = fixture()?;
+    close(compress_exposed_faces(&mesh, &mut case)?, 5., 1e-10);
+    Ok(())
+}
+
+#[test]
+fn coincident_exposed_faces_with_distinct_ids_are_rejected() -> Result<()> {
+    let (mut mesh, mut case) = fixture()?;
+    duplicate_exposed_contact(&mut mesh, &mut case);
+    let first = &case.plate.contacts[0];
+    let second = &case.plate.contacts[1];
+    assert_ne!(first.id, second.id);
+    assert_ne!(first.soil_b.cell, second.soil_b.cell);
+    assert!(
+        first
+            .soil_b
+            .nodes
+            .iter()
+            .all(|node| !second.soil_b.nodes.contains(node))
+    );
+    assert_eq!(
+        first.soil_b.nodes.map(|node| mesh.nodes[node]),
+        second.soil_b.nodes.map(|node| mesh.nodes[node])
+    );
+    for _ in 0..2 {
+        let error = compress_exposed_faces(&mesh, &mut case).unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("occupy the same conforming exposed face")
+        );
+        case.plate.contacts.reverse();
+    }
+    Ok(())
+}

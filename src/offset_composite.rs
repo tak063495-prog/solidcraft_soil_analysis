@@ -145,6 +145,14 @@ impl Patch {
                 ));
             }
         }
+        // Every valid counterpart matches all six nodes of this exposed face.
+        // Check occupancy after the existing per-contact input diagnostics.
+        if let [first, second, ..] = plate.contacts.as_slice() {
+            return Err(Error::Input(format!(
+                "plate {} contacts {} and {} occupy the same conforming exposed face",
+                plate.id, first.id, second.id
+            )));
+        }
         let points = elements::face_points(&contact_x)?
             .into_iter()
             .map(|gp| {
