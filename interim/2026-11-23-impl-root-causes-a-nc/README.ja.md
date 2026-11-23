@@ -54,3 +54,7 @@ open の入口では両系が元の shear 終端から各自で解く。既報�
 原因調査では NAFEMS 3DNLG-7 は弾性殻、Griffiths・Koutsabeloulis (1985) は別の掘削問題と整理し、元の3D MCC施工と同一入力の公刊崩壊値は見つからなかった。後者の原論文は今回も出版社抄録までで全文未確認。外部論文による追加の物理判定は保留し、手順の合否と参照値はリポジトリの既存規約に依拠した。残差4案・別施工 NC-01b は本計算の対象外。[原因調査](../2026-11-23-survey-unmet-root-causes/README.ja.md)・[出典確認範囲](../2026-11-22-spec-survey-t9-nc01-spec/sources.ja.md)
 
 限定検証の原票は observations.zip と validation.json に保存する。A-01・A-02・A-04・元 NC-01 の包括判定は未達。
+
+## P6-01 追補登録
+
+科学原票のコミットは `5eb0ca79fe8f420629278060fbfa42ac348a5dc4`。validation.json の Git blob は `615643602ccfc766a9ac3afecd44e71a7f8295fe`、SHA-256 は `120ab6139cdf5779bc415b0e6a85472202a375db0189fa541bd299fb2baac254`。固定コミットの原票を e541fe1 方式で照合し、追補台帳の末尾に `root-causes-a-nc` を登録した。登録直後の追補台帳 SHA-256 は `fd06c30335c3e8a0725493d8a12262cfbfca5cd88b233c68d51acb4175b6f15b`。元の80行台帳の判定は維持する。
