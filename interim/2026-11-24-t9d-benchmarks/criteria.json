@@ -1,0 +1,31 @@
+{
+  "decision_jst": "2026-11-24T06:00:00+09:00",
+  "linear_relative_max": 1e-10,
+  "arch": {
+    "figure": "https://docs.software.vt.edu/abaqusv2025/English/SIMA3DXRefImages/sxmsnapbuckle-loadvdisph.png",
+    "publication": "https://docs.software.vt.edu/abaqusv2025/English/SIMACAEEXARefMap/simaexa-c-snapbuckling.htm",
+    "input": "https://docs.software.vt.edu/abaqusv2025/English/SIMAINPRefResources/snapbuckling_deep.inp",
+    "first_peak_load_reading": [885, 905],
+    "basis": "Fig.7 の公開ラスター（横456画素表示、左上原点）で縦軸の0は約249行、1000は約49行。1画素=5荷重単位。頂部の線とマーカーの読取りを69〜71行、零点および読取り端の合計1画素を見込み、図から識別できる範囲を885〜905とした。著者指定FE許容値ではない。12/96梁と独立射撃を個別に採点し、各系列で単純foldかつ前後の受理荷重の増減を要求する。",
+    "peak_displacement_tolerance": null,
+    "full_curve_tolerance": null
+  },
+  "kirsch": {
+    "publication": "https://docs.itascacg.com/itasca950/3dec/docproject/source/examples/CylindricalHoleInAnIEM.html",
+    "radius_m": 1, "outer_radius_m": 10, "bulk_kpa": 3900000, "shear_kpa": 2800000,
+    "horizontal_vertical_compression_kpa": [15000, 30000], "release": [0, 0.5, 1],
+    "wall_hoop_compression_kpa_horizontal_vertical": [75000, 15000],
+    "field_relative_tolerance": null,
+    "basis": "本文の閉形式を各測点で用いる。2.5a以内の一致は定性的で、公刊の場誤差許容値を確認できない。施工平衡に既存の自由力相対残差上限を適用し、引継ぎ時の変位差と反力、応力・変位場の誤差は別に記録する。"
+  },
+  "mcc": {
+    "publication": "https://docs.itascacg.com/flac3d700/flac3d/zone/test3d/VerificationProblems/TriaxialCompressionTest/TriaxialCompressionTest.html",
+    "p0_kpa": 5, "pc_targets_kpa": [8, 40], "M": 1.02, "lambda": 0.2, "kappa": 0.05,
+    "p1_kpa": 1, "v_lambda": 3.32, "terminal_axial_strain": 0.5,
+    "endpoint_relative_max_exclusive": 0.02,
+    "basis": "公式本文 Results and Discussion が理論値に対する終端誤差 less than 2% を報告。この公刊再現精度を今回の p′,q,v の各終端値に個別採用する。理論値は式から算出、Table 2 の表示値は7.576, 7.727, 2.811。数表の丸め幅はFE許容差に使わない。限界状態は漸近値であり、軸ひずみ0.5は既存 tools/verify_mcc_triaxial.py の試験終端。G一定とν一定で一致を要求できないひずみ曲線は採点しない。",
+    "history_pc_or_volume_tolerance": null,
+    "full_stress_strain_tolerance": null
+  },
+  "missing_tolerance_state": "参照なし（全文待ち）・未達"
+}
