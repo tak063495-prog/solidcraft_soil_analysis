@@ -1,14 +1,19 @@
+from collections import Counter
+import copy
 import io
 import json
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 import zipfile
 
 import numpy as np
 
 STUDY = Path(__file__).resolve().parents[1] / "interim/2026-11-22-impl-t8-acceptance-criteria"
 sys.path.insert(0, str(STUDY))
+import assess as assessment
+import water
 from branches import paired, support_reason
 from refinement import richardson
 from two_mesh import metrics
@@ -132,6 +137,111 @@ class AcceptanceCriteria(unittest.TestCase):
                 self.assertLess(abs(point["b_flow_error_m3_s"]), 1e-14)
                 self.assertLess(point["max_nodal_force_error_kn"], 1e-10)
                 self.assertEqual(point["expected_a_outflow_m3_s"] == 0, row["slope"] == 0)
+
+    def test_affine_solver_output_requires_each_face_point_and_time(self):
+        mesh = water.controls.read(water.controls.EX / "joint-water-column-mesh.json")
+        frames = []
+        for seconds in (.125, .25):
+            traces = []
+            forces = []
+            for face, (a_nodes, b_nodes) in enumerate(zip(
+                    mesh["face_sets"]["Seam:a"], mesh["face_sets"]["Seam:b"], strict=True)):
+                owners = [next(i for i, tet in enumerate(mesh["tetrahedra"])
+                               if set(nodes) <= set(tet)) for nodes in (a_nodes, b_nodes)]
+                z = mesh["nodes"][a_nodes[0]][2]
+                pressure = 10 * (2 - z)
+                cell_z = sum(mesh["nodes"][n][2] for n in mesh["tetrahedra"][owners[0]]) / 4
+                outward = 1 if z > cell_z else -1
+                for point in range(3):
+                    traces.append(dict(joint_id="Seam", face_index=face, point_index=point,
+                                       time_s=seconds, elevation_m=z, applied_pressure_kpa=pressure,
+                                       **{f"side_{side}": dict(face=face, owner=owner,
+                                                              total_head_m=2., outward_flow_m3_s=0.)
+                                          for side, owner in zip("ab", owners, strict=True)}))
+                forces.append([[0., 0., -outward * pressure * .5 / 3]] * 3)
+            frames.append(dict(phase="transient", state=dict(
+                hydraulic=dict(time_s=seconds), fluid=dict(joint_traces=traces),
+                mechanical=dict(joint_water=dict(face_nodal_force_a_kn=forces)))))
+
+        def record(name, mesh, run, folder, budget):
+            budget[name] = {}
+
+        with patch.object(water.controls, "record", side_effect=record), \
+             patch.object(water, "solve") as solve:
+            solve.return_value = dict(frames=frames)
+            result = water.affine_column(STUDY, None, 0., .125)
+            self.assertEqual(len(result["traces"]), 12)
+
+            for mutation in ("missing", "duplicate face", "duplicate point", "extra", "late"):
+                with self.subTest(mutation=mutation):
+                    invalid = copy.deepcopy(frames)
+                    for frame in invalid:
+                        traces = frame["state"]["fluid"]["joint_traces"]
+                        if mutation == "missing":
+                            del traces[3:]
+                        elif mutation == "duplicate face":
+                            traces[3:] = copy.deepcopy(traces[:3])
+                        elif mutation == "duplicate point":
+                            traces[1] = copy.deepcopy(traces[0])
+                        elif mutation == "extra":
+                            traces.append(copy.deepcopy(traces[0]))
+                        else:
+                            frame["state"]["hydraulic"]["time_s"] += .25
+                            for trace in traces:
+                                trace["time_s"] += .25
+                    solve.return_value = dict(frames=invalid)
+                    with self.assertRaises(ValueError):
+                        water.affine_column(STUDY, None, 0., .125)
+
+    def test_affine_assessment_requires_both_profiles_and_the_complete_matrix(self):
+        work = Path("sealed-study")
+        archived_read = assessment.read
+        with zipfile.ZipFile(STUDY / "observations.zip") as archive:
+            original = json.loads(archive.read("t8-water/affine.json"))
+            for row in original:
+                counts = Counter()
+                for trace in row["traces"]:
+                    key = trace["time_s"], trace["face"]
+                    trace["point_index"] = counts[key]
+                    counts[key] += 1
+
+            def read(path):
+                if path == work / "t8-water/affine.json":
+                    return rows
+                if path.is_relative_to(work):
+                    return json.loads(archive.read(path.relative_to(work).as_posix()))
+                return archived_read(path)
+
+            rows = original
+            branches = archived_read(STUDY / "comparisons.json")["branches"]
+            with patch.object(assessment, "read", side_effect=read), \
+                 patch.object(assessment, "evaluate", return_value=branches):
+                result, _ = assessment.assess(work)
+                self.assertEqual(result["items"]["A-04"]["limited"][0]["status"], "限定受入")
+                for mutation in ("no profiles", "one profile", "no traces", "missing face",
+                                 "duplicate face", "duplicate point", "extra trace", "duplicate path"):
+                    with self.subTest(mutation=mutation):
+                        rows = copy.deepcopy(original)
+                        row = rows[0]
+                        if mutation == "no profiles":
+                            row["water"]["profiles"].clear()
+                        elif mutation == "one profile":
+                            row["water"]["profiles"].pop(next(iter(row["water"]["profiles"])))
+                        elif mutation == "no traces":
+                            row["traces"].clear()
+                        elif mutation == "missing face":
+                            row["traces"] = [trace for trace in row["traces"] if trace["face"] == 0]
+                        elif mutation == "duplicate face":
+                            row["traces"] = [trace | {"face": 0} for trace in row["traces"]]
+                        elif mutation == "duplicate point":
+                            row["traces"][1] = copy.deepcopy(row["traces"][0])
+                        elif mutation == "extra trace":
+                            row["traces"].append(row["traces"][0])
+                        else:
+                            rows[1] = copy.deepcopy(row)
+                        result, _ = assessment.assess(work)
+                        self.assertEqual(result["items"]["A-04"]["limited"][0]["status"], "未達")
+                        self.assertEqual(result["items"]["A-04"]["original"], "未達")
 
     def test_shell_references_and_reassembly_failures_remain_visible(self):
         with zipfile.ZipFile(STUDY/"observations.zip") as z:

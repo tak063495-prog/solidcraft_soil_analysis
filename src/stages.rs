@@ -4572,6 +4572,12 @@ impl<'a> ExternalMechanics<'a> {
             wet.histories = histories.clone();
         }
     }
+    pub(crate) fn set_joint_trace_point_recording(&mut self, enabled: bool) {
+        if let Some(wet) = &mut self.model.wet_joints {
+            wet.record_trace_points = enabled;
+        }
+    }
+
     pub fn wet_joints(&self) -> Option<&crate::joint_water::Model> {
         self.model.wet_joints.as_ref()
     }

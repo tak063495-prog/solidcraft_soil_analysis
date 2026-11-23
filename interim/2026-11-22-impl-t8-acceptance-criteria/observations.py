@@ -9,6 +9,10 @@ import zipfile
 from assess import assess
 from sealed import HERE
 
+# Pinned member from the original T8 seal at 518912cb. Its Tri3 traces
+# had an implicit order and cannot supply explicit point identities.
+LEGACY_AFFINE_SHA256 = "c58ff19316761f7fab660dae43b91e73f367c525a93730c7e7fb50b61afabab2"
+
 FILES = (
     "a02/results.json", "a03/results.json", "a04/budget-summary.json",
     "t8-water/placement.json", "t8-water/affine.json",
@@ -61,7 +65,9 @@ def verify(source):
             path = Path(tmp) / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
-        decision, _ = assess(Path(tmp))
+        decision, _ = assess(
+            Path(tmp), sealed_legacy_points=expected["t8-water/affine.json"] == LEGACY_AFFINE_SHA256
+        )
         if decision != json.loads((source / "acceptance.json").read_bytes()):
             raise ValueError("scope or outcome differs from measured fields")
     return len(FILES)

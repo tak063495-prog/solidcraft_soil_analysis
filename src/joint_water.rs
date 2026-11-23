@@ -55,6 +55,7 @@ struct Face {
     owner_b: usize,
 }
 pub struct Model {
+    pub(crate) record_trace_points: bool,
     pub(crate) histories: BTreeMap<String, rt0::HeadHistory>,
     mesh: Mesh,
     configuration: joints::Configuration,
@@ -152,6 +153,7 @@ impl Model {
             }
         }
         Ok(Self {
+            record_trace_points: false,
             histories: BTreeMap::new(),
             mesh: mesh.clone(),
             configuration,

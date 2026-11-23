@@ -838,6 +838,7 @@ fn advance(
     let ps = periods(&case)?;
     let mut kernel = stages::ExternalMechanics::new(mesh, &ground, &case.one_way.mechanics)?;
     kernel.set_head_histories(&case.one_way.joint_reservoir_heads);
+    kernel.set_joint_trace_point_recording(case.one_way.verification_record_joint_trace_points);
     let starting_active = initial_active(&kernel, &case, mesh.tetrahedra.len())?;
     let seed = if case.initially_inactive_bodies.is_empty() {
         kernel.seed()?

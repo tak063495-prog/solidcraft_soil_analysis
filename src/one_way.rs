@@ -74,6 +74,9 @@ pub struct Case {
     pub exterior_periods: Vec<ExteriorPeriod>,
     #[serde(default = "default_store_points")]
     pub store_transfer_integration_points: bool,
+    /// Include the face-local integration point index in JOINT trace evidence.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub verification_record_joint_trace_points: bool,
     #[serde(default)]
     pub verification_reject_once_at_times_s: Vec<f64>,
 }
@@ -710,6 +713,7 @@ fn advance(
     let periods = validate(&case)?;
     let mut kernel = stages::ExternalMechanics::new(mesh, &ground, &case.mechanics)?;
     kernel.set_head_histories(&case.joint_reservoir_heads);
+    kernel.set_joint_trace_point_recording(case.verification_record_joint_trace_points);
     let mut seed_mechanics = if let Some(active) = initial_active {
         kernel.seed_on_domain(active)?
     } else {

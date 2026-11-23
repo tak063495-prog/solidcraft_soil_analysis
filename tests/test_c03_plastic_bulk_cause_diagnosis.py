@@ -6,11 +6,15 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 STUDY=ROOT/'interim/2026-12-18-c03-plastic-bulk-cause-diagnosis'
+sys.path.insert(0,str(ROOT/'tools'))
 sys.path.insert(0,str(STUDY))
+import c03diag_reference
 from c03diag_metrics import norm,dot,metric,compare
 from c03diag_mcc_point import step
 
@@ -89,3 +93,95 @@ class C03PlasticBulkCauseDiagnosis(unittest.TestCase):
             self.assertIs(a[key],False,key)
         self.assertTrue(a['production_defaults_unchanged'])
         self.assertTrue(a['old_evidence_unchanged'])
+
+
+class PrincipalOrderCutback(unittest.TestCase):
+    def run_shear(self, failure, *, minimum=.4, cutback=True, attempts=None):
+        attempts = [] if attempts is None else attempts
+        system = SimpleNamespace(points=[], c=np.zeros((0, 3, 1)),
+                                 weight=np.zeros(0))
+        seed = {"effective_stress_compression_positive_kpa": np.zeros(6)}
+        strain = np.zeros((6, 1))
+        strain[0, 0] = 1.
+        model = SimpleNamespace(
+            system=system, nd=1, seeds=[seed],
+            case=dict(stages=[dict(name="shear", target_factor=1.)],
+                      settings=dict(minimum_increment=minimum)),
+            t=np.ones((1, 1)), base=np.zeros(1), seed_force=np.zeros(1),
+            boundary=np.ones(1), mats=[None], b=[strain], ids=[[0]],
+            weights=[1.], cr=np.zeros((0, 3, 1)),
+            strains=lambda u: (strain @ u)[None, :],
+            internal=lambda states, traction: -states[0]["effective_stress_compression_positive_kpa"][:1],
+        )
+        load = 0.
+
+        def offset(factor):
+            nonlocal load
+            load = factor
+            return np.zeros(1)
+
+        model.offset = offset
+
+        def evaluate(material, old, delta, count, *, require_order):
+            original = old["effective_stress_compression_positive_kpa"]
+            displacement = -delta[0]
+            if load == .5 and original[0] == 0 and displacement > 1e-7:
+                reason = failure(displacement, require_order)
+                if reason is not None:
+                    raise ArithmeticError(reason)
+            return {"effective_stress_compression_positive_kpa": original + delta}
+
+        with patch.object(c03diag_reference, "integrate", side_effect=evaluate):
+            result = c03diag_reference.run(
+                model, steps=2, fixed_material=1, fixed_contact=1,
+                cutback=cutback, attempt_sink=attempts.append)
+        self.assertTrue(result["complete"])
+        return [a for a in attempts if a["stage"] == "shear"]
+
+    def test_cutback_retries_same_target_when_every_candidate_has_wrong_order(self):
+        trials = []
+
+        def failure(displacement, ordered):
+            trials.append(ordered)
+            return None if ordered else ("inadmissible principal order",)
+
+        actual = self.run_shear(failure)
+        # The accepted candidate is evaluated again at the next Newton iteration.
+        self.assertEqual(trials, [False] * 18 + [True] * 2)
+        self.assertEqual([(a["target"], a["accepted"]) for a in actual],
+                         [(.5, False), (.5, True), (1., True)])
+        self.assertIn("inadmissible principal order", actual[0]["reason"])
+        self.assertTrue(actual[1]["ordered_return"])
+
+    def test_cutback_tries_smaller_damping_before_retrying_the_target(self):
+        trials = []
+
+        def failure(displacement, ordered):
+            trials.append((displacement, ordered))
+            return ("inadmissible principal order",) if len(trials) == 1 else None
+
+        actual = self.run_shear(failure)
+        self.assertEqual(trials[:2], [(.5, False), (.25, False)])
+        self.assertEqual([(a["target"], a["ordered_return"]) for a in actual],
+                         [(.5, False), (1., False)])
+
+    def test_cutback_bisects_only_after_ordered_trial_fails(self):
+        calls = []
+
+        def failure(displacement, ordered):
+            calls.append(ordered)
+            return ("inadmissible principal order",)
+
+        actual = self.run_shear(failure, minimum=.2)
+        self.assertEqual(calls, [False] * 18 + [True] * 18)
+        self.assertEqual([(a["target"], a["accepted"]) for a in actual],
+                         [(.5, False), (.5, False), (.25, True), (.5, True), (1., True)])
+        self.assertTrue(actual[2]["ordered_return"])
+
+    def test_default_line_search_keeps_its_existing_failure(self):
+        with self.assertRaisesRegex(ArithmeticError, "independent line search"):
+            self.run_shear(lambda *_: ("inadmissible principal order",), cutback=False)
+
+    def test_cutback_does_not_disguise_unexpected_arithmetic_failure(self):
+        with self.assertRaisesRegex(ArithmeticError, "true linear residual"):
+            self.run_shear(lambda *_: ("true linear residual", 1e-4))

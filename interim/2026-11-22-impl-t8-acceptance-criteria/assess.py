@@ -1,11 +1,15 @@
 """Scoped T8 decisions from the small studies. Original rows always retain their status."""
 import argparse
+from collections import Counter
 import json
+import math
 from pathlib import Path
 
 from refinement import richardson
 from branches import evaluate
 from sealed import HERE
+from water import AFFINE_SLOPES, AFFINE_STEPS, TRI3_POINTS, affine_faces, affine_fixture, affine_times
+from t1_water_balance import LIMITS
 
 T4 = HERE.parent / "2026-11-21-impl-t4-offset-plate-composite"
 T6 = HERE.parent / "2026-11-21-impl-t6-offset-kink-joint"
@@ -28,7 +32,44 @@ def item(option, *controls, cap=None):
     return dict(option=option, original="未達", limited=list(controls), scale_limit=cap)
 
 
-def assess(work):
+def affine_water_passed(rows, *, sealed_legacy_points=False):
+    expected_paths = {(slope, dt) for slope in AFFINE_SLOPES for dt in AFFINE_STEPS}
+    paths = {(row.get("slope"), row.get("physical_dt_s")) for row in rows}
+    if len(rows) != len(expected_paths) or paths != expected_paths:
+        return False
+    mesh, case = affine_fixture()
+    _, faces = affine_faces(mesh, case)
+    for row in rows:
+        profiles = row.get("water", {}).get("profiles", {})
+        if set(profiles) != set(LIMITS) or any(p.get("passed") is not True for p in profiles.values()):
+            return False
+        expected = [(seconds, face, point) for seconds in affine_times(case, row["physical_dt_s"])
+                    for face in range(len(faces)) for point in TRI3_POINTS]
+        traces = row.get("traces", [])
+        if sealed_legacy_points:
+            # The fixed original archive predates point indices.
+            expected_counts = Counter((time, face) for time, face, _ in expected)
+            actual_counts = Counter((trace.get("time_s"), trace.get("face")) for trace in traces)
+        else:
+            expected_counts = Counter(expected)
+            actual_counts = Counter((trace.get("time_s"), trace.get("face"), trace.get("point_index"))
+                                    for trace in traces)
+        if actual_counts != expected_counts:
+            return False
+        for trace in traces:
+            if not (
+                abs(trace.get("pressure_error_kpa", math.inf)) <= 1e-12
+                and trace.get("max_nodal_force_error_kn", math.inf) <= 1e-10
+                and max(abs(trace.get("side_a_head_error_m", math.inf)),
+                        abs(trace.get("side_b_head_error_m", math.inf))) <= 1e-10
+                and max(abs(trace.get("a_flow_error_m3_s", math.inf)),
+                        abs(trace.get("b_flow_error_m3_s", math.inf))) <= 1e-14
+            ):
+                return False
+    return True
+
+
+def assess(work, *, sealed_legacy_points=False):
     a1=evaluate()
     a2=read(work/"a02/results.json")
     a3=read(work/"a03/results.json")
@@ -58,12 +99,7 @@ def assess(work):
     # in tests/t2_soil_birth.rs. Expose the moved-plane observations separately.
     placement_errors = {key:max(abs(row["difference"][key]) for row in placed)
                         for key in placed[0]["difference"]}
-    water_ok = len(water)==6 and all(
-        all(p["passed"] is True for p in row["water"]["profiles"].values()) and
-        all(abs(r["pressure_error_kpa"])<=1e-12 and r["max_nodal_force_error_kn"]<=1e-10 and
-            max(abs(r["side_a_head_error_m"]), abs(r["side_b_head_error_m"]))<=1e-10 and
-            max(abs(r["a_flow_error_m3_s"]),abs(r["b_flow_error_m3_s"]))<=1e-14 for r in row["traces"])
-        for row in water)
+    water_ok = affine_water_passed(water, sealed_legacy_points=sealed_legacy_points)
     dry_frames = [f for f in patch["frames"] if "local_nodal_work_difference" in f]
     legacy=read(T4/"measurements.json")["b02"]
     original_joins=read(T6/"b03-replay.json")

@@ -110,6 +110,13 @@ class NonlinearFailure(ArithmeticError):
     """A global nonlinear trial failed before committing any fields."""
 
 
+def principal_order_failure(reason):
+    return isinstance(reason, tuple) and reason[:1] == ('inadmissible principal order',)
+
+
+LOCAL_ITERATION_LIMIT = 'independent projected complementarity iteration did not converge'
+
+
 def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tolerance=1e-10,fixed_material=None,fixed_contact=None,*,cutback=False,attempt_sink=None):
     assert isinstance(steps,int) and steps>=2 and 0<tolerance<=1e-10
     assert 1e-7<=material_maximum<=1e-3 and contact_maximum>=5e-6
@@ -179,12 +186,28 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                     if linear<=1e-10:break
                     correction+=np.linalg.solve(jac,-res-jac@correction)
                 else:raise ArithmeticError(('true linear residual',linear))
+                order_error = other_error = None
                 for cut in range(18):
-                    trial=free+correction*2.**(-cut)
-                    try:trial_res=evaluate(trial)[0]
-                    except ArithmeticError:continue
-                    if np.linalg.norm(trial_res)<np.linalg.norm(res):free=trial;break
-                else:raise NonlinearFailure(('independent line search',name,progress,iteration,relative))
+                    trial = free + correction * 2.**(-cut)
+                    try:
+                        trial_res = evaluate(trial)[0]
+                    except ArithmeticError as error:
+                        if cutback:
+                            reason = error.args[0] if error.args else None
+                            if principal_order_failure(reason):
+                                order_error = error
+                            elif reason != LOCAL_ITERATION_LIMIT:
+                                other_error = error
+                        continue
+                    if np.linalg.norm(trial_res) < np.linalg.norm(res):
+                        free = trial
+                        break
+                else:
+                    if other_error is not None:
+                        raise other_error
+                    if order_error is not None:
+                        raise order_error
+                    raise NonlinearFailure(('independent line search', name, progress, iteration, relative))
             else:raise NonlinearFailure(('independent Newton limit',name,progress,relative))
         current = 0.
         attempts = 0
@@ -200,8 +223,8 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                     attempt(target, require_order)
                 except ArithmeticError as error:
                     reason = error.args[0] if error.args else None
-                    order_failure = isinstance(reason, tuple) and reason[:1] == ('inadmissible principal order',)
-                    local_limit = reason == 'independent projected complementarity iteration did not converge'
+                    order_failure = principal_order_failure(reason)
+                    local_limit = reason == LOCAL_ITERATION_LIMIT
                     if not isinstance(error, NonlinearFailure) and not (cutback and (order_failure or local_limit)):
                         raise
                     if attempt_sink:

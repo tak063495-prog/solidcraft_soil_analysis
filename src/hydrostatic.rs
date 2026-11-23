@@ -161,6 +161,58 @@ pub fn depth_bounds(points: &[[f64; 3]], level: f64) -> Result<[f64; 2]> {
     ])
 }
 
+/// Test the whole Tri3/Tri6 patch against a constant water level.
+pub(crate) fn fully_submerged(points: &[[f64; 3]], level: f64) -> Result<bool> {
+    let [lower, upper] = depth_bounds(points, level)?;
+    if points.iter().any(|p| p[2] > level) {
+        return Ok(false);
+    }
+    if lower >= 0. && upper.is_finite() {
+        return Ok(true);
+    }
+    let [a, b, c, ab, bc, ca] = points else {
+        return Ok(false);
+    };
+
+    let edges = [(a, ab, b), (b, bc, c), (a, ca, c)];
+    // For each edge, z(t) = z(0) + slope*t + curvature*t².
+    let curvature = edges.map(|(start, mid, end)| 2. * ((start[2] - mid[2]) + (end[2] - mid[2])));
+    let [rr, diagonal, ss] = curvature;
+    let rs = rr + ss - diagonal;
+    let slopes = std::array::from_fn::<_, 3, _>(|i| edges[i].2[2] - edges[i].0[2] - curvature[i]);
+    let [slope_r, _, slope_s] = slopes;
+    let det = (2. * rr).mul_add(2. * ss, -rs * rs);
+    if !curvature
+        .into_iter()
+        .chain(slopes)
+        .chain([rs, det])
+        .all(f64::is_finite)
+    {
+        return Ok(false);
+    }
+
+    for ((start, _, _), (q, slope)) in edges.into_iter().zip(curvature.into_iter().zip(slopes)) {
+        if q < 0. && slope > 0. && slope + 2. * q < 0. {
+            let t = -0.5 * slope / q;
+            if t * q.mul_add(t, slope) > level - start[2] {
+                return Ok(false);
+            }
+        }
+    }
+
+    // A strict interior maximum requires a negative definite Hessian. A
+    // singular maximum lies on a ridge that also reaches the boundary.
+    if rr < 0. && det > 0. {
+        let r = rs.mul_add(slope_s, -2. * ss * slope_r) / det;
+        let s = rs.mul_add(slope_r, -2. * rr * slope_s) / det;
+        if r > 0. && s > 0. && r + s < 1. {
+            let elevation = r * (slope_r + rr * r + rs * s) + s * (slope_s + ss * s);
+            return Ok(elevation <= level - a[2]);
+        }
+    }
+    Ok(true)
+}
+
 fn integrate_triangle(
     points: &[[f64; 3]],
     level: f64,

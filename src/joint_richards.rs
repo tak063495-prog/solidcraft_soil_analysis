@@ -67,6 +67,8 @@ pub struct Trace {
 pub struct PointTraces {
     pub joint_id: String,
     pub face_index: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_index: Option<usize>,
     pub time_s: f64,
     pub elevation_m: f64,
     pub side_a: Option<Trace>,
@@ -156,17 +158,23 @@ impl Model {
             return Err(Error::Input("invalid joint storage point layout".into()));
         }
         let mut volumes = BTreeMap::<usize, f64>::new();
+        let mut checked_faces = BTreeSet::new();
         for (p, state) in self.layout.iter().zip(&joint.points) {
+            let key = (p.joint_id.as_str(), p.face_index);
             let wall = indices
-                .get(&(p.joint_id.as_str(), p.face_index))
+                .get(&key)
                 .ok_or_else(|| Error::Input("missing internal storage face".into()))?;
-            if p.nodes_a
-                .iter()
-                .any(|&node| wall.total_head_m < self.mesh.nodes[node][2])
-            {
-                return Err(Error::Solve(
-                    "joint aperture storage requires flooded faces".into(),
-                ));
+            if checked_faces.insert(key) {
+                let positions: Vec<_> = p
+                    .nodes_a
+                    .iter()
+                    .map(|&node| self.mesh.nodes[node])
+                    .collect();
+                if !hydrostatic::fully_submerged(&positions, wall.total_head_m)? {
+                    return Err(Error::Solve(
+                        "joint aperture storage requires flooded faces".into(),
+                    ));
+                }
             }
             let aperture = b0 + Vector3::from(p.normal).dot(&Vector3::from(state.jump_m));
             if !aperture.is_finite() || aperture <= 0. {
@@ -284,11 +292,12 @@ impl Model {
             let xyz: Vec<_> = f.nodes_a.iter().map(|&n| self.mesh.nodes[n]).collect();
             field.face_nodal_force_a_kn[fi] =
                 hydrostatic::face_load(&xyz, head, self.gamma, Default::default())?.nodal_force_kn;
-            for (i, p) in self
+            for (point_index, (i, p)) in self
                 .layout
                 .iter()
                 .enumerate()
                 .filter(|(_, p)| p.nodes_a == f.nodes_a && p.owner_a == f.owner_a)
+                .enumerate()
             {
                 let z = p.position_m[2];
                 let pressure = self.gamma * (head - z).max(0.);
@@ -296,6 +305,7 @@ impl Model {
                 points.push(PointTraces {
                     joint_id: p.joint_id.clone(),
                     face_index: p.face_index,
+                    point_index: self.record_trace_points.then_some(point_index),
                     time_s: time,
                     elevation_m: z,
                     side_a: trace(&pair.a, z)?,
@@ -312,5 +322,138 @@ impl Model {
             )?,
             points,
         ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn storage_model(elevation: Option<fn(f64, f64) -> f64>) -> Result<(Model, joints::State)> {
+        let mut mesh: Mesh =
+            serde_json::from_str(include_str!("../examples/joint-water-column-mesh.json"))?;
+        if let Some(elevation) = elevation {
+            mesh = mesh.elevate_straight()?;
+            // The seam has t=0 after translating by its original height.
+            // Adding any quadratic elevation to t preserves det J=1.
+            for [r, s, z] in &mut mesh.nodes {
+                *z += elevation(*r, *s) - 0.5;
+            }
+        }
+        let stage: serde_json::Value =
+            serde_json::from_str(include_str!("../examples/stages-joint-water-cycle.json"))?;
+        let mut configuration: joints::Configuration =
+            serde_json::from_value(stage["joint_system"].clone())?;
+        configuration.joints[0].water = Some(Policy::Continuous);
+        let ground = serde_json::from_str(include_str!("../examples/ground-joint-water-mc.json"))?;
+        let contact = joints::Model::new(&mesh, configuration)?;
+        Ok((
+            Model::new(&mesh, &contact, &ground)?,
+            contact.initial_state()?,
+        ))
+    }
+
+    fn storage_traces(model: &Model, head: f64) -> Vec<PointTraces> {
+        model
+            .layout
+            .iter()
+            .map(|p| {
+                let depth = head - p.position_m[2];
+                let side = |owner| {
+                    Some(Trace {
+                        face: p.face_index,
+                        owner,
+                        local_face: 0,
+                        total_head_m: head,
+                        pressure_head_m: depth,
+                        signed_pressure_kpa: model.gamma * depth,
+                        outward_flow_m3_s: 0.,
+                    })
+                };
+                PointTraces {
+                    joint_id: p.joint_id.clone(),
+                    face_index: p.face_index,
+                    point_index: None,
+                    time_s: 0.,
+                    elevation_m: p.position_m[2],
+                    side_a: side(p.owner_a),
+                    side_b: side(p.owner_b),
+                    applied_pressure_kpa: model.gamma * depth.max(0.),
+                }
+            })
+            .collect()
+    }
+
+    fn edge_crest(r: f64, _: f64) -> f64 {
+        -2. * r * r + 3. * r - 1.
+    }
+
+    #[test]
+    fn curved_aperture_storage_rejects_an_interior_crest() -> Result<()> {
+        // The first seam triangle has its maximum at r=1/3, s=2/3.
+        // Every edge has maximum elevation 0.25 m.
+        let elevation = |x: f64, y: f64| {
+            let r = x;
+            let s = y - x;
+            r + s - r * r - r * s - s * s
+        };
+        let (model, joint) = storage_model(Some(elevation))?;
+        let error = model
+            .saturated_volumes(0.001, &joint, &storage_traces(&model, 0.3))
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("joint aperture storage requires flooded faces")
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn curved_aperture_storage_rejects_exposure_between_submerged_nodes() -> Result<()> {
+        let (model, joint) = storage_model(Some(edge_crest))?;
+        assert!(model.layout.iter().all(
+            |p| p.nodes_a.len() == 6 && p.nodes_a.iter().all(|&n| model.mesh.nodes[n][2] <= 0.)
+        ));
+        let error = model
+            .saturated_volumes(0.001, &joint, &storage_traces(&model, 0.05))
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("joint aperture storage requires flooded faces")
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn curved_aperture_storage_accepts_fully_submerged_patch() -> Result<()> {
+        let (model, joint) = storage_model(Some(edge_crest))?;
+        let result =
+            model.saturated_volumes(0.001, &joint, &storage_traces(&model, 0.125000001))?;
+        assert_eq!(result.len(), 2);
+        for (face, volume) in result {
+            let area: f64 = model
+                .layout
+                .iter()
+                .filter(|p| p.face_index == face)
+                .map(|p| p.weight_m2)
+                .sum();
+            assert!((volume - 0.001 * area).abs() < 1e-14);
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn planar_tet4_aperture_storage_keeps_the_triangle_volume() -> Result<()> {
+        let (model, joint) = storage_model(None)?;
+        let result = model.saturated_volumes(0.001, &joint, &storage_traces(&model, 0.5))?;
+        assert_eq!(result.len(), 2);
+        assert!(
+            result
+                .values()
+                .all(|volume| (volume - 0.0005).abs() < 1e-14)
+        );
+        Ok(())
     }
 }
