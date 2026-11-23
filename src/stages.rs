@@ -933,6 +933,7 @@ impl Tangent {
                     stored_nonzeros: a.len(),
                     iterations: 1,
                     restarts: 0,
+                    true_absolute_residual: None,
                     true_relative_residual: residual,
                     matrix_storage_bytes: a.len() * size_of::<f64>(),
                     workspace_storage_bytes: (a.len() + 2 * a.nrows()) * size_of::<f64>(),
@@ -3584,7 +3585,8 @@ impl<'a> Model<'a> {
                 }
                 let (x, report) =
                     temporary.solve_a01_observed(&reduced, settings, self.observer)?;
-                let original = (matrix.action(&x)? - &reduced).norm() / reduced.norm().max(1e-30);
+                let absolute = (matrix.action(&x)? - &reduced).norm();
+                let original = absolute / reduced.norm().max(1e-30);
                 let index = contact_predictors.len();
                 contact_predictors.push(ContactPredictor {
                     elastic_activation: true,
@@ -3660,7 +3662,8 @@ impl<'a> Model<'a> {
                     )?;
                 let elastic_neutral_correction_norm_m = elastic.norm();
                 x += &gauges.modes * elastic;
-                let original = (matrix.action(&x)? - &reduced).norm() / reduced.norm().max(1e-30);
+                let absolute = (matrix.action(&x)? - &reduced).norm();
+                let original = absolute / reduced.norm().max(1e-30);
                 if !original.is_finite() {
                     return Err(Error::Solve(
                         "nonfinite original contact predictor residual".into(),
@@ -3670,6 +3673,7 @@ impl<'a> Model<'a> {
                 if !activation {
                     let mut report = temporary.clone();
                     report.method.push_str("_zero_increment_gauge");
+                    report.true_absolute_residual = report.true_absolute_residual.map(|_| absolute);
                     report.true_relative_residual = original;
                     linear_solves.push(report);
                 }

@@ -10,6 +10,7 @@ pub enum DenseResidualMethod {
     ExtendedResidual,
     Ruiz,
     GmresPolish,
+    CoordinatePolish,
 }
 
 impl DenseResidualMethod {
@@ -19,6 +20,7 @@ impl DenseResidualMethod {
             Self::ExtendedResidual => "extended_residual",
             Self::Ruiz => "ruiz",
             Self::GmresPolish => "gmres_polish",
+            Self::CoordinatePolish => "coordinate_polish",
         }
     }
 }
@@ -63,8 +65,9 @@ struct System<'a> {
 }
 
 impl System<'_> {
-    fn residual(&self, x: &DVector<f64>) -> f64 {
-        (self.a * x - self.b).norm() / self.scale
+    fn residuals(&self, x: &DVector<f64>) -> (f64, f64) {
+        let absolute = (self.a * x - self.b).norm();
+        (absolute, absolute / self.scale)
     }
 }
 
@@ -126,7 +129,9 @@ fn correction(
     let a = system.a;
     let b = system.b;
     let rhs = match method {
-        DenseResidualMethod::RepeatedRefinement => dense_refinement::compensated_residual(a, x, b),
+        DenseResidualMethod::RepeatedRefinement | DenseResidualMethod::CoordinatePolish => {
+            dense_refinement::compensated_residual(a, x, b)
+        }
         DenseResidualMethod::ExtendedResidual => extended_residual(a, x, b),
         DenseResidualMethod::GmresPolish => b - a * x,
         DenseResidualMethod::Ruiz => unreachable!("equilibration uses its own factors"),
@@ -160,8 +165,8 @@ pub(super) fn solve(
     };
     let lu = a.clone().lu();
     let mut x = lu.solve(rhs).ok_or_else(singular)?;
-    let initial = system.residual(&x);
-    let mut residual = initial;
+    let (mut absolute, mut residual) = system.residuals(&x);
+    let initial = residual;
     let mut steps = 0;
     let mut sweeps = 0;
     let mut min_pivot = f64::NAN;
@@ -173,7 +178,16 @@ pub(super) fn solve(
             drop(lu);
             (x, sweeps) = equilibrate(&system)?;
             steps = 1;
-            residual = system.residual(&x);
+            (absolute, residual) = system.residuals(&x);
+        } else if method == DenseResidualMethod::CoordinatePolish {
+            x += correction(&system, &x, &lu, method)?;
+            steps = 1;
+            (absolute, residual) = system.residuals(&x);
+            if residual.is_finite() && residual > tolerance {
+                let count;
+                (count, absolute, residual) = coordinate::polish(&system, &mut x);
+                steps += count;
+            }
         } else {
             let limit = if method == DenseResidualMethod::ExtendedResidual {
                 1
@@ -185,7 +199,7 @@ pub(super) fn solve(
             for _ in 0..limit {
                 x += correction(&system, &x, &lu, method)?;
                 steps += 1;
-                residual = system.residual(&x);
+                (absolute, residual) = system.residuals(&x);
                 if !residual.is_finite() || residual <= system.tolerance {
                     break;
                 }
@@ -202,14 +216,22 @@ pub(super) fn solve(
         }
     }
     let name = method.name();
+    let absolute = (method == DenseResidualMethod::CoordinatePolish).then_some(absolute);
     if !residual.is_finite() || residual > tolerance || !x.iter().all(|v| v.is_finite()) {
+        if let Some(absolute) = absolute {
+            return Err(Error::Solve(format!(
+                "true linear residual {residual:e} ({name}, absolute {absolute:e}, initial {initial:e}, steps {steps}, unscaled min abs U pivot {min_pivot:e})"
+            )));
+        }
         return Err(Error::Solve(format!(
             "true linear residual {residual:e} ({name}, initial {initial:e}, steps {steps}, scale sweeps {sweeps}, unscaled min abs U pivot {min_pivot:e})"
         )));
     }
     let n = a.nrows();
     let vectors = match method {
-        DenseResidualMethod::Ruiz | DenseResidualMethod::GmresPolish => 5,
+        DenseResidualMethod::Ruiz
+        | DenseResidualMethod::GmresPolish
+        | DenseResidualMethod::CoordinatePolish => 5,
         _ => 3,
     };
     let report = LinearReport {
@@ -222,6 +244,7 @@ pub(super) fn solve(
         } else {
             0
         },
+        true_absolute_residual: absolute,
         true_relative_residual: residual,
         matrix_storage_bytes: a.len() * size_of::<f64>(),
         workspace_storage_bytes: (a.len() + vectors * n) * size_of::<f64>()
@@ -230,6 +253,8 @@ pub(super) fn solve(
     };
     Ok((x, report))
 }
+
+mod coordinate;
 
 #[cfg(test)]
 mod tests;

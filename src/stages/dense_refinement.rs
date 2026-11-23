@@ -62,6 +62,7 @@ pub(super) fn solve(
         stored_nonzeros: a.len(),
         iterations: 1 + usize::from(correct),
         restarts: 0,
+        true_absolute_residual: None,
         true_relative_residual: residual,
         matrix_storage_bytes: a.len() * size_of::<f64>(),
         workspace_storage_bytes: (a.len() + 3 * a.nrows()) * size_of::<f64>(),

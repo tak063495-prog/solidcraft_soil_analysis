@@ -381,6 +381,9 @@ pub struct LinearReport {
     pub stored_nonzeros: usize,
     pub iterations: usize,
     pub restarts: usize,
+    /// Original-system residual norm when requested by the coordinate polish route.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub true_absolute_residual: Option<f64>,
     pub true_relative_residual: f64,
     pub matrix_storage_bytes: usize,
     /// Explicitly allocated solve arrays, excluding matrix and allocator overhead.
@@ -693,6 +696,7 @@ pub fn gmres_ilu0_a01_residual_observed(
         stored_nonzeros: matrix.values.len(),
         iterations,
         restarts,
+        true_absolute_residual: None,
         true_relative_residual: residual,
         matrix_storage_bytes: matrix.storage_bytes(),
         workspace_storage_bytes: (matrix.values.len()
