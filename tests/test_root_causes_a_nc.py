@@ -17,10 +17,10 @@ CLI = ROOT / "target/release" / ("soil-fem-3d.exe" if os.name == "nt" else "soil
 
 
 class TestConstructionTransfer(unittest.TestCase):
-    def run_case(self, name):
+    def run_case(self, name, *options):
         with tempfile.TemporaryDirectory() as temp:
             folder = Path(temp) / name
-            subprocess.run([sys.executable, STUDY / (name + ".py"), CLI, folder], check=True)
+            subprocess.run([sys.executable, STUDY / (name + ".py"), CLI, folder, *options], check=True)
             return json.loads((folder / "results.json").read_bytes())
 
     def test_tip_crossing_carries_closed_form_nodal_force(self):
@@ -32,7 +32,8 @@ class TestConstructionTransfer(unittest.TestCase):
             self.assertGreater(row["minimum_cone_margin_kpa"], 0)
 
     def test_saturated_cut_transfers_head_and_wall_load(self):
-        result = self.run_case("a04")
+        result = self.run_case("a04", "--reference", "decimal40")
+        self.assertEqual(result["reference"], "decimal40")
         self.assertEqual((result["states"], result["fields"]), (24, 49))
         self.assertLess(result["comparisons"]["exterior"]["maximum_absolute"], 1e-10)
         self.assertEqual(result["old_case_exit"], 1)

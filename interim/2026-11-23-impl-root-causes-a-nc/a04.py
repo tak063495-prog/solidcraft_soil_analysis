@@ -22,6 +22,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("cli", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--reference", choices=("longdouble", "decimal40"), default="longdouble")
     args = parser.parse_args()
     folder = args.output
     folder.mkdir(parents=True, exist_ok=False)
@@ -33,7 +34,12 @@ def main():
     result = solve(cli, folder, case, inputs)
     (folder / "native.log").write_text(result.stdout + result.stderr, encoding="utf-8")
     result.check_returncode()
-    study.independent(folder)
+    if args.reference == "decimal40":
+        portable = HERE.parent / "2027-01-12-a04-fixed-order-portable-reference" / "a04ref_matrix.py"
+        subprocess.run([sys.executable, portable, "--force-binary64", "--independent", folder,
+                        "--output", folder], check=True)
+    else:
+        study.independent(folder)
     study.native_fields(folder)
     comparison = study.compare(folder / "native-fields.jsonl", folder / "independent-fields.jsonl")
     native_rows = [row for row, _ in study.fields(folder / "native-fields.jsonl")]
@@ -57,7 +63,7 @@ def main():
     assert rejected.returncode == 1 and not (control / "native.json").exists()
     assert "exterior reservoir and prescribed hydraulic head disagree" in rejected.stderr
     study.write(folder / "results.json", dict(limited_pass=True, states=len(native_rows),
-                 fields=len(all_fields), comparisons=all_fields, old_case_exit=rejected.returncode,
+                 reference=args.reference, fields=len(all_fields), comparisons=all_fields, old_case_exit=rejected.returncode,
                  old_case_message=rejected.stderr.strip()))
 
 

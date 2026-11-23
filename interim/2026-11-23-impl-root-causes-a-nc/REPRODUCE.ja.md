@@ -15,6 +15,7 @@ cli=target/release/soil-fem-3d
 bridge=target/release/examples/t7_boundary
 python "$D/a02.py" "$cli" "$O/a02"
 python "$D/a04.py" "$cli" "$O/a04"
+python "$D/a04.py" "$cli" "$O/a04-decimal40" --reference decimal40
 for n in 18 144; do
   folder="$O/mesh-$n"
   python "$D/branch.py" prepare --elements "$n" "$cli" "$folder" "$bridge"
