@@ -71,3 +71,16 @@ Puso & Laursen UCRL-JRNL-200667 から数値を必要とする測点は今回の
 検証原票を固定コミット `67cf910e93bc1c39b6d11fa01211a962d138019a` の `validation.json` として登録した。Git blob SHA-1 は `162a2d331d3a6d777d66add45408761dd2eda948`、原票の SHA-256 は `4a76b0cb1f689c6349014b576c481c4fe006fea2d728f2b9cd066cd5bb102b6b`。e541fe1 の登録方式で真偽値・null 29件を照合した。既存台帳を含む監査は 80行・421資料・171証跡、`integrity_ok=true`、`numerical_acceptance_performed=false`。
 
 全文照合の追補を固定コミット `24a857edea5945bc97dc237ae8123b6842af1b51` で追加登録した。原票 `publication-checks.json` の Git blob SHA-1 は `7d2af99c66fa2f600fc4debf14f6ab79ca6940cc`、SHA-256 は `b0f34f4a070a3cbb2983a1e92752f329e0beaf970d9a61282b163119b5d01b42`。NC-01 の先行登録を含む再監査結果は 80行・423資料・171証跡、整合性検査成功、数値の合否を変更した件数は0。
+
+### Linux 全試験
+
+先行の A・C 系列と NC-01 を含む `ec117d7b36146f134e2e1a0aea7a8d6f0c6f1a12` で実行した。新しい実行ファイルで5項目を再計算した結果は、保存済みの `comparisons.json` とバイト一致した（SHA-256 `6fc9270eba98b1e692efdbe63b1cb994f1388db7f6b90d6f2164f142d8389823`）。
+
+|検査|結果|
+|---|---|
+|Rust 1.99.1、全ターゲット release|106テストバイナリ、527件成功。失敗・無視0件。doc-test は対象0件。|
+|Rust の書式と静的検査|`cargo fmt --all -- --check` と `cargo clippy --locked --all-targets -- -D warnings` が成功。|
+|Python 3.13.17、unittest|発見1,079件、全7群で1,079件成功。実行 ID の和集合が発見 ID と一致し、重複・スキップ・失敗・エラー0件。core 526／528、mean／spatial 各4、C-01 switch／path／cause は4／5／8件。T10 比較器の7件は内数。|
+|Linux 専用 pytest|7件成功。unittest と合わせて Python 1,086件成功。|
+
+以前の取得失敗と比較 JSON の初回出力エラーは作業ログに残した。PC 実行は0件。[Linux の試験原票と監査出力](linux-verification.zip)（SHA-256 `5e787ba727cab290ab57c54bb68623c65005ec87c5c07f7b983a7f99def8a1fe`）・[PC 手順](REPRODUCE.ja.md)
