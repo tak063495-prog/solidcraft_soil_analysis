@@ -125,3 +125,7 @@ Puso・Laursen の摩擦あり著者稿 UCRL-JRNL-200667（2003-10-30、44ペー
 - C-01 の event4 は同じ湿潤荷重履歴で刻みの提案と局所内分割を変更する。1024 分割の reload で観測した停止理由は工程の試行上限 2,000 回である。[非線形制御の入力](../2026-11-22-impl-c01-c03-nonlinear/probe_c01.py)・[工程別の既存記録](../2026-11-23-survey-unmet-root-causes/README.ja.md)
 - C-02 の 12/96 Tet10 で報告された摩擦円超過は、保存場を共通の物理点に三次補間した後に測る量である。この値を次段への指定力として入力する経路は今回の比較に含まれない。[小型二格子の集計コード](../2026-11-22-impl-t8-acceptance-criteria/two_mesh.py)・[既存の照合結果](../2026-11-22-impl-t8-acceptance-criteria/README.ja.md)
 - C-03 の 12 Tet10 で主応力順序に違反したのは reload の試行解である。同じ入力・同じ目標 1.0 を順序検査付きの再試行で受理した記録があり、全場差と材料・接触の刻み感度は引き続き検証対象である。[入力と再試行の対照](../2026-11-22-impl-c01-c03-nonlinear/README.ja.md)
+
+## P6-01 台帳との照合
+
+固定コミット `3e3bbd35fab54f5b60522b01f547cd8d6f7bff04` の [検証記録](validation.json) は SHA-256 `007641b6555001c4cfb3996db173cdb2465770e787cc0e834952284dd5fbc45b`、Git blob `3ed2385b3419cd75cffd1a046d6271b16b811701`。[追補台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml) は元の三項目と P6 の未達、上限2,000回、448／224座標、MCC 仕事・空間次数の欠測を型付きで照合する。
