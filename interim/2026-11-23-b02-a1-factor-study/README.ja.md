@@ -72,4 +72,4 @@ python -m unittest discover -s tests -p test_b02_a1_factor_study.py -v
 python interim/2026-12-06-p6-01-status-reconciliation/audit_status.py
 ```
 
-既存の B-02 10×5・18×9 の行に加え、本調査を「B-02 A1／18×9 片軸比較・未達」として登録する。判定は測点別の既存0.1%幅で行い、再現試験で確認する表の表示桁は受入幅に使用しない。[原票](measurements.json)・[P6-01 追補台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
+既存の B-02 10×5・18×9 の行に加え、本調査を「B-02 A1／18×9 片軸比較・未達」として追補台帳の別行 `b02-a1-fixed-grid-cause-unmet` に登録した。原票の固定コミットは `ae2e18ae087f32cc012f2b487168088d2e98bdf1`。判定は測点別の既存0.1%幅で行い、再現試験で確認する表の表示桁は受入幅に使用しない。[原票](measurements.json)・[P6-01 追補台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
