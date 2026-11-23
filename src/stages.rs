@@ -21,6 +21,7 @@ mod joint_path_error;
 #[path = "stages_mixed.rs"]
 mod mixed;
 pub use joint_path_error::PathErrorAudit;
+mod dense_refinement;
 pub(crate) mod srm_adapter;
 pub mod t7;
 
@@ -50,6 +51,9 @@ pub struct Settings {
     pub maximum_free_dofs: usize,
     #[serde(default, skip_serializing_if = "LinearSolver::is_dense")]
     pub linear_solver: LinearSolver,
+    /// Reuse the dense LU for one compensated correction on residual rejection.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub dense_lu_refinement: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -895,6 +899,9 @@ impl Tangent {
                 )?;
                 Ok((DVector::from_vec(x), report))
             }
+            Self::Dense(a) if settings.dense_lu_refinement => {
+                dense_refinement::solve(a, rhs, settings.relative_linear_tolerance)
+            }
             Self::Dense(a) => {
                 let started = Instant::now();
                 let x = a.clone().lu().solve(rhs).ok_or_else(|| {
@@ -1112,6 +1119,9 @@ impl StageCase {
             ));
         }
         s.linear_solver.validate()?;
+        if s.dense_lu_refinement && !s.linear_solver.is_dense() {
+            return Err(Error::Input("dense_lu_refinement requires dense_lu".into()));
+        }
         if let Some(control) = self
             .joint_system
             .as_ref()

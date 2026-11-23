@@ -602,6 +602,7 @@ fn srm_inputs(mesh: &Mesh) -> Result<(Ground, StageCase)> {
             mcc_integration: None,
             tangent_perturbation: 1e-7,
             maximum_free_dofs: 100_000,
+            dense_lu_refinement: false,
             linear_solver: sparse(),
         },
         boundary: Some(srm_boundary(mesh)),
