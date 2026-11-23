@@ -61,3 +61,7 @@ python interim/2026-11-24-b02-a1-shear-mean/study.py a1-replay.json
 python interim/2026-11-24-b02-a1-shear-mean/regression.py PARENT_RELEASE target/release regression-replay.json
 python -m unittest discover -s tests -p test_b02_element_mean_shear.py -v
 ```
+
+## P6-01 台帳
+
+新方式の格子別・層別 A1 と A3、既定方式の回帰結果を2つの追補記録に登録した。基準計算の未達と新方式の限定達成は別々の真偽値を持つ。原票を `d0e2f759bd3c5c817f7e1d9cf7e4d9e8666e7eb9` に固定し、Git blob SHA-1、SHA-256、型付きの判定値を照合する。[追補台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
