@@ -1,7 +1,9 @@
 //! SSLS111A. Two 0.4 m offset layers share the six DOFs on the reference plane.
 use nalgebra::{DMatrix, DVector, Vector3};
 use serde_json::json;
-use soil_fem_3d::curved_shell::{Kernel, Q36, Tying, geometry::Geometry, path::solve_supported};
+use soil_fem_3d::curved_shell::{
+    Kernel, Q36, ShearInterpolation, Tying, geometry::Geometry, path::solve_supported,
+};
 use soil_fem_3d::plates::Section;
 use soil_fem_3d::{Error, Result};
 
@@ -14,11 +16,28 @@ struct EdgeElement {
     offset: f64,
     dofs: [usize; 36],
     kernel: Kernel,
+    other_root_kernel: Option<Kernel>,
 }
 
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    let (nx, ny) = match args.as_slice() {
+    let (args, compare) = match args.as_slice() {
+        [rest @ .., flag] if flag == "--compare-shear" => (rest, true),
+        rest => (rest, false),
+    };
+    let (args, shear, other) = match args {
+        [grid, flag] if flag == "--shear-mean" => (
+            std::slice::from_ref(grid),
+            ShearInterpolation::ElementMean,
+            ShearInterpolation::Centroid,
+        ),
+        rest => (
+            rest,
+            ShearInterpolation::Centroid,
+            ShearInterpolation::ElementMean,
+        ),
+    };
+    let (nx, ny) = match args {
         [] => (10, 5),
         [grid] if grid == "12x6" => (12, 6),
         [grid] if grid == "18x9" => (18, 9),
@@ -61,7 +80,7 @@ fn main() -> Result<()> {
                         directors: [Vector3::z(); 6],
                         e: offset,
                     };
-                    let kernel = Kernel::new(&geo, &section, Tying::default())?;
+                    let kernel = Kernel::with_shear(&geo, &section, Tying::default(), shear)?;
                     let dofs: [usize; 36] = std::array::from_fn(|k| 6 * ids[k / 6] + k % 6);
                     for (a, &row) in dofs.iter().enumerate() {
                         for (b, &column) in dofs.iter().enumerate() {
@@ -77,6 +96,11 @@ fn main() -> Result<()> {
                             at_a1: ids[0] == 0,
                             offset,
                             dofs,
+                            other_root_kernel: if ids[0] == 0 && compare {
+                                Some(Kernel::with_shear(&geo, &section, Tying::default(), other)?)
+                            } else {
+                                None
+                            },
                             kernel,
                         });
                     }
@@ -103,7 +127,25 @@ fn main() -> Result<()> {
         let local = Q36::from_fn(|i, _| q[edge.dofs[i]]);
         let samples = edge.kernel.resultants(&local, edge.offset);
         if edge.at_a1 {
-            layers.push(json!({"offset_m":edge.offset,"root_samples":samples}));
+            let mut layer = json!({"offset_m":edge.offset,"root_samples":samples});
+            if let Some(other) = edge.other_root_kernel {
+                layer["other_interpolation_same_solution"] =
+                    json!(other.resultants(&local, edge.offset));
+                // Exact continuous strip kinematics at this triangle's six nodes.
+                let d = section.young_kpa * 0.8_f64.powi(3) / 12.;
+                let s = (5. / 6.) * (section.young_kpa / 2.) * 0.8;
+                let exact = Q36::from_fn(|i, _| {
+                    let node = edge.dofs[i] / 6;
+                    let x = (node % (2 * nx + 1)) as f64 * 10. / (2 * nx) as f64;
+                    match i % 6 {
+                        2 => -(5. * x * x - x.powi(3) / 6.) / d - x / s,
+                        4 => (10. * x - x * x / 2.) / d,
+                        _ => 0.,
+                    }
+                });
+                layer["exact_nodal_field"] = json!(edge.kernel.resultants(&exact, edge.offset));
+            }
+            layers.push(layer);
         }
         if diagnostic {
             sections.push(json!({"cut":edge.cut,"right_of_cut":edge.right_of_cut,

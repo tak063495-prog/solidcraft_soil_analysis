@@ -2,7 +2,7 @@
 //! offset composite convention. Each installation owns its reference geometry.
 use super::kink::{Input, Joint, Line, Reduction, State};
 use super::{
-    Field, Kernel, Q36, Tying,
+    Field, Kernel, Q36, ShearInterpolation, Tying,
     geometry::{Director, Face, Geometry, V, geometries},
 };
 use crate::{Error, Result, checkpoint, offset_composite::path::Step, plates::Section};
@@ -103,7 +103,13 @@ struct Model {
     stiffness: DMatrix<f64>,
 }
 impl Model {
-    fn new(case: &Case, g: &[Geometry], old: &Frame, joint: Option<&Joint>) -> Result<Self> {
+    fn new(
+        case: &Case,
+        g: &[Geometry],
+        old: &Frame,
+        joint: Option<&Joint>,
+        shear: ShearInterpolation,
+    ) -> Result<Self> {
         let n = old.configuration.len();
         let line = joint
             .map(|j| j.install(case, g, &old.configuration))
@@ -115,7 +121,7 @@ impl Model {
         let mut elements = vec![];
         for (geo, f) in g.iter().zip(&case.faces) {
             let section = joint.map_or(&case.section, |j| j.section(case, &f.group));
-            let k = Kernel::new(geo, section, Tying::default())?;
+            let k = Kernel::with_shear(geo, section, Tying::default(), shear)?;
             let idx = indices(f);
             for (i, &a) in idx.iter().enumerate() {
                 for (j, &b) in idx.iter().enumerate() {
@@ -204,7 +210,12 @@ impl Model {
     }
 }
 
-fn install(case: &Case, old: &Frame, joint: Option<&Joint>) -> Result<(Model, Generation)> {
+fn install(
+    case: &Case,
+    old: &Frame,
+    joint: Option<&Joint>,
+    shear: ShearInterpolation,
+) -> Result<(Model, Generation)> {
     let x: Vec<_> = case
         .nodes
         .iter()
@@ -225,7 +236,7 @@ fn install(case: &Case, old: &Frame, joint: Option<&Joint>) -> Result<(Model, Ge
         })
         .collect();
     let g = geometries(&x, &case.faces, &explicit)?;
-    let model = Model::new(case, &g, old, joint)?;
+    let model = Model::new(case, &g, old, joint, shear)?;
     let elements = case
         .faces
         .iter()
@@ -316,6 +327,7 @@ fn step(
     old: &Frame,
     step: &Step,
     joint: Option<&Joint>,
+    shear: ShearInterpolation,
 ) -> Result<Frame> {
     let mut next = old.clone();
     let mut q = v(&old.configuration);
@@ -330,7 +342,7 @@ fn step(
             if model.is_some() || holder.trim().is_empty() || !contacts.is_empty() {
                 return Err(Error::Input("shell installation requires absent shell, holding support and no contact pairs".into()));
             }
-            let (m, g) = install(case, old, joint)?;
+            let (m, g) = install(case, old, joint, shear)?;
             plate = m.loads(case, [0.; 3]);
             applied += &plate;
             *model = Some(m);
@@ -471,12 +483,32 @@ fn step(
     Ok(next)
 }
 pub fn run(case: &Case, until: usize, resume: Option<&Run>) -> Result<Run> {
-    run_path(case, None, until, resume)
+    run_with_shear(case, until, resume, ShearInterpolation::Centroid)
+}
+pub fn run_with_shear(
+    case: &Case,
+    until: usize,
+    resume: Option<&Run>,
+    shear: ShearInterpolation,
+) -> Result<Run> {
+    run_path(case, None, until, resume, shear)
 }
 pub fn run_kink(input: &Input, until: usize, resume: Option<&Run>) -> Result<Run> {
-    run_path(&input.shell, Some(&input.joint), until, resume)
+    run_path(
+        &input.shell,
+        Some(&input.joint),
+        until,
+        resume,
+        ShearInterpolation::Centroid,
+    )
 }
-fn run_path(case: &Case, joint: Option<&Joint>, until: usize, resume: Option<&Run>) -> Result<Run> {
+fn run_path(
+    case: &Case,
+    joint: Option<&Joint>,
+    until: usize,
+    resume: Option<&Run>,
+    shear: ShearInterpolation,
+) -> Result<Run> {
     if until > case.steps.len() || case.faces.is_empty() || case.nodes.is_empty() {
         return Err(Error::Input(
             "empty curved shell or invalid accepted index".into(),
@@ -524,7 +556,8 @@ fn run_path(case: &Case, joint: Option<&Joint>, until: usize, resume: Option<&Ru
         rotation_convention: "global-small-rotation".into(),
         input_sha256: match joint {
             Some(j) => checkpoint::hash_json(&(case, j))?,
-            None => checkpoint::hash_json(case)?,
+            None if shear == ShearInterpolation::Centroid => checkpoint::hash_json(case)?,
+            None => checkpoint::hash_json(&(case, shear))?,
         },
         solver_binary_sha256: checkpoint::hash_file(&std::env::current_exe()?)?,
         frames: vec![initial],
@@ -548,6 +581,7 @@ fn run_path(case: &Case, joint: Option<&Joint>, until: usize, resume: Option<&Ru
                 run.frames.last().unwrap(),
                 event,
                 joint,
+                shear,
             )?);
         }
         if checkpoint::hash_json(saved)? != checkpoint::hash_json(&run)? {
@@ -565,6 +599,7 @@ fn run_path(case: &Case, joint: Option<&Joint>, until: usize, resume: Option<&Ru
             run.frames.last().unwrap(),
             event,
             joint,
+            shear,
         )?);
     }
     Ok(run)

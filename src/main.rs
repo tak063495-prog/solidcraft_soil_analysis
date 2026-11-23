@@ -24,13 +24,18 @@ fn run() -> Result<()> {
 [command, case, output, rest @ ..] if command == "curved-shell" => {
             use soil_fem_3d::curved_shell::path;
             let case: path::Case = serde_json::from_reader(fs::File::open(case)?)?;
+            use soil_fem_3d::curved_shell::ShearInterpolation;
+            let (shear, rest) = match rest {
+                [flag, remaining @ ..] if flag == "--shear-mean" => (ShearInterpolation::ElementMean, remaining),
+                _ => (ShearInterpolation::Centroid, rest),
+            };
             let (until, resume) = match rest {
                 [] => (case.steps.len(), None),
                 [flag, index] if flag == "--until" => (index.parse().map_err(|_| Error::Input("invalid accepted index".into()))?, None),
                 [flag, file] if flag == "--resume" => (case.steps.len(), Some(serde_json::from_reader(fs::File::open(file)?)?)),
-                _ => return Err(Error::Input("curved-shell CASE OUTPUT [--until INDEX | --resume RUN]".into())),
+                _ => return Err(Error::Input("curved-shell CASE OUTPUT [--shear-mean] [--until INDEX | --resume RUN]".into())),
             };
-            write_new(output, &path::run(&case, until, resume.as_ref())?)?;
+            write_new(output, &path::run_with_shear(&case, until, resume.as_ref(), shear)?)?;
         }
 
 [command, mesh, case, output, rest @ ..] if command == "offset-composite" => {

@@ -23,6 +23,15 @@ const EDGES: [([f64; 2], [f64; 2]); 3] = [
     ([1., 0.], [-1., 1.]),
 ];
 
+/// Interior degrees of freedom for the eight-coefficient transverse shear field.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ShearInterpolation {
+    #[default]
+    Centroid,
+    ElementMean,
+}
+
 #[derive(Clone, Copy)]
 pub struct Tying {
     pub membrane: bool,
@@ -130,6 +139,9 @@ struct Layer {
 }
 impl Layer {
     fn new(geo: &Geometry, z: f64) -> Result<Self> {
+        Self::with_shear(geo, z, ShearInterpolation::Centroid)
+    }
+    fn with_shear(geo: &Geometry, z: f64, shear: ShearInterpolation) -> Result<Self> {
         let center = geo.basis(&geo.surface(CENTER)?, z);
         let mut normal = [Stretch::zeros(); 3];
         let mut shear_matrix = SMatrix::<f64, 8, 8>::zeros();
@@ -168,12 +180,29 @@ impl Layer {
                 .solve(&samples)
                 .ok_or_else(|| Error::Input("singular membrane tying system".into()))?;
         }
-        shear_matrix
-            .fixed_rows_mut::<2>(6)
-            .copy_from(&shear_space(CENTER));
-        shear_samples
-            .fixed_rows_mut::<2>(6)
-            .copy_from(&raw(geo, CENTER, z, &center)?.fixed_rows::<2>(3));
+        // The first six equations fix the tangential edge samples. The final
+        // two either collocate at the centroid or preserve the reference-cell
+        // mean of each covariant shear component in the same centroid frame.
+        let (space, samples) = match shear {
+            ShearInterpolation::Centroid => (
+                shear_space(CENTER),
+                raw(geo, CENTER, z, &center)?
+                    .fixed_rows::<2>(3)
+                    .into_owned(),
+            ),
+            ShearInterpolation::ElementMean => {
+                let mut space = SMatrix::<f64, 2, 8>::zeros();
+                let mut samples = Shear::zeros();
+                for (l, w) in mindlin::quadrature() {
+                    let p = [l[1], l[2]];
+                    space += shear_space(p) * w;
+                    samples += raw(geo, p, z, &center)?.fixed_rows::<2>(3) * w;
+                }
+                (space, samples)
+            }
+        };
+        shear_matrix.fixed_rows_mut::<2>(6).copy_from(&space);
+        shear_samples.fixed_rows_mut::<2>(6).copy_from(&samples);
         let transverse = shear_matrix
             .lu()
             .solve(&shear_samples)
@@ -283,6 +312,14 @@ pub struct Resultant {
 }
 impl Kernel {
     pub fn new(geo: &Geometry, section: &Section, tying: Tying) -> Result<Self> {
+        Self::with_shear(geo, section, tying, ShearInterpolation::Centroid)
+    }
+    pub fn with_shear(
+        geo: &Geometry,
+        section: &Section,
+        tying: Tying,
+        shear: ShearInterpolation,
+    ) -> Result<Self> {
         section.validate()?;
         let t = section.thickness_m;
         if !geo.e.is_finite() || geo.e.abs() > t / 2. {
@@ -320,7 +357,7 @@ impl Kernel {
             ((0.6_f64).sqrt(), 5. / 9.),
         ] {
             let z = xi * t / 2.;
-            let layer = Layer::new(geo, z)?;
+            let layer = Layer::with_shear(geo, z, shear)?;
             for (l, w) in mindlin::quadrature() {
                 let p = [l[1], l[2]];
                 let s = geo.surface(p)?;
