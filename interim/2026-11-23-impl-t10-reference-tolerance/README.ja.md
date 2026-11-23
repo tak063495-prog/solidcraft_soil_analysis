@@ -64,4 +64,4 @@ Puso & Laursen UCRL-JRNL-200667 から数値を必要とする測点は今回の
 
 ### P6-01 状態監査
 
-検証原票を固定コミット `f4a0908d62cfd5611139d6aa47839749740cbfe1` の `validation.json` として登録した。Git blob SHA-1 は `162a2d331d3a6d777d66add45408761dd2eda948`、原票の SHA-256 は `4a76b0cb1f689c6349014b576c481c4fe006fea2d728f2b9cd066cd5bb102b6b`。e541fe1 の登録方式で真偽値・null 29件を照合した。既存台帳を含む監査は 80行・421資料・171証跡、`integrity_ok=true`、`numerical_acceptance_performed=false`。
+検証原票を固定コミット `67cf910e93bc1c39b6d11fa01211a962d138019a` の `validation.json` として登録した。Git blob SHA-1 は `162a2d331d3a6d777d66add45408761dd2eda948`、原票の SHA-256 は `4a76b0cb1f689c6349014b576c481c4fe006fea2d728f2b9cd066cd5bb102b6b`。e541fe1 の登録方式で真偽値・null 29件を照合した。既存台帳を含む監査は 80行・421資料・171証跡、`integrity_ok=true`、`numerical_acceptance_performed=false`。
