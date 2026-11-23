@@ -18,6 +18,7 @@ use std::{
 };
 
 struct Study {
+    grid: Option<u32>,
     seed: Option<Seed>,
     guesses: Cell<usize>,
     arc: Option<RefCell<Sphere>>,
@@ -51,6 +52,14 @@ impl Observer for Study {
         progress: f64,
         state: &stages::Committed,
     ) -> Result<()> {
+        if self
+            .grid
+            .is_some_and(|n| (progress * f64::from(n)).fract() == 0.)
+        {
+            let mut out = std::io::stdout().lock();
+            serde_json::to_writer(&mut out, &(stage, progress, state))?;
+            writeln!(out)?;
+        }
         if let Some(history) = &self.history {
             let joint = state.joints.as_ref().expect("C-01 joint state");
             let field: Vec<_> = joint
@@ -96,6 +105,7 @@ fn main() -> Result<()> {
         .map(RefCell::new);
     let attempt_budget = case.settings.attempt_budget_policy.stage_limit(&mesh)?;
     let study = Study {
+        grid: options.full_field_grid.map(|n| n.get()),
         history: options
             .dissipation_history
             .map(File::create_new)

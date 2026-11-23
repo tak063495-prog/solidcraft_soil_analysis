@@ -10,6 +10,7 @@ use std::{
 #[serde(deny_unknown_fields)]
 pub struct Options {
     pub seed: Option<PathBuf>,
+    pub full_field_grid: Option<std::num::NonZeroU32>,
     pub dissipation_history: Option<PathBuf>,
     pub arc_scale_m: Option<f64>,
 }

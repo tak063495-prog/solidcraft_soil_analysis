@@ -766,16 +766,26 @@ impl Model {
                 "JOINT state/displacement length mismatch".into(),
             ));
         }
+        let history_bisection = self
+            .configuration
+            .global_step_control
+            .as_ref()
+            .and_then(|c| c.path_error.as_ref())
+            .is_some_and(|c| c.contact_history_bisection);
         self.points
             .iter()
             .zip(&state.points)
             .map(|(p, s)| {
                 if self.contact_active(state, p, active) {
-                    self.configuration.joints[p.material].material.partition(
+                    let count = self.configuration.joints[p.material].material.partition(
                         s,
                         Self::jump(p, u).into(),
                         self.configuration.maximum_increment_m,
-                    )
+                    )?;
+                    let open_or_slipped = history_bisection
+                        && (s.accumulated_plastic_slip_m > 0.
+                            || s.elastic_jump().dot(&Vector3::from(s.normal)) > 0.);
+                    Ok(if open_or_slipped { count.max(8) } else { count })
                 } else {
                     Ok(1)
                 }

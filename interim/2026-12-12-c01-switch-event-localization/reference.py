@@ -88,7 +88,7 @@ def endpoint_status(system, old_jump, old_traction, target, count):
         tau=np.where(closed[:,None],trial*scale[:,None],0); gap=end
     return status
 
-def event_proposal(audit, gaps, progress, steps, minimum):
+def event_proposal(audit, gaps, progress, steps, minimum, *, error_scaled_retry=False):
     h = audit['actual_increment']
     base = audit['base_increment']
     if audit['reject']:
@@ -101,7 +101,12 @@ def event_proposal(audit, gaps, progress, steps, minimum):
                 if (a > 0) != (b > 0):
                     fractions.append((j + a / (a-b)) / 2)
         first = min(fractions, default=1.)
-        fraction = min(.9375, max(.0625, first)) if first < 1 else .5
+        if error_scaled_retry:
+            ratio = max(audit['maximum_slip_error_m'] / audit['slip_budget_m'],
+                        audit['maximum_dissipation_error_kpa_m'] / audit['dissipation_budget_kpa_m'])
+            fraction = min(.9375, max(.0625, min(first, .9 / np.sqrt(ratio))))
+        else:
+            fraction = min(.9375, max(.0625, first)) if first < 1 else .5
         return max(h * fraction, min(minimum, h / 2))
     ratio = max(audit['maximum_slip_error_m'] / audit['slip_budget_m'],
                 audit['maximum_dissipation_error_kpa_m'] / audit['dissipation_budget_kpa_m'])
@@ -111,7 +116,7 @@ def event_proposal(audit, gaps, progress, steps, minimum):
         anchor += base
     remaining = min(1., anchor) - progress
     if remaining > 0:
-        desired = remaining / max(1, np.floor(.5 + remaining / desired))
+        desired = min(remaining, desired) if error_scaled_retry else remaining / max(1, np.floor(.5 + remaining / desired))
     return min(base, max(minimum, desired))
 
 
@@ -127,7 +132,7 @@ def stage_attempt_budget(mesh, settings):
     return (2065 * elements + 11) // 12
 
 
-def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None, switch_bisections=None, path_error=None, attempt_sink=None, methods=None):
+def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None, switch_bisections=None, path_error=None, attempt_sink=None, methods=None, field_observer=None):
     attempt_budget = stage_attempt_budget(mesh, case['settings'])
     assert isinstance(steps, int) and steps >= 2
     assert isinstance(contact_steps, int) and contact_steps >= 1
@@ -228,6 +233,12 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
     minimum_contact = (path_error or {}).get('minimum_contact_substeps', 1)
     if type(minimum_contact) is not int or not 1 <= minimum_contact <= 50000:
         raise ValueError('invalid minimum contact subdivisions')
+    control = path_error or {}
+    refine_history = control.get("contact_history_bisection", False)
+    if refine_history and (not control.get("event_proposal") or minimum_contact != 4):
+        raise ValueError("contact_history_bisection requires event4")
+    if control.get("error_scaled_retry") and (not control.get("event_proposal") or control.get("event_comparison") is not None):
+        raise ValueError("error_scaled_retry requires unmodified event localization")
     frozen_counts = np.full(len(jump), minimum_contact, dtype=int)
 
     def project(target):
@@ -251,9 +262,13 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
             pd[mask], nd[mask], work[mask] = contact_work(subset(mask), jump[mask], traction[mask], target[mask], int(count))
         return pd, nd, work
 
-    def increment(load, factor, name, progress, previous=0., *, probe=False, start_load=None, start_factor=None):
+    def increment(load, factor, name, progress, previous=0., *, probe=False, start_load=None, start_factor=None, previous_slip=None):
         nonlocal u, jump, traction, plastic, accumulated, maximum_residual, frozen_counts, status
         frozen_counts = np.full(len(jump), minimum_contact, dtype=int)
+        if refine_history:
+            old_accumulated = accumulated if previous_slip is None else previous_slip
+            marked = (old_accumulated > 0) | (np.einsum("qi,qi->q", jump, system.normal) > 0)
+            frozen_counts[marked] = 2 * minimum_contact
         fixed = offset(factor); initial = methods.initial(name, progress, u) if methods is not None else u
         free = t.T@(initial-fixed); scale = max(np.linalg.norm(load), 1.)
         def evaluate(free):
@@ -276,7 +291,7 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                 new_status[np.all(target == jump, axis=1)] = status[np.all(target == jump, axis=1)]
                 pd, nd, work = work_parts(target)
                 if probe:
-                    return dict(u=candidate, jump=target, traction=q, slip=slip, pd=pd,
+                    return dict(u=candidate, jump=target, traction=q, slip=slip, cum=cum, pd=pd,
                                 status=new_status, residual=relative, iterations=iteration)
                 error_audit = None
                 rejected = (switch_bisections is not None and np.any(new_status != status)
@@ -290,7 +305,7 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                          start_factor+(factor-start_factor)*.5,
                                          name, midpoint, previous, probe=True)
                         u, jump, traction, status = half['u'], half['jump'], half['traction'], half['status']
-                        fine = increment(load, factor, name, progress, midpoint, probe=True)
+                        fine = increment(load, factor, name, progress, midpoint, probe=True, previous_slip=accumulated+half['cum'] if refine_history else None)
                     finally:
                         u, jump, traction, status, frozen_counts = saved
                     slip_error = (plastic+slip)-((plastic+half['slip'])+fine['slip'])
@@ -316,7 +331,8 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                         gaps = [np.einsum('qa,qa->q', values, system.normal)
                                 for values in (jump, half['jump'], fine['jump'])]
                         error_audit['proposed_increment'] = event_proposal(
-                            error_audit, gaps, progress, steps, case['settings']['minimum_increment'])
+                            error_audit, gaps, progress, steps, case['settings']['minimum_increment'],
+                            **({'error_scaled_retry': True} if path_error.get('error_scaled_retry') else {}))
                 if methods is not None and methods.arc is not None:
                     retry = methods.arc.retry(name,previous,progress,1/steps,u,candidate,rejected)
                     if retry is not None:
@@ -338,6 +354,8 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                  slipping_points=int((cum > 0).sum())))
                 if methods is not None:
                     methods.commit(name, progress, u, plastic_work)
+                if field_observer is not None and (progress * steps).is_integer():
+                    field_observer.independent(name, progress, field_state(name, load), status)
                 if history_sink is not None:
                     history_sink(dict(path[-1]), field_state(name, load))
                 return True

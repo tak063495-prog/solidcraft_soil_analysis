@@ -219,3 +219,42 @@ fn proportional_stage_budget_counts_spatial_cells_and_preserves_legacy_identity(
     );
     Ok(())
 }
+
+#[test]
+fn explicit_event4_history_substeps_and_retry_keep_the_force_and_path_gates() -> Result<()> {
+    for mode in ["contact_history_bisection", "error_scaled_retry"] {
+        let (mesh, ground, mut case) = fixture()?;
+        case.settings.minimum_increment = 1. / (16. * 65536.);
+        let mut options = serde_json::json!({"path_error":{
+            "event_proposal":true, "minimum_contact_substeps":4,
+            "slip_scale_m":1e-4, "dissipation_scale_kpa_m":1e-2
+        }});
+        options["path_error"][mode] = true.into();
+        case.joint_system.as_mut().unwrap().global_step_control =
+            Some(serde_json::from_value(options.clone())?);
+        let run = stages::solve(&mesh, ground, case.clone())?;
+        assert!(run.complete, "{mode}: {:?}", run.failure_reason);
+        assert!(run.attempts.iter().any(|a| !a.accepted));
+        for a in &run.attempts {
+            let e = a.joint_path_error.as_ref().unwrap();
+            if a.accepted {
+                for residual in [
+                    a.relative_force_residual.unwrap(),
+                    e.midpoint_relative_force_residual,
+                    e.fine_relative_force_residual,
+                ] {
+                    assert!(residual <= case.settings.relative_force_tolerance);
+                }
+                assert!(e.maximum_slip_error_m <= e.slip_budget_m);
+                assert!(e.maximum_dissipation_error_kpa_m <= e.dissipation_budget_kpa_m);
+            } else {
+                assert!(a.committed_state_unchanged_on_rejection);
+            }
+        }
+        options["path_error"]["event_proposal"] = false.into();
+        case.joint_system.as_mut().unwrap().global_step_control =
+            Some(serde_json::from_value(options)?);
+        assert!(case.validate().is_err());
+    }
+    Ok(())
+}

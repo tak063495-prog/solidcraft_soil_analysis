@@ -49,7 +49,7 @@ def seal(folder, side, n):
     return dict(solver=side, steps=n, sha256={key: sha(path) for key, path in files.items()})
 
 
-def execute(args):
+def execute(args, fields=None):
     study, mesh, ground, case, control = context(args.steps)
     folder = args.folder
     folder.mkdir(parents=True)
@@ -69,18 +69,23 @@ def execute(args):
         case["settings"]["attempt_budget_policy"] = args.attempt_budget_policy
     limit = study.reference.stage_attempt_budget(mesh, case["settings"])
     history_file = folder / "dissipation.jsonl"
+    if args.contact_history_bisection:
+        control["contact_history_bisection"] = True
+    if args.error_scaled_retry:
+        control["error_scaled_retry"] = True
     if args.active:
         control["semismooth_contact"] = True
     case_file.write_text(json.dumps(case, allow_nan=False), encoding="utf-8")
     output = folder / "result.json"
     if args.solver == "native":
         options = []
-        if seed or args.arc or args.active or args.history:
+        if seed or args.arc or args.active or args.history or fields is not None:
             opt = folder / "methods.json"
             opt.write_text(
                 json.dumps(
                     dict(
                         seed=str(seed.resolve()) if seed else None,
+                        full_field_grid=args.steps if fields is not None else None,
                         dissipation_history=str(history_file.resolve()) if args.history else None,
                         arc_scale_m=0.02 if args.arc else None,
                     )
@@ -88,18 +93,24 @@ def execute(args):
                 encoding="utf-8",
             )
             options = ["--methods", opt]
-        subprocess.run(
-            [
-                args.binary.resolve(),
-                ROOT / "examples/joint-water-column-tet10-mesh.json",
-                ROOT / "examples/ground-joint-water-mc.json",
-                case_file,
-                output,
-                *([save] if args.save_seed else []),
-                *options,
-            ],
-            check=True,
-        )
+        command = [
+            args.binary.resolve(),
+            ROOT / "examples/joint-water-column-tet10-mesh.json",
+            ROOT / "examples/ground-joint-water-mc.json",
+            case_file, output, *([save] if args.save_seed else []), *options,
+        ]
+        if fields is None:
+            subprocess.run(command, check=True)
+        else:
+            with subprocess.Popen(command, stdout=subprocess.PIPE) as solver:
+                try:
+                    for line in solver.stdout:
+                        fields.native(*json.loads(line))
+                except BaseException:
+                    solver.kill()
+                    raise
+                if solver.wait():
+                    raise subprocess.CalledProcessError(solver.returncode, command)
         if args.save_seed:
             (folder / "identity.json").write_text(
                 json.dumps(seal(folder, "native", args.steps)), encoding="utf-8"
@@ -164,6 +175,7 @@ def execute(args):
             path_error=control,
             attempt_sink=record,
             methods=methods,
+            field_observer=fields,
         )
         complete = True
         stop = None
@@ -208,6 +220,8 @@ if __name__ == "__main__":
     p.add_argument("--attempt-budget-policy", choices=("fixed", "mesh_proportional"), default="fixed")
     p.add_argument("--history", action="store_true", help="save dissipation at every accepted state")
     p.add_argument("--arc", action="store_true")
+    p.add_argument("--contact-history-bisection", action="store_true")
+    p.add_argument("--error-scaled-retry", action="store_true")
     p.add_argument("--active", action="store_true")
     p.add_argument("--save-seed", action="store_true")
     p.add_argument("--binary", type=Path, default=Path("target/release/examples/c01_methods"))

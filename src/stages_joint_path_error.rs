@@ -247,18 +247,20 @@ impl Model<'_> {
                     }
                 }
             }
+            let ratio = (maximum_slip_error_m / slip_budget_m)
+                .max(maximum_dissipation_error_kpa_m / dissipation_budget_kpa_m);
             let next = if audit.reject {
                 let locate = control.event_comparison
                     != Some(crate::joints::EventComparison::BisectRejections);
-                let fraction = if locate && fraction < 1. {
+                let fraction = if control.error_scaled_retry {
+                    fraction.min(0.9 / ratio.sqrt()).clamp(0.0625, 0.9375)
+                } else if locate && fraction < 1. {
                     fraction.clamp(0.0625, 0.9375)
                 } else {
                     0.5
                 };
                 (h * fraction).max(settings.minimum_increment.min(h * 0.5))
             } else {
-                let ratio = (maximum_slip_error_m / slip_budget_m)
-                    .max(maximum_dissipation_error_kpa_m / dissipation_budget_kpa_m);
                 let desired = if ratio > 0. {
                     (0.9 * h / ratio.sqrt()).min(base)
                 } else {
@@ -266,7 +268,9 @@ impl Model<'_> {
                 };
                 let end = start + h;
                 let remaining = crate::joints::GlobalStepControl::next(end, base, base) - end;
-                if remaining > 0. {
+                if control.error_scaled_retry && remaining > 0. {
+                    remaining.min(desired)
+                } else if remaining > 0. {
                     remaining / (remaining / desired).round().max(1.)
                 } else {
                     desired

@@ -30,6 +30,12 @@ pub struct PathErrorControl {
     /// Use signed-gap event localization and fit the proposal to the next base boundary.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub event_proposal: bool,
+    /// Use the measured coarse/fine defect to propose a retry and clip growth at the next anchor.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub error_scaled_retry: bool,
+    /// Bisect the local partition floor at previously slipped or currently open contact points.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub contact_history_bisection: bool,
     /// Record the first signed-gap zero. The bisection control varies only rejected steps.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub event_comparison: Option<EventComparison>,
@@ -65,6 +71,18 @@ impl GlobalStepControl {
             if c.event_comparison.is_some() && !c.event_proposal {
                 return Err(Error::Input(
                     "event_comparison requires event_proposal".into(),
+                ));
+            }
+            if c.error_scaled_retry && (!c.event_proposal || c.event_comparison.is_some()) {
+                return Err(Error::Input(
+                    "error_scaled_retry requires unmodified event localization".into(),
+                ));
+            }
+            if c.contact_history_bisection
+                && (!c.event_proposal || c.minimum_contact_substeps != Some(4))
+            {
+                return Err(Error::Input(
+                    "contact_history_bisection requires event4".into(),
                 ));
             }
             return Ok(());
