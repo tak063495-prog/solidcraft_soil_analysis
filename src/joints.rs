@@ -1,7 +1,7 @@
 //! Matching Tri3/Tri6 interfaces; only declared Tet10 crack-tip edges may share nodes.
 #[path = "joints_global_step.rs"]
 mod global_step;
-pub use global_step::GlobalStepControl;
+pub use global_step::{EventComparison, GlobalStepControl};
 
 use crate::{
     Error, Result, boundary, elements,

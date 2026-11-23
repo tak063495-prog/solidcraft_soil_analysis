@@ -25,6 +25,9 @@ pub struct PathErrorAudit {
     pub fine_linear_solves: Vec<LinearReport>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub proposed_increment: Option<f64>,
+    /// Diagnostic coordinate and zero-based GP index on the two-half-step path.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub first_gap_zero: Option<(f64, usize)>,
     pub reject: bool,
 }
 
@@ -196,20 +199,21 @@ impl Model<'_> {
             midpoint_linear_solves: half.linear_solves,
             fine_linear_solves: fine.linear_solves,
             proposed_increment: None,
+            first_gap_zero: None,
             reject: maximum_slip_error_m > slip_budget_m
                 || maximum_dissipation_error_kpa_m > dissipation_budget_kpa_m,
         };
         if control.event_proposal {
-            let next = if audit.reject {
-                let mut fraction = 1.;
+            let mut fraction = 1.;
+            if audit.reject || control.event_comparison.is_some() {
                 for (i, ((left, mid), right)) in
                     a.points.iter().zip(&b.points).zip(&d.points).enumerate()
                 {
-                    if audit.slip_errors_m[i]
+                    let within_budget = audit.slip_errors_m[i]
                         .iter()
                         .all(|v| v.abs() <= slip_budget_m)
-                        && audit.dissipation_errors_kpa_m[i].abs() <= dissipation_budget_kpa_m
-                    {
+                        && audit.dissipation_errors_kpa_m[i].abs() <= dissipation_budget_kpa_m;
+                    if within_budget && control.event_comparison.is_none() {
                         continue;
                     }
                     let n = nalgebra::Vector3::from(left.normal);
@@ -217,11 +221,23 @@ impl Model<'_> {
                     for (j, pair) in gaps.windows(2).enumerate() {
                         if (pair[0] > 0.) != (pair[1] > 0.) {
                             let root = (j as f64 + pair[0] / (pair[0] - pair[1])) * 0.5;
-                            fraction = f64::min(fraction, root);
+                            if !within_budget {
+                                fraction = f64::min(fraction, root);
+                            }
+                            let position = start + h * root;
+                            if control.event_comparison.is_some()
+                                && audit.first_gap_zero.is_none_or(|(best, _)| position < best)
+                            {
+                                audit.first_gap_zero = Some((position, i));
+                            }
                         }
                     }
                 }
-                let fraction = if fraction < 1. {
+            }
+            let next = if audit.reject {
+                let locate = control.event_comparison
+                    != Some(crate::joints::EventComparison::BisectRejections);
+                let fraction = if locate && fraction < 1. {
                     fraction.clamp(0.0625, 0.9375)
                 } else {
                     0.5

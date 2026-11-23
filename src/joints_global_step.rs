@@ -17,12 +17,22 @@ fn is_zero(n: &u32) -> bool {
     *n == 0
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EventComparison {
+    Observe,
+    BisectRejections,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PathErrorControl {
     /// Use signed-gap event localization and fit the proposal to the next base boundary.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub event_proposal: bool,
+    /// Record the first signed-gap zero. The bisection control varies only rejected steps.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub event_comparison: Option<EventComparison>,
     /// Lower bound on local return-map subdivisions for every coarse and half trial.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub minimum_contact_substeps: Option<usize>,
@@ -47,6 +57,11 @@ impl GlobalStepControl {
             {
                 return Err(Error::Input(
                     "JOINT minimum_contact_substeps outside existing partition budget".into(),
+                ));
+            }
+            if c.event_comparison.is_some() && !c.event_proposal {
+                return Err(Error::Input(
+                    "event_comparison requires event_proposal".into(),
                 ));
             }
             return Ok(());

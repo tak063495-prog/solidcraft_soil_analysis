@@ -154,3 +154,35 @@ fn check_path_replay(event_proposal: bool) -> Result<()> {
     assert_eq!(a, b);
     Ok(())
 }
+
+#[test]
+fn diagnostic_gap_bisection_reuses_the_error_budget_and_reports_the_crossing() -> Result<()> {
+    let (mesh, ground, mut case) = fixture()?;
+    case.settings.minimum_increment = 1. / (16. * 65536.);
+    let control = serde_json::json!({"path_error":{
+        "slip_scale_m":1e-4, "dissipation_scale_kpa_m":1e-2,
+        "event_proposal":true, "minimum_contact_substeps":4,
+        "event_comparison":"bisect_rejections"
+    }});
+    case.joint_system.as_mut().unwrap().global_step_control =
+        Some(serde_json::from_value(control)?);
+    let run = stages::solve(&mesh, ground, case)?;
+    assert!(run.complete);
+    let mut rejected = 0;
+    let mut crossings = 0;
+    for attempt in &run.attempts {
+        let audit = attempt.joint_path_error.as_ref().unwrap();
+        if let Some((position, gp)) = audit.first_gap_zero {
+            assert!((attempt.progress_from..=attempt.progress_to).contains(&position));
+            assert!(gp < audit.old_status.len());
+            crossings += 1;
+        }
+        if audit.reject {
+            assert!(!attempt.accepted && attempt.committed_state_unchanged_on_rejection);
+            assert_eq!(audit.proposed_increment, Some(audit.actual_increment / 2.));
+            rejected += 1;
+        }
+    }
+    assert!(crossings > 0 && rejected > 0);
+    Ok(())
+}
