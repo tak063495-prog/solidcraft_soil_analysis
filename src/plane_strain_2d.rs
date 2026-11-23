@@ -799,6 +799,7 @@ fn column_inputs() -> Result<(Ground, StageCase)> {
             tangent_perturbation: 1e-7,
             maximum_free_dofs: 100_000,
             dense_lu_refinement: false,
+            dense_residual_method: None,
             linear_solver: LinearSolver::SparseGmresIlu0 {
                 options: GmresOptions::default(),
             },

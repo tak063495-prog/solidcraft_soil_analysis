@@ -3,7 +3,11 @@ use super::{DMatrix, DVector, Error, Instant, LinearReport, Result};
 
 // FMA recovers the product roundoff. Neumaier accumulation retains low parts
 // in the subtraction b_i - sum_j A_ij x_j (also for nonsymmetric tangents).
-fn compensated_residual(a: &DMatrix<f64>, x: &DVector<f64>, b: &DVector<f64>) -> DVector<f64> {
+pub(super) fn compensated_residual(
+    a: &DMatrix<f64>,
+    x: &DVector<f64>,
+    b: &DVector<f64>,
+) -> DVector<f64> {
     DVector::from_fn(b.len(), |i, _| {
         let mut sum = b[i];
         let mut error = 0.;

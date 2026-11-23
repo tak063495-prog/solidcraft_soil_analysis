@@ -22,6 +22,8 @@ mod joint_path_error;
 mod mixed;
 pub use joint_path_error::PathErrorAudit;
 mod dense_refinement;
+mod dense_residual;
+pub use dense_residual::DenseResidualMethod;
 pub(crate) mod srm_adapter;
 pub mod t7;
 
@@ -54,6 +56,9 @@ pub struct Settings {
     /// Reuse the dense LU for one compensated correction on residual rejection.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub dense_lu_refinement: bool,
+    /// Select one dense LU recovery method when the unscaled residual exceeds tolerance.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dense_residual_method: Option<DenseResidualMethod>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -903,6 +908,14 @@ impl Tangent {
                 dense_refinement::solve(a, rhs, settings.relative_linear_tolerance)
             }
             Self::Dense(a) => {
+                if let Some(method) = settings.dense_residual_method {
+                    return dense_residual::solve(
+                        a,
+                        rhs,
+                        settings.relative_linear_tolerance,
+                        method,
+                    );
+                }
                 let started = Instant::now();
                 let x = a.clone().lu().solve(rhs).ok_or_else(|| {
                     Error::Solve("singular non-symmetric tangent; inspect active supports".into())
@@ -1121,6 +1134,18 @@ impl StageCase {
         s.linear_solver.validate()?;
         if s.dense_lu_refinement && !s.linear_solver.is_dense() {
             return Err(Error::Input("dense_lu_refinement requires dense_lu".into()));
+        }
+        if s.dense_residual_method.is_some() {
+            if !s.linear_solver.is_dense() {
+                return Err(Error::Input(
+                    "dense_residual_method requires dense_lu".into(),
+                ));
+            }
+            if s.dense_lu_refinement {
+                return Err(Error::Input(
+                    "select only one dense LU refinement option".into(),
+                ));
+            }
         }
         if let Some(control) = self
             .joint_system
