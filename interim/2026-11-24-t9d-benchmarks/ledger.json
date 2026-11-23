@@ -1,0 +1,173 @@
+{
+  "schema": "t9d-scope-ledger/1",
+  "decision_jst": "2026-11-24T06:00:00+09:00",
+  "sha256": {
+    "criteria.json": "d0c1cb60806cad6ea9521bc24b94d6c2d9553c345ad359737401e7da5a4f5af4",
+    "arch-results.json": "1092c093305d8d58c96cada09e2c3254af50cff5d3fabf5cacf54aa97f4b3121",
+    "kirsch-results.json": "fbdccfe6e4195680d5053fce02abe279a3eb966987a3314b9e3320aca79423e8",
+    "mcc-results.json": "7d2888ef2bf7b9dceec179c219ae75e9ffa9803c96a0b0380345fb1b96db7472"
+  },
+  "rows": [
+    {
+      "id": "T9d:arch:12:beam:fold",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/12/beam",
+      "reason": "受理平衡列の増減と T7 の単純 fold 診断"
+    },
+    {
+      "id": "T9d:arch:12:beam:figure7",
+      "state": "未達",
+      "passed": false,
+      "evidence": "arch-results.json#/12/beam",
+      "reason": "最初の単純 fold 荷重と公刊 Fig. 7 の読取り区間の照合"
+    },
+    {
+      "id": "T9d:arch:12:shooting:fold",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/12/shooting",
+      "reason": "受理平衡列の増減と T7 の単純 fold 診断"
+    },
+    {
+      "id": "T9d:arch:12:shooting:figure7",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/12/shooting",
+      "reason": "最初の単純 fold 荷重と公刊 Fig. 7 の読取り区間の照合"
+    },
+    {
+      "id": "T9d:arch:60:beam:fold",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/60/beam",
+      "reason": "受理平衡列の増減と T7 の単純 fold 診断"
+    },
+    {
+      "id": "T9d:arch:60:beam:figure7",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/60/beam",
+      "reason": "最初の単純 fold 荷重と公刊 Fig. 7 の読取り区間の照合"
+    },
+    {
+      "id": "T9d:arch:60:shooting:fold",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/60/shooting",
+      "reason": "受理平衡列の増減と T7 の単純 fold 診断"
+    },
+    {
+      "id": "T9d:arch:60:shooting:figure7",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/60/shooting",
+      "reason": "最初の単純 fold 荷重と公刊 Fig. 7 の読取り区間の照合"
+    },
+    {
+      "id": "T9d:arch:96:beam:fold",
+      "state": "未達",
+      "passed": false,
+      "evidence": "arch-results.json#/96/beam",
+      "reason": "受理平衡列の増減と T7 の単純 fold 診断"
+    },
+    {
+      "id": "T9d:arch:96:beam:figure7",
+      "state": "未達",
+      "passed": false,
+      "evidence": "arch-results.json#/96/beam",
+      "reason": "最初の単純 fold 荷重と公刊 Fig. 7 の読取り区間の照合"
+    },
+    {
+      "id": "T9d:arch:96:shooting:fold",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/96/shooting",
+      "reason": "受理平衡列の増減と T7 の単純 fold 診断"
+    },
+    {
+      "id": "T9d:arch:96:shooting:figure7",
+      "state": "達成",
+      "passed": true,
+      "evidence": "arch-results.json#/96/shooting",
+      "reason": "最初の単純 fold 荷重と公刊 Fig. 7 の読取り区間の照合"
+    },
+    {
+      "id": "T9d:arch:full-curve",
+      "state": "未達",
+      "passed": false,
+      "evidence": "criteria.json#/arch/full_curve_tolerance",
+      "reason": "参照なし（全文待ち）・未達。全曲線・頂点変位の点別許容幅は未確認。"
+    },
+    {
+      "id": "T9d:kirsch:12:stage-equilibrium",
+      "state": "達成",
+      "passed": true,
+      "evidence": "kirsch-results.json",
+      "reason": "無孔、実応力の引継ぎ、半解放、全解放の各自由力残差と線形残差"
+    },
+    {
+      "id": "T9d:kirsch:96:stage-equilibrium",
+      "state": "達成",
+      "passed": true,
+      "evidence": "kirsch-results.json",
+      "reason": "無孔、実応力の引継ぎ、半解放、全解放の各自由力残差と線形残差"
+    },
+    {
+      "id": "T9d:kirsch:field",
+      "state": "未達",
+      "passed": false,
+      "evidence": "criteria.json#/kirsch/field_relative_tolerance",
+      "reason": "参照なし（全文待ち）・未達。解析応力・変位は既知。孔壁回復応力・変位場のFE許容幅は未確認。"
+    },
+    {
+      "id": "T9d:mcc:OCR1.6:critical",
+      "state": "達成",
+      "passed": true,
+      "evidence": "mcc-results.json",
+      "reason": "両格子・両材料内刻みで p′, q, v の各終端を解析解と比較"
+    },
+    {
+      "id": "T9d:mcc:OCR1.6:free-equilibrium",
+      "state": "達成",
+      "passed": true,
+      "evidence": "mcc-results.json",
+      "reason": "圧密・除荷・排水軸圧縮の全増分、自由節点で再組立した力の釣合い"
+    },
+    {
+      "id": "T9d:mcc:OCR8:critical",
+      "state": "達成",
+      "passed": true,
+      "evidence": "mcc-results.json",
+      "reason": "両格子・両材料内刻みで p′, q, v の各終端を解析解と比較"
+    },
+    {
+      "id": "T9d:mcc:OCR8:free-equilibrium",
+      "state": "達成",
+      "passed": true,
+      "evidence": "mcc-results.json",
+      "reason": "圧密・除荷・排水軸圧縮の全増分、自由節点で再組立した力の釣合い"
+    },
+    {
+      "id": "T9d:mcc:history-accuracy",
+      "state": "未達",
+      "passed": false,
+      "evidence": "criteria.json#/mcc/history_pc_or_volume_tolerance",
+      "reason": "参照なし（全文待ち）・未達。圧密・除荷の p′c, v を持ち越し誤差を測定。公刊の前史の数値許容幅は未確認。"
+    },
+    {
+      "id": "T9d:mcc:strain-curve",
+      "state": "未達",
+      "passed": false,
+      "evidence": "criteria.json#/mcc/full_stress_strain_tolerance",
+      "reason": "参照なし（全文待ち）・未達。固定νと一定Gでは同じひずみ曲線が参照にならない。"
+    },
+    {
+      "id": "NC-01:overall",
+      "state": "未達",
+      "passed": false,
+      "evidence": "../2026-11-23-nc01-t9d-verification-proposal/ledger.json",
+      "reason": "元の5 kPa 3D MCC 全撤去は未達・分類D。"
+    }
+  ]
+}
