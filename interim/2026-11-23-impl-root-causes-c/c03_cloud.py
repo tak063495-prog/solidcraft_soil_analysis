@@ -11,7 +11,7 @@ from c03diag_study import binary, configuration, initialize, invoke, schedule
 SIZES = {"m0c1": (1e-4, 5e-5), "m1c0": (5e-5, 1e-4), "m1c1": (5e-5, 5e-5)}
 
 
-def solve(root, label, solver):
+def solve(root, label, solver, *, resolve_edges=False):
     folder = root / f"{label}-{solver}"
     folder.mkdir()
     material, contact = SIZES[label]
@@ -36,7 +36,7 @@ def solve(root, label, solver):
             stream = anchors if row["progress"] * 32 == round(row["progress"] * 32) else extras
             print(json.dumps(dict(row=row, fields={k:v.tolist() for k,v in fields.items()}),
                              allow_nan=False), file=stream, flush=True)
-        result = run(model, 32, material, contact, accepted, cutback=True)
+        result = run(model, 32, material, contact, accepted, cutback=True, resolve_edges=resolve_edges)
     write(folder/"result.json", result)
 
 
@@ -46,10 +46,14 @@ if __name__ == "__main__":
     parser.add_argument("--initialize", type=Path, metavar="NATIVE_PROBE")
     parser.add_argument("--route", choices=SIZES)
     parser.add_argument("--solver", choices=("native", "independent"))
+    parser.add_argument("--resolve-edges", action="store_true",
+                        help="converge coactive independent MC shear planes to their classification width")
     args = parser.parse_args()
+    if args.resolve_edges and args.solver != "independent":
+        parser.error("--resolve-edges requires an independent MC route")
     if args.initialize and not (args.route or args.solver):
         initialize(args.root, args.initialize.resolve(), "tet10", 30., open_factor=.12)
     elif args.route and args.solver and not args.initialize:
-        solve(args.root, args.route, args.solver)
+        solve(args.root, args.route, args.solver, resolve_edges=args.resolve_edges)
     else:
         parser.error("select --initialize or both --route and --solver")

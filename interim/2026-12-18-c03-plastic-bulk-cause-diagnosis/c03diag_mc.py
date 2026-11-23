@@ -32,7 +32,25 @@ def principal_order_ok(stress, scale):
     return np.all(stress[:-1]>=stress[1:]-1e-8*scale)
 
 
-def step(p,old,de,*,require_order=False):
+# The six shear planes use the ordered principal-stress pairs from step().
+SHEAR_PAIRS = tuple((i, j) for i in range(3) for j in range(3) if i != j)
+
+
+def active_edge_resolved(stress, multipliers, tol):
+    """Coactive shear planes must agree on their major and minor principal stresses."""
+    active = np.flatnonzero(multipliers[:6] > 0)
+    if len(active) < 2:
+        return True
+    pairs = [SHEAR_PAIRS[k] for k in active]
+    major, minor = (set(group) for group in zip(*pairs))
+    if major & minor:
+        # A shared index connects both groups at the apex. Adjacent gaps
+        # can each fit the width while the two extremes still exceed it.
+        return np.ptp(stress[list(major | minor)]) <= tol
+    return all(np.ptp(stress[list(group)]) <= tol for group in (major, minor))
+
+
+def step(p,old,de,*,require_order=False,resolve_edges=False,trace=None):
     """Iterative principal-plane complementarity (projected Gauss-Seidel).
 
     Rust enumerates nonsingular active subsets with LU. This reference instead
@@ -52,6 +70,7 @@ def step(p,old,de,*,require_order=False):
         for i in range(3):a=np.zeros(3);a[i]=-1;n.append(a);m.append(a);limit.append(p['tension_cutoff_kpa'])
     n=np.asarray(n);m=np.asarray(m);limit=np.asarray(limit);dm=d@m.T;den=np.einsum('ij,ji->i',n,dm)
     multipliers=np.zeros(len(n));stress=values.copy();scale=max(np.max(np.abs(values)),p['cohesion_kpa'],1.)
+    tol=1e-10*scale  # existing principal-stress classification width
     for iterations in range(20000):
         for i in range(len(n)):
             updated=max(0.,multipliers[i]+(n[i]@stress-limit[i])/den[i])
@@ -61,7 +80,10 @@ def step(p,old,de,*,require_order=False):
         if np.max(f)<1e-13*scale and np.max(np.abs(multipliers*f))<1e-16*scale:
             # A tiny active multiplier can satisfy complementarity before an edge
             # return satisfies the existing principal-order check.
-            if not require_order or principal_order_ok(stress, scale):
+            ordered = principal_order_ok(stress, scale)
+            if not ordered and not require_order:
+                break  # retain the ordinary principal-order rejection below
+            if ordered and (not resolve_edges or active_edge_resolved(stress, multipliers, tol)):
                 break
     else:raise ArithmeticError('independent projected complementarity iteration did not converge')
     assert np.min(multipliers)>=0, ('negative projected multiplier', multipliers)
@@ -76,7 +98,7 @@ def step(p,old,de,*,require_order=False):
         'equivalent_plastic_strain':float(old['equivalent_plastic_strain']+np.sqrt(2/3*np.square(dev).sum())),
         'plastic_work_kpa':float(old['plastic_work_kpa']+max(0,stress@dp))}
     # Categorical return is diagnosed independently from active multipliers.
-    tol=1e-10*scale; active=np.flatnonzero(multipliers>0);shear=bool(np.any(active<6));tension=bool(np.any(active>=6))
+    active=np.flatnonzero(multipliers>0);shear=bool(np.any(active<6));tension=bool(np.any(active>=6))
     if not len(active):kind='elastic'
     elif shear and tension:kind='mixed'
     elif tension:
@@ -86,6 +108,10 @@ def step(p,old,de,*,require_order=False):
     elif abs(stress[1]-stress[2])<=tol:kind='compression_edge'
     else:kind='shear_face'
     out['last_return']=kind
+    if trace is not None:
+        trace.append(dict(label=kind, sweeps=iterations+1, scale_kpa=scale, threshold_kpa=tol,
+                          multipliers=multipliers.tolist(), yield_residuals_kpa=f.tolist(),
+                          principal_kpa=stress.tolist()))
     assert normalized_yield(p,out['effective_stress_compression_positive_kpa'])<1e-8
     return out
 

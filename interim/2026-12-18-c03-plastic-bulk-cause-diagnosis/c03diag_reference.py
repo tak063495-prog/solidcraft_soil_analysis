@@ -8,6 +8,7 @@ The finite volume/contact quadrature is prescribed by the input, not a continuum
 claim. Partition growth follows this reference's converged-candidate policy;
 production's predictor-dependent doubling is deliberately not read from results.
 """
+from functools import partial
 import copy
 from types import SimpleNamespace
 import numpy as np
@@ -24,10 +25,10 @@ RETURNS = ('elastic','shear_face','compression_edge','extension_edge','shear_ape
 CONTACT = ('open','stick','slip')
 
 
-def integrate(material, old, strain, count, *, require_order=False):
+def integrate(material, old, strain, count, *, require_order=False, resolve_edges=False):
     state = old
     for _ in range(int(count)):
-        state = mc.step(material, state, np.asarray(strain)/count, require_order=require_order)
+        state = mc.step(material, state, np.asarray(strain)/count, require_order=require_order, resolve_edges=resolve_edges)
     return state
 
 
@@ -117,11 +118,12 @@ def principal_order_failure(reason):
 LOCAL_ITERATION_LIMIT = 'independent projected complementarity iteration did not converge'
 
 
-def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tolerance=1e-10,fixed_material=None,fixed_contact=None,*,cutback=False,attempt_sink=None):
+def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tolerance=1e-10,fixed_material=None,fixed_contact=None,*,cutback=False,attempt_sink=None,resolve_edges=False):
     assert isinstance(steps,int) and steps>=2 and 0<tolerance<=1e-10
     assert 1e-7<=material_maximum<=1e-3 and contact_maximum>=5e-6
     m=model;s=m.system;u=np.zeros(m.nd);states=copy.deepcopy(m.seeds);jump=np.zeros((len(s.points),3));traction=jump.copy()
     plastic=jump.copy();accumulated=np.zeros(len(jump));pd=accumulated.copy();nd=accumulated.copy();work=accumulated.copy()
+    update = partial(integrate, resolve_edges=True) if resolve_edges else integrate
     rows=[];origin=0.
     for phase,(name,end) in enumerate([('geostatic',0.)]+[(x['name'],x['target_factor']) for x in m.case['stages']]):
         def attempt(progress, require_order):
@@ -140,7 +142,7 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                 return q,dp,da
             def evaluate(x,tangent=False):
                 candidate=fixed+m.t@x;target=np.einsum('qag,g->qa',s.c,candidate);de=-m.strains(candidate-u)
-                updated=[integrate(mat,old,e,c,require_order=require_order) for mat,old,e,c in zip(m.mats,states,de,counts)]
+                updated=[update(mat,old,e,c,require_order=require_order) for mat,old,e,c in zip(m.mats,states,de,counts)]
                 q,dp,da=projected(target);res=m.t.T@(m.internal(updated,q[:,0])-load)
                 if not tangent:return res,candidate,target,updated,q[:,0],dp[:,0],da[:,0]
                 jac=np.zeros((m.t.shape[1],)*2);h=1e-8
@@ -148,7 +150,7 @@ def run(model,steps=16,material_maximum=1e-3,contact_maximum=5e-4,sink=None,tole
                     d=np.empty((6,6))
                     for a in range(6):
                         perturb=np.zeros(6);perturb[a]=h
-                        sp=integrate(mat,old,e+perturb,c,require_order=require_order)['effective_stress_compression_positive_kpa'];sm=integrate(mat,old,e-perturb,c,require_order=require_order)['effective_stress_compression_positive_kpa']
+                        sp=update(mat,old,e+perturb,c,require_order=require_order)['effective_stress_compression_positive_kpa'];sm=update(mat,old,e-perturb,c,require_order=require_order)['effective_stress_compression_positive_kpa']
                         d[:,a]=(np.asarray(sp)-sm)/(2*h)
                     br=b@m.t[ids];jac+=br.T@d@br*w
                 h=2e-9;targets=np.repeat(target[:,None,:],7,axis=1)
