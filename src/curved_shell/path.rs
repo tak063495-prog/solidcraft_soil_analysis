@@ -261,7 +261,8 @@ fn install(case: &Case, old: &Frame, joint: Option<&Joint>) -> Result<(Model, Ge
         },
     ))
 }
-pub(super) fn solve_supported(k: DMatrix<f64>, rhs: &DVector<f64>) -> Result<DVector<f64>> {
+/// Solve the supported shell system with the existing true-residual check.
+pub fn solve_supported(k: DMatrix<f64>, rhs: &DVector<f64>) -> Result<DVector<f64>> {
     let scale = k.diagonal().map(|v| 1. / v.sqrt());
     let scaled = DMatrix::from_fn(k.nrows(), k.ncols(), |i, j| scale[i] * k[(i, j)] * scale[j]);
     let factor = scaled
