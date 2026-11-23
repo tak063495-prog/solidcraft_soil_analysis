@@ -22,6 +22,7 @@ struct Study {
     guesses: Cell<usize>,
     arc: Option<RefCell<Sphere>>,
     sink: Option<RefCell<BufWriter<File>>>,
+    history: Option<RefCell<BufWriter<File>>>,
 }
 impl Observer for Study {
     fn on_progress(&self, _: &Progress) -> Result<()> {
@@ -43,6 +44,25 @@ impl Observer for Study {
         self.arc
             .as_ref()
             .and_then(|arc| arc.borrow_mut().retry(sample))
+    }
+    fn on_accepted_state(
+        &self,
+        stage: usize,
+        progress: f64,
+        state: &stages::Committed,
+    ) -> Result<()> {
+        if let Some(history) = &self.history {
+            let joint = state.joints.as_ref().expect("C-01 joint state");
+            let field: Vec<_> = joint
+                .points
+                .iter()
+                .map(|q| q.plastic_dissipation_kpa_m)
+                .collect();
+            let mut sink = history.borrow_mut();
+            serde_json::to_writer(&mut *sink, &(stage, progress, field))?;
+            writeln!(sink)?;
+        }
+        self.on_accepted_displacement(stage, progress, &state.displacement_m)
     }
     fn on_accepted_displacement(&self, stage: usize, progress: f64, u: &[[f64; 3]]) -> Result<()> {
         if let Some(sink) = &self.sink {
@@ -74,7 +94,14 @@ fn main() -> Result<()> {
         .transpose()?
         .map(BufWriter::new)
         .map(RefCell::new);
+    let attempt_budget = case.settings.attempt_budget_policy.stage_limit(&mesh)?;
     let study = Study {
+        history: options
+            .dissipation_history
+            .map(File::create_new)
+            .transpose()?
+            .map(BufWriter::new)
+            .map(RefCell::new),
         sink,
         seed: options
             .seed
@@ -99,7 +126,7 @@ fn main() -> Result<()> {
         ));
     }
     for (name, attempts) in groups_of_attempts {
-        assert!(attempts.len() <= 2000);
+        assert!(attempts.len() <= attempt_budget);
         let accepted: Vec<_> = attempts.iter().filter(|a| a.accepted).collect();
         let mut reasons = std::collections::BTreeMap::new();
         for a in attempts.iter().filter(|a| !a.accepted) {
@@ -120,6 +147,9 @@ fn main() -> Result<()> {
         }
         groups.push(json!({"stage":name,"attempts":attempts.len(),"accepted":accepted.len(),
         "last_accepted":accepted.last().map(|a|a.progress_to),"rejections":reasons,"max_force":force_max}));
+    }
+    if let Some(s) = study.history {
+        s.into_inner().flush()?;
     }
     if let Some(s) = study.sink {
         s.into_inner().flush()?;

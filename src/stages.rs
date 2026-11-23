@@ -35,9 +35,42 @@ pub enum Kinematics {
     Explicit,
 }
 
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AttemptBudgetPolicy {
+    #[default]
+    Fixed,
+    MeshProportional,
+}
+
+impl AttemptBudgetPolicy {
+    fn is_fixed(&self) -> bool {
+        *self == Self::Fixed
+    }
+
+    pub fn stage_limit(self, mesh: &Mesh) -> Result<usize> {
+        match self {
+            Self::Fixed => Ok(2000),
+            Self::MeshProportional => {
+                // mesh/3 has a corner tetrahedron and a Tet10 connectivity for the same cell.
+                let elements = mesh.tetrahedra.len();
+                if elements == 0 {
+                    return Err(Error::Input(
+                        "mesh-proportional attempt budget requires spatial elements".into(),
+                    ));
+                }
+                usize::try_from((2065 * elements as u128).div_ceil(12))
+                    .map_err(|_| Error::Input("mesh-proportional attempt budget overflow".into()))
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Settings {
+    #[serde(default, skip_serializing_if = "AttemptBudgetPolicy::is_fixed")]
+    pub attempt_budget_policy: AttemptBudgetPolicy,
     pub kinematics: Kinematics,
     pub relative_force_tolerance: f64,
     pub relative_linear_tolerance: f64,
@@ -5128,6 +5161,7 @@ fn equilibrate(
         .as_ref()
         .and_then(|j| j.global_step_control.as_ref());
     let mut settings = model.case.settings.clone();
+    let attempt_budget = settings.attempt_budget_policy.stage_limit(model.mesh)?;
     settings.relative_force_tolerance = settings
         .relative_force_tolerance
         .min(model.ground.initialization.relative_equilibrium_tolerance);
@@ -5167,7 +5201,7 @@ fn equilibrate(
             || saved.last_committed.stage_index != 0
             || saved.last_committed.stage_progress != saved.progress
             || saved.complete != (saved.progress == 1.)
-            || saved.attempts.len() > 2000
+            || saved.attempts.len() > attempt_budget
             || (saved.verification_rejection_done && !cfg.verification_reject_once)
         {
             return Err(Error::Input(
@@ -5295,7 +5329,7 @@ fn equilibrate(
     };
     let mut accepted = 0;
     while report.progress < 1. - 1e-12 {
-        if report.attempts.len() >= 2000 {
+        if report.attempts.len() >= attempt_budget {
             report.failure_reason = Some("geostatic attempt budget exhausted".into());
             break;
         }
@@ -5416,7 +5450,7 @@ fn equilibrate(
                     linear_solves: linear,
                 });
                 if let Some(observer) = model.observer {
-                    observer.on_accepted_displacement(0, next, &t.state.displacement_m)?;
+                    observer.on_accepted_state(0, next, &t.state)?;
                 }
                 report.last_committed = t.state;
                 report.progress = next;
@@ -5615,6 +5649,7 @@ fn solve_controlled(
     observer: Option<&dyn crate::stage_control::Observer>,
 ) -> Result<Run> {
     case.validate()?;
+    let attempt_budget = case.settings.attempt_budget_policy.stage_limit(mesh)?;
     if case.has_offset_plates()
         && ground
             .materials
@@ -5948,7 +5983,7 @@ fn solve_controlled(
             || !runtime.increment.is_finite()
             || runtime.increment < case.settings.minimum_increment
             || runtime.increment > 1.
-            || runtime.stage_attempts > 2000
+            || runtime.stage_attempts > attempt_budget
             || runtime
                 .injected_stages
                 .iter()
@@ -6558,11 +6593,11 @@ fn solve_controlled(
             }
         }
         while progress < 1. - 1e-12 {
-            count += 1;
-            if count > 2000 {
+            if count >= attempt_budget {
                 failure = Some("stage attempt budget exceeded".into());
                 break;
             }
+            count += 1;
             let next = if matches!(stage, Stage::ResetDisplay { .. }) {
                 1.
             } else if global_control.is_some() {
@@ -6744,11 +6779,7 @@ fn solve_controlled(
             match trial {
                 Ok(t) if !force_reject && !switch_cutback && !path_error_cutback => {
                     if let Some(observer) = model.observer {
-                        observer.on_accepted_displacement(
-                            stage_index + 1,
-                            next,
-                            &t.state.displacement_m,
-                        )?;
+                        observer.on_accepted_state(stage_index + 1, next, &t.state)?;
                     }
                     committed = t.state;
                     progress = next;

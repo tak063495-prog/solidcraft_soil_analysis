@@ -788,6 +788,7 @@ fn column_inputs() -> Result<(Ground, StageCase)> {
         beam_system: None,
         schema: "soil-fem-stages/1".into(),
         settings: Settings {
+            attempt_budget_policy: Default::default(),
             kinematics: Kinematics::Explicit,
             relative_force_tolerance: 1e-8,
             relative_linear_tolerance: 1e-10,

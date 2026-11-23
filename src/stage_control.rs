@@ -68,6 +68,15 @@ pub trait Observer {
     fn c01_arc_retry(&self, _sample: ArcSample<'_>) -> Option<f64> {
         None
     }
+    /// Called after acceptance, including geostatic initialization, never on trial states.
+    fn on_accepted_state(
+        &self,
+        stage: usize,
+        progress: f64,
+        state: &crate::stages::Committed,
+    ) -> Result<()> {
+        self.on_accepted_displacement(stage, progress, &state.displacement_m)
+    }
     /// Optional displacement stream at actual accepted load coordinates.
     fn on_accepted_displacement(
         &self,

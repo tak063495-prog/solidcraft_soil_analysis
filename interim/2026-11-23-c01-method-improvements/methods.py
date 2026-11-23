@@ -137,7 +137,8 @@ def active_tangent(system, old, traction, target, counts):
 
 
 class Methods:
-    def __init__(self, sink, seed, active, arc):
+    def __init__(self, sink, seed, active, arc, history=None):
+        self.history = history
         self.sink = sink
         self.seed = seed
         self.active = active
@@ -155,7 +156,9 @@ class Methods:
         self.guesses += 1
         return self.seed.interpolate(name, time)
 
-    def commit(self, name, progress, u):
+    def commit(self, name, progress, u, dissipation):
+        if self.history is not None:
+            print(json.dumps([STAGES.index(name), progress, dissipation.tolist()], separators=(",", ":")), file=self.history)
         if self.sink:
             print(
                 json.dumps(

@@ -115,7 +115,20 @@ def event_proposal(audit, gaps, progress, steps, minimum):
     return min(base, max(minimum, desired))
 
 
+def stage_attempt_budget(mesh, settings):
+    policy = settings.get("attempt_budget_policy", "fixed")
+    if policy == "fixed":
+        return 2000
+    if policy != "mesh_proportional":
+        raise ValueError("unknown attempt_budget_policy")
+    elements = len(mesh["tetrahedra"])
+    if not elements:
+        raise ValueError("mesh-proportional attempt budget requires spatial elements")
+    return (2065 * elements + 11) // 12
+
+
 def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None, switch_bisections=None, path_error=None, attempt_sink=None, methods=None):
+    attempt_budget = stage_attempt_budget(mesh, case['settings'])
     assert isinstance(steps, int) and steps >= 2
     assert isinstance(contact_steps, int) and contact_steps >= 1
     assert order >= 3
@@ -324,7 +337,7 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                  open_points=int((np.einsum('qa,qa->q', jump, system.normal) > 0).sum()),
                                  slipping_points=int((cum > 0).sum())))
                 if methods is not None:
-                    methods.commit(name, progress, u)
+                    methods.commit(name, progress, u, plastic_work)
                 if history_sink is not None:
                     history_sink(dict(path[-1]), field_state(name, load))
                 return True
@@ -369,14 +382,17 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                            reaction=reaction.reshape(-1, 3), gap=normal)
     def phase(name, origin, end, geostatic=False):
         if switch_bisections is None and path_error is None:
-            for progress in (progress_grids or {}).get(name, [i/steps for i in range(1, steps+1)]):
+            for number, progress in enumerate((progress_grids or {}).get(name, [i/steps for i in range(1, steps+1)]), 1):
+                if case["settings"].get("attempt_budget_policy") == "mesh_proportional" and number > attempt_budget:
+                    raise AssertionError("independent stage attempt budget")
                 factor = origin+(end-origin)*progress
                 increment(base+(1-progress)*holding if geostatic else base+factor*boundary,
                           factor, name, progress)
             return
         progress=0.; size=1/steps; attempts_at_start=len(attempts)
         while progress < 1-1e-12:
-            assert len(attempts)-attempts_at_start < 2000, 'independent stage attempt budget'
+            if len(attempts)-attempts_at_start >= attempt_budget:
+                raise AssertionError("independent stage attempt budget")
             anchor=(np.floor(progress*steps)+1)/steps
             if anchor <= progress+16*np.finfo(float).eps: anchor += 1/steps
             next_progress=min(progress+size, anchor, 1.)

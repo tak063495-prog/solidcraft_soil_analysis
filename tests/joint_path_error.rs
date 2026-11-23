@@ -186,3 +186,36 @@ fn diagnostic_gap_bisection_reuses_the_error_budget_and_reports_the_crossing() -
     assert!(crossings > 0 && rejected > 0);
     Ok(())
 }
+
+#[test]
+fn proportional_stage_budget_counts_spatial_cells_and_preserves_legacy_identity() -> Result<()> {
+    use soil_fem_3d::stages::AttemptBudgetPolicy;
+    let (mesh, _, case) = fixture()?;
+    let legacy = serde_json::to_value(&case.settings)?;
+    assert!(legacy.get("attempt_budget_policy").is_none());
+    assert_eq!(
+        case.settings.attempt_budget_policy.stage_limit(&mesh)?,
+        2000
+    );
+    let mut settings = legacy.clone();
+    settings["attempt_budget_policy"] = "fixed".into();
+    assert_eq!(
+        serde_json::to_value(serde_json::from_value::<stages::Settings>(
+            settings.clone()
+        )?)?,
+        legacy
+    );
+    settings["attempt_budget_policy"] = "mesh_proportional".into();
+    let opt: stages::Settings = serde_json::from_value(settings.clone())?;
+    assert_eq!(opt.attempt_budget_policy.stage_limit(&mesh)?, 2065);
+    assert_eq!(serde_json::to_value(opt)?, settings);
+    // A separate single-cell mesh exercises the ceiling on a non-divisible product.
+    let mut cell = mesh;
+    cell.tetrahedra.truncate(1);
+    cell.tetrahedra10.truncate(1);
+    assert_eq!(
+        AttemptBudgetPolicy::MeshProportional.stage_limit(&cell)?,
+        173
+    );
+    Ok(())
+}

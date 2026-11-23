@@ -10,6 +10,7 @@ use std::{
 #[serde(deny_unknown_fields)]
 pub struct Options {
     pub seed: Option<PathBuf>,
+    pub dissipation_history: Option<PathBuf>,
     pub arc_scale_m: Option<f64>,
 }
 type Snapshot = (f64, Vec<[f64; 3]>);

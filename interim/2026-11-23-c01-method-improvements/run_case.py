@@ -1,4 +1,4 @@
-"""Execute one explicit method combination with the original event4 path budget."""
+"""Execute one explicit method combination with the selected stage attempt budget."""
 
 import argparse
 from collections import Counter
@@ -65,18 +65,23 @@ def execute(args):
         ):
             raise ValueError("seed solver, input or coarse time grid differs")
         seed = source / "seed.jsonl"
+    if args.attempt_budget_policy != "fixed":
+        case["settings"]["attempt_budget_policy"] = args.attempt_budget_policy
+    limit = study.reference.stage_attempt_budget(mesh, case["settings"])
+    history_file = folder / "dissipation.jsonl"
     if args.active:
         control["semismooth_contact"] = True
     case_file.write_text(json.dumps(case, allow_nan=False), encoding="utf-8")
     output = folder / "result.json"
     if args.solver == "native":
         options = []
-        if seed or args.arc or args.active:
+        if seed or args.arc or args.active or args.history:
             opt = folder / "methods.json"
             opt.write_text(
                 json.dumps(
                     dict(
                         seed=str(seed.resolve()) if seed else None,
+                        dissipation_history=str(history_file.resolve()) if args.history else None,
                         arc_scale_m=0.02 if args.arc else None,
                     )
                 ),
@@ -110,7 +115,7 @@ def execute(args):
     def record(a):
         g = groups[a["stage"]]
         g["attempts"] += 1
-        assert g["attempts"] <= 2000
+        assert g["attempts"] <= limit
         if a["accepted"]:
             g["accepted"] += 1
             g["last_accepted"] = a["progress_to"]
@@ -137,11 +142,13 @@ def execute(args):
             ] += 1
 
     sink = save.open("x", encoding="utf-8") if args.save_seed else None
+    history = history_file.open("x", encoding="utf-8", newline="\n") if args.history else None
     methods = Methods(
         sink,
         Seed(seed, len(mesh["nodes"])) if seed else None,
         args.active,
         Sphere(0.02) if args.arc else None,
+        history,
     )
     try:
         study.reference._reference(
@@ -166,6 +173,8 @@ def execute(args):
         complete = False
         stop = str(e)
     finally:
+        if history:
+            history.close()
         if sink:
             sink.close()
     output.write_text(
@@ -193,9 +202,11 @@ def execute(args):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("folder", type=Path)
-    p.add_argument("--steps", type=int, choices=(256, 512, 1024), required=True)
+    p.add_argument("--steps", type=int, choices=(128, 256, 512, 1024), required=True)
     p.add_argument("--solver", choices=("native", "independent"), required=True)
     p.add_argument("--seed", type=Path)
+    p.add_argument("--attempt-budget-policy", choices=("fixed", "mesh_proportional"), default="fixed")
+    p.add_argument("--history", action="store_true", help="save dissipation at every accepted state")
     p.add_argument("--arc", action="store_true")
     p.add_argument("--active", action="store_true")
     p.add_argument("--save-seed", action="store_true")
