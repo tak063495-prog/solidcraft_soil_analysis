@@ -1,0 +1,109 @@
+{
+  "decision_time_jst": "2026-11-23 20:03–20:05",
+  "start_commit": "331328faf6c8a1f6abcffc74fa3ebfb40ad6fa79",
+  "scope_rows": {
+    "a01_dry_to_002": {
+      "item": "A-01",
+      "status": "達成",
+      "scope": "乾燥18/144 Tet4、open 0.0025〜0.02 の同枝追跡",
+      "reason": "8共通座標で接触ラベル・世代一致。終端変位差 3.89224e−12 / 3.70035e−12 m。",
+      "evidence": "interim/2026-11-23-impl-root-causes-a-nc/validation.json"
+    },
+    "a01_open_0125": {
+      "item": "A-01",
+      "status": "未達",
+      "scope": "open 0.125 までの同枝全場",
+      "reason": "0.02を越えた補正候補で両系とも元の接触状態から外れる。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/results/a01.json"
+    },
+    "a01_wet_ownership": {
+      "item": "A-01",
+      "status": "未達",
+      "scope": "湿潤時の面所有",
+      "reason": "乾燥2界面の検証範囲外。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/README.ja.md"
+    },
+    "a01_instability": {
+      "item": "A-01",
+      "status": "未達",
+      "scope": "物理的不安定の有無",
+      "reason": "局所の接触遷移から構造全体の不安定は確定できない。分類D。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/results/a01.json"
+    },
+    "a02_compression": {
+      "item": "A-02",
+      "status": "達成",
+      "scope": "共有先端・整合圧縮施工",
+      "reason": "本体4 BIRTH 増分。全243成分最大差 6.1602e−15 kN。",
+      "evidence": "interim/2026-11-23-impl-root-causes-a-nc/validation.json"
+    },
+    "a02_shear_pads": {
+      "item": "A-02",
+      "status": "達成",
+      "scope": "独立にすべり・除荷した2面の非一様せん断を BIRTH で移行",
+      "reason": "全243力成分・32 GP traction を照合。全GPで摩擦余裕が正。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/results/a02.json"
+    },
+    "a02_original": {
+      "item": "A-02",
+      "status": "検証対象外",
+      "scope": "旧 S1-A",
+      "reason": "物理的に不整合な入力のため検証対象外（拒否は正しい挙動）。",
+      "evidence": "interim/2026-11-23-impl-root-causes-a-nc/README.ja.md"
+    },
+    "a04_saturated": {
+      "item": "A-04",
+      "status": "達成",
+      "scope": "飽和先行施工・整合した切断面の水頭と外水荷重",
+      "reason": "12 Tet4、24状態×49場。",
+      "evidence": "interim/2026-11-23-impl-root-causes-a-nc/validation.json"
+    },
+    "a04_unsaturated": {
+      "item": "A-04",
+      "status": "未達",
+      "scope": "未飽和面の状態則・開口体積・流路",
+      "reason": "今後の問題設定。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/README.ja.md"
+    },
+    "a04_richards": {
+      "item": "A-04",
+      "status": "未達",
+      "scope": "一般 Richards 湿潤 JOINT の連成",
+      "reason": "一般の ONE_WAY・双方向連成の検証は今後の問題設定。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/README.ja.md"
+    },
+    "c02_measures": {
+      "item": "C-02",
+      "status": "達成",
+      "scope": "指定された主量・局所確認量を小型二格子の共通448時点で算出",
+      "reason": "主量は面積重み L2 と符号付き面積積分差。点 L2 は局所確認用。",
+      "evidence": "interim/2026-11-23-impl-root-causes-c/c02-results.json"
+    },
+    "c02_accuracy": {
+      "item": "C-02",
+      "status": "未達",
+      "scope": "空間誤差の定量受入",
+      "reason": "許容幅の参照が得られるまで判定保留。",
+      "evidence": "interim/2026-11-23-impl-root-causes-c/c02-results.json"
+    },
+    "c03_comparison": {
+      "item": "C-03",
+      "status": "達成",
+      "scope": "MC 12 Tet10 の材料／接触細分と実装間で同時刻の全保存場を照合",
+      "reason": "m0/m1=1e−4/5e−5、c0/c1=1e−4/5e−5 m、7比較×224座標×23場。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/results/c03.json"
+    },
+    "c03_accuracy": {
+      "item": "C-03",
+      "status": "未達",
+      "scope": "全場差の定量受入",
+      "reason": "比較方法を確定。全場の許容幅は参照待ち、判定保留。",
+      "evidence": "interim/2026-11-23-ac-scope-decisions/results/c03.json"
+    }
+  },
+  "evidence_sha256": {
+    "a01": "2c328fb8f695583b0dd6cdb92708352c77f179d60bfd27e5961aa129e5a8300b",
+    "a02": "053b2684bf3b6b114ea76e002432c2a54ca8598c6fced2330105deb4ffc64b1a",
+    "c03": "cb7027645566dd25087345632691d77395e9483edd0d81ca207e179d8c5eba3a"
+  }
+}

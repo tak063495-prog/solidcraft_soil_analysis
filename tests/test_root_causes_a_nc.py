@@ -1,6 +1,7 @@
 """Exercise both admissible construction inputs through the production CLI."""
 import gzip
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -54,3 +55,60 @@ class TestConstructionTransfer(unittest.TestCase):
                     self.assertEqual(direct["stop"], "equilibrated candidate differs from accepted contact branch")
                     self.assertTrue(all(row["result_checkpoint"] == row["parent"]
                                         for row in direct["trials"] if not row["accepted"]))
+
+
+SCOPE_STUDY = ROOT / "interim/2026-11-23-ac-scope-decisions"
+
+
+class ScopeDecisions(unittest.TestCase):
+    def test_nonuniform_unloaded_sliding_pads_transfer_all_components(self):
+        spec = importlib.util.spec_from_file_location(
+            "ac_scope_shear_transfer", SCOPE_STUDY / "shear_transfer.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        suffix = ".exe" if os.name == "nt" else ""
+        probe = ROOT / "target/release/examples" / ("joint_a02_projection_probe" + suffix)
+        subprocess.run(
+            ["cargo", "build", "--release", "--locked", "--example", "joint_a02_projection_probe"],
+            cwd=ROOT,
+            check=True,
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            result = module.solve(probe, Path(tmp) / "transfer")
+        self.assertEqual([p["reference_kpa"] for p in result["pads"]], [[13, 0, -60], [0, -8, -40]])
+        self.assertEqual((result["nodes"], result["gp"]), (81, 32))
+        self.assertLessEqual(result["maximum_nodal_component_error_kn"], 1e-10)
+        self.assertGreater(result["minimum_gp_cone_margin_kpa"], 0)
+
+    def test_corrected_arrivals_depart_from_old_branch_on_the_same_points(self):
+        data = json.loads((SCOPE_STUDY / "results/a01.json").read_bytes())
+        for size, first_gp in (("18", 4), ("144", 11)):
+            pairs = list(zip(data[size]["native"], data[size]["independent"], strict=True))
+            self.assertEqual(len(pairs), 10)
+            for native, independent in pairs:
+                self.assertEqual(native["ds"], independent["ds"])
+                self.assertEqual(native["accepted"], independent["accepted"])
+                self.assertEqual(native["corrected"]["events"], independent["corrected"]["events"])
+                self.assertEqual(native["corrected"]["stored_label_mismatches"], [])
+            self.assertEqual(pairs[0][0]["parent_progress"], 0.02)
+            self.assertTrue(pairs[0][0]["accepted"])
+            self.assertEqual(pairs[1][0]["corrected"]["changed"][0]["gp"], first_gp)
+            self.assertEqual(pairs[-1][0]["corrected"]["changed"][0]["candidate"], "slip")
+
+    def test_scope_ledger_binds_results_and_keeps_accuracy_decisions_pending(self):
+        scoped = json.loads((SCOPE_STUDY / "scope-rows.json").read_bytes())
+        rows = scoped["scope_rows"]
+        self.assertEqual(rows["a01_dry_to_002"]["status"], "達成")
+        self.assertEqual(rows["a02_original"]["status"], "検証対象外")
+        for key in ("a01_open_0125", "a01_wet_ownership", "a01_instability",
+                    "a04_unsaturated", "a04_richards", "c02_accuracy", "c03_accuracy"):
+            self.assertEqual(rows[key]["status"], "未達")
+        self.assertEqual(set(scoped["evidence_sha256"]), {"a01", "a02", "c03"})
+        for case, digest in scoped["evidence_sha256"].items():
+            evidence = SCOPE_STUDY / "results" / (case + ".json")
+            self.assertEqual(hashlib.sha256(evidence.read_bytes()).hexdigest(), digest)
+        c03 = json.loads((SCOPE_STUDY / "results/c03.json").read_bytes())
+        self.assertEqual(len(c03["full_fields"]), 7)
+        for pair in c03["full_fields"].values():
+            self.assertEqual((pair["accepted"], len(pair["fields"])), (224, 23))
