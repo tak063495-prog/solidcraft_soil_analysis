@@ -47,3 +47,7 @@ python interim/2026-11-23-b01-b02-refined-cases/refined.py runs/b01-b02-refined
 python -m unittest discover -s tests -p test_refined_shell_cases.py -v
 python interim/2026-12-06-p6-01-status-reconciliation/audit_status.py
 ```
+
+## P6-01 への登録
+
+4つの変位照合と A1 の原因調査を別々の5証拠として登録した。各行の原票を公開コミット `bd0a479cda71a16004b245d19142d5e7d50ebd3a` に固定し、Git blob SHA-1、SHA-256、型付きの合否を照合する。既存の包括行を保持した。[P6-01 追補台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
