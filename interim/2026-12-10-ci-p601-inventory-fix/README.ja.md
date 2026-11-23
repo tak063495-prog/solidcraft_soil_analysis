@@ -104,3 +104,5 @@ CI の成功から合格へ昇格させない。キャンセル、時間切れ�
 ## 2026-11-23 JST　NC-01 の追補行
 
 348自由度の保存8系の限定受入、96 Tet10 本計算の終端棄却、元の全撤去の未達・分類 D を別行で登録した。追補 ID は `nc01-t9d-scope-ledger`。[追補行](../2026-11-23-nc01-t9d-verification-proposal/ledger.json)・[判定と T9 (d) 候補比較](../2026-11-23-nc01-t9d-verification-proposal/README.ja.md)
+
+2026-11-23 20:03–20:05 JST の A・C 決定を14行で追補した。達成6行、未達7行、旧 A-02 の検証対象外1行を各行の適用範囲・根拠と結び付けた。[範囲別台帳](../2026-12-06-p6-01-status-reconciliation/ledger-ac-20261123.ja.md)・[接触枝、非一様せん断と材料分類の調査](../2026-11-23-ac-scope-decisions/README.ja.md)
