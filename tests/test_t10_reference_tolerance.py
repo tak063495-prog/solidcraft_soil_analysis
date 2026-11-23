@@ -1,5 +1,6 @@
 """T10 compares only the approved probes; an unmet gate is a reportable result."""
 
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -97,6 +98,11 @@ class ReferenceWidths(unittest.TestCase):
 
     def test_work_from_prescribed_slip_and_effective_pressure(self):
         self.assertTrue(all(r["passed"] for r in study.edf_force_points()))
+        saved = json.loads((HERE / "publication-checks.json").read_bytes())
+        printed = study.published_force_points()
+        self.assertEqual(printed, saved["SSNP162D"]["force_points"])
+        self.assertTrue(all(row["passed"] for row in printed))
+        self.assertEqual([r["reference"] for r in printed], [1e5, -1244566.6, 1244647])
         patch = study.contact_patch(
             self.binaries / "examples" / ("joint_birth_points" + self.suffix)
         )

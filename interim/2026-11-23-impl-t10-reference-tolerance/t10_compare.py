@@ -182,6 +182,15 @@ def edf_force_points():
     ]
 
 
+def published_force_points():
+    """Compare the EDF regression values to the printed model D force table."""
+    table = (1.0e5, -1.2445666e6, 1.244647e6)
+    return [
+        dict(inst=row["inst"], **relative(row["measured"], printed, 0.001))
+        for row, printed in zip(edf_force_points(), table, strict=True)
+    ]
+
+
 def contact_patch(binary):
     material = dict(
         normal_stiffness_kpa_m=1e6,
