@@ -9,9 +9,9 @@ PR #13 を取得したリポジトリのルートで実行する。Rust は rust
 ```powershell
 git fetch origin codex/plastic-spatial-convergence
 if ($LASTEXITCODE) { throw 'fetch failed' }
-git switch --detach origin/codex/plastic-spatial-convergence
+git switch --detach 51fd59c224231d0fcad162764c044eeb4202e67b
 if ($LASTEXITCODE) { throw 'checkout failed' }
-git rev-parse HEAD
+if ((git rev-parse HEAD) -ne '51fd59c224231d0fcad162764c044eeb4202e67b') { throw 'unexpected implementation revision' }
 cargo build --locked --release --example nc_history_trace
 if ($LASTEXITCODE) { throw 'build failed' }
 $Trace = (Resolve-Path target/release/examples/nc_history_trace.exe).Path
@@ -104,6 +104,26 @@ python "$T/audit_matrices.py" "$T/refined-terminal.jsonl"
 ```
 
 Windows で P6-01 台帳の全原票を検証する場合は、CI と同様に最初のチェックアウトから Git の自動改行変換を無効にした作業コピーを使う。たとえば新規クローンには `git clone -c core.autocrlf=false --branch codex/plastic-spatial-convergence <PR のリポジトリ URL> <新規フォルダ>` を使う。今回の文書、保存行列、測定 JSON、追補台帳には個別の Git 属性も指定した。
+
+## 全試験と台帳の確認
+
+実装 SHA に固定する上の PC 比較と別に、全試験には測定原票を台帳登録した PR #13 の作業コピーを使う。Linux では CI の固定版依存関係に加えて PowerShell を `NC_GATE_POWERSHELL` で指定する。以下の出力先は新規ディレクトリとする。各 Python 群の `python-test-inventory.json` に実行件数・エラー・スキップ・割当てが残る。
+
+```sh
+set -eu
+cargo fmt --all --check
+cargo clippy --locked --all-targets -- -D warnings
+cargo test --locked --release --all-targets --no-fail-fast
+cargo test --locked --release --doc
+cargo build --locked --release --bins --example nc_input_roundtrip --example nc_dense_lu_diagnostic --example wet_joint_local_path_probe
+python -m pytest -q tests/linux
+for group in python-core-0 python-core-1 python-mean-evidence python-spatial-evidence python-c01-switch python-c01-path python-c01-cause
+do
+  python tools/run_ci_python_evidence_shards.py --group "$group" --output "work/linear-verification/$group"
+done
+python interim/2026-12-06-p6-01-status-reconciliation/audit_status.py
+python interim/2026-12-07-p6-03-cloud-reconciliation/audit_status.py
+```
 
 ## 資源見積もり
 

@@ -72,3 +72,30 @@ PR #13 の作業起点は `518912cbf80b31e7a9b5736e338c8aa724681d77`。クラウ
 |B-01|屋根 n8 の内部 Cholesky 棄却2.949e−10。保存行列の一回補正2.291e−11は既往の観測で、内部解法は別経路。曲面殻の極穴半球にも線形残差による欠測がある。[屋根の因子分解監査](../2027-01-08-pc-failure-diagnosis/README.ja.md)・[T5](../2026-11-21-impl-t5-curved-tri6-shell/README.ja.md)|
 |B-02 / B-03|B-02 薄板96と768の超過は再組立残差。768の既往値は本体3.871e−10、独立1.051e−10。B-03 では本体の真の線形残差最大8.797e−11が許容内。旧結果を維持し、768・6144要素の計算は行っていない。[B-02](../2026-11-21-impl-t4-offset-plate-composite/README.ja.md)・[B-03](../2026-11-21-impl-t6-offset-kink-joint/README.ja.md)|
 |別入力 NC-01b|96 pressure の最大受理線形残差9.971e−11。独自の施工問題で全撤去に達した限定記録である。[別入力の比較](../2026-11-22-impl-nc01-option-b-physical-input/README.ja.md)|
+
+## P6-01 登録と再検証
+
+測定原票を実装コミット `51fd59c224231d0fcad162764c044eeb4202e67b` に固定した。e541fe1 と同一の登録スクリプトで全 bool/null の JSON Pointer を追補台帳に追加した。測定 SHA-256 は `b60a9de67812390c0661a5594ce1875ad35e4a106ae3facc500309a699ae6959`、Git blob は `224d8a449aeb3f34c60f98475912b2ee36fe2ecf`、追補台帳 SHA-256 は `b654414805933cfc6ebc7c8908ae088723157cb12dcd05f414027ce128ba2258`。P6-01 監査は80行・417原票・171証拠で `integrity_ok=true`。 [追補台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
+
+P6-03 の追補連鎖も6行でエラー0件。Windows で自動改行変換を有効にした Git フィルターで、新規文書・証拠と追補台帳が Git blob のバイト列に一致することを確認した。
+
+## 試験結果
+
+|クラウド Linux の検査|実行結果|
+|---|---|
+|Rust 1.99.1、全ターゲット release|518件すべて成功。105実行対象、独立の `--list` とテスト名が一致。doc-test 0件。|
+|rustfmt / Clippy|`cargo fmt --all --check`、`cargo clippy --locked --all-targets -- -D warnings` 成功。|
+|python-core-0|535件成功|
+|python-core-1|494件成功|
+|python-mean-evidence|4件成功|
+|python-spatial-evidence|4件成功|
+|python-c01-switch|4件成功|
+|python-c01-path|5件成功|
+|python-c01-cause|8件成功|
+|Linux 専用 pytest|7件成功|
+
+Python 3.13 では unittest の全1,054件が重複・欠落なく実行され、別収集の pytest と合わせて1,061件成功、失敗・エラー・スキップ0件。初回の Rust 全体実行は証拠展開時のディスク不足で1件が I/O エラーになった。容量復旧後に該当ターゲット9件が成功し、さらに全ターゲットを一括再実行した。
+
+[検証記録](verification.zip)（SHA-256 `d8efcbfa7dc1a7d15d973f5a0472e95ce4fb9e740ea60f2f85582c256c132806`）に初回と再実行の Rust ログ、テスト一覧、Python 各群の実行台帳、pytest、Clippy、P6 監査の出力を収録した。[PC の再実行手順](REPRODUCE.ja.md)
+
+NC-01 は未達・分類 D。
