@@ -31,6 +31,7 @@ def report(source):
                         point = 472/512
                     seen = next((i+1 for i,r in enumerate(rows) if r["accepted"] and r["end"]==point), None)
                     stages[stage] = dict(last_accepted=final, first_rejected_after_final=target,
+                                         last_rejected_trial=run["last_rejected"].get(stage),
                                          observation=point, attempts_to_observation=seen,
                                          full_observed_prefix=summarize(rows))
                 terminals[route] = dict(stop=run["stop"], attempts=run["counts"], stages=stages)
