@@ -1,0 +1,2741 @@
+{
+  "coarse_seeds": {
+    "native-256-base": {
+      "solver": "native",
+      "steps": 256,
+      "sha256": {
+        "mesh": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+        "ground": "bb3ffbba96527fb0edbb9a21dc6951fb779866ec08ceeb19889d9c333e47abef",
+        "case": "a0aaeeb04a2fd12445b20d243959f65a3d4da35e6eb6e391eb94da22d0222165",
+        "result": "10e5c0d5a977319c922cae78064ba24478ed47deabc542ef76ec1fc0a9bc7605",
+        "seed": "f493e583e514b32e43b0fbd0bd1861b2d5af0133adc0947c68b24c291d0b467c"
+      },
+      "attempts": 2715
+    },
+    "native-512-base": {
+      "solver": "native",
+      "steps": 512,
+      "sha256": {
+        "mesh": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+        "ground": "bb3ffbba96527fb0edbb9a21dc6951fb779866ec08ceeb19889d9c333e47abef",
+        "case": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+        "result": "fafc55e258b718d78dd251532c56940e92e578a983efaa3e563479248e179974",
+        "seed": "b46c5eedf24723f397a2c8b9fb9b771f312c8ac5234cd8efd1345b6907d8c12b"
+      },
+      "attempts": 5077
+    },
+    "independent-256-base": {
+      "solver": "independent",
+      "steps": 256,
+      "sha256": {
+        "mesh": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+        "ground": "bb3ffbba96527fb0edbb9a21dc6951fb779866ec08ceeb19889d9c333e47abef",
+        "case": "a0aaeeb04a2fd12445b20d243959f65a3d4da35e6eb6e391eb94da22d0222165",
+        "result": "161c619946066a98e704541fb78851551cffe6965f957a90f4d5eaab192710d9",
+        "seed": "8e6b439ab1174eb7677da7967b6078696186ca15901201a9c87ad6f7431aa4d6"
+      },
+      "attempts": 2695
+    },
+    "independent-512-base": {
+      "solver": "independent",
+      "steps": 512,
+      "sha256": {
+        "mesh": "76c1586e1529c116a5f09e15171772490d34ff918d76ef7b4f31fdd878d3a8c3",
+        "ground": "bb3ffbba96527fb0edbb9a21dc6951fb779866ec08ceeb19889d9c333e47abef",
+        "case": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+        "result": "9e2e6f8b4d86505b76a6846a2a3544e14e377612750f58968194bfb127c539f8",
+        "seed": "cae0e98203b89aef513a687a02c588d4726a27b00d569ccd9ee6dd38c20008c9"
+      },
+      "attempts": 5056
+    }
+  },
+  "routes": [
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "base",
+      "complete": true,
+      "total_attempts": 5077,
+      "reload_attempts": 1110,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "fafc55e258b718d78dd251532c56940e92e578a983efaa3e563479248e179974",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "complete": true,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 3.0426047830551536e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 543,
+            "attempts": 574,
+            "last_accepted": 1.0,
+            "max_force": 7.791904929249178e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 31
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 853,
+            "attempts": 935,
+            "last_accepted": 1.0,
+            "max_force": 8.940477180300615e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 82
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 739,
+            "attempts": 808,
+            "last_accepted": 1.0,
+            "max_force": 9.964088401525047e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 69
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 5.2278562208473545e-14,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1013,
+            "attempts": 1110,
+            "last_accepted": 1.0,
+            "max_force": 9.995549242203416e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 97
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 566,
+            "attempts": 626,
+            "last_accepted": 1.0,
+            "max_force": 9.683020401542928e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 60
+            },
+            "stage": "return"
+          }
+        ],
+        "stop": null
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "w",
+      "complete": true,
+      "total_attempts": 5062,
+      "reload_attempts": 1100,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "42282a99f750bcc33e26c81d334491a1f70e9ab909e5f2585475574109003024",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "arc_reviews": 0,
+        "complete": true,
+        "seed_queries": 15186,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 6.087792802860899e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 543,
+            "attempts": 574,
+            "last_accepted": 1.0,
+            "max_force": 8.2093278007843e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 31
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 840,
+            "attempts": 925,
+            "last_accepted": 1.0,
+            "max_force": 9.982503993420977e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 85
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 742,
+            "attempts": 812,
+            "last_accepted": 1.0,
+            "max_force": 9.45061864124676e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 70
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 8.742485784413539e-13,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1000,
+            "attempts": 1100,
+            "last_accepted": 1.0,
+            "max_force": 9.60871691805435e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 100
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 566,
+            "attempts": 627,
+            "last_accepted": 1.0,
+            "max_force": 9.002318706681736e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 61
+            },
+            "stage": "return"
+          }
+        ],
+        "stop": null
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "s",
+      "complete": true,
+      "total_attempts": 5062,
+      "reload_attempts": 1095,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "e2319fd0b0c790f2d12a90ac74edc48be378df8aa313b8e002e4be2ff5440761",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "arc_reviews": 0,
+        "complete": true,
+        "seed_queries": 0,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 3.029766127189555e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 543,
+            "attempts": 574,
+            "last_accepted": 1.0,
+            "max_force": 5.372938936604384e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 31
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 851,
+            "attempts": 940,
+            "last_accepted": 1.0,
+            "max_force": 9.653681985445485e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 89
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 740,
+            "attempts": 801,
+            "last_accepted": 1.0,
+            "max_force": 6.57381477480482e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 61
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 8.224984366948092e-14,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1002,
+            "attempts": 1095,
+            "last_accepted": 1.0,
+            "max_force": 9.404368235640605e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 93
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 567,
+            "attempts": 628,
+            "last_accepted": 1.0,
+            "max_force": 8.493150193941076e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 61
+            },
+            "stage": "return"
+          }
+        ],
+        "stop": null
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "a",
+      "complete": false,
+      "total_attempts": 4248,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "open",
+      "stop_progress": 0.77734375,
+      "result_sha256": "3091a89cce860ac8485a3c44d5bc174f784a0079fbd1e89b76f430bb15153d91",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "arc_reviews": 3623,
+        "complete": false,
+        "seed_queries": 0,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 3.0426047830551536e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1164,
+            "attempts": 1736,
+            "last_accepted": 1.0,
+            "max_force": 9.856137179922697e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 541,
+              "joint_global_path_error_cutback": 31
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1115,
+            "attempts": 2000,
+            "last_accepted": 0.77734375,
+            "max_force": 8.940477152234921e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 803,
+              "joint_global_path_error_cutback": 82
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "ws",
+      "complete": true,
+      "total_attempts": 5053,
+      "reload_attempts": 1098,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "a2c97651af02c8fe4cd173bdd5c3cd56f7ac467027e850726b53a59aa25cf0a1",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "arc_reviews": 0,
+        "complete": true,
+        "seed_queries": 15159,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 6.087792802860899e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 543,
+            "attempts": 574,
+            "last_accepted": 1.0,
+            "max_force": 8.209327836339245e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 31
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 838,
+            "attempts": 926,
+            "last_accepted": 1.0,
+            "max_force": 8.218139822934082e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 88
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 739,
+            "attempts": 804,
+            "last_accepted": 1.0,
+            "max_force": 6.860043747737237e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 65
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 8.748589869303359e-13,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 997,
+            "attempts": 1098,
+            "last_accepted": 1.0,
+            "max_force": 8.215814450962149e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 101
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 566,
+            "attempts": 627,
+            "last_accepted": 1.0,
+            "max_force": 8.563373668130902e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 61
+            },
+            "stage": "return"
+          }
+        ],
+        "stop": null
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "wa",
+      "complete": false,
+      "total_attempts": 6225,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "recontact",
+      "stop_progress": 0.962890625,
+      "result_sha256": "3893776340b887326a775c50a7fcbaff0a960e49499be9f7b8bca96bec9c9655",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "arc_reviews": 5528,
+        "complete": false,
+        "seed_queries": 18675,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 6.087792802860899e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1125,
+            "attempts": 1752,
+            "last_accepted": 1.0,
+            "max_force": 9.881098314930093e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 597,
+              "joint_global_path_error_cutback": 30
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1329,
+            "attempts": 1961,
+            "last_accepted": 1.0,
+            "max_force": 9.982429077121123e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 547,
+              "joint_global_path_error_cutback": 85
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 1117,
+            "attempts": 2000,
+            "last_accepted": 0.962890625,
+            "max_force": 9.450618697256898e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 813,
+              "joint_global_path_error_cutback": 70
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "sa",
+      "complete": false,
+      "total_attempts": 4260,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "open",
+      "stop_progress": 0.78689334479975,
+      "result_sha256": "58943a0f824d10afd39ba859a46ab26b48cf43034dc0f4bc6b9b2ad703daa0c9",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "arc_reviews": 3640,
+        "complete": false,
+        "seed_queries": 0,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 3.029766127189555e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1024,
+            "attempts": 1748,
+            "last_accepted": 1.0,
+            "max_force": 5.372684893005943e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 694,
+              "joint_global_path_error_cutback": 30
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1113,
+            "attempts": 2000,
+            "last_accepted": 0.78689334479975,
+            "max_force": 9.33226224346209e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 809,
+              "joint_global_path_error_cutback": 78
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 512,
+      "mode": "wsa",
+      "complete": false,
+      "total_attempts": 6292,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "recontact",
+      "stop_progress": 0.9660156249999999,
+      "result_sha256": "21035247b31c3dc9b5ec1832f83364c209cdc3e86913b7ef01994504a8708c6d",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "arc_reviews": 5596,
+        "complete": false,
+        "seed_queries": 18876,
+        "stages": [
+          {
+            "accepted": 512,
+            "attempts": 512,
+            "last_accepted": 1.0,
+            "max_force": 6.087792802860899e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1026,
+            "attempts": 1815,
+            "last_accepted": 1.0,
+            "max_force": 8.289599115231604e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 758,
+              "joint_global_path_error_cutback": 31
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1328,
+            "attempts": 1965,
+            "last_accepted": 1.0,
+            "max_force": 8.218139839737455e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 549,
+              "joint_global_path_error_cutback": 88
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 1122,
+            "attempts": 2000,
+            "last_accepted": 0.9660156249999999,
+            "max_force": 6.860043945953332e-09,
+            "rejections": {
+              "joint_arc_length_corrector": 813,
+              "joint_global_path_error_cutback": 65
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "base",
+      "complete": false,
+      "total_attempts": 8550,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.8937670337791954,
+      "stop_stage": "reload",
+      "stop_progress": 0.8937670337791954,
+      "result_sha256": "8d55ebbf9cb339fb6780a0894d3681a6a2338aded5e90d217619b8a24544d9ee",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "complete": false,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 1.525099525943868e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1086,
+            "attempts": 1148,
+            "last_accepted": 1.0,
+            "max_force": 9.57342132883425e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 62
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1672,
+            "attempts": 1769,
+            "last_accepted": 1.0,
+            "max_force": 9.970124782669156e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 97
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 1488,
+            "attempts": 1585,
+            "last_accepted": 1.0,
+            "max_force": 9.762373188279734e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 97
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 3.442055415716496e-15,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1899,
+            "attempts": 2000,
+            "last_accepted": 0.8937670337791954,
+            "max_force": 9.685360648564374e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 101
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "w",
+      "complete": false,
+      "total_attempts": 8482,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.923828125,
+      "stop_stage": "reload",
+      "stop_progress": 0.923828125,
+      "result_sha256": "4a55ccd8a20883d4beea1a6375cb187d6e02eb4cbb3fca486d604ba27d8084d6",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "arc_reviews": 0,
+        "complete": false,
+        "seed_queries": 25446,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 3.0456586463175225e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1086,
+            "attempts": 1148,
+            "last_accepted": 1.0,
+            "max_force": 6.504687923466989e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 62
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1628,
+            "attempts": 1722,
+            "last_accepted": 1.0,
+            "max_force": 9.894792275388644e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 94
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 1474,
+            "attempts": 1564,
+            "last_accepted": 1.0,
+            "max_force": 9.932211903612171e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 90
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 2.2786806319797455e-13,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1878,
+            "attempts": 2000,
+            "last_accepted": 0.923828125,
+            "max_force": 9.971898910451241e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 122
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "s",
+      "complete": false,
+      "total_attempts": 8476,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.9267578125,
+      "stop_stage": "reload",
+      "stop_progress": 0.9267578125,
+      "result_sha256": "d4a36aafbad4554d1dc6fae66848edb53dd8e049329a0512a3b8f832cd80f500",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "arc_reviews": 0,
+        "complete": false,
+        "seed_queries": 0,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 1.5232097026972918e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1086,
+            "attempts": 1148,
+            "last_accepted": 1.0,
+            "max_force": 8.244646142324547e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 62
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1634,
+            "attempts": 1713,
+            "last_accepted": 1.0,
+            "max_force": 9.922738094508232e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 79
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 1479,
+            "attempts": 1567,
+            "last_accepted": 1.0,
+            "max_force": 7.475681218841986e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 88
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 5.304416091226189e-15,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1888,
+            "attempts": 2000,
+            "last_accepted": 0.9267578125,
+            "max_force": 9.066468797389534e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 112
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "a",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6416015625,
+      "result_sha256": "debbe7d04fb58c4255fae4f2b405ed519667830c2251c1c0fc6afa62e3d1ebea",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "arc_reviews": 2000,
+        "complete": false,
+        "seed_queries": 0,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 1.525099525943868e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1314,
+            "attempts": 2000,
+            "last_accepted": 0.6416015625,
+            "max_force": 1.438836421403624e-13,
+            "rejections": {
+              "joint_arc_length_corrector": 686
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "open"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "ws",
+      "complete": false,
+      "total_attempts": 8463,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.9365234375,
+      "stop_stage": "reload",
+      "stop_progress": 0.9365234375,
+      "result_sha256": "a32ba7ed820cc506277671bb36927c8847436276c38d25ce06798ef8f7606252",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "arc_reviews": 0,
+        "complete": false,
+        "seed_queries": 25389,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 3.0456586463175225e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1086,
+            "attempts": 1148,
+            "last_accepted": 1.0,
+            "max_force": 6.504688002079924e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 62
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 1617,
+            "attempts": 1709,
+            "last_accepted": 1.0,
+            "max_force": 9.777083444477411e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 92
+            },
+            "stage": "open"
+          },
+          {
+            "accepted": 1468,
+            "attempts": 1558,
+            "last_accepted": 1.0,
+            "max_force": 9.065192302374914e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 90
+            },
+            "stage": "recontact"
+          },
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 2.2843184549526736e-13,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 1881,
+            "attempts": 2000,
+            "last_accepted": 0.9365234375,
+            "max_force": 9.86236495631851e-09,
+            "rejections": {
+              "joint_global_path_error_cutback": 119
+            },
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "wa",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6259765625,
+      "result_sha256": "fb5f840cfe8068fd692493c3b87dfe7e1dc2da00267a0ca4b95e7aa6f90608b8",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "arc_reviews": 2000,
+        "complete": false,
+        "seed_queries": 9072,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 3.0456586463175225e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1282,
+            "attempts": 2000,
+            "last_accepted": 0.6259765625,
+            "max_force": 2.876719764366467e-13,
+            "rejections": {
+              "joint_arc_length_corrector": 718
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "open"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "sa",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6416015625,
+      "result_sha256": "2554cca186ad640695e9140cdc0f25253586bfc2a50851382204af6835c729f8",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "arc_reviews": 2000,
+        "complete": false,
+        "seed_queries": 0,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 1.5232097026972918e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1314,
+            "attempts": 2000,
+            "last_accepted": 0.6416015625,
+            "max_force": 1.4389371515203942e-13,
+            "rejections": {
+              "joint_arc_length_corrector": 686
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "open"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "native",
+      "N": 1024,
+      "mode": "wsa",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6259765625,
+      "result_sha256": "fb5f840cfe8068fd692493c3b87dfe7e1dc2da00267a0ca4b95e7aa6f90608b8",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "arc_reviews": 2000,
+        "complete": false,
+        "seed_queries": 9072,
+        "stages": [
+          {
+            "accepted": 1024,
+            "attempts": 1024,
+            "last_accepted": 1.0,
+            "max_force": 3.0456586463175225e-14,
+            "rejections": {},
+            "stage": "geostatic"
+          },
+          {
+            "accepted": 1282,
+            "attempts": 2000,
+            "last_accepted": 0.6259765625,
+            "max_force": 2.876719764366467e-13,
+            "rejections": {
+              "joint_arc_length_corrector": 718
+            },
+            "stage": "shear"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "open"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "recontact"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reverse"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "reload"
+          },
+          {
+            "accepted": 0,
+            "attempts": 0,
+            "last_accepted": null,
+            "max_force": 0.0,
+            "rejections": {},
+            "stage": "return"
+          }
+        ],
+        "stop": "stage attempt budget exceeded"
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "base",
+      "complete": true,
+      "total_attempts": 5056,
+      "reload_attempts": 1102,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "9e2e6f8b4d86505b76a6846a2a3544e14e377612750f58968194bfb127c539f8",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "complete": true,
+        "stop": null,
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 1.9026212325133155e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 574,
+            "accepted": 543,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 31
+            },
+            "max_force": 9.779906285569076e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 924,
+            "accepted": 835,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 89
+            },
+            "max_force": 9.817264403542993e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 806,
+            "accepted": 740,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 66
+            },
+            "max_force": 9.81995161106536e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 5.2254750891264354e-14
+          },
+          {
+            "stage": "reload",
+            "attempts": 1102,
+            "accepted": 998,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 104
+            },
+            "max_force": 9.907842745200305e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 626,
+            "accepted": 565,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 61
+            },
+            "max_force": 9.526309866167812e-11
+          }
+        ]
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "w",
+      "complete": true,
+      "total_attempts": 5058,
+      "reload_attempts": 1102,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "f2cd2f34dc7b783936295d037e53e10aa8afc5ab7192968cb28f4f1d3ad6b5d4",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "complete": true,
+        "stop": null,
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 3.6419583481620784e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 574,
+            "accepted": 543,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 31
+            },
+            "max_force": 9.963965487339309e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 926,
+            "accepted": 833,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 93
+            },
+            "max_force": 9.953212017247522e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 806,
+            "accepted": 740,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 66
+            },
+            "max_force": 9.571549973027401e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 8.524787646221363e-13
+          },
+          {
+            "stage": "reload",
+            "attempts": 1102,
+            "accepted": 997,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 105
+            },
+            "max_force": 9.964372662326527e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 626,
+            "accepted": 565,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 61
+            },
+            "max_force": 9.900218132790173e-11
+          }
+        ],
+        "seed_queries": 15174,
+        "active_tangents": 0,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "s",
+      "complete": true,
+      "total_attempts": 5066,
+      "reload_attempts": 1102,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "089460834b7173dd94bc91a2b55f2688991800c95fa8a0c6f7c0111b5a898bc0",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "complete": true,
+        "stop": null,
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 2.78796390408663e-16
+          },
+          {
+            "stage": "shear",
+            "attempts": 574,
+            "accepted": 543,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 31
+            },
+            "max_force": 9.886369676966736e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 926,
+            "accepted": 833,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 93
+            },
+            "max_force": 9.804330741572997e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 814,
+            "accepted": 743,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 71
+            },
+            "max_force": 9.732133247685778e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 8.09010398148578e-14
+          },
+          {
+            "stage": "reload",
+            "attempts": 1102,
+            "accepted": 997,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 105
+            },
+            "max_force": 9.958785355706911e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 626,
+            "accepted": 565,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 61
+            },
+            "max_force": 9.177376794689344e-11
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 32438,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "a",
+      "complete": false,
+      "total_attempts": 4154,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "open",
+      "stop_progress": 0.8943152197997473,
+      "result_sha256": "1dba5e4519ad30872bcded96882c6f874e7c92aebf7f564a1dc0acc1a023452c",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 1.9026212325133155e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 1642,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {
+              "arc_correction": 587,
+              "path_error": 31
+            },
+            "max_force": 9.997393971159895e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 2000,
+            "accepted": 1215,
+            "last_accepted": 0.8943152197997473,
+            "rejections": {
+              "path_error": 89,
+              "arc_correction": 696
+            },
+            "max_force": 9.817271084673535e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 0,
+        "arc_reviews": 3522
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "ws",
+      "complete": true,
+      "total_attempts": 5059,
+      "reload_attempts": 1104,
+      "reload_accepted": 1.0,
+      "stop_stage": null,
+      "stop_progress": null,
+      "result_sha256": "87a47607694d04ccb483d195e57548ee54f8ad396eb5d487f53e19b4e074b403",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "complete": true,
+        "stop": null,
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 3.6419583481620784e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 574,
+            "accepted": 543,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 31
+            },
+            "max_force": 9.964004709188972e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 925,
+            "accepted": 834,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 91
+            },
+            "max_force": 9.922876893483113e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 806,
+            "accepted": 740,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 66
+            },
+            "max_force": 9.620971276173336e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 8.524500473034984e-13
+          },
+          {
+            "stage": "reload",
+            "attempts": 1104,
+            "accepted": 998,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 106
+            },
+            "max_force": 9.964299368160501e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 626,
+            "accepted": 565,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 61
+            },
+            "max_force": 9.931785292475458e-11
+          }
+        ],
+        "seed_queries": 15177,
+        "active_tangents": 11076,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "wa",
+      "complete": false,
+      "total_attempts": 4150,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "open",
+      "stop_progress": 0.947265625,
+      "result_sha256": "6d64302f7eda30dc891f937cc4e22c506d30ddb5cbd99bf587f2ca72a0363e02",
+      "case_sha256": "1781108286283beb5dbdd17dbc28c24ef79334e8989347bde51f4eabc3b8f6c5",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 3.6419583481620784e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 1638,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {
+              "arc_correction": 583,
+              "path_error": 31
+            },
+            "max_force": 9.993194690544111e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 2000,
+            "accepted": 1268,
+            "last_accepted": 0.947265625,
+            "rejections": {
+              "path_error": 93,
+              "arc_correction": 639
+            },
+            "max_force": 9.953212828382055e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 12450,
+        "active_tangents": 0,
+        "arc_reviews": 3514
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "sa",
+      "complete": false,
+      "total_attempts": 4319,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "open",
+      "stop_progress": 0.8671875,
+      "result_sha256": "73fb236c629b50420027c4b1e91191f84817c48791b795caf78c0d642d8a6743",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 2.78796390408663e-16
+          },
+          {
+            "stage": "shear",
+            "attempts": 1807,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {
+              "arc_correction": 753,
+              "path_error": 30
+            },
+            "max_force": 9.870107693742821e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 2000,
+            "accepted": 1186,
+            "last_accepted": 0.8671875,
+            "rejections": {
+              "path_error": 93,
+              "arc_correction": 721
+            },
+            "max_force": 9.898491103759088e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 19656,
+        "arc_reviews": 3684
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 512,
+      "mode": "wsa",
+      "complete": false,
+      "total_attempts": 4326,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "open",
+      "stop_progress": 0.947265625,
+      "result_sha256": "f963231a41802d4259187a842970c373e9833acd274018e5c04f3f1cb294592a",
+      "case_sha256": "9930111cd247128d7bdf702786362ab1218d9452150260a9fbf340cf4203f9ac",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 512,
+            "accepted": 512,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 3.6419583481620784e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 1814,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {
+              "arc_correction": 759,
+              "path_error": 31
+            },
+            "max_force": 9.965723352065492e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 2000,
+            "accepted": 1269,
+            "last_accepted": 0.947265625,
+            "rejections": {
+              "path_error": 91,
+              "arc_correction": 640
+            },
+            "max_force": 9.922868339207865e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 12978,
+        "active_tangents": 4839,
+        "arc_reviews": 3692
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "base",
+      "complete": false,
+      "total_attempts": 8458,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.93359375,
+      "stop_stage": "reload",
+      "stop_progress": 0.93359375,
+      "result_sha256": "e4f769b5dbb1ab422b451d21772e4b5bf86028a81a956d82db4b49d8fe2dfeb9",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 9.439029655106956e-15
+          },
+          {
+            "stage": "shear",
+            "attempts": 1148,
+            "accepted": 1086,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 62
+            },
+            "max_force": 9.776986933701747e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 1713,
+            "accepted": 1620,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 93
+            },
+            "max_force": 9.927110445645245e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 1549,
+            "accepted": 1465,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 84
+            },
+            "max_force": 9.727918580737486e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 3.3631825683846747e-15
+          },
+          {
+            "stage": "reload",
+            "attempts": 2000,
+            "accepted": 1879,
+            "last_accepted": 0.93359375,
+            "rejections": {
+              "path_error": 121
+            },
+            "max_force": 9.93716151957221e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 0,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "w",
+      "complete": false,
+      "total_attempts": 8449,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.9345703125,
+      "stop_stage": "reload",
+      "stop_progress": 0.9345703125,
+      "result_sha256": "2d51fe0901d49c260980c31b5b9b62fba8ddad301639fdb629f32b9514510837",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 1.9024423093463246e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 1148,
+            "accepted": 1086,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 62
+            },
+            "max_force": 8.73798578896931e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 1711,
+            "accepted": 1617,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 94
+            },
+            "max_force": 9.486397177521844e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 1542,
+            "accepted": 1459,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 83
+            },
+            "max_force": 9.160637460760668e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 2.2442925822328293e-13
+          },
+          {
+            "stage": "reload",
+            "attempts": 2000,
+            "accepted": 1880,
+            "last_accepted": 0.9345703125,
+            "rejections": {
+              "path_error": 120
+            },
+            "max_force": 9.994548331053977e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 25347,
+        "active_tangents": 0,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "s",
+      "complete": false,
+      "total_attempts": 8450,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.9345703125,
+      "stop_stage": "reload",
+      "stop_progress": 0.9345703125,
+      "result_sha256": "b4703d1dcbedb3f4b7f4874be8bab9112af019e34aad2d95cb5e40cf23e54824",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 4.14048223361382e-16
+          },
+          {
+            "stage": "shear",
+            "attempts": 1148,
+            "accepted": 1086,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 62
+            },
+            "max_force": 9.891264575846255e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 1708,
+            "accepted": 1615,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 93
+            },
+            "max_force": 9.444615118660852e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 1546,
+            "accepted": 1462,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 84
+            },
+            "max_force": 9.167820512023652e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 5.207891644587621e-15
+          },
+          {
+            "stage": "reload",
+            "attempts": 2000,
+            "accepted": 1880,
+            "last_accepted": 0.9345703125,
+            "rejections": {
+              "path_error": 120
+            },
+            "max_force": 9.947226614139011e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 50534,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "a",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6259765625,
+      "result_sha256": "25c398646f5299ecead4f4c062af66df4f5b5651b4758be754bf8d55193f294b",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 9.439029655106956e-15
+          },
+          {
+            "stage": "shear",
+            "attempts": 2000,
+            "accepted": 1282,
+            "last_accepted": 0.6259765625,
+            "rejections": {
+              "arc_correction": 718
+            },
+            "max_force": 5.210547474719958e-15
+          },
+          {
+            "stage": "open",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 0,
+        "arc_reviews": 2000
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "ws",
+      "complete": false,
+      "total_attempts": 8447,
+      "reload_attempts": 2000,
+      "reload_accepted": 0.9365234375,
+      "stop_stage": "reload",
+      "stop_progress": 0.9365234375,
+      "result_sha256": "0bd83bd9318efaeaceedc741160f68f35390bafe3dc87699aa87ae322f74bea0",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 1.9024423093463246e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 1148,
+            "accepted": 1086,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 62
+            },
+            "max_force": 8.737923145823703e-11
+          },
+          {
+            "stage": "open",
+            "attempts": 1707,
+            "accepted": 1616,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 91
+            },
+            "max_force": 9.987368399239333e-11
+          },
+          {
+            "stage": "recontact",
+            "attempts": 1544,
+            "accepted": 1461,
+            "last_accepted": 1.0,
+            "rejections": {
+              "path_error": 83
+            },
+            "max_force": 9.983495462692842e-11
+          },
+          {
+            "stage": "reverse",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 2.2487266842468056e-13
+          },
+          {
+            "stage": "reload",
+            "attempts": 2000,
+            "accepted": 1881,
+            "last_accepted": 0.9365234375,
+            "rejections": {
+              "path_error": 119
+            },
+            "max_force": 9.994558130846003e-11
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 25341,
+        "active_tangents": 15668,
+        "arc_reviews": 0
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "wa",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6259765625,
+      "result_sha256": "9e1658e76d0040522fdab232c866dd4b15c07456d54738e827351584e6688722",
+      "case_sha256": "553dedfd47504f9c6966c69ef183026c2e5b2cf1bcc9fd245dd3cec044c45749",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 1.9024423093463246e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 2000,
+            "accepted": 1282,
+            "last_accepted": 0.6259765625,
+            "rejections": {
+              "arc_correction": 718
+            },
+            "max_force": 1.049767561341724e-14
+          },
+          {
+            "stage": "open",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 9072,
+        "active_tangents": 0,
+        "arc_reviews": 2000
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "sa",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6259765625,
+      "result_sha256": "c6b0672531db2a518cf252d688610f4dfc69338dd2f536c4b63f9900650f5eaa",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 4.14048223361382e-16
+          },
+          {
+            "stage": "shear",
+            "attempts": 2000,
+            "accepted": 1282,
+            "last_accepted": 0.6259765625,
+            "rejections": {
+              "arc_correction": 718
+            },
+            "max_force": 7.197552211682129e-16
+          },
+          {
+            "stage": "open",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 0,
+        "active_tangents": 9072,
+        "arc_reviews": 2000
+      }
+    },
+    {
+      "solver": "independent",
+      "N": 1024,
+      "mode": "wsa",
+      "complete": false,
+      "total_attempts": 3024,
+      "reload_attempts": 0,
+      "reload_accepted": null,
+      "stop_stage": "shear",
+      "stop_progress": 0.6259765625,
+      "result_sha256": "9e1658e76d0040522fdab232c866dd4b15c07456d54738e827351584e6688722",
+      "case_sha256": "96a83dbc218ad8d96155b549ac8b14be06fff081c01dcb8da5a76b055a75c2f3",
+      "details": {
+        "complete": false,
+        "stop": "independent stage attempt budget",
+        "stages": [
+          {
+            "stage": "geostatic",
+            "attempts": 1024,
+            "accepted": 1024,
+            "last_accepted": 1.0,
+            "rejections": {},
+            "max_force": 1.9024423093463246e-14
+          },
+          {
+            "stage": "shear",
+            "attempts": 2000,
+            "accepted": 1282,
+            "last_accepted": 0.6259765625,
+            "rejections": {
+              "arc_correction": 718
+            },
+            "max_force": 1.049767561341724e-14
+          },
+          {
+            "stage": "open",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "recontact",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reverse",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "reload",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          },
+          {
+            "stage": "return",
+            "attempts": 0,
+            "accepted": 0,
+            "last_accepted": null,
+            "rejections": {},
+            "max_force": 0.0
+          }
+        ],
+        "seed_queries": 9072,
+        "active_tangents": 0,
+        "arc_reviews": 2000
+      }
+    }
+  ]
+}

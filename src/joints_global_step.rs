@@ -33,6 +33,9 @@ pub struct PathErrorControl {
     /// Record the first signed-gap zero. The bisection control varies only rejected steps.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub event_comparison: Option<EventComparison>,
+    /// Use the generalized derivative of the open, sticking or sliding active branch.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub semismooth_contact: bool,
     /// Lower bound on local return-map subdivisions for every coarse and half trial.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub minimum_contact_substeps: Option<usize>,

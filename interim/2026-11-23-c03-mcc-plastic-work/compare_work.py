@@ -31,6 +31,31 @@ def summarize(rows, force_tolerance):
                 max_force_residual=max(r["relative_force_residual"] for r in rows))
 
 
+def audit_force(out):
+    """Apply the survey's published residual criterion to the saved increments."""
+    path = out / "increments.csv"
+    by_route = {}
+    with path.open(encoding="utf-8", newline="") as stream:
+        for row in csv.DictReader(stream):
+            key = row["case"] + "-" + row["solver"]
+            by_route.setdefault(key, []).append(float(row["relative_force_residual"]))
+    if set(by_route) != {c + "-" + s for c in SIZES for s in ("native", "independent")}:
+        raise ValueError("incomplete force audit")
+    if any(len(values) != 224 or not all(math.isfinite(v) for v in values) for values in by_route.values()):
+        raise ValueError("incomplete force history")
+    limit = 1e-10
+    exceed = {key: sum(v > limit for v in values) for key, values in by_route.items()}
+    return dict(
+        increments_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        criterion=limit,
+        all_within_criterion=not any(exceed.values()),
+        exceeded=exceed,
+        maxima={key: max(values) for key, values in by_route.items()},
+        scopes=[dict(id="force_all_points", status="未達" if any(exceed.values()) else "達成",
+                     scope="原因調査の全受理点1e−10を各経路224座標で照合。")],
+    )
+
+
 def compare(root, out):
     out.mkdir()
     histories, totals, pairs, digests = {}, {}, {}, {}
@@ -79,6 +104,7 @@ def compare(root, out):
     for case in SIZES:
         pair(case+"-native",case+"-independent","solver")
     write(out/"summary.json",dict(components=QUANTITIES,totals=totals,pairs=pairs,inputs_and_traces_sha256=digests))
+    write(out/"force-audit.json", audit_force(out))
     # Each ledger row has a distinct scope. No physical acceptance inferred from executing a comparison.
     scopes = [
         ("work_evaluated","達成","本体・独立の6経路、324 GP・224受理座標。全材料内分割の終端状態を保存状態と完全一致照合。"),

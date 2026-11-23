@@ -3354,6 +3354,28 @@ impl<'a> Model<'a> {
                 }
             }
         }
+        if let Some(observer) = self.observer
+            && let Some(seed) = observer.c01_initial_displacement(stage, progress)?
+        {
+            if seed.len() != u.len() || !seed.iter().flatten().all(|x| x.is_finite()) {
+                return Err(Error::Control("invalid C-01 displacement predictor".into()));
+            }
+            if let Some(transform) = &dofs.transform {
+                let flat: Vec<_> = seed.into_iter().flatten().collect();
+                let free = transform.expand(&transform.reduce(&flat));
+                for (g, value) in free.into_iter().enumerate() {
+                    if dofs.active_nodes[g / 3] {
+                        u[g / 3][g % 3] = transform.offset[g] + value;
+                    }
+                }
+            } else {
+                for (g, index) in dofs.map.iter().enumerate() {
+                    if index.is_some() {
+                        u[g / 3][g % 3] = seed[g / 3][g % 3];
+                    }
+                }
+            }
+        }
         let diagnostic = self
             .observer
             .filter(|o| o.diagnostic_enabled(stage, progress));
@@ -5389,6 +5411,9 @@ fn equilibrate(
                     rejected_trial_load_changed: false,
                     linear_solves: linear,
                 });
+                if let Some(observer) = model.observer {
+                    observer.on_accepted_displacement(0, next, &t.state.displacement_m)?;
+                }
                 report.last_committed = t.state;
                 report.progress = next;
                 if global_control.is_some() {
@@ -5415,7 +5440,7 @@ fn equilibrate(
                         cfg.maximum_initial_engineering_strain
                     )
                 } else if path_error_cutback {
-                    "joint_global_path_error_cutback".into()
+                    joint_path_error.as_ref().unwrap().rejection_reason().into()
                 } else if switch_cutback {
                     "joint_global_switch_cutback".into()
                 } else if injected {
@@ -6714,6 +6739,13 @@ fn solve_controlled(
                 .map_or_else(|_| vec![], |t| t.contact_predictors.clone());
             match trial {
                 Ok(t) if !force_reject && !switch_cutback && !path_error_cutback => {
+                    if let Some(observer) = model.observer {
+                        observer.on_accepted_displacement(
+                            stage_index + 1,
+                            next,
+                            &t.state.displacement_m,
+                        )?;
+                    }
                     committed = t.state;
                     progress = next;
                     if global_control.is_some() {
@@ -6772,7 +6804,7 @@ fn solve_controlled(
                         injected.insert(stage.name().to_string());
                         "verification_injected_rejection_after_convergence".into()
                     } else if path_error_cutback {
-                        "joint_global_path_error_cutback".into()
+                        joint_path_error.as_ref().unwrap().rejection_reason().into()
                     } else if switch_cutback {
                         "joint_global_switch_cutback".into()
                     } else {

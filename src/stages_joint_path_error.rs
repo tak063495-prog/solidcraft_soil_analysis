@@ -29,6 +29,18 @@ pub struct PathErrorAudit {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub first_gap_zero: Option<(f64, usize)>,
     pub reject: bool,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub arc_correction: bool,
+}
+
+impl PathErrorAudit {
+    pub(super) fn rejection_reason(&self) -> &'static str {
+        if self.arc_correction {
+            "joint_arc_length_corrector"
+        } else {
+            "joint_global_path_error_cutback"
+        }
+    }
 }
 
 impl Model<'_> {
@@ -200,6 +212,7 @@ impl Model<'_> {
             fine_linear_solves: fine.linear_solves,
             proposed_increment: None,
             first_gap_zero: None,
+            arc_correction: false,
             reject: maximum_slip_error_m > slip_budget_m
                 || maximum_dissipation_error_kpa_m > dissipation_budget_kpa_m,
         };
@@ -261,6 +274,24 @@ impl Model<'_> {
                 .max(settings.minimum_increment)
             };
             audit.proposed_increment = Some(next.min(base));
+        }
+        if let Some(observer) = self.observer
+            && let Some(size) = observer.c01_arc_retry(crate::stage_control::ArcSample {
+                stage: coarse.state.stage_index,
+                start,
+                end: start + h,
+                base,
+                old_u: &old.displacement_m,
+                trial_u: &coarse.state.displacement_m,
+                path_rejected: audit.reject,
+            })
+        {
+            if audit.reject || !size.is_finite() || size <= 0. || size > base {
+                return Err(Error::Control("invalid arc-length correction".into()));
+            }
+            audit.arc_correction = true;
+            audit.reject = true;
+            audit.proposed_increment = Some(size);
         }
         Ok((coarse, Some(audit)))
     }

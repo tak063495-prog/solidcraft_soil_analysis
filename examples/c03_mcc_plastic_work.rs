@@ -215,16 +215,22 @@ mod tests {
     use super::work;
     #[test]
     fn hydrostatic_and_deviatoric_work_use_engineering_shear() {
+        // Isotropic yield at p'=pc and associated compression.
         assert_eq!(
-            work(&[8., 8., 8., 0., 0., 0.], [0.25, 0.25, 0.25, 0., 0., 0.]),
-            [6., 6., 0.]
+            work(
+                &[100., 100., 100., 0., 0., 0.],
+                [1. / 1024., 1. / 1024., 1. / 1024., 0., 0., 0.]
+            ),
+            [300. / 1024., 300. / 1024., 0.]
         );
-        let result = work(&[2., -1., -1., 0., 0., 0.], [2., -1., -1., 0., 0., 0.]);
-        assert_eq!(result, [6., 0., 6.]);
-        let shear = work(&[0., 0., 0., 4., 0., 0.], [0., 0., 0., 0.5, 0., 0.]);
-        assert_eq!(shear[0], 2.);
-        let rotated = work(&[0., 0., 0., 4., 0., 0.], [0., 0., 0., 0., 0.5, 0.]);
-        assert_eq!(rotated[0], 0.);
-        assert!(rotated[2] > 0.);
+        // At p'=100, pc=200, M=1.2, q=120 the associated flow is isochoric.
+        // Rotate the same principal stress and flow together into the xy and yz planes.
+        for (sigma, flow) in [
+            ([180., 60., 60., 0., 0., 0.], [4., -2., -2., 0., 0., 0.]),
+            ([120., 120., 60., 60., 0., 0.], [1., 1., -2., 6., 0., 0.]),
+            ([60., 120., 120., 0., 60., 0.], [-2., 1., 1., 0., 6., 0.]),
+        ] {
+            assert_eq!(work(&sigma, flow.map(|v| v / 512.)), [0.9375, 0., 0.9375]);
+        }
     }
 }

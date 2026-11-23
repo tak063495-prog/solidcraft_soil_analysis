@@ -115,7 +115,7 @@ def event_proposal(audit, gaps, progress, steps, minimum):
     return min(base, max(minimum, desired))
 
 
-def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None, switch_bisections=None, path_error=None, attempt_sink=None):
+def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume, cut_volume=False, history_sink=None, *, maximum_m=None, maximum_dofs=300, progress_grids=None, switch_bisections=None, path_error=None, attempt_sink=None, methods=None):
     assert isinstance(steps, int) and steps >= 2
     assert isinstance(contact_steps, int) and contact_steps >= 1
     assert order >= 3
@@ -241,7 +241,8 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
     def increment(load, factor, name, progress, previous=0., *, probe=False, start_load=None, start_factor=None):
         nonlocal u, jump, traction, plastic, accumulated, maximum_residual, frozen_counts, status
         frozen_counts = np.full(len(jump), minimum_contact, dtype=int)
-        fixed = offset(factor); free = t.T@(u-fixed); scale = max(np.linalg.norm(load), 1.)
+        fixed = offset(factor); initial = methods.initial(name, progress, u) if methods is not None else u
+        free = t.T@(initial-fixed); scale = max(np.linalg.norm(load), 1.)
         def evaluate(free):
             candidate = fixed+t@free; target = np.einsum('qag,g->qa', system.c, candidate)
             q, slip, cum = project(target)
@@ -303,6 +304,11 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                 for values in (jump, half['jump'], fine['jump'])]
                         error_audit['proposed_increment'] = event_proposal(
                             error_audit, gaps, progress, steps, case['settings']['minimum_increment'])
+                if methods is not None and methods.arc is not None:
+                    retry = methods.arc.retry(name,previous,progress,1/steps,u,candidate,rejected)
+                    if retry is not None:
+                        rejected=True
+                        error_audit.update(reject=True,arc_correction=True,proposed_increment=retry)
                 record_attempt(dict(stage=name, progress_from=previous, progress_to=progress,
                                      accepted=not rejected, relative_force_residual=relative,
                                      old_status=status.tolist(), trial_status=new_status.tolist(),
@@ -317,14 +323,19 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                  contact_partition_counts=frozen_counts.tolist() if maximum_m is not None else [contact_steps]*len(jump),
                                  open_points=int((np.einsum('qa,qa->q', jump, system.normal) > 0).sum()),
                                  slipping_points=int((cum > 0).sum())))
+                if methods is not None:
+                    methods.commit(name, progress, u)
                 if history_sink is not None:
                     history_sink(dict(path[-1]), field_state(name, load))
                 return True
-            h = 2e-9; perturb = np.repeat(target[:, None, :], 7, axis=1)
-            for axis in range(3):
-                perturb[:, 1+2*axis, axis] += h; perturb[:, 2+2*axis, axis] -= h
-            pq, _, _ = project(perturb)
-            tangent = np.stack([(pq[:, 1+2*a]-pq[:, 2+2*a])/(2*h) for a in range(3)], axis=2)
+            if methods is not None and methods.active:
+                tangent = methods.tangent(system, jump, traction, target, frozen_counts)
+            else:
+                h = 2e-9; perturb = np.repeat(target[:, None, :], 7, axis=1)
+                for axis in range(3):
+                    perturb[:, 1+2*axis, axis] += h; perturb[:, 2+2*axis, axis] -= h
+                pq, _, _ = project(perturb)
+                tangent = np.stack([(pq[:, 1+2*a]-pq[:, 2+2*a])/(2*h) for a in range(3)], axis=2)
             jac = kr+np.einsum('qai,qab,qbj,q->ij', cr, tangent, cr, system.weight, optimize=True)
             correction = np.linalg.solve(jac, -residual)
             for power in range(16):

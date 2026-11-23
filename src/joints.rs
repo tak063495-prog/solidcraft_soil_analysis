@@ -1054,12 +1054,22 @@ impl Model {
                     }
                 }
                 if tangent {
-                    let d = material.tangent(
-                        old,
-                        jump.into(),
-                        count,
-                        self.configuration.tangent_step_m,
-                    )?;
+                    let semismooth = self
+                        .configuration
+                        .global_step_control
+                        .as_ref()
+                        .and_then(|c| c.path_error.as_ref())
+                        .is_some_and(|c| c.semismooth_contact);
+                    let d = if semismooth {
+                        material.semismooth_tangent(old, jump.into(), count)?
+                    } else {
+                        material.tangent(
+                            old,
+                            jump.into(),
+                            count,
+                            self.configuration.tangent_step_m,
+                        )?
+                    };
                     for &(n, c) in &p.coefficients {
                         for &(m, v) in &p.coefficients {
                             for a in 0..3 {
