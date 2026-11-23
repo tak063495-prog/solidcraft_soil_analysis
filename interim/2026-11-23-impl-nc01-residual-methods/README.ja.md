@@ -104,6 +104,26 @@ A・C 系列と T10 の変更が入った先端 `a4dd8d42c9aadabdb514a069b876a02
 
 ## P6-01 原票の固定
 
-測定原票をコミット `6ae41048426c86a56708ed246d22160e610d9930` に固定した。原票の SHA-256 は `a4effd6ab7b3b2c7df57e9a4b2566536c19765a8916d4163640457128c26958d`、Git blob は `ca7eabafb8c1b0a334cacec39adfb5eb04d54aa3`。e541fe1 の登録器とのバイト一致を確認して、60個の boolean/null の JSON Pointer を追補した。追補後の台帳 SHA-256 は `ca4812df21ead770dd3a84b45f16b3e56c97ea3b8deeab991182618ccca358f0`。P6-01 は80行・422原票・171証拠、P6-03 は6行で、いずれも `integrity_ok=true`。[台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
+測定原票をコミット `6ae41048426c86a56708ed246d22160e610d9930` に固定した。原票の SHA-256 は `a4effd6ab7b3b2c7df57e9a4b2566536c19765a8916d4163640457128c26958d`、Git blob は `ca7eabafb8c1b0a334cacec39adfb5eb04d54aa3`。e541fe1 の登録器とのバイト一致を確認して、60個の boolean/null の JSON Pointer を追補した。登録時点の台帳 SHA-256 は `ca4812df21ead770dd3a84b45f16b3e56c97ea3b8deeab991182618ccca358f0`。登録時点の P6-01 は80行・422原票・171証拠、P6-03 は6行で、いずれも `integrity_ok=true`。[台帳](../2026-12-10-ci-p601-inventory-fix/inventory.toml)
+
+## Linux 検証
+
+測定版では Rust 526件・Python 1,070件が成功した。以下は A・C 系列と T10 を統合した `ec117d7b36146f134e2e1a0aea7a8d6f0c6f1a12` の検証結果。Rust 1.99.1 で `cargo fmt --all --check` と `cargo clippy --locked --all-targets -- -D warnings` が成功した。release 全106ターゲットで527件成功、失敗・無視・除外0。独立の `--list` と実行済みテスト ID がターゲット別に一致した。doc-test は0件。
+
+Python 3.13.17 の全7群を再実行した。結果は下表の計1,079件で、全 ID の重複・欠落・失敗・エラー・スキップは0。これに Linux 専用 pytest 9.2.0 の7件を加え、合計1,086件成功した。mean と spatial の証拠再生もこの環境では各4件を実行できた。
+
+|群|実行・成功件数|
+|---|---:|
+|python-core-0|526|
+|python-core-1|528|
+|python-mean-evidence|4|
+|python-spatial-evidence|4|
+|python-c01-switch|4|
+|python-c01-path|5|
+|python-c01-cause|8|
+
+検証時点の P6-01 は80行・423原票・171証拠、台帳 SHA-256 は `96d594b5fad935b806db8134144e24985079a7c63fa635352233c73bcaaedc6a`。P6-01 と P6-03 の両方で整合を確認した。保存系8件×6経路の判定・元残差・報告反復数または棄却理由も、実測版と統合版で48件すべて一致した。
+
+新しい入力検査の初回は疎用試験入力の自由度収容数100,000を dense 用に直しておらず1件失敗した。新規試験内の値だけを750に修正して再実行した。Linux 専用試験も旧診断ランナーの取得途中に7件失敗し、固定コミットの blob と照合して配置した後、指定版 pytest で全件成功した。初回ログと最終ログを区別して保存した。測定時ソースの Git bundle は、前提コミットだけを取得した別リポジトリに読み込み、実装コミットと src tree の一致を検証した。生産入力、既存試験の期待値・期待メッセージ・期待 SHA は変更していない。[検証ログと全群の実行台帳](verification.zip)（SHA-256 `193793d2d9501f6bc4fa38328709f49744a2ddf510805bc41b797cb9dfd78be7`）
 
 NC-01 は未達・分類 D。
