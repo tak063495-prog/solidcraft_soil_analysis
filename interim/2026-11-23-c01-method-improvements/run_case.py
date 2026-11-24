@@ -69,6 +69,8 @@ def execute(args, fields=None):
         case["settings"]["attempt_budget_policy"] = args.attempt_budget_policy
     limit = study.reference.stage_attempt_budget(mesh, case["settings"])
     history_file = folder / "dissipation.jsonl"
+    if getattr(args, "localize_friction_events", False):
+        control["localize_friction_events"] = True
     if args.contact_history_bisection:
         control["contact_history_bisection"] = True
     if args.error_scaled_retry:
@@ -221,6 +223,7 @@ if __name__ == "__main__":
     p.add_argument("--history", action="store_true", help="save dissipation at every accepted state")
     p.add_argument("--arc", action="store_true")
     p.add_argument("--contact-history-bisection", action="store_true")
+    p.add_argument("--localize-friction-events", action="store_true")
     p.add_argument("--error-scaled-retry", action="store_true")
     p.add_argument("--active", action="store_true")
     p.add_argument("--save-seed", action="store_true")

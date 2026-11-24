@@ -18,6 +18,25 @@ from c01_retry_fields import CATEGORIES, STAGES
 
 
 class Event4Retry(unittest.TestCase):
+    def test_independent_friction_event_retries_and_finishes_the_cycle(self):
+        from run_case import Methods, context
+
+        study, mesh, ground, case, control = context(4)
+        control.update(localize_friction_events=True, semismooth_contact=True, contact_history_bisection=True)
+        result = study.reference._reference(
+            mesh, ground, case, 4, 1, 7, False, True, maximum_m=5e-5,
+            path_error=control, methods=Methods(None, None, True, None, None),
+        )
+        self.assertEqual((result["path"][-1]["stage"], result["path"][-1]["progress"]), ("return", 1))
+        targets = [a for a in result["attempts"] if "friction_event_target" in a.get("joint_path_error", {})]
+        self.assertTrue(targets)
+        for a in targets:
+            progress, gp = a["joint_path_error"]["friction_event_target"]
+            self.assertFalse(a["accepted"])
+            self.assertLess(a["progress_from"], progress)
+            self.assertLess(progress, a["progress_to"])
+            self.assertTrue(0 <= gp < 32)
+
     def test_signed_direction_and_zero_fields(self):
         values = np.arange(14, dtype=float).reshape(7, 2)
         linear = observed(values + 1, values + 0.5, values + 0.25)

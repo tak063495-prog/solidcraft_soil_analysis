@@ -45,8 +45,8 @@ def solution(x):
     return stress, ur*er+ut*et
 
 
-def geometry(n):
-    nt, nr, nz = 2*n, n, n
+def geometry(n, *, divisions=None):
+    nt, nr, nz = divisions if divisions is not None else (2*n, n, n)
     rings = np.geomspace(A,R,nr+1)
     # Ring vertices precede core vertices, keeping retained node IDs across stages.
     coords = []
@@ -150,8 +150,8 @@ def balances(result):
                 moment_error_kn_m=result["moment_balance_error_kn_m"])
 
 
-def study(binary, folder, n):
-    xyz,count,ring,core = geometry(n)
+def study(binary, folder, n, *, divisions=None):
+    xyz,count,ring,core = geometry(n, divisions=divisions)
     full = ring+core
     initial = solve(binary,folder/"intact",xyz,full,traction(xyz,boundary(full),R,lambda k,x:S0))
     cells = {p["element_index"]:tensor(s) for p,s in zip(initial["integration_points"],

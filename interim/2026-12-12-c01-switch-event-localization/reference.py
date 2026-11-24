@@ -88,6 +88,42 @@ def endpoint_status(system, old_jump, old_traction, target, count):
         tau=np.where(closed[:,None],trial*scale[:,None],0); gap=end
     return status
 
+def friction_event(system, jumps, tractions, statuses, h, resolution):
+    """Root of the elastic trial friction margin on each equilibrated closed chord."""
+    from scipy.optimize import brentq
+
+    earliest = None
+    for half in (0, 1):
+        changed = np.flatnonzero(statuses[half] != statuses[half + 1])
+        for i in changed:
+            n = system.normal[i]
+            left, right = jumps[half][i], jumps[half + 1][i]
+            a, b = left @ n, right @ n
+            if (a > 0) != (b > 0):
+                root = a / (a - b)
+            elif a <= 0 and statuses[half][i] == 2 and statuses[half + 1][i] == 1:
+                root = 0.5
+            elif a <= 0 and statuses[half][i] == 1 and statuses[half + 1][i] == 2:
+                tau = tractions[half][i]
+                shear = tau - (tau @ n) * n
+                dj = right - left
+                dt = system.kt[i] * (dj - (dj @ n) * n)
+                cap = system.mu[i] * system.kn[i]
+
+                def excess(t):
+                    return np.linalg.norm(shear + t * dt) + cap * (a + t * (b - a))
+
+                if not excess(0) < 0 < excess(1):
+                    continue
+                root = brentq(excess, 0, 1, xtol=2e-15)
+            else:
+                continue
+            offset = (half + root) * h * 0.5
+            if resolution < offset < h - resolution and (earliest is None or offset < earliest[0]):
+                earliest = offset, int(i)
+    return earliest
+
+
 def event_proposal(audit, gaps, progress, steps, minimum, *, error_scaled_retry=False):
     h = audit['actual_increment']
     base = audit['base_increment']
@@ -333,6 +369,18 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                         error_audit['proposed_increment'] = event_proposal(
                             error_audit, gaps, progress, steps, case['settings']['minimum_increment'],
                             **({'error_scaled_retry': True} if path_error.get('error_scaled_retry') else {}))
+                    if path_error.get("localize_friction_events"):
+                        if not path_error.get("event_proposal") or path_error.get("event_comparison") is not None:
+                            raise ValueError("friction localization requires event proposals without comparison")
+                        event = friction_event(system, [jump, half["jump"], fine["jump"]],
+                                               [traction, half["traction"]], [status, half["status"], fine["status"]],
+                                               h, max(1 / (64 * steps), case["settings"]["minimum_increment"]))
+                        if event is not None:
+                            event_offset, gp = event
+                            proposal = min(event_offset, error_audit["proposed_increment"]) if rejected else event_offset
+                            error_audit.update(friction_event_target=[previous + event_offset, gp],
+                                               proposed_increment=proposal, reject=True)
+                            rejected = True
                 if methods is not None and methods.arc is not None:
                     retry = methods.arc.retry(name,previous,progress,1/steps,u,candidate,rejected)
                     if retry is not None:

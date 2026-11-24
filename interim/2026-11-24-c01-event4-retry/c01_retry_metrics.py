@@ -110,12 +110,12 @@ def align(series, field, n):
     return [g[:count] for g in grids]
 
 
-def compare(histories):
+def compare(histories, modes=("local", "ws", "local-ws", "local-active")):
     fields = sorted(next(iter(histories.values())).meta["fields"])
     if any(sorted(s.meta["fields"]) != fields for s in histories.values()):
         raise ValueError("field inventories differ")
     refinements, solvers = {}, {}
-    for mode in ("local", "ws", "local-ws", "local-active"):
+    for mode in modes:
         for side in ("native", "independent"):
             series = [histories[side, n, mode] for n in (256, 512, 1024)]
             common = min(s.count // (s.n // 256) for s in series)

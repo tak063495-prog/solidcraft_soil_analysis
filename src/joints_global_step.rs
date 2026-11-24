@@ -13,6 +13,37 @@ pub struct GlobalStepControl {
     pub path_error: Option<PathErrorControl>,
 }
 
+#[path = "joints_friction_event.rs"]
+mod friction_event;
+
+impl joints::Model {
+    pub(crate) fn friction_event_fraction(
+        &self,
+        states: [&joints::State; 3],
+        h: f64,
+        resolution: f64,
+    ) -> Option<(f64, usize)> {
+        let mut earliest = None;
+        for (half, pair) in states.windows(2).enumerate() {
+            for (i, point) in self.points.iter().enumerate() {
+                let mat = &self.configuration.joints[point.material].material;
+                if let Some(local) =
+                    friction_event::fraction(&pair[0].points[i], &pair[1].points[i], mat)
+                {
+                    let offset = (half as f64 + local) * (h * 0.5);
+                    if offset > resolution
+                        && h - offset > resolution
+                        && earliest.is_none_or(|(t, _)| offset < t)
+                    {
+                        earliest = Some((offset, i));
+                    }
+                }
+            }
+        }
+        earliest
+    }
+}
+
 fn is_zero(n: &u32) -> bool {
     *n == 0
 }
@@ -30,6 +61,9 @@ pub struct PathErrorControl {
     /// Use signed-gap event localization and fit the proposal to the next base boundary.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub event_proposal: bool,
+    /// Localize gap and Coulomb activity changes on equilibrated half-step chords.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub localize_friction_events: bool,
     /// Use the measured coarse/fine defect to propose a retry and clip growth at the next anchor.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub error_scaled_retry: bool,
@@ -71,6 +105,12 @@ impl GlobalStepControl {
             if c.event_comparison.is_some() && !c.event_proposal {
                 return Err(Error::Input(
                     "event_comparison requires event_proposal".into(),
+                ));
+            }
+            if c.localize_friction_events && (!c.event_proposal || c.event_comparison.is_some()) {
+                return Err(Error::Input(
+                    "localize_friction_events requires event_proposal without an event comparison"
+                        .into(),
                 ));
             }
             if c.error_scaled_retry && (!c.event_proposal || c.event_comparison.is_some()) {

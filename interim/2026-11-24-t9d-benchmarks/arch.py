@@ -11,7 +11,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 
 
-def beam_curve(n):
+def beam_curve(n, *, extrapolate=False):
     """Continue from T7's verified restart, releasing full Newton matrices in batches."""
     from arch_elements import Arch
     from continuation import Controls, trace, simple_point
@@ -26,7 +26,8 @@ def beam_curve(n):
     while len(points)-1 < 1500:
         block = trace(model, {}, points[-1], forward,
                       Controls(0.18, min(4,1501-len(points)), 1e-9, 1e-10, 20),
-                      restart=checkpoint,
+                      restart=checkpoint, extrapolate=extrapolate,
+                      attempt_limit=(2065*n+11)//12-len(trials) if extrapolate else None,
                       stop=lambda pts: pts[-1]["z"][-1] < max(highest, *(p["z"][-1] for p in pts))-0.45)
         new = [p["z"] for p in block["accepted"][1:]]
         points.extend(new)
@@ -67,6 +68,7 @@ def summarize(case, peak_key, band):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--extrapolate", action="store_true", help="seed beam corrections from accepted points on the current arc plane")
     parser.add_argument("--root", type=Path, default=HERE.parents[1])
     args = parser.parse_args()
     sys.path.insert(0, str(args.root/"interim/2026-11-22-impl-t7-physical-instability"))
@@ -81,7 +83,7 @@ if __name__ == "__main__":
         results[str(n)], histories[str(n)] = {}, {}
         for method, calculate, key in [("beam", beam_curve, "fold_load"),
                                        ("shooting", arch, "estimated_peak_load")]:
-            case = calculate(n)
+            case = calculate(n, extrapolate=args.extrapolate) if method == "beam" else calculate(n)
             results[str(n)][method] = summarize(case, key, band)
             histories[str(n)][method] = [[r[k] for k in columns] for r in case["trials"]]
     encoded = json.dumps(results, indent=2, allow_nan=False)

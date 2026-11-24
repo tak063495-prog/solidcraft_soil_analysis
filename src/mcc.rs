@@ -263,6 +263,24 @@ impl Parameters {
         strain: [f64; 6],
         max_substep: f64,
     ) -> Result<Update> {
+        self.integrate_with_shear(committed, strain, max_substep, None)
+    }
+
+    /// Backward Euler with a prescribed constant G and state-dependent bulk modulus.
+    pub fn integrate_with_shear(
+        &self,
+        committed: &State,
+        strain: [f64; 6],
+        max_substep: f64,
+        shear_kpa: Option<f64>,
+    ) -> Result<Update> {
+        if let Some(g) = shear_kpa
+            && (self.integration != Integration::BackwardEuler || !g.is_finite() || g <= 0.)
+        {
+            return Err(Error::Input(
+                "constant MCC shear modulus requires positive finite G and backward Euler".into(),
+            ));
+        }
         self.validate_state(committed)?;
         if !strain.iter().all(|x| x.is_finite())
             || !max_substep.is_finite()
@@ -293,7 +311,7 @@ impl Parameters {
             let increment = strain.map(|x| x / steps as f64);
             let mut failed = false;
             for _ in 0..steps {
-                match self.substep(&state, increment) {
+                match self.substep_with_shear(&state, increment, shear_kpa) {
                     Ok((next, yielded)) => {
                         state = next;
                         plastic += usize::from(yielded);
@@ -325,7 +343,17 @@ impl Parameters {
             let update = midpoint::integrate(self, old, de, 1, false)?.0;
             return Ok((update.state, update.plastic_substeps != 0));
         }
-        let (k, g) = self.moduli(old)?;
+        self.substep_with_shear(old, de, None)
+    }
+
+    fn substep_with_shear(
+        &self,
+        old: &State,
+        de: [f64; 6],
+        shear_kpa: Option<f64>,
+    ) -> Result<(State, bool)> {
+        let (k, elastic_shear) = self.moduli(old)?;
+        let g = shear_kpa.unwrap_or(elastic_shear);
         let ev = de[0] + de[1] + de[2];
         let mut trial = old.effective_stress_compression_positive_kpa;
         for i in 0..3 {

@@ -124,6 +124,7 @@ impl Cube {
         cell_pressure: f64,
         platen: bool,
         h: f64,
+        shear: Option<f64>,
     ) -> Trial<(f64, f64, f64)> {
         let mut residual = vec![Vector3::zeros(); self.nodes.len()];
         let mut external = residual.clone();
@@ -133,7 +134,9 @@ impl Cube {
                 -self.nodes[c.ids[k / 3]][k % 3] * strain[k % 3]
             });
             let de = -(c.b * du);
-            c.state = model.integrate(&c.state, de.into(), h)?.state;
+            c.state = model
+                .integrate_with_shear(&c.state, de.into(), h, shear)?
+                .state;
             let stress = SVector::<f64, 6>::from(c.state.effective_stress_compression_positive_kpa);
             let local = -c.vol * c.b.transpose() * stress;
             for k in 0..12 {
@@ -173,7 +176,7 @@ impl Cube {
     }
 }
 
-fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
+fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value, constant_g: bool) -> Trial<Value> {
     let get = |key: &str| cfg[key].as_f64().unwrap();
     let p0 = get("p0_kpa");
     // Match Table 1's G at the common normally consolidated starting state.
@@ -189,10 +192,12 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
         specific_volume_ncl_at_reference: get("v_lambda"),
         integration: Integration::BackwardEuler,
     };
+    let initial_pc = if constant_g { ocr_target } else { p0 };
+    let shear = constant_g.then_some(shear0);
     let mut state = State {
         effective_stress_compression_positive_kpa: [p0, p0, p0, 0., 0., 0.],
-        preconsolidation_pressure_kpa: p0,
-        void_ratio: model.reference_void_ratio(p0, p0)?,
+        preconsolidation_pressure_kpa: initial_pc,
+        void_ratio: model.reference_void_ratio(p0, initial_pc)?,
         plastic_strain_compression_positive: [0.; 6],
     };
     let mut mesh = Cube::new(n, &state)?;
@@ -206,6 +211,9 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
     let axial_end = get("terminal_axial_strain");
     for (stage, count) in [("consolidate", 128), ("unload", 128), ("shear", 512)] {
         let platen = stage == "shear";
+        if constant_g && !platen {
+            continue;
+        }
         for i in 1..=count {
             let f = f64::from(i) / f64::from(count);
             let pressure = match stage {
@@ -227,7 +235,9 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
             // The root is the physical strain giving the prescribed cell pressure.
             // Every evaluation starts from the same committed material state.
             let evaluate = |x| -> Trial<(f64, State)> {
-                let s = model.integrate(&state, strain(x), h)?.state;
+                let s = model
+                    .integrate_with_shear(&state, strain(x), h, shear)?
+                    .state;
                 Ok((s.effective_stress_compression_positive_kpa[0] - pressure, s))
             };
             let (mut lo, mut hi) = (-0.002, 0.002);
@@ -251,7 +261,7 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
             let (lateral, next) = success.ok_or("pressure control did not converge")?;
             state = next;
             let (free, spread, reaction) =
-                mesh.step(&model, strain(lateral), pressure, platen, h)?;
+                mesh.step(&model, strain(lateral), pressure, platen, h, shear)?;
             max_free = max_free.max(free);
             max_spread = max_spread.max(spread);
             max_side_error = max_side_error
@@ -269,7 +279,7 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
                 max_v_error = max_v_error
                     .max((v - 1. - model.reference_void_ratio(pressure, exact_pc)?).abs());
             }
-            if i % 16 == 0 || i == 1 {
+            if constant_g || i % 16 == 0 || i == 1 {
                 history.push(json!({"stage":stage,"fraction":f,"p_kpa":p,"q_kpa":q,
                     "pc_kpa":pc_history,"v":v,
                     "free_relative":free,"top_compression_reaction_kn":reaction}));
@@ -285,22 +295,41 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value) -> Trial<Value> {
     ];
     let values = [p, q, v];
     let errors: [f64; 3] = std::array::from_fn(|i| (values[i] / predicted[i] - 1.).abs());
-    Ok(
-        json!({"elements":mesh.cells.len(),"poisson":model.poisson,"material_substep":h,"ocr":ocr_target/p0,"history":history,
+    let mut output = json!({"elements":mesh.cells.len(),"poisson":model.poisson,"material_substep":h,"ocr":ocr_target/p0,"history":history,
         "endpoint_p_q_v":values,"critical_p_q_v":predicted,"relative_errors":errors,
         "endpoint_passed":errors.iter().all(|e| *e < get("endpoint_relative_max_exclusive")),
         "max_free_relative":max_free,"max_cell_p_spread_kpa":max_spread,"max_lateral_error_kpa":max_side_error,
-        "history_max_pc_error_kpa":max_pc_error,"history_max_v_error":max_v_error,"peak_q_kpa":max_q}),
-    )
+        "history_max_pc_error_kpa":max_pc_error,"history_max_v_error":max_v_error,"peak_q_kpa":max_q});
+    if constant_g {
+        let fields = output.as_object_mut().unwrap();
+        fields.remove("poisson");
+        fields.remove("history_max_pc_error_kpa");
+        fields.remove("history_max_v_error");
+        fields.insert("constant_shear_kpa".into(), json!(shear0));
+        fields.insert("initial_pc_kpa".into(), json!(initial_pc));
+    }
+    Ok(output)
 }
 
 fn main() -> Trial<()> {
     let cfg: Value = serde_json::from_str(SPEC)?;
+    let args: Vec<_> = std::env::args().skip(1).collect();
+    let constant_g = match args.as_slice() {
+        [] => false,
+        [arg] if arg == "--constant-g" => true,
+        _ => return Err("usage: t9d_mcc [--constant-g]".into()),
+    };
     let mut records = Vec::new();
     for pressure in cfg["mcc"]["pc_targets_kpa"].as_array().unwrap() {
         for n in [1, 2] {
             for h in [1e-4, 5e-5] {
-                records.push(specimen(pressure.as_f64().unwrap(), n, h, &cfg["mcc"])?);
+                records.push(specimen(
+                    pressure.as_f64().unwrap(),
+                    n,
+                    h,
+                    &cfg["mcc"],
+                    constant_g,
+                )?);
             }
         }
     }
@@ -316,7 +345,7 @@ mod tests {
     fn drained_history_reaches_the_published_critical_state() -> Trial<()> {
         let spec: Value = serde_json::from_str(SPEC)?;
         for pc in [8., 40.] {
-            let result = specimen(pc, 1, 1e-4, &spec["mcc"])?;
+            let result = specimen(pc, 1, 1e-4, &spec["mcc"], false)?;
             assert_eq!(result["endpoint_passed"], true);
             assert!(
                 result["max_free_relative"].as_f64().unwrap()

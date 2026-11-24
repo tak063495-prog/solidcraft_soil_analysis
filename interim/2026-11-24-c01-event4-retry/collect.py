@@ -33,8 +33,10 @@ def inspect(folder, side, n, mode, seeds, previous):
     }
     if mode in flags:
         ctrl[flags[mode]] = True
-    if mode in ("local-ws", "local-active"):
+    if mode in ("local-ws", "local-active", "friction-events"):
         ctrl.update(semismooth_contact=True, contact_history_bisection=True)
+    if mode == "friction-events":
+        ctrl["localize_friction_events"] = True
     warm = mode in ("ws", "local-ws")
     if cfg != expected or study.reference.stage_attempt_budget(mesh, cfg["settings"]) != 2065:
         raise ValueError("case input or attempt budget changed")

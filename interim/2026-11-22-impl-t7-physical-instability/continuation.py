@@ -119,6 +119,23 @@ def direction(ev, previous):
     return tangent if tangent @ previous >= 0 else -tangent
 
 
+def extrapolate_on_plane(history, z, tangent, plane, predicted, ds):
+    """Interpolate at ds in the current tangent coordinate, then enforce the corrector plane."""
+    if len(history) < 2:
+        return predicted.copy()
+    points = np.asarray(history)
+    x = (points - z) @ tangent
+    if np.any(np.diff(x) <= 0):
+        return predicted.copy()
+    trial = np.zeros_like(z)
+    for i, point in enumerate(points):
+        others = np.delete(x, i)
+        trial += np.prod((ds - others) / (x[i] - others)) * point
+    if not np.isfinite(trial).all():
+        return predicted.copy()
+    return trial - plane * ((plane @ (trial - predicted)) / (plane @ plane))
+
+
 def trace(
     evaluate,
     checkpoint,
@@ -129,6 +146,8 @@ def trace(
     local_control=None,
     stop=None,
     restart=None,
+    extrapolate=False,
+    attempt_limit=None,
 ):
     """evaluate(parent,z) must integrate all history from parent on every call."""
     z = np.array(z0, dtype=float)
@@ -145,6 +164,7 @@ def trace(
             "starting checkpoint is not an accepted equilibrium on this stage"
         )
     incoming = point
+    history = [z.copy()]
     if restart is not None:
         payload = restart["payload"]
         if (
@@ -154,6 +174,10 @@ def trace(
         ):
             raise ValueError("restart checkpoint or predictor digest differs")
         old = np.asarray(payload["previous_direction"])
+        if extrapolate and "extrapolation_points" in payload:
+            history = [np.asarray(row) for row in payload["extrapolation_points"]]
+            if not 1 <= len(history) <= 4 or not np.array_equal(history[-1], z):
+                raise ValueError("invalid extrapolation restart history")
         incoming = Evaluation(
             point.residual,
             np.asarray(payload["k"]),
@@ -180,9 +204,14 @@ def trace(
             break
         ds = controls.ds
         for cut in range(controls.event_bisections + 1):
+            if attempt_limit is not None and len(rows) >= attempt_limit:
+                accepted_trial = False
+                reason = "attempt budget"
+                break
             origin = z.copy()
             predicted = z + tangent * ds
-            trial = predicted.copy()
+            trial = (extrapolate_on_plane(history, z, tangent, plane, predicted, ds)
+                     if extrapolate else predicted.copy())
             iterations = []
             measured_linear = None
             accepted_trial = False
@@ -290,6 +319,8 @@ def trace(
                     critical["next"] = True
             if accepted_trial:
                 old, z, parent = tangent, trial.copy(), ev.candidate
+                if extrapolate:
+                    history = [z.copy()] if switch else [*history[-3:], z.copy()]
                 s += float(np.linalg.norm(z - origin))
                 accepted.append(dict(z=z.copy(), state=parent, event=ev.event, s=s))
                 # At zero incremental slip re-integration may select stick; the
@@ -324,6 +355,8 @@ def trace(
         q=incoming.q,
         event=incoming.event,
     )
+    if extrapolate:
+        payload["extrapolation_points"] = history
     return dict(
         termination_reason=reason,
         physical_classification="D",

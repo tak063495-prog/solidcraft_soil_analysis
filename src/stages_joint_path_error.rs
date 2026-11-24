@@ -28,6 +28,8 @@ pub struct PathErrorAudit {
     /// Diagnostic coordinate and zero-based GP index on the two-half-step path.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub first_gap_zero: Option<(f64, usize)>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub friction_event_target: Option<(f64, usize)>,
     pub reject: bool,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub arc_correction: bool,
@@ -212,6 +214,7 @@ impl Model<'_> {
             fine_linear_solves: fine.linear_solves,
             proposed_increment: None,
             first_gap_zero: None,
+            friction_event_target: None,
             arc_correction: false,
             reject: maximum_slip_error_m > slip_budget_m
                 || maximum_dissipation_error_kpa_m > dissipation_budget_kpa_m,
@@ -278,6 +281,22 @@ impl Model<'_> {
                 .max(settings.minimum_increment)
             };
             audit.proposed_increment = Some(next.min(base));
+        }
+        if control.localize_friction_events {
+            let joints = self
+                .joints
+                .as_ref()
+                .ok_or_else(|| Error::Input("missing JOINT model".into()))?;
+            let resolution = (base / 64.).max(settings.minimum_increment);
+            if let Some((offset, gp)) = joints.friction_event_fraction([a, b, d], h, resolution) {
+                audit.friction_event_target = Some((start + offset, gp));
+                audit.proposed_increment = Some(if audit.reject {
+                    offset.min(audit.proposed_increment.unwrap_or(h * 0.5))
+                } else {
+                    offset
+                });
+                audit.reject = true;
+            }
         }
         if let Some(observer) = self.observer
             && let Some(size) = observer.c01_arc_retry(crate::stage_control::ArcSample {
