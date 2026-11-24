@@ -65,6 +65,13 @@ pub fn invariants(s: &[f64; 6]) -> (f64, f64) {
 #[path = "mcc_elastic_split.rs"]
 mod elastic_split;
 
+#[derive(Clone, Copy)]
+enum ElasticStep {
+    Frozen,
+    Split,
+    RefinePlastic(f64),
+}
+
 impl Parameters {
     /// Differentiate the converged local return and propagate sensitivities
     /// through the complete fixed partition. The primal update is unchanged.
@@ -277,7 +284,13 @@ impl Parameters {
         max_substep: f64,
         shear_kpa: Option<f64>,
     ) -> Result<Update> {
-        self.integrate_steps(committed, strain, max_substep, shear_kpa, false)
+        self.integrate_steps(
+            committed,
+            strain,
+            max_substep,
+            shear_kpa,
+            ElasticStep::Frozen,
+        )
     }
 
     fn integrate_steps(
@@ -286,7 +299,7 @@ impl Parameters {
         strain: [f64; 6],
         max_substep: f64,
         shear_kpa: Option<f64>,
-        split_elastic: bool,
+        elastic_step: ElasticStep,
     ) -> Result<Update> {
         if let Some(g) = shear_kpa
             && (self.integration != Integration::BackwardEuler || !g.is_finite() || g <= 0.)
@@ -326,16 +339,21 @@ impl Parameters {
             let mut failed = false;
             let mut accepted = 0;
             for _ in 0..steps {
-                let step = match (shear_kpa, split_elastic) {
-                    (Some(g), true) => self.elastic_split_substep(&state, increment, g),
+                let step = match (shear_kpa, elastic_step) {
+                    (Some(g), ElasticStep::Split) => {
+                        self.elastic_split_substep(&state, increment, g, None)
+                    }
+                    (Some(g), ElasticStep::RefinePlastic(h)) => {
+                        self.elastic_split_substep(&state, increment, g, Some(h))
+                    }
                     _ => self
                         .substep_with_shear(&state, increment, shear_kpa)
-                        .map(|(next, yielded)| (next, yielded, 1)),
+                        .map(|(next, yielded)| (next, usize::from(yielded), 1)),
                 };
                 match step {
                     Ok((next, yielded, count)) => {
                         state = next;
-                        plastic += usize::from(yielded);
+                        plastic += yielded;
                         accepted += count;
                         if accepted > 100_000 {
                             return Err(Error::Material("MCC substep budget exceeded".into()));

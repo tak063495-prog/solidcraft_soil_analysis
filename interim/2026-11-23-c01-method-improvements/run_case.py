@@ -71,6 +71,8 @@ def execute(args, fields=None):
     history_file = folder / "dissipation.jsonl"
     if getattr(args, "localize_friction_events", False):
         control["localize_friction_events"] = True
+    if getattr(args, "resolve_slip_path", False):
+        control["resolve_slip_path"] = True
     if args.contact_history_bisection:
         control["contact_history_bisection"] = True
     if args.error_scaled_retry:

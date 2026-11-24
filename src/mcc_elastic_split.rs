@@ -9,7 +9,37 @@ impl Parameters {
         max_substep: f64,
         shear_kpa: f64,
     ) -> Result<Update> {
-        self.integrate_steps(committed, strain, max_substep, Some(shear_kpa), true)
+        self.integrate_steps(
+            committed,
+            strain,
+            max_substep,
+            Some(shear_kpa),
+            ElasticStep::Split,
+        )
+    }
+
+    /// Preserve the outer strain grid and the exact elastic leg. Bound the
+    /// strain one-norm only on the remainder integrated by the plastic return.
+    pub fn integrate_with_plastic_refinement(
+        &self,
+        committed: &State,
+        strain: [f64; 6],
+        max_substep: f64,
+        shear_kpa: f64,
+        plastic_width: f64,
+    ) -> Result<Update> {
+        if !(1e-7..=1e-3).contains(&plastic_width) {
+            return Err(Error::Input(
+                "MCC plastic width must be in [1e-7,1e-3]".into(),
+            ));
+        }
+        self.integrate_steps(
+            committed,
+            strain,
+            max_substep,
+            Some(shear_kpa),
+            ElasticStep::RefinePlastic(plastic_width),
+        )
     }
 
     pub(super) fn elastic_split_substep(
@@ -17,7 +47,8 @@ impl Parameters {
         old: &State,
         de: [f64; 6],
         g: f64,
-    ) -> Result<(State, bool, usize)> {
+        plastic_width: Option<f64>,
+    ) -> Result<(State, usize, usize)> {
         let ev = de[..3].iter().sum::<f64>();
         let p = invariants(&old.effective_stress_compression_positive_kpa).0;
         let v = 1. + old.void_ratio;
@@ -48,26 +79,35 @@ impl Parameters {
             ));
         }
         if yield_value <= 1e-11 {
-            return Ok((trial, false, 1));
+            return Ok((trial, 0, 1));
         }
+        let plastic_leg = |start: &State, strain: [f64; 6]| -> Result<(State, usize, usize)> {
+            let width = strain.iter().map(|x| x.abs()).sum::<f64>();
+            let steps = plastic_width.map_or(1, |h| (width / h).ceil().max(1.) as usize);
+            let increment = strain.map(|x| x / steps as f64);
+            let mut state = start.clone();
+            let mut plastic = 0;
+            for _ in 0..steps {
+                let (next, yielded) = self.substep_with_shear(&state, increment, Some(g))?;
+                state = next;
+                plastic += usize::from(yielded);
+            }
+            Ok((state, plastic, steps))
+        };
         // A parent already on the loading surface has no initial elastic leg.
         // On reversal a step can first enter the interior and then yield again.
         let mut lo = 0.;
         let mut hi = 1.;
         if self.normalized_yield(old) >= -1e-11 {
             if self.outward_elastic_direction(old, de, g) {
-                return self
-                    .substep_with_shear(old, de, Some(g))
-                    .map(|(s, y)| (s, y, 1));
+                return plastic_leg(old, de);
             }
             let mut probe = 0.5;
             while probe > f64::EPSILON && self.normalized_yield(&predictor(probe)) >= 0. {
                 probe *= 0.5;
             }
             if self.normalized_yield(&predictor(probe)) >= 0. {
-                return self
-                    .substep_with_shear(old, de, Some(g))
-                    .map(|(s, y)| (s, y, 1));
+                return plastic_leg(old, de);
             }
             lo = probe;
         }
@@ -80,8 +120,8 @@ impl Parameters {
             }
         }
         let boundary = predictor(lo);
-        self.substep_with_shear(&boundary, de.map(|x| (1. - lo) * x), Some(g))
-            .map(|(s, y)| (s, y, 2))
+        plastic_leg(&boundary, de.map(|x| (1. - lo) * x))
+            .map(|(state, plastic, count)| (state, plastic, count + 1))
     }
 
     fn outward_elastic_direction(&self, old: &State, de: [f64; 6], g: f64) -> bool {

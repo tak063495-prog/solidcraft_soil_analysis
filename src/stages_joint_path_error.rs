@@ -1,4 +1,4 @@
-//! Opt-in step doubling of GLOBAL equilibria. Probe states are never committed.
+//! Opt-in step doubling of GLOBAL equilibria. The refined path is retained only by explicit selection.
 use super::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21,6 +21,8 @@ pub struct PathErrorAudit {
     pub endpoint_disagreement_points: usize,
     pub midpoint_relative_force_residual: f64,
     pub fine_relative_force_residual: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub coarse_linear_solves: Option<Vec<LinearReport>>,
     pub midpoint_linear_solves: Vec<LinearReport>,
     pub fine_linear_solves: Vec<LinearReport>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -211,7 +213,10 @@ impl Model<'_> {
             midpoint_relative_force_residual: half.residual,
             fine_relative_force_residual: fine.residual,
             midpoint_linear_solves: half.linear_solves,
-            fine_linear_solves: fine.linear_solves,
+            coarse_linear_solves: control
+                .resolve_slip_path
+                .then(|| coarse.linear_solves.clone()),
+            fine_linear_solves: fine.linear_solves.clone(),
             proposed_increment: None,
             first_gap_zero: None,
             friction_event_target: None,
@@ -288,7 +293,14 @@ impl Model<'_> {
                 .as_ref()
                 .ok_or_else(|| Error::Input("missing JOINT model".into()))?;
             let resolution = (base / 64.).max(settings.minimum_increment);
-            if let Some((offset, gp)) = joints.friction_event_fraction([a, b, d], h, resolution) {
+            if let Some((offset, gp)) = joints.friction_event_fraction(
+                [a, b, d],
+                h,
+                resolution,
+                control
+                    .resolve_slip_path
+                    .then_some(settings.minimum_increment),
+            ) {
                 audit.friction_event_target = Some((start + offset, gp));
                 audit.proposed_increment = Some(if audit.reject {
                     offset.min(audit.proposed_increment.unwrap_or(h * 0.5))
@@ -316,7 +328,12 @@ impl Model<'_> {
             audit.reject = true;
             audit.proposed_increment = Some(size);
         }
-        Ok((coarse, Some(audit)))
+        let trial = if control.resolve_slip_path && !audit.reject {
+            fine
+        } else {
+            coarse
+        };
+        Ok((trial, Some(audit)))
     }
 }
 

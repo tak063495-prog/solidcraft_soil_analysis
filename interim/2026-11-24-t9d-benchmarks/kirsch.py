@@ -45,9 +45,12 @@ def solution(x):
     return stress, ur*er+ut*et
 
 
-def geometry(n, *, divisions=None):
+def geometry(n, *, divisions=None, radii=None):
     nt, nr, nz = divisions if divisions is not None else (2*n, n, n)
-    rings = np.geomspace(A,R,nr+1)
+    rings = np.geomspace(A,R,nr+1) if radii is None else np.asarray(radii, dtype=float)
+    if (rings.shape != (nr+1,) or rings[0] != A or rings[-1] != R or
+            not np.all(np.isfinite(rings)) or not np.all(np.diff(rings) > 0)):
+        raise ValueError("expected strictly increasing radii from A to R")
     # Ring vertices precede core vertices, keeping retained node IDs across stages.
     coords = []
     node = {}
@@ -150,8 +153,8 @@ def balances(result):
                 moment_error_kn_m=result["moment_balance_error_kn_m"])
 
 
-def study(binary, folder, n, *, divisions=None):
-    xyz,count,ring,core = geometry(n, divisions=divisions)
+def study(binary, folder, n, *, divisions=None, radii=None):
+    xyz,count,ring,core = geometry(n, divisions=divisions, radii=radii)
     full = ring+core
     initial = solve(binary,folder/"intact",xyz,full,traction(xyz,boundary(full),R,lambda k,x:S0))
     cells = {p["element_index"]:tensor(s) for p,s in zip(initial["integration_points"],

@@ -11,13 +11,14 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 
 
-def beam_curve(n, *, extrapolate=False):
+def beam_curve(n, *, extrapolate=False, model=None, fold_metrics=False):
     """Continue from T7's verified restart, releasing full Newton matrices in batches."""
     from arch_elements import Arch
     from continuation import Controls, trace, simple_point
     from references import force_unit
 
-    model = Arch(n)
+    if model is None:
+        model = Arch(n)
     origin = np.zeros(len(model.free)+1)
     forward = origin.copy()
     forward[-1] = 1.
@@ -40,7 +41,7 @@ def beam_curve(n, *, extrapolate=False):
             break
     curve = [dict(load=z[-1]*force_unit, downward_crown=model({},z).details["crown"]) for z in points]
     i = int(np.argmax([r["load"] for r in curve]))
-    fold = (simple_point(model, {}, points[i-1], points[i+1], 1e-9)
+    fold = (simple_point(model, {}, points[i-1], points[i+1], 1e-9, metrics=fold_metrics)
             if 0 < i < len(points)-1 else {"kind":"D"})
     return dict(curve=curve,trials=trials,fold=fold,termination=reason,
                 fold_load=fold["z"][-1]*force_unit if fold["kind"]=="simple fold" else None)

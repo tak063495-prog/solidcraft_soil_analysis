@@ -28,7 +28,7 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("raw", type=Path)
     p.add_argument("output", type=Path)
-    p.add_argument("--mode", choices=("friction-events", "local-active"), default="friction-events")
+    p.add_argument("--mode", choices=("friction-events", "local-active","resolved-slip"), default="friction-events")
     args = p.parse_args()
     result = measure(args.raw, args.mode)
     with args.output.open("x", encoding="utf-8") as f:

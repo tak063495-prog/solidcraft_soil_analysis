@@ -15,15 +15,16 @@ def run(folder, n, side, mode, seeds, binary, full_fields=True):
         folder=path,
         steps=n,
         solver=side,
-        active=warm or mode in ("local-active", "friction-events"),
+        active=warm or mode in ("local-active", "friction-events", "resolved-slip"),
         arc=False,
         seed=seeds / f"{side}-{n // 2}-base" if warm else None,
         save_seed=False,
         attempt_budget_policy="mesh_proportional",
         history=True,
-        localize_friction_events=mode == "friction-events",
+        localize_friction_events=mode in ("friction-events", "resolved-slip"),
+        resolve_slip_path=mode == "resolved-slip",
         error_scaled_retry=mode == "retry",
-        contact_history_bisection=mode in ("local", "local-ws", "local-active", "friction-events"),
+        contact_history_bisection=mode in ("local", "local-ws", "local-active", "friction-events", "resolved-slip"),
         binary=binary,
     )
     if full_fields:
@@ -39,7 +40,7 @@ if __name__ == "__main__":
     p.add_argument("--steps", type=int, choices=(256, 512, 1024), required=True)
     p.add_argument("--solver", choices=("native", "independent"), required=True)
     p.add_argument(
-        "--mode", choices=("base", "ws", "retry", "local", "local-ws", "local-active", "friction-events"), required=True
+        "--mode", choices=("base", "ws", "retry", "local", "local-ws", "local-active", "friction-events", "resolved-slip"), required=True
     )
     p.add_argument("--seeds", type=Path, default=Path("seeds"))
     p.add_argument("--binary", type=Path, default=Path("target/release/examples/c01_methods"))

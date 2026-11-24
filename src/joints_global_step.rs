@@ -22,17 +22,45 @@ impl joints::Model {
         states: [&joints::State; 3],
         h: f64,
         resolution: f64,
+        opening_resolution: Option<f64>,
     ) -> Option<(f64, usize)> {
         let mut earliest = None;
         for (half, pair) in states.windows(2).enumerate() {
             for (i, point) in self.points.iter().enumerate() {
                 let mat = &self.configuration.joints[point.material].material;
+                if opening_resolution.is_some()
+                    && friction_event::unloads_from_start(
+                        &pair[0].points[i],
+                        &pair[1].points[i],
+                        mat,
+                    )
+                {
+                    continue;
+                }
                 if let Some(local) =
                     friction_event::fraction(&pair[0].points[i], &pair[1].points[i], mat)
                 {
+                    let mut guard = resolution;
+                    let local = if let Some(minimum) = opening_resolution {
+                        let gaps = states.map(|s| {
+                            let p = &s.points[i];
+                            p.elastic_jump().dot(&nalgebra::Vector3::from(p.normal))
+                        });
+                        if pair[0].points[i].status == crate::joint_law::Status::Slip
+                            && gaps[half] <= 0.
+                            && gaps[half + 1] > 0.
+                        {
+                            guard = minimum;
+                        }
+                        friction_event::opening_fraction(gaps, half)
+                            .or_else(|| friction_event::quadratic_gap_fraction(gaps, half))
+                            .unwrap_or(local)
+                    } else {
+                        local
+                    };
                     let offset = (half as f64 + local) * (h * 0.5);
-                    if offset > resolution
-                        && h - offset > resolution
+                    if offset > guard
+                        && h - offset > guard
                         && earliest.is_none_or(|(t, _)| offset < t)
                     {
                         earliest = Some((offset, i));
@@ -64,6 +92,9 @@ pub struct PathErrorControl {
     /// Localize gap and Coulomb activity changes on equilibrated half-step chords.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub localize_friction_events: bool,
+    /// Keep the equilibrated two-half-step history and bracket the curved gap root.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub resolve_slip_path: bool,
     /// Use the measured coarse/fine defect to propose a retry and clip growth at the next anchor.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub error_scaled_retry: bool,
@@ -105,6 +136,11 @@ impl GlobalStepControl {
             if c.event_comparison.is_some() && !c.event_proposal {
                 return Err(Error::Input(
                     "event_comparison requires event_proposal".into(),
+                ));
+            }
+            if c.resolve_slip_path && !c.localize_friction_events {
+                return Err(Error::Input(
+                    "resolve_slip_path requires friction event localization".into(),
                 ));
             }
             if c.localize_friction_events && (!c.event_proposal || c.event_comparison.is_some()) {

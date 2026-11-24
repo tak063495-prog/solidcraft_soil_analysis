@@ -16,6 +16,7 @@ const SPEC: &str = include_str!("../../interim/2026-11-24-t9d-benchmarks/criteri
 enum ElasticPath {
     Default,
     Analytic,
+    RefinedPlastic,
 }
 
 struct MaterialStep<'a> {
@@ -31,6 +32,13 @@ impl MaterialStep<'_> {
             ElasticPath::Default => self
                 .model
                 .integrate_with_shear(state, strain, self.h, self.shear)?,
+            ElasticPath::RefinedPlastic => self.model.integrate_with_plastic_refinement(
+                state,
+                strain,
+                self.h,
+                self.shear.ok_or("plastic refinement requires constant G")?,
+                2.5e-5,
+            )?,
             ElasticPath::Analytic => self.model.integrate_with_elastic_split(
                 state,
                 strain,
@@ -373,7 +381,10 @@ fn specimen(
         fields.insert("initial_pc_kpa".into(), json!(initial_pc));
     }
     if let Some(path) = comparison {
-        output["analytic_elastic"] = json!(path == ElasticPath::Analytic);
+        output["analytic_elastic"] = json!(path != ElasticPath::Default);
+        if path == ElasticPath::RefinedPlastic {
+            output["plastic_material_width"] = json!(2.5e-5);
+        }
         output["control_substeps"] = json!(control_steps);
         output["cell_substeps"] = json!(cell_steps);
         output["seconds"] = json!(start.elapsed().as_secs_f64());
@@ -384,11 +395,16 @@ fn specimen(
 fn main() -> Trial<()> {
     let cfg: Value = serde_json::from_str(SPEC)?;
     let args: Vec<_> = std::env::args().skip(1).collect();
-    if args == ["--compare-ocr8"] {
+    if args == ["--compare-ocr8"] || args == ["--refine-plastic-ocr8"] {
+        let paths: &[ElasticPath] = if args == ["--refine-plastic-ocr8"] {
+            &[ElasticPath::RefinedPlastic]
+        } else {
+            &[ElasticPath::Default, ElasticPath::Analytic]
+        };
         let mut records = Vec::new();
         for n in [1, 2] {
             for h in [1e-4, 5e-5] {
-                for path in [ElasticPath::Default, ElasticPath::Analytic] {
+                for &path in paths {
                     records.push(specimen(40., n, h, &cfg["mcc"], true, true, Some(path))?);
                 }
             }

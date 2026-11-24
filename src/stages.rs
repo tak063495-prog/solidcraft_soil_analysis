@@ -21,6 +21,8 @@ mod joint_path_error;
 #[path = "stages_mixed.rs"]
 mod mixed;
 pub use joint_path_error::PathErrorAudit;
+mod checkpoint_response;
+pub use checkpoint_response::CheckpointResponse;
 mod dense_refinement;
 mod dense_residual;
 pub use dense_residual::DenseResidualMethod;

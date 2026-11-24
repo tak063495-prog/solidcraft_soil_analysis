@@ -88,7 +88,7 @@ def endpoint_status(system, old_jump, old_traction, target, count):
         tau=np.where(closed[:,None],trial*scale[:,None],0); gap=end
     return status
 
-def friction_event(system, jumps, tractions, statuses, h, resolution):
+def friction_event(system, jumps, tractions, statuses, h, resolution, *, curved_gap=False, opening_resolution=None):
     """Root of the elastic trial friction margin on each equilibrated closed chord."""
     from scipy.optimize import brentq
 
@@ -101,7 +101,28 @@ def friction_event(system, jumps, tractions, statuses, h, resolution):
             a, b = left @ n, right @ n
             if (a > 0) != (b > 0):
                 root = a / (a - b)
+                if curved_gap:
+                    g0,gm,g1 = (row[i]@n for row in jumps)
+                    def gap(s):
+                        t = half+s
+                        return g0+t*(gm-g0)+0.5*t*(t-1)*(g0-2*gm+g1)
+                    # A contact opening changes slope. Extrapolate from the two
+                    # equilibria on the same branch when their root is bracketed.
+                    other = g1-gm if half == 0 else gm-g0
+                    one_sided = (1.-gm/other if half == 0 else -gm/other) if other else -1.
+                    # Evaluate endpoints from the original branch observations.
+                    root = (one_sided if a<=0<b and 0<one_sided<1 else
+                            brentq(lambda s: a if s==0 else b if s==1 else gap(s),0.,1.))
             elif a <= 0 and statuses[half][i] == 2 and statuses[half + 1][i] == 1:
+                if curved_gap:
+                    tau = tractions[half][i]
+                    shear = tau - (tau@n)*n
+                    dj = right-left
+                    trial = shear + system.kt[i]*(dj-(dj@n)*n)
+                    if np.linalg.norm(trial) <= -system.mu[i]*system.kn[i]*b:
+                        # Convex norm minus affine cap along this closed chord.
+                        # Both endpoints are in the cone: unloading starts at t=0.
+                        continue
                 root = 0.5
             elif a <= 0 and statuses[half][i] == 1 and statuses[half + 1][i] == 2:
                 tau = tractions[half][i]
@@ -118,8 +139,13 @@ def friction_event(system, jumps, tractions, statuses, h, resolution):
                 root = brentq(excess, 0, 1, xtol=2e-15)
             else:
                 continue
+            guard = resolution
+            if opening_resolution is not None and statuses[half][i] == 2 and b > 0 >= a:
+                # Tangential slip freezes at opening. Keep locating the curved-path
+                # root until a retry would cross the existing global step floor.
+                guard = opening_resolution
             offset = (half + root) * h * 0.5
-            if resolution < offset < h - resolution and (earliest is None or offset < earliest[0]):
+            if guard < offset < h - guard and (earliest is None or offset < earliest[0]):
                 earliest = offset, int(i)
     return earliest
 
@@ -328,7 +354,7 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                 pd, nd, work = work_parts(target)
                 if probe:
                     return dict(u=candidate, jump=target, traction=q, slip=slip, cum=cum, pd=pd,
-                                status=new_status, residual=relative, iterations=iteration)
+                                status=new_status, residual=relative, iterations=iteration, nd=nd, work=work, counts=frozen_counts.copy())
                 error_audit = None
                 rejected = (switch_bisections is not None and np.any(new_status != status)
                             and progress-previous > (1/steps/2**switch_bisections)*(1+16*np.finfo(float).eps))
@@ -374,7 +400,9 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                             raise ValueError("friction localization requires event proposals without comparison")
                         event = friction_event(system, [jump, half["jump"], fine["jump"]],
                                                [traction, half["traction"]], [status, half["status"], fine["status"]],
-                                               h, max(1 / (64 * steps), case["settings"]["minimum_increment"]))
+                                               h, max(1 / (64 * steps), case["settings"]["minimum_increment"]), curved_gap=path_error.get("resolve_slip_path",False),
+                                               opening_resolution=(case["settings"]["minimum_increment"]
+                                                                   if path_error.get("resolve_slip_path") else None))
                         if event is not None:
                             event_offset, gp = event
                             proposal = min(event_offset, error_audit["proposed_increment"]) if rejected else event_offset
@@ -392,6 +420,13 @@ def _reference(mesh, ground, case, steps, contact_steps, order, discrete_volume,
                                      **({'joint_path_error':error_audit} if error_audit is not None else {})))
                 if rejected:
                     return False  # Neither global path has changed committed arrays.
+                if path_error is not None and path_error.get("resolve_slip_path"):
+                    candidate,target,q,new_status = fine["u"],fine["jump"],fine["traction"],fine["status"]
+                    slip = half["slip"]+fine["slip"]
+                    cum = half["cum"]+fine["cum"]
+                    pd,nd,work = (half[k]+fine[k] for k in ("pd","nd","work"))
+                    relative,iteration = fine["residual"],fine["iterations"]
+                    frozen_counts = fine["counts"]
                 status = new_status
                 plastic_work[:] += pd; numerical[:] += nd; endpoint_work[:] += work
                 u = candidate; jump = target; traction = q; plastic += slip; accumulated += cum

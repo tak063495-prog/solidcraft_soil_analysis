@@ -368,7 +368,7 @@ def trace(
     )
 
 
-def simple_point(evaluate, parent, before, after, tol):
+def simple_point(evaluate, parent, before, after, tol, *, metrics=False):
     """Locate R=0, Kv=0 and v.v=1 between two equilibria of a smooth fixed branch."""
     a, b = np.asarray(before), np.asarray(after)
     ea, eb = evaluate(parent, a), evaluate(parent, b)
@@ -444,7 +444,10 @@ def simple_point(evaluate, parent, before, after, tol):
     w = u[:, -1]
     h = np.cbrt(np.finfo(float).eps) * (1 + np.linalg.norm(z[:-1]))
     probes = [evaluate(parent, z + np.r_[sign * h * v, 0.0]) for sign in (-1, 1)]
-    curvature = w @ (probes[1].k - probes[0].k) @ v / (2 * h)
+    if hasattr(evaluate, "tangent_action_derivative"):
+        curvature = w @ evaluate.tangent_action_derivative(z, v)
+    else:
+        curvature = w @ (probes[1].k - probes[0].k) @ v / (2 * h)
     scale = max(np.linalg.norm(ea.k), np.linalg.norm(eb.k), 1.0)
     aug = np.vstack((np.column_stack((ev.k, ev.q)), ta))
     along = (z - a) @ chord / (chord @ chord)
@@ -469,6 +472,9 @@ def simple_point(evaluate, parent, before, after, tol):
         curvature=curvature,
         singular_values=sv,
         bordered_rank=np.linalg.matrix_rank(aug),
+        **(dict(curvature_over_scale=abs(curvature)/scale,
+                fd_curvature_over_scale=abs(w @ (probes[1].k - probes[0].k) @ v)/(2*h*scale),
+                force_ratio=np.linalg.norm(ev.residual)/ev.denominator) if metrics else {}),
     )
 
 

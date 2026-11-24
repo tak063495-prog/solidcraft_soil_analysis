@@ -33,9 +33,11 @@ def inspect(folder, side, n, mode, seeds, previous):
     }
     if mode in flags:
         ctrl[flags[mode]] = True
-    if mode in ("local-ws", "local-active", "friction-events"):
+    if mode in ("local-ws", "local-active", "friction-events","resolved-slip"):
         ctrl.update(semismooth_contact=True, contact_history_bisection=True)
-    if mode == "friction-events":
+    if mode == "resolved-slip":
+        ctrl["resolve_slip_path"] = True
+    if mode in ("friction-events","resolved-slip"):
         ctrl["localize_friction_events"] = True
     warm = mode in ("ws", "local-ws")
     if cfg != expected or study.reference.stage_attempt_budget(mesh, cfg["settings"]) != 2065:
