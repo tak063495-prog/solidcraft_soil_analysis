@@ -89,6 +89,8 @@ SolidCraftで作成・編集した3Dソリッドを解析へ渡すための開�
 
 有効接触ばねと物理水圧荷重を分け、SOIL・CONTINUOUS・PRESCRIBEDを施工FEMへ接続しました。定常浸透では水頭だけを共有し、接触変位は分離します。部分DEATHの面荷重・水圧と履歴を保存します。[入力・実行・検証ゲート](docs/JOINT_WATER.ja.md)。総合受入は`pwsh -NoProfile -File scripts/Test-JointWater.ps1`で実行します。 [今回の総合受入](runs/wet-joint-acceptance-20261024-v1/final-validation.json)は全206 Rust試験、湿潤15ケース・34地点再開と既存結果の完全一致が合格しました。[実CADの3D図](runs/wet-joint-figure-20261024-29784813-v1/wet-joint.png)と[独立弾性変位比較](runs/wet-joint-elastic-20261024-29784813-v1/verification.json)、[当該固定版のソース照合](runs/wet-joint-current-source-binding-29784813.json)も保存しています。
 
+C-01 の `joint_system.global_step_control.path_error.semismooth_contact = true` では、開口から法線ギャップが厳密にゼロとなるときに閉側の片側接線を使います。試行せん断力の勾配を Coulomb 上限の勾配で制限し、摩擦係数ゼロでは法線剛性だけを使います。未指定または `false` は従来の中心差分接線です。[再現試験と検証記録](interim/2026-11-24-issue-44/README.ja.md)
+
 ## 不飽和水理と地盤変形
 
 ```powershell

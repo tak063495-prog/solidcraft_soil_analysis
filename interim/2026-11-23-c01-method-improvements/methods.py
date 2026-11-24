@@ -105,15 +105,18 @@ def active_tangent(system, old, traction, target, counts):
         for j in range(1, int(count) + 1):
             next_gap = gap + dg
             closed = next_gap <= 0
-            newly = (gap > 0) & closed
+            recontact = (gap > 0) & (next_gap == 0)
+            crossing = (gap > 0) & (next_gap < 0)
             tau[gap > 0] = 0
             jac[gap > 0] = 0
             frac = np.ones(len(gap))
             df = np.zeros_like(nn)
-            frac[newly] = next_gap[newly] / dg[newly]
-            df[newly] = ((j * dg[newly] - next_gap[newly]) / (count * dg[newly] ** 2))[:, None] * nn[
-                newly
-            ]
+            frac[recontact] = 0
+            frac[crossing] = next_gap[crossing] / dg[crossing]
+            df[crossing] = (
+                ((j * dg[crossing] - next_gap[crossing]) / (count * dg[crossing] ** 2))[:, None]
+                * nn[crossing]
+            )
             trial = tau + kt[:, None] * dt * frac[:, None]
             dj = jac + kt[:, None, None] * (
                 frac[:, None, None] * P / count + dt[:, :, None] * df[:, None, :]
@@ -129,9 +132,19 @@ def active_tangent(system, old, traction, target, counts):
                 mu[sliding] * kn[sliding] * j / count
             )[:, None, None] * direction[:, :, None] * nn[sliding, None, :]
             tau[sliding] = cap[sliding, None] * direction
+            if recontact.any():
+                # Take the closed-side derivative of the trial shear capped by Coulomb.
+                increment = kt[recontact, None] * dt[recontact]
+                length = np.linalg.norm(increment, axis=1)
+                cap_slope = mu[recontact] * kn[recontact]
+                slips = length > cap_slope * gap[recontact]
+                divisor = np.where(slips, length, gap[recontact])
+                slope = (increment / divisor[:, None]) * np.where(slips, cap_slope, 1)[:, None]
+                jac[recontact] = -(j / count) * slope[:, :, None] * nn[recontact, None, :]
             tau[~closed] = 0
             jac[~closed] = 0
             gap = next_gap
+        jac[mu == 0] = 0
         result[mask] = jac + (kn * (gap <= 0))[:, None, None] * normal[mask]
     return result
 

@@ -139,6 +139,71 @@ fn interface_assembly_tangent_matches_independent_direction_and_rejects_bad_layo
     Ok(())
 }
 
+#[test]
+fn default_recontact_uses_centered_tangent_and_preserves_outputs() -> Result<()> {
+    let (mesh, mut model) = fixture(false)?;
+    let initial = model.initial_state()?;
+    let active = vec![true; mesh.tetrahedra.len()];
+    let counts = vec![1; initial.points.len()];
+    let side_b = &mesh.node_sets["Seam:b"];
+    let jumps = |x, z| {
+        let mut u = vec![[0.; 3]; mesh.nodes.len()];
+        for &node in side_b {
+            u[node] = [x, 0., z];
+        }
+        u
+    };
+    let open = model
+        .evaluate(&initial, &jumps(0., 0.00025), &active, Some(&counts), false)?
+        .state;
+    let h = model.configuration.tangent_step_m;
+    let target = jumps(0.002, 0.);
+    let legacy = model.evaluate(&open, &target, &active, Some(&counts), true)?;
+    let plus = model.evaluate(&open, &jumps(0.002, h), &active, Some(&counts), false)?;
+    let minus = model.evaluate(&open, &jumps(0.002, -h), &active, Some(&counts), false)?;
+    let centered = DVector::from_iterator(
+        target.len() * 3,
+        plus.internal_kn
+            .iter()
+            .zip(&minus.internal_kn)
+            .map(|(p, m)| (p - m) / (2. * h)),
+    );
+    let mut predicted = DVector::zeros(centered.len());
+    for &(row, column, value) in &legacy.tangent {
+        if column % 3 == 2 && side_b.contains(&(column / 3)) {
+            predicted[row] += value;
+        }
+    }
+    assert!(centered.norm() > 0.);
+    assert!((&predicted - &centered).norm() / centered.norm() < 1e-10);
+
+    model.configuration.global_step_control = Some(serde_json::from_value(serde_json::json!({
+        "path_error": { "semismooth_contact": false, "slip_scale_m": 1e-4, "dissipation_scale_kpa_m": 1e-2 }
+    }))?);
+    let disabled = model.evaluate(&open, &target, &active, Some(&counts), true)?;
+    assert_eq!(disabled.tangent, legacy.tangent);
+    model
+        .configuration
+        .global_step_control
+        .as_mut()
+        .unwrap()
+        .path_error
+        .as_mut()
+        .unwrap()
+        .semismooth_contact = true;
+    let enabled = model.evaluate(&open, &target, &active, Some(&counts), true)?;
+    assert_ne!(enabled.tangent, legacy.tangent);
+    for value in [disabled, enabled] {
+        assert_eq!(value.state, legacy.state);
+        assert_eq!(value.internal_kn, legacy.internal_kn);
+        assert_eq!(
+            serde_json::to_vec(&value.report)?,
+            serde_json::to_vec(&legacy.report)?
+        );
+    }
+    Ok(())
+}
+
 fn coupled(mcc: bool) -> Result<(Mesh, Ground, StageCase)> {
     let (mesh, _) = fixture(true)?;
     let ground = serde_json::from_str(if mcc {
