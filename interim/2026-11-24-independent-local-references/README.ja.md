@@ -67,3 +67,9 @@ OCR 8 の第50点（軸ひずみ 0.048828125）で参照体積ひずみは −9.
 各受理区間64→128分割の最大差は、直接 0.003472%、体積 0.004076%、せん断 0.004189%。全4,032分類がこの2水準間で一致した。FEM と参照の分類差は m0c1 の GP108（reload 0.96875）、GP185（open 0.96875）の2点で、いずれも extension_edge／shear_face。例として m0c1・GP108 の終端で FEM の直接・体積・せん断は 0.05249739、−0.00709758、0.06764969 kPa、参照は 0.05245207、−0.00709038、0.06758414 kPa。局所仕事は全18点経路で合格、全分類一致は未達。[各点の絶対値と刻み差](c03.json)・[範囲別台帳](scope-rows.json)
 
 C-01 の全場収束、T7 の12／96要素、NC-01 の96 Tet10 の判定は未達。今回の3件は以上の材料点・壁面の検証範囲に限る。[C-01・T7・Kirsch・MCC の先行判定](../2026-11-24-approved-four/scope-rows.json)・[NC-01 の台帳](../2026-11-24-t9d-benchmarks/ledger.json)
+
+## Linux 全試験
+
+実装コミット `11a6ffc6d925268024d702a06a4f21a7f120713a` の Rust 全ターゲット 541 件、Python 全 1,123 件が合格。両言語とも失敗・skip・未実行は0件。doctest は対象0件で正常終了。Python は core が555／536件、C-01 の3群が4／5／8件、mean-evidence と spatial-evidence は各4件、Linux 専用は7件で、両 evidence 群の setUpClass エラーは0件。cargo fmt と全ターゲットの Clippy（-D warnings）も合格した。[群別件数・ログの SHA-256](tests/linux.json)
+
+全証拠の一括 fetch は HTTP/2 の early EOF で中断した。中断前に受け取った完全な blob を先端ツリーの ID と照合して1,663パスを復元し、残り196パスは Git で復元して ID 一致を確認した。追跡ファイルの欠落は0件。分割分を含む evidence.* アーカイブ1,540ファイル、30,459,909,979バイトも照合した。[中断時の出力](tests/fetch.log.gz)・[パス別 Git blob ID](tests/archive-blobs.json.gz)
