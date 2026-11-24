@@ -176,7 +176,14 @@ impl Cube {
     }
 }
 
-fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value, constant_g: bool) -> Trial<Value> {
+fn specimen(
+    ocr_target: f64,
+    n: usize,
+    h: f64,
+    cfg: &Value,
+    constant_g: bool,
+    observe_strain: bool,
+) -> Trial<Value> {
     let get = |key: &str| cfg[key].as_f64().unwrap();
     let p0 = get("p0_kpa");
     // Match Table 1's G at the common normally consolidated starting state.
@@ -202,6 +209,8 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value, constant_g: bool) ->
     };
     let mut mesh = Cube::new(n, &state)?;
     let mut history = Vec::new();
+    let mut axial_strain = 0.;
+    let mut lateral_strain = 0.;
     let mut max_free: f64 = 0.;
     let mut max_spread: f64 = 0.;
     let mut max_side_error: f64 = 0.;
@@ -280,9 +289,18 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value, constant_g: bool) ->
                     .max((v - 1. - model.reference_void_ratio(pressure, exact_pc)?).abs());
             }
             if constant_g || i % 16 == 0 || i == 1 {
-                history.push(json!({"stage":stage,"fraction":f,"p_kpa":p,"q_kpa":q,
+                let mut row = json!({"stage":stage,"fraction":f,"p_kpa":p,"q_kpa":q,
                     "pc_kpa":pc_history,"v":v,
-                    "free_relative":free,"top_compression_reaction_kn":reaction}));
+                    "free_relative":free,"top_compression_reaction_kn":reaction});
+                if observe_strain {
+                    let increment = strain(lateral);
+                    axial_strain += increment[2];
+                    lateral_strain += increment[0];
+                    row["axial_strain"] = json!(axial_strain);
+                    row["lateral_strain"] = json!(lateral_strain);
+                    row["volumetric_strain"] = json!(axial_strain + 2. * lateral_strain);
+                }
+                history.push(row);
             }
         }
     }
@@ -314,9 +332,12 @@ fn specimen(ocr_target: f64, n: usize, h: f64, cfg: &Value, constant_g: bool) ->
 fn main() -> Trial<()> {
     let cfg: Value = serde_json::from_str(SPEC)?;
     let args: Vec<_> = std::env::args().skip(1).collect();
-    let constant_g = match args.as_slice() {
-        [] => false,
-        [arg] if arg == "--constant-g" => true,
+    let (constant_g, observe_strain) = match args.as_slice() {
+        [] => (false, false),
+        [arg] if arg == "--constant-g" => (true, false),
+        [arg, observation] if arg == "--constant-g" && observation == "--strain-history" => {
+            (true, true)
+        }
         _ => return Err("usage: t9d_mcc [--constant-g]".into()),
     };
     let mut records = Vec::new();
@@ -329,6 +350,7 @@ fn main() -> Trial<()> {
                     h,
                     &cfg["mcc"],
                     constant_g,
+                    observe_strain,
                 )?);
             }
         }
@@ -345,7 +367,7 @@ mod tests {
     fn drained_history_reaches_the_published_critical_state() -> Trial<()> {
         let spec: Value = serde_json::from_str(SPEC)?;
         for pc in [8., 40.] {
-            let result = specimen(pc, 1, 1e-4, &spec["mcc"], false)?;
+            let result = specimen(pc, 1, 1e-4, &spec["mcc"], false, false)?;
             assert_eq!(result["endpoint_passed"], true);
             assert!(
                 result["max_free_relative"].as_f64().unwrap()
