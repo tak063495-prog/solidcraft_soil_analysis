@@ -3,7 +3,7 @@ use nalgebra::{SVector, Vector3};
 use serde_json::{Value, json};
 use soil_fem_3d::{
     elastic,
-    mcc::{Integration, Parameters, State, invariants},
+    mcc::{Integration, Parameters, State, Update, invariants},
 };
 use std::collections::BTreeMap;
 use std::error::Error;
@@ -11,6 +11,35 @@ use std::error::Error;
 type Trial<T> = Result<T, Box<dyn Error>>;
 
 const SPEC: &str = include_str!("../../interim/2026-11-24-t9d-benchmarks/criteria.json");
+
+#[derive(Clone, Copy, PartialEq)]
+enum ElasticPath {
+    Default,
+    Analytic,
+}
+
+struct MaterialStep<'a> {
+    model: &'a Parameters,
+    h: f64,
+    shear: Option<f64>,
+    path: ElasticPath,
+}
+
+impl MaterialStep<'_> {
+    fn integrate(&self, state: &State, strain: [f64; 6]) -> Trial<Update> {
+        Ok(match self.path {
+            ElasticPath::Default => self
+                .model
+                .integrate_with_shear(state, strain, self.h, self.shear)?,
+            ElasticPath::Analytic => self.model.integrate_with_elastic_split(
+                state,
+                strain,
+                self.h,
+                self.shear.ok_or("analytic path requires constant G")?,
+            )?,
+        })
+    }
+}
 
 struct Cell {
     ids: [usize; 4],
@@ -119,24 +148,23 @@ impl Cube {
     /// test all free nodal equations against the prescribed pressure traction.
     fn step(
         &mut self,
-        model: &Parameters,
+        method: &MaterialStep,
         strain: [f64; 6],
         cell_pressure: f64,
         platen: bool,
-        h: f64,
-        shear: Option<f64>,
-    ) -> Trial<(f64, f64, f64)> {
+    ) -> Trial<(f64, f64, f64, usize)> {
         let mut residual = vec![Vector3::zeros(); self.nodes.len()];
         let mut external = residual.clone();
         let mut p_range = [f64::INFINITY, f64::NEG_INFINITY];
+        let mut substeps = 0;
         for c in &mut self.cells {
             let du = SVector::<f64, 12>::from_fn(|k, _| {
                 -self.nodes[c.ids[k / 3]][k % 3] * strain[k % 3]
             });
             let de = -(c.b * du);
-            c.state = model
-                .integrate_with_shear(&c.state, de.into(), h, shear)?
-                .state;
+            let update = method.integrate(&c.state, de.into())?;
+            substeps += update.substeps;
+            c.state = update.state;
             let stress = SVector::<f64, 6>::from(c.state.effective_stress_compression_positive_kpa);
             let local = -c.vol * c.b.transpose() * stress;
             for k in 0..12 {
@@ -172,6 +200,7 @@ impl Cube {
             free2.sqrt() / norm2.sqrt(),
             p_range[1] - p_range[0],
             axial_reaction,
+            substeps,
         ))
     }
 }
@@ -183,7 +212,9 @@ fn specimen(
     cfg: &Value,
     constant_g: bool,
     observe_strain: bool,
+    comparison: Option<ElasticPath>,
 ) -> Trial<Value> {
+    let start = std::time::Instant::now();
     let get = |key: &str| cfg[key].as_f64().unwrap();
     let p0 = get("p0_kpa");
     // Match Table 1's G at the common normally consolidated starting state.
@@ -201,6 +232,13 @@ fn specimen(
     };
     let initial_pc = if constant_g { ocr_target } else { p0 };
     let shear = constant_g.then_some(shear0);
+    let method = MaterialStep {
+        model: &model,
+        h,
+        shear,
+        path: comparison.unwrap_or(ElasticPath::Default),
+    };
+    let (mut control_steps, mut cell_steps) = (0, 0);
     let mut state = State {
         effective_stress_compression_positive_kpa: [p0, p0, p0, 0., 0., 0.],
         preconsolidation_pressure_kpa: initial_pc,
@@ -243,10 +281,10 @@ fn specimen(
             };
             // The root is the physical strain giving the prescribed cell pressure.
             // Every evaluation starts from the same committed material state.
-            let evaluate = |x| -> Trial<(f64, State)> {
-                let s = model
-                    .integrate_with_shear(&state, strain(x), h, shear)?
-                    .state;
+            let mut evaluate = |x| -> Trial<(f64, State)> {
+                let update = method.integrate(&state, strain(x))?;
+                control_steps += update.substeps;
+                let s = update.state;
                 Ok((s.effective_stress_compression_positive_kpa[0] - pressure, s))
             };
             let (mut lo, mut hi) = (-0.002, 0.002);
@@ -269,8 +307,9 @@ fn specimen(
             }
             let (lateral, next) = success.ok_or("pressure control did not converge")?;
             state = next;
-            let (free, spread, reaction) =
-                mesh.step(&model, strain(lateral), pressure, platen, h, shear)?;
+            let (free, spread, reaction, substeps) =
+                mesh.step(&method, strain(lateral), pressure, platen)?;
+            cell_steps += substeps;
             max_free = max_free.max(free);
             max_spread = max_spread.max(spread);
             max_side_error = max_side_error
@@ -300,6 +339,13 @@ fn specimen(
                     row["lateral_strain"] = json!(lateral_strain);
                     row["volumetric_strain"] = json!(axial_strain + 2. * lateral_strain);
                 }
+                if comparison.is_some() {
+                    row["plastic_volumetric_strain"] = json!(
+                        state.plastic_strain_compression_positive[..3]
+                            .iter()
+                            .sum::<f64>()
+                    );
+                }
                 history.push(row);
             }
         }
@@ -326,12 +372,30 @@ fn specimen(
         fields.insert("constant_shear_kpa".into(), json!(shear0));
         fields.insert("initial_pc_kpa".into(), json!(initial_pc));
     }
+    if let Some(path) = comparison {
+        output["analytic_elastic"] = json!(path == ElasticPath::Analytic);
+        output["control_substeps"] = json!(control_steps);
+        output["cell_substeps"] = json!(cell_steps);
+        output["seconds"] = json!(start.elapsed().as_secs_f64());
+    }
     Ok(output)
 }
 
 fn main() -> Trial<()> {
     let cfg: Value = serde_json::from_str(SPEC)?;
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args == ["--compare-ocr8"] {
+        let mut records = Vec::new();
+        for n in [1, 2] {
+            for h in [1e-4, 5e-5] {
+                for path in [ElasticPath::Default, ElasticPath::Analytic] {
+                    records.push(specimen(40., n, h, &cfg["mcc"], true, true, Some(path))?);
+                }
+            }
+        }
+        println!("{}", serde_json::to_string_pretty(&records)?);
+        return Ok(());
+    }
     let (constant_g, observe_strain) = match args.as_slice() {
         [] => (false, false),
         [arg] if arg == "--constant-g" => (true, false),
@@ -351,6 +415,7 @@ fn main() -> Trial<()> {
                     &cfg["mcc"],
                     constant_g,
                     observe_strain,
+                    None,
                 )?);
             }
         }
@@ -367,7 +432,7 @@ mod tests {
     fn drained_history_reaches_the_published_critical_state() -> Trial<()> {
         let spec: Value = serde_json::from_str(SPEC)?;
         for pc in [8., 40.] {
-            let result = specimen(pc, 1, 1e-4, &spec["mcc"], false, false)?;
+            let result = specimen(pc, 1, 1e-4, &spec["mcc"], false, false, None)?;
             assert_eq!(result["endpoint_passed"], true);
             assert!(
                 result["max_free_relative"].as_f64().unwrap()

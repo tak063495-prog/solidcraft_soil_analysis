@@ -62,6 +62,9 @@ pub fn invariants(s: &[f64; 6]) -> (f64, f64) {
     (p, (1.5 * ss).sqrt())
 }
 
+#[path = "mcc_elastic_split.rs"]
+mod elastic_split;
+
 impl Parameters {
     /// Differentiate the converged local return and propagate sensitivities
     /// through the complete fixed partition. The primal update is unchanged.
@@ -274,6 +277,17 @@ impl Parameters {
         max_substep: f64,
         shear_kpa: Option<f64>,
     ) -> Result<Update> {
+        self.integrate_steps(committed, strain, max_substep, shear_kpa, false)
+    }
+
+    fn integrate_steps(
+        &self,
+        committed: &State,
+        strain: [f64; 6],
+        max_substep: f64,
+        shear_kpa: Option<f64>,
+        split_elastic: bool,
+    ) -> Result<Update> {
         if let Some(g) = shear_kpa
             && (self.integration != Integration::BackwardEuler || !g.is_finite() || g <= 0.)
         {
@@ -310,11 +324,22 @@ impl Parameters {
             let mut plastic = 0;
             let increment = strain.map(|x| x / steps as f64);
             let mut failed = false;
+            let mut accepted = 0;
             for _ in 0..steps {
-                match self.substep_with_shear(&state, increment, shear_kpa) {
-                    Ok((next, yielded)) => {
+                let step = match (shear_kpa, split_elastic) {
+                    (Some(g), true) => self.elastic_split_substep(&state, increment, g),
+                    _ => self
+                        .substep_with_shear(&state, increment, shear_kpa)
+                        .map(|(next, yielded)| (next, yielded, 1)),
+                };
+                match step {
+                    Ok((next, yielded, count)) => {
                         state = next;
                         plastic += usize::from(yielded);
+                        accepted += count;
+                        if accepted > 100_000 {
+                            return Err(Error::Material("MCC substep budget exceeded".into()));
+                        }
                     }
                     Err(e) => {
                         failed = true;
@@ -327,7 +352,7 @@ impl Parameters {
                 self.validate_state(&state)?;
                 return Ok(Update {
                     state,
-                    substeps: steps,
+                    substeps: accepted,
                     plastic_substeps: plastic,
                 });
             }
