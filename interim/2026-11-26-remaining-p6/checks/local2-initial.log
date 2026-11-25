@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "/workspace/work/p6-src/interim/2026-11-26-remaining-p6/face.py", line 94, in <module>
+    run(Path(sys.argv[1]), int(sys.argv[2]))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/p6-src/interim/2026-11-26-remaining-p6/face.py", line 83, in run
+    driver.run(out, 8)
+    ~~~~~~~~~~^^^^^^^^
+  File "/workspace/work/p6-src/interim/2026-11-26-remaining-p5/c02_reference.py", line 28, in run
+    namespace["run"](output, 4, divisions, 512)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/p6-src/interim/2026-11-25-remaining5-p2/c02_face.py", line 21, in run
+  File "/workspace/work/p6-src/interim/2026-11-25-approved-six/c02_reference.py", line 5, in reference
+    import time
+            ^^^
+  File "/workspace/work/p6-src/interim/2026-11-25-remaining5-p2/c02_face.py", line 50, in surface
+    g = ref.geometry(mesh, ground, case, degree, 6)
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+    assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         verbose=verbose, header=header, equal_nan=equal_nan,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         strict=strict)
+                         ^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Not equal to tolerance rtol=0, atol=2e-14
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference among violations: 5.69544412e-14
+Max relative difference among violations: 5.69544412e-14
+ ACTUAL: array(1.)
+ DESIRED: array(1.)
+{"exit_code": 1, "seconds": 0.36371882799994637, "peak_rss_kib": 88520}
