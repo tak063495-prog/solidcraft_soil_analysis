@@ -57,11 +57,18 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("root",type=Path)
     p.add_argument("output",type=Path)
-    p.add_argument("--theta",type=int,required=True)
+    p.add_argument("--theta",type=int)
     grid = p.add_mutually_exclusive_group(required=True)
     grid.add_argument("--inner-splits",type=int)
     grid.add_argument("--band-cells",type=int,help="cells between a and 2.5a out of 24 radial cells")
+    grid.add_argument("--registered-grid",choices=["inverse-radius-22x21"])
     args=p.parse_args()
+    if args.registered_grid:
+        if args.theta not in (None,22):
+            p.error("inverse-radius-22x21 fixes theta at 22")
+        args.theta=22
+    elif args.theta is None:
+        p.error("--theta is required with --inner-splits or --band-cells")
     root=args.root.resolve()
     sys.path[:0]=[str(root/"interim/2026-11-24-approved-four"),str(root/"interim/2026-11-24-t9d-benchmarks")]
     from kirsch import A,R,study
@@ -70,7 +77,10 @@ def main():
     folder=args.output
     folder.mkdir()
     rings=np.geomspace(A,R,17)
-    if args.band_cells is None:
+    if args.registered_grid:
+        refined=A/np.linspace(1,A/R,22)
+        refined[[0,-1]]=[A,R]
+    elif args.band_cells is None:
         splits=args.inner_splits
         if not 0<=splits<=16:
             p.error("inner splits outside the initial 16 radial cells")
