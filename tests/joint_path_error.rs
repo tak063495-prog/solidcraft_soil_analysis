@@ -258,3 +258,35 @@ fn explicit_event4_history_substeps_and_retry_keep_the_force_and_path_gates() ->
     }
     Ok(())
 }
+
+#[test]
+fn independent_endpoint_rebalance_keeps_the_original_path_budgets() -> Result<()> {
+    let (mesh, ground, mut case) = fixture()?;
+    case.settings.minimum_increment = 1. / (16. * 65536.);
+    case.joint_system.as_mut().unwrap().global_step_control = Some(serde_json::from_value(
+        serde_json::json!({"path_error":{"slip_scale_m":1e-4,"dissipation_scale_kpa_m":1e-2,
+            "event_proposal":true, "reequilibrate_endpoints":true}}),
+    )?);
+    let run = stages::solve(&mesh, ground, case)?;
+    assert!(run.complete, "{:?}", run.failure_reason);
+    let mut corrected = 0;
+    for a in &run.attempts {
+        if !a.accepted {
+            assert!(a.committed_state_unchanged_on_rejection);
+        }
+        if let Some(e) = &a.joint_path_error {
+            let before = e.endpoint_rebalance_from.unwrap();
+            corrected += before.iter().flatten().count();
+            assert!(before.into_iter().flatten().all(|r| r > 1e-10));
+            assert!(e.midpoint_relative_force_residual <= 1e-10);
+            assert!(e.fine_relative_force_residual <= 1e-10);
+            assert_eq!(e.slip_budget_m, e.base_increment.powi(2) * 1e-4);
+            if a.accepted {
+                assert!(!e.reject && e.maximum_slip_error_m <= e.slip_budget_m);
+                assert!(e.maximum_dissipation_error_kpa_m <= e.dissipation_budget_kpa_m);
+            }
+        }
+    }
+    assert!(corrected > 0);
+    Ok(())
+}

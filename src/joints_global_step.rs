@@ -95,6 +95,9 @@ pub struct PathErrorControl {
     /// Keep the equilibrated two-half-step history and bracket the curved gap root.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub resolve_slip_path: bool,
+    /// Independently re-solve marginal coarse and half equilibria from their parent.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub reequilibrate_endpoints: bool,
     /// Use the measured coarse/fine defect to propose a retry and clip growth at the next anchor.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub error_scaled_retry: bool,

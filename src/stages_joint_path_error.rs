@@ -4,6 +4,9 @@ use super::*;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PathErrorAudit {
+    /// Initial residual ratios for re-solved coarse, midpoint and fine endpoints.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub endpoint_rebalance_from: Option<[Option<f64>; 3]>,
     pub midpoint_progress: f64,
     pub base_increment: f64,
     pub actual_increment: f64,
@@ -121,9 +124,32 @@ impl Model<'_> {
             .map(|(a, b)| a + (b - a) * 0.5)
             .collect();
         let midpoint_progress = midpoint.progress;
-        let coarse = self.trial(old, target.clone(), settings)?;
-        let half = self.trial(old, midpoint, settings)?;
-        let fine = self.trial(&half.state, target, settings)?;
+        // Restart from the immutable parent, including its material and contact
+        // history. Only the corrected midpoint becomes the fine trial's parent.
+        // 1e-10 is the independent equilibrium solve's endpoint target in P1.
+        let endpoint = |parent: &Committed, load: Target| -> Result<(Trial, Option<f64>)> {
+            if !control.reequilibrate_endpoints {
+                return self.trial(parent, load, settings).map(|t| (t, None));
+            }
+            let initial = self.trial(parent, load.clone(), settings)?;
+            if initial.residual <= 1e-10 {
+                return Ok((initial, None));
+            }
+            let mut corrector = settings.clone();
+            corrector.relative_force_tolerance = corrector.relative_force_tolerance.min(1e-10);
+            let mut corrected = self.trial(parent, load, &corrector)?;
+            let mut reports = initial.linear_solves;
+            reports.append(&mut corrected.linear_solves);
+            corrected.linear_solves = reports;
+            let mut predictors = initial.contact_predictors;
+            predictors.append(&mut corrected.contact_predictors);
+            corrected.contact_predictors = predictors;
+            corrected.iterations += initial.iterations;
+            Ok((corrected, Some(initial.residual)))
+        };
+        let (coarse, coarse_from) = endpoint(old, target.clone())?;
+        let (half, half_from) = endpoint(old, midpoint)?;
+        let (fine, fine_from) = endpoint(&half.state, target)?;
         let a = old
             .joints
             .as_ref()
@@ -195,6 +221,11 @@ impl Model<'_> {
             .filter(|(c, d)| c.status != d.status)
             .count();
         let mut audit = PathErrorAudit {
+            endpoint_rebalance_from: control.reequilibrate_endpoints.then_some([
+                coarse_from,
+                half_from,
+                fine_from,
+            ]),
             midpoint_progress,
             base_increment: base,
             actual_increment: h,

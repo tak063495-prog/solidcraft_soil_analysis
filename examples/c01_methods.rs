@@ -155,8 +155,19 @@ fn main() -> Result<()> {
                     && e.maximum_dissipation_error_kpa_m <= e.dissipation_budget_kpa_m
             );
         }
-        groups.push(json!({"stage":name,"attempts":attempts.len(),"accepted":accepted.len(),
-        "last_accepted":accepted.last().map(|a|a.progress_to),"rejections":reasons,"max_force":force_max}));
+        let rebalance = attempts
+            .iter()
+            .filter_map(|a| a.joint_path_error.as_ref())
+            .filter_map(|e| e.endpoint_rebalance_from)
+            .collect::<Vec<_>>();
+        let mut summary = json!({"stage":name,"attempts":attempts.len(),"accepted":accepted.len(),
+        "last_accepted":accepted.last().map(|a|a.progress_to),"rejections":reasons,"max_force":force_max});
+        if !rebalance.is_empty() {
+            let counts: [usize; 3] =
+                std::array::from_fn(|i| rebalance.iter().filter(|r| r[i].is_some()).count());
+            summary["reequilibrated_coarse_mid_fine"] = json!(counts);
+        }
+        groups.push(summary);
     }
     if let Some(s) = study.history {
         s.into_inner().flush()?;
