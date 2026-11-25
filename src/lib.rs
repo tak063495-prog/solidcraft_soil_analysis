@@ -22,6 +22,7 @@ pub mod hydraulic_transition;
 pub mod hydrostatic;
 pub mod hydrostatic_volume;
 pub mod joint_law;
+pub mod joint_p_cycle;
 pub mod joint_water;
 pub mod joints;
 pub mod linalg;
