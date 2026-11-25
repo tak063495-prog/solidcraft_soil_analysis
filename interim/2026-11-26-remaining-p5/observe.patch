@@ -1,0 +1,134 @@
+--- a/src/stages_joint_path_error.rs
++++ b/src/stages_joint_path_error.rs
+@@ -127,13 +127,15 @@
+         // Restart from the immutable parent, including its material and contact
+         // history. Only the corrected midpoint becomes the fine trial's parent.
+         // 1e-10 is the independent equilibrium solve's endpoint target in P1.
+-        let endpoint = |parent: &Committed, load: Target| -> Result<(Trial, Option<f64>)> {
++        let trace = target.stage == 3 && target.progress > 0.5;
++        let probe_target = trace.then(|| target.clone());
++        let endpoint = |parent: &Committed, load: Target| -> Result<(Trial, Option<f64>, Option<Committed>)> {
+             if !control.reequilibrate_endpoints {
+-                return self.trial(parent, load, settings).map(|t| (t, None));
++                return self.trial(parent, load, settings).map(|t| (t, None, None));
+             }
+             let initial = self.trial(parent, load.clone(), settings)?;
+             if initial.residual <= 1e-10 {
+-                return Ok((initial, None));
++                return Ok((initial, None, None));
+             }
+             let mut corrector = settings.clone();
+             corrector.relative_force_tolerance = corrector.relative_force_tolerance.min(1e-10);
+@@ -145,11 +147,11 @@
+             predictors.append(&mut corrected.contact_predictors);
+             corrected.contact_predictors = predictors;
+             corrected.iterations += initial.iterations;
+-            Ok((corrected, Some(initial.residual)))
+-        };
+-        let (coarse, coarse_from) = endpoint(old, target.clone())?;
+-        let (half, half_from) = endpoint(old, midpoint)?;
+-        let (fine, fine_from) = endpoint(&half.state, target)?;
++            Ok((corrected, Some(initial.residual), trace.then_some(initial.state)))
++        };
++        let (coarse, coarse_from, raw_coarse) = endpoint(old, target.clone())?;
++        let (half, half_from, raw_half) = endpoint(old, midpoint)?;
++        let (fine, fine_from, raw_fine) = endpoint(&half.state, target)?;
+         let a = old
+             .joints
+             .as_ref()
+@@ -359,6 +361,36 @@
+             audit.reject = true;
+             audit.proposed_increment = Some(size);
+         }
++        if let Some(load) = probe_target {
++            // Counterfactual fine endpoint before either half-step correction.
++            // With an unchanged midpoint, reuse the ordinary initial fine trial.
++            let uncorrected_fine = if let Some(mid) = &raw_half {
++                Some(self.trial(mid, load, settings)?)
++            } else {
++                None
++            };
++            let sample = |s: &Committed| {
++                let points = &s.joints.as_ref().unwrap().points;
++                serde_json::json!({
++                    "slip": points.iter().map(|p| p.plastic_slip_m).collect::<Vec<_>>(),
++                    "status": points.iter().map(|p| &p.status).collect::<Vec<_>>(),
++                })
++            };
++            let cf = raw_fine.as_ref().unwrap_or(&fine.state);
++            eprintln!("{}", serde_json::json!({
++                "start": start, "end": start+h, "accepted": !audit.reject,
++                "parent": sample(old), "before_c": sample(raw_coarse.as_ref().unwrap_or(&coarse.state)),
++                "before_m": sample(raw_half.as_ref().unwrap_or(&half.state)),
++                "before_f": sample(uncorrected_fine.as_ref().map_or(cf, |t| &t.state)),
++                "f_from_corrected_mid": sample(cf),
++                "after_c": sample(&coarse.state), "after_m": sample(&half.state),
++                "after_f": sample(&fine.state), "selected_from": audit.endpoint_rebalance_from,
++                "post_max_slip": maximum_slip_error_m, "slip_budget": slip_budget_m,
++                "post_max_dissipation": maximum_dissipation_error_kpa_m,
++                "dissipation_budget": dissipation_budget_kpa_m,
++                "event": audit.friction_event_target, "extra_trial": uncorrected_fine.is_some(),
++            }));
++        }
+         let trial = if control.resolve_slip_path && !audit.reject {
+             fine
+         } else {
+--- a/src/mcc_midpoint.rs
++++ b/src/mcc_midpoint.rs
+@@ -268,7 +268,8 @@
+         x[i] = trial.stress[i].v / scale;
+     }
+     let mut solution = None;
+-    for _ in 0..40 {
++    let trace = std::env::var_os("P5_POINT_TRACE").is_some();
++    for iteration in 0..40 {
+         let variables = std::array::from_fn(|i| D::<8>::seed(x[i], i));
+         let r = equations(p, &old8, strain8, variables).0;
+         let value = SVector::<f64, 8>::from_fn(|i, _| r[i].v);
+@@ -281,10 +282,22 @@
+             .lu()
+             .solve(&(-value))
+             .ok_or_else(|| Error::Material("singular midpoint local Jacobian".into()))?;
++        if trace {
++            eprintln!("{}", serde_json::json!({"iteration":iteration,"x":x.as_slice(),
++                "r":value.as_slice(),"dx":correction.as_slice(),"norm":value.norm(),
++                "linear_defect":(jac * correction + value).norm()}));
++        }
+         let mut accepted = false;
+         let mut alpha = 1.;
+         for _ in 0..30 {
+             let candidate = x + correction * alpha;
++            if trace {
++                let r = equations(p, &old8, strain8, std::array::from_fn(|i| D::<8>::c(candidate[i]))).0;
++                eprintln!("{}", serde_json::json!({"alpha":alpha,
++                    "finite":candidate.iter().all(|v| v.is_finite()), "log_pc":candidate[6],
++                    "multiplier":candidate[7],"pressure":(candidate[0]+candidate[1]+candidate[2])/3.,
++                    "candidate_norm":sum(r.map(D::square)).v.sqrt()}));
++            }
+             if candidate.iter().all(|x| x.is_finite())
+                 && candidate[6].abs() < 100.
+                 && candidate[7] >= 0.
+@@ -435,6 +448,11 @@
+             t.g = std::array::from_fn(|i| -equation.g[i + 1] / equation.g[0]);
+         }
+         let prefix = elastic(p, old, de.map(|x| x * t))?;
++        if std::env::var_os("P5_POINT_TRACE").is_some() {
++            eprintln!("{}",serde_json::json!({"first_yield":yield_value(p, &prefix).v,
++                "fraction":fraction,"pc":pc,"pc_squared":pc*pc,"loading":loading,
++                "f0":f0,"f1":f1}));
++        }
+         if yield_value(p, &prefix).v.abs() > 1e-10 {
+             return Err(Error::Material(
+                 "elastic first yield residual exceeds tolerance".into(),
+@@ -467,7 +485,10 @@
+         x
+     });
+     let mut plastic_count = 0;
+-    for _ in 0..steps {
++    for substep in 0..steps {
++        if std::env::var_os("P5_POINT_TRACE").is_some() {
++            eprintln!("{}",serde_json::json!({"substep":substep,"count":steps,"tangent":tangent}));
++        }
+         let (next, yielded) = step(p, &state, de, tangent)?;
+         state = next;
+         plastic_count += usize::from(yielded);
