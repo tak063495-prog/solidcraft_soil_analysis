@@ -8,7 +8,7 @@ import sys
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-P9 = HERE.parent / "2026-11-26-remaining-p9"
+P9 = Path("interim/2026-11-26-remaining-p9").resolve()
 
 
 def rows(path):
@@ -57,7 +57,7 @@ def freeze_reload(path):
                     if used:
                         windows.add((l,h))
     assert windows
-    return dict(trace_sha256=hashlib.sha256(path.read_bytes()).hexdigest(), events=pairs, windows=sorted(windows))
+    return dict(trace_raw_sha256=hashlib.sha256(gzip.decompress(path.read_bytes())).hexdigest(), events=pairs, windows=sorted(windows))
 
 
 if __name__ == "__main__":
