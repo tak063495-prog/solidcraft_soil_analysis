@@ -1,0 +1,206 @@
+test_bounded_fixed_path (__main__.Evidence.test_bounded_fixed_path) ... ERROR
+test_condensed_samples (__main__.Evidence.test_condensed_samples) ... ERROR
+test_endpoint_and_reload_work (__main__.Evidence.test_endpoint_and_reload_work) ... ERROR
+test_full_field_streams (__main__.Evidence.test_full_field_streams) ... ERROR
+test_history_steps (__main__.Evidence.test_history_steps) ... ERROR
+test_matched_contact (__main__.Evidence.test_matched_contact) ... ERROR
+test_nc_partition (__main__.Evidence.test_nc_partition) ... ERROR
+test_nc_predictions (__main__.Evidence.test_nc_predictions) ... ERROR
+test_preregistered_loads (__main__.Evidence.test_preregistered_loads) ... ERROR
+test_reload_freeze (__main__.Evidence.test_reload_freeze) ... ERROR
+
+======================================================================
+ERROR: test_bounded_fixed_path (__main__.Evidence.test_bounded_fixed_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 86, in test_bounded_fixed_path
+    b=np.load(D/f"c02/{s}.npz")
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c02/plus.npz'
+
+======================================================================
+ERROR: test_condensed_samples (__main__.Evidence.test_condensed_samples)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 110, in test_condensed_samples
+    z=read(D/f"c02/{sign}-sampled-tangents.json")
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c02/plus-sampled-tangents.json'
+
+======================================================================
+ERROR: test_endpoint_and_reload_work (__main__.Evidence.test_endpoint_and_reload_work)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 39, in test_endpoint_and_reload_work
+    self.assertEqual(read(d/"prefix-identity.json")["common_canonical_sha256"],read(P9/"c01/reload/prefix-comparison.json")["common_canonical_sha256"])
+                     ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c01/reload/prefix-identity.json'
+
+======================================================================
+ERROR: test_full_field_streams (__main__.Evidence.test_full_field_streams)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 65, in test_full_field_streams
+    score=read(d/"score.json")
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c01/alternate/score.json'
+
+======================================================================
+ERROR: test_history_steps (__main__.Evidence.test_history_steps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 98, in test_history_steps
+    records=[json.loads(l) for l in (D/f"c02/{s}-intervals.jsonl").read_text().splitlines()]
+                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c02/plus-intervals.jsonl'
+
+======================================================================
+ERROR: test_matched_contact (__main__.Evidence.test_matched_contact)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 52, in test_matched_contact
+    rows=read(d/"matched.json")
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c01/alternate/matched.json'
+
+======================================================================
+ERROR: test_nc_partition (__main__.Evidence.test_nc_partition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 132, in test_nc_partition
+    z=read(D/"nc/substeps.json")
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/nc/substeps.json'
+
+======================================================================
+ERROR: test_nc_predictions (__main__.Evidence.test_nc_predictions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 116, in test_nc_predictions
+    z=read(D/"nc/summary.json")
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/nc/summary.json'
+
+======================================================================
+ERROR: test_preregistered_loads (__main__.Evidence.test_preregistered_loads)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 26, in test_preregistered_loads
+    actual=read(D/"c01/alternate/plan.json")
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c01/alternate/plan.json'
+
+======================================================================
+ERROR: test_reload_freeze (__main__.Evidence.test_reload_freeze)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 34, in test_reload_freeze
+    self.assertEqual(read(d/"plan.json"),json.loads(json.dumps(freeze_reload(d/"observation-trace.jsonl.gz"))))
+                     ~~~~^^^^^^^^^^^^^^^
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/verify.py", line 21, in read
+    return json.loads(path.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p10/c01/reload/plan.json'
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.009s
+
+FAILED (errors=10)

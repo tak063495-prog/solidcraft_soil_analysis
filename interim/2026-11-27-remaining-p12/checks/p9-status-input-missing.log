@@ -1,0 +1,32 @@
+......E...
+======================================================================
+ERROR: test_preregistered_windows (__main__.Evidence.test_preregistered_windows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p9/verify.py", line 21, in test_preregistered_windows
+    self.assertEqual(json.loads(json.dumps(freeze())),read(P/"windows.json"))
+                                           ~~~~~~^^
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p9/freeze_windows.py", line 36, in freeze
+    coarse, a = events(256)
+                ~~~~~~^^^^^
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p9/freeze_windows.py", line 26, in events
+    values, digest = status(n)
+                     ~~~~~~^^^
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p9/freeze_windows.py", line 17, in status
+    meta = json.loads((folder / "manifest.json").read_text())["fields"]["contact_status"]
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p12/tree/interim/2026-11-26-remaining-p7/c01/original256/manifest.json'
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.387s
+
+FAILED (errors=1)

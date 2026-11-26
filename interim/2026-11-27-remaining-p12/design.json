@@ -1,0 +1,46 @@
+{
+  "authorization_jst": "2026-11-27 05:09",
+  "base": "0d711c0b7e7a292ca669f0164b274392e51ccc06",
+  "C02": {
+    "radius_m": 1e-08,
+    "threshold": 0.001,
+    "initial_history": "exact zero",
+    "signs": [
+      "plus",
+      "minus"
+    ],
+    "stop": "first failed sequential ball inclusion",
+    "nested_test_radii_m": [
+      1e-08,
+      3e-09,
+      1e-09,
+      3e-10,
+      1e-10,
+      3e-11,
+      1e-11
+    ],
+    "carry": "carry residual/lower after successful inclusion; stop when no nested ball certifies"
+  },
+  "reload": {
+    "rule": "retain p11 bands, filter actions to slip -> open, target band entrance",
+    "compare": "largest accepted common N1024 grid coordinate, and fixed p11 coordinate when available",
+    "cap": 1787,
+    "B12": 2065,
+    "default": 2000
+  },
+  "alternate": {
+    "points": [
+      14,
+      26
+    ],
+    "baseline": "p11",
+    "rule": "p11 symmetric endpoint decomposition, add middle-level opening-to-slip half endpoints and outer endpoints over three levels to existing knots",
+    "score": "p11 original 22 fields on 1792 common loads"
+  },
+  "nc": {
+    "common_arc_m": 0.004,
+    "initial": "each own p11 terminal state, secant and next width",
+    "rule": "p10 formula, record before first global attempt at each parent on both paths, apply only to predicted",
+    "mesh": 96
+  }
+}
