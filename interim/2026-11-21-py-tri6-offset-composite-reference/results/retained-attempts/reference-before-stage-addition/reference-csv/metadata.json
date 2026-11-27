@@ -1,0 +1,58 @@
+{
+  "schema": "tri6-offset-reference-output/1",
+  "requested_formulation": "mindlin_tri6_offset",
+  "actual_formulation": "mindlin_tri6_offset",
+  "completed": true,
+  "cancelled": false,
+  "source_kind": "independent-reference",
+  "units": {
+    "length": "m",
+    "rotation": "rad",
+    "force": "kN",
+    "moment": "kN*m",
+    "membrane": "kN/m",
+    "bending": "kN",
+    "pressure": "kPa"
+  },
+  "coordinate_system": "local-right-handed-XYZ",
+  "basis_global": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "normal": [
+    0.0,
+    0.0,
+    1.0
+  ],
+  "displacement_surface": "attachment",
+  "section_moment_surface": "neutral-and-attachment",
+  "offset_definition": "x_p=x_s-e*n;u_p=u_s+e*[n]cross*theta;Ms=Mp-e*N",
+  "stress_sign": "tension-positive",
+  "reaction_sign": "support-on-plate",
+  "install_reference": "zero-displacement-zero-rotation",
+  "e_m": 0.06,
+  "thickness_m": 0.2,
+  "E_kpa": 200000.0,
+  "nu": 0.0,
+  "case": "eccentric-cantilever",
+  "subdivisions": 2,
+  "load": {
+    "N_kn_m": 3.0,
+    "Ms_kn": 0.0
+  },
+  "boundary": "x=0 all six DOF fixed",
+  "geometry": "L=2m,H=1m,straight-planar-tri6"
+}

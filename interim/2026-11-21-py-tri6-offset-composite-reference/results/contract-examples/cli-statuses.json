@@ -1,0 +1,36 @@
+[
+  {
+    "name": "synthetic-roundtrip",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/compare.py",
+      "--reference",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/results/reference/reference-output.json",
+      "--candidate",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/results/reference/reference-output.json",
+      "--output",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/results/contract-examples/synthetic-roundtrip.json"
+    ],
+    "exit_code": 2,
+    "expected_exit": 2,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "name": "legacy-refusal",
+    "command": [
+      "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/compare.py",
+      "--reference",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/results/reference/reference-output.json",
+      "--candidate",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/results/contract-examples/legacy-candidate.json",
+      "--output",
+      "interim/2026-11-21-py-tri6-offset-composite-reference/results/contract-examples/legacy-refusal.json"
+    ],
+    "exit_code": 1,
+    "expected_exit": 1,
+    "stdout": "",
+    "stderr": ""
+  }
+]

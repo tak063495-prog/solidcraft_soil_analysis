@@ -1,0 +1,45 @@
+test_basis_normal_and_reference_mismatch_refused (__main__.Contracts.test_basis_normal_and_reference_mismatch_refused) ... ok
+test_csv_json_roundtrip (__main__.Contracts.test_csv_json_roundtrip) ... ok
+test_duplicate_json_keys_refused (__main__.Contracts.test_duplicate_json_keys_refused) ... ok
+test_identical_packet_still_has_undefined_acceptance (__main__.Contracts.test_identical_packet_still_has_undefined_acceptance) ... ok
+test_missing_metadata_and_duplicate_missing_points_refused (__main__.Contracts.test_missing_metadata_and_duplicate_missing_points_refused) ... ok
+test_nonfinite_and_boolean_values_refused (__main__.Contracts.test_nonfinite_and_boolean_values_refused) ... ok
+test_numeric_mismatch_recorded_without_invented_threshold (__main__.Contracts.test_numeric_mismatch_recorded_without_invented_threshold) ... ok
+test_outside_offset_refused (__main__.Contracts.test_outside_offset_refused) ... ok
+test_relabelled_opposite_moment_transfer_refused (__main__.Contracts.test_relabelled_opposite_moment_transfer_refused) ... ok
+test_sample_coordinates_cannot_be_silently_interpolated (__main__.Contracts.test_sample_coordinates_cannot_be_silently_interpolated) ... ok
+test_silent_legacy_fallback_refused_even_zero_offset (__main__.Contracts.test_silent_legacy_fallback_refused_even_zero_offset) ... ok
+test_unfinished_or_cancelled_refused (__main__.Contracts.test_unfinished_or_cancelled_refused) ... ok
+test_wrong_signed_offset_refused (__main__.Contracts.test_wrong_signed_offset_refused) ... ok
+test_wrong_units_refused (__main__.Contracts.test_wrong_units_refused) ... ok
+test_assembled_free_patch_has_only_six_rigid_modes (__main__.Mechanics.test_assembled_free_patch_has_only_six_rigid_modes) ... ok
+test_axial_membrane_to_bending_closed_form_both_signs (__main__.Mechanics.test_axial_membrane_to_bending_closed_form_both_signs) ... ok
+test_curved_edge_and_inverted_jacobian_rejected (__main__.Mechanics.test_curved_edge_and_inverted_jacobian_rejected) ... ok
+test_direct_thickness_energy_matches_transformed_matrix_both_signs (__main__.Mechanics.test_direct_thickness_energy_matches_transformed_matrix_both_signs) ... ok
+test_hydrostatic_closed_polynomials_and_cut_wet_polygon (__main__.Mechanics.test_hydrostatic_closed_polynomials_and_cut_wet_polygon) ... ok
+test_mcc_existing_invariants_only_no_coupled_acceptance (__main__.Mechanics.test_mcc_existing_invariants_only_no_coupled_acceptance) ... ok
+test_out_of_range_offset_and_nonfinite_rejected (__main__.Mechanics.test_out_of_range_offset_and_nonfinite_rejected) ... ok
+test_pure_bending_and_membrane_are_energy_conjugate (__main__.Mechanics.test_pure_bending_and_membrane_are_energy_conjugate) ... ok
+test_rigid_six_and_no_extra_zero_modes (__main__.Mechanics.test_rigid_six_and_no_extra_zero_modes) ... ok
+test_section_resultants_have_eccentric_moment_transfer (__main__.Mechanics.test_section_resultants_have_eccentric_moment_transfer) ... ok
+test_simple_supported_axial_and_bending_closed_form (__main__.Mechanics.test_simple_supported_axial_and_bending_closed_form) ... FAIL
+test_single_linear_truss_tip_solution_and_load_balance (__main__.Mechanics.test_single_linear_truss_tip_solution_and_load_balance) ... ok
+test_strips_balance_all_free_and_constrained_nodes (__main__.Mechanics.test_strips_balance_all_free_and_constrained_nodes) ... ok
+test_water_normal_force_has_no_offset_couple_or_uniform_lumping (__main__.Mechanics.test_water_normal_force_has_no_offset_couple_or_uniform_lumping) ... ok
+test_water_virtual_work_exact_quadratic_field (__main__.Mechanics.test_water_virtual_work_exact_quadratic_field) ... ok
+test_winkler_analytic_amplitude_satisfies_two_field_equilibrium (__main__.Mechanics.test_winkler_analytic_amplitude_satisfies_two_field_equilibrium) ... ok
+test_winkler_h_errors_are_measured_separately_from_quadrature (__main__.Mechanics.test_winkler_h_errors_are_measured_separately_from_quadrature) ... ok
+
+======================================================================
+FAIL: test_simple_supported_axial_and_bending_closed_form (__main__.Mechanics.test_simple_supported_axial_and_bending_closed_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tri6-reference/interim/2026-11-21-py-tri6-offset-composite-reference/checks.py", line 51, in test_simple_supported_axial_and_bending_closed_form
+    self.assertLess(report['errors']['displacement_max_m'], 1e-12)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.0003774294369070177 not less than 1e-12
+
+----------------------------------------------------------------------
+Ran 31 tests in 1.430s
+
+FAILED (failures=1)
