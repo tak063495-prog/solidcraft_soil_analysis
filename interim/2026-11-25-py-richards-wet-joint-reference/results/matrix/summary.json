@@ -1,0 +1,909 @@
+{
+  "accepted": null,
+  "A04": "未達",
+  "C04": "未達",
+  "parameters": {
+    "ks_m_s": 0.02,
+    "theta_r": 0.08,
+    "theta_s": 0.4117647058823529,
+    "alpha_per_m": 1.2,
+    "n": 1.6,
+    "ss_per_m": 0.02,
+    "gamma_water_kn_m3": 10.0,
+    "external_opening_stiffness_kpa_m": 2000.0,
+    "tangential_contact_stiffness_kpa_m": 200.0,
+    "mu": 0.3,
+    "gap_ks_m_s": 0.002,
+    "one_d_elevation_m": 0.32,
+    "normal_load_offset_kpa": 0.1,
+    "normal_load_amplitude_kpa": 0.5,
+    "boundary_head_amplitude_m": 0.15,
+    "prescribed_head_amplitude_m": 0.07,
+    "shear_displacement_amplitude_m": 0.006,
+    "schedule_peak_aperture_m": 0.0005,
+    "schedule_events_s": [
+      0.35,
+      0.75
+    ],
+    "problem_definition": "unit_cartesian_domain;left_Hbase+.15*sin(pi*t)^2*(1+.2*cos(pi*z));right_Hbase;N=.1+.5*cos(2*pi*t)^2;s=.006*sin(2*pi*t)"
+  },
+  "series": {
+    "time-vg-ONE_WAY": {
+      "dt_s": [
+        0.05,
+        0.025,
+        0.0125
+      ],
+      "differences_rms_m": [
+        0.0010961197230862595,
+        0.0004975105626659116
+      ],
+      "observed_order": 1.1396063234853293,
+      "interface_common_samples": 20,
+      "interface": {
+        "head_a_m": {
+          "rms_changes": [
+            0.0013328307604236586,
+            0.0006834915407278775
+          ],
+          "observed_order": 0.96349821472674
+        },
+        "head_b_m": {
+          "rms_changes": [
+            0.0013312975524032828,
+            0.0006826807215607284
+          ],
+          "observed_order": 0.9635501408118206
+        },
+        "joint_head_m": {
+          "rms_changes": [
+            0.0013350897745750354,
+            0.0006845076795152541
+          ],
+          "observed_order": 0.9637981230486729
+        },
+        "q_a_to_joint_m3_s": {
+          "rms_changes": [
+            6.982434712957785e-05,
+            3.589714846508525e-05
+          ],
+          "observed_order": 0.9598609327919502
+        },
+        "q_joint_to_b_m3_s": {
+          "rms_changes": [
+            7.831406066598688e-05,
+            4.012493815828085e-05
+          ],
+          "observed_order": 0.9647721864653753
+        },
+        "reservoir_inflow_m3_s": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "joint_storage_rate_m3_s": {
+          "rms_changes": [
+            0.00014042514741738463,
+            7.090273522797166e-05
+          ],
+          "observed_order": 0.98588812868374
+        },
+        "gap_m": {
+          "rms_changes": [
+            5.264708804512373e-06,
+            2.7283789549409106e-06
+          ],
+          "observed_order": 0.9483096970910131
+        },
+        "hydraulic_aperture_m": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "physical_pressure_kpa": {
+          "rms_changes": [
+            0.012232004535427292,
+            0.0063256292111799695
+          ],
+          "observed_order": 0.9513799496140658
+        },
+        "effective_pressure_kpa": {
+          "rms_changes": [
+            0.006076590539601347,
+            0.003199590291002187
+          ],
+          "observed_order": 0.9253749025017034
+        },
+        "shear_kpa": {
+          "rms_changes": [
+            0.0018229771618804038,
+            0.0009598770873006562
+          ],
+          "observed_order": 0.9253749025017031
+        },
+        "plastic_slip_m": {
+          "rms_changes": [
+            0.0007045023169494407,
+            0.00029256058567239706
+          ],
+          "observed_order": 1.2678690313386218
+        },
+        "friction_dissipation_kpa_m": {
+          "rms_changes": [
+            5.6457004695501636e-05,
+            2.913047387183643e-05
+          ],
+          "observed_order": 0.954623418884619
+        },
+        "water_balance_defect_m3": {
+          "rms_changes": [
+            1.0727249341066901e-13,
+            2.3422620668927587e-14
+          ],
+          "observed_order": 2.195305782953132
+        }
+      },
+      "contact_switch_brackets": [
+        [
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.55,
+              0.6
+            ],
+            "new_open": true
+          },
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.8,
+              0.85
+            ],
+            "new_open": false
+          }
+        ],
+        [
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.55,
+              0.575
+            ],
+            "new_open": true
+          },
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.85,
+              0.875
+            ],
+            "new_open": false
+          }
+        ],
+        [
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.5625,
+              0.575
+            ],
+            "new_open": true
+          },
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.85,
+              0.8625
+            ],
+            "new_open": false
+          }
+        ]
+      ]
+    },
+    "time-vg-TWO_WAY": {
+      "dt_s": [
+        0.05,
+        0.025,
+        0.0125
+      ],
+      "differences_rms_m": [
+        0.0009281666103471462,
+        0.0004393147795147764
+      ],
+      "observed_order": 1.0791287635816667,
+      "interface_common_samples": 20,
+      "interface": {
+        "head_a_m": {
+          "rms_changes": [
+            0.0010662819820716723,
+            0.000559338395351574
+          ],
+          "observed_order": 0.9307957428803415
+        },
+        "head_b_m": {
+          "rms_changes": [
+            0.0010628880214386392,
+            0.0005575373402550166
+          ],
+          "observed_order": 0.9308492766718945
+        },
+        "joint_head_m": {
+          "rms_changes": [
+            0.0010649628369279512,
+            0.000558672369941745
+          ],
+          "observed_order": 0.9307287105490512
+        },
+        "q_a_to_joint_m3_s": {
+          "rms_changes": [
+            3.309738019249737e-05,
+            1.6828233484475235e-05
+          ],
+          "observed_order": 0.9758332855778846
+        },
+        "q_joint_to_b_m3_s": {
+          "rms_changes": [
+            3.389050060349731e-05,
+            1.8207677866836536e-05
+          ],
+          "observed_order": 0.8963340087316617
+        },
+        "reservoir_inflow_m3_s": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "joint_storage_rate_m3_s": {
+          "rms_changes": [
+            4.776485197053525e-05,
+            2.0932641923040892e-05
+          ],
+          "observed_order": 1.190194986906384
+        },
+        "gap_m": {
+          "rms_changes": [
+            4.0416034539588634e-06,
+            2.1213654928234684e-06
+          ],
+          "observed_order": 0.9299345710763633
+        },
+        "hydraulic_aperture_m": {
+          "rms_changes": [
+            4.0416034539588634e-06,
+            2.1213654928234684e-06
+          ],
+          "observed_order": 0.9299345710763633
+        },
+        "physical_pressure_kpa": {
+          "rms_changes": [
+            0.00941993673188485,
+            0.004978542721553192
+          ],
+          "observed_order": 0.9199938599925155
+        },
+        "effective_pressure_kpa": {
+          "rms_changes": [
+            0.004837041876654007,
+            0.0026048265611670982
+          ],
+          "observed_order": 0.8929377121443774
+        },
+        "shear_kpa": {
+          "rms_changes": [
+            0.03523740018422312,
+            0.0007814479683501293
+          ],
+          "observed_order": 5.494813859367182
+        },
+        "plastic_slip_m": {
+          "rms_changes": [
+            0.00017638845193108268,
+            6.003816032092455e-06
+          ],
+          "observed_order": 4.876732530376361
+        },
+        "friction_dissipation_kpa_m": {
+          "rms_changes": [
+            6.646766383799424e-05,
+            2.5759029392057227e-05
+          ],
+          "observed_order": 1.367574414588905
+        },
+        "water_balance_defect_m3": {
+          "rms_changes": [
+            8.683841378550543e-14,
+            1.7830359134955692e-14
+          ],
+          "observed_order": 2.2839976118426697
+        }
+      },
+      "contact_switch_brackets": [
+        [
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.55,
+              0.6
+            ],
+            "new_open": true
+          },
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.85,
+              0.9
+            ],
+            "new_open": false
+          }
+        ],
+        [
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.55,
+              0.575
+            ],
+            "new_open": true
+          },
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.85,
+              0.875
+            ],
+            "new_open": false
+          }
+        ],
+        [
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.55,
+              0.5625
+            ],
+            "new_open": true
+          },
+          {
+            "point_id": 0,
+            "bracket_s": [
+              0.85,
+              0.8625
+            ],
+            "new_open": false
+          }
+        ]
+      ]
+    },
+    "space-vg": {
+      "nx": [
+        4,
+        8,
+        16
+      ],
+      "dt_s": 0.003125,
+      "differences_rms_m": [
+        0.0012720653096732523,
+        0.0002645716902959763
+      ],
+      "observed_order": 2.2654421388632837,
+      "restriction": "explicit pairwise cell-volume mean; not trace matching"
+    },
+    "time-linear-ONE_WAY": {
+      "dt_s": [
+        0.05,
+        0.025,
+        0.0125
+      ],
+      "differences_rms_m": [
+        0.000543768920229574,
+        0.00031177319368711425
+      ],
+      "observed_order": 0.802496804538886,
+      "interface_common_samples": 20,
+      "interface": {
+        "head_a_m": {
+          "rms_changes": [
+            0.0013063944341604758,
+            0.0006719792926914344
+          ],
+          "observed_order": 0.9591018679012565
+        },
+        "head_b_m": {
+          "rms_changes": [
+            0.0013047650470480554,
+            0.0006711124191091493
+          ],
+          "observed_order": 0.9591636798404352
+        },
+        "joint_head_m": {
+          "rms_changes": [
+            0.0013090584258158998,
+            0.0006731758094629478
+          ],
+          "observed_order": 0.95947424945519
+        },
+        "q_a_to_joint_m3_s": {
+          "rms_changes": [
+            7.424821262990335e-05,
+            3.755120017242e-05
+          ],
+          "observed_order": 0.9834972780767367
+        },
+        "q_joint_to_b_m3_s": {
+          "rms_changes": [
+            8.3175464428303e-05,
+            4.209927317603115e-05
+          ],
+          "observed_order": 0.9823626906707202
+        },
+        "reservoir_inflow_m3_s": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "joint_storage_rate_m3_s": {
+          "rms_changes": [
+            0.0001519809745700756,
+            7.673732745840022e-05
+          ],
+          "observed_order": 0.9858903081336197
+        },
+        "gap_m": {
+          "rms_changes": [
+            6.5452921290792674e-06,
+            3.3658790473144556e-06
+          ],
+          "observed_order": 0.9594742494552604
+        },
+        "hydraulic_aperture_m": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "physical_pressure_kpa": {
+          "rms_changes": [
+            0.013090584258158563,
+            0.006731758094628682
+          ],
+          "observed_order": 0.9594742494553128
+        },
+        "effective_pressure_kpa": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "shear_kpa": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "plastic_slip_m": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "friction_dissipation_kpa_m": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "water_balance_defect_m3": {
+          "rms_changes": [
+            8.894220246186774e-19,
+            2.247512184860492e-19
+          ],
+          "observed_order": null
+        }
+      },
+      "contact_switch_brackets": [
+        [],
+        [],
+        []
+      ]
+    },
+    "time-linear-TWO_WAY": {
+      "dt_s": [
+        0.05,
+        0.025,
+        0.0125
+      ],
+      "differences_rms_m": [
+        0.00025857277107818393,
+        0.00014270454352253238
+      ],
+      "observed_order": 0.8575390915803561,
+      "interface_common_samples": 20,
+      "interface": {
+        "head_a_m": {
+          "rms_changes": [
+            0.001089977177523336,
+            0.0005680700093095452
+          ],
+          "observed_order": 0.9401572830075186
+        },
+        "head_b_m": {
+          "rms_changes": [
+            0.0010303025885587094,
+            0.0005385816442928405
+          ],
+          "observed_order": 0.9358311368532563
+        },
+        "joint_head_m": {
+          "rms_changes": [
+            0.0010847728447208177,
+            0.000565787190965126
+          ],
+          "observed_order": 0.9390615482525014
+        },
+        "q_a_to_joint_m3_s": {
+          "rms_changes": [
+            3.705904562779378e-05,
+            1.9039535245236464e-05
+          ],
+          "observed_order": 0.9608274655721342
+        },
+        "q_joint_to_b_m3_s": {
+          "rms_changes": [
+            3.6789722026808814e-05,
+            1.9051919878934348e-05
+          ],
+          "observed_order": 0.9493663890300816
+        },
+        "reservoir_inflow_m3_s": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "joint_storage_rate_m3_s": {
+          "rms_changes": [
+            6.001703150653533e-05,
+            3.079147990240829e-05
+          ],
+          "observed_order": 0.9628407558101436
+        },
+        "gap_m": {
+          "rms_changes": [
+            5.4238642236039855e-06,
+            2.8289359548257312e-06
+          ],
+          "observed_order": 0.9390615482524224
+        },
+        "hydraulic_aperture_m": {
+          "rms_changes": [
+            5.4238642236039855e-06,
+            2.8289359548257312e-06
+          ],
+          "observed_order": 0.9390615482524224
+        },
+        "physical_pressure_kpa": {
+          "rms_changes": [
+            0.01084772844720772,
+            0.0056578719096521905
+          ],
+          "observed_order": 0.9390615482522033
+        },
+        "effective_pressure_kpa": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "shear_kpa": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "plastic_slip_m": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "friction_dissipation_kpa_m": {
+          "rms_changes": [
+            0.0,
+            0.0
+          ],
+          "observed_order": null
+        },
+        "water_balance_defect_m3": {
+          "rms_changes": [
+            3.4544689548147025e-16,
+            8.171755580430984e-17
+          ],
+          "observed_order": null
+        }
+      },
+      "contact_switch_brackets": [
+        [],
+        [],
+        []
+      ]
+    },
+    "space-linear": {
+      "nx": [
+        4,
+        8,
+        16
+      ],
+      "dt_s": 0.003125,
+      "differences_rms_m": [
+        0.0011358647369090124,
+        0.0002705954515137669
+      ],
+      "observed_order": 2.0695815493433054,
+      "restriction": "explicit pairwise cell-volume mean; not trace matching"
+    },
+    "space2d-vg": {
+      "grids": [
+        [
+          4,
+          2
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          16,
+          8
+        ]
+      ],
+      "dt_s": 0.00625,
+      "differences_rms_m": [
+        0.005590979646828456,
+        0.0021439500726242356
+      ],
+      "observed_order": 1.3828297837163082,
+      "restriction": "explicit cell-volume means; no matching of different interface points"
+    },
+    "space2d-linear": {
+      "grids": [
+        [
+          4,
+          2
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          16,
+          8
+        ]
+      ],
+      "dt_s": 0.00625,
+      "differences_rms_m": [
+        0.0010335706935294855,
+        0.0002461720657678273
+      ],
+      "observed_order": 2.069898101460928,
+      "restriction": "explicit cell-volume means; no matching of different interface points"
+    },
+    "eigen-0": {
+      "errors_rms_m": [
+        0.0006055359814975632,
+        0.00017420924738731656,
+        6.479622185480703e-05
+      ],
+      "orders": [
+        1.7973914815079715,
+        1.4268396073526965
+      ],
+      "dt_s": 0.0005,
+      "caveat": "fixed time error remains; not pure asymptotic space order"
+    },
+    "eigen-1": {
+      "errors_rms_m": [
+        0.0016596215249939734,
+        0.0004536400247526516,
+        0.00013884090632211208
+      ],
+      "orders": [
+        1.8712344336513034,
+        1.7081152472782553
+      ],
+      "dt_s": 0.00025,
+      "caveat": "fixed time error remains; not pure asymptotic space order"
+    }
+  },
+  "cases": {
+    "vg-1d-ONE_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 2.675639386700429e-13,
+      "maximum_residual_m3_s": 1.6234415076233768e-12,
+      "cumulative_net_inflow_m3": 0.00020878615173523077,
+      "max_gap_m": 0.00023320063349491498,
+      "max_joint_flow_m3_s": 0.0038281008390397236,
+      "contact_states": [
+        "open",
+        "slip",
+        "stick"
+      ]
+    },
+    "vg-1d-ONE_WAY-PRESCRIBED": {
+      "maximum_water_balance_defect_m3": 2.7018637977979654e-13,
+      "maximum_residual_m3_s": 1.7583202547114142e-12,
+      "cumulative_net_inflow_m3": 0.00018272832714409047,
+      "max_gap_m": 9.187752592878113e-05,
+      "max_joint_flow_m3_s": 0.004093773390752113,
+      "contact_states": [
+        "open",
+        "slip",
+        "stick"
+      ]
+    },
+    "vg-1d-TWO_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 2.890210857101061e-13,
+      "maximum_residual_m3_s": 1.6234415076233768e-12,
+      "cumulative_net_inflow_m3": 0.000211456592235275,
+      "max_gap_m": 0.00016670390375059688,
+      "max_joint_flow_m3_s": 0.003366283930853348,
+      "contact_states": [
+        "open",
+        "slip",
+        "stick"
+      ]
+    },
+    "vg-2d-ONE_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 4.9536899105265264e-14,
+      "maximum_residual_m3_s": 8.40858726981315e-13,
+      "cumulative_net_inflow_m3": 0.0013655105041159984,
+      "max_gap_m": 0.0009036310507950818,
+      "max_joint_flow_m3_s": 0.0012315323813260194,
+      "contact_states": [
+        "open",
+        "slip",
+        "stick"
+      ]
+    },
+    "vg-2d-ONE_WAY-PRESCRIBED": {
+      "maximum_water_balance_defect_m3": 4.957376197912977e-14,
+      "maximum_residual_m3_s": 8.40858726981315e-13,
+      "cumulative_net_inflow_m3": 0.001856439496082248,
+      "max_gap_m": 0.0008634571333781889,
+      "max_joint_flow_m3_s": 0.0018979331540598255,
+      "contact_states": [
+        "open",
+        "slip",
+        "stick"
+      ]
+    },
+    "vg-2d-TWO_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 4.4289902691521665e-14,
+      "maximum_residual_m3_s": 7.376261339941102e-13,
+      "cumulative_net_inflow_m3": 0.0013788613484455494,
+      "max_gap_m": 0.0008513350897081392,
+      "max_joint_flow_m3_s": 0.0011048331492649983,
+      "contact_states": [
+        "open",
+        "slip",
+        "stick"
+      ]
+    },
+    "linear-1d-ONE_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 4.87890977618477e-19,
+      "maximum_residual_m3_s": 2.322776099608105e-18,
+      "cumulative_net_inflow_m3": 0.0002211446692333468,
+      "max_gap_m": 0.00873150861155407,
+      "max_joint_flow_m3_s": 0.003955742983255958,
+      "contact_states": [
+        "open"
+      ]
+    },
+    "linear-1d-ONE_WAY-PRESCRIBED": {
+      "maximum_water_balance_defect_m3": 4.336808689942018e-19,
+      "maximum_residual_m3_s": 1.8177327048077285e-18,
+      "cumulative_net_inflow_m3": 0.0001892856118837826,
+      "max_gap_m": 0.008590349468363094,
+      "max_joint_flow_m3_s": 0.004297961181640705,
+      "contact_states": [
+        "open"
+      ]
+    },
+    "linear-1d-TWO_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 1.9087379246607306e-16,
+      "maximum_residual_m3_s": 1.7638921566583404e-14,
+      "cumulative_net_inflow_m3": 0.00035440434182379773,
+      "max_gap_m": 0.008654696967951606,
+      "max_joint_flow_m3_s": 0.0032430764202763117,
+      "contact_states": [
+        "open"
+      ]
+    },
+    "linear-2d-ONE_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 2.439454888092385e-19,
+      "maximum_residual_m3_s": 6.64814984476219e-19,
+      "cumulative_net_inflow_m3": 0.00020067380352788654,
+      "max_gap_m": 0.009487478713233322,
+      "max_joint_flow_m3_s": 0.0013345821065724,
+      "contact_states": [
+        "open"
+      ]
+    },
+    "linear-2d-ONE_WAY-PRESCRIBED": {
+      "maximum_water_balance_defect_m3": 2.168404344971009e-19,
+      "maximum_residual_m3_s": 9.192689757873311e-19,
+      "cumulative_net_inflow_m3": 0.0001750933748127701,
+      "max_gap_m": 0.009357151941837342,
+      "max_joint_flow_m3_s": 0.0015856829089499077,
+      "contact_states": [
+        "open"
+      ]
+    },
+    "linear-2d-TWO_WAY-CONTINUOUS": {
+      "maximum_water_balance_defect_m3": 1.31378198250931e-16,
+      "maximum_residual_m3_s": 4.9295824634630744e-15,
+      "cumulative_net_inflow_m3": 0.00032281294354125035,
+      "max_gap_m": 0.009410852903902466,
+      "max_joint_flow_m3_s": 0.0010719598071257522,
+      "contact_states": [
+        "open"
+      ]
+    },
+    "dry-ONE_WAY": {
+      "maximum_water_balance_defect_m3": 2.675639386700429e-13,
+      "maximum_effective_pressure_kpa": 0.6,
+      "max_gap_m": 0.0
+    },
+    "dry-TWO_WAY": {
+      "maximum_water_balance_defect_m3": 2.465190052959587e-13,
+      "maximum_effective_pressure_kpa": 0.6,
+      "max_gap_m": 0.0
+    }
+  },
+  "switch_sensitivity": [
+    {
+      "shift_s": -0.0125,
+      "final_cell_head_difference_rms_m": 6.581215678103313e-05,
+      "net_inflow_difference_m3": -8.074578911139625e-07
+    },
+    {
+      "shift_s": 0.0125,
+      "final_cell_head_difference_rms_m": 8.380242473304625e-05,
+      "net_inflow_difference_m3": 1.0210035168322002e-06
+    }
+  ],
+  "coupling_difference": {
+    "head_a_m": 0.006333848511109757,
+    "head_b_m": 0.006488624495513147,
+    "joint_head_m": 0.006430671042652696,
+    "q_a_to_joint_m3_s": 0.0004291516985697203,
+    "q_joint_to_b_m3_s": 0.0004394650513286627,
+    "reservoir_inflow_m3_s": 0.0,
+    "joint_storage_rate_m3_s": 0.0008684206387109998,
+    "gap_m": 2.3876334885614786e-05,
+    "hydraulic_aperture_m": 0.0001873086918285762,
+    "physical_pressure_kpa": 0.06430456399216114,
+    "effective_pressure_kpa": 0.04306691862603877,
+    "shear_kpa": 0.012920075587811629,
+    "plastic_slip_m": 9.860039651607513e-05,
+    "friction_dissipation_kpa_m": 0.00013302186548248542,
+    "water_balance_defect_m3": 1.1600655585978686e-14
+  },
+  "complete": true,
+  "elapsed_seconds": 157.28035971500003
+}
