@@ -1,0 +1,125 @@
+{
+  "base_commit": "2d2d54c48070581d088959b52984ceb348e0e85e",
+  "completed_jst": "2026-11-12T00:38:47.513483+09:00",
+  "environment": {
+    "python": "3.13.17",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41"
+  },
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "software_checks_passed": true,
+  "B_01_passed": false,
+  "numerical_benchmark_acceptance": "未定義",
+  "new_tests": {
+    "tests_run": 27,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "exit_code": 0,
+    "log": "curved-new-tests.log"
+  },
+  "existing_python": {
+    "unique_tests_run": 532,
+    "all_discovered_ids_executed_exactly_once_in_selected_final_groups": true,
+    "groups": {
+      "python-core-0": {
+        "tests_run": 265,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 166.0009689389999
+      },
+      "python-core-1": {
+        "tests_run": 259,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 350.4240736930001
+      },
+      "python-mean-evidence": {
+        "tests_run": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 792.8374560120001
+      },
+      "python-spatial-evidence": {
+        "tests_run": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 122.63124444300001
+      }
+    },
+    "inventory_source": "unchanged tools/run_ci_python_tests.py; tests/ and tools/ test_*.py"
+  },
+  "release_build": {
+    "command": "cargo build --locked --release",
+    "exit_code": 0,
+    "log": "release-build.log"
+  },
+  "source_sha256": {
+    "tools/py_curved_shell_reference/benchmarks.json": "bb8ea0050a3f0453eb772e3561d64a56eeda75afc6140e20862aa00e81f45f55",
+    "tools/py_curved_shell_reference/check_reference.py": "74d57785f0f03f769bd19f9b9ee059c2138feff5d09868650e7aee41a19f4eb9",
+    "tools/py_curved_shell_reference/compare.py": "9124172732ab50adb434152a44aff75d28a798b2492f05fecccf598d3d93a803",
+    "tools/py_curved_shell_reference/reference.py": "ac78168389ef9e6f9b1f521ca3513d8d7935086bb5fdc610328a727a63c001ce",
+    "tools/py_curved_shell_reference/requirements.txt": "e2f592ebff79c02f4a4bb52764bc788b99e2ca7dc2d09fffe2c3645f6982079a"
+  },
+  "retained_attempts": {
+    "retained-validation-attempts/discovery-1/python-core-0/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-1/python-core-1/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-1/python-mean-evidence/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-1/python-spatial-evidence/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-2/python-core-0/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-2/python-core-1/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-2/python-mean-evidence/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/discovery-2/python-spatial-evidence/python-test-inventory.json": {
+      "exit_code": 1
+    },
+    "retained-validation-attempts/missing-fixtures-core-0/python-test-inventory.json": {
+      "exit_code": 1,
+      "tests_run": 265,
+      "failures": 1,
+      "errors": 5,
+      "skipped": 0
+    },
+    "retained-validation-attempts/missing-fixtures-core-1/python-test-inventory.json": {
+      "exit_code": 1,
+      "tests_run": 259,
+      "failures": 0,
+      "errors": 2,
+      "skipped": 0
+    }
+  },
+  "retained_attempts_note": "Two initial discovery failures (no tests executed), then missing baseline fixtures caused core-0 failure1/error5 and core-1 error2. Baseline files were restored byte-for-byte from the base commit; failed groups were rerun without source/test/tolerance changes. All logs retained.",
+  "windows_new_head_ci": "未確認; timeouts/cancellations are not success"
+}

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tools/run_ci_python_tests.py", line 110, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/workspace/solidcraft_soil_analysis/tools/run_ci_python_tests.py", line 88, in main
+    tests, shards = discover(root)
+                    ~~~~~~~~^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/run_ci_python_tests.py", line 51, in discover
+    tests.extend(flatten(suite))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/run_ci_python_tests.py", line 40, in flatten
+    yield from flatten(item)
+  File "/workspace/solidcraft_soil_analysis/tools/run_ci_python_tests.py", line 43, in flatten
+    raise ValueError('unittest discovery failed: '+item.id())
+ValueError: unittest discovery failed: unittest.loader._FailedTest.test_historical_utf8_isolation

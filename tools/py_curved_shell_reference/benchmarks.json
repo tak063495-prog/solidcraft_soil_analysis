@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "status": "B-01未達。独立参照の準備のみ",
+  "units": "consistent legacy benchmark units; no SI conversion is applied",
+  "sources": {
+    "MH1985": {
+      "citation": "R. H. MacNeal and R. L. Harder, A proposed standard set of problems to test finite element accuracy, Finite Elements in Analysis and Design 1 (1985) 3-20",
+      "doi": "10.1016/0168-874X(85)90003-4",
+      "url": "https://doi.org/10.1016/0168-874X(85)90003-4",
+      "verification": "書誌確認。原著全文の図・数値の直接照合は未確認。従来値の由来はKC2023で確認"
+    },
+    "KLLB2017": {
+      "citation": "Y. Ko, Y. Lee, P.-S. Lee and K.-J. Bathe, Performance of the MITC3+ and MITC4+ shell elements in widely-used benchmark problems, Computers and Structures 193 (2017) 187-206",
+      "doi": "10.1016/j.compstruc.2017.08.003",
+      "url": "https://web.mit.edu/kjb/www/Principal_Publications/Performance_of_the_MITC3%2B_and_MITC4%2B_shell_elements_in_widely_used_benchmark_problems.pdf",
+      "verification": "著者公開PDFのFig.9/11/17、Sections 3.3/3.4/3.7、Tables 8/10/15を確認"
+    },
+    "KC2023": {
+      "citation": "P. Krysl and J.-S. Chen, Benchmarking Computational Shell Models, Archives of Computational Methods in Engineering 30 (2023) 301-315 (online 2022)",
+      "doi": "10.1007/s11831-022-09798-5",
+      "url": "https://link.springer.com/article/10.1007/s11831-022-09798-5",
+      "verification": "本文Sections 2.1/2.2/3/4確認。著者自身の計算と従来値の由来を区別"
+    },
+    "SOF2026": {
+      "citation": "SOFiSTiK 2026 Verification, Benchmark 41: Linear Pinched Cylinder, Sections 1-3",
+      "url": "https://docs.sofistik.com/2026/en/verification/_static/verification/pdf/be41.pdf",
+      "verification": "公式検証PDFで全荷重1と1/8モデル荷重1/4、従来参照値を確認"
+    }
+  },
+  "acceptance": {
+    "relative_displacement_tolerance": null,
+    "observed_order_minimum": null,
+    "status": "未定義",
+    "searched_documents": [
+      "interim/2026-11-16-issue-triage/todo.ja.md:B-01",
+      "interim/2026-11-14-plate6-curved-offset/README.ja.md",
+      "interim/2026-11-14-plate6-curved-offset/acceptance.json",
+      "docs/P6_STATUS.ja.md",
+      "docs/PLATES.ja.md"
+    ],
+    "basis_quote": "Scordelis-Lo屋根・ピンチ円筒・半球殻のh系列が必要。ユーザーPCで実行",
+    "note": "平面板等の既存許容値は曲面殻へ転用しない。比較は未定義をpassとしない"
+  },
+  "benchmarks": [
+    {
+      "id": "scordelis_lo",
+      "name_ja": "Scordelis-Lo屋根",
+      "geometry": {
+        "radius": 25.0,
+        "length": 50.0,
+        "half_angle_deg": 40.0,
+        "thickness": 0.25
+      },
+      "material": {
+        "E": 432000000.0,
+        "nu": 0.0
+      },
+      "coordinate_map": "x=R*sin(theta), y=axial, z=R*cos(theta); quarter: theta=[0,40deg], y=[0,L/2]",
+      "load": {
+        "kind": "global -z uniform self-weight per midsurface area, not normal pressure",
+        "surface_traction_magnitude": 90.0,
+        "volume_weight": 360.0
+      },
+      "boundary": [
+        "theta=0: ux=beta_circ=0",
+        "y=0: uy=beta_axial=0",
+        "y=L/2 diaphragm: ux=uz=beta_circ=0",
+        "theta=40deg: free"
+      ],
+      "reference": {
+        "signed_value": -0.3024,
+        "quantity": "uz at (R*sin(40deg),0,R*cos(40deg)), midpoint of free edge",
+        "status": "確認済み・従来の公刊ベンチマーク値、厳密解ではない",
+        "source_ids": [
+          "KLLB2017",
+          "KC2023",
+          "MH1985"
+        ],
+        "locator": "KLLB2017 Fig.11, Section 3.4, Table 10; KC2023 Section 2.1",
+        "caveat": "KC2023はKL約0.3006、MR約0.30200-0.30204を議論。本パッケージの固定従来値を置換しない"
+      },
+      "input_source_ids": [
+        "KLLB2017"
+      ],
+      "h_span_over_radius": 1.0,
+      "probe": {
+        "xyz": [
+          16.06969024216348,
+          0.0,
+          19.151111077974452
+        ],
+        "component": "uz",
+        "coordinate_tolerance": 1e-07
+      }
+    },
+    {
+      "id": "pinched_cylinder",
+      "name_ja": "剛な端部ダイアフラム付きピンチ円筒",
+      "geometry": {
+        "radius": 300.0,
+        "length": 600.0,
+        "thickness": 3.0
+      },
+      "material": {
+        "E": 3000000.0,
+        "nu": 0.3
+      },
+      "coordinate_map": "x=R*sin(theta), y=axial, z=R*cos(theta); eighth: theta=[0,90deg], y=[0,L/2]",
+      "load": {
+        "kind": "two opposite full-model inward radial forces at axial midpoint",
+        "point_force_full": 1.0,
+        "eighth_model_force": 0.25,
+        "eighth_model_vector": [
+          0.0,
+          0.0,
+          -0.25
+        ]
+      },
+      "boundary": [
+        "theta=0: ux=beta_circ=0",
+        "theta=90deg: uz=beta_circ=0",
+        "y=0: uy=beta_axial=0",
+        "y=L/2 diaphragm: ux=uz=beta_circ=0"
+      ],
+      "reference": {
+        "signed_value": -1.8248e-05,
+        "quantity": "uz at (0,0,R), under inward load",
+        "status": "確認済み・従来の公刊ベンチマーク値",
+        "source_ids": [
+          "KLLB2017",
+          "SOF2026"
+        ],
+        "locator": "KLLB2017 Fig.9, Section 3.3, Table 8; SOF2026 Sections 2-3",
+        "caveat": "KL参照。MR/3D点荷重の無限細分化極限を保証しない (KC2023 Section 4)"
+      },
+      "input_source_ids": [
+        "KLLB2017",
+        "SOF2026"
+      ],
+      "h_span_over_radius": 1.5707963267948966,
+      "probe": {
+        "xyz": [
+          0.0,
+          0.0,
+          300.0
+        ],
+        "component": "uz",
+        "coordinate_tolerance": 1e-06
+      }
+    },
+    {
+      "id": "hemisphere_hole",
+      "name_ja": "18度の極穴を持つ半球殻",
+      "geometry": {
+        "radius": 10.0,
+        "hole_polar_angle_deg": 18.0,
+        "thickness": 0.04
+      },
+      "material": {
+        "E": 68250000.0,
+        "nu": 0.3
+      },
+      "coordinate_map": "x=R*sin(theta)*cos(phi), y=R*sin(theta)*sin(phi), z=R*cos(theta); quarter: phi=[0,90deg], theta=[90deg,18deg]",
+      "load": {
+        "kind": "four alternating radial equatorial point forces; +x outward, +y inward in quarter",
+        "point_force_full": 2.0,
+        "quarter_model_force": 1.0,
+        "quarter_point_forces": [
+          {
+            "xyz": [
+              10,
+              0,
+              0
+            ],
+            "vector": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "xyz": [
+              0,
+              10,
+              0
+            ],
+            "vector": [
+              0,
+              -1,
+              0
+            ]
+          }
+        ]
+      },
+      "boundary": [
+        "phi=0: uy=beta_azimuth=0",
+        "phi=90deg: ux=beta_azimuth=0",
+        "(R,0,0): uz=0 removes vertical rigid translation only",
+        "equator and polar-hole edges: free"
+      ],
+      "reference": {
+        "signed_value": 0.094,
+        "quantity": "ux at (R,0,0), outward-loaded equator point",
+        "status": "確認済み・従来の公刊ベンチマーク値、厳密解ではない",
+        "source_ids": [
+          "KC2023",
+          "MH1985"
+        ],
+        "locator": "KC2023 Section 2.2 explicitly identifies MH1985 open-top value 0.0940",
+        "caveat": "穴なし0.0924は使わない。KLLB2017は同形状で0.093を採用。KC2023の著者KL計算0.093597も併記のみ。固定従来値を置換しない"
+      },
+      "input_source_ids": [
+        "KLLB2017"
+      ],
+      "h_span_over_radius": 1.5707963267948966,
+      "probe": {
+        "xyz": [
+          10.0,
+          0.0,
+          0.0
+        ],
+        "component": "ux",
+        "coordinate_tolerance": 1e-07
+      }
+    }
+  ],
+  "evidence_date_jst": "2026-11-11",
+  "directory_label": "2026-11-19"
+}
