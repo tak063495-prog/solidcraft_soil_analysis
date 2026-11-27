@@ -1,0 +1,119 @@
+{
+  "base_commit": "79d839e3f89331a82d976efc1f23cbe2c848cbee",
+  "recorded_date_jst": "2026-11-12",
+  "numerical_acceptance_performed": false,
+  "existing_python": {
+    "discovered": 562,
+    "assigned_unique_once": 562,
+    "executed_test_bodies": 554,
+    "successful_tests": 554,
+    "failures": 0,
+    "setup_errors": 2,
+    "unexecuted_due_to_setup_errors": 8,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "all_discovered_executed": false,
+    "all_passed": false,
+    "groups": {
+      "python-core-0": {
+        "assigned_total": 291,
+        "tests_run": 291,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 848.765604902
+      },
+      "python-core-1": {
+        "assigned_total": 263,
+        "tests_run": 263,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 684.5358565290001
+      },
+      "python-mean-evidence": {
+        "assigned_total": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 1,
+        "elapsed_seconds": 995.2261972019999
+      },
+      "python-spatial-evidence": {
+        "assigned_total": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 1,
+        "elapsed_seconds": 284.73101290700015
+      }
+    }
+  },
+  "new_audit_python": {
+    "discovered": 36,
+    "tests_run": 36,
+    "passed": 36,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "exit_code": 0,
+    "command": "python -m unittest discover -s interim/2026-11-25-p6-status-ledger-audit -p 'test_*.py' -v",
+    "audit_script_sha256": "7cb162f495b3efa36971436e28e45b4a5bfbfc4a2928813e92a4034421e00290",
+    "test_script_sha256": "f004e5edbda37ec0eb6e69ffa4c5220519824ed9d0c073d2fd3be6fa4dc8ec8c"
+  },
+  "builds": {
+    "cli_exit_code": 0,
+    "examples_exit_code": 0,
+    "commands": [
+      "cargo build --locked --release --examples",
+      "cargo build --locked --release"
+    ],
+    "cli_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7"
+  },
+  "preservation": {
+    "base_tracked_files": 5913,
+    "existing_tracked_source_document_input_ci_files_checked": 1264,
+    "source_content_changes": [],
+    "missing_sources": [],
+    "existing_file_changes_in_commit": 0,
+    "only_new_destination_files": true
+  },
+  "archive_preparation": {
+    "method": "partial/sparse checkout; restore only required original evidence files, size and Git blob SHA-1 independently checked before linking; original replay then checks manifest SHA-256",
+    "files": 412,
+    "bytes": 7666837232,
+    "all_original_blob_hashes_verified": true,
+    "not_new_numerical_solves": true
+  },
+  "environment": {
+    "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "rust_tests": "not_run: no Rust change; release CLI/examples only",
+  "windows_ci": "本PR先端の成功は未確認。旧版・Linux成功を転用しない。",
+  "legacy_replay": "失敗原因の詳細は各groupのprocess.log。setUpClassエラーの4件ずつは成功にもskipにも数えない。元の厳密比較・参照値・NCコードを変更しない。",
+  "legacy_replay_failures": {
+    "mean": "ValueError: saved mean-stress/complement partition differs from own history",
+    "spatial": "ValueError: remeasured JSON differs",
+    "each_setup_errors": 1,
+    "each_unexecuted_test_bodies": 4
+  },
+  "evidence_publication": "公開範囲は集計・失敗理由・コマンド/全件割当結果・ソース指紋・ログSHAのみ。生ログ/ZIPは作業領域に保持し公開しない。"
+}
