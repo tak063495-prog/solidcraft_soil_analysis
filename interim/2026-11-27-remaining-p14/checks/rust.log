@@ -1,0 +1,86 @@
+   Compiling autocfg v1.5.1
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling num-traits v0.2.19
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+   Compiling typenum v1.20.1
+   Compiling syn v3.0.9
+   Compiling paste v1.0.15
+   Compiling bytemuck v1.25.2
+   Compiling serde_core v1.0.229
+   Compiling safe_arch v0.7.4
+   Compiling matrixmultiply v0.3.11
+   Compiling zmij v1.0.23
+   Compiling wide v0.7.33
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling approx v0.5.1
+   Compiling num-complex v0.4.6
+   Compiling num-integer v0.1.47
+   Compiling syn v2.0.119
+   Compiling thiserror v2.0.21
+   Compiling serde v1.0.229
+   Compiling rawpointer v0.2.1
+   Compiling serde_json v1.0.154
+   Compiling simba v0.9.1
+   Compiling nalgebra-macros v0.3.0
+   Compiling num-rational v0.4.2
+   Compiling digest v0.10.7
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling cfg-if v1.0.5
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling cpufeatures v0.2.17
+   Compiling sha2 v0.10.9
+   Compiling nalgebra v0.34.2
+   Compiling soil-fem-3d v0.1.0 (/workspace/work/p14/source)
+    Finished `release` profile [optimized] target(s) in 4m 11s
+     Running tests/joint_law.rs (target/release/deps/joint_law-98b9ff8aef6fb8b0)
+
+running 6 tests
+test algorithmic_tangent_is_nonsymmetric_and_matches_half_step ... ok
+test global_rotation_and_restart_preserve_all_interface_history ... ok
+test normal_compression_stick_and_opening_obey_unilateral_friction_and_work ... ok
+test numerical_dissipation_refines_and_failed_history_does_not_mutate_state ... ok
+test open_motion_is_not_plastic_sliding_and_recontact_starts_unloaded ... ok
+test two_direction_reversal_preserves_residual_slip_and_positive_dissipation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/joint_path_error.rs (target/release/deps/joint_path_error-a0662a1f1880e57f)
+
+running 7 tests
+test diagnostic_gap_bisection_reuses_the_error_budget_and_reports_the_crossing has been running for over 60 seconds
+test event_proposals_recheck_all_gates_and_checkpoint_replays_exactly has been running for over 60 seconds
+test diagnostic_gap_bisection_reuses_the_error_budget_and_reports_the_crossing ... ok
+test event_proposals_recheck_all_gates_and_checkpoint_replays_exactly ... ok
+test explicit_event4_history_substeps_and_retry_keep_the_force_and_path_gates has been running for over 60 seconds
+test global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly has been running for over 60 seconds
+test explicit_event4_history_substeps_and_retry_keep_the_force_and_path_gates ... ok
+test independent_endpoint_rebalance_keeps_the_original_path_budgets has been running for over 60 seconds
+test global_error_rejections_leave_history_intact_and_checkpoint_replays_exactly ... ok
+test path_error_option_is_explicit_and_separate_from_legacy_switch_control ... ok
+test proportional_stage_budget_counts_spatial_cells_and_preserves_legacy_identity ... ok
+test independent_endpoint_rebalance_keeps_the_original_path_budgets ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 326.03s
+
+     Running tests/mcc_midpoint.rs (target/release/deps/mcc_midpoint-261d0ef8ca2fd45b)
+
+running 10 tests
+test adaptive_partition_and_its_consistent_tangent_use_the_identical_material_map ... ok
+test arbitrary_rotation_preserves_stress_plastic_history_and_directional_tangent ... ok
+test elastic_reversal_and_permitted_positive_drift_unloading_retain_pc_without_projection ... ok
+test full_partition_tangent_includes_first_yield_hardening_and_opposite_reyield ... ok
+test both_global_schemes_start_nearly_hydrostatic_elastic_newton_steps ... ok
+test global_midpoint_cutback_checkpoint_restores_plastic_history_and_binds_scheme ... ok
+test invalid_midpoint_trials_leave_committed_material_history_unchanged ... ok
+test ocr_first_yield_and_unloading_converge_quadratically_to_closed_form ... ok
+test optional_scheme_preserves_legacy_json_and_rejects_unknown_integration ... ok
+test global_displacement_and_both_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.60s
+
