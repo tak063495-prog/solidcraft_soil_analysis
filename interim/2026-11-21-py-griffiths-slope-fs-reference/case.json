@@ -1,0 +1,77 @@
+{
+  "model_id": "griffiths_1999_coarse_reconstruction_D1",
+  "units": {
+    "length": "m",
+    "force": "kN",
+    "stress": "kPa"
+  },
+  "polygon_xy_m": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      32.0,
+      0.0
+    ],
+    [
+      12.0,
+      10.0
+    ],
+    [
+      0.0,
+      10.0
+    ]
+  ],
+  "height_m": 10.0,
+  "slope_horizontal_to_vertical": 2.0,
+  "foundation_below_toe_m": 0.0,
+  "cohesion_kpa": 10.0,
+  "friction_deg": 20.0,
+  "unit_weight_kn_m3": 20.0,
+  "young_kpa": 100000.0,
+  "poisson": 0.3,
+  "dilation_deg": 0.0,
+  "boundary": {
+    "base_y0": [
+      "ux=0",
+      "uy=0"
+    ],
+    "left_x0": [
+      "ux=0"
+    ],
+    "top_and_slope": "traction_free"
+  },
+  "initialization": "stress_free_gravity_turn_on",
+  "water": "dry_zero_pore_pressure",
+  "loads": "self_weight_only",
+  "source": {
+    "repo": "https://github.com/tak063495-prog/excel-vba-soil-fem",
+    "commit": "440d246d9e32f5892c79539d4a7b797ad29442ee",
+    "path": "docs/inconsistent-evidence24/fixtures.json",
+    "sha256": "cb706a29d979c0552126baf3107cd8579d55fc95d9af2a94f892b7c2dc2d88e9",
+    "fixture": "griffiths_1999_coarse",
+    "nodes": 661,
+    "elements": 200
+  },
+  "paper_attribution": {
+    "source_id": "griffiths_lane_1999_ex1",
+    "fos_reported": 1.4,
+    "published_pass_fail": [
+      1.35,
+      1.4
+    ],
+    "lem_reference": 1.38,
+    "H": 10,
+    "normalised_displacement_formula": "E*umax/(gamma*H^2)",
+    "explicit_assumptions": [
+      "H=10m and gamma=20kN/m3 preserve c/(gamma H)=0.05",
+      "E=100000kPa, nu=.3 are nominal values suggested on p390",
+      "stress-free gravity turn-on; psi=0 non-associated"
+    ],
+    "comparison_role": "primary_reconstructed"
+  },
+  "paper_absolute_H_gamma": "nominal reconstruction; original dimensionless ratios only",
+  "accepted": null,
+  "fs_tolerance": null
+}
