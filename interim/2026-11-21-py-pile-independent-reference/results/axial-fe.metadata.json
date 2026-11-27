@@ -1,0 +1,140 @@
+{
+  "schema": "pile-field-comparison/1",
+  "units": "m-kN-kPa",
+  "case": {
+    "id": "verification-only-axial",
+    "model": "1d-axial-linear-springs",
+    "geometry": {
+      "length_m": 6.0,
+      "area_m2": 1.0,
+      "inertia_m4": 0.08333333333333333
+    },
+    "materials": {
+      "pile_young_kpa": 30000000.0,
+      "distributed_k_kn_m2": 833333.3333333334,
+      "tip_k_kn_m": 5000000.0
+    },
+    "loads": {
+      "head_load_kn": 100.0,
+      "head_moment_kn_m": 0.0,
+      "distributed_load": "none"
+    },
+    "boundary": "axial elastic tip",
+    "interface": "independent linear springs; verification parameters, NOT identified 3D mapping",
+    "water": "dry",
+    "reference_state": "load increment; no gravity increment; small strain linear"
+  },
+  "basis": {
+    "origin_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "axes": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "signs": {
+    "u": "positive global -Z (down)",
+    "N": "compression positive; N=-EA*du/ds",
+    "shaft_reaction": "positive global -Z; force of soil on pile=-ka*u"
+  },
+  "frame": "verification-only full head load relative to unloaded spring model",
+  "quantities": {
+    "u": {
+      "unit": "m",
+      "component": "axial_displacement",
+      "location": "section at station; FE right limit except tip left",
+      "definition": "axial_displacement; s=8-z increasing down; u positive down; w positive global X"
+    },
+    "N": {
+      "unit": "kN",
+      "component": "compression_force",
+      "location": "section at station; FE right limit except tip left",
+      "definition": "compression_force; s=8-z increasing down; u positive down; w positive global X"
+    },
+    "shaft_reaction": {
+      "unit": "kN/m",
+      "component": "axial_soil_on_pile",
+      "location": "section at station; FE right limit except tip left",
+      "definition": "axial_soil_on_pile; s=8-z increasing down; u positive down; w positive global X"
+    }
+  },
+  "expected_ids": {
+    "u": [
+      "s000",
+      "s001",
+      "s002",
+      "s003",
+      "s004",
+      "s005",
+      "s006",
+      "s007",
+      "s008",
+      "s009",
+      "s010",
+      "s011",
+      "s012",
+      "s013",
+      "s014",
+      "s015",
+      "s016"
+    ],
+    "N": [
+      "s000",
+      "s001",
+      "s002",
+      "s003",
+      "s004",
+      "s005",
+      "s006",
+      "s007",
+      "s008",
+      "s009",
+      "s010",
+      "s011",
+      "s012",
+      "s013",
+      "s014",
+      "s015",
+      "s016"
+    ],
+    "shaft_reaction": [
+      "s000",
+      "s001",
+      "s002",
+      "s003",
+      "s004",
+      "s005",
+      "s006",
+      "s007",
+      "s008",
+      "s009",
+      "s010",
+      "s011",
+      "s012",
+      "s013",
+      "s014",
+      "s015",
+      "s016"
+    ]
+  },
+  "provenance": {
+    "source": "standalone axial fe, n=16",
+    "sha256": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d"
+  }
+}

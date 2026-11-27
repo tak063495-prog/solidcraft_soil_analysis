@@ -1,0 +1,876 @@
+{
+  "metadata": {
+    "schema": "pile-field-comparison/1",
+    "units": "m-kN-kPa",
+    "case": {
+      "id": "verification-only-beam",
+      "model": "1d-winkler-eb-free-tip",
+      "geometry": {
+        "length_m": 6.0,
+        "area_m2": 1.0,
+        "inertia_m4": 0.08333333333333333
+      },
+      "materials": {
+        "pile_young_kpa": 30000000.0,
+        "distributed_k_kn_m2": 7716.049382716049,
+        "tip_k_kn_m": 0.0
+      },
+      "loads": {
+        "head_load_kn": 10.0,
+        "head_moment_kn_m": 0.0,
+        "distributed_load": "none"
+      },
+      "boundary": "head moment zero; tip M=V=0",
+      "interface": "independent linear springs; verification parameters, NOT identified 3D mapping",
+      "water": "dry",
+      "reference_state": "load increment; no gravity increment; small strain linear"
+    },
+    "basis": {
+      "origin_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "axes": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "signs": {
+      "w": "positive global +X",
+      "slope": "dw/ds; s increases global -Z",
+      "M": "M=-EI*d2w/ds2",
+      "V": "V=-EI*d3w/ds3; V(0)=-H",
+      "soil_reaction": "positive global +X; force of soil on pile=-kh*w"
+    },
+    "frame": "verification-only full head load relative to unloaded spring model",
+    "quantities": {
+      "w": {
+        "unit": "m",
+        "component": "lateral_displacement",
+        "location": "section at station; FE right limit except tip left",
+        "definition": "lateral_displacement; s=8-z increasing down; u positive down; w positive global X"
+      },
+      "slope": {
+        "unit": "rad",
+        "component": "dw_ds",
+        "location": "section at station; FE right limit except tip left",
+        "definition": "dw_ds; s=8-z increasing down; u positive down; w positive global X"
+      },
+      "M": {
+        "unit": "kN*m",
+        "component": "minus_EI_d2w_ds2",
+        "location": "section at station; FE right limit except tip left",
+        "definition": "minus_EI_d2w_ds2; s=8-z increasing down; u positive down; w positive global X"
+      },
+      "V": {
+        "unit": "kN",
+        "component": "minus_EI_d3w_ds3",
+        "location": "section at station; FE right limit except tip left",
+        "definition": "minus_EI_d3w_ds3; s=8-z increasing down; u positive down; w positive global X"
+      },
+      "soil_reaction": {
+        "unit": "kN/m",
+        "component": "lateral_soil_on_pile",
+        "location": "section at station; FE right limit except tip left",
+        "definition": "lateral_soil_on_pile; s=8-z increasing down; u positive down; w positive global X"
+      }
+    },
+    "expected_ids": {
+      "w": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s008",
+        "s009",
+        "s010",
+        "s011",
+        "s012",
+        "s013",
+        "s014",
+        "s015",
+        "s016"
+      ],
+      "slope": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s008",
+        "s009",
+        "s010",
+        "s011",
+        "s012",
+        "s013",
+        "s014",
+        "s015",
+        "s016"
+      ],
+      "M": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s008",
+        "s009",
+        "s010",
+        "s011",
+        "s012",
+        "s013",
+        "s014",
+        "s015",
+        "s016"
+      ],
+      "V": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s008",
+        "s009",
+        "s010",
+        "s011",
+        "s012",
+        "s013",
+        "s014",
+        "s015",
+        "s016"
+      ],
+      "soil_reaction": [
+        "s000",
+        "s001",
+        "s002",
+        "s003",
+        "s004",
+        "s005",
+        "s006",
+        "s007",
+        "s008",
+        "s009",
+        "s010",
+        "s011",
+        "s012",
+        "s013",
+        "s014",
+        "s015",
+        "s016"
+      ]
+    },
+    "provenance": {
+      "source": "standalone beam exact, n=not applicable",
+      "sha256": "26ea49b1d71c983010b502e589b8f81b4ebbef91ec35ad1d93549c365c075c7d"
+    }
+  },
+  "rows": [
+    {
+      "id": "s000",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 8.0,
+      "value": 0.0008721728069858798
+    },
+    {
+      "id": "s001",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.625,
+      "value": 0.0007883936380037771
+    },
+    {
+      "id": "s002",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.25,
+      "value": 0.0007047956323896818
+    },
+    {
+      "id": "s003",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.875,
+      "value": 0.0006215162680358857
+    },
+    {
+      "id": "s004",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.5,
+      "value": 0.0005386500022781005
+    },
+    {
+      "id": "s005",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.125,
+      "value": 0.0004562533539040342
+    },
+    {
+      "id": "s006",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.75,
+      "value": 0.0003743499603343607
+    },
+    {
+      "id": "s007",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.375,
+      "value": 0.00029293560647500013
+    },
+    {
+      "id": "s008",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.0,
+      "value": 0.00021198322374684582
+    },
+    {
+      "id": "s009",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.625,
+      "value": 0.00013144785949934987
+    },
+    {
+      "id": "s010",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.25,
+      "value": 5.12716184095526e-05
+    },
+    {
+      "id": "s011",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.875,
+      "value": -2.8611421440018518e-05
+    },
+    {
+      "id": "s012",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.5,
+      "value": -0.00010827031432093966
+    },
+    {
+      "id": "s013",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.125,
+      "value": -0.0001877723704822009
+    },
+    {
+      "id": "s014",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.75,
+      "value": -0.00026717829347210596
+    },
+    {
+      "id": "s015",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.375,
+      "value": -0.0003465373270999341
+    },
+    {
+      "id": "s016",
+      "quantity": "w",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.0,
+      "value": -0.00042588240838167346
+    },
+    {
+      "id": "s000",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 8.0,
+      "value": -0.00022349906615611666
+    },
+    {
+      "id": "s001",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.625,
+      "value": -0.00022324090701616265
+    },
+    {
+      "id": "s002",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.25,
+      "value": -0.00022255424840545972
+    },
+    {
+      "id": "s003",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.875,
+      "value": -0.0002215606063470113
+    },
+    {
+      "id": "s004",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.5,
+      "value": -0.0002203679163521408
+    },
+    {
+      "id": "s005",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.125,
+      "value": -0.0002190705929696184
+    },
+    {
+      "id": "s006",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.75,
+      "value": -0.00021774960162125256
+    },
+    {
+      "id": "s007",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.375,
+      "value": -0.00021647253696060995
+    },
+    {
+      "id": "s008",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.0,
+      "value": -0.00021529370281232662
+    },
+    {
+      "id": "s009",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.625,
+      "value": -0.00021425418956554912
+    },
+    {
+      "id": "s010",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.25,
+      "value": -0.00021338194570627374
+    },
+    {
+      "id": "s011",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.875,
+      "value": -0.00021269184097989885
+    },
+    {
+      "id": "s012",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.5,
+      "value": -0.0002121857194775065
+    },
+    {
+      "id": "s013",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.125,
+      "value": -0.00021185244173775705
+    },
+    {
+      "id": "s014",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.75,
+      "value": -0.00021166791575141287
+    },
+    {
+      "id": "s015",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.375,
+      "value": -0.00021159511754807598
+    },
+    {
+      "id": "s016",
+      "quantity": "slope",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.0,
+      "value": -0.0002115841028353884
+    },
+    {
+      "id": "s000",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 8.0,
+      "value": -0.0
+    },
+    {
+      "id": "s001",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.625,
+      "value": -3.29197114067858
+    },
+    {
+      "id": "s002",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.25,
+      "value": -5.728463835771193
+    },
+    {
+      "id": "s003",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.875,
+      "value": -7.400175318764842
+    },
+    {
+      "id": "s004",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.5,
+      "value": -8.397460965188115
+    },
+    {
+      "id": "s005",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.125,
+      "value": -8.810231340288583
+    },
+    {
+      "id": "s006",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.75,
+      "value": -8.727890414924877
+    },
+    {
+      "id": "s007",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.375,
+      "value": -8.239309462595978
+    },
+    {
+      "id": "s008",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.0,
+      "value": -7.432831181087626
+    },
+    {
+      "id": "s009",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.625,
+      "value": -6.396298614421212
+    },
+    {
+      "id": "s010",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.25,
+      "value": -5.2171034828003116
+    },
+    {
+      "id": "s011",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.875,
+      "value": -3.982248558548596
+    },
+    {
+      "id": "s012",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.5,
+      "value": -2.778418753437243
+    },
+    {
+      "id": "s013",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.125,
+      "value": -1.6920556064499275
+    },
+    {
+      "id": "s014",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.75,
+      "value": -0.8094298804006674
+    },
+    {
+      "id": "s015",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.375,
+      "value": -0.2167069906922907
+    },
+    {
+      "id": "s016",
+      "quantity": "M",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.0,
+      "value": -0.0
+    },
+    {
+      "id": "s000",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 8.0,
+      "value": -10.0
+    },
+    {
+      "id": "s001",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.625,
+      "value": -7.5975836671336445
+    },
+    {
+      "id": "s002",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.25,
+      "value": -5.4373605368446425
+    },
+    {
+      "id": "s003",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.875,
+      "value": -3.5185965244446926
+    },
+    {
+      "id": "s004",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.5,
+      "value": -1.8402232188183503
+    },
+    {
+      "id": "s005",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.125,
+      "value": -0.4009550053626597
+    },
+    {
+      "id": "s006",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.75,
+      "value": 0.8006084811492221
+    },
+    {
+      "id": "s007",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.375,
+      "value": 1.7658944963550682
+    },
+    {
+      "id": "s008",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.0,
+      "value": 2.496283834163392
+    },
+    {
+      "id": "s009",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.625,
+      "value": 2.993051896319554
+    },
+    {
+      "id": "s010",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.25,
+      "value": 3.257324100000577
+    },
+    {
+      "id": "s011",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.875,
+      "value": 3.2900455460478955
+    },
+    {
+      "id": "s012",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.5,
+      "value": 3.0919648794567487
+    },
+    {
+      "id": "s013",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.125,
+      "value": 2.663632284601767
+    },
+    {
+      "id": "s014",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.75,
+      "value": 2.0054115695257444
+    },
+    {
+      "id": "s015",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.375,
+      "value": 1.1175063055877403
+    },
+    {
+      "id": "s016",
+      "quantity": "V",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.0,
+      "value": -0.0
+    },
+    {
+      "id": "s000",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 8.0,
+      "value": -6.729728448965121
+    },
+    {
+      "id": "s001",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.625,
+      "value": -6.083284243856304
+    },
+    {
+      "id": "s002",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 7.25,
+      "value": -5.4382379042413715
+    },
+    {
+      "id": "s003",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.875,
+      "value": -4.795650216326278
+    },
+    {
+      "id": "s004",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.5,
+      "value": -4.1562500175779356
+    },
+    {
+      "id": "s005",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 6.125,
+      "value": -3.5204734097533503
+    },
+    {
+      "id": "s006",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.75,
+      "value": -2.8885027803577215
+    },
+    {
+      "id": "s007",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.375,
+      "value": -2.2603056055169763
+    },
+    {
+      "id": "s008",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 5.0,
+      "value": -1.6356730227380079
+    },
+    {
+      "id": "s009",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.625,
+      "value": -1.0142581751493045
+    },
+    {
+      "id": "s010",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 4.25,
+      "value": -0.3956143395798812
+    },
+    {
+      "id": "s011",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.875,
+      "value": 0.2207671407408836
+    },
+    {
+      "id": "s012",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.5,
+      "value": 0.835419091982559
+    },
+    {
+      "id": "s013",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 3.125,
+      "value": 1.4488608833503156
+    },
+    {
+      "id": "s014",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.75,
+      "value": 2.0615609064205707
+    },
+    {
+      "id": "s015",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.375,
+      "value": 2.6738991288575162
+    },
+    {
+      "id": "s016",
+      "quantity": "soil_reaction",
+      "x_m": 5.0,
+      "y_m": 5.0,
+      "z_m": 2.0,
+      "value": 3.286129694303036
+    }
+  ]
+}
