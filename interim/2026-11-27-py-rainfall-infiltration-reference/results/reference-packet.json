@@ -1,0 +1,1457 @@
+{
+  "metadata": {
+    "contract": "external-rainfall-reference/1",
+    "case_id": "semi-infinite-pulse-receptor",
+    "parameters": {
+      "ks": 0.0001,
+      "alpha": 1.0,
+      "theta_r": 0.08,
+      "theta_s": 0.45,
+      "initial_u": 0.2,
+      "length": 4.0,
+      "pulse_jumps": [
+        [
+          0.0,
+          2e-05
+        ],
+        [
+          300.0,
+          -2e-05
+        ]
+      ],
+      "specific_yield": 0.2,
+      "receptor_initial_level_m": 0.2,
+      "recharge_depth_m": 0.5,
+      "receptor_modulus_kpa": 10000.0,
+      "receptor_total_stress_kpa": 50.0
+    },
+    "source_kind": "independent_reference",
+    "complete": true,
+    "clock": "physical_seconds",
+    "event_trace": "right_limit_boundary_continuous_interior",
+    "interpolation": "none",
+    "quantities": {
+      "head": {
+        "unit": "m",
+        "meaning": "total_head",
+        "sign": "elevation_up"
+      },
+      "saturation": {
+        "unit": "1",
+        "meaning": "theta/theta_s",
+        "sign": "nonnegative"
+      },
+      "flux": {
+        "unit": "m/s",
+        "meaning": "instantaneous_Darcy_flux",
+        "sign": "down"
+      },
+      "infiltration": {
+        "unit": "m",
+        "meaning": "cumulative_net_top_infiltration",
+        "sign": "inward"
+      },
+      "effective_stress": {
+        "unit": "kPa",
+        "meaning": "Terzaghi_vertical",
+        "sign": "compression_positive"
+      }
+    },
+    "times_s": [
+      0.0,
+      300.0,
+      600.0
+    ],
+    "locations": {
+      "head": [
+        {
+          "id": "c0",
+          "coordinate_m": 0.125
+        },
+        {
+          "id": "c1",
+          "coordinate_m": 0.375
+        },
+        {
+          "id": "c2",
+          "coordinate_m": 0.625
+        },
+        {
+          "id": "c3",
+          "coordinate_m": 0.875
+        },
+        {
+          "id": "c4",
+          "coordinate_m": 1.125
+        },
+        {
+          "id": "c5",
+          "coordinate_m": 1.375
+        },
+        {
+          "id": "c6",
+          "coordinate_m": 1.625
+        },
+        {
+          "id": "c7",
+          "coordinate_m": 1.875
+        },
+        {
+          "id": "c8",
+          "coordinate_m": 2.125
+        },
+        {
+          "id": "c9",
+          "coordinate_m": 2.375
+        },
+        {
+          "id": "c10",
+          "coordinate_m": 2.625
+        },
+        {
+          "id": "c11",
+          "coordinate_m": 2.875
+        },
+        {
+          "id": "c12",
+          "coordinate_m": 3.125
+        },
+        {
+          "id": "c13",
+          "coordinate_m": 3.375
+        },
+        {
+          "id": "c14",
+          "coordinate_m": 3.625
+        },
+        {
+          "id": "c15",
+          "coordinate_m": 3.875
+        }
+      ],
+      "saturation": [
+        {
+          "id": "c0",
+          "coordinate_m": 0.125
+        },
+        {
+          "id": "c1",
+          "coordinate_m": 0.375
+        },
+        {
+          "id": "c2",
+          "coordinate_m": 0.625
+        },
+        {
+          "id": "c3",
+          "coordinate_m": 0.875
+        },
+        {
+          "id": "c4",
+          "coordinate_m": 1.125
+        },
+        {
+          "id": "c5",
+          "coordinate_m": 1.375
+        },
+        {
+          "id": "c6",
+          "coordinate_m": 1.625
+        },
+        {
+          "id": "c7",
+          "coordinate_m": 1.875
+        },
+        {
+          "id": "c8",
+          "coordinate_m": 2.125
+        },
+        {
+          "id": "c9",
+          "coordinate_m": 2.375
+        },
+        {
+          "id": "c10",
+          "coordinate_m": 2.625
+        },
+        {
+          "id": "c11",
+          "coordinate_m": 2.875
+        },
+        {
+          "id": "c12",
+          "coordinate_m": 3.125
+        },
+        {
+          "id": "c13",
+          "coordinate_m": 3.375
+        },
+        {
+          "id": "c14",
+          "coordinate_m": 3.625
+        },
+        {
+          "id": "c15",
+          "coordinate_m": 3.875
+        }
+      ],
+      "flux": [
+        {
+          "id": "f0",
+          "coordinate_m": 0.0
+        },
+        {
+          "id": "f1",
+          "coordinate_m": 0.25
+        },
+        {
+          "id": "f2",
+          "coordinate_m": 0.5
+        },
+        {
+          "id": "f3",
+          "coordinate_m": 0.75
+        },
+        {
+          "id": "f4",
+          "coordinate_m": 1.0
+        },
+        {
+          "id": "f5",
+          "coordinate_m": 1.25
+        },
+        {
+          "id": "f6",
+          "coordinate_m": 1.5
+        },
+        {
+          "id": "f7",
+          "coordinate_m": 1.75
+        },
+        {
+          "id": "f8",
+          "coordinate_m": 2.0
+        },
+        {
+          "id": "f9",
+          "coordinate_m": 2.25
+        },
+        {
+          "id": "f10",
+          "coordinate_m": 2.5
+        },
+        {
+          "id": "f11",
+          "coordinate_m": 2.75
+        },
+        {
+          "id": "f12",
+          "coordinate_m": 3.0
+        },
+        {
+          "id": "f13",
+          "coordinate_m": 3.25
+        },
+        {
+          "id": "f14",
+          "coordinate_m": 3.5
+        },
+        {
+          "id": "f15",
+          "coordinate_m": 3.75
+        },
+        {
+          "id": "f16",
+          "coordinate_m": 4.0
+        }
+      ],
+      "infiltration": [
+        {
+          "id": "top",
+          "coordinate_m": 0.0
+        }
+      ],
+      "effective_stress": [
+        {
+          "id": "r0",
+          "coordinate_m": 0.0
+        },
+        {
+          "id": "r1",
+          "coordinate_m": -0.25
+        },
+        {
+          "id": "r2",
+          "coordinate_m": -0.5
+        },
+        {
+          "id": "r3",
+          "coordinate_m": -0.75
+        },
+        {
+          "id": "r4",
+          "coordinate_m": -1.0
+        }
+      ]
+    },
+    "hydraulic_model": "Gardner_unsaturated_semi_infinite; depth_down; elevation=-depth",
+    "mechanical_model": "one_way_recharge_bucket; receptor_elevation_up; fixed_total_Terzaghi"
+  },
+  "rows": [
+    {
+      "quantity": "head",
+      "id": "c0",
+      "time_s": 0.0,
+      "coordinate_m": 0.125,
+      "value": -1.7344379124341003
+    },
+    {
+      "quantity": "head",
+      "id": "c1",
+      "time_s": 0.0,
+      "coordinate_m": 0.375,
+      "value": -1.9844379124341003
+    },
+    {
+      "quantity": "head",
+      "id": "c2",
+      "time_s": 0.0,
+      "coordinate_m": 0.625,
+      "value": -2.2344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c3",
+      "time_s": 0.0,
+      "coordinate_m": 0.875,
+      "value": -2.4844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c4",
+      "time_s": 0.0,
+      "coordinate_m": 1.125,
+      "value": -2.7344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c5",
+      "time_s": 0.0,
+      "coordinate_m": 1.375,
+      "value": -2.9844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c6",
+      "time_s": 0.0,
+      "coordinate_m": 1.625,
+      "value": -3.2344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c7",
+      "time_s": 0.0,
+      "coordinate_m": 1.875,
+      "value": -3.4844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c8",
+      "time_s": 0.0,
+      "coordinate_m": 2.125,
+      "value": -3.7344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c9",
+      "time_s": 0.0,
+      "coordinate_m": 2.375,
+      "value": -3.9844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c10",
+      "time_s": 0.0,
+      "coordinate_m": 2.625,
+      "value": -4.2344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c11",
+      "time_s": 0.0,
+      "coordinate_m": 2.875,
+      "value": -4.4844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c12",
+      "time_s": 0.0,
+      "coordinate_m": 3.125,
+      "value": -4.7344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c13",
+      "time_s": 0.0,
+      "coordinate_m": 3.375,
+      "value": -4.9844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c14",
+      "time_s": 0.0,
+      "coordinate_m": 3.625,
+      "value": -5.2344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c15",
+      "time_s": 0.0,
+      "coordinate_m": 3.875,
+      "value": -5.4844379124341005
+    },
+    {
+      "quantity": "saturation",
+      "id": "c0",
+      "time_s": 0.0,
+      "coordinate_m": 0.125,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c1",
+      "time_s": 0.0,
+      "coordinate_m": 0.375,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c2",
+      "time_s": 0.0,
+      "coordinate_m": 0.625,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c3",
+      "time_s": 0.0,
+      "coordinate_m": 0.875,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c4",
+      "time_s": 0.0,
+      "coordinate_m": 1.125,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c5",
+      "time_s": 0.0,
+      "coordinate_m": 1.375,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c6",
+      "time_s": 0.0,
+      "coordinate_m": 1.625,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c7",
+      "time_s": 0.0,
+      "coordinate_m": 1.875,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c8",
+      "time_s": 0.0,
+      "coordinate_m": 2.125,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c9",
+      "time_s": 0.0,
+      "coordinate_m": 2.375,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c10",
+      "time_s": 0.0,
+      "coordinate_m": 2.625,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c11",
+      "time_s": 0.0,
+      "coordinate_m": 2.875,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c12",
+      "time_s": 0.0,
+      "coordinate_m": 3.125,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c13",
+      "time_s": 0.0,
+      "coordinate_m": 3.375,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c14",
+      "time_s": 0.0,
+      "coordinate_m": 3.625,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c15",
+      "time_s": 0.0,
+      "coordinate_m": 3.875,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "flux",
+      "id": "f0",
+      "time_s": 0.0,
+      "coordinate_m": 0.0,
+      "value": 4e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f1",
+      "time_s": 0.0,
+      "coordinate_m": 0.25,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f2",
+      "time_s": 0.0,
+      "coordinate_m": 0.5,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f3",
+      "time_s": 0.0,
+      "coordinate_m": 0.75,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f4",
+      "time_s": 0.0,
+      "coordinate_m": 1.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f5",
+      "time_s": 0.0,
+      "coordinate_m": 1.25,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f6",
+      "time_s": 0.0,
+      "coordinate_m": 1.5,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f7",
+      "time_s": 0.0,
+      "coordinate_m": 1.75,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f8",
+      "time_s": 0.0,
+      "coordinate_m": 2.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f9",
+      "time_s": 0.0,
+      "coordinate_m": 2.25,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f10",
+      "time_s": 0.0,
+      "coordinate_m": 2.5,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f11",
+      "time_s": 0.0,
+      "coordinate_m": 2.75,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f12",
+      "time_s": 0.0,
+      "coordinate_m": 3.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f13",
+      "time_s": 0.0,
+      "coordinate_m": 3.25,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f14",
+      "time_s": 0.0,
+      "coordinate_m": 3.5,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f15",
+      "time_s": 0.0,
+      "coordinate_m": 3.75,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f16",
+      "time_s": 0.0,
+      "coordinate_m": 4.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "infiltration",
+      "id": "top",
+      "time_s": 0.0,
+      "coordinate_m": 0.0,
+      "value": 0.0
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r0",
+      "time_s": 0.0,
+      "coordinate_m": 0.0,
+      "value": 48.038
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r1",
+      "time_s": 0.0,
+      "coordinate_m": -0.25,
+      "value": 45.585499999999996
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r2",
+      "time_s": 0.0,
+      "coordinate_m": -0.5,
+      "value": 43.133
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r3",
+      "time_s": 0.0,
+      "coordinate_m": -0.75,
+      "value": 40.6805
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r4",
+      "time_s": 0.0,
+      "coordinate_m": -1.0,
+      "value": 38.228
+    },
+    {
+      "quantity": "head",
+      "id": "c0",
+      "time_s": 300.0,
+      "coordinate_m": 0.125,
+      "value": -1.5519109205484143
+    },
+    {
+      "quantity": "head",
+      "id": "c1",
+      "time_s": 300.0,
+      "coordinate_m": 0.375,
+      "value": -1.9045533991821815
+    },
+    {
+      "quantity": "head",
+      "id": "c2",
+      "time_s": 300.0,
+      "coordinate_m": 0.625,
+      "value": -2.2086075090469195
+    },
+    {
+      "quantity": "head",
+      "id": "c3",
+      "time_s": 300.0,
+      "coordinate_m": 0.875,
+      "value": -2.4783783354830895
+    },
+    {
+      "quantity": "head",
+      "id": "c4",
+      "time_s": 300.0,
+      "coordinate_m": 1.125,
+      "value": -2.733416039964335
+    },
+    {
+      "quantity": "head",
+      "id": "c5",
+      "time_s": 300.0,
+      "coordinate_m": 1.375,
+      "value": -2.984315104918945
+    },
+    {
+      "quantity": "head",
+      "id": "c6",
+      "time_s": 300.0,
+      "coordinate_m": 1.625,
+      "value": -3.2344274844354164
+    },
+    {
+      "quantity": "head",
+      "id": "c7",
+      "time_s": 300.0,
+      "coordinate_m": 1.875,
+      "value": -3.4844372913144332
+    },
+    {
+      "quantity": "head",
+      "id": "c8",
+      "time_s": 300.0,
+      "coordinate_m": 2.125,
+      "value": -3.7344378866298205
+    },
+    {
+      "quantity": "head",
+      "id": "c9",
+      "time_s": 300.0,
+      "coordinate_m": 2.375,
+      "value": -3.984437911689602
+    },
+    {
+      "quantity": "head",
+      "id": "c10",
+      "time_s": 300.0,
+      "coordinate_m": 2.625,
+      "value": -4.234437912419233
+    },
+    {
+      "quantity": "head",
+      "id": "c11",
+      "time_s": 300.0,
+      "coordinate_m": 2.875,
+      "value": -4.484437912433895
+    },
+    {
+      "quantity": "head",
+      "id": "c12",
+      "time_s": 300.0,
+      "coordinate_m": 3.125,
+      "value": -4.734437912434098
+    },
+    {
+      "quantity": "head",
+      "id": "c13",
+      "time_s": 300.0,
+      "coordinate_m": 3.375,
+      "value": -4.9844379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c14",
+      "time_s": 300.0,
+      "coordinate_m": 3.625,
+      "value": -5.2344379124341005
+    },
+    {
+      "quantity": "head",
+      "id": "c15",
+      "time_s": 300.0,
+      "coordinate_m": 3.875,
+      "value": -5.4844379124341005
+    },
+    {
+      "quantity": "saturation",
+      "id": "c0",
+      "time_s": 300.0,
+      "coordinate_m": 0.125,
+      "value": 0.37515165446691756
+    },
+    {
+      "quantity": "saturation",
+      "id": "c1",
+      "time_s": 300.0,
+      "coordinate_m": 0.375,
+      "value": 0.35589774611167085
+    },
+    {
+      "quantity": "saturation",
+      "id": "c2",
+      "time_s": 300.0,
+      "coordinate_m": 0.625,
+      "value": 0.34652522343789177
+    },
+    {
+      "quantity": "saturation",
+      "id": "c3",
+      "time_s": 300.0,
+      "coordinate_m": 0.875,
+      "value": 0.3432217111692856
+    },
+    {
+      "quantity": "saturation",
+      "id": "c4",
+      "time_s": 300.0,
+      "coordinate_m": 1.125,
+      "value": 0.3423903493604226
+    },
+    {
+      "quantity": "saturation",
+      "id": "c5",
+      "time_s": 300.0,
+      "coordinate_m": 1.375,
+      "value": 0.342242418475926
+    },
+    {
+      "quantity": "saturation",
+      "id": "c6",
+      "time_s": 300.0,
+      "coordinate_m": 1.625,
+      "value": 0.3422239370576136
+    },
+    {
+      "quantity": "saturation",
+      "id": "c7",
+      "time_s": 300.0,
+      "coordinate_m": 1.875,
+      "value": 0.34222232436193256
+    },
+    {
+      "quantity": "saturation",
+      "id": "c8",
+      "time_s": 300.0,
+      "coordinate_m": 2.125,
+      "value": 0.34222222646559275
+    },
+    {
+      "quantity": "saturation",
+      "id": "c9",
+      "time_s": 300.0,
+      "coordinate_m": 2.375,
+      "value": 0.3422222223446509
+    },
+    {
+      "quantity": "saturation",
+      "id": "c10",
+      "time_s": 300.0,
+      "coordinate_m": 2.625,
+      "value": 0.3422222222246671
+    },
+    {
+      "quantity": "saturation",
+      "id": "c11",
+      "time_s": 300.0,
+      "coordinate_m": 2.875,
+      "value": 0.34222222222225596
+    },
+    {
+      "quantity": "saturation",
+      "id": "c12",
+      "time_s": 300.0,
+      "coordinate_m": 3.125,
+      "value": 0.34222222222222254
+    },
+    {
+      "quantity": "saturation",
+      "id": "c13",
+      "time_s": 300.0,
+      "coordinate_m": 3.375,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c14",
+      "time_s": 300.0,
+      "coordinate_m": 3.625,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "saturation",
+      "id": "c15",
+      "time_s": 300.0,
+      "coordinate_m": 3.875,
+      "value": 0.3422222222222222
+    },
+    {
+      "quantity": "flux",
+      "id": "f0",
+      "time_s": 300.0,
+      "coordinate_m": 0.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f1",
+      "time_s": 300.0,
+      "coordinate_m": 0.25,
+      "value": 3.2025825822707234e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f2",
+      "time_s": 300.0,
+      "coordinate_m": 0.5,
+      "value": 2.5439042594469183e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f3",
+      "time_s": 300.0,
+      "coordinate_m": 0.75,
+      "value": 2.1793307889851163e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f4",
+      "time_s": 300.0,
+      "coordinate_m": 1.0,
+      "value": 2.042231262080907e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f5",
+      "time_s": 300.0,
+      "coordinate_m": 1.25,
+      "value": 2.0070087780949203e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f6",
+      "time_s": 300.0,
+      "coordinate_m": 1.5,
+      "value": 2.0008124372728122e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f7",
+      "time_s": 300.0,
+      "coordinate_m": 1.75,
+      "value": 2.0000653741585536e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f8",
+      "time_s": 300.0,
+      "coordinate_m": 2.0,
+      "value": 2.0000036358512516e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f9",
+      "time_s": 300.0,
+      "coordinate_m": 2.25,
+      "value": 2.000000139323206e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f10",
+      "time_s": 300.0,
+      "coordinate_m": 2.5,
+      "value": 2.0000000036698077e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f11",
+      "time_s": 300.0,
+      "coordinate_m": 2.75,
+      "value": 2.000000000066328e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f12",
+      "time_s": 300.0,
+      "coordinate_m": 3.0,
+      "value": 2.0000000000008214e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f13",
+      "time_s": 300.0,
+      "coordinate_m": 3.25,
+      "value": 2.0000000000000073e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f14",
+      "time_s": 300.0,
+      "coordinate_m": 3.5,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f15",
+      "time_s": 300.0,
+      "coordinate_m": 3.75,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f16",
+      "time_s": 300.0,
+      "coordinate_m": 4.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "infiltration",
+      "id": "top",
+      "time_s": 300.0,
+      "coordinate_m": 0.0,
+      "value": 0.012
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r0",
+      "time_s": 300.0,
+      "coordinate_m": 0.0,
+      "value": 48.00560826295428
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r1",
+      "time_s": 300.0,
+      "coordinate_m": -0.25,
+      "value": 45.55310826295428
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r2",
+      "time_s": 300.0,
+      "coordinate_m": -0.5,
+      "value": 43.10060826295428
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r3",
+      "time_s": 300.0,
+      "coordinate_m": -0.75,
+      "value": 40.64810826295428
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r4",
+      "time_s": 300.0,
+      "coordinate_m": -1.0,
+      "value": 38.19560826295428
+    },
+    {
+      "quantity": "head",
+      "id": "c0",
+      "time_s": 600.0,
+      "coordinate_m": 0.125,
+      "value": -1.6349192698060553
+    },
+    {
+      "quantity": "head",
+      "id": "c1",
+      "time_s": 600.0,
+      "coordinate_m": 0.375,
+      "value": -1.8922490387486945
+    },
+    {
+      "quantity": "head",
+      "id": "c2",
+      "time_s": 600.0,
+      "coordinate_m": 0.625,
+      "value": -2.169887781044607
+    },
+    {
+      "quantity": "head",
+      "id": "c3",
+      "time_s": 600.0,
+      "coordinate_m": 0.875,
+      "value": -2.4495597999170253
+    },
+    {
+      "quantity": "head",
+      "id": "c4",
+      "time_s": 600.0,
+      "coordinate_m": 1.125,
+      "value": -2.719580177474192
+    },
+    {
+      "quantity": "head",
+      "id": "c5",
+      "time_s": 600.0,
+      "coordinate_m": 1.375,
+      "value": -2.979326705962604
+    },
+    {
+      "quantity": "head",
+      "id": "c6",
+      "time_s": 600.0,
+      "coordinate_m": 1.625,
+      "value": -3.2329890386208096
+    },
+    {
+      "quantity": "head",
+      "id": "c7",
+      "time_s": 600.0,
+      "coordinate_m": 1.875,
+      "value": -3.4840954131171245
+    },
+    {
+      "quantity": "head",
+      "id": "c8",
+      "time_s": 600.0,
+      "coordinate_m": 2.125,
+      "value": -3.734370093480978
+    },
+    {
+      "quantity": "head",
+      "id": "c9",
+      "time_s": 600.0,
+      "coordinate_m": 2.375,
+      "value": -3.984426661616766
+    },
+    {
+      "quantity": "head",
+      "id": "c10",
+      "time_s": 600.0,
+      "coordinate_m": 2.625,
+      "value": -4.234436350957525
+    },
+    {
+      "quantity": "head",
+      "id": "c11",
+      "time_s": 600.0,
+      "coordinate_m": 2.875,
+      "value": -4.484437731442366
+    },
+    {
+      "quantity": "head",
+      "id": "c12",
+      "time_s": 600.0,
+      "coordinate_m": 3.125,
+      "value": -4.73443789494065
+    },
+    {
+      "quantity": "head",
+      "id": "c13",
+      "time_s": 600.0,
+      "coordinate_m": 3.375,
+      "value": -4.984437911026081
+    },
+    {
+      "quantity": "head",
+      "id": "c14",
+      "time_s": 600.0,
+      "coordinate_m": 3.625,
+      "value": -5.23443791233983
+    },
+    {
+      "quantity": "head",
+      "id": "c15",
+      "time_s": 600.0,
+      "coordinate_m": 3.875,
+      "value": -5.484437912428855
+    },
+    {
+      "quantity": "saturation",
+      "id": "c0",
+      "time_s": 600.0,
+      "coordinate_m": 0.125,
+      "value": 0.35942953495625785
+    },
+    {
+      "quantity": "saturation",
+      "id": "c1",
+      "time_s": 600.0,
+      "coordinate_m": 0.375,
+      "value": 0.35810293731455156
+    },
+    {
+      "quantity": "saturation",
+      "id": "c2",
+      "time_s": 600.0,
+      "coordinate_m": 0.625,
+      "value": 0.3531872217211966
+    },
+    {
+      "quantity": "saturation",
+      "id": "c3",
+      "time_s": 600.0,
+      "coordinate_m": 0.875,
+      "value": 0.34805892904118474
+    },
+    {
+      "quantity": "saturation",
+      "id": "c4",
+      "time_s": 600.0,
+      "coordinate_m": 1.125,
+      "value": 0.34468373516497447
+    },
+    {
+      "quantity": "saturation",
+      "id": "c5",
+      "time_s": 600.0,
+      "coordinate_m": 1.375,
+      "value": 0.34306488340400826
+    },
+    {
+      "quantity": "saturation",
+      "id": "c6",
+      "time_s": 600.0,
+      "coordinate_m": 1.625,
+      "value": 0.342460654158703
+    },
+    {
+      "quantity": "saturation",
+      "id": "c7",
+      "time_s": 600.0,
+      "coordinate_m": 1.875,
+      "value": 0.3422785539783683
+    },
+    {
+      "quantity": "saturation",
+      "id": "c8",
+      "time_s": 600.0,
+      "coordinate_m": 2.125,
+      "value": 0.3422333750504736
+    },
+    {
+      "quantity": "saturation",
+      "id": "c9",
+      "time_s": 600.0,
+      "coordinate_m": 2.375,
+      "value": 0.34222407236703617
+    },
+    {
+      "quantity": "saturation",
+      "id": "c10",
+      "time_s": 600.0,
+      "coordinate_m": 2.625,
+      "value": 0.3422224789985707
+    },
+    {
+      "quantity": "saturation",
+      "id": "c11",
+      "time_s": 600.0,
+      "coordinate_m": 2.875,
+      "value": 0.3422222519853101
+    },
+    {
+      "quantity": "saturation",
+      "id": "c12",
+      "time_s": 600.0,
+      "coordinate_m": 3.125,
+      "value": 0.3422222250989229
+    },
+    {
+      "quantity": "saturation",
+      "id": "c13",
+      "time_s": 600.0,
+      "coordinate_m": 3.375,
+      "value": 0.34222222245376316
+    },
+    {
+      "quantity": "saturation",
+      "id": "c14",
+      "time_s": 600.0,
+      "coordinate_m": 3.625,
+      "value": 0.3422222222377243
+    },
+    {
+      "quantity": "saturation",
+      "id": "c15",
+      "time_s": 600.0,
+      "coordinate_m": 3.875,
+      "value": 0.3422222222230848
+    },
+    {
+      "quantity": "flux",
+      "id": "f0",
+      "time_s": 600.0,
+      "coordinate_m": 0.0,
+      "value": 2e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f1",
+      "time_s": 600.0,
+      "coordinate_m": 0.25,
+      "value": 2.2773422053373475e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f2",
+      "time_s": 600.0,
+      "coordinate_m": 0.5,
+      "value": 2.412971075549741e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f3",
+      "time_s": 600.0,
+      "coordinate_m": 0.75,
+      "value": 2.35386425422487e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f4",
+      "time_s": 600.0,
+      "coordinate_m": 1.0,
+      "value": 2.2112223982482878e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f5",
+      "time_s": 600.0,
+      "coordinate_m": 1.25,
+      "value": 2.0949999409025907e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f6",
+      "time_s": 600.0,
+      "coordinate_m": 1.5,
+      "value": 2.0337579383818058e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f7",
+      "time_s": 600.0,
+      "coordinate_m": 1.75,
+      "value": 2.0097592401285898e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f8",
+      "time_s": 600.0,
+      "coordinate_m": 2.0,
+      "value": 2.0023305110435663e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f9",
+      "time_s": 600.0,
+      "coordinate_m": 2.25,
+      "value": 2.0004623650950205e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f10",
+      "time_s": 600.0,
+      "coordinate_m": 2.5,
+      "value": 2.000076289074338e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f11",
+      "time_s": 600.0,
+      "coordinate_m": 2.75,
+      "value": 2.000010461700823e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f12",
+      "time_s": 600.0,
+      "coordinate_m": 3.0,
+      "value": 2.0000011911953813e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f13",
+      "time_s": 600.0,
+      "coordinate_m": 3.25,
+      "value": 2.0000001125165043e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f14",
+      "time_s": 600.0,
+      "coordinate_m": 3.5,
+      "value": 2.0000000088100037e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f15",
+      "time_s": 600.0,
+      "coordinate_m": 3.75,
+      "value": 2.0000000005714686e-05
+    },
+    {
+      "quantity": "flux",
+      "id": "f16",
+      "time_s": 600.0,
+      "coordinate_m": 4.0,
+      "value": 2.0000000000306932e-05
+    },
+    {
+      "quantity": "infiltration",
+      "id": "top",
+      "time_s": 600.0,
+      "coordinate_m": 0.0,
+      "value": 0.018000000000000002
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r0",
+      "time_s": 600.0,
+      "coordinate_m": 0.0,
+      "value": 47.9241598013369
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r1",
+      "time_s": 600.0,
+      "coordinate_m": -0.25,
+      "value": 45.4716598013369
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r2",
+      "time_s": 600.0,
+      "coordinate_m": -0.5,
+      "value": 43.0191598013369
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r3",
+      "time_s": 600.0,
+      "coordinate_m": -0.75,
+      "value": 40.5666598013369
+    },
+    {
+      "quantity": "effective_stress",
+      "id": "r4",
+      "time_s": 600.0,
+      "coordinate_m": -1.0,
+      "value": 38.114159801336896
+    }
+  ]
+}
