@@ -1,0 +1,291 @@
+{
+  "accepted": null,
+  "b03_complete": false,
+  "source_base": "interim/2026-11-14-plate6-curved-offset",
+  "archive_sha256": "64461737600bfdb289be5f31ef11a22cad4ec0d7983638725e94651b76709212",
+  "manifest_sha256": "545c4dd0cd383e5b9c837df62566336763609e36c4fbdf509f4ad6257d9ea52a",
+  "cases": [
+    {
+      "case": "outside_half_thickness",
+      "input_status": "確認済み",
+      "inputs": [
+        {
+          "archive_member": "retained-failures/scope-refusals/outside_half_thickness/mesh.json",
+          "sha256": "b079905346d6d1bf296d40d7cc868d84cfc75f19995addeabb2aa616d8d27ca7",
+          "bytes": 6347
+        },
+        {
+          "archive_member": "retained-failures/scope-refusals/outside_half_thickness/ground.json",
+          "sha256": "8a81814472859c4a5c7ef979859b31e3a7a83a1dc75923398dc38a9beef82c55",
+          "bytes": 2517
+        },
+        {
+          "archive_member": "retained-failures/scope-refusals/outside_half_thickness/stages.json",
+          "sha256": "9e57cdd2ed771a0d03bfb8932045acac9c839111f8e6995a7b7232346fe276e2",
+          "bytes": 6144
+        }
+      ],
+      "independent_guard": {
+        "rejected": true,
+        "errors": [
+          "offset_outside_thickness",
+          "shared_signed_normal_offset_mismatch"
+        ],
+        "faces": [
+          {
+            "face_id": "wall_face0_part0",
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.051,
+            "t_m": 0.1,
+            "signed_normal_offset_m": [
+              0.0,
+              0.0,
+              0.051
+            ],
+            "errors": [
+              "offset_outside_thickness"
+            ]
+          },
+          {
+            "face_id": "wall_face1_part0",
+            "normal": [
+              -0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "t_m": 0.1,
+            "signed_normal_offset_m": [
+              -0.0,
+              0.0,
+              0.05
+            ],
+            "errors": []
+          }
+        ],
+        "shared_nodes": [
+          {
+            "shared_node_id": "plate_mesh_node_8",
+            "face_ids": [
+              "wall_face0_part0",
+              "wall_face1_part0"
+            ],
+            "signed_offset_delta_m": [
+              -0.0,
+              0.0,
+              -0.000999999999999994
+            ],
+            "neutral_point_delta_m": [
+              0.0,
+              0.0,
+              0.0010000000000000009
+            ],
+            "normal_dot": 1.0,
+            "inconsistent": true
+          },
+          {
+            "shared_node_id": "plate_mesh_node_11",
+            "face_ids": [
+              "wall_face0_part0",
+              "wall_face1_part0"
+            ],
+            "signed_offset_delta_m": [
+              -0.0,
+              0.0,
+              -0.000999999999999994
+            ],
+            "neutral_point_delta_m": [
+              0.0,
+              0.0,
+              0.0010000000000000009
+            ],
+            "normal_dot": 1.0,
+            "inconsistent": true
+          },
+          {
+            "shared_node_id": "plate_mesh_node_40",
+            "face_ids": [
+              "wall_face0_part0",
+              "wall_face1_part0"
+            ],
+            "signed_offset_delta_m": [
+              -0.0,
+              0.0,
+              -0.000999999999999994
+            ],
+            "neutral_point_delta_m": [
+              0.0,
+              0.0,
+              0.0010000000000000009
+            ],
+            "normal_dot": 1.0,
+            "inconsistent": true
+          }
+        ],
+        "accepted": null,
+        "scope": "independent exact geometry guard; not a complete production input validator"
+      },
+      "historical_body_refusal": {
+        "case": "outside_half_thickness",
+        "returncode": 1,
+        "stderr": "invalid input: offset scope requires finite |e| <= thickness/2\n",
+        "stdout": "",
+        "refused": true
+      },
+      "same_rejection_confirmed": true,
+      "body_rerun_by_this_script": false
+    },
+    {
+      "case": "folded_offset_normals",
+      "input_status": "確認済み",
+      "inputs": [
+        {
+          "archive_member": "retained-failures/scope-refusals/folded_offset_normals/mesh.json",
+          "sha256": "b079905346d6d1bf296d40d7cc868d84cfc75f19995addeabb2aa616d8d27ca7",
+          "bytes": 6347
+        },
+        {
+          "archive_member": "retained-failures/scope-refusals/folded_offset_normals/ground.json",
+          "sha256": "8a81814472859c4a5c7ef979859b31e3a7a83a1dc75923398dc38a9beef82c55",
+          "bytes": 2517
+        },
+        {
+          "archive_member": "retained-failures/scope-refusals/folded_offset_normals/stages.json",
+          "sha256": "493560968f57bddc8fb68716bc1f74901a369f91f98ca12b1832c0109d4e8519",
+          "bytes": 6143
+        }
+      ],
+      "independent_guard": {
+        "rejected": true,
+        "errors": [
+          "shared_signed_normal_offset_mismatch"
+        ],
+        "faces": [
+          {
+            "face_id": "wall_face0_part0",
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "t_m": 0.1,
+            "signed_normal_offset_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "errors": []
+          },
+          {
+            "face_id": "wall_face1_part0",
+            "normal": [
+              0.0,
+              0.0,
+              -1.0
+            ],
+            "e_m": 0.05,
+            "t_m": 0.1,
+            "signed_normal_offset_m": [
+              0.0,
+              0.0,
+              -0.05
+            ],
+            "errors": []
+          }
+        ],
+        "shared_nodes": [
+          {
+            "shared_node_id": "plate_mesh_node_8",
+            "face_ids": [
+              "wall_face0_part0",
+              "wall_face1_part0"
+            ],
+            "signed_offset_delta_m": [
+              0.0,
+              0.0,
+              -0.1
+            ],
+            "neutral_point_delta_m": [
+              0.0,
+              0.0,
+              0.10000000000000009
+            ],
+            "normal_dot": -1.0,
+            "inconsistent": true
+          },
+          {
+            "shared_node_id": "plate_mesh_node_11",
+            "face_ids": [
+              "wall_face0_part0",
+              "wall_face1_part0"
+            ],
+            "signed_offset_delta_m": [
+              0.0,
+              0.0,
+              -0.1
+            ],
+            "neutral_point_delta_m": [
+              0.0,
+              0.0,
+              0.10000000000000009
+            ],
+            "normal_dot": -1.0,
+            "inconsistent": true
+          },
+          {
+            "shared_node_id": "plate_mesh_node_40",
+            "face_ids": [
+              "wall_face0_part0",
+              "wall_face1_part0"
+            ],
+            "signed_offset_delta_m": [
+              0.0,
+              0.0,
+              -0.1
+            ],
+            "neutral_point_delta_m": [
+              0.0,
+              0.0,
+              0.10000000000000009
+            ],
+            "normal_dot": -1.0,
+            "inconsistent": true
+          }
+        ],
+        "accepted": null,
+        "scope": "independent exact geometry guard; not a complete production input validator"
+      },
+      "historical_body_refusal": {
+        "case": "folded_offset_normals",
+        "returncode": 1,
+        "stderr": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "stdout": "",
+        "refused": true
+      },
+      "same_rejection_confirmed": true,
+      "body_rerun_by_this_script": false
+    }
+  ],
+  "unconfirmed": [
+    {
+      "item": "noncoplanar physical kink input",
+      "status": "未確認",
+      "reason": "folded_offset_normals is a coplanar winding reversal, not a finite-angle kink"
+    },
+    {
+      "item": "parallel physical step input",
+      "status": "未確認",
+      "reason": "no separately identified B-03 step input in this cited archive"
+    },
+    {
+      "item": "compact/Native/GUI/GPU/real CAD input and display",
+      "status": "未確認",
+      "reason": "PC procedure only; no fabricated historical input"
+    }
+  ]
+}
