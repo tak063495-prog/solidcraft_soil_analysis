@@ -1,0 +1,26 @@
+{
+  "schema": "p6-reference-exchange/1",
+  "complete": true,
+  "conventions": {
+    "stress_sign": "tension_positive",
+    "shear": "tensor_components",
+    "stress_basis": "dry_total_equals_effective",
+    "axes": "right_handed_xyz",
+    "vector_sign": "positive_along_named_global_axis"
+  },
+  "case": {
+    "name": "lame-plane-strain",
+    "physical_conditions": {
+      "E_Pa": 30000000.0,
+      "nu": 0.25,
+      "a_m": 1.0,
+      "b_m": 2.0,
+      "internal_pressure_Pa": 100000.0,
+      "external_pressure_Pa": 0.0,
+      "axial_strain": 0.0,
+      "geometry": "quarter_annulus_symmetry_sides",
+      "axial_condition": "imposed_uniform_strain_not_closed_end_caps"
+    },
+    "time_meaning": "static_state_label_not_physical_time"
+  }
+}

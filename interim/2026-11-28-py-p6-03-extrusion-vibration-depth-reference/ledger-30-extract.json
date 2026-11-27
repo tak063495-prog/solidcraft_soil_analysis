@@ -1,0 +1,84 @@
+{
+  "pr": 30,
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/30",
+  "commit": "df1c8d082bb39a7cd5913918779e1e78f5343ab7",
+  "path": "interim/2026-11-25-p6-status-ledger-audit/ledger.json",
+  "git_blob_sha1": "2b0a1b48c995c87dce30067e9d063dc7cf59733d",
+  "base_commit": "79d839e3f89331a82d976efc1f23cbe2c848cbee",
+  "rows": [
+    {
+      "id": "STATUS:P6-03:bounded",
+      "target": "STATUS:P6-03",
+      "state": "限定受入",
+      "scope": "10³→10⁴→10⁵要素の性能・メモリー・真残差測定：部分（一様MCCで105456要素まで照合）。1296/10368に加え、105456 Tet4・105456 GPの並列載除荷が完了し、全節点・全GP・塑性棄却復元を理論式と照合。経過6543.93秒／CPU23261.39秒、観測peak WS660246528 bytes。世代3の載荷後状態から除荷を再計算し、全報告の非時間値が一致。全結果442649477 bytesを含む約33 MBの公開ZIPは新規配置で再監査一致。同時実行の観測で専有速度保証ではない。元直列は実行中で速度比は未算出。別CSR版2865要素の全場一致・独立監査と、本体への統合281/171・実MC/MCC照合は合格。一般CAD局所掘削の10万要素性能と単独性能比較は残る。",
+      "reason": "部分（一様MCCで105456要素まで照合）。1296/10368に加え、105456 Tet4・105456 GPの並列載除荷が完了し、全節点・全GP・塑性棄却復元を理論式と照合。経過6543.93秒／CPU23261.39秒、観測peak WS660246528 bytes。世代3の載荷後状態から除荷を再計算し、全報告の非時間値が一致。全結果442649477 bytesを含む約33 MBの公開ZIPは新規配置で再監査一致。同時実行の観測で専有速度保証ではない。元直列は実行中で速度比は未算出。別CSR版2865要素の全場一致・独立監査と、本体への統合281/171・実MC/MCC照合は合格。一般CAD局所掘削の10万要素性能と単独性能比較は残る。。既存記録の範囲の転記であり今回の新受入ではない。",
+      "evidence": [
+        "E025"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc"
+    },
+    {
+      "id": "STATUS:P6-03:remaining",
+      "target": "STATUS:P6-03",
+      "state": "未達",
+      "scope": "10³→10⁴→10⁵要素の性能・メモリー・真残差測定：要件全体",
+      "reason": "1296/10368に加え、105456 Tet4・105456 GPの並列載除荷が完了し、全節点・全GP・塑性棄却復元を理論式と照合。経過6543.93秒／CPU23261.39秒、観測peak WS660246528 bytes。世代3の載荷後状態から除荷を再計算し、全報告の非時間値が一致。全結果442649477 bytesを含む約33 MBの公開ZIPは新規配置で再監査一致。同時実行の観測で専有速度保証ではない。元直列は実行中で速度比は未算出。別CSR版2865要素の全場一致・独立監査と、本体への統合281/171・実MC/MCC照合は合格。一般CAD局所掘削の10万要素性能と単独性能比較は残る。",
+      "evidence": [
+        "E025"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc"
+    },
+    {
+      "id": "TODO:P6-03:overall",
+      "target": "TODO:P6-03",
+      "state": "未達",
+      "scope": "既存MCC空間差・押出し応力/振動モニター/有限幅奥行き応力の判定不能、杭・降雨等の残件",
+      "reason": "元の物理条件・参照・判定を保持してユーザーPCで系列/独立監査を追加。今回これらの大規模計算を再実行したとはしない",
+      "evidence": [
+        "E044"
+      ],
+      "completed": false,
+      "next_work": "cloud_and_user_pc"
+    },
+    {
+      "id": "TODO:P6-03:indeterminate",
+      "target": "TODO:P6-03",
+      "state": "判定不能",
+      "scope": "MCC/押出し応力・振動モニター・有限幅奥行き応力",
+      "reason": "元記録の判定不能を保持。不収束・試行上限・有限差・中点を連続解/正確なFsへ変えない。",
+      "evidence": [
+        "E085"
+      ],
+      "completed": false,
+      "next_work": "user_pc"
+    }
+  ],
+  "evidence": {
+    "E044": {
+      "source": "S087",
+      "lines": [
+        21,
+        21
+      ],
+      "value": "|P6-03 / P2|既存MCC空間差・押出し応力/振動モニター/有限幅奥行き応力の判定不能、杭・降雨等の残件|柱Tet4最細6.828%不合格と連続推定1.034%合格を区別。杭6.687→4.717%、旧降雨5項目未達・元のしきい値を保持|元の物理条件・参照・判定を保持してユーザーPCで系列/独立監査を追加。今回これらの大規模計算を再実行したとはしない|"
+    },
+    "E085": {
+      "source": "S087",
+      "lines": [
+        21,
+        21
+      ],
+      "value": "|P6-03 / P2|既存MCC空間差・押出し応力/振動モニター/有限幅奥行き応力の判定不能、杭・降雨等の残件|柱Tet4最細6.828%不合格と連続推定1.034%合格を区別。杭6.687→4.717%、旧降雨5項目未達・元のしきい値を保持|元の物理条件・参照・判定を保持してユーザーPCで系列/独立監査を追加。今回これらの大規模計算を再実行したとはしない|"
+    }
+  },
+  "source_S087": {
+    "path": "interim/2026-11-16-issue-triage/todo.ja.md",
+    "commit": "79d839e3f89331a82d976efc1f23cbe2c848cbee",
+    "sha256": "2e69911a898aa7ebcbb5e645cce3e2a62f57c33cc58b1f695a4fe0d970529d67",
+    "git_blob_sha1": "2cfcbee88f6a8f9d08d9c333e59e8b4f4771ee9e",
+    "kind": "markdown"
+  },
+  "interpretation": "TODO:P6-03 is distinct from STATUS:P6-03; no new acceptance; original three diagnoses remain indeterminate."
+}
