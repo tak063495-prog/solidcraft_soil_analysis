@@ -1,0 +1,18 @@
+The direct archived checkpoint resume exited 1 before any trial. The original
+message and profile are in initial-reload/. Rerunning the prefix with the
+current probe passed the complete prefix comparison, then the reload ran.
+
+The three alternate launch shells (N256, N512, N1024) each returned 2
+after the timed solver and field writer had returned 0 and written their
+complete results. Their common shell file was edited during execution to
+regenerate the independent reload prefix. Each shell reported:
+interim/2026-11-28-remaining-p15/route.sh: line 40: unexpected EOF while looking for matching `"'
+The alternate command block was already executing and was identical in both
+versions. The final file passes bash -n. All three solver exit statuses are
+retained in the resource logs. Stage charges, raw histories, reconstructed
+field hashes and the unchanged score have been checked separately.
+
+Initial resource inventory (after the separate C-02 replay check) stopped:
+ValueError: missing route profile: interim/2026-11-28-remaining-p15/checks/face-replay.log
+The inventory now selects the two timing logs explicitly. The replay file
+contains byte-comparison hashes.
