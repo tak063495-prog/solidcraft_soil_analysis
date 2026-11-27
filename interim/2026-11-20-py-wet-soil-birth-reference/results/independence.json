@@ -1,0 +1,63 @@
+{
+  "modules": [
+    {
+      "path": "reference.py",
+      "sha256": "6278e340956f33737088f5b1b3311eaee0209c4bcb702719abbce0b85c040678",
+      "imports": [
+        "dataclasses",
+        "numpy"
+      ]
+    },
+    {
+      "path": "numerical.py",
+      "sha256": "622fb3611c2e152dcbde1f144611267bdcc03083f17f1c52ba2de155fd654d6a",
+      "imports": [
+        "numpy",
+        "numpy.polynomial.legendre",
+        "scipy.sparse",
+        "scipy.sparse.linalg"
+      ]
+    },
+    {
+      "path": "policies.py",
+      "sha256": "cfb631b3f1321017d4658942ef1208d4231b5efe0d12a74fe98af1d22575641c",
+      "imports": [
+        "numpy",
+        "reference"
+      ]
+    },
+    {
+      "path": "compare.py",
+      "sha256": "5fb1e3c664ecd6c6d21bdea066c47498bb56457541a3df6b9ea86b77d9db51d6",
+      "imports": [
+        "argparse",
+        "csv",
+        "json",
+        "pathlib",
+        "numpy",
+        "reference",
+        "numerical",
+        "policies"
+      ]
+    },
+    {
+      "path": "run_reference.py",
+      "sha256": "38fdacd6c530aaab836daa649b84073b65ba48b24de4e531a2b825a5dd4f28f9",
+      "imports": [
+        "argparse",
+        "json",
+        "pathlib",
+        "time",
+        "numpy",
+        "reference",
+        "numerical",
+        "compare",
+        "policies"
+      ]
+    }
+  ],
+  "production_modules_imported": false,
+  "production_subprocesses_in_reference": false,
+  "existing_tests_invoked_only_by_validate": true,
+  "review": "static imports and source review; independent equations and implementations"
+}
