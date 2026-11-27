@@ -1,0 +1,17 @@
+setUpClass (test_nc_spatial_evidence.SpatialEvidence) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_nc_spatial_evidence.SpatialEvidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/multi-joint/tests/test_nc_spatial_evidence.py", line 22, in setUpClass
+    cls.integrity = replay.run(cls.folder,allow_platform_float_differences=sys.platform=='win32')
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/multi-joint/interim/2026-11-10-nc-spatial-release/remeasure.py", line 144, in run
+    raise ValueError('remeasured JSON differs')
+ValueError: remeasured JSON differs
+
+----------------------------------------------------------------------
+Ran 0 tests in 347.844s
+
+FAILED (errors=1)
