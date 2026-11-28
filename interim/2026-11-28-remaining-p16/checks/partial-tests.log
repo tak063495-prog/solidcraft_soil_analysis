@@ -1,0 +1,29 @@
+test_paired_prefix (verify.Evidence.test_paired_prefix) ... ERROR
+test_paired_inverse_action (verify.Evidence.test_paired_inverse_action) ... ok
+test_original_reject_cost (verify.Evidence.test_original_reject_cost) ... ok
+test_parent_decisions (verify.Evidence.test_parent_decisions) ... ok
+
+======================================================================
+ERROR: test_paired_prefix (verify.Evidence.test_paired_prefix)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/p16-source/interim/2026-11-28-remaining-p16/verify.py", line 24, in test_paired_prefix
+    previous = read(P15/f"c02/{sign}.json")
+  File "/workspace/work/p16-source/interim/2026-11-28-remaining-p16/verify.py", line 17, in read
+    return json.loads(file.read_text())
+                      ~~~~~~~~~~~~~~^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 546, in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_abc.py", line 632, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/p16-source/interim/2026-11-28-remaining-p15/c02/plus.json'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.022s
+
+FAILED (errors=1)
