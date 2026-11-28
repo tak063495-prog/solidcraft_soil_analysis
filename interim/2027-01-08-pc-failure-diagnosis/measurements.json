@@ -1,0 +1,2686 @@
+{
+  "schema": "pcfail-measurements/1",
+  "passed": false,
+  "all_acceptance_complete": false,
+  "diagnostic_only": true,
+  "pc_executed": false,
+  "source_base": "520cecfce646200505d7fefabaa66ad1bda33f59",
+  "roof": {
+    "paths": [
+      {
+        "n": 2,
+        "complete": true,
+        "frames": 5,
+        "attempts": 16,
+        "accepted": 16,
+        "rejected": 0,
+        "last_committed": {
+          "stage_index": 4,
+          "stage_progress": 1.0,
+          "boundary_factor": 0.0
+        },
+        "last_attempt": {
+          "stage": "remove",
+          "progress_from": 0.75,
+          "progress_to": 1.0,
+          "accepted": true,
+          "reason": "converged_material_force",
+          "newton_iterations": 0,
+          "relative_force_residual": 6.129412619238569e-12,
+          "committed_state_unchanged_on_rejection": false,
+          "rejected_trial_material_changed": false,
+          "rejected_trial_plastic_changed": false,
+          "rejected_trial_active_set_changed": false,
+          "rejected_trial_load_changed": false,
+          "linear_solves": []
+        },
+        "process": {
+          "status": "done",
+          "exit_code": 0,
+          "timed_out": false,
+          "command": [
+            "/workspace/pc-failure/work/beam-observer/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/pc-failure/work/roof-series-v2/n2/mesh.json",
+            "/workspace/pc-failure/work/roof-series-v2/n2/ground.json",
+            "/workspace/pc-failure/work/roof-series-v2/n2/stages.json",
+            "/workspace/pc-failure/work/roof-series-v2/n2/run.json"
+          ],
+          "cwd": "/workspace/pc-failure",
+          "elapsed_seconds": 0.17014304999997876,
+          "memory_limit_bytes": 8589934592,
+          "peak_job_committed_bytes": null,
+          "memory_measurement": "Windows job committed memory; Linux peak not measured",
+          "pid": 6861,
+          "numerical_acceptance": false
+        }
+      },
+      {
+        "n": 4,
+        "complete": true,
+        "frames": 5,
+        "attempts": 16,
+        "accepted": 16,
+        "rejected": 0,
+        "last_committed": {
+          "stage_index": 4,
+          "stage_progress": 1.0,
+          "boundary_factor": 0.0
+        },
+        "last_attempt": {
+          "stage": "remove",
+          "progress_from": 0.75,
+          "progress_to": 1.0,
+          "accepted": true,
+          "reason": "converged_material_force",
+          "newton_iterations": 0,
+          "relative_force_residual": 6.129412619238569e-12,
+          "committed_state_unchanged_on_rejection": false,
+          "rejected_trial_material_changed": false,
+          "rejected_trial_plastic_changed": false,
+          "rejected_trial_active_set_changed": false,
+          "rejected_trial_load_changed": false,
+          "linear_solves": []
+        },
+        "process": {
+          "status": "done",
+          "exit_code": 0,
+          "timed_out": false,
+          "command": [
+            "/workspace/pc-failure/work/beam-observer/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/pc-failure/work/roof-series-v2/n4/mesh.json",
+            "/workspace/pc-failure/work/roof-series-v2/n4/ground.json",
+            "/workspace/pc-failure/work/roof-series-v2/n4/stages.json",
+            "/workspace/pc-failure/work/roof-series-v2/n4/run.json"
+          ],
+          "cwd": "/workspace/pc-failure",
+          "elapsed_seconds": 0.22071972999992795,
+          "memory_limit_bytes": 8589934592,
+          "peak_job_committed_bytes": null,
+          "memory_measurement": "Windows job committed memory; Linux peak not measured",
+          "pid": 7036,
+          "numerical_acceptance": false
+        }
+      },
+      {
+        "n": 8,
+        "complete": false,
+        "frames": 2,
+        "attempts": 12,
+        "accepted": 4,
+        "rejected": 8,
+        "last_committed": {
+          "stage_index": 1,
+          "stage_progress": 1.0,
+          "boundary_factor": 0.0
+        },
+        "last_attempt": {
+          "stage": "load_plate_beam",
+          "progress_from": 0.0,
+          "progress_to": 0.001953125,
+          "accepted": false,
+          "reason": "numerical solve failed: beam interior true residual exceeded tolerance",
+          "newton_iterations": null,
+          "relative_force_residual": null,
+          "committed_state_unchanged_on_rejection": true,
+          "rejected_trial_material_changed": false,
+          "rejected_trial_plastic_changed": false,
+          "rejected_trial_active_set_changed": false,
+          "rejected_trial_load_changed": false,
+          "linear_solves": []
+        },
+        "process": {
+          "status": "failed",
+          "exit_code": 1,
+          "timed_out": false,
+          "command": [
+            "/workspace/pc-failure/work/beam-observer/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/pc-failure/work/roof-series-v2/n8/mesh.json",
+            "/workspace/pc-failure/work/roof-series-v2/n8/ground.json",
+            "/workspace/pc-failure/work/roof-series-v2/n8/stages.json",
+            "/workspace/pc-failure/work/roof-series-v2/n8/run.json"
+          ],
+          "cwd": "/workspace/pc-failure",
+          "elapsed_seconds": 6.20692202500004,
+          "memory_limit_bytes": 8589934592,
+          "peak_job_committed_bytes": null,
+          "memory_measurement": "Windows job committed memory; Linux peak not measured",
+          "pid": 7214,
+          "numerical_acceptance": false
+        }
+      }
+    ],
+    "linear_observation": {
+      "schema": "pcfail-beam-linear-observation/1",
+      "passed": false,
+      "b01_complete": false,
+      "diagnostic_only": true,
+      "rejected_system_only": true,
+      "n": 1584,
+      "factor": 0.25,
+      "original_gate": 1e-10,
+      "native_relative": 2.948857986787151e-10,
+      "fixed_order_original_relative": 2.918568500898291e-10,
+      "matrix_symmetry_max": 5.960464477539063e-08,
+      "minimum_eigenvalue": 289.4630832355157,
+      "maximum_eigenvalue": 1211012599.3033595,
+      "mixed_dof_algebraic_condition": 4183651.282115461,
+      "independent_double_cholesky_fixed_order_relative": 7.981058583503436e-11,
+      "rounded_matrix_refinement_observations": [
+        {
+          "iteration": 0,
+          "fixed_order_relative": 2.918568500898291e-10,
+          "maximum_solution_change": 0.0
+        },
+        {
+          "iteration": 1,
+          "fixed_order_relative": 2.2906647606869527e-11,
+          "maximum_solution_change": 1.3741424664814872e-11
+        },
+        {
+          "iteration": 2,
+          "fixed_order_relative": 2.3448053910944137e-11,
+          "maximum_solution_change": 1.308937680466471e-11
+        },
+        {
+          "iteration": 3,
+          "fixed_order_relative": 2.187565709675632e-11,
+          "maximum_solution_change": 1.3834614009944346e-11
+        }
+      ],
+      "production_policy_changed": false,
+      "interpretation": "Same rejected rounded matrix/RHS; mixed-DOF algebra only. Refinement is not applied to the solver or accepted as a completed roof path."
+    }
+  },
+  "hydraulic": {
+    "precision_cross": [
+      {
+        "schema": "pcfail-hydraulic/1",
+        "passed": false,
+        "a04_complete": false,
+        "diagnostic_only": true,
+        "precision": "host",
+        "mantissa_bits": 63,
+        "flux_mantissa_bits": 63,
+        "steps": 4,
+        "original_policy_unchanged": true,
+        "input_only": true,
+        "iterations": [
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99999896.70817639,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99995749.75123468,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99897719.02577887,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 67481520.2888553,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 2605.507904682588,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 1.6193688824258387e-05,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998088.88635853,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99954617.77259596,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 80880030.38329291,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 5689.0131743851725,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 9.145279759829385e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998237.77952664,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99920649.55620527,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 41955899.43919564,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 216.5910105506137,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 9.614968590453297e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998242.9768088,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99804972.85377347,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 2284919.8381545297,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.2042830254943894,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 7.394547650812919e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99999950.3205375,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99999736.23035307,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99993849.58962202,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 98358915.66280805,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 4624406.974562565,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 3.2263866718603254,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 6,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 1.8536497074628776e-05,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99999566.43069834,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99983467.83608977,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 97832284.94926938,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 368264.2274370143,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.0014652987529817582,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99998958.21442632,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99897338.79271677,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 32807067.913205203,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 13.649354517263488,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 1.7427537420032094e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99998824.43555799,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99333306.94060053,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 1643456.7416199197,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.03900657530372006,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 1.323023790425723e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999899.51160802,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999918.70621175,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99984096.50832838,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 73249173.47915213,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 611.0355410532981,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 7.200641129793502e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999612.47405489,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99990031.64612888,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99461691.40611038,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 2982808.938232648,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 0.05725811956938702,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 1.0113449328464633e-05,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999273.58475755,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99926763.75770473,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 33761901.30607235,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 19.001231821208517,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 5.749361244915105e-06,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99998864.64154011,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99798091.7118608,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 86938009.1267225,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 28442.71495773231,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 1.6862288228007754e-05,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          }
+        ],
+        "failed_candidates": [],
+        "execution_complete": true,
+        "accepted_rows": 24
+      },
+      {
+        "schema": "pcfail-hydraulic/1",
+        "passed": false,
+        "a04_complete": false,
+        "diagnostic_only": true,
+        "precision": "binary64",
+        "mantissa_bits": 52,
+        "flux_mantissa_bits": 52,
+        "steps": 4,
+        "original_policy_unchanged": true,
+        "input_only": true,
+        "iterations": [
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99999896.70817639,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99995749.75123763,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99897719.02595176,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 67481520.2148676,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 2605.4974828581126,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.015370452067580857,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 6,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.00905271502464159,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998088.88635853,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99954617.77269278,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 80880030.18262303,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 5688.977937684803,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.01900050585170866,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.01900050585170866,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 6,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.01900050585170866,
+            "residual_dtype": "float64",
+            "x_dtype": "float64"
+          }
+        ],
+        "failed_candidates": [
+          {
+            "cut": 0,
+            "native_l2": 1.266981583779345e-17,
+            "changed_components": 18,
+            "scaled_residual": 0.022074092398283264
+          },
+          {
+            "cut": 1,
+            "native_l2": 1.0987898521863711e-17,
+            "changed_components": 1,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 2,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 3,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 4,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 5,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 6,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 7,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 8,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 9,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 10,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 11,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 12,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 13,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 14,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 15,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 16,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 17,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 18,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          },
+          {
+            "cut": 19,
+            "native_l2": 1.0889474740275325e-17,
+            "changed_components": 0,
+            "scaled_residual": 0.01900050585170866
+          }
+        ],
+        "execution_complete": false,
+        "error": "ArithmeticError(('hydraulic line search', 0.01900050585170866))",
+        "accepted_rows": 9
+      },
+      {
+        "schema": "pcfail-hydraulic/1",
+        "passed": false,
+        "a04_complete": false,
+        "diagnostic_only": true,
+        "precision": "state64-flux80",
+        "mantissa_bits": 52,
+        "flux_mantissa_bits": 63,
+        "steps": 4,
+        "original_policy_unchanged": true,
+        "input_only": true,
+        "iterations": [
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99999896.70817639,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99995749.75123852,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99897719.0259951,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 67481520.25400922,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 2605.549049262573,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.014295935671101549,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 6,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.011983007999600172,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          },
+          {
+            "iteration": 7,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.011983007999600172,
+            "residual_dtype": "float128",
+            "x_dtype": "float64"
+          }
+        ],
+        "failed_candidates": [
+          {
+            "cut": 0,
+            "native_l2": 9.797245579290452e-18,
+            "changed_components": 9,
+            "scaled_residual": 0.014295935671101549
+          },
+          {
+            "cut": 1,
+            "native_l2": 9.005347927457432e-18,
+            "changed_components": 2,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 2,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 3,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 4,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 5,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 6,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 7,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 8,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 9,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 10,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 11,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 12,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 13,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 14,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 15,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 16,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 17,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 18,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          },
+          {
+            "cut": 19,
+            "native_l2": 8.969037500620236e-18,
+            "changed_components": 0,
+            "scaled_residual": 0.011983007999600172
+          }
+        ],
+        "execution_complete": false,
+        "error": "ArithmeticError(('hydraulic line search', 0.011983007999600172))",
+        "accepted_rows": 8
+      },
+      {
+        "schema": "pcfail-hydraulic/1",
+        "passed": false,
+        "a04_complete": false,
+        "diagnostic_only": true,
+        "precision": "state80-flux64",
+        "mantissa_bits": 63,
+        "flux_mantissa_bits": 52,
+        "steps": 4,
+        "original_policy_unchanged": true,
+        "input_only": true,
+        "iterations": [
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p0",
+            "merit": 0.0,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99999896.70817639,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99995749.75123613,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99897719.02573372,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 67481520.20668797,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 2605.505241923802,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.0017566230936769572,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998088.88635853,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99954617.77259478,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 80880030.37158354,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 5689.011520679089,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.001672279727483847,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998237.77952664,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99920649.55619545,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 41955899.44969534,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 216.5908827216539,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.001210659562621668,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99998242.9768088,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 99804972.85375838,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 2284919.79309312,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.20490763841527532,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p1",
+            "merit": 0.0010746389376697504,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99999950.3205375,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99999736.23035309,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99993849.58962215,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 98358915.66276726,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 4624406.968217816,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 3.226092863026336,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 6,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.005393610419205904,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99999566.43069834,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99983467.83608861,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 97832284.94961879,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 368264.2331016505,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.0011485171874338217,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99998958.21442634,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99897338.79274733,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 32807067.89245331,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 13.649177395000827,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.0006519419786704014,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99998824.43555798,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 99333306.94065012,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 1643456.7463389123,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.0389597511173317,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p2",
+            "merit": 0.0008572634567774419,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999899.51160802,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999918.70621173,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99984096.50831543,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 73249173.4280515,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 611.0358029471796,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 0.007435522473356187,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999612.47405486,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99990031.64612885,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99461691.40619978,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 2982808.9373998777,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 0.057281591484068736,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 5,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 0.0013390377587769705,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99999273.58475755,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99926763.75770448,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 33761901.39095692,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 19.001159859032835,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 0.001691051624245387,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 0,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99998864.64154011,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 1,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 99798091.71182394,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 2,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 86938009.12595434,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 3,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 28442.71569507476,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          },
+          {
+            "iteration": 4,
+            "dt": 0.25,
+            "period": "p3",
+            "merit": 0.00038198519449257775,
+            "residual_dtype": "float128",
+            "x_dtype": "float128"
+          }
+        ],
+        "failed_candidates": [],
+        "execution_complete": true,
+        "accepted_rows": 24
+      }
+    ],
+    "original_pc_merit": 0.011860214796293166,
+    "original_pc_bitwise_reproduced": false,
+    "native_control": {
+      "complete": true,
+      "frames": 20,
+      "excavations": 1,
+      "process": {
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-one-way-construction",
+          "/workspace/pc-failure/work/a04-native-final/mesh.json",
+          "/workspace/pc-failure/work/a04-native-final/ground.json",
+          "/workspace/pc-failure/work/a04-native-final/case.json",
+          "/workspace/pc-failure/work/a04-native-final/native.json"
+        ],
+        "exit_code": 0
+      }
+    }
+  },
+  "selected_evidence": {
+    "a01-old-verified.json": {
+      "status": "verified",
+      "passed": false,
+      "numerical_acceptance": false,
+      "parts": [
+        {
+          "path": "interim/2026-11-23-joint-combo-extension/evidence.zip.part000",
+          "status": "verified",
+          "expected_bytes": 25165824,
+          "expected_sha256": "7dc810af0ff8b4dfab4d374b38675cfafdf7d196b4e56ae868c6dd8f217e580d"
+        },
+        {
+          "path": "interim/2026-11-23-joint-combo-extension/evidence.zip.part001",
+          "status": "verified",
+          "expected_bytes": 25165824,
+          "expected_sha256": "34e44c48fe8e71d87005ef5ae929d3170f2ec63c24b5d72b517ba4b428e6f697"
+        },
+        {
+          "path": "interim/2026-11-23-joint-combo-extension/evidence.zip.part002",
+          "status": "verified",
+          "expected_bytes": 25165824,
+          "expected_sha256": "97b2bf3c9eef93b10dd62fb538f850124a2438a726ea284dd0ee7f457cfa7acc"
+        },
+        {
+          "path": "interim/2026-11-23-joint-combo-extension/evidence.zip.part003",
+          "status": "verified",
+          "expected_bytes": 25165824,
+          "expected_sha256": "1e27a8c393dd165d6b41edd862af3438cc86ea4d82453ab68e1c78fb05f86a71"
+        },
+        {
+          "path": "interim/2026-11-23-joint-combo-extension/evidence.zip.part004",
+          "status": "verified",
+          "expected_bytes": 13424065,
+          "expected_sha256": "a6ed12003b6129e9b38bc2a1160752c1ddb261417beae5b10fb4a9d901006b35"
+        }
+      ],
+      "all_bytes_verified": true,
+      "entries": 2620,
+      "archive_bytes": 114087361,
+      "archive_sha256": "b4cf7c9ca0bc98fec3f304ebca5db30d109becad494bf9f48cf7d400c45383a2"
+    },
+    "a01-verified.json": {
+      "status": "verified",
+      "passed": false,
+      "numerical_acceptance": false,
+      "parts": [
+        {
+          "path": "interim/2026-12-20-a01-joint-combo-cause-diagnosis/evidence.zip.part000",
+          "status": "verified",
+          "expected_bytes": 21860534,
+          "expected_sha256": "55213f769bfc2ce095042f0e7ae4385a0218b5dc6be11f654e61457380e10cdf"
+        }
+      ],
+      "all_bytes_verified": true,
+      "entries": 615,
+      "archive_bytes": 21860534,
+      "archive_sha256": "55213f769bfc2ce095042f0e7ae4385a0218b5dc6be11f654e61457380e10cdf"
+    },
+    "b01-verified.json": {
+      "status": "verified",
+      "passed": false,
+      "numerical_acceptance": false,
+      "parts": [
+        {
+          "path": "interim/2026-12-25-b01-curved-tri6-cause-diagnosis/evidence.zip.part000",
+          "status": "verified",
+          "expected_bytes": 16777216,
+          "expected_sha256": "5a5142284f2691a50007eaaa989c22b54c2c01171f2f55aa9b1d93c4ae486028"
+        },
+        {
+          "path": "interim/2026-12-25-b01-curved-tri6-cause-diagnosis/evidence.zip.part001",
+          "status": "verified",
+          "expected_bytes": 3603765,
+          "expected_sha256": "45ccab6422b5269edf2909ece34237126b1b524143303b1a24cc04c5797af1a3"
+        }
+      ],
+      "all_bytes_verified": true,
+      "entries": 136,
+      "archive_bytes": 20380981,
+      "archive_sha256": "7fb423d6852f3c79a04e2d0681641e763161e0cdfd065f378f7740015432acb8"
+    },
+    "b01-cli-verified.json": {
+      "status": "verified",
+      "passed": false,
+      "numerical_acceptance": false,
+      "parts": [
+        {
+          "path": "interim/2026-12-03-tri6-curved-b01/evidence.zip.part000",
+          "status": "verified",
+          "expected_bytes": 16777216,
+          "expected_sha256": "0fd4e156be471de7608b16165269098cdcf779ea5125d119faa858f570e699ec"
+        },
+        {
+          "path": "interim/2026-12-03-tri6-curved-b01/evidence.zip.part001",
+          "status": "verified",
+          "expected_bytes": 16777216,
+          "expected_sha256": "ebf3649dfe17098625b0d807e747db1de8a8b1e6f9982a0ad6d81324298ffb44"
+        },
+        {
+          "path": "interim/2026-12-03-tri6-curved-b01/evidence.zip.part002",
+          "status": "verified",
+          "expected_bytes": 16777216,
+          "expected_sha256": "fa771b880cbe4f1ef664f558d16a273880d3da5421b21f44ed185cd163874b1d"
+        },
+        {
+          "path": "interim/2026-12-03-tri6-curved-b01/evidence.zip.part003",
+          "status": "verified",
+          "expected_bytes": 889940,
+          "expected_sha256": "0b856541e59d366c86f380be76a7acff9dcde501b2cfea35c0121d5bfc0f0c2e"
+        }
+      ],
+      "all_bytes_verified": true,
+      "entries": 507,
+      "archive_bytes": 51221588,
+      "archive_sha256": "4f74641ec5b8a815612ce5cb8ca85645aadd916fdfea0d81b17274fa5644d400"
+    }
+  },
+  "b02_new_driver_execution": {
+    "execution_complete": true,
+    "cases": 2,
+    "accepted_states": 40,
+    "restarts": 5,
+    "all_restarts_exact": true,
+    "all_case_original_field_gates": true,
+    "source_binding_unchanged": true,
+    "observer_build": "direct rustc from unchanged production library",
+    "scope_cli": "work-only observation binary, failure trace disabled"
+  },
+  "b01_cli": {
+    "diagnostic_only": true,
+    "production_scope_expanded": false,
+    "solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+    "prior_archive_sha256": "4f74641ec5b8a815612ce5cb8ca85645aadd916fdfea0d81b17274fa5644d400",
+    "prior_all_members_sha256_verified": true,
+    "records": [
+      {
+        "name": "curved-mid-mindlin_tri6-axis0-e0.0",
+        "prefix": "probes/curved-mid-mindlin_tri6-axis0-e0.0",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "e7293282661fc2da5d63c7a25c355075a13a83eca5af8f3f51b9782c9d3cf5de"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis0-e0.0/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis0-e0.0/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis0-e0.0/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis0-e0.0/run.json"
+        ],
+        "pid": 59015,
+        "exit_code": 1,
+        "elapsed_seconds": 0.04262874300002295,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6-axis2-e0.0",
+        "prefix": "probes/curved-mid-mindlin_tri6-axis2-e0.0",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "7031df05b434d3a80723c6db89dc98ece8546afd0c3e85f93483786e15a5102f"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis2-e0.0/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis2-e0.0/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis2-e0.0/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6-axis2-e0.0/run.json"
+        ],
+        "pid": 59056,
+        "exit_code": 1,
+        "elapsed_seconds": 0.04854450800007726,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6_offset-axis0-e0.0",
+        "prefix": "probes/curved-mid-mindlin_tri6_offset-axis0-e0.0",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "3108e2cda6249538f77f1e1e70e703e8502d5f4fa8883adc281deab1f9dd2836"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.0/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.0/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.0/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.0/run.json"
+        ],
+        "pid": 59089,
+        "exit_code": 1,
+        "elapsed_seconds": 0.04099568500009809,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6_offset-axis0-e0.05",
+        "prefix": "probes/curved-mid-mindlin_tri6_offset-axis0-e0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "296d0ae6e6df9700b26729a9b56c6aed44b3b339efc49dfb076599d9d7cf8cad"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e0.05/run.json"
+        ],
+        "pid": 59142,
+        "exit_code": 1,
+        "elapsed_seconds": 0.033457597000051464,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6_offset-axis0-e-0.05",
+        "prefix": "probes/curved-mid-mindlin_tri6_offset-axis0-e-0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "1413468ee657e3541dac040cfc61074628286c02d867fda1feaa775c4d8bd40f"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e-0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e-0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e-0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis0-e-0.05/run.json"
+        ],
+        "pid": 59151,
+        "exit_code": 1,
+        "elapsed_seconds": 0.020156534000079773,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6_offset-axis2-e0.0",
+        "prefix": "probes/curved-mid-mindlin_tri6_offset-axis2-e0.0",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "8e245a3221325911631d72116c52b4dd5de1706c8754e6b188589f3c935f9ad9"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.0/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.0/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.0/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.0/run.json"
+        ],
+        "pid": 59164,
+        "exit_code": 1,
+        "elapsed_seconds": 0.028040101999977196,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6_offset-axis2-e0.05",
+        "prefix": "probes/curved-mid-mindlin_tri6_offset-axis2-e0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "3501b828bbccc6c14001f45e1bbca482ca1a6a9b2b64d977c134c09ca22fe4c9"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e0.05/run.json"
+        ],
+        "pid": 59189,
+        "exit_code": 1,
+        "elapsed_seconds": 0.05753672600008031,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-mid-mindlin_tri6_offset-axis2-e-0.05",
+        "prefix": "probes/curved-mid-mindlin_tri6_offset-axis2-e-0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "c7bc6d46774a6fcf1e826528abd4f7a150c91d4900b2bfb462c911b45f30f88d"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e-0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e-0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e-0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-mid-mindlin_tri6_offset-axis2-e-0.05/run.json"
+        ],
+        "pid": 59219,
+        "exit_code": 1,
+        "elapsed_seconds": 0.03424812700018265,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "true-cylinder-patch-e0.0",
+        "prefix": "probes/true-cylinder-patch-e0.0",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "9a0f5721c4bdb073c86c212906b578998f62cd8a282060ebf513500be321cde0",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "84a20176f394ee7a3866b8ce6d26c262c4d7ae111aef3db777e67d6720bf6d07"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.0/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.0/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.0/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.0/run.json"
+        ],
+        "pid": 59259,
+        "exit_code": 1,
+        "elapsed_seconds": 0.04640810299997611,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "true-cylinder-patch-e0.05",
+        "prefix": "probes/true-cylinder-patch-e0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "9a0f5721c4bdb073c86c212906b578998f62cd8a282060ebf513500be321cde0",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "d587bdd192d6add7c88dc5022196f885ab1b504ca7560775cae2913e6d7cdc43"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/true-cylinder-patch-e0.05/run.json"
+        ],
+        "pid": 59284,
+        "exit_code": 1,
+        "elapsed_seconds": 0.044990267999992284,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "false-planar-declaration-geometry",
+        "prefix": "probes/false-planar-declaration-geometry",
+        "accepted": false,
+        "expected_diagnostic": "unknown field",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "79d3a7892672104f0ee4b58187e7aa713e96c927e7e52be2d1f04eb5a4077c33"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-geometry/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-geometry/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-geometry/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-geometry/run.json"
+        ],
+        "pid": 59321,
+        "exit_code": 1,
+        "elapsed_seconds": 0.0018656990000636142,
+        "result_exists": false,
+        "diagnostic": "unknown field `geometry`, expected one of `id`, `nodes`, `formulation`, `attachment_offset_m`, `section_id`, `initially_active`, `constant_traction_kpa`, `boundary_traction_kpa` at line 226 column 18\n",
+        "log_sha256": "9b40a6007deefa597573bbd0d1bb8209a9531c5cbe5088824e8d73d7414ab1de",
+        "contract_confirmed": true
+      },
+      {
+        "name": "false-planar-declaration-normal",
+        "prefix": "probes/false-planar-declaration-normal",
+        "accepted": false,
+        "expected_diagnostic": "unknown field",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "003f311363b3d4cdc92e7326bbd8e22028f98331deac70ea63b1fd1c20c14310"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-normal/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-normal/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-normal/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-normal/run.json"
+        ],
+        "pid": 59322,
+        "exit_code": 1,
+        "elapsed_seconds": 0.0072096429998964595,
+        "result_exists": false,
+        "diagnostic": "unknown field `normal`, expected one of `id`, `nodes`, `formulation`, `attachment_offset_m`, `section_id`, `initially_active`, `constant_traction_kpa`, `boundary_traction_kpa` at line 226 column 16\n",
+        "log_sha256": "25537940a3a36f2362772e87a1d5473aa7e91fb9551ac12217ebd8a6fb849e9b",
+        "contract_confirmed": true
+      },
+      {
+        "name": "false-planar-declaration-directors",
+        "prefix": "probes/false-planar-declaration-directors",
+        "accepted": false,
+        "expected_diagnostic": "unknown field",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "c53a850667345d33c0170c07850210e893f6e6eb3969dd92d0a7edbf956ce76c"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-directors/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-directors/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-directors/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/false-planar-declaration-directors/run.json"
+        ],
+        "pid": 59327,
+        "exit_code": 1,
+        "elapsed_seconds": 0.0031892110000626417,
+        "result_exists": false,
+        "diagnostic": "unknown field `directors`, expected one of `id`, `nodes`, `formulation`, `attachment_offset_m`, `section_id`, `initially_active`, `constant_traction_kpa`, `boundary_traction_kpa` at line 226 column 19\n",
+        "log_sha256": "dcc8f8cf467ccaf8ca3792618549c579b753dddde87fca9120fa8c93e92bb320",
+        "contract_confirmed": true
+      },
+      {
+        "name": "outside-half-thickness--0.051",
+        "prefix": "probes/outside-half-thickness--0.051",
+        "accepted": false,
+        "expected_diagnostic": "offset",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "072b4f50e0e4c4ae88dcb926a056b738c5fc9b62e113fe8de593894d3df35784"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness--0.051/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness--0.051/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness--0.051/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness--0.051/run.json"
+        ],
+        "pid": 59332,
+        "exit_code": 1,
+        "elapsed_seconds": 0.04853571500007092,
+        "result_exists": false,
+        "diagnostic": "invalid input: offset scope requires finite |e| <= thickness/2\n",
+        "log_sha256": "7df2cd6a7570ec24c9e2761ca01441ca046c4713f18ec4f51364e2ae4b352807",
+        "contract_confirmed": true
+      },
+      {
+        "name": "outside-half-thickness-0.051",
+        "prefix": "probes/outside-half-thickness-0.051",
+        "accepted": false,
+        "expected_diagnostic": "offset",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "4f58cf2b70b62645255169afb9826a751af3873203ba908e9a23bc5653cc512c"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness-0.051/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness-0.051/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness-0.051/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/outside-half-thickness-0.051/run.json"
+        ],
+        "pid": 59357,
+        "exit_code": 1,
+        "elapsed_seconds": 0.040545067000039126,
+        "result_exists": false,
+        "diagnostic": "invalid input: offset scope requires finite |e| <= thickness/2\n",
+        "log_sha256": "7df2cd6a7570ec24c9e2761ca01441ca046c4713f18ec4f51364e2ae4b352807",
+        "contract_confirmed": true
+      },
+      {
+        "name": "e-sign",
+        "prefix": "probes/e-sign",
+        "accepted": false,
+        "expected_diagnostic": "same signed normal offset",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "6fe2137ab01e4558d1abb9b6d7a936f9dba5bca47c001196a2ddfb8f8b6559b5"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/e-sign/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/e-sign/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/e-sign/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/e-sign/run.json"
+        ],
+        "pid": 59390,
+        "exit_code": 1,
+        "elapsed_seconds": 0.05003662399985842,
+        "result_exists": false,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "log_sha256": "ebef717f118deaf59484002737339ba726edf5fb74dea0786eb65b5fc7cfef1e",
+        "contract_confirmed": true
+      },
+      {
+        "name": "normal-sign",
+        "prefix": "probes/normal-sign",
+        "accepted": false,
+        "expected_diagnostic": "same signed normal offset",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "5f364f7749c17438ff0f37098d4aadec07a173895dba2e1ef06853b08f046b4c"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/normal-sign/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/normal-sign/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/normal-sign/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/normal-sign/run.json"
+        ],
+        "pid": 59427,
+        "exit_code": 1,
+        "elapsed_seconds": 0.034584484000106386,
+        "result_exists": false,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "log_sha256": "ebef717f118deaf59484002737339ba726edf5fb74dea0786eb65b5fc7cfef1e",
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-facet-nonzero-arm",
+        "prefix": "probes/curved-facet-nonzero-arm",
+        "accepted": false,
+        "expected_diagnostic": "same signed normal offset",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "cfc96b80daeba8bb9ab9124e52c28ebbef86d80c9f61a4a4fe6f29d62b8d3c73"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-facet-nonzero-arm/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-facet-nonzero-arm/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-facet-nonzero-arm/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/curved-facet-nonzero-arm/run.json"
+        ],
+        "pid": 59456,
+        "exit_code": 1,
+        "elapsed_seconds": 0.03467489400009072,
+        "result_exists": false,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "log_sha256": "ebef717f118deaf59484002737339ba726edf5fb74dea0786eb65b5fc7cfef1e",
+        "contract_confirmed": true
+      },
+      {
+        "name": "legacy-e0-mindlin_tri6",
+        "prefix": "probes/legacy-e0-mindlin_tri6",
+        "accepted": true,
+        "expected_diagnostic": null,
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "c171d600a2de13e87f41c0cabe7f83a96239839dec37ae3f20f1aa2d43e5c0c0"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-mindlin_tri6/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-mindlin_tri6/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-mindlin_tri6/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-mindlin_tri6/run.json"
+        ],
+        "pid": 59481,
+        "exit_code": 0,
+        "elapsed_seconds": 0.9818990960000065,
+        "result_exists": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee",
+        "complete": true,
+        "original_run_equal_except_authenticated_binary_and_time": true,
+        "old_solver_binary_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_binary_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+        "contract_confirmed": true
+      },
+      {
+        "name": "legacy-e0-cst_dkt",
+        "prefix": "probes/legacy-e0-cst_dkt",
+        "accepted": true,
+        "expected_diagnostic": null,
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "6627aa4583564b6699dcc30189d838476f7191e8de30f53e7ec6429ae9edb246"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-cst_dkt/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-cst_dkt/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-cst_dkt/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-cst_dkt/run.json"
+        ],
+        "pid": 60766,
+        "exit_code": 0,
+        "elapsed_seconds": 0.7379219330000524,
+        "result_exists": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee",
+        "complete": true,
+        "original_run_equal_except_authenticated_binary_and_time": true,
+        "old_solver_binary_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_binary_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+        "contract_confirmed": true
+      },
+      {
+        "name": "legacy-e0-default",
+        "prefix": "probes/legacy-e0-default",
+        "accepted": true,
+        "expected_diagnostic": null,
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "bedfdee3eb355a6bda824cfa19348f52d73cd5c35f10e8630247f953c2fe18ec"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-default/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-default/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-default/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/legacy-e0-default/run.json"
+        ],
+        "pid": 61848,
+        "exit_code": 0,
+        "elapsed_seconds": 0.9336479820001387,
+        "result_exists": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee",
+        "complete": true,
+        "original_run_equal_except_authenticated_binary_and_time": true,
+        "old_solver_binary_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_binary_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+        "contract_confirmed": true
+      },
+      {
+        "name": "planar-offset-positive",
+        "prefix": "probes/planar-offset-positive",
+        "accepted": true,
+        "expected_diagnostic": null,
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "a2cb617f542a8337038685a15ab63ede2b6b7e755d4089a93c1662b30c30b6a2"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/planar-offset-positive/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/planar-offset-positive/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/planar-offset-positive/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/planar-offset-positive/run.json"
+        ],
+        "pid": 63141,
+        "exit_code": 0,
+        "elapsed_seconds": 0.7951552840002023,
+        "result_exists": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee",
+        "complete": true,
+        "original_run_equal_except_authenticated_binary_and_time": true,
+        "old_solver_binary_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+        "new_solver_binary_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+        "contract_confirmed": true
+      },
+      {
+        "name": "sphere-e0.0",
+        "prefix": "probes/spherical/sphere-e0.0",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "7018da444fe97e4af594714af52d1a4501985542168d6799b9495430d460985f",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "a8c836dec260210c22723f558c1205ed4b30e631e68a28c315c1797a79583624"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.0/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.0/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.0/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.0/run.json"
+        ],
+        "pid": 64444,
+        "exit_code": 1,
+        "elapsed_seconds": 0.06703871200011235,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "sphere-e0.05",
+        "prefix": "probes/spherical/sphere-e0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "7018da444fe97e4af594714af52d1a4501985542168d6799b9495430d460985f",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "598f16949fc8a99bcbc0c3b22bed483c2258733b5850abc0850e547be5936878"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e0.05/run.json"
+        ],
+        "pid": 64497,
+        "exit_code": 1,
+        "elapsed_seconds": 0.03550011299989819,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      },
+      {
+        "name": "sphere-e-0.05",
+        "prefix": "probes/spherical/sphere-e-0.05",
+        "accepted": false,
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "input_sha256": {
+          "mesh": "7018da444fe97e4af594714af52d1a4501985542168d6799b9495430d460985f",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "2d71e0f5c8a320f44deff5be12ff20173c3c2aad78349dd734603e72b3f618df"
+        },
+        "command": [
+          "/workspace/pc-failure/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e-0.05/mesh.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e-0.05/ground.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e-0.05/stages.json",
+          "/workspace/pc-failure/work/b01-cli-final/controls/sphere-e-0.05/run.json"
+        ],
+        "pid": 64538,
+        "exit_code": 1,
+        "elapsed_seconds": 0.044195162000050914,
+        "result_exists": false,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614",
+        "contract_confirmed": true
+      }
+    ],
+    "refusals": 21,
+    "accepted_controls": 4,
+    "all_original_contracts_confirmed": true
+  },
+  "b02_production_cli_scope": {
+    "process_exit_code": 0,
+    "log": "work/b02-production-cli-scope.log"
+  }
+}

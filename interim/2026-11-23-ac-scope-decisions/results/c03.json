@@ -1,0 +1,4915 @@
+{
+  "input_and_binary_sha256": {
+    "mesh": "793d272c98cdb30590894d028c7cea75670bbdff2a3fc0ade85ae3634732c7b5",
+    "ground": "be3b5bf00835735fd876f5b199944320be96e61a87ebf977c0638e69019063b7",
+    "native_probe": "5bb37756e02f1b0450abc46385320397ce8f28029594030df72f5a0cf9c7935a",
+    "local_native_return_probe": "2408623f1d2205d1497fab321c446699101f044c5800af5eeaab69b3b80d6906",
+    "native_cases": {
+      "m0c1": "fa1b1a06c84ae07973aea3e2b02f99e8b9aee5ee247bb7edee939891eb0dc1af",
+      "m1c0": "2c210dfdc0999044389ace50b9441129aa1f87c54e8dc0fa28f0732bcf041c18",
+      "m1c1": "1c091b28c544c5df4f5afa4d09d0aa586ceaf1b73db1746c8922de73adcb667d"
+    }
+  },
+  "original_mismatch_counts": {
+    "c03-contact-independent": 0,
+    "c03-contact-native": 0,
+    "c03-m0c1-solvers": 4,
+    "c03-m1c0-solvers": 5,
+    "c03-m1c1-solvers": 5,
+    "c03-material-independent": 2,
+    "c03-material-native": 3
+  },
+  "force_gates": {
+    "m0c1": {
+      "original_above_one_e_minus_ten": 70,
+      "original_max": 9.852921618008602e-09,
+      "tight_max": 9.00961332009151e-11,
+      "changed_native_labels": 0
+    },
+    "m1c0": {
+      "original_above_one_e_minus_ten": 71,
+      "original_max": 9.851300493872752e-09,
+      "tight_max": 9.010657549662079e-11,
+      "changed_native_labels": 0
+    },
+    "m1c1": {
+      "original_above_one_e_minus_ten": 71,
+      "original_max": 9.851263365438875e-09,
+      "tight_max": 9.007362636560184e-11,
+      "changed_native_labels": 0
+    }
+  },
+  "tight_native_vs_independent": {
+    "m0c1": [
+      {
+        "stage": "open",
+        "progress": 0.71875,
+        "field": "material_return",
+        "gp": 182,
+        "native": "shear_face",
+        "independent": "extension_edge"
+      },
+      {
+        "stage": "open",
+        "progress": 0.96875,
+        "field": "material_return",
+        "gp": 143,
+        "native": "shear_face",
+        "independent": "elastic"
+      },
+      {
+        "stage": "recontact",
+        "progress": 0.0625,
+        "field": "material_return",
+        "gp": 273,
+        "native": "extension_edge",
+        "independent": "shear_face"
+      },
+      {
+        "stage": "return",
+        "progress": 0.21875,
+        "field": "contact_status",
+        "gp": 30,
+        "native": "stick",
+        "independent": "slip"
+      }
+    ],
+    "m1c0": [
+      {
+        "stage": "open",
+        "progress": 0.8125,
+        "field": "material_return",
+        "gp": 152,
+        "native": "elastic",
+        "independent": "shear_face"
+      },
+      {
+        "stage": "open",
+        "progress": 0.96875,
+        "field": "material_return",
+        "gp": 185,
+        "native": "shear_face",
+        "independent": "extension_edge"
+      },
+      {
+        "stage": "recontact",
+        "progress": 0.0625,
+        "field": "material_return",
+        "gp": 273,
+        "native": "extension_edge",
+        "independent": "shear_face"
+      },
+      {
+        "stage": "reload",
+        "progress": 0.96875,
+        "field": "material_return",
+        "gp": 108,
+        "native": "shear_face",
+        "independent": "extension_edge"
+      },
+      {
+        "stage": "return",
+        "progress": 0.21875,
+        "field": "contact_status",
+        "gp": 30,
+        "native": "stick",
+        "independent": "slip"
+      }
+    ],
+    "m1c1": [
+      {
+        "stage": "open",
+        "progress": 0.8125,
+        "field": "material_return",
+        "gp": 152,
+        "native": "elastic",
+        "independent": "shear_face"
+      },
+      {
+        "stage": "open",
+        "progress": 0.96875,
+        "field": "material_return",
+        "gp": 185,
+        "native": "shear_face",
+        "independent": "extension_edge"
+      },
+      {
+        "stage": "recontact",
+        "progress": 0.0625,
+        "field": "material_return",
+        "gp": 273,
+        "native": "extension_edge",
+        "independent": "shear_face"
+      },
+      {
+        "stage": "reload",
+        "progress": 0.96875,
+        "field": "material_return",
+        "gp": 108,
+        "native": "shear_face",
+        "independent": "extension_edge"
+      },
+      {
+        "stage": "return",
+        "progress": 0.21875,
+        "field": "contact_status",
+        "gp": 30,
+        "native": "stick",
+        "independent": "slip"
+      }
+    ]
+  },
+  "local_exchanges": [
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "parent_route": "m0c1-native",
+      "other_route": "m0c1-independent",
+      "original_label": "shear_face",
+      "original_count": 4,
+      "other_count": 2,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "parent_route": "m0c1-independent",
+      "other_route": "m0c1-native",
+      "original_label": "extension_edge",
+      "original_count": 2,
+      "other_count": 4,
+      "other_law": "extension_edge",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "parent_route": "m0c1-native",
+      "other_route": "m0c1-independent",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 1,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "parent_route": "m0c1-independent",
+      "other_route": "m0c1-native",
+      "original_label": "elastic",
+      "original_count": 1,
+      "other_count": 1,
+      "other_law": "elastic",
+      "other_partition": "elastic"
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "parent_route": "m0c1-native",
+      "other_route": "m0c1-independent",
+      "original_label": "extension_edge",
+      "original_count": 4,
+      "other_count": 1,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "parent_route": "m0c1-independent",
+      "other_route": "m0c1-native",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 4,
+      "other_law": "extension_edge",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "parent_route": "m0c1-native",
+      "other_route": "m0c1-independent",
+      "original_label": "stick",
+      "original_count": 1,
+      "other_count": 1,
+      "other_jump_increment_trial_minus_cap_kpa": -7.853073330998939e-05
+    },
+    {
+      "pair": "c03-m0c1-solvers",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "parent_route": "m0c1-independent",
+      "other_route": "m0c1-native",
+      "original_label": "slip",
+      "original_count": 1,
+      "other_count": 1,
+      "other_jump_increment_trial_minus_cap_kpa": 0.010367348882891037
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "parent_route": "m1c0-native",
+      "other_route": "m1c0-independent",
+      "original_label": "elastic",
+      "original_count": 4,
+      "other_count": 1,
+      "other_law": "elastic",
+      "other_partition": "elastic"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "parent_route": "m1c0-independent",
+      "other_route": "m1c0-native",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 4,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "parent_route": "m1c0-native",
+      "other_route": "m1c0-independent",
+      "original_label": "shear_face",
+      "original_count": 8,
+      "other_count": 2,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "parent_route": "m1c0-independent",
+      "other_route": "m1c0-native",
+      "original_label": "extension_edge",
+      "original_count": 2,
+      "other_count": 8,
+      "other_law": "extension_edge",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "parent_route": "m1c0-native",
+      "other_route": "m1c0-independent",
+      "original_label": "extension_edge",
+      "original_count": 7,
+      "other_count": 1,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "parent_route": "m1c0-independent",
+      "other_route": "m1c0-native",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 7,
+      "other_law": "extension_edge",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "parent_route": "m1c0-native",
+      "other_route": "m1c0-independent",
+      "original_label": "shear_face",
+      "original_count": 40,
+      "other_count": 3,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "parent_route": "m1c0-independent",
+      "other_route": "m1c0-native",
+      "original_label": "extension_edge",
+      "original_count": 3,
+      "other_count": 40,
+      "other_law": "extension_edge",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "parent_route": "m1c0-native",
+      "other_route": "m1c0-independent",
+      "original_label": "stick",
+      "original_count": 1,
+      "other_count": 1,
+      "other_jump_increment_trial_minus_cap_kpa": -0.006923645471333728
+    },
+    {
+      "pair": "c03-m1c0-solvers",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "parent_route": "m1c0-independent",
+      "other_route": "m1c0-native",
+      "original_label": "slip",
+      "original_count": 1,
+      "other_count": 1,
+      "other_jump_increment_trial_minus_cap_kpa": 0.002642518405897576
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "parent_route": "m1c1-native",
+      "other_route": "m1c1-independent",
+      "original_label": "elastic",
+      "original_count": 4,
+      "other_count": 1,
+      "other_law": "elastic",
+      "other_partition": "elastic"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "parent_route": "m1c1-independent",
+      "other_route": "m1c1-native",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 4,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "parent_route": "m1c1-native",
+      "other_route": "m1c1-independent",
+      "original_label": "shear_face",
+      "original_count": 8,
+      "other_count": 2,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "parent_route": "m1c1-independent",
+      "other_route": "m1c1-native",
+      "original_label": "extension_edge",
+      "original_count": 2,
+      "other_count": 8,
+      "other_law": "extension_edge",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "parent_route": "m1c1-native",
+      "other_route": "m1c1-independent",
+      "original_label": "extension_edge",
+      "original_count": 7,
+      "other_count": 1,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "parent_route": "m1c1-independent",
+      "other_route": "m1c1-native",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 7,
+      "other_law": "extension_edge",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "parent_route": "m1c1-native",
+      "other_route": "m1c1-independent",
+      "original_label": "shear_face",
+      "original_count": 40,
+      "other_count": 3,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "parent_route": "m1c1-independent",
+      "other_route": "m1c1-native",
+      "original_label": "extension_edge",
+      "original_count": 3,
+      "other_count": 40,
+      "other_law": "extension_edge",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "parent_route": "m1c1-native",
+      "other_route": "m1c1-independent",
+      "original_label": "stick",
+      "original_count": 1,
+      "other_count": 1,
+      "other_jump_increment_trial_minus_cap_kpa": -0.006410001039302671
+    },
+    {
+      "pair": "c03-m1c1-solvers",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "parent_route": "m1c1-independent",
+      "other_route": "m1c1-native",
+      "original_label": "slip",
+      "original_count": 1,
+      "other_count": 1,
+      "other_jump_increment_trial_minus_cap_kpa": 0.0027246341743438762
+    },
+    {
+      "pair": "c03-material-independent",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "parent_route": "m0c1-independent",
+      "other_route": "m1c1-independent",
+      "original_label": "extension_edge",
+      "original_count": 2,
+      "other_count": 3,
+      "other_law": "extension_edge",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-material-independent",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "parent_route": "m1c1-independent",
+      "other_route": "m0c1-independent",
+      "original_label": "shear_face",
+      "original_count": 3,
+      "other_count": 2,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-material-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "parent_route": "m0c1-independent",
+      "other_route": "m1c1-independent",
+      "original_label": "elastic",
+      "original_count": 1,
+      "other_count": 1,
+      "other_law": "elastic",
+      "other_partition": "elastic"
+    },
+    {
+      "pair": "c03-material-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "parent_route": "m1c1-independent",
+      "other_route": "m0c1-independent",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 1,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-material-native",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "parent_route": "m0c1-native",
+      "other_route": "m1c1-native",
+      "original_label": "shear_face",
+      "original_count": 1,
+      "other_count": 4,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-material-native",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "parent_route": "m1c1-native",
+      "other_route": "m0c1-native",
+      "original_label": "elastic",
+      "original_count": 4,
+      "other_count": 1,
+      "other_law": "elastic",
+      "other_partition": "elastic"
+    },
+    {
+      "pair": "c03-material-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "parent_route": "m0c1-native",
+      "other_route": "m1c1-native",
+      "original_label": "extension_edge",
+      "original_count": 4,
+      "other_count": 8,
+      "other_law": "extension_edge",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-material-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "parent_route": "m1c1-native",
+      "other_route": "m0c1-native",
+      "original_label": "shear_face",
+      "original_count": 8,
+      "other_count": 4,
+      "other_law": "shear_face",
+      "other_partition": "shear_face"
+    },
+    {
+      "pair": "c03-material-native",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "parent_route": "m0c1-native",
+      "other_route": "m1c1-native",
+      "original_label": "extension_edge",
+      "original_count": 20,
+      "other_count": 40,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    },
+    {
+      "pair": "c03-material-native",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "parent_route": "m1c1-native",
+      "other_route": "m0c1-native",
+      "original_label": "shear_face",
+      "original_count": 40,
+      "other_count": 20,
+      "other_law": "shear_face",
+      "other_partition": "extension_edge"
+    }
+  ],
+  "full_fields": {
+    "c03-contact-independent": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 2.3132150271444537e-05,
+          "reference_l2": 0.2578418097709853,
+          "relative_l2": 8.971450476550129e-05,
+          "maximum_absolute": 1.23462316432843e-06,
+          "maximum_index": [
+            189,
+            8
+          ],
+          "signed_sum": -0.0005449826702748405,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 0
+        },
+        "elastic_energy": {
+          "absolute_l2": 1.5816403198344787e-05,
+          "reference_l2": 1.1235754676876488,
+          "relative_l2": 1.407684988966109e-05,
+          "maximum_absolute": 5.124912545735171e-06,
+          "maximum_index": [
+            186,
+            3
+          ],
+          "signed_sum": -3.3012451553895216e-05,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.019508999102179035,
+          "reference_l2": 6.005184509832704,
+          "relative_l2": 0.0032486927038187755,
+          "maximum_absolute": 0.0005050667389342872,
+          "maximum_index": [
+            209,
+            0
+          ],
+          "signed_sum": -1.3204132600575467,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 3.1338308106855306e-06,
+          "reference_l2": 0.1917429980861983,
+          "relative_l2": 1.634391264330139e-05,
+          "maximum_absolute": 1.0351408387824015e-06,
+          "maximum_index": [
+            186,
+            299
+          ],
+          "signed_sum": -3.3964008724034375e-05,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 3.536726106544213e-07,
+          "reference_l2": 0.009004982915280643,
+          "relative_l2": 3.927521173352487e-05,
+          "maximum_absolute": 1.2182762407814777e-07,
+          "maximum_index": [
+            186,
+            16
+          ],
+          "signed_sum": 8.272054741308872e-07,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 6.136769812694908e-06,
+          "reference_l2": 0.10833365357893107,
+          "relative_l2": 5.664693850857439e-05,
+          "maximum_absolute": 1.1979437487538236e-06,
+          "maximum_index": [
+            186,
+            27,
+            0
+          ],
+          "signed_sum": 8.272058876247991e-06,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 0
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 0.004604387451995824,
+          "reference_l2": 0.11494575865784108,
+          "relative_l2": 0.04005704521644595,
+          "maximum_absolute": 0.0002302327748085701,
+          "maximum_index": [
+            208,
+            22
+          ],
+          "signed_sum": 0.2886195249944706,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.02392859413285634,
+          "reference_l2": 5.100109186219563,
+          "relative_l2": 0.004691780755892664,
+          "maximum_absolute": 0.0006219927968150463,
+          "maximum_index": [
+            211,
+            17
+          ],
+          "signed_sum": -1.6089997726004746,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 1.8832182671726783e-05,
+          "reference_l2": 0.08437907804102882,
+          "relative_l2": 0.0002231854519975882,
+          "maximum_absolute": 2.694236595943749e-06,
+          "maximum_index": [
+            186,
+            8,
+            0
+          ],
+          "signed_sum": -0.00015914261115340458,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 5.08728235996567e-06,
+          "reference_l2": 0.24047991348405018,
+          "relative_l2": 2.11547080430195e-05,
+          "maximum_absolute": 1.107842484412069e-06,
+          "maximum_index": [
+            186,
+            299,
+            5
+          ],
+          "signed_sum": -0.00022350429000497475,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.00022987850387145355,
+          "reference_l2": 14.825614542087528,
+          "relative_l2": 1.5505495790334058e-05,
+          "maximum_absolute": 6.957699516779714e-05,
+          "maximum_index": [
+            186,
+            299
+          ],
+          "signed_sum": 0.0007520058303980517,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.025511804302975886,
+          "reference_l2": 754.2803485385787,
+          "relative_l2": 3.382270842983662e-05,
+          "maximum_absolute": 0.006728036187787723,
+          "maximum_index": [
+            186,
+            23,
+            2
+          ],
+          "signed_sum": 1.214147163884655e-12,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 3.214792784687728e-05,
+          "reference_l2": 0.35118398547440555,
+          "relative_l2": 9.154155421822399e-05,
+          "maximum_absolute": 3.1552817005024627e-06,
+          "maximum_index": [
+            186,
+            170,
+            3
+          ],
+          "signed_sum": 9.440651888978512e-05,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 1.9472239222949976,
+          "reference_l2": 48801.27699879295,
+          "relative_l2": 3.990108542330071e-05,
+          "maximum_absolute": 0.21770736168093663,
+          "maximum_index": [
+            186,
+            170,
+            1
+          ],
+          "signed_sum": -5.797872419296987,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 1.2240814301593526,
+          "reference_l2": 9162.940986430096,
+          "relative_l2": 0.000133590452232767,
+          "maximum_absolute": 0.28951225448507145,
+          "maximum_index": [
+            186,
+            8,
+            0
+          ],
+          "signed_sum": -0.23183241518950878,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 3.2221523477441225e-06,
+          "reference_l2": 0.1102664291350923,
+          "relative_l2": 2.9221517129175558e-05,
+          "maximum_absolute": 6.74953894963141e-07,
+          "maximum_index": [
+            186,
+            33,
+            0
+          ],
+          "signed_sum": -1.7614556253443637e-05,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 1.4832177499168502e-05,
+          "reference_l2": 188.63433910556608,
+          "relative_l2": 7.862925472370076e-08,
+          "maximum_absolute": 2.899466961858721e-06,
+          "maximum_index": [
+            186,
+            170
+          ],
+          "signed_sum": 8.451268355513797e-05,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.944382578492938,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    },
+    "c03-contact-native": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 2.0366292113505508e-05,
+          "reference_l2": 0.2578456708108687,
+          "relative_l2": 7.898636439951828e-05,
+          "maximum_absolute": 1.0722512071396906e-06,
+          "maximum_index": [
+            191,
+            23
+          ],
+          "signed_sum": -0.0004155975947598517,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 0
+        },
+        "elastic_energy": {
+          "absolute_l2": 1.4494249897516395e-05,
+          "reference_l2": 1.1236182424337606,
+          "relative_l2": 1.2899621375069352e-05,
+          "maximum_absolute": 7.109522833164284e-06,
+          "maximum_index": [
+            185,
+            22
+          ],
+          "signed_sum": -1.3318619148770699e-05,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.02514075656643425,
+          "reference_l2": 6.013169634121878,
+          "relative_l2": 0.0041809491659394425,
+          "maximum_absolute": 0.0005659027613547085,
+          "maximum_index": [
+            209,
+            0
+          ],
+          "signed_sum": -1.7517651377422647,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 4.960665303762513e-06,
+          "reference_l2": 0.19175442356065076,
+          "relative_l2": 2.586988717990897e-05,
+          "maximum_absolute": 6.361417569871559e-07,
+          "maximum_index": [
+            80,
+            315
+          ],
+          "signed_sum": -2.3385523489351697e-05,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 2.7699166242201944e-07,
+          "reference_l2": 0.009005135373238243,
+          "relative_l2": 3.075930021498537e-05,
+          "maximum_absolute": 4.510196449379112e-08,
+          "maximum_index": [
+            81,
+            12
+          ],
+          "signed_sum": -5.896666796559196e-07,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 4.669063247070149e-06,
+          "reference_l2": 0.10833773283508606,
+          "relative_l2": 4.309729514256583e-05,
+          "maximum_absolute": 8.320963562345502e-07,
+          "maximum_index": [
+            185,
+            31,
+            0
+          ],
+          "signed_sum": -4.700949203274791e-05,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 0
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 0.0067999526447783095,
+          "reference_l2": 0.11212751805751488,
+          "relative_l2": 0.06064481549739048,
+          "maximum_absolute": 0.0003205289166926142,
+          "maximum_index": [
+            208,
+            22
+          ],
+          "signed_sum": 0.4328197095913502,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.031357332234483885,
+          "reference_l2": 5.111038221658032,
+          "relative_l2": 0.006135217714007135,
+          "maximum_absolute": 0.0007036761870957559,
+          "maximum_index": [
+            209,
+            0
+          ],
+          "signed_sum": -2.184571528714453,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 1.7544710176452788e-05,
+          "reference_l2": 0.08437853239282508,
+          "relative_l2": 0.00020792860078169194,
+          "maximum_absolute": 2.578104588896044e-06,
+          "maximum_index": [
+            185,
+            27,
+            0
+          ],
+          "signed_sum": -4.883053757586476e-05,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 8.460632134086008e-06,
+          "reference_l2": 0.2404628720934564,
+          "relative_l2": 3.518477534776248e-05,
+          "maximum_absolute": 6.484325937777325e-07,
+          "maximum_index": [
+            80,
+            162,
+            3
+          ],
+          "signed_sum": -0.0004862560708056815,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.00036009439464175443,
+          "reference_l2": 14.829196556867092,
+          "relative_l2": 2.4282798684396843e-05,
+          "maximum_absolute": 4.310477015817549e-05,
+          "maximum_index": [
+            80,
+            315
+          ],
+          "signed_sum": 0.0030802029238798426,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.017048409361009164,
+          "reference_l2": 754.2941962592678,
+          "relative_l2": 2.260180370677179e-05,
+          "maximum_absolute": 0.004197766662661806,
+          "maximum_index": [
+            185,
+            52,
+            2
+          ],
+          "signed_sum": 4.002580873078282e-13,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 2.115457153157525e-05,
+          "reference_l2": 0.3511767945877747,
+          "relative_l2": 6.023909283757582e-05,
+          "maximum_absolute": 1.6433591219886141e-06,
+          "maximum_index": [
+            185,
+            170,
+            3
+          ],
+          "signed_sum": 0.0005609452882497152,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 1.2554005838512576,
+          "reference_l2": 48801.63368889354,
+          "relative_l2": 2.5724560613161734e-05,
+          "maximum_absolute": 0.1345899971992992,
+          "maximum_index": [
+            185,
+            126,
+            1
+          ],
+          "signed_sum": -5.468860207268509,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 0.990954612791995,
+          "reference_l2": 9163.194857374461,
+          "relative_l2": 0.00010814509875826586,
+          "maximum_absolute": 0.3654736416227884,
+          "maximum_index": [
+            185,
+            27,
+            0
+          ],
+          "signed_sum": 0.16998527839372182,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 2.5130046789480392e-06,
+          "reference_l2": 0.11026674320010113,
+          "relative_l2": 2.2790232177145996e-05,
+          "maximum_absolute": 3.949308776333548e-07,
+          "maximum_index": [
+            185,
+            5,
+            0
+          ],
+          "signed_sum": -2.914891041461873e-05,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 9.694818957215264e-06,
+          "reference_l2": 188.63434412104408,
+          "relative_l2": 5.1394771203457156e-08,
+          "maximum_absolute": 1.3661311435431145e-06,
+          "maximum_index": [
+            185,
+            126
+          ],
+          "signed_sum": 2.1483668154465008e-05,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.944382578492934,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    },
+    "c03-m0c1-solvers": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 3.0834206520999686e-05,
+          "reference_l2": 0.25783530288277395,
+          "relative_l2": 0.00011958876917261638,
+          "maximum_absolute": 1.5332848050850743e-06,
+          "maximum_index": [
+            203,
+            15
+          ],
+          "signed_sum": 0.0003916839934927763,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 1
+        },
+        "elastic_energy": {
+          "absolute_l2": 0.00012734584283866023,
+          "reference_l2": 1.1235222754910956,
+          "relative_l2": 0.00011334518737779089,
+          "maximum_absolute": 8.437041286384062e-06,
+          "maximum_index": [
+            159,
+            0
+          ],
+          "signed_sum": 0.004649664679173801,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.009474651015569895,
+          "reference_l2": 6.005081075444343,
+          "relative_l2": 0.0015777723725185213,
+          "maximum_absolute": 0.00027297658625216603,
+          "maximum_index": [
+            223,
+            0
+          ],
+          "signed_sum": 0.6282985800901285,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 7.846244853285334e-05,
+          "reference_l2": 0.19173121377482072,
+          "relative_l2": 0.0004092314808219166,
+          "maximum_absolute": 1.9041938519115745e-06,
+          "maximum_index": [
+            154,
+            225
+          ],
+          "signed_sum": 0.0067446506423869505,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 1.3650040057680057e-06,
+          "reference_l2": 0.009004821452599586,
+          "relative_l2": 0.00015158590461268338,
+          "maximum_absolute": 1.6285528971169707e-07,
+          "maximum_index": [
+            97,
+            16
+          ],
+          "signed_sum": -5.235347297981844e-05,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 1.944012580814357e-05,
+          "reference_l2": 0.10832308820293608,
+          "relative_l2": 0.00017946428716769772,
+          "maximum_absolute": 9.313064767338245e-07,
+          "maximum_index": [
+            186,
+            8,
+            1
+          ],
+          "signed_sum": 0.0012211163356395563,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 3
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 0.003473231219010375,
+          "reference_l2": 0.11494673075131202,
+          "relative_l2": 0.030216006982614695,
+          "maximum_absolute": 0.0001840613437417071,
+          "maximum_index": [
+            207,
+            6
+          ],
+          "signed_sum": -0.1895970676773893,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.012099439703286159,
+          "reference_l2": 5.100057139697538,
+          "relative_l2": 0.0023724125773233445,
+          "maximum_absolute": 0.00034471219535708864,
+          "maximum_index": [
+            203,
+            8
+          ],
+          "signed_sum": 0.8132459830883187,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 3.1148712570823914e-05,
+          "reference_l2": 0.08437254696458925,
+          "relative_l2": 0.00036918065995917936,
+          "maximum_absolute": 1.5924864131314199e-06,
+          "maximum_index": [
+            186,
+            23,
+            0
+          ],
+          "signed_sum": 0.00016859330503912038,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 0.00020811351899213264,
+          "reference_l2": 0.2405075975192317,
+          "relative_l2": 0.0008653095417307608,
+          "maximum_absolute": 3.845050241504738e-06,
+          "maximum_index": [
+            146,
+            216,
+            4
+          ],
+          "signed_sum": 0.006695061554902204,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.009921027667234465,
+          "reference_l2": 14.820906912241727,
+          "relative_l2": 0.000669394101587665,
+          "maximum_absolute": 0.000166118025203027,
+          "maximum_index": [
+            151,
+            317
+          ],
+          "signed_sum": 1.062371614311176,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.1271932744472935,
+          "reference_l2": 754.2644578885476,
+          "relative_l2": 0.00016863219937918376,
+          "maximum_absolute": 0.006092502966978941,
+          "maximum_index": [
+            186,
+            49,
+            0
+          ],
+          "signed_sum": 2.402505657505212e-12,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 0.00017124007648641426,
+          "reference_l2": 0.3511872727050086,
+          "relative_l2": 0.00048760330967418926,
+          "maximum_absolute": 3.804674776656039e-06,
+          "maximum_index": [
+            186,
+            216,
+            4
+          ],
+          "signed_sum": -0.011151580094410096,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 8.027554874198794,
+          "reference_l2": 48800.344373547814,
+          "relative_l2": 0.00016449791445631936,
+          "maximum_absolute": 0.11502971922456595,
+          "maximum_index": [
+            160,
+            267,
+            0
+          ],
+          "signed_sum": 205.6098675937044,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 1.066286809433301,
+          "reference_l2": 9162.626082672195,
+          "relative_l2": 0.0001163734937792341,
+          "maximum_absolute": 0.18494453880757433,
+          "maximum_index": [
+            186,
+            8,
+            1
+          ],
+          "signed_sum": -43.94578888711386,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 1.2710877919100944e-05,
+          "reference_l2": 0.11026451222474801,
+          "relative_l2": 0.00011527623586809907,
+          "maximum_absolute": 7.944814458203642e-07,
+          "maximum_index": [
+            186,
+            42,
+            1
+          ],
+          "signed_sum": 2.085359280313793e-05,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 6.708161544709199e-05,
+          "reference_l2": 188.63434060018986,
+          "relative_l2": 3.556171969199996e-07,
+          "maximum_absolute": 1.5908864763325425e-06,
+          "maximum_index": [
+            185,
+            162
+          ],
+          "signed_sum": 0.00120484352920891,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 1.3046460051713327e-14,
+          "reference_l2": 24.944382578492938,
+          "relative_l2": 5.230219673972605e-16,
+          "maximum_absolute": 4.440892098500626e-16,
+          "maximum_index": [
+            0,
+            27,
+            2
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    },
+    "c03-m1c0-solvers": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 2.477263146411585e-05,
+          "reference_l2": 0.25783140764410467,
+          "relative_l2": 9.608073620848603e-05,
+          "maximum_absolute": 1.7081118797585004e-06,
+          "maximum_index": [
+            203,
+            15
+          ],
+          "signed_sum": 0.0003728652100848442,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 1
+        },
+        "elastic_energy": {
+          "absolute_l2": 8.035910058485015e-05,
+          "reference_l2": 1.1235752298415604,
+          "relative_l2": 7.152089014652084e-05,
+          "maximum_absolute": 4.895244104824448e-06,
+          "maximum_index": [
+            159,
+            1
+          ],
+          "signed_sum": 0.0029987709020688046,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.005848475312785477,
+          "reference_l2": 5.987747315659423,
+          "relative_l2": 0.0009767405009710889,
+          "maximum_absolute": 0.00025475082162589036,
+          "maximum_index": [
+            191,
+            9
+          ],
+          "signed_sum": 0.19293855843700095,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 4.96735456886045e-05,
+          "reference_l2": 0.19174280687734652,
+          "relative_l2": 0.0002590634115436702,
+          "maximum_absolute": 1.307555590673165e-06,
+          "maximum_index": [
+            186,
+            299
+          ],
+          "signed_sum": 0.004494041362222931,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 9.24765518623312e-07,
+          "reference_l2": 0.009004981295617841,
+          "relative_l2": 0.00010269488500474035,
+          "maximum_absolute": 1.5033381664898724e-07,
+          "maximum_index": [
+            186,
+            16
+          ],
+          "signed_sum": -3.479867606074857e-05,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 1.147799449046348e-05,
+          "reference_l2": 0.10833379768123438,
+          "relative_l2": 0.00010595026424012921,
+          "maximum_absolute": 1.1091347741194963e-06,
+          "maximum_index": [
+            186,
+            23,
+            0
+          ],
+          "signed_sum": 0.0005472239520451914,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 4
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 0.0015056294192746836,
+          "reference_l2": 0.11907169313996853,
+          "relative_l2": 0.01264473007455113,
+          "maximum_absolute": 8.75746795343229e-05,
+          "maximum_index": [
+            203,
+            8
+          ],
+          "signed_sum": -0.04534922390659521,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.007298245270938243,
+          "reference_l2": 5.078255123848082,
+          "relative_l2": 0.001437156088646438,
+          "maximum_absolute": 0.0003245301642179621,
+          "maximum_index": [
+            191,
+            9
+          ],
+          "signed_sum": 0.23528901144154465,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 2.4370813057062485e-05,
+          "reference_l2": 0.08437856617748093,
+          "relative_l2": 0.0002888270583527242,
+          "maximum_absolute": 2.7623684523320788e-06,
+          "maximum_index": [
+            186,
+            8,
+            0
+          ],
+          "signed_sum": 5.797945683421185e-05,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 0.00013465919575134265,
+          "reference_l2": 0.24048035233815554,
+          "relative_l2": 0.0005599592417512318,
+          "maximum_absolute": 2.197755038193432e-06,
+          "maximum_index": [
+            146,
+            216,
+            4
+          ],
+          "signed_sum": 0.0012497237257990677,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.006578079158132936,
+          "reference_l2": 14.82562121604251,
+          "relative_l2": 0.00044369669656843297,
+          "maximum_absolute": 0.00013553537573313124,
+          "maximum_index": [
+            186,
+            299
+          ],
+          "signed_sum": 0.6978361627943314,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.0993916055268669,
+          "reference_l2": 754.2793453238601,
+          "relative_l2": 0.0001317702866226461,
+          "maximum_absolute": 0.009448186349045429,
+          "maximum_index": [
+            186,
+            49,
+            0
+          ],
+          "signed_sum": 2.3157339489838907e-12,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 0.00010592393131616494,
+          "reference_l2": 0.3511838722323154,
+          "relative_l2": 0.00030161957792325405,
+          "maximum_absolute": 3.054763836603941e-06,
+          "maximum_index": [
+            186,
+            189,
+            3
+          ],
+          "signed_sum": -0.004036609433645328,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 5.892481811905814,
+          "reference_l2": 48801.240203741334,
+          "relative_l2": 0.00012074450951051995,
+          "maximum_absolute": 0.21886583338842058,
+          "maximum_index": [
+            186,
+            170,
+            1
+          ],
+          "signed_sum": 69.1916969683892,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 1.2286817715788692,
+          "reference_l2": 9162.93795326071,
+          "relative_l2": 0.0001340925561044132,
+          "maximum_absolute": 0.3001273714202295,
+          "maximum_index": [
+            186,
+            24,
+            1
+          ],
+          "signed_sum": -28.00338615456953,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 7.628834498501169e-06,
+          "reference_l2": 0.11026638316339102,
+          "relative_l2": 6.91854967909565e-05,
+          "maximum_absolute": 6.370038639834071e-07,
+          "maximum_index": [
+            187,
+            42,
+            1
+          ],
+          "signed_sum": -7.326480489423013e-05,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 4.8983591966232084e-05,
+          "reference_l2": 188.63433941920644,
+          "relative_l2": 2.596748403130075e-07,
+          "maximum_absolute": 2.8916340997220402e-06,
+          "maximum_index": [
+            186,
+            170
+          ],
+          "signed_sum": 0.0012842540340542996,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 1.3046460051713327e-14,
+          "reference_l2": 24.944382578492938,
+          "relative_l2": 5.230219673972605e-16,
+          "maximum_absolute": 4.440892098500626e-16,
+          "maximum_index": [
+            0,
+            27,
+            2
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    },
+    "c03-m1c1-solvers": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 1.9613844713694673e-05,
+          "reference_l2": 0.2578418097709853,
+          "relative_l2": 7.606929508878199e-05,
+          "maximum_absolute": 1.098271639259421e-06,
+          "maximum_index": [
+            203,
+            12
+          ],
+          "signed_sum": 0.0002434801345698555,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 1
+        },
+        "elastic_energy": {
+          "absolute_l2": 7.867122687311683e-05,
+          "reference_l2": 1.1235754676876488,
+          "relative_l2": 7.001864061256563e-05,
+          "maximum_absolute": 4.7798300454593434e-06,
+          "maximum_index": [
+            159,
+            1
+          ],
+          "signed_sum": 0.00297907706966368,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.009404565508026673,
+          "reference_l2": 6.005184509832704,
+          "relative_l2": 0.0015660743633485244,
+          "maximum_absolute": 0.0002571186945050097,
+          "maximum_index": [
+            198,
+            20
+          ],
+          "signed_sum": 0.624290436121719,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 4.9931072508451215e-05,
+          "reference_l2": 0.1917429980861983,
+          "relative_l2": 0.00026040623650833204,
+          "maximum_absolute": 9.169116670492555e-07,
+          "maximum_index": [
+            154,
+            225
+          ],
+          "signed_sum": 0.004483462876988248,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 8.418427776000537e-07,
+          "reference_l2": 0.009004982915280643,
+          "relative_l2": 9.348632701695886e-05,
+          "maximum_absolute": 9.364972904625448e-08,
+          "maximum_index": [
+            97,
+            16
+          ],
+          "signed_sum": -3.338180390696177e-05,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 1.0831269071082415e-05,
+          "reference_l2": 0.10833365357893107,
+          "relative_l2": 9.998064971741062e-05,
+          "maximum_absolute": 6.81077941138016e-07,
+          "maximum_index": [
+            186,
+            8,
+            1
+          ],
+          "signed_sum": 0.0006025055029541872,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 4
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 0.0034721745643675394,
+          "reference_l2": 0.11494575865784108,
+          "relative_l2": 0.03020706988157047,
+          "maximum_absolute": 0.00018390186486784855,
+          "maximum_index": [
+            207,
+            6
+          ],
+          "signed_sum": -0.18954940850347482,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.01205867675050232,
+          "reference_l2": 5.100109186219563,
+          "relative_l2": 0.0023643958021692412,
+          "maximum_absolute": 0.0003509393096157859,
+          "maximum_index": [
+            203,
+            8
+          ],
+          "signed_sum": 0.8108607675555234,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 1.9008502302557456e-05,
+          "reference_l2": 0.08437907804102882,
+          "relative_l2": 0.00022527506514487735,
+          "maximum_absolute": 1.5470081000709652e-06,
+          "maximum_index": [
+            186,
+            8,
+            0
+          ],
+          "signed_sum": -5.233261674332796e-05,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 0.00013548390078718935,
+          "reference_l2": 0.24047991348405018,
+          "relative_l2": 0.0005633896770183898,
+          "maximum_absolute": 2.220612400398393e-06,
+          "maximum_index": [
+            146,
+            216,
+            4
+          ],
+          "signed_sum": 0.0015124755065997744,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.006582084856375772,
+          "reference_l2": 14.825614542087528,
+          "relative_l2": 0.0004439670839741782,
+          "maximum_absolute": 0.00010647675898434183,
+          "maximum_index": [
+            97,
+            267
+          ],
+          "signed_sum": 0.6955079657008495,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.09781871563777132,
+          "reference_l2": 754.2803485385787,
+          "relative_l2": 0.0001296848258439922,
+          "maximum_absolute": 0.005155015317103384,
+          "maximum_index": [
+            186,
+            49,
+            0
+          ],
+          "signed_sum": 3.1296230255633717e-12,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 0.000103190169874965,
+          "reference_l2": 0.35118398547440555,
+          "relative_l2": 0.00029383506692529847,
+          "maximum_absolute": 2.3824933906065743e-06,
+          "maximum_index": [
+            186,
+            216,
+            4
+          ],
+          "signed_sum": -0.004503148203005258,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 5.698167867876436,
+          "reference_l2": 48801.27699879295,
+          "relative_l2": 0.00011676267955072928,
+          "maximum_absolute": 0.08915450018919557,
+          "maximum_index": [
+            185,
+            162,
+            1
+          ],
+          "signed_sum": 68.86268475636072,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 0.8110551111741925,
+          "reference_l2": 9162.940986430096,
+          "relative_l2": 8.85147151308001e-05,
+          "maximum_absolute": 0.18457788253803464,
+          "maximum_index": [
+            186,
+            8,
+            1
+          ],
+          "signed_sum": -28.405203848152762,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 7.389852614135638e-06,
+          "reference_l2": 0.1102664291350923,
+          "relative_l2": 6.701815477385236e-05,
+          "maximum_absolute": 5.215003046289061e-07,
+          "maximum_index": [
+            186,
+            42,
+            1
+          ],
+          "signed_sum": -6.173045073305504e-05,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 4.774055736530171e-05,
+          "reference_l2": 188.63433910556608,
+          "relative_l2": 2.530851890046621e-07,
+          "maximum_absolute": 1.2448976405288192e-06,
+          "maximum_index": [
+            185,
+            162
+          ],
+          "signed_sum": 0.0013472830494549726,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 1.3046460051713327e-14,
+          "reference_l2": 24.944382578492938,
+          "relative_l2": 5.230219673972605e-16,
+          "maximum_absolute": 4.440892098500626e-16,
+          "maximum_index": [
+            0,
+            27,
+            2
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    },
+    "c03-material-independent": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 2.3587190940540393e-05,
+          "reference_l2": 0.2578418097709853,
+          "relative_l2": 9.147931036277824e-05,
+          "maximum_absolute": 1.2854514570685184e-06,
+          "maximum_index": [
+            96,
+            0
+          ],
+          "signed_sum": -0.0004929649825286934,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 0
+        },
+        "elastic_energy": {
+          "absolute_l2": 0.00010796231419527728,
+          "reference_l2": 1.1235754676876488,
+          "relative_l2": 9.608817324702441e-05,
+          "maximum_absolute": 7.609903764131676e-06,
+          "maximum_index": [
+            159,
+            1
+          ],
+          "signed_sum": -0.0036925853234490427,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.00044818217776640916,
+          "reference_l2": 6.005184509832704,
+          "relative_l2": 7.463254077082386e-05,
+          "maximum_absolute": 2.7841252134785943e-05,
+          "maximum_index": [
+            223,
+            0
+          ],
+          "signed_sum": -0.009905379878595657,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 6.18200673240378e-05,
+          "reference_l2": 0.1917429980861983,
+          "relative_l2": 0.00032241108119237036,
+          "maximum_absolute": 1.370545627250733e-06,
+          "maximum_index": [
+            95,
+            197
+          ],
+          "signed_sum": -0.005081352975012413,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 1.2201396931558215e-06,
+          "reference_l2": 0.009004982915280643,
+          "relative_l2": 0.0001354960586416388,
+          "maximum_absolute": 1.3309373324380284e-07,
+          "maximum_index": [
+            97,
+            16
+          ],
+          "signed_sum": 4.702267481131508e-05,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 1.9744257533802253e-05,
+          "reference_l2": 0.10833365357893107,
+          "relative_l2": 0.00018225414616351637,
+          "maximum_absolute": 5.569765298510477e-07,
+          "maximum_index": [
+            179,
+            8,
+            1
+          ],
+          "signed_sum": -0.0014417467989663365,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 2
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 7.577673369280407e-06,
+          "reference_l2": 0.11494575865784108,
+          "relative_l2": 6.592390582967798e-05,
+          "maximum_absolute": 4.773512739314131e-07,
+          "maximum_index": [
+            211,
+            16
+          ],
+          "signed_sum": -1.5538748769885124e-06,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.0003646591756357495,
+          "reference_l2": 5.100109186219563,
+          "relative_l2": 7.150026839053848e-05,
+          "maximum_absolute": 2.3597458289711937e-05,
+          "maximum_index": [
+            223,
+            0
+          ],
+          "signed_sum": -0.006211240680249253,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 2.471885491902248e-05,
+          "reference_l2": 0.08437907804102882,
+          "relative_l2": 0.00029295004748692666,
+          "maximum_absolute": 1.0193938822147114e-06,
+          "maximum_index": [
+            89,
+            0,
+            0
+          ],
+          "signed_sum": -0.0007247686229546856,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 0.00015874031626409227,
+          "reference_l2": 0.24047991348405018,
+          "relative_l2": 0.0006600980263352462,
+          "maximum_absolute": 3.1154814067545613e-06,
+          "maximum_index": [
+            146,
+            216,
+            4
+          ],
+          "signed_sum": -0.012885786917039588,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.007120270997149937,
+          "reference_l2": 14.825614542087528,
+          "relative_l2": 0.0004802681856415892,
+          "maximum_absolute": 0.00013419801776154427,
+          "maximum_index": [
+            155,
+            307
+          ],
+          "signed_sum": -0.748925253237377,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.0713568867103749,
+          "reference_l2": 754.2803485385787,
+          "relative_l2": 9.460260611141358e-05,
+          "maximum_absolute": 0.004337701471854416,
+          "maximum_index": [
+            162,
+            49,
+            2
+          ],
+          "signed_sum": 1.1492769897648474e-12,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 0.00014190412446834672,
+          "reference_l2": 0.35118398547440555,
+          "relative_l2": 0.0004040734496382346,
+          "maximum_absolute": 2.6754941204322306e-06,
+          "maximum_index": [
+            155,
+            216,
+            4
+          ],
+          "signed_sum": 0.01606028780143732,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 5.107565194269178,
+          "reference_l2": 48801.27699879295,
+          "relative_l2": 0.00010466048243769334,
+          "maximum_absolute": 0.09745610969595475,
+          "maximum_index": [
+            90,
+            197,
+            1
+          ],
+          "signed_sum": -322.2906239500415,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 0.730693591719566,
+          "reference_l2": 9162.940986430096,
+          "relative_l2": 7.97444393455868e-05,
+          "maximum_absolute": 0.036140991248919674,
+          "maximum_index": [
+            96,
+            0,
+            2
+          ],
+          "signed_sum": 36.10789415984571,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 1.2334667145647902e-05,
+          "reference_l2": 0.1102664291350923,
+          "relative_l2": 0.00011186239767079201,
+          "maximum_absolute": 5.71963512508675e-07,
+          "maximum_index": [
+            179,
+            42,
+            1
+          ],
+          "signed_sum": -0.0002843269614023813,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 4.387503723730341e-05,
+          "reference_l2": 188.63433910556608,
+          "relative_l2": 2.3259305514225316e-07,
+          "maximum_absolute": 1.025951324562513e-06,
+          "maximum_index": [
+            91,
+            189
+          ],
+          "signed_sum": 0.00040648850856039864,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.944382578492938,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    },
+    "c03-material-native": {
+      "accepted": 224,
+      "fields": {
+        "accumulated": {
+          "absolute_l2": 1.5959607382270534e-05,
+          "reference_l2": 0.2578456708108687,
+          "relative_l2": 6.189596797216347e-05,
+          "maximum_absolute": 7.174087521774099e-07,
+          "maximum_index": [
+            96,
+            0
+          ],
+          "signed_sum": -0.00034476112360577266,
+          "components": 7168
+        },
+        "contact_status": {
+          "mismatches": 0
+        },
+        "elastic_energy": {
+          "absolute_l2": 6.502516765460826e-05,
+          "reference_l2": 1.1236182424337606,
+          "relative_l2": 5.7871228143967784e-05,
+          "maximum_absolute": 4.5954995913782826e-06,
+          "maximum_index": [
+            159,
+            1
+          ],
+          "signed_sum": -0.0020219977139389216,
+          "components": 7168
+        },
+        "endpoint_work": {
+          "absolute_l2": 0.000267003634327385,
+          "reference_l2": 6.013169634121878,
+          "relative_l2": 4.440314352887474e-05,
+          "maximum_absolute": 1.2645825656049103e-05,
+          "maximum_index": [
+            223,
+            1
+          ],
+          "signed_sum": -0.005897235910186188,
+          "components": 7168
+        },
+        "equivalent_plastic_strain": {
+          "absolute_l2": 3.4315657820567094e-05,
+          "reference_l2": 0.19175442356065076,
+          "relative_l2": 0.0001789562774269625,
+          "maximum_absolute": 8.590747376430218e-07,
+          "maximum_index": [
+            95,
+            197
+          ],
+          "signed_sum": -0.002820165209613711,
+          "components": 72576
+        },
+        "gap": {
+          "absolute_l2": 7.308248475616781e-07,
+          "reference_l2": 0.009005135373238243,
+          "relative_l2": 8.115645320930626e-05,
+          "maximum_absolute": 7.707165617141338e-08,
+          "maximum_index": [
+            92,
+            1
+          ],
+          "signed_sum": 2.8051005738458404e-05,
+          "components": 7168
+        },
+        "jump": {
+          "absolute_l2": 1.104265581088855e-05,
+          "reference_l2": 0.10833773283508606,
+          "relative_l2": 0.00010192806810622397,
+          "maximum_absolute": 2.774691066603137e-07,
+          "maximum_index": [
+            179,
+            8,
+            1
+          ],
+          "signed_sum": -0.0008231359662809676,
+          "components": 21504
+        },
+        "material_return": {
+          "mismatches": 3
+        },
+        "numerical_dissipation": {
+          "absolute_l2": 5.171579085831945e-06,
+          "reference_l2": 0.11212751805751488,
+          "relative_l2": 4.612230053267768e-05,
+          "maximum_absolute": 3.809984932686371e-07,
+          "maximum_index": [
+            94,
+            7
+          ],
+          "signed_sum": -4.921304879144738e-05,
+          "components": 7168
+        },
+        "open": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.269322199023193,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "physical_pressure": {
+          "absolute_l2": 0.0,
+          "reference_l2": 211.66010488516724,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 7168
+        },
+        "plastic_dissipation": {
+          "absolute_l2": 0.0002195913676291227,
+          "reference_l2": 5.111038221658032,
+          "relative_l2": 4.296414115993184e-05,
+          "maximum_absolute": 1.026541854523555e-05,
+          "maximum_index": [
+            223,
+            19
+          ],
+          "signed_sum": -0.0038260251474539196,
+          "components": 7168
+        },
+        "plastic_slip": {
+          "absolute_l2": 1.5190339878275936e-05,
+          "reference_l2": 0.08437853239282508,
+          "relative_l2": 0.0001800261209516795,
+          "maximum_absolute": 6.008965645954746e-07,
+          "maximum_index": [
+            89,
+            0,
+            0
+          ],
+          "signed_sum": -0.0005038427011722374,
+          "components": 21504
+        },
+        "plastic_strain": {
+          "absolute_l2": 8.376765031348388e-05,
+          "reference_l2": 0.2404628720934564,
+          "relative_l2": 0.00034836001742891685,
+          "maximum_absolute": 1.4910435656482167e-06,
+          "maximum_index": [
+            146,
+            216,
+            4
+          ],
+          "signed_sum": -0.007703200868737159,
+          "components": 435456
+        },
+        "plastic_work": {
+          "absolute_l2": 0.0039054106104976067,
+          "reference_l2": 14.829196556867092,
+          "relative_l2": 0.00026335955528818534,
+          "maximum_absolute": 7.978076415443222e-05,
+          "maximum_index": [
+            92,
+            197
+          ],
+          "signed_sum": -0.38206160462705047,
+          "components": 72576
+        },
+        "pore": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1029.9566565082796,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 72576
+        },
+        "reaction": {
+          "absolute_l2": 0.04039866944604792,
+          "reference_l2": 754.2941962592678,
+          "relative_l2": 5.355823980403794e-05,
+          "maximum_absolute": 0.0024393583636381777,
+          "maximum_index": [
+            174,
+            49,
+            2
+          ],
+          "signed_sum": 4.2215962171333887e-13,
+          "components": 36288
+        },
+        "strain": {
+          "absolute_l2": 7.369196358623796e-05,
+          "reference_l2": 0.3511767945877747,
+          "relative_l2": 0.00020984291878607905,
+          "maximum_absolute": 1.2212001513809637e-06,
+          "maximum_index": [
+            146,
+            216,
+            4
+          ],
+          "signed_sum": 0.00941185591003248,
+          "components": 435456
+        },
+        "stress": {
+          "absolute_l2": 2.712401834096832,
+          "reference_l2": 48801.63368889354,
+          "relative_l2": 5.558014412771863e-05,
+          "maximum_absolute": 0.06794050182580236,
+          "maximum_index": [
+            86,
+            197,
+            1
+          ],
+          "signed_sum": -185.54344111269782,
+          "components": 435456
+        },
+        "traction": {
+          "absolute_l2": 0.4317352430459735,
+          "reference_l2": 9163.194857374461,
+          "relative_l2": 4.711623508677398e-05,
+          "maximum_absolute": 0.017677695309009422,
+          "maximum_index": [
+            185,
+            15,
+            2
+          ],
+          "signed_sum": 20.567309120884612,
+          "components": 21504
+        },
+        "u": {
+          "absolute_l2": 7.01786969877775e-06,
+          "reference_l2": 0.11026674320010113,
+          "relative_l2": 6.364448151009971e-05,
+          "maximum_absolute": 2.821744314021752e-07,
+          "maximum_index": [
+            179,
+            42,
+            1
+          ],
+          "signed_sum": -0.00020174291786618836,
+          "components": 36288
+        },
+        "void": {
+          "absolute_l2": 2.428431841777812e-05,
+          "reference_l2": 188.63434412104408,
+          "relative_l2": 1.2873752407565404e-07,
+          "maximum_absolute": 5.454009506244972e-07,
+          "maximum_index": [
+            83,
+            189
+          ],
+          "signed_sum": 0.000264048988314336,
+          "components": 72576
+        },
+        "water_load": {
+          "absolute_l2": 0.0,
+          "reference_l2": 24.944382578492934,
+          "relative_l2": 0.0,
+          "maximum_absolute": 0.0,
+          "maximum_index": [
+            0,
+            0,
+            0
+          ],
+          "signed_sum": 0.0,
+          "components": 36288
+        }
+      },
+      "identical_to_previous": true
+    }
+  },
+  "points": [
+    {
+      "route": "m0c1-native",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "label": "shear_face",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          97.42580663214649,
+          98.24847564826543,
+          -0.8455762983423398,
+          0.9604036803265116,
+          -4.519248745555542,
+          7.850023036137539
+        ],
+        "plastic_strain_compression_positive": [
+          0.0001000252048377349,
+          6.248022285821035e-05,
+          -0.00019375522338101425,
+          0.00015237901778006668,
+          -7.817831781431545e-06,
+          3.127844691124116e-05
+        ],
+        "void_ratio": 0.7007684630865771,
+        "equivalent_plastic_strain": 0.00020727154152669255,
+        "plastic_work_kpa": 0.016739738087481026,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        7.783133951642011e-06,
+        1.835184199752261e-05,
+        -3.568582308056462e-05,
+        1.2086161033636559e-05,
+        -1.1801441041491845e-05,
+        1.4774050654504697e-05
+      ],
+      "trial_principal_kpa": [
+        98.45155674148651,
+        97.83138421414738,
+        -2.763977087824191
+      ],
+      "trial_yield_kpa": 1.4102197754132249,
+      "native_elastic_threshold_kpa": 9.845155674148652e-09,
+      "single_face_max_mid_kpa": 0.03975086678035211,
+      "single_face_mid_min_kpa": 99.90410566172582,
+      "returned_principal_kpa": [
+        97.95426056569295,
+        97.91450969891257,
+        -1.9895959628132087
+      ],
+      "returned_max_mid_kpa": 0.039750866780380534,
+      "returned_mid_min_kpa": 99.90410566172578,
+      "relative_force": 3.6255738075781752e-12,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 3.6254210783789835e-12
+    },
+    {
+      "route": "m0c1-native",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          81.14444613013279,
+          86.85315374186892,
+          -4.018624939058738,
+          0.763422037566643,
+          -7.145019956292939,
+          7.992747125193316
+        ],
+        "plastic_strain_compression_positive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "void_ratio": 0.7009251946394692,
+        "equivalent_plastic_strain": 0.0,
+        "plastic_work_kpa": 0.0,
+        "last_return": "elastic"
+      },
+      "total_compressive_strain": [
+        2.384905049520339e-07,
+        5.338333189497446e-07,
+        -1.8372761374479626e-06,
+        -6.812120291306296e-07,
+        1.138764358511649e-06,
+        5.981600504050004e-08
+      ],
+      "trial_principal_kpa": [
+        87.38572200393656,
+        81.84298253553196,
+        -5.515967684912063
+      ],
+      "trial_yield_kpa": 0.00528830227005983,
+      "native_elastic_threshold_kpa": 8.738572200393658e-09,
+      "single_face_max_mid_kpa": 5.540562896186131,
+      "single_face_mid_min_kpa": 87.35635802252193,
+      "returned_principal_kpa": [
+        87.38385715099582,
+        81.84329425480966,
+        -5.513063767712297
+      ],
+      "returned_max_mid_kpa": 5.5405628961861595,
+      "returned_mid_min_kpa": 87.35635802252196,
+      "relative_force": 4.5194558021417935e-09,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.9715665779150647e-11
+    },
+    {
+      "route": "m0c1-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          70.63218289209912,
+          76.11187289063356,
+          -5.4205623904305416,
+          1.0681127358408624,
+          -12.07105460764729,
+          10.875511854910826
+        ],
+        "plastic_strain_compression_positive": [
+          -5.244382984596106e-07,
+          3.193554773212081e-05,
+          -3.7888098440198796e-05,
+          -4.093642662272887e-06,
+          -2.2248375112966118e-05,
+          1.1891907766167836e-05
+        ],
+        "void_ratio": 0.7010903606492516,
+        "equivalent_plastic_strain": 4.2960136743483726e-05,
+        "plastic_work_kpa": 0.0030219139156947754,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        -1.6991319737626058e-08,
+        4.669036122281108e-08,
+        -3.4829253004837344e-08,
+        -9.961474806721672e-08,
+        1.1192488165872652e-07,
+        -1.1490037604614617e-07
+      ],
+      "trial_principal_kpa": [
+        77.90689267163123,
+        72.08845176058703,
+        -8.673133592796015
+      ],
+      "trial_yield_kpa": 0.001622497943316148,
+      "native_elastic_threshold_kpa": 7.790689267163124e-09,
+      "single_face_max_mid_kpa": 5.817773119422682,
+      "single_face_mid_min_kpa": 80.76079004411696,
+      "returned_principal_kpa": [
+        77.90632051824315,
+        72.08854739882044,
+        -8.672242645296537
+      ],
+      "returned_max_mid_kpa": 5.817773119422711,
+      "returned_mid_min_kpa": 80.76079004411697,
+      "relative_force": 3.7420322729671164e-09,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 2.970249415930484e-11
+    },
+    {
+      "route": "m0c1-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "label": "extension_edge",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          99.51170428823178,
+          101.67190952267575,
+          0.6432437976200603,
+          0.6647707497192827,
+          -2.9369526997872533,
+          11.155656712472046
+        ],
+        "plastic_strain_compression_positive": [
+          8.054629179477805e-05,
+          0.0001669007629707909,
+          -0.0002953534328796985,
+          0.00022150524872502654,
+          1.0756568265752372e-06,
+          6.953121771894098e-05
+        ],
+        "void_ratio": 0.7007491832436017,
+        "equivalent_plastic_strain": 0.00031775020037716825,
+        "plastic_work_kpa": 0.026328093733109462,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        6.350724130389862e-06,
+        1.512090210563445e-05,
+        -2.8872689851436528e-05,
+        2.4068918196118016e-06,
+        -5.5307695772694985e-06,
+        1.4911989798041025e-05
+      ],
+      "trial_principal_kpa": [
+        101.41168077136558,
+        101.0137290464227,
+        -1.587501673985881
+      ],
+      "trial_yield_kpa": 1.125568669595289,
+      "native_elastic_threshold_kpa": 1.0141168077136558e-08,
+      "single_face_max_mid_kpa": -0.06531254610878534,
+      "single_face_mid_min_kpa": 102.04950417047161,
+      "returned_principal_kpa": [
+        101.04474674566323,
+        101.04474674566315,
+        -0.9594339028231644
+      ],
+      "returned_max_mid_kpa": 8.526512829121202e-14,
+      "returned_mid_min_kpa": 102.00418064848631,
+      "relative_force": 3.7420322729671164e-09,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 2.970249415930484e-11
+    },
+    {
+      "route": "m0c1-native",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "label": "extension_edge",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          92.52139920531914,
+          90.54849770209184,
+          -1.6300702647960432,
+          -0.417406310236495,
+          13.924733378508082,
+          2.824812570434215
+        ],
+        "plastic_strain_compression_positive": [
+          1.1662900151314272e-05,
+          0.0001788272090949243,
+          -0.00022806567544806364,
+          -7.406720927847893e-05,
+          9.961039864937414e-05,
+          -1.308585852407599e-05
+        ],
+        "void_ratio": 0.700870310341857,
+        "equivalent_plastic_strain": 0.00024909573006145976,
+        "plastic_work_kpa": 0.01889372864379576,
+        "last_return": "extension_edge"
+      },
+      "total_compressive_strain": [
+        1.1934753446591153e-06,
+        -1.0416139879168906e-06,
+        -2.0099941720369042e-07,
+        -1.3495223217254188e-06,
+        1.2710091729452605e-05,
+        7.537611031657928e-06
+      ],
+      "trial_principal_kpa": [
+        92.65803066695251,
+        92.6464425595161,
+        -3.8100618728369975
+      ],
+      "trial_yield_kpa": 0.0825839156654311,
+      "native_elastic_threshold_kpa": 9.265803066695252e-09,
+      "single_face_max_mid_kpa": -0.022401979996544696,
+      "single_face_mid_min_kpa": 96.41602379345369,
+      "returned_principal_kpa": [
+        92.63919274351026,
+        92.6391927435102,
+        -3.7612852368741314
+      ],
+      "returned_max_mid_kpa": 7.105427357601002e-14,
+      "returned_mid_min_kpa": 96.40047798038432,
+      "relative_force": 1.7200663291116939e-09,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 8.365884833624379e-16
+    },
+    {
+      "route": "m0c1-native",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "label": "extension_edge",
+      "count": 20,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          79.46818276675246,
+          82.47116018322845,
+          -1.7773441966983121,
+          -1.4261145846173342,
+          -11.327570823011593,
+          -16.695571001130734
+        ],
+        "plastic_strain_compression_positive": [
+          -7.125005010015212e-05,
+          -9.86787958890345e-06,
+          4.299984311364131e-05,
+          -8.030866451536971e-05,
+          8.653908212295382e-05,
+          0.0001625175323818866
+        ],
+        "void_ratio": 0.7010160026410108,
+        "equivalent_plastic_strain": 0.00025282707906820046,
+        "plastic_work_kpa": 0.047837663754731655,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        9.253120236184259e-06,
+        8.66004616321034e-06,
+        -3.785779938368658e-05,
+        -5.947773891508245e-06,
+        1.21052565518283e-05,
+        3.0795516232628875e-05
+      ],
+      "trial_principal_kpa": [
+        81.93929106128739,
+        81.84927603438867,
+        -7.49347055649902
+      ],
+      "trial_yield_kpa": 0.24832713832590514,
+      "native_elastic_threshold_kpa": 8.19392910612874e-09,
+      "single_face_max_mid_kpa": -0.012192056353029557,
+      "single_face_mid_min_kpa": 89.22102263127043,
+      "returned_principal_kpa": [
+        81.8573187370095,
+        81.85731873700941,
+        -7.355243239041082
+      ],
+      "returned_max_mid_kpa": 9.947598300641403e-14,
+      "returned_mid_min_kpa": 89.2125619760505,
+      "relative_force": 1.783917140377702e-10,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 7.39596742966116e-16
+    },
+    {
+      "route": "m0c1-native",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "label": "stick",
+      "count": 1,
+      "gap_m": -3.406443400664267e-05,
+      "previous_jump_m": [
+        0.0013313521916249555,
+        0.0011108144239374699,
+        -3.113999033532141e-05
+      ],
+      "previous_traction_kpa": [
+        -6.300784796019925,
+        -5.2182991212474965,
+        -31.139990335321407
+      ],
+      "target_jump_m": [
+        0.00132317381382852,
+        0.0011047268432624942,
+        -3.406443400664267e-05
+      ],
+      "trial_shear_kpa": 10.217980279088708,
+      "coulomb_limit_kpa": 10.2193302019928,
+      "trial_minus_cap_kpa": -0.0013499229040920824,
+      "relative_force": 8.152049837614988e-12,
+      "tight_native_label": "stick",
+      "tight_native_relative_force": 8.144027571820823e-12
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "label": "extension_edge",
+      "count": 2,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          97.45459838037628,
+          98.22018589552181,
+          -0.8542039900347339,
+          0.9400699512484099,
+          -4.52092013025444,
+          7.855222997834329
+        ],
+        "plastic_strain_compression_positive": [
+          9.934153143565648e-05,
+          6.288911001518769e-05,
+          -0.00019343378035178088,
+          0.00015258181220954354,
+          -7.999853722611459e-06,
+          3.163810376346572e-05
+        ],
+        "void_ratio": 0.7007684390139015,
+        "plastic_work_kpa": 0.016703357755864665,
+        "equivalent_plastic_strain": 0.00020696207954917217,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        7.743051135903302e-06,
+        1.840222493570616e-05,
+        -3.570659324980046e-05,
+        1.2011144620671305e-05,
+        -1.1838709959856083e-05,
+        1.4787207768376172e-05
+      ],
+      "trial_principal_kpa": [
+        98.91431142870275,
+        97.78334262045111,
+        -3.5493139101573816
+      ],
+      "trial_yield_kpa": 2.819602352521123,
+      "native_elastic_threshold_kpa": 9.891431142870276e-09,
+      "single_face_max_mid_kpa": -0.029529936765769094,
+      "single_face_mid_min_kpa": 99.95055562448606,
+      "returned_principal_kpa": [
+        97.93357084162686,
+        97.93357084070347,
+        -1.996492537501922
+      ],
+      "returned_max_mid_kpa": 9.233929176843958e-10,
+      "returned_mid_min_kpa": 99.93006337820539,
+      "relative_force": 1.284159245585151e-15,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 3.6254210783789835e-12
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          81.14355760940644,
+          86.85330771794925,
+          -4.023703732690883,
+          0.7630846621169383,
+          -7.144646956641757,
+          7.9934046259195535
+        ],
+        "plastic_strain_compression_positive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "void_ratio": 0.7009252341916903,
+        "plastic_work_kpa": 0.0,
+        "equivalent_plastic_strain": 0.0,
+        "last_return": "elastic"
+      },
+      "total_compressive_strain": [
+        2.39034014206749e-07,
+        5.376172245332144e-07,
+        -1.8458474283558276e-06,
+        -6.821105828548298e-07,
+        1.1410041696321103e-06,
+        5.962205745933748e-08
+      ],
+      "trial_principal_kpa": [
+        87.38579980304847,
+        81.8419785679528,
+        -5.521915823740445
+      ],
+      "trial_yield_kpa": 0.014249410068586599,
+      "native_elastic_threshold_kpa": 8.738579980304848e-09,
+      "single_face_max_mid_kpa": 5.537956428490219,
+      "single_face_mid_min_kpa": 87.35690967537326,
+      "returned_principal_kpa": [
+        87.38077492872894,
+        81.84281850023866,
+        -5.5140911751345865
+      ],
+      "returned_max_mid_kpa": 5.537956428490276,
+      "returned_mid_min_kpa": 87.35690967537325,
+      "relative_force": 9.93353509765806e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.9715665779150647e-11
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "label": "elastic",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          70.63015866426171,
+          76.10582993248131,
+          -5.423232266661204,
+          1.0685708477370788,
+          -12.069163981516976,
+          10.8754229494484
+        ],
+        "plastic_strain_compression_positive": [
+          -5.258345202850852e-07,
+          3.2019795145478276e-05,
+          -3.7987945893753346e-05,
+          -4.1037731067263e-06,
+          -2.2304457564526767e-05,
+          1.1922506085097283e-05
+        ],
+        "void_ratio": 0.7010904626202834,
+        "plastic_work_kpa": 0.0030297917863264076,
+        "equivalent_plastic_strain": 4.30728684062796e-05,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        -1.6929749862910533e-08,
+        4.218398104761508e-08,
+        -2.0278575299561314e-08,
+        -9.897700972632537e-08,
+        1.0708938417842037e-07,
+        -1.141958227538995e-07
+      ],
+      "trial_principal_kpa": [
+        77.90063359275922,
+        72.087102929109,
+        -8.673736277815097
+      ],
+      "trial_yield_kpa": -0.000603013964067145,
+      "native_elastic_threshold_kpa": 7.790063359275922e-09,
+      "single_face_max_mid_kpa": 5.813530663650226,
+      "single_face_mid_min_kpa": 80.76083920692409,
+      "returned_principal_kpa": [
+        77.90063359275923,
+        72.08710292910898,
+        -8.673736277815083
+      ],
+      "returned_max_mid_kpa": 5.813530663650255,
+      "returned_mid_min_kpa": 80.76083920692406,
+      "relative_force": 4.5864778792588406e-11,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 2.970249415930484e-11
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "label": "extension_edge",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          99.57299129821509,
+          101.6097209623292,
+          0.6294656168685372,
+          0.6702911752768261,
+          -2.945486149140596,
+          11.166352472358241
+        ],
+        "plastic_strain_compression_positive": [
+          7.900324251906992e-05,
+          0.00016812566063460264,
+          -0.00029498197043049046,
+          0.00022053800752312177,
+          6.146719480838581e-07,
+          6.964214064306414e-05
+        ],
+        "void_ratio": 0.70074919244141,
+        "plastic_work_kpa": 0.026264609590663568,
+        "equivalent_plastic_strain": 0.00031739660384357796,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        6.616027758432918e-06,
+        1.5011421366161334e-05,
+        -2.911122623746501e-05,
+        2.288242001744452e-06,
+        -5.520928554576248e-06,
+        1.5018262041702028e-05
+      ],
+      "trial_principal_kpa": [
+        102.53228318849709,
+        100.88740755085524,
+        -3.47845714015719
+      ],
+      "trial_yield_kpa": 4.522303077418009,
+      "native_elastic_threshold_kpa": 1.025322831884971e-08,
+      "single_face_max_mid_kpa": -0.21642478340488935,
+      "single_face_mid_min_kpa": 102.1491410542659,
+      "returned_principal_kpa": [
+        101.0369059803919,
+        101.03690597971614,
+        -0.9620474912469348
+      ],
+      "returned_max_mid_kpa": 6.757545634172857e-10,
+      "returned_mid_min_kpa": 101.99895347096307,
+      "relative_force": 4.5864778792588406e-11,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 2.970249415930484e-11
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          92.51687201087154,
+          90.55027947875826,
+          -1.6407489335690284,
+          -0.4136141640405647,
+          13.899576672568672,
+          2.804361790836804
+        ],
+        "plastic_strain_compression_positive": [
+          1.1389786685467451e-05,
+          0.0001786355385118641,
+          -0.0002275246932253628,
+          -7.398367531425284e-05,
+          0.00010021224260974548,
+          -1.2348324767384653e-05
+        ],
+        "void_ratio": 0.7008702720691762,
+        "plastic_work_kpa": 0.018857384299188318,
+        "equivalent_plastic_strain": 0.0002485891266121988,
+        "last_return": "extension_edge"
+      },
+      "total_compressive_strain": [
+        1.2059947176132368e-06,
+        -1.0525851419942347e-06,
+        -1.8538471770852897e-07,
+        -1.3423986272556433e-06,
+        1.2693669294258235e-05,
+        7.54129386108913e-06
+      ],
+      "trial_principal_kpa": [
+        92.71014065452093,
+        92.6612967854127,
+        -3.9530286693952417
+      ],
+      "trial_yield_kpa": 0.323089104287007,
+      "native_elastic_threshold_kpa": 9.271014065452092e-09,
+      "single_face_max_mid_kpa": -0.0841339246287589,
+      "single_face_mid_min_kpa": 96.45595498693183,
+      "returned_principal_kpa": [
+        92.63483138333623,
+        92.63483137285372,
+        -3.7627390235987974
+      ],
+      "returned_max_mid_kpa": 1.0482509082976321e-08,
+      "returned_mid_min_kpa": 96.39757039645252,
+      "relative_force": 6.643159368835415e-16,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 8.365884833624379e-16
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "label": "extension_edge",
+      "count": 2,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          79.49309530878374,
+          82.3703625047677,
+          -1.778456379850613,
+          -1.4156514055815854,
+          -11.343401730816133,
+          -16.72960857867009
+        ],
+        "plastic_strain_compression_positive": [
+          -7.198203109138621e-05,
+          -8.660249980173024e-06,
+          4.252426708716699e-05,
+          -8.07445963764122e-05,
+          8.710312963002279e-05,
+          0.0001639225862234822
+        ],
+        "void_ratio": 0.7010165264123178,
+        "plastic_work_kpa": 0.04784461331877011,
+        "equivalent_plastic_strain": 0.00025282659759135416,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        9.342332403982882e-06,
+        8.588376542094832e-06,
+        -3.788604646594694e-05,
+        -5.993349847036937e-06,
+        1.2195373487945342e-05,
+        3.0732405282686246e-05
+      ],
+      "trial_principal_kpa": [
+        82.52502670323894,
+        81.83359480179523,
+        -8.691834511074674
+      ],
+      "trial_yield_kpa": 2.338740891165159,
+      "native_elastic_threshold_kpa": 8.252502670323894e-09,
+      "single_face_max_mid_kpa": -0.27115272212608943,
+      "single_face_mid_min_kpa": 89.37903506973319,
+      "returned_principal_kpa": [
+        81.82477947434388,
+        81.82477947300177,
+        -7.366089659929589
+      ],
+      "returned_max_mid_kpa": 1.3421157518678228e-09,
+      "returned_mid_min_kpa": 89.19086913293135,
+      "relative_force": 5.644185561742404e-16,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 7.39596742966116e-16
+    },
+    {
+      "route": "m0c1-independent",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "label": "slip",
+      "count": 1,
+      "gap_m": -3.404418397280291e-05,
+      "previous_jump_m": [
+        0.0013312232921113892,
+        0.0011108499034389718,
+        -3.111939709723874e-05
+      ],
+      "previous_traction_kpa": [
+        -6.305479699434731,
+        -5.221304079010698,
+        -31.119397097238743
+      ],
+      "target_jump_m": [
+        0.0013230393198188205,
+        0.001104758311606518,
+        -3.404418397280291e-05
+      ],
+      "trial_shear_kpa": 10.22489393786663,
+      "coulomb_limit_kpa": 10.213255191840872,
+      "trial_minus_cap_kpa": 0.011638746025758095,
+      "relative_force": 7.261761510775369e-16,
+      "tight_native_label": "stick",
+      "tight_native_relative_force": 8.144027571820823e-12
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "label": "shear_face",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          97.42343007210687,
+          98.24398221997657,
+          -0.8487188141541178,
+          0.9617360725969184,
+          -4.51344386470592,
+          7.838792735169515
+        ],
+        "plastic_strain_compression_positive": [
+          0.00010018979320136142,
+          6.2501683780961e-05,
+          -0.00019397608674345088,
+          0.00015249724273258048,
+          -7.8123056155082e-06,
+          3.1231210880511824e-05
+        ],
+        "void_ratio": 0.7007685904130838,
+        "equivalent_plastic_strain": 0.00020750245398719008,
+        "plastic_work_kpa": 0.016758760622672526,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        7.788526953275398e-06,
+        1.8346764665278603e-05,
+        -3.5692893705492474e-05,
+        1.2135724378532687e-05,
+        -1.1781528674354719e-05,
+        1.4777222926358855e-05
+      ],
+      "trial_principal_kpa": [
+        98.44935396613127,
+        97.82317528475588,
+        -2.764964824990139
+      ],
+      "trial_yield_kpa": 1.4105999934845244,
+      "native_elastic_threshold_kpa": 9.844935396613128e-09,
+      "single_face_max_mid_kpa": 0.0456005297446751,
+      "single_face_mid_min_kpa": 99.89669809579392,
+      "returned_principal_kpa": [
+        97.95192371124152,
+        97.90632318149682,
+        -1.9903749142970422
+      ],
+      "returned_max_mid_kpa": 0.04560052974470352,
+      "returned_mid_min_kpa": 99.89669809579385,
+      "relative_force": 2.516049143709714e-10,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.8374398839900653e-12
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "label": "elastic",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          81.14534586252542,
+          86.8537299062448,
+          -4.014597182004968,
+          0.7636126068397366,
+          -7.1458233460107135,
+          7.992344707307097
+        ],
+        "plastic_strain_compression_positive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "void_ratio": 0.7009251571942543,
+        "equivalent_plastic_strain": 0.0,
+        "plastic_work_kpa": 0.0,
+        "last_return": "elastic"
+      },
+      "total_compressive_strain": [
+        2.3825926771338084e-07,
+        5.31776810321339e-07,
+        -1.8325801046938897e-06,
+        -6.808151827066553e-07,
+        1.139059051671566e-06,
+        6.049808825993513e-08
+      ],
+      "trial_principal_kpa": [
+        87.38643068939729,
+        81.8439603245252,
+        -5.511548433822052
+      ],
+      "trial_yield_kpa": -0.0009862316345987665,
+      "native_elastic_threshold_kpa": 8.738643068939729e-09,
+      "single_face_max_mid_kpa": 5.542470364872088,
+      "single_face_mid_min_kpa": 87.35550875834726,
+      "returned_principal_kpa": [
+        87.38643068939729,
+        81.8439603245252,
+        -5.511548433822052
+      ],
+      "returned_max_mid_kpa": 5.542470364872088,
+      "returned_mid_min_kpa": 87.35550875834726,
+      "relative_force": 9.156184638319654e-10,
+      "tight_native_label": "elastic",
+      "tight_native_relative_force": 2.5177444996022864e-12
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          70.6337053302746,
+          76.11644321724447,
+          -5.419018993264775,
+          1.0679257688231016,
+          -12.071522093114337,
+          10.875262998693458
+        ],
+        "plastic_strain_compression_positive": [
+          -5.237552513833207e-07,
+          3.1882519073352176e-05,
+          -3.782599307784443e-05,
+          -4.087441217831773e-06,
+          -2.224360087176507e-05,
+          1.1877747172952952e-05
+        ],
+        "void_ratio": 0.7010902920878297,
+        "equivalent_plastic_strain": 4.28954029261807e-05,
+        "plastic_work_kpa": 0.0030191658158981822,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        -1.689797695061117e-08,
+        4.988705894864067e-08,
+        -4.378535877049086e-08,
+        -9.983485901702663e-08,
+        1.1169831824382949e-07,
+        -1.1393031202099504e-07
+      ],
+      "trial_principal_kpa": [
+        77.91143577972719,
+        72.08957696561293,
+        -8.672582260278942
+      ],
+      "trial_yield_kpa": 0.003067053215687565,
+      "native_elastic_threshold_kpa": 7.791143577972719e-09,
+      "single_face_max_mid_kpa": 5.820596468945439,
+      "single_face_mid_min_kpa": 80.76065583055502,
+      "returned_principal_kpa": [
+        77.91035422218434,
+        72.08975775323891,
+        -8.670898077316087
+      ],
+      "returned_max_mid_kpa": 5.820596468945425,
+      "returned_mid_min_kpa": 80.760655830555,
+      "relative_force": 1.6850962924530212e-09,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 9.964223554114835e-12
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "label": "shear_face",
+      "count": 8,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          99.48140167472448,
+          101.69045370479543,
+          0.6501900021378019,
+          0.6768661489208435,
+          -2.931879989389896,
+          11.154080202487185
+        ],
+        "plastic_strain_compression_positive": [
+          8.119069431831064e-05,
+          0.00016659943471944213,
+          -0.0002957574677655437,
+          0.00022152919715359793,
+          1.2037966555056578e-06,
+          6.937217920015236e-05
+        ],
+        "void_ratio": 0.7007493196598997,
+        "equivalent_plastic_strain": 0.0003181545358324572,
+        "plastic_work_kpa": 0.026372799082881884,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        6.267133253953839e-06,
+        1.5154704804304204e-05,
+        -2.879730385208629e-05,
+        2.472346751388822e-06,
+        -5.533373434913824e-06,
+        1.4883307126052898e-05
+      ],
+      "trial_principal_kpa": [
+        101.24228050573186,
+        101.00721563162054,
+        -1.2681457288991187
+      ],
+      "trial_yield_kpa": 0.5618346191482857,
+      "native_elastic_threshold_kpa": 1.0124228050573186e-08,
+      "single_face_max_mid_kpa": 0.0038236248458218824,
+      "single_face_mid_min_kpa": 101.99996361320203,
+      "returned_principal_kpa": [
+        101.0441566300056,
+        101.04033300515971,
+        -0.9596306080423745
+      ],
+      "returned_max_mid_kpa": 0.0038236248458929367,
+      "returned_mid_min_kpa": 101.99996361320208,
+      "relative_force": 1.6850962924530212e-09,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 9.964223554114835e-12
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "label": "extension_edge",
+      "count": 7,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          92.52554800847345,
+          90.5513835841962,
+          -1.6267499034799515,
+          -0.418275848885801,
+          13.930066575558932,
+          2.829647013853517
+        ],
+        "plastic_strain_compression_positive": [
+          1.1695286653978858e-05,
+          0.00017890510726046297,
+          -0.00022819710413874846,
+          -7.405011698846119e-05,
+          9.961459329368801e-05,
+          -1.3167483363134453e-05
+        ],
+        "void_ratio": 0.700870275854732,
+        "equivalent_plastic_strain": 0.00024924919230019595,
+        "plastic_work_kpa": 0.018906793109071923,
+        "last_return": "extension_edge"
+      },
+      "total_compressive_strain": [
+        1.1964396561689949e-06,
+        -1.0342358946334275e-06,
+        -2.1889707647364528e-07,
+        -1.3286871510459077e-06,
+        1.2706469460821132e-05,
+        7.542429507449826e-06
+      ],
+      "trial_principal_kpa": [
+        92.65401229123052,
+        92.64734835577231,
+        -3.788126014024982
+      ],
+      "trial_yield_kpa": 0.047670939586410555,
+      "native_elastic_threshold_kpa": 9.265401229123052e-09,
+      "single_face_max_mid_kpa": -0.012956584972400265,
+      "single_face_mid_min_kpa": 96.41210722771103,
+      "returned_principal_kpa": [
+        92.64314981681352,
+        92.6431498168135,
+        -3.7599662124397284
+      ],
+      "returned_max_mid_kpa": 1.4210854715202004e-14,
+      "returned_mid_min_kpa": 96.40311602925323,
+      "relative_force": 1.2099768644236586e-09,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 6.481661900452089e-16
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "label": "shear_face",
+      "count": 40,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          79.46492742989489,
+          82.47587898301603,
+          -1.7760768299044418,
+          -1.4259709959594515,
+          -11.329408912323759,
+          -16.69416867396099
+        ],
+        "plastic_strain_compression_positive": [
+          -7.119023448748515e-05,
+          -9.933647634378986e-06,
+          4.299664729152093e-05,
+          -8.03166970277157e-05,
+          8.654171189064543e-05,
+          0.00016248457778214535
+        ],
+        "void_ratio": 0.7010159996215708,
+        "equivalent_plastic_strain": 0.0002528877569977629,
+        "plastic_work_kpa": 0.04782475176997807,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        9.244621397125184e-06,
+        8.66726572597112e-06,
+        -3.784365573776551e-05,
+        -5.948134713133471e-06,
+        1.211586662583867e-05,
+        3.078330977459261e-05
+      ],
+      "trial_principal_kpa": [
+        81.90556266151034,
+        81.84938787270913,
+        -7.4220408792215835
+      ],
+      "trial_yield_kpa": 0.12431842252122749,
+      "native_elastic_threshold_kpa": 8.190556266151034e-09,
+      "single_face_max_mid_kpa": 0.00500751225619922,
+      "single_face_mid_min_kpa": 89.21049086674961,
+      "returned_principal_kpa": [
+        81.8617233414424,
+        81.85671582918616,
+        -7.353775037563423
+      ],
+      "returned_max_mid_kpa": 0.005007512256241853,
+      "returned_mid_min_kpa": 89.21049086674958,
+      "relative_force": 2.5284609001265593e-11,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 2.5284746847501065e-11
+    },
+    {
+      "route": "m1c0-native",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "label": "stick",
+      "count": 1,
+      "gap_m": -3.4072032774746406e-05,
+      "previous_jump_m": [
+        0.0013314820575313934,
+        0.0011108747703334235,
+        -3.114763239795494e-05
+      ],
+      "previous_traction_kpa": [
+        -6.297977388785827,
+        -5.216266278166015,
+        -31.147632397954936
+      ],
+      "target_jump_m": [
+        0.0013233039340558958,
+        0.001104787609769327,
+        -3.4072032774746406e-05
+      ],
+      "trial_shear_kpa": 10.214426905685762,
+      "coulomb_limit_kpa": 10.221609832423923,
+      "trial_minus_cap_kpa": -0.0071829267381602335,
+      "relative_force": 2.4152796399211532e-14,
+      "tight_native_label": "stick",
+      "tight_native_relative_force": 2.4144286212686638e-14
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "label": "shear_face",
+      "count": 3,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          97.43507013312424,
+          98.23604304381405,
+          -0.8504336738648646,
+          0.9534943499129565,
+          -4.515954141281761,
+          7.846318875694171
+        ],
+        "plastic_strain_compression_positive": [
+          9.990048931283637e-05,
+          6.259587264002957e-05,
+          -0.00019374622827279375,
+          0.00015249489966264154,
+          -7.876076970479136e-06,
+          3.1401566407567604e-05
+        ],
+        "void_ratio": 0.7007685178114413,
+        "plastic_work_kpa": 0.01673592994378495,
+        "equivalent_plastic_strain": 0.00020727201002882943,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        7.767389713776892e-06,
+        1.836858213574884e-05,
+        -3.569353608933109e-05,
+        1.20953686559799e-05,
+        -1.1801171303758763e-05,
+        1.4771465116967739e-05
+      ],
+      "trial_principal_kpa": [
+        98.60418635139726,
+        97.81168336453275,
+        -3.0265211082586756
+      ],
+      "trial_yield_kpa": 1.8803506110203259,
+      "native_elastic_threshold_kpa": 9.860418635139726e-09,
+      "single_face_max_mid_kpa": 0.018583741716099667,
+      "single_face_mid_min_kpa": 99.91650206287702,
+      "returned_principal_kpa": [
+        97.94110447982335,
+        97.92252073810724,
+        -1.9939813247697653
+      ],
+      "returned_max_mid_kpa": 0.018583741716113877,
+      "returned_mid_min_kpa": 99.916502062877,
+      "relative_force": 4.9409106726661416e-12,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.8374398839900653e-12
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          81.14452785774824,
+          86.85331861078949,
+          -4.01854904487095,
+          0.763338858675086,
+          -7.145159919945746,
+          7.992805615065062
+        ],
+        "plastic_strain_compression_positive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "void_ratio": 0.7009251924453492,
+        "plastic_work_kpa": 0.0,
+        "equivalent_plastic_strain": 0.0,
+        "last_return": "elastic"
+      },
+      "total_compressive_strain": [
+        2.3870222835251475e-07,
+        5.343138243572454e-07,
+        -1.838544708139481e-06,
+        -6.81425254025061e-07,
+        1.139745248663387e-06,
+        6.037962260729521e-08
+      ],
+      "trial_principal_kpa": [
+        87.38590057616454,
+        81.84306399524743,
+        -5.51604931160262
+      ],
+      "trial_yield_kpa": 0.0055000284198811755,
+      "native_elastic_threshold_kpa": 8.738590057616455e-09,
+      "single_face_max_mid_kpa": 5.5405728659386,
+      "single_face_mid_min_kpa": 87.35641732588805,
+      "returned_principal_kpa": [
+        87.3839610606737,
+        81.84338819473504,
+        -5.513029131152988
+      ],
+      "returned_max_mid_kpa": 5.540572865938657,
+      "returned_mid_min_kpa": 87.35641732588803,
+      "relative_force": 1.2085268499012051e-14,
+      "tight_native_label": "elastic",
+      "tight_native_relative_force": 2.5177444996022864e-12
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          70.63190072615294,
+          76.11106085207557,
+          -5.420952941321219,
+          1.0681336162431045,
+          -12.070717038303108,
+          10.875501339069862
+        ],
+        "plastic_strain_compression_positive": [
+          -5.246976949001535e-07,
+          3.194686139488325e-05,
+          -3.790142274539958e-05,
+          -4.09445774626482e-06,
+          -2.2255777316828464e-05,
+          1.1896079282962224e-05
+        ],
+        "void_ratio": 0.7010903746136037,
+        "plastic_work_kpa": 0.0030229950763669784,
+        "equivalent_plastic_strain": 4.2975193304572145e-05,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        -1.6841377135255885e-08,
+        4.775638111052279e-08,
+        -3.733762120789745e-08,
+        -9.954341909261857e-08,
+        1.0937647879294748e-07,
+        -1.1397556492199561e-07
+      ],
+      "trial_principal_kpa": [
+        77.90601908284141,
+        72.08811391375707,
+        -8.673730013999329
+      ],
+      "trial_yield_kpa": 0.0020803353533764835,
+      "native_elastic_threshold_kpa": 7.790601908284142e-09,
+      "single_face_max_mid_kpa": 5.81704893963601,
+      "single_face_mid_min_kpa": 80.76082419766064,
+      "returned_principal_kpa": [
+        77.90528547887862,
+        72.08823653924264,
+        -8.672587658417992
+      ],
+      "returned_max_mid_kpa": 5.817048939635981,
+      "returned_mid_min_kpa": 80.76082419766064,
+      "relative_force": 9.421027671528183e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 9.964223554114835e-12
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "label": "extension_edge",
+      "count": 2,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          99.512538765902,
+          101.66089657054833,
+          0.6442489711133422,
+          0.6805567574907319,
+          -2.936918656455701,
+          11.161175930723108
+        ],
+        "plastic_strain_compression_positive": [
+          8.039554488618576e-05,
+          0.00016716407980907138,
+          -0.0002954866555737741,
+          0.0002208960750303316,
+          9.692801469176051e-07,
+          6.942090461372622e-05
+        ],
+        "void_ratio": 0.7007492807747198,
+        "plastic_work_kpa": 0.026334742793318884,
+        "equivalent_plastic_strain": 0.00031788718464274607,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        6.3827636411683874e-06,
+        1.5097457657686394e-05,
+        -2.8890423039794075e-05,
+        2.436239558275894e-06,
+        -5.5250490993981715e-06,
+        1.492246664794151e-05
+      ],
+      "trial_principal_kpa": [
+        101.80252998881357,
+        100.94393503933291,
+        -2.207220598506176
+      ],
+      "trial_yield_kpa": 2.2505716650997343,
+      "native_elastic_threshold_kpa": 1.0180252998881358e-08,
+      "single_face_max_mid_kpa": -0.06770077111436024,
+      "single_face_mid_min_kpa": 102.04797981772865,
+      "returned_principal_kpa": [
+        101.039974260596,
+        101.03997425926075,
+        -0.9610247311788669
+      ],
+      "returned_max_mid_kpa": 1.3352519090403803e-09,
+      "returned_mid_min_kpa": 102.00099899043961,
+      "relative_force": 9.421027671528183e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 9.964223554114835e-12
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          92.52794946821226,
+          90.5575801188136,
+          -1.6317832495658644,
+          -0.41564757769063937,
+          13.914749600655316,
+          2.8151578895762497
+        ],
+        "plastic_strain_compression_positive": [
+          1.1474461737727725e-05,
+          0.00017882669376791135,
+          -0.00022785219036823467,
+          -7.40204488247968e-05,
+          0.00010012550941634607,
+          -1.2595883185465956e-05
+        ],
+        "void_ratio": 0.700870173914864,
+        "plastic_work_kpa": 0.01888689443218611,
+        "equivalent_plastic_strain": 0.00024892995172432446,
+        "last_return": "extension_edge"
+      },
+      "total_compressive_strain": [
+        1.2041009590614072e-06,
+        -1.0427293610336876e-06,
+        -2.0161660606576046e-07,
+        -1.3432182572809792e-06,
+        1.2713900831216349e-05,
+        7.539624263851702e-06
+      ],
+      "trial_principal_kpa": [
+        92.72133827303381,
+        92.67358573036739,
+        -3.9512389179507608
+      ],
+      "trial_yield_kpa": 0.32600328637672504,
+      "native_elastic_threshold_kpa": 9.27213382730338e-09,
+      "single_face_max_mid_kpa": -0.08642467717221791,
+      "single_face_mid_min_kpa": 96.46502571883532,
+      "returned_principal_kpa": [
+        92.64605298601222,
+        92.64605297524433,
+        -3.758998489373454
+      ],
+      "returned_max_mid_kpa": 1.0767891467367008e-08,
+      "returned_mid_min_kpa": 96.40505146461778,
+      "relative_force": 7.298882763675886e-16,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 6.481661900452089e-16
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "label": "extension_edge",
+      "count": 3,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          79.47598173419294,
+          82.4175225985429,
+          -1.7788175024593602,
+          -1.4196783339387853,
+          -11.338412895171762,
+          -16.71006273165923
+        ],
+        "plastic_strain_compression_positive": [
+          -7.156694614774643e-05,
+          -9.27630717460005e-06,
+          4.271156362466476e-05,
+          -8.052574324147071e-05,
+          8.681477383886656e-05,
+          0.00016320548093876606
+        ],
+        "void_ratio": 0.7010163476935354,
+        "plastic_work_kpa": 0.04783084366286812,
+        "equivalent_plastic_strain": 0.0002529173049420076,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        9.283311343069526e-06,
+        8.644834412057563e-06,
+        -3.785069786708087e-05,
+        -6.013692353503626e-06,
+        1.2192222919959653e-05,
+        3.076307695746812e-05
+      ],
+      "trial_principal_kpa": [
+        82.32673043713763,
+        81.83181764263838,
+        -8.257440829804445
+      ],
+      "trial_yield_kpa": 1.5880022362091637,
+      "native_elastic_threshold_kpa": 8.232673043713762e-09,
+      "single_face_max_mid_kpa": -0.1586810005824617,
+      "single_face_mid_min_kpa": 89.31085816800746,
+      "returned_principal_kpa": [
+        81.83958844040711,
+        81.83958843843301,
+        -7.361153337908519
+      ],
+      "returned_max_mid_kpa": 1.9741008827622863e-09,
+      "returned_mid_min_kpa": 89.20074177634153,
+      "relative_force": 7.038718249433122e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 2.5284746847501065e-11
+    },
+    {
+      "route": "m1c0-independent",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "label": "slip",
+      "count": 1,
+      "gap_m": -3.405675565308549e-05,
+      "previous_jump_m": [
+        0.0013314120242533653,
+        0.0011108983976069922,
+        -3.113222604509337e-05
+      ],
+      "previous_traction_kpa": [
+        -6.302058565122567,
+        -5.219495018364885,
+        -31.13222604509337
+      ],
+      "target_jump_m": [
+        0.001323232571101447,
+        0.0011048105107187285,
+        -3.405675565308549e-05
+      ],
+      "trial_shear_kpa": 10.219928495934287,
+      "coulomb_limit_kpa": 10.217026695925647,
+      "trial_minus_cap_kpa": 0.002901800008640265,
+      "relative_force": 6.506247463522672e-16,
+      "tight_native_label": "stick",
+      "tight_native_relative_force": 2.4144286212686638e-14
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "label": "shear_face",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          97.4247211397044,
+          98.24426523828734,
+          -0.8484774054509416,
+          0.9618097805933973,
+          -4.512760795926449,
+          7.839253357485747
+        ],
+        "plastic_strain_compression_positive": [
+          0.00010018976210371676,
+          6.248251828664802e-05,
+          -0.00019395326014372854,
+          0.0001525189533245182,
+          -7.807538856040348e-06,
+          3.123550199814007e-05
+        ],
+        "void_ratio": 0.7007685718883314,
+        "equivalent_plastic_strain": 0.0002074783771160093,
+        "plastic_work_kpa": 0.01675688574635864,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        7.786570130197918e-06,
+        1.8351681903179675e-05,
+        -3.5695579235517606e-05,
+        1.212836320537485e-05,
+        -1.1788562944231833e-05,
+        1.4772849691693931e-05
+      ],
+      "trial_principal_kpa": [
+        98.44994956714945,
+        97.8243607850698,
+        -2.764818401790415
+      ],
+      "trial_yield_kpa": 1.4106781591940276,
+      "native_elastic_threshold_kpa": 9.844994956714945e-09,
+      "single_face_max_mid_kpa": 0.04497845881745377,
+      "single_face_mid_min_kpa": 99.89769885796706,
+      "returned_principal_kpa": [
+        97.95249174811048,
+        97.90751328929304,
+        -1.9901855686740664
+      ],
+      "returned_max_mid_kpa": 0.04497845881743956,
+      "returned_mid_min_kpa": 99.8976988579671,
+      "relative_force": 2.467357218100931e-10,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 2.1364990915340988e-12
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "label": "elastic",
+      "count": 4,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          81.145365215067,
+          86.85369654397256,
+          -4.014363858332411,
+          0.76363673610605,
+          -7.145738024952815,
+          7.9923126517182155
+        ],
+        "plastic_strain_compression_positive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "void_ratio": 0.700925155702115,
+        "equivalent_plastic_strain": 0.0,
+        "plastic_work_kpa": 0.0,
+        "last_return": "elastic"
+      },
+      "total_compressive_strain": [
+        2.3833911823353917e-07,
+        5.31931120322072e-07,
+        -1.8331522277096848e-06,
+        -6.808825676914494e-07,
+        1.1380241605743655e-06,
+        6.028906671286661e-08
+      ],
+      "trial_principal_kpa": [
+        87.38638510030495,
+        81.84395956141104,
+        -5.511367258297314
+      ],
+      "trial_yield_kpa": -0.001280789467870136,
+      "native_elastic_threshold_kpa": 8.738638510030495e-09,
+      "single_face_max_mid_kpa": 5.542425538893909,
+      "single_face_mid_min_kpa": 87.35532681970835,
+      "returned_principal_kpa": [
+        87.38638510030495,
+        81.84395956141104,
+        -5.511367258297314
+      ],
+      "returned_max_mid_kpa": 5.542425538893909,
+      "returned_mid_min_kpa": 87.35532681970835,
+      "relative_force": 8.814448418602936e-10,
+      "tight_native_label": "elastic",
+      "tight_native_relative_force": 4.980146124382226e-12
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          70.63364595901106,
+          76.11631230765991,
+          -5.419056338239207,
+          1.0679812521841925,
+          -12.071553922252093,
+          10.875234168614108
+        ],
+        "plastic_strain_compression_positive": [
+          -5.23636255272676e-07,
+          3.188425905789729e-05,
+          -3.782822498370948e-05,
+          -4.08872813211038e-06,
+          -2.224493144738778e-05,
+          1.1878185606084806e-05
+        ],
+        "void_ratio": 0.7010902942710597,
+        "equivalent_plastic_strain": 4.28978764394088e-05,
+        "plastic_work_kpa": 0.0030193258845921077,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        -1.6941214001191797e-08,
+        4.9193118106357494e-08,
+        -4.2182198024022546e-08,
+        -9.983548290112316e-08,
+        1.1267693898563669e-07,
+        -1.145611289936509e-07
+      ],
+      "trial_principal_kpa": [
+        77.91129621974044,
+        72.0895639489775,
+        -8.672440813765878
+      ],
+      "trial_yield_kpa": 0.002785103452715987,
+      "native_elastic_threshold_kpa": 7.791129621974043e-09,
+      "single_face_max_mid_kpa": 5.820585971158408,
+      "single_face_mid_min_kpa": 80.7606395723639,
+      "returned_principal_kpa": [
+        77.91031408821715,
+        72.08972811705867,
+        -8.670911455305184
+      ],
+      "returned_max_mid_kpa": 5.820585971158479,
+      "returned_mid_min_kpa": 80.76063957236386,
+      "relative_force": 1.759203615049875e-09,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.108108929830411e-11
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "label": "shear_face",
+      "count": 8,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          99.48154727578932,
+          101.69087520808068,
+          0.6503889831446997,
+          0.6769699151395158,
+          -2.9321972015291022,
+          11.154208384267196
+        ],
+        "plastic_strain_compression_positive": [
+          8.119491143586632e-05,
+          0.0001665992780218623,
+          -0.00029576238440475605,
+          0.00022152814433415687,
+          1.2039438484970714e-06,
+          6.937761857629125e-05
+        ],
+        "void_ratio": 0.7007493159044349,
+        "equivalent_plastic_strain": 0.0003181602149057804,
+        "plastic_work_kpa": 0.026373416967662374,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        6.263393834587905e-06,
+        1.5152208939497456e-05,
+        -2.878862135570856e-05,
+        2.4743110984657178e-06,
+        -5.5314170814580234e-06,
+        1.4882588237284699e-05
+      ],
+      "trial_principal_kpa": [
+        101.243083460033,
+        101.0071479115058,
+        -1.2677756539515437
+      ],
+      "trial_yield_kpa": 0.5616809838775012,
+      "native_elastic_threshold_kpa": 1.0124308346003302e-08,
+      "single_face_max_mid_kpa": 0.004757532837459166,
+      "single_face_mid_min_kpa": 101.99960112643515,
+      "returned_principal_kpa": [
+        101.04501376184274,
+        101.04025622900524,
+        -0.9593448974299721
+      ],
+      "returned_max_mid_kpa": 0.004757532837501799,
+      "returned_mid_min_kpa": 101.99960112643521,
+      "relative_force": 1.759203615049875e-09,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.108108929830411e-11
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "label": "extension_edge",
+      "count": 7,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          92.52544635159693,
+          90.55111217270297,
+          -1.6265763523188843,
+          -0.4183344811169327,
+          13.930676236691287,
+          2.8299120291344733
+        ],
+        "plastic_strain_compression_positive": [
+          1.1691989540538752e-05,
+          0.00017892575563117224,
+          -0.00022821791595573947,
+          -7.405514972161834e-05,
+          9.962530416250148e-05,
+          -1.3165898926263779e-05
+        ],
+        "void_ratio": 0.700870283098117,
+        "equivalent_plastic_strain": 0.00024926466623867276,
+        "plastic_work_kpa": 0.018908412074815473,
+        "last_return": "extension_edge"
+      },
+      "total_compressive_strain": [
+        1.1969898574065653e-06,
+        -1.0363253364163914e-06,
+        -2.1524558220896434e-07,
+        -1.3258056642987285e-06,
+        1.2703030796838234e-05,
+        7.541689247408003e-06
+      ],
+      "trial_principal_kpa": [
+        92.65408424706855,
+        92.64737912745382,
+        -3.788050207137559
+      ],
+      "trial_yield_kpa": 0.047593207174294605,
+      "native_elastic_threshold_kpa": 9.265408424706856e-09,
+      "single_face_max_mid_kpa": -0.012883407521982804,
+      "single_face_mid_min_kpa": 96.41210029505427,
+      "returned_principal_kpa": [
+        92.64321558986526,
+        92.64321558986524,
+        -3.759944288089123
+      ],
+      "returned_max_mid_kpa": 2.842170943040401e-14,
+      "returned_mid_min_kpa": 96.40315987795435,
+      "relative_force": 1.2092384299188611e-09,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 5.752072441220598e-16
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "label": "shear_face",
+      "count": 40,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          79.46692322790247,
+          82.47781159979954,
+          -1.7749726494237272,
+          -1.4255657763331362,
+          -11.32827323040906,
+          -16.69614809185085
+        ],
+        "plastic_strain_compression_positive": [
+          -7.120940245211356e-05,
+          -9.938208858590762e-06,
+          4.3026014673373415e-05,
+          -8.034613605976054e-05,
+          8.65670702264455e-05,
+          0.00016251181783445416
+        ],
+        "void_ratio": 0.7010159557888307,
+        "equivalent_plastic_strain": 0.00025285036037063345,
+        "plastic_work_kpa": 0.04782205075544754,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        9.247411880887993e-06,
+        8.661072775164022e-06,
+        -3.785542450805182e-05,
+        -5.935286940648403e-06,
+        1.2093948905408494e-05,
+        3.079472320652291e-05
+      ],
+      "trial_principal_kpa": [
+        81.90577878968945,
+        81.8508638222918,
+        -7.422004173219079
+      ],
+      "trial_yield_kpa": 0.12437142760702358,
+      "native_elastic_threshold_kpa": 8.190577878968946e-09,
+      "single_face_max_mid_kpa": 0.0037258748914297257,
+      "single_face_mid_min_kpa": 89.21190412851817,
+      "returned_principal_kpa": [
+        81.8619207780481,
+        81.8581949031566,
+        -7.353709225361527
+      ],
+      "returned_max_mid_kpa": 0.00372587489150078,
+      "returned_mid_min_kpa": 89.21190412851813,
+      "relative_force": 8.671591821016123e-11,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 8.671621163229836e-11
+    },
+    {
+      "route": "m1c1-native",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "label": "stick",
+      "count": 1,
+      "gap_m": -3.407138220437343e-05,
+      "previous_jump_m": [
+        0.001331481725483645,
+        0.0011108899028400327,
+        -3.114697522852171e-05
+      ],
+      "previous_traction_kpa": [
+        -6.298141700374941,
+        -5.216544301622177,
+        -31.146975228521708
+      ],
+      "target_jump_m": [
+        0.0013233036240992,
+        0.001104802807802085,
+        -3.407138220437343e-05
+      ],
+      "trial_shear_kpa": 10.214717958718282,
+      "coulomb_limit_kpa": 10.221414661312028,
+      "trial_minus_cap_kpa": -0.006696702593746551,
+      "relative_force": 2.670597614350878e-14,
+      "tight_native_label": "stick",
+      "tight_native_relative_force": 2.6622578082047417e-14
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "open",
+      "progress": 0.71875,
+      "field": "material_return",
+      "gp": 182,
+      "label": "shear_face",
+      "count": 3,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          97.43536929580277,
+          98.23631204173714,
+          -0.8503497149054198,
+          0.9535051978030169,
+          -4.51595633331805,
+          7.846249938453026
+        ],
+        "plastic_strain_compression_positive": [
+          9.990111012111694e-05,
+          6.259137126834723e-05,
+          -0.0001937416155757698,
+          0.00015249334820574353,
+          -7.87497987568392e-06,
+          3.14029653727597e-05
+        ],
+        "void_ratio": 0.7007685121298333,
+        "plastic_work_kpa": 0.016735621192777335,
+        "equivalent_plastic_strain": 0.00020726715398221892,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        7.766741233685779e-06,
+        1.8369093738048173e-05,
+        -3.569374744600456e-05,
+        1.209532869486327e-05,
+        -1.1801944879613992e-05,
+        1.4770883877869058e-05
+      ],
+      "trial_principal_kpa": [
+        98.6044585809212,
+        97.81190554917586,
+        -3.026442252199941
+      ],
+      "trial_yield_kpa": 1.8803684416941948,
+      "native_elastic_threshold_kpa": 9.86044585809212e-09,
+      "single_face_max_mid_kpa": 0.018626447805132784,
+      "single_face_mid_min_kpa": 99.91663665129614,
+      "returned_principal_kpa": [
+        97.94137042158557,
+        97.92274397378043,
+        -1.993892677515677
+      ],
+      "returned_max_mid_kpa": 0.018626447805146995,
+      "returned_mid_min_kpa": 99.9166366512961,
+      "relative_force": 4.990947819505108e-12,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 2.1364990915340988e-12
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "open",
+      "progress": 0.8125,
+      "field": "material_return",
+      "gp": 152,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          81.14452267018869,
+          86.85329734620468,
+          -4.018513905643674,
+          0.7633487330072911,
+          -7.145158535343829,
+          7.9927821084418715
+        ],
+        "plastic_strain_compression_positive": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "void_ratio": 0.7009251923862427,
+        "plastic_work_kpa": 0.0,
+        "equivalent_plastic_strain": 0.0,
+        "last_return": "elastic"
+      },
+      "total_compressive_strain": [
+        2.387030535221972e-07,
+        5.342927946141546e-07,
+        -1.838538019810236e-06,
+        -6.814125675553146e-07,
+        1.1396332208786284e-06,
+        6.035985473699036e-08
+      ],
+      "trial_principal_kpa": [
+        87.38587820447724,
+        81.84305364430787,
+        -5.516011280953915
+      ],
+      "trial_yield_kpa": 0.005431796603168948,
+      "native_elastic_threshold_kpa": 8.738587820447723e-09,
+      "single_face_max_mid_kpa": 5.540588928206745,
+      "single_face_mid_min_kpa": 87.35640238988677,
+      "returned_principal_kpa": [
+        87.3839627500739,
+        81.84337382186717,
+        -5.513028568019579
+      ],
+      "returned_max_mid_kpa": 5.540588928206731,
+      "returned_mid_min_kpa": 87.35640238988675,
+      "relative_force": 1.2024523722579018e-14,
+      "tight_native_label": "elastic",
+      "tight_native_relative_force": 4.980146124382226e-12
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 143,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          70.63190584450254,
+          76.11109216596621,
+          -5.420934756708051,
+          1.0681385233245768,
+          -12.0707455793733,
+          10.875491306502864
+        ],
+        "plastic_strain_compression_positive": [
+          -5.246304064137935e-07,
+          3.1946192230751684e-05,
+          -3.7900673392212115e-05,
+          -4.094403921065486e-06,
+          -2.225495010282471e-05,
+          1.1895378349215282e-05
+        ],
+        "void_ratio": 0.7010903739910967,
+        "plastic_work_kpa": 0.00302292212106182,
+        "equivalent_plastic_strain": 4.297421512545617e-05,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        -1.684295375007447e-08,
+        4.774798454509113e-08,
+        -3.7365984404459185e-08,
+        -9.954828026637551e-08,
+        1.0947889269872632e-07,
+        -1.1403327090642666e-07
+      ],
+      "trial_principal_kpa": [
+        77.90605333077845,
+        72.0881145410945,
+        -8.673719856514609
+      ],
+      "trial_yield_kpa": 0.0020822230948169818,
+      "native_elastic_threshold_kpa": 7.790605333077846e-09,
+      "single_face_max_mid_kpa": 5.817081783274446,
+      "single_face_mid_min_kpa": 80.76081374218813,
+      "returned_principal_kpa": [
+        77.90531906112756,
+        72.08823727785308,
+        -8.672576464335027
+      ],
+      "returned_max_mid_kpa": 5.817081783274475,
+      "returned_mid_min_kpa": 80.7608137421881,
+      "relative_force": 9.730699637806822e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.108108929830411e-11
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "open",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 185,
+      "label": "extension_edge",
+      "count": 2,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          99.51258422026928,
+          101.6613325415013,
+          0.6444416169417445,
+          0.6807661370996427,
+          -2.936953839835292,
+          11.161239370263035
+        ],
+        "plastic_strain_compression_positive": [
+          8.039531246980691e-05,
+          0.0001671559859546765,
+          -0.00029547672941504494,
+          0.00022089170105579252,
+          9.691990558804031e-07,
+          6.94194107999798e-05
+        ],
+        "void_ratio": 0.7007492734680063,
+        "plastic_work_kpa": 0.026333927061700377,
+        "equivalent_plastic_strain": 0.0003178765730135974,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        6.380676942035457e-06,
+        1.5097644378162794e-05,
+        -2.888780222763445e-05,
+        2.4379676265357385e-06,
+        -5.524833897052495e-06,
+        1.4921692542202853e-05
+      ],
+      "trial_principal_kpa": [
+        101.80317532225499,
+        100.94377469788189,
+        -2.2068938834129335
+      ],
+      "trial_yield_kpa": 2.25040425918057,
+      "native_elastic_threshold_kpa": 1.0180317532225499e-08,
+      "single_face_max_mid_kpa": -0.06682619488945818,
+      "single_face_mid_min_kpa": 102.04757481951873,
+      "returned_principal_kpa": [
+        101.04027712913218,
+        101.04027712781422,
+        -0.9609237750001682
+      ],
+      "returned_max_mid_kpa": 1.3179572988519794e-09,
+      "returned_mid_min_kpa": 102.00120090281439,
+      "relative_force": 9.730699637806822e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 1.108108929830411e-11
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "recontact",
+      "progress": 0.0625,
+      "field": "material_return",
+      "gp": 273,
+      "label": "shear_face",
+      "count": 1,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          92.5281254710609,
+          90.55770201742216,
+          -1.631656585336191,
+          -0.4156683673530585,
+          13.914957066171617,
+          2.8152583735538763
+        ],
+        "plastic_strain_compression_positive": [
+          1.1472216881544599e-05,
+          0.00017883168707732893,
+          -0.00022785549958500976,
+          -7.401619320054414e-05,
+          0.00010012770032543897,
+          -1.2595572834296074e-05
+        ],
+        "void_ratio": 0.7008701719801234,
+        "plastic_work_kpa": 0.018887086684128977,
+        "equivalent_plastic_strain": 0.00024893230527999724,
+        "last_return": "extension_edge"
+      },
+      "total_compressive_strain": [
+        1.204243504938907e-06,
+        -1.0426988951631929e-06,
+        -2.0188651710241034e-07,
+        -1.3433204007954916e-06,
+        1.2713755609048074e-05,
+        7.5393945879017175e-06
+      ],
+      "trial_principal_kpa": [
+        92.72152419303477,
+        92.6737656518377,
+        -3.9512044185572965
+      ],
+      "trial_yield_kpa": 0.3260444972870076,
+      "native_elastic_threshold_kpa": 9.272152419303476e-09,
+      "single_face_max_mid_kpa": -0.08643564032753659,
+      "single_face_mid_min_kpa": 96.46515094032026,
+      "returned_principal_kpa": [
+        92.64622940644797,
+        92.64622939567863,
+        -3.7589396825616035
+      ],
+      "returned_max_mid_kpa": 1.0769340974547958e-08,
+      "returned_mid_min_kpa": 96.40516907824023,
+      "relative_force": 6.826588435586692e-16,
+      "tight_native_label": "extension_edge",
+      "tight_native_relative_force": 5.752072441220598e-16
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "reload",
+      "progress": 0.96875,
+      "field": "material_return",
+      "gp": 108,
+      "label": "extension_edge",
+      "count": 3,
+      "replay_stress_error_kpa": 0.0,
+      "previous_state": {
+        "effective_stress_compression_positive_kpa": [
+          79.48049058069365,
+          82.42083270754291,
+          -1.776840627035745,
+          -1.4192059113991418,
+          -11.337190274437127,
+          -16.713033597339894
+        ],
+        "plastic_strain_compression_positive": [
+          -7.161230191360839e-05,
+          -9.269802238213513e-06,
+          4.2759247191772126e-05,
+          -8.05817329242694e-05,
+          8.684432349708193e-05,
+          0.00016325633128325953
+        ],
+        "void_ratio": 0.7010162660174446,
+        "plastic_work_kpa": 0.04782685556258969,
+        "equivalent_plastic_strain": 0.0002528587197543393,
+        "last_return": "shear_face"
+      },
+      "total_compressive_strain": [
+        9.289769598062065e-06,
+        8.626105186165537e-06,
+        -3.786979056549795e-05,
+        -5.980637826067143e-06,
+        1.2168569419563916e-05,
+        3.077271664927895e-05
+      ],
+      "trial_principal_kpa": [
+        82.32671844646921,
+        81.83502538343609,
+        -8.25812343850658
+      ],
+      "trial_yield_kpa": 1.5890201539281605,
+      "native_elastic_threshold_kpa": 8.232671844646923e-09,
+      "single_face_max_mid_kpa": -0.16231968908141425,
+      "single_face_mid_min_kpa": 89.31424955885076,
+      "returned_principal_kpa": [
+        81.8408879345017,
+        81.84088793322803,
+        -7.360720173210325
+      ],
+      "returned_max_mid_kpa": 1.2736620647046948e-09,
+      "returned_mid_min_kpa": 89.20160810643836,
+      "relative_force": 7.22690868965369e-16,
+      "tight_native_label": "shear_face",
+      "tight_native_relative_force": 8.671621163229836e-11
+    },
+    {
+      "route": "m1c1-independent",
+      "stage": "return",
+      "progress": 0.21875,
+      "field": "contact_status",
+      "gp": 30,
+      "label": "slip",
+      "count": 1,
+      "gap_m": -3.405666650336296e-05,
+      "previous_jump_m": [
+        0.001331407010206449,
+        0.001110898795655144,
+        -3.113213265733896e-05
+      ],
+      "previous_traction_kpa": [
+        -6.302288972006214,
+        -5.219318474071462,
+        -31.132132657338957
+      ],
+      "target_jump_m": [
+        0.0013232274980383564,
+        0.0011048108622591628,
+        -3.405666650336296e-05
+      ],
+      "trial_shear_kpa": 10.220011288863535,
+      "coulomb_limit_kpa": 10.216999951008887,
+      "trial_minus_cap_kpa": 0.003011337854648133,
+      "relative_force": 6.576135522073238e-16,
+      "tight_native_label": "stick",
+      "tight_native_relative_force": 2.6622578082047417e-14
+    }
+  ]
+}

@@ -44,7 +44,8 @@ def verify_initial(mesh,ground,run,q,offset):
             assert np.allclose(p['position_m'],qinfo['position_m'],atol=1e-8,rtol=0);expected.append(p['state'])
     else:raise ValueError('unsupported geostatic seed definition')
     if expected is not None:assert expected==seed['material_states']
-    force,_=internal(mesh,ground,seed['material_states'],all_active,q,offset)
+    from hydrostatic_volume_audit import enabled
+    force,_=internal(mesh,ground,seed['material_states'],all_active,q,offset,hydrostatic_cut=enabled(run))
     joint_system=None
     if case.get('joint_system'):
         from joint_reference import System as JointSystem,coupled_forces as joint_forces
@@ -69,7 +70,7 @@ def verify_initial(mesh,ground,run,q,offset):
     assert last['boundary_factor']==cfg['initial_boundary_factor']
     physical_load=base
     if case.get('boundary') is not None:physical_load=base+cfg['initial_boundary_factor']*ref.conditions_load(mesh,case['boundary'],all_active)
-    actual,_=internal(mesh,ground,last['material_states'],all_active,q,offset)
+    actual,_=internal(mesh,ground,last['material_states'],all_active,q,offset,hydrostatic_cut=enabled(run))
     if beam_system is not None:actual,physical_load,_=coupled_forces(beam_system,last,actual,physical_load)
     if anchor_system is not None:actual,physical_load=anchor_forces(anchor_system,last,actual,physical_load)
     if joint_system is not None:actual,physical_load=joint_forces(joint_system,last,actual,physical_load)

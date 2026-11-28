@@ -1,0 +1,8 @@
+{
+  "stage": "triage-specific lightweight source inventory construction",
+  "first_attempt_error": "FileNotFoundError: interim/2026-11-10-nc-mean-stress-release/source-fingerprints.json",
+  "cause": "The triage helper initially assumed a separate fingerprint file for both archives. Mean stores its 783 source fingerprints directly in archive-sha256.json; spatial has a separate 623-entry source-fingerprints.json.",
+  "resolution": "Read the immutable mean source-entry hashes as its fingerprints, retain the spatial original fingerprint file, and compare every source entry. No existing replay code, archive, hash, tolerance, or test was changed for this correction.",
+  "original_python_replay_or_solver_failure": false,
+  "counted_as_successful_test": false
+}

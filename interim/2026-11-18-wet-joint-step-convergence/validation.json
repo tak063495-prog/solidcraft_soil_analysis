@@ -1,0 +1,174 @@
+{
+  "software_checks_passed": true,
+  "numerical_acceptance": false,
+  "c01_decision": "未達",
+  "p6_complete": false,
+  "starting_commit": "b069ec84da432f677c33fab5c984b6e680835bc4",
+  "linux": {
+    "rust": {
+      "exit_code": 0,
+      "passed": 451,
+      "failed": 0,
+      "ignored": 0,
+      "filtered_out": 0,
+      "aggregate_groups": 69,
+      "rust_sources_before_and_after_exact": 145
+    },
+    "python": {
+      "discovered_total": 532,
+      "executed_total": 532,
+      "unique_executed_total": 532,
+      "missing": [],
+      "duplicates": [],
+      "all_discovered_ids_executed_exactly_once": true,
+      "groups": {
+        "python-core-0": {
+          "tests_run": 265,
+          "elapsed_seconds": 216.31912414999988,
+          "exit_code": 0
+        },
+        "python-core-1": {
+          "tests_run": 259,
+          "elapsed_seconds": 396.83481649199985,
+          "exit_code": 0
+        },
+        "python-mean-evidence": {
+          "tests_run": 4,
+          "elapsed_seconds": 827.0832610319999,
+          "exit_code": 0
+        },
+        "python-spatial-evidence": {
+          "tests_run": 4,
+          "elapsed_seconds": 138.59943539200003,
+          "exit_code": 0
+        }
+      }
+    },
+    "checks": {
+      "fmt": {
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.8112418780001462
+      },
+      "clippy": {
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.27743077999980414
+      },
+      "build": {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 0.11728306700001667
+      }
+    },
+    "validation_sources_before_and_after_exact": 1261,
+    "source_freeze_scope": "Rust subset frozen before cargo test; combined sources frozen before formal Python groups. Combined freeze occurred after Rust tests began. Both subsets checked unchanged."
+  },
+  "new_tests": {
+    "rust": 0,
+    "python": 6,
+    "included_in_full_discovery": true
+  },
+  "archive_replay": {
+    "all_entries_sha256_verified": 1140,
+    "all_four_measurement_objects_exact": true,
+    "numerical_acceptance": false,
+    "solver_rerun": false,
+    "software_replay_passed": true
+  },
+  "sealed_source_replay": {
+    "all_four_objects_exact": true,
+    "isolated_process": true,
+    "isolated_python_flags": [
+      "-I",
+      "-X",
+      "utf8"
+    ],
+    "source": "SHA-verified archived sources",
+    "solver_rerun": false,
+    "numerical_acceptance": false
+  },
+  "separate_process_restart": {
+    "steps": 256,
+    "checks": [
+      {
+        "checkpoint": "checkpoint-0128.json",
+        "checkpoint_sha256": "88d58d2168ed62728cb03265f76a5c297b9578cf22676b5b33325647e80a04eb",
+        "process_id": 166025,
+        "suffix_states_exact": 1664,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 120.02869521399998
+      },
+      {
+        "checkpoint": "checkpoint-0384.json",
+        "checkpoint_sha256": "36a04fb00a62f9e88aeb1c36efcca768e8be30646f8f4319d388dccea14412d8",
+        "process_id": 245758,
+        "suffix_states_exact": 1408,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 97.12914589100001
+      },
+      {
+        "checkpoint": "checkpoint-0640.json",
+        "checkpoint_sha256": "88e1717cea287e4eb58b507656dc3966a531f4d8063e6fc22abd1277c66cce3b",
+        "process_id": 317913,
+        "suffix_states_exact": 1152,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 82.00358505700001
+      },
+      {
+        "checkpoint": "checkpoint-0896.json",
+        "checkpoint_sha256": "3bc0c8f21fa1e3cc06cb268a27f13174cb4e6bae802935d6e7396a71910718f6",
+        "process_id": 377120,
+        "suffix_states_exact": 896,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 65.78046465500006
+      },
+      {
+        "checkpoint": "checkpoint-1152.json",
+        "checkpoint_sha256": "50877ff37fb8213b2e3b56e9400e5b154a4b46b086bd044c61dab81be5e5da28",
+        "process_id": 425152,
+        "suffix_states_exact": 640,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 45.17069394600003
+      },
+      {
+        "checkpoint": "checkpoint-1408.json",
+        "checkpoint_sha256": "669ea102e6be0282e216b3b9446c1d36acabb160f795711245c69ae98e412dce",
+        "process_id": 458937,
+        "suffix_states_exact": 384,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 28.25990306099993
+      },
+      {
+        "checkpoint": "checkpoint-1664.json",
+        "checkpoint_sha256": "a301bbb1528001b298b7f91adcfbd78586787b4451f7aa64c94fbc020f32ccfb",
+        "process_id": 480294,
+        "suffix_states_exact": 128,
+        "entire_run_exact_except_elapsed": true,
+        "elapsed_seconds": 10.128782270000102
+      }
+    ],
+    "uninterrupted_exact_except_elapsed": true,
+    "uninterrupted_elapsed_seconds": 40.98448123899993,
+    "all_seven_phases": true
+  },
+  "windows_ci": "unconfirmed for pushed commit; no old, cancelled or timed-out run used as success"
+}

@@ -1,0 +1,236 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "b02_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "23c7b0ea48906723620b47eefb50e7481074d875",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 920,
+    "executed": 920,
+    "passed": 920,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 24259,
+      "exit_code": 0,
+      "elapsed_seconds": 1.323183821999919
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 24446,
+      "exit_code": 0,
+      "elapsed_seconds": 40.86458832899996
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 41075,
+      "exit_code": 0,
+      "elapsed_seconds": 1271.2631763609998
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 121820,
+      "exit_code": 0,
+      "elapsed_seconds": 2.7606880739999724
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 122285,
+      "exit_code": 0,
+      "elapsed_seconds": 1316.252995492
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 979410,
+      "exit_code": 0,
+      "elapsed_seconds": 2.988881036999828
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-rerun-core-0/python-core-0"
+      ],
+      "pid": 805802,
+      "exit_code": 0,
+      "elapsed_seconds": 408.84621044200003
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-full/python/python-core-1"
+      ],
+      "pid": 330401,
+      "exit_code": 0,
+      "elapsed_seconds": 469.98100107100026
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-full/python/python-mean-evidence"
+      ],
+      "pid": 753005,
+      "exit_code": 0,
+      "elapsed_seconds": 937.7989974809998
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-full/python/python-spatial-evidence"
+      ],
+      "pid": 793641,
+      "exit_code": 0,
+      "elapsed_seconds": 143.7836916440001
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-full/python/python-c01-switch"
+      ],
+      "pid": 804614,
+      "exit_code": 0,
+      "elapsed_seconds": 65.96926960600013
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-full/python/python-c01-path"
+      ],
+      "pid": 806645,
+      "exit_code": 0,
+      "elapsed_seconds": 93.27241756499961
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/b02follow-full/python/python-c01-cause"
+      ],
+      "pid": 834020,
+      "exit_code": 0,
+      "elapsed_seconds": 91.6665530360001
+    }
+  ],
+  "source_count": 1584,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true,
+  "initial_python_full_attempt": {
+    "executed": 920,
+    "passed": 919,
+    "failures": 0,
+    "errors": 1,
+    "skipped": 0,
+    "unexecuted": 0,
+    "retained_at": "validation/retained-first-python"
+  },
+  "python_full_partition_execution_attempts": 1338,
+  "python_full_partition_attempt_outcomes": {
+    "passed": 1337,
+    "errors": 1,
+    "failures": 0
+  },
+  "selected_results": "One successful result for each of all 920 discovered IDs. The retained initial failed core-0 is replaced only in the selection by the full unchanged-source core-0 rerun; no duplicate counting.",
+  "recovery": "P6-03 fixed BASE commit/tree absent under depth=1; explicit fixed filtered retrieval, 30 paths/29 unique frozen blobs verified; no code/reference/tolerance change.",
+  "standalone_recovery_checks_not_added_to_full_counts": {
+    "p603_restored": 19,
+    "new_contracts_before_full": 7,
+    "isolated_rule": 1,
+    "isolated_input_contract": 1,
+    "isolated_crlf": 1
+  },
+  "archive_reproduction": "26 parts / 4067 entries verified; measurements and 127 derived files byte/SHA identical; no extra equilibrium solve",
+  "source_commit_at_full_python": "84e87e03cf094e0e48468dad8271bdd84e4b7bec",
+  "scientific_commit": "c4d63c56cd9caa0a0b78b20689c522afaa6041e8",
+  "late_saved_orchestration_separate_from_tested_sources": true,
+  "diagnostic_reassembly_failure_is_separate_from_software_tests": true
+}

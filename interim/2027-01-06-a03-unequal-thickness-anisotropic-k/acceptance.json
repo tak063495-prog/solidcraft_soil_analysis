@@ -1,0 +1,53 @@
+{
+  "passed": false,
+  "a03_complete": false,
+  "diagnostic_only": true,
+  "new_limited_acceptance": false,
+  "unequal_thickness_directional_k_matrix_completed": true,
+  "formal_paths": 63,
+  "formal_states": 2304,
+  "endpoint_work_observed_first_order_supported_in_this_matrix": true,
+  "gl_sensitivity_small_in_this_matrix": true,
+  "x_y_stress_and_support_reaction_asymmetry_observed": true,
+  "x_y_displacement_and_traction_changes_above_roundoff_observed": false,
+  "general_plastic_or_free_surface_or_spatial_convergence_proved": false,
+  "physical_instability_proved": false,
+  "production_rust_changed": false,
+  "nc_code_or_configuration_changed": false,
+  "acceptance_tolerance_changed": false,
+  "old_values_rewritten": false,
+  "other_items_complete": false,
+  "refusals_retained": true,
+  "cloud_diagnostics_remaining": true,
+  "cloud_remaining_tasks": [
+    "同じ12 Tet10・側面ローラー・完全水没・fresh MC・単一CONTINUOUS/Bで、ボディ別定数の明示初期応力に小さいτxzまたはτyzを個別に与える入力対照はクラウド可能。本件のせん断0/対角応力という残る制約を外し、弾性・閉鎖固着内なら既存独立参照で新規全体平衡と方向別仕事/反力を比較できる。今回は対象外・未実施であり、受理/弾性域は事前に確認する。"
+  ],
+  "named_20261230_cloud_remainder_completed": true,
+  "all_possible_cloud_diagnostics_exhausted": false,
+  "mandatory_pc_transfer_due_to_resource_limits": false,
+  "pc_optional_task": "同じ12 Tet10・固定入力のWindows再実行とOS間再現。未定義仕様の解決や巨大メッシュ検証をPCへ回さない。",
+  "specification_decisions_required": [
+    "S1 Darcy後BIRTH: 新領域σ'/p、所有/活動面、Darcy→活性化→平衡、誕生移送水量。",
+    "S2 部分水没/未定義水圧: 自由水面と水圧/面積分の割当て契約。",
+    "S3 新設MCC: σ'/pc/e/OCR、形成史・配置・保持力。",
+    "S4 旧履歴: 履歴/参照配置・保持力/再平衡の契約。",
+    "S5 水量null: 流量/貯留/誕生水量と水収支合否の契約。"
+  ],
+  "unfinished_items": [
+    "A-01",
+    "A-02",
+    "A-03",
+    "A-04",
+    "B-01",
+    "B-02",
+    "B-03",
+    "C-01",
+    "C-02",
+    "C-03",
+    "C-04",
+    "NC-01",
+    "P6"
+  ],
+  "source_commit_base": "484f007490d4a042c7ad330de75881025c76a8df",
+  "windows_ci_after_push": "未確定"
+}

@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14",
+    "title": "[P2] SOIL源項の独立照査がGPのNaNを誤差0として受理する",
+    "issue_number": 14,
+    "body": "## 対象\nPR #13 の head `90d24e4181016a1ba8211719ee16b284d82b5eef`（main ではなくPR差分）。`tools/verify_soil_source_column.py`、Git blob `fa9774de0b05b237224b61cb7e5e30ce5f217c37`。\n\n**P2 / 独立照査の偽合格**。通常のPython実行で再現し、`-O` や `PYTHONOPTIMIZE` は不要です。既存 #2 の最適化によるassert無効化とは原因が異なります。\n\n## 発生条件と原因\n`flow_audits[0].solution.points` のGP水頭・圧力水頭・Darcy流速のいずれかにNaNが入り、他の入力・節点水頭・水圧・収支が照査条件を満たす場合です。\n\n[誤差集計 L53–62](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L53-L62) は最大誤差を0で初期化し、各点で `max(現在値, abs(誤差))` を呼びます。Pythonでは `max(0.0, float('nan')) == 0.0` なのでNaNが比較から脱落し、全GPがNaNでも最大誤差0が残ります。\n\nそのまま[返却 L77–85](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L77-L85) は `passed: true` を返します。[単独CLI L88–95](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tools/verify_soil_source_column.py#L88-L95) でも終了コード0で合格JSONを書き出します。\n\n## 独立実行した再現\n固定headの実ファイルをGit blob照合して使用。既存12 Tet10柱の入力から、解析式 `H(z)=2+z-z²`、`pressure_head=2-z²`、`qz=2e-4*(z-0.5)` と一致する合成fixtureを作りました。土領域162 GP、土体積0.5 m³、源項・底面流出1e-4 m³/sです。これはRustの出力ではありません。\n\n正常fixtureの照査後、次の3項目をそれぞれ独立に置換しました。\n- `head_m = NaN`\n- `pressure_head_m = NaN`\n- `darcy_flux_m_s = [NaN, NaN, NaN]`\n\n各項目について「先頭1 GPのみ」「全162 GP」の計6条件を、保存したJSONに対して実CLIで実行しました。\n\n```text\npython tools/verify_soil_source_column.py --evidence <fixture-directory> --output <new-report.json>\n```\n\n結果は**6条件すべて終了0・passed=true**。全GP置換時は対応する `maximum_gp_head_error_m` / `maximum_pressure_head_error_m` / `maximum_flux_error_m_s` が **0.0** でした。通常のPython JSON読み込みが受け付ける `NaN` トークンを使用しています。\n\n同じfixtureで水頭/圧力水頭を100、流速を[1,1,1]、各項目をInfinityにする計6対照はAPI照査で拒否されました。NaNだけが最大値集計で消えることを切り分けています。置換処理の要点は次のとおりです。\n\n```python\nbad = copy.deepcopy(native)\nfor point in bad[\"flow_audits\"][0][\"solution\"][\"points\"]:\n    point[\"head_m\"] = float(\"nan\")\nreport = audit(mesh, ground, case, bad)\n# 現状: report[\"passed\"] is True\n# 現状: report[\"frames\"][0][\"maximum_gp_head_error_m\"] == 0.0\n```\n\n## 影響・限定\n非有限なGP場を、独立解析解との一致が確認できた結果として報告してしまいます。保存証拠が破損・外部編集された場合の再照査や、API呼び出し元から渡された非有限場を拒否できません。\n\n**本体RustソルバーがNaNを実際に出したとの指摘ではありません。** 単独照査API/CLIの誤受理を実証したもので、統合 `verify_wet_structures.run` 全体、VTU出力、実解析の偽合格は実証していません。Windows/native求解・再開も未実行です。Python照査は通常モードで独立実行し、CLIには実meshio依存を用い、meshio APIを置き換えていません。作者の保存結果やCIを独立実行結果へ読み替えていません。\n\n## 修正案・回帰試験\n- 誤差集計前にGP座標・水頭・圧力水頭・流速の形状と有限性を `np.isfinite(...).all()` で明示検査し、非有限値は例外で拒否してください。受理条件に必要な検査はassertだけに依存させないでください。\n- 有限性を確認してから最大誤差を計算し、出力する最大誤差自体も有限であることを確認してください。\n- 3項目それぞれについて、1 GPだけ/全GPのNaN、±Infinity、有限の不一致、正常対照をAPIとCLIで試験してください。拒否時は非ゼロ終了・合格JSON未生成を確認してください。\n- [既存の破損拒否試験 L85–95](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/90d24e4181016a1ba8211719ee16b284d82b5eef/tests/test_soil_source_wet_structures.py#L85-L95) は有限の改変を扱っていますが、このGPのNaN集計を検査していません。",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 2,
+    "created_at": "2026-11-08T23:14:52Z",
+    "updated_at": "2026-11-09T23:21:44Z",
+    "closed_at": "2026-11-09T22:47:34Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14",
+    "display_title": "[P2] SOIL源項の独立照査がGPのNaNを誤差0として受理する"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14",
+  "title": "[P2] SOIL源項の独立照査がGPのNaNを誤差0として受理する",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/14",
+  "display_title": "[P2] SOIL源項の独立照査がGPのNaNを誤差0として受理する"
+}

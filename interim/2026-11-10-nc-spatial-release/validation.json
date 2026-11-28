@@ -1,0 +1,100 @@
+{
+  "record_date_JST": "2026-11-10",
+  "start_commit": "fdd3018e59bfa04a7808f59ce0d19db3ca5d72aa",
+  "production_numeric_sources_changed": false,
+  "checks": {
+    "fmt": {
+      "exit_code": 0
+    },
+    "clippy_locked_all_targets_D_warnings": {
+      "exit_code": 0
+    },
+    "build_locked_release": {
+      "exit_code": 0
+    },
+    "rust_locked_release": {
+      "exit_code": 0
+    },
+    "python_standard_batch1": {
+      "exit_code": 0
+    },
+    "python_evidence_batch2": {
+      "exit_code": 0
+    },
+    "python_tools": {
+      "exit_code": 0
+    }
+  },
+  "rust": {
+    "passed": 412,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "new_tests": 2,
+    "windows_only_tests_not_defined_on_linux": 2
+  },
+  "python": {
+    "standard_discovered": 375,
+    "batch1": 371,
+    "batch2": 4,
+    "tools": 2,
+    "passed_total": 377,
+    "failed": 0,
+    "skipped": 0,
+    "new_tests": 14,
+    "disjoint_batches": true,
+    "all_discovered_test_ids": "validation-logs/python-batches.json"
+  },
+  "repeated_selected_checks_not_added_to_totals": true,
+  "source_fingerprints": {
+    "files": 623,
+    "final_snapshot_verified": true,
+    "pre_suite_freeze_claimed": false,
+    "archive_replay_code_tested_in_batch2": true,
+    "unchanged": true
+  },
+  "evidence": {
+    "parts": 55,
+    "entries": 411,
+    "archive_bytes": 920331265,
+    "linux_replay_all_SHA_verified": true,
+    "linux_measurements_byte_identical": true,
+    "derived_float_differences": [],
+    "numerical_acceptance": false
+  },
+  "numerical": {
+    "driver_invocations": 14,
+    "all_driver_exit_codes": 0,
+    "passed": false,
+    "full_release": false,
+    "static_limit_confirmed": false,
+    "accepted_saved_fields_including_duplicates": 3681,
+    "actual_linear_systems": 39759
+  },
+  "partial_restarts": {
+    "diagnostic_maps": 2,
+    "corresponding_fields_each": 13,
+    "exact_full_rows_attempts_and_linear_systems": true,
+    "production_phases": 4,
+    "production_complete_restart_verified": false
+  },
+  "solver_sha256": "e743012ee06e62f8a0ff69a1bb0c6a4cb288283234fca7c9533b65360f08fddc",
+  "windows_CI": {
+    "groups": [
+      "rust-core",
+      "rust-integration-0",
+      "rust-integration-1",
+      "python",
+      "verification"
+    ],
+    "aggregate": "Rust and Python on Windows",
+    "new_head_status": "not_observed_at_document_freeze; verify actual pushed head in final report",
+    "windows_spatial_numerical_paths_recomputed": false
+  },
+  "development_notes": [
+    "最初の後処理は独立接触をRustのpoints形式と誤認してKeyError。実際の独立4場形式へ修正し、数値データを変えず全再監査した。初回ログを保存。",
+    "改行差の記録と圧縮ストリーム再監査の実装後にソースを固定して再梱包。初期梱包の中断・再梱包を数値未収束や試験件数に加えない。",
+    "生成diff文書の空白指摘はゼロ文脈diffへ修正。ソース・文書の最終git diff --check成功。生ログの末尾空行は元バイトを保持し、ログをこの体裁検査から除外した。"
+  ]
+}

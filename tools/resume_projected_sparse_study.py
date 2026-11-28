@@ -11,6 +11,9 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import signal
+import threading
+from contextlib import contextmanager
 
 INPUTS=('mesh.json','ground.json','case.json','mesh-identity.json')
 BACKENDS={
@@ -121,13 +124,53 @@ def preflight(folder):
         fingerprints[str(path)]=sha(path)
     return dict(folder=folder,steps=steps,backend=backend,saved=saved,fingerprints=fingerprints)
 
+@contextmanager
+def retain_launch_handle():
+    """Defer cooperative interrupts until Popen's handle has been assigned."""
+    if threading.current_thread() is not threading.main_thread():
+        yield
+        return
+    previous={};pending=[]
+    def defer(signum, frame):
+        pending.append(signum)
+    try:
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            previous[signum]=signal.signal(signum,defer)
+        yield
+    finally:
+        for signum,handler in previous.items():signal.signal(signum,handler)
+        if pending:raise KeyboardInterrupt('interrupted while launching owned reference child')
+
+
+def stop_owned(process):
+    """Use only our retained Popen handle; unlock requires a successful wait."""
+    try:
+        if process.poll() is not None:
+            process.wait(timeout=5)
+            return True
+    except BaseException:
+        pass
+    for action in (process.terminate, process.kill):
+        try:
+            action()
+        except BaseException:
+            pass
+        try:
+            process.wait(timeout=5)
+            return True
+        except BaseException:
+            pass
+    return False
+
+
 def run(folder):
     folder=folder.resolve();lock=folder/'.reference-resume.lock'
     # A live or stale lock is never silently discarded. Check its owner before
     # removing a stale lock after a hard interruption.
     try:handle=lock.open('x',encoding='utf-8')
     except FileExistsError:raise ValueError('reference resume lock exists; verify its owner before retrying')
-    with handle:json.dump(dict(pid=os.getpid()),handle)
+    with handle:json.dump(dict(pid=os.getpid(),parent_pid=os.getpid(),child_pid=None,interrupted=False),handle)
+    process=None;progress=None;attempt=None;interrupted=False
     try:
         cfg=preflight(folder)
         attempt=folder/'resume-attempts'/datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
@@ -151,9 +194,11 @@ def run(folder):
               *BACKENDS[cfg['backend']]]
             if phase=='cycle':command.extend(['--initial',str(folder/'initial.json')])
             progress.update(status=phase+'_running',command=command);save()
-            process=subprocess.Popen(command)
+            with retain_launch_handle():
+                process=subprocess.Popen(command)
             progress.update(child_pid=process.pid,parent_pid=os.getpid());save()
             code=process.wait()
+            process=None  # wait confirmed the owned child's termination
             progress['phases'].append(dict(phase=phase,exit_code=code))
             progress.pop('child_pid',None)
             if code:
@@ -163,9 +208,33 @@ def run(folder):
             progress['status']=phase+'_saved';save()
         progress['status']='completed';save()
         return 0
-    finally:lock.unlink()
+    except BaseException:
+        interrupted=True
+        raise
+    finally:
+        child_pid=None if process is None else process.pid
+        confirmed=process is None or stop_owned(process)
+        record=dict(pid=os.getpid(),parent_pid=os.getpid(),child_pid=child_pid,
+            interrupted=interrupted,child_exit_confirmed=confirmed,
+            status='interrupted' if interrupted else 'finished',
+            manual_check='Verify both recorded PIDs and child termination before removing this lock.' if not confirmed else None)
+        # Write the ownership fallback independently of progress/status writes.
+        # If any record write fails, the existing exclusive lock stays in place.
+        if not confirmed:
+            with lock.open('w',encoding='utf-8') as stream:
+                json.dump(record,stream,indent=2);stream.flush();os.fsync(stream.fileno())
+        if progress is not None and interrupted:
+            progress.update(record)
+            try:atomic(attempt/'progress.json',progress)
+            except BaseException:
+                if not confirmed:
+                    pass  # the lock itself carries the recovery instructions
+        if confirmed:lock.unlink()
 
 if __name__=='__main__':
+    def terminate_parent(signum, frame):
+        raise KeyboardInterrupt('reference resume termination requested')
+    signal.signal(signal.SIGTERM,terminate_parent)
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('study',type=Path)
     args=parser.parse_args()

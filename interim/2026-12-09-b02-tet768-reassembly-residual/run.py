@@ -1,0 +1,41 @@
+"""Fresh 3x3 native/input-only solve matrix. No existing evidence overwritten."""
+import argparse
+import json
+import shutil
+import sys
+from pathlib import Path
+from common import ROOT, HERE, inputs, write, read, command, sha
+from compare import compare
+from study import exact
+
+def run(out,binary,levels,steps_list):
+    out.mkdir(parents=True,exist_ok=False)
+    solver=out/'solver'/binary.name;solver.parent.mkdir();shutil.copy2(binary,solver)
+    source_files=[p for tree in ('src','tools','tests','examples') for p in (ROOT/tree).rglob('*') if p.suffix in ('.rs','.py','.toml','.json')]
+    source_files += [p for folder in (HERE,ROOT/'interim/2026-12-01-tri6-offset-composite-b02') for p in folder.iterdir() if p.suffix in ('.rs','.py')]
+    source_files += [ROOT/p for p in ('Cargo.toml','Cargo.lock','rust-toolchain.toml','requirements.lock.txt','requirements-reference.lock.txt','.github/workflows/fem-ci.yml')]
+    binding={str(p.relative_to(ROOT)):sha(p) for p in source_files}
+    write(out/'source-binding-before.json',binding)
+    records=[]
+    for level in levels:
+        for steps in steps_list:
+            name=('beam-positive' if level==0 else 'mesh-'+str(level)) if steps==4 else f'mesh{level}-load{steps}'
+            folder=out/name;folder.mkdir()
+            m,g,c,refinements=inputs(level,steps,.05,True)
+            for k,v in [('mesh',m),('ground',g),('stages',c),('refinement',refinements)]:write(folder/(k+'.json'),v)
+            paths=[folder/(s+'.json') for s in ('mesh','ground','stages')]
+            native=command([solver,'solve',*paths,folder/'native'],folder/'native.log')
+            independent=command([sys.executable,HERE/'reference_probe.py',folder,folder/'independent.jsonl'],folder/'independent.log')
+            result=compare(folder)
+            plain=command([solver,'plain',*paths,folder/'plain'],folder/'plain.log')
+            assert exact(read(folder/'native/run.json'),read(folder/'plain/run.json'))
+            records.append(dict(name=name,level=level,steps=steps,tet10=len(m['tetrahedra']),native=native,independent=independent,plain=plain,
+                                solver_sha256=sha(solver),input_sha256={p.name:sha(p) for p in paths},unobserved_run_equal=True,comparison=result))
+            write(out/'fresh-solves.json',dict(passed=False,b02_complete=False,cases=records))
+            print(name,'accepted',result['accepted_points'],'native',result['maximum_native_reassembled_residual'],'independent',result['maximum_independent_reassembled_residual'],flush=True)
+    after={str(p.relative_to(ROOT)):sha(p) for p in source_files};write(out/'source-binding-after.json',after)
+    assert binding==after
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('output',type=Path);p.add_argument('--binary',type=Path,required=True);p.add_argument('--levels',nargs='+',type=int,default=[0,1,2]);p.add_argument('--steps',nargs='+',type=int,default=[4,8,16]);a=p.parse_args()
+    run(a.output.resolve(),a.binary.resolve(),a.levels,a.steps)

@@ -86,6 +86,7 @@ pub struct Transform {
     pub count: usize,
     pub active_nodes: Vec<bool>,
     equations: Vec<(usize, Vector3<f64>, f64)>,
+    pairs: Vec<[usize; 2]>,
 }
 impl Transform {
     pub fn new(
@@ -101,7 +102,7 @@ impl Transform {
         active_elements: Vec<bool>,
         extra: Vec<(usize, Vector3<f64>, f64)>,
     ) -> Result<Self> {
-        Self::build(mesh, constraints, active_elements, extra, false)
+        Self::build(mesh, constraints, active_elements, extra, false, &[])
     }
     /// Interface-supported components are checked from their current contact
     /// state after equilibrium, rather than treating every component as free.
@@ -111,7 +112,18 @@ impl Transform {
         active_elements: Vec<bool>,
         extra: Vec<(usize, Vector3<f64>, f64)>,
     ) -> Result<Self> {
-        Self::build(mesh, constraints, active_elements, extra, true)
+        Self::build(mesh, constraints, active_elements, extra, true, &[])
+    }
+    /// Exact equal-displacement classes, with an orthonormal, work-conjugate
+    /// nullspace. No penalty stiffness enters the mechanics matrix.
+    pub fn with_node_pairs(
+        mesh: &Mesh,
+        constraints: &[Constraint],
+        active_elements: Vec<bool>,
+        extra: Vec<(usize, Vector3<f64>, f64)>,
+        pairs: &[[usize; 2]],
+    ) -> Result<Self> {
+        Self::build(mesh, constraints, active_elements, extra, true, pairs)
     }
     fn build(
         mesh: &Mesh,
@@ -119,6 +131,7 @@ impl Transform {
         active_elements: Vec<bool>,
         extra: Vec<(usize, Vector3<f64>, f64)>,
         interfaces: bool,
+        pairs: &[[usize; 2]],
     ) -> Result<Self> {
         if active_elements.len() != mesh.tetrahedra.len() {
             return Err(Error::Input(
@@ -131,6 +144,31 @@ impl Transform {
                 for n in mesh.cell_nodes(ei) {
                     active[n] = true;
                 }
+            }
+        }
+        let mut parents: Vec<_> = (0..mesh.nodes.len()).collect();
+        fn root(parents: &[usize], mut n: usize) -> usize {
+            while parents[n] != n {
+                n = parents[n];
+            }
+            n
+        }
+        let mut enabled_pairs = Vec::new();
+        for &[a, b] in pairs {
+            if a >= active.len() || b >= active.len() || a == b {
+                return Err(Error::Input("invalid equal-displacement node pair".into()));
+            }
+            if active[a] && active[b] {
+                let ra = root(&parents, a);
+                let rb = root(&parents, b);
+                parents[rb] = ra;
+                enabled_pairs.push([a, b]);
+            }
+        }
+        let mut groups = BTreeMap::<usize, Vec<usize>>::new();
+        for (n, &enabled) in active.iter().enumerate() {
+            if enabled {
+                groups.entry(root(&parents, n)).or_default().push(n);
             }
         }
         let mut by_node = vec![Vec::new(); mesh.nodes.len()];
@@ -182,16 +220,14 @@ impl Transform {
                 ));
             }
             if active[node] {
-                by_node[node].push((direction, value));
+                by_node[root(&parents, node)].push((direction, value));
             }
         }
         let mut rows = vec![vec![]; 3 * mesh.nodes.len()];
         let mut offset = vec![0.; rows.len()];
         let mut count = 0;
-        for (node, eqs) in by_node.iter().enumerate() {
-            if !active[node] {
-                continue;
-            }
+        for (&node, members) in &groups {
+            let eqs = &by_node[node];
             let mut normals = Vec::<Vector3<f64>>::new();
             let mut u0 = Vector3::zeros();
             for (a, value) in eqs {
@@ -211,8 +247,10 @@ impl Transform {
                     normals.push(q);
                 }
             }
-            for a in 0..3 {
-                offset[3 * node + a] = u0[a];
+            for &member in members {
+                for a in 0..3 {
+                    offset[3 * member + a] = u0[a];
+                }
             }
             let mut basis = Vec::<Vector3<f64>>::new();
             for a in 0..3 {
@@ -233,9 +271,12 @@ impl Transform {
                 ));
             }
             for v in basis {
-                for a in 0..3 {
-                    if v[a].abs() > 1e-15 {
-                        rows[3 * node + a].push((count, v[a]));
+                for &member in members {
+                    for a in 0..3 {
+                        if v[a].abs() > 1e-15 {
+                            rows[3 * member + a]
+                                .push((count, v[a] / (members.len() as f64).sqrt()));
+                        }
                     }
                 }
                 count += 1;
@@ -247,6 +288,7 @@ impl Transform {
             count,
             active_nodes: active,
             equations,
+            pairs: enabled_pairs,
         };
         if !interfaces {
             result.check_rigid_modes(mesh, &active_elements)?;
@@ -341,6 +383,11 @@ impl Transform {
             .map(|(node, d, value)| {
                 (d.dot(&Vector3::from_row_slice(&u[3 * node..3 * node + 3])) - value).abs()
             })
+            .chain(
+                self.pairs
+                    .iter()
+                    .flat_map(|&[a, b]| (0..3).map(move |d| (u[3 * a + d] - u[3 * b + d]).abs())),
+            )
             .fold(0., f64::max)
     }
     pub fn reactions(&self, internal_minus_external: &[f64]) -> Vec<f64> {

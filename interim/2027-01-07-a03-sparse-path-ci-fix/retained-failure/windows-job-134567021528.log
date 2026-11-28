@@ -1,0 +1,1641 @@
+﻿2026-11-18T04:01:38.3175321Z Current runner version: '2.338.2'
+2026-11-18T04:01:38.3211419Z ##[group]Runner Image Provisioner
+2026-11-18T04:01:38.3212702Z Hosted Compute Agent
+2026-11-18T04:01:38.3213742Z Version: 20261103.629
+2026-11-18T04:01:38.3214780Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-18T04:01:38.3216066Z Build Date: 2026-11-03T17:26:59Z
+2026-11-18T04:01:38.3217238Z Worker ID: {8e739b27-7a28-4919-a036-a91fc975a18f}
+2026-11-18T04:01:38.3218411Z Region: eastus
+2026-11-18T04:01:38.3219282Z Cloud: Azure
+2026-11-18T04:01:38.3220097Z ##[endgroup]
+2026-11-18T04:01:38.3223327Z ##[group]Operating System
+2026-11-18T04:01:38.3224499Z Microsoft Windows Server 2025
+2026-11-18T04:01:38.3225556Z 10.0.26100
+2026-11-18T04:01:38.3226508Z Datacenter
+2026-11-18T04:01:38.3227345Z ##[endgroup]
+2026-11-18T04:01:38.3228221Z ##[group]Runner Image
+2026-11-18T04:01:38.3229859Z Image: windows-2025-vs2026
+2026-11-18T04:01:38.3230914Z Version: 20261103.298.1
+2026-11-18T04:01:38.3233404Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-18T04:01:38.3236290Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-18T04:01:38.3238007Z ##[endgroup]
+2026-11-18T04:01:38.3239781Z ##[group]GITHUB_TOKEN Permissions
+2026-11-18T04:01:38.3242743Z Contents: read
+2026-11-18T04:01:38.3243686Z Metadata: read
+2026-11-18T04:01:38.3244587Z ##[endgroup]
+2026-11-18T04:01:38.3247221Z Secret source: Actions
+2026-11-18T04:01:38.3248652Z Cache mode: write
+2026-11-18T04:01:38.3249705Z Prepare workflow directory
+2026-11-18T04:01:38.3767217Z Prepare all required actions
+2026-11-18T04:01:38.3817476Z Getting action download info
+2026-11-18T04:01:38.5283030Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-18T04:01:38.6823554Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-18T04:01:38.9654205Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-11-18T04:01:39.1966893Z Complete job name: python-core-1 on Windows
+2026-11-18T04:01:39.3997234Z ##[group]Run git config --global core.autocrlf false
+2026-11-18T04:01:39.3998463Z [36;1mgit config --global core.autocrlf false[0m
+2026-11-18T04:01:39.4943946Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T04:01:39.4945184Z env:
+2026-11-18T04:01:39.4945767Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:01:39.4946352Z   RUST_TEST_THREADS: 2
+2026-11-18T04:01:39.4946955Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:01:39.4947567Z   MKL_NUM_THREADS: 1
+2026-11-18T04:01:39.4948146Z   OMP_NUM_THREADS: 1
+2026-11-18T04:01:39.4949176Z   PYTHONUTF8: 1
+2026-11-18T04:01:39.4949745Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:01:39.4950395Z ##[endgroup]
+2026-11-18T04:01:40.4080662Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-18T04:01:40.4081798Z with:
+2026-11-18T04:01:40.4082332Z   persist-credentials: false
+2026-11-18T04:01:40.4082970Z   fetch-depth: 0
+2026-11-18T04:01:40.4083540Z   sparse-checkout-cone-mode: false
+2026-11-18T04:01:40.4088329Z   sparse-checkout: /*
+/*
+/*
+/*
+/*
+!/interim/2026-11-10-nc-postfold-branches/evidence.tar.gz.part*
+!/interim/2026-12-11-c01-global-step-control/evidence.zip.part*
+!/interim/2026-12-12-c01-switch-event-localization/evidence.zip.part*
+!/interim/2026-12-13-c01-cause-diagnosis/evidence.zip.part*
+!/interim/2026-12-12-c01-switch-event-localization/retained-failures/prototypes.zip
+
+2026-11-18T04:01:40.4093020Z   repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-18T04:01:40.4101580Z   token: ***
+2026-11-18T04:01:40.4102374Z   ssh-strict: true
+2026-11-18T04:01:40.4103175Z   ssh-user: git
+2026-11-18T04:01:40.4103956Z   clean: true
+2026-11-18T04:01:40.4104768Z   fetch-tags: false
+2026-11-18T04:01:40.4107818Z   show-progress: true
+2026-11-18T04:01:40.4108660Z   lfs: false
+2026-11-18T04:01:40.4109959Z   submodules: false
+2026-11-18T04:01:40.4110630Z   set-safe-directory: true
+2026-11-18T04:01:40.4111224Z   allow-unsafe-pr-checkout: false
+2026-11-18T04:01:40.4111820Z env:
+2026-11-18T04:01:40.4112268Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:01:40.4112784Z   RUST_TEST_THREADS: 2
+2026-11-18T04:01:40.4113317Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:01:40.4113853Z   MKL_NUM_THREADS: 1
+2026-11-18T04:01:40.4114350Z   OMP_NUM_THREADS: 1
+2026-11-18T04:01:40.4114845Z   PYTHONUTF8: 1
+2026-11-18T04:01:40.4115348Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:01:40.4115893Z ##[endgroup]
+2026-11-18T04:01:40.5602825Z Syncing repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-18T04:01:40.5604725Z ##[group]Getting Git version info
+2026-11-18T04:01:40.5605631Z Working directory is 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-18T04:01:40.6553255Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-18T04:01:40.6903032Z git version 2.56.0.windows.4
+2026-11-18T04:01:40.6947703Z ##[endgroup]
+2026-11-18T04:01:40.6957772Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\e9af4551-c632-4fbd-aff7-c4c606085d80\.gitconfig'
+2026-11-18T04:01:40.6977845Z Temporarily overriding HOME='D:\a\_temp\e9af4551-c632-4fbd-aff7-c4c606085d80' before making global git config changes
+2026-11-18T04:01:40.6979255Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-18T04:01:40.6987561Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-18T04:01:40.7344267Z Deleting the contents of 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-18T04:01:40.7349189Z ##[group]Determining repository object format
+2026-11-18T04:01:40.7351483Z ##[endgroup]
+2026-11-18T04:01:40.7352326Z ##[group]Initializing the repository
+2026-11-18T04:01:40.7360492Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-18T04:01:40.8241416Z Initialized empty Git repository in D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/
+2026-11-18T04:01:40.8330930Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-18T04:01:40.9080814Z ##[endgroup]
+2026-11-18T04:01:40.9081944Z ##[group]Disabling automatic garbage collection
+2026-11-18T04:01:40.9088634Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-18T04:01:40.9451766Z ##[endgroup]
+2026-11-18T04:01:40.9453068Z ##[group]Setting up auth
+2026-11-18T04:01:40.9454676Z Removing SSH command configuration
+2026-11-18T04:01:40.9463681Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T04:01:40.9848175Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-18T04:01:42.5472157Z Removing HTTP extra header
+2026-11-18T04:01:42.5481659Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T04:01:42.5848829Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-18T04:01:43.1353978Z Removing includeIf entries pointing to credentials config files
+2026-11-18T04:01:43.1364726Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T04:01:43.1730501Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-18T04:01:43.7508609Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-18T04:01:43.7919075Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D:\a\_temp\git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:01:43.8286949Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D:\a\_temp\git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:01:43.8703028Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:01:43.9079394Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:01:43.9458782Z ##[endgroup]
+2026-11-18T04:01:43.9459474Z ##[group]Fetching the repository
+2026-11-18T04:01:43.9474504Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +93a443ebfc3d9b34e73005b9c9f3e91012fb211c:refs/remotes/pull/13/merge
+2026-11-18T04:01:44.9421364Z From https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-18T04:01:44.9422897Z  * [new branch]      codex/acceptance-tests-todo              -> origin/codex/acceptance-tests-todo
+2026-11-18T04:01:44.9424119Z  * [new branch]      codex/plastic-spatial-convergence        -> origin/codex/plastic-spatial-convergence
+2026-11-18T04:01:44.9425639Z  * [new branch]      codex/py-b03-offset-kink-geometry-reference -> origin/codex/py-b03-offset-kink-geometry-reference
+2026-11-18T04:01:44.9427176Z  * [new branch]      codex/py-c03-plastic-bulk-wet-joint-reference -> origin/codex/py-c03-plastic-bulk-wet-joint-reference
+2026-11-18T04:01:44.9428547Z  * [new branch]      codex/py-curved-shell-reference          -> origin/codex/py-curved-shell-reference
+2026-11-18T04:01:44.9429922Z  * [new branch]      codex/py-griffiths-linear-solver         -> origin/codex/py-griffiths-linear-solver
+2026-11-18T04:01:44.9431254Z  * [new branch]      codex/py-griffiths-slope-fs-reference    -> origin/codex/py-griffiths-slope-fs-reference
+2026-11-18T04:01:44.9432818Z  * [new branch]      codex/py-joint-tip-birth-projection-reference -> origin/codex/py-joint-tip-birth-projection-reference
+2026-11-18T04:01:44.9434267Z  * [new branch]      codex/py-mcc-independent-reference       -> origin/codex/py-mcc-independent-reference
+2026-11-18T04:01:44.9436875Z  * [new branch]      codex/py-multi-joint-structure-composite-reference -> origin/codex/py-multi-joint-structure-composite-reference
+2026-11-18T04:01:44.9438681Z  * [new branch]      codex/py-p6-03-extrusion-vibration-depth-reference -> origin/codex/py-p6-03-extrusion-vibration-depth-reference
+2026-11-18T04:01:44.9440205Z  * [new branch]      codex/py-p6-status-ledger-audit          -> origin/codex/py-p6-status-ledger-audit
+2026-11-18T04:01:44.9441456Z  * [new branch]      codex/py-pile-independent-reference      -> origin/codex/py-pile-independent-reference
+2026-11-18T04:01:44.9443137Z  * [new branch]      codex/py-rainfall-infiltration-reference -> origin/codex/py-rainfall-infiltration-reference
+2026-11-18T04:01:44.9444525Z  * [new branch]      codex/py-richards-wet-joint-reference    -> origin/codex/py-richards-wet-joint-reference
+2026-11-18T04:01:44.9445853Z  * [new branch]      codex/py-transient-water-reference       -> origin/codex/py-transient-water-reference
+2026-11-18T04:01:44.9447139Z  * [new branch]      codex/py-tri6-offset-composite-reference -> origin/codex/py-tri6-offset-composite-reference
+2026-11-18T04:01:44.9448534Z  * [new branch]      codex/py-wet-soil-birth-darcy-reference  -> origin/codex/py-wet-soil-birth-darcy-reference
+2026-11-18T04:01:44.9450102Z  * [new branch]      codex/py-wet-soil-birth-reference        -> origin/codex/py-wet-soil-birth-reference
+2026-11-18T04:01:44.9451184Z  * [new branch]      codex/py-wetjoint-reference              -> origin/codex/py-wetjoint-reference
+2026-11-18T04:01:44.9452239Z  * [new branch]      cursor/epoch-srm-stage-gate-9c70         -> origin/cursor/epoch-srm-stage-gate-9c70
+2026-11-18T04:01:44.9453409Z  * [new branch]      cursor/job-solver-executable-bit-8db6    -> origin/cursor/job-solver-executable-bit-8db6
+2026-11-18T04:01:44.9454939Z  * [new branch]      cursor/plane-strain-2d-five-percent-cc73 -> origin/cursor/plane-strain-2d-five-percent-cc73
+2026-11-18T04:01:44.9456357Z  * [new branch]      cursor/spatial-convergence-harness-fa39  -> origin/cursor/spatial-convergence-harness-fa39
+2026-11-18T04:01:44.9457445Z  * [new branch]      main                                     -> origin/main
+2026-11-18T04:01:44.9458209Z  * [new ref]         93a443ebfc3d9b34e73005b9c9f3e91012fb211c -> pull/13/merge
+2026-11-18T04:01:44.9472565Z ##[endgroup]
+2026-11-18T04:01:44.9473177Z ##[group]Determining the checkout info
+2026-11-18T04:01:44.9474636Z ##[endgroup]
+2026-11-18T04:01:44.9475232Z ##[group]Setting up sparse checkout
+2026-11-18T04:01:44.9484623Z [command]"C:\Program Files\Git\bin\git.exe" config core.sparseCheckout true
+2026-11-18T04:01:44.9873481Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --git-path info/sparse-checkout
+2026-11-18T04:01:45.0312998Z .git/info/sparse-checkout
+2026-11-18T04:01:45.0351782Z ##[endgroup]
+2026-11-18T04:01:45.0352222Z ##[group]Checking out the ref
+2026-11-18T04:01:45.0364470Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/13/merge
+2026-11-18T04:05:50.3448999Z Updating files:   0% (1/12963)
+2026-11-18T04:05:50.3749377Z Updating files:   1% (130/12963)
+2026-11-18T04:05:50.3918865Z Updating files:   2% (260/12963)
+2026-11-18T04:05:50.4692240Z Updating files:   2% (290/12963)
+2026-11-18T04:05:50.5218373Z Updating files:   3% (389/12963)
+2026-11-18T04:05:50.5771733Z Updating files:   4% (519/12963)
+2026-11-18T04:05:50.6544180Z Updating files:   5% (649/12963)
+2026-11-18T04:05:50.7662470Z Updating files:   6% (778/12963)
+2026-11-18T04:05:50.8587999Z Updating files:   7% (908/12963)
+2026-11-18T04:05:50.9457647Z Updating files:   8% (1038/12963)
+2026-11-18T04:05:51.1149599Z Updating files:   9% (1167/12963)
+2026-11-18T04:05:51.1797413Z Updating files:  10% (1297/12963)
+2026-11-18T04:05:51.2534043Z Updating files:  11% (1426/12963)
+2026-11-18T04:05:51.3393819Z Updating files:  12% (1556/12963)
+2026-11-18T04:05:51.3920525Z Updating files:  13% (1686/12963)
+2026-11-18T04:05:51.4014878Z Updating files:  13% (1795/12963)
+2026-11-18T04:05:51.4524627Z Updating files:  14% (1815/12963)
+2026-11-18T04:05:51.5143474Z Updating files:  15% (1945/12963)
+2026-11-18T04:05:51.5889402Z Updating files:  16% (2075/12963)
+2026-11-18T04:05:51.7758066Z Updating files:  17% (2204/12963)
+2026-11-18T04:05:52.2032595Z Updating files:  18% (2334/12963)
+2026-11-18T04:05:52.4041748Z Updating files:  19% (2463/12963)
+2026-11-18T04:05:52.4278683Z Updating files:  19% (2581/12963)
+2026-11-18T04:05:53.4107139Z Updating files:  20% (2593/12963)
+2026-11-18T04:05:53.7142980Z Updating files:  20% (2644/12963)
+2026-11-18T04:05:54.4139719Z Updating files:  21% (2723/12963)
+2026-11-18T04:05:54.8990635Z Updating files:  21% (2825/12963)
+2026-11-18T04:05:55.6289283Z Updating files:  22% (2852/12963)
+2026-11-18T04:05:56.4366571Z Updating files:  22% (2872/12963)
+2026-11-18T04:05:57.4531763Z Updating files:  22% (2891/12963)
+2026-11-18T04:05:58.7952315Z Updating files:  22% (2910/12963)
+2026-11-18T04:05:59.5415968Z Updating files:  22% (2930/12963)
+2026-11-18T04:06:00.0883436Z Updating files:  22% (2977/12963)
+2026-11-18T04:06:00.4463718Z Updating files:  23% (2982/12963)
+2026-11-18T04:06:02.0140436Z Updating files:  23% (2991/12963)
+2026-11-18T04:06:02.4621818Z Updating files:  23% (3006/12963)
+2026-11-18T04:06:07.2831218Z Updating files:  23% (3017/12963)
+2026-11-18T04:06:07.6366055Z Updating files:  23% (3029/12963)
+2026-11-18T04:06:08.5702282Z Updating files:  23% (3030/12963)
+2026-11-18T04:06:09.5632477Z Updating files:  23% (3077/12963)
+2026-11-18T04:06:10.8596670Z Updating files:  23% (3083/12963)
+2026-11-18T04:06:10.8775760Z Updating files:  23% (3088/12963)
+2026-11-18T04:06:11.4851139Z Updating files:  24% (3112/12963)
+2026-11-18T04:06:12.4918938Z Updating files:  24% (3202/12963)
+2026-11-18T04:06:14.1842315Z Updating files:  24% (3217/12963)
+2026-11-18T04:06:14.3486730Z Updating files:  24% (3237/12963)
+2026-11-18T04:06:14.5153934Z Updating files:  25% (3241/12963)
+2026-11-18T04:06:16.2447262Z Updating files:  25% (3245/12963)
+2026-11-18T04:06:16.4974291Z Updating files:  25% (3262/12963)
+2026-11-18T04:06:18.0914451Z Updating files:  25% (3269/12963)
+2026-11-18T04:06:18.5349502Z Updating files:  25% (3285/12963)
+2026-11-18T04:06:19.5250429Z Updating files:  25% (3296/12963)
+2026-11-18T04:06:20.7603467Z Updating files:  25% (3310/12963)
+2026-11-18T04:06:21.0149214Z Updating files:  25% (3365/12963)
+2026-11-18T04:06:21.5549644Z Updating files:  26% (3371/12963)
+2026-11-18T04:06:22.5414217Z Updating files:  26% (3384/12963)
+2026-11-18T04:06:22.8797537Z Updating files:  26% (3423/12963)
+2026-11-18T04:06:24.1311299Z Updating files:  27% (3501/12963)
+2026-11-18T04:06:24.5552067Z Updating files:  27% (3552/12963)
+2026-11-18T04:06:25.5941641Z Updating files:  27% (3559/12963)
+2026-11-18T04:06:27.3927752Z Updating files:  27% (3573/12963)
+2026-11-18T04:06:27.5998688Z Updating files:  27% (3588/12963)
+2026-11-18T04:06:31.8700793Z Updating files:  27% (3592/12963)
+2026-11-18T04:06:32.6531788Z Updating files:  27% (3607/12963)
+2026-11-18T04:06:33.6695579Z Updating files:  27% (3612/12963)
+2026-11-18T04:06:33.7080059Z Updating files:  27% (3629/12963)
+2026-11-18T04:06:34.9464578Z Updating files:  28% (3630/12963)
+2026-11-18T04:06:35.6359739Z Updating files:  28% (3650/12963)
+2026-11-18T04:06:36.6436226Z Updating files:  28% (3665/12963)
+2026-11-18T04:06:37.6468782Z Updating files:  28% (3679/12963)
+2026-11-18T04:06:39.2166124Z Updating files:  28% (3695/12963)
+2026-11-18T04:06:39.6788864Z Updating files:  28% (3719/12963)
+2026-11-18T04:06:42.4204386Z Updating files:  28% (3730/12963)
+2026-11-18T04:06:42.6483007Z Updating files:  28% (3737/12963)
+2026-11-18T04:06:43.6699218Z Updating files:  28% (3747/12963)
+2026-11-18T04:06:43.7196844Z Updating files:  28% (3759/12963)
+2026-11-18T04:06:44.8109950Z Updating files:  29% (3760/12963)
+2026-11-18T04:06:46.9623821Z Updating files:  29% (3774/12963)
+2026-11-18T04:06:54.3115056Z Updating files:  29% (3793/12963)
+2026-11-18T04:06:54.3283530Z Updating files:  29% (3811/12963)
+2026-11-18T04:06:54.3284208Z Updating files:  29% (3826/12963)
+2026-11-18T04:06:54.3284990Z Updating files:  29% (3835/12963)
+2026-11-18T04:06:54.3289503Z Updating files:  29% (3844/12963)
+2026-11-18T04:06:54.3438169Z Updating files:  29% (3855/12963)
+2026-11-18T04:06:54.3609533Z Updating files:  29% (3863/12963)
+2026-11-18T04:06:54.8990163Z Updating files:  29% (3870/12963)
+2026-11-18T04:06:55.3106244Z Updating files:  29% (3878/12963)
+2026-11-18T04:06:55.7300362Z Updating files:  30% (3889/12963)
+2026-11-18T04:06:56.7707315Z Updating files:  30% (3909/12963)
+2026-11-18T04:06:56.8026433Z Updating files:  30% (4014/12963)
+2026-11-18T04:06:57.5021549Z Updating files:  31% (4019/12963)
+2026-11-18T04:06:57.7763021Z Updating files:  32% (4149/12963)
+2026-11-18T04:07:01.1411514Z Updating files:  32% (4167/12963)
+2026-11-18T04:07:01.1412196Z Updating files:  32% (4176/12963)
+2026-11-18T04:07:01.1412595Z Updating files:  32% (4185/12963)
+2026-11-18T04:07:01.9219604Z Updating files:  32% (4196/12963)
+2026-11-18T04:07:02.9945433Z Updating files:  32% (4205/12963)
+2026-11-18T04:07:03.8028991Z Updating files:  32% (4210/12963)
+2026-11-18T04:07:03.9647400Z Updating files:  32% (4258/12963)
+2026-11-18T04:07:04.4464832Z Updating files:  33% (4278/12963)
+2026-11-18T04:07:04.8273117Z Updating files:  34% (4408/12963)
+2026-11-18T04:07:05.2610926Z Updating files:  34% (4527/12963)
+2026-11-18T04:07:05.9993138Z Updating files:  35% (4538/12963)
+2026-11-18T04:07:06.8616951Z Updating files:  35% (4554/12963)
+2026-11-18T04:07:08.0022559Z Updating files:  35% (4602/12963)
+2026-11-18T04:07:08.8366623Z Updating files:  35% (4611/12963)
+2026-11-18T04:07:09.0889168Z Updating files:  35% (4621/12963)
+2026-11-18T04:07:10.0663366Z Updating files:  36% (4667/12963)
+2026-11-18T04:07:10.9282756Z Updating files:  36% (4769/12963)
+2026-11-18T04:07:12.3730893Z Updating files:  36% (4772/12963)
+2026-11-18T04:07:13.2433113Z Updating files:  36% (4777/12963)
+2026-11-18T04:07:13.2467209Z Updating files:  36% (4793/12963)
+2026-11-18T04:07:13.3482687Z Updating files:  37% (4797/12963)
+2026-11-18T04:07:14.2026757Z Updating files:  38% (4926/12963)
+2026-11-18T04:07:15.2872993Z Updating files:  38% (4951/12963)
+2026-11-18T04:07:15.9549978Z Updating files:  38% (4955/12963)
+2026-11-18T04:07:17.6157151Z Updating files:  38% (4958/12963)
+2026-11-18T04:07:18.3752724Z Updating files:  38% (5014/12963)
+2026-11-18T04:07:19.2728869Z Updating files:  38% (5018/12963)
+2026-11-18T04:07:20.5848758Z Updating files:  38% (5021/12963)
+2026-11-18T04:07:21.3656847Z Updating files:  38% (5026/12963)
+2026-11-18T04:07:22.3722768Z Updating files:  38% (5030/12963)
+2026-11-18T04:07:23.4712102Z Updating files:  38% (5034/12963)
+2026-11-18T04:07:24.3099004Z Updating files:  38% (5038/12963)
+2026-11-18T04:07:25.3853854Z Updating files:  38% (5042/12963)
+2026-11-18T04:07:26.3781081Z Updating files:  38% (5046/12963)
+2026-11-18T04:07:27.5315709Z Updating files:  38% (5051/12963)
+2026-11-18T04:07:28.4733230Z Updating files:  39% (5056/12963)
+2026-11-18T04:07:29.3641831Z Updating files:  39% (5060/12963)
+2026-11-18T04:07:30.5305161Z Updating files:  39% (5064/12963)
+2026-11-18T04:07:31.4733059Z Updating files:  39% (5069/12963)
+2026-11-18T04:07:32.4608075Z Updating files:  39% (5073/12963)
+2026-11-18T04:07:33.4857838Z Updating files:  39% (5077/12963)
+2026-11-18T04:07:34.6124353Z Updating files:  39% (5082/12963)
+2026-11-18T04:07:35.6096726Z Updating files:  39% (5087/12963)
+2026-11-18T04:07:36.3752976Z Updating files:  39% (5091/12963)
+2026-11-18T04:07:37.3324747Z Updating files:  39% (5095/12963)
+2026-11-18T04:07:37.3464204Z Updating files:  39% (5166/12963)
+2026-11-18T04:07:38.1150908Z Updating files:  40% (5186/12963)
+2026-11-18T04:07:38.3388026Z Updating files:  41% (5315/12963)
+2026-11-18T04:07:38.6105028Z Updating files:  42% (5445/12963)
+2026-11-18T04:07:39.2950937Z Updating files:  42% (5446/12963)
+2026-11-18T04:07:39.4465659Z Updating files:  43% (5575/12963)
+2026-11-18T04:07:40.3517407Z Updating files:  43% (5618/12963)
+2026-11-18T04:07:40.5117027Z Updating files:  43% (5628/12963)
+2026-11-18T04:07:41.3748472Z Updating files:  44% (5704/12963)
+2026-11-18T04:07:42.3875426Z Updating files:  44% (5741/12963)
+2026-11-18T04:07:42.5713632Z Updating files:  44% (5824/12963)
+2026-11-18T04:07:43.0028171Z Updating files:  45% (5834/12963)
+2026-11-18T04:07:43.3722571Z Updating files:  46% (5963/12963)
+2026-11-18T04:07:43.5460825Z Updating files:  46% (6040/12963)
+2026-11-18T04:07:43.5857373Z Updating files:  47% (6093/12963)
+2026-11-18T04:07:44.5315881Z Updating files:  48% (6223/12963)
+2026-11-18T04:07:45.4220528Z Updating files:  48% (6304/12963)
+2026-11-18T04:07:46.4133944Z Updating files:  48% (6308/12963)
+2026-11-18T04:07:47.5158691Z Updating files:  48% (6312/12963)
+2026-11-18T04:07:48.7538076Z Updating files:  48% (6317/12963)
+2026-11-18T04:07:48.8410818Z Updating files:  48% (6321/12963)
+2026-11-18T04:07:48.9803251Z Updating files:  49% (6352/12963)
+2026-11-18T04:07:49.0447754Z Updating files:  50% (6482/12963)
+2026-11-18T04:07:49.3592144Z Updating files:  51% (6612/12963)
+2026-11-18T04:07:49.4186371Z Updating files:  52% (6741/12963)
+2026-11-18T04:07:50.5521348Z Updating files:  52% (6799/12963)
+2026-11-18T04:07:51.4598605Z Updating files:  52% (6803/12963)
+2026-11-18T04:07:51.6623084Z Updating files:  52% (6807/12963)
+2026-11-18T04:07:52.4817869Z Updating files:  53% (6871/12963)
+2026-11-18T04:07:53.4431531Z Updating files:  53% (6906/12963)
+2026-11-18T04:07:54.3210355Z Updating files:  53% (6909/12963)
+2026-11-18T04:07:54.5190180Z Updating files:  54% (7001/12963)
+2026-11-18T04:07:55.1490139Z Updating files:  54% (7037/12963)
+2026-11-18T04:07:55.4387561Z Updating files:  55% (7130/12963)
+2026-11-18T04:07:55.4490026Z Updating files:  55% (7236/12963)
+2026-11-18T04:07:55.5979188Z Updating files:  56% (7260/12963)
+2026-11-18T04:07:56.4761360Z Updating files:  57% (7389/12963)
+2026-11-18T04:07:56.8502177Z Updating files:  57% (7405/12963)
+2026-11-18T04:07:57.5849576Z Updating files:  58% (7519/12963)
+2026-11-18T04:07:57.6386721Z Updating files:  58% (7617/12963)
+2026-11-18T04:07:58.4971748Z Updating files:  59% (7649/12963)
+2026-11-18T04:07:58.8110697Z Updating files:  59% (7712/12963)
+2026-11-18T04:07:58.9852971Z Updating files:  60% (7778/12963)
+2026-11-18T04:07:59.1557539Z Updating files:  61% (7908/12963)
+2026-11-18T04:07:59.5477694Z Updating files:  62% (8038/12963)
+2026-11-18T04:07:59.7568076Z Updating files:  62% (8103/12963)
+2026-11-18T04:08:00.5384398Z Updating files:  63% (8167/12963)
+2026-11-18T04:08:01.4621369Z Updating files:  63% (8235/12963)
+2026-11-18T04:08:02.5710532Z Updating files:  63% (8241/12963)
+2026-11-18T04:08:03.2217055Z Updating files:  63% (8250/12963)
+2026-11-18T04:08:03.2665936Z Updating files:  64% (8297/12963)
+2026-11-18T04:08:03.2963093Z Updating files:  65% (8426/12963)
+2026-11-18T04:08:03.3266194Z Updating files:  66% (8556/12963)
+2026-11-18T04:08:03.5691928Z Updating files:  67% (8686/12963)
+2026-11-18T04:08:04.5883874Z Updating files:  67% (8724/12963)
+2026-11-18T04:08:04.7139694Z Updating files:  67% (8732/12963)
+2026-11-18T04:08:05.5977638Z Updating files:  68% (8815/12963)
+2026-11-18T04:08:06.7229829Z Updating files:  68% (8861/12963)
+2026-11-18T04:08:07.6081375Z Updating files:  68% (8868/12963)
+2026-11-18T04:08:08.5926177Z Updating files:  68% (8875/12963)
+2026-11-18T04:08:08.6447216Z Updating files:  68% (8883/12963)
+2026-11-18T04:08:08.6872735Z Updating files:  69% (8945/12963)
+2026-11-18T04:08:08.7141089Z Updating files:  70% (9075/12963)
+2026-11-18T04:08:08.7412854Z Updating files:  71% (9204/12963)
+2026-11-18T04:08:08.7687499Z Updating files:  72% (9334/12963)
+2026-11-18T04:08:08.7971292Z Updating files:  73% (9463/12963)
+2026-11-18T04:08:08.8257981Z Updating files:  74% (9593/12963)
+2026-11-18T04:08:08.8586102Z Updating files:  75% (9723/12963)
+2026-11-18T04:08:08.8903466Z Updating files:  76% (9852/12963)
+2026-11-18T04:08:08.9233423Z Updating files:  77% (9982/12963)
+2026-11-18T04:08:08.9518031Z Updating files:  78% (10112/12963)
+2026-11-18T04:08:08.9847829Z Updating files:  79% (10241/12963)
+2026-11-18T04:08:09.0127066Z Updating files:  80% (10371/12963)
+2026-11-18T04:08:09.0409002Z Updating files:  81% (10501/12963)
+2026-11-18T04:08:09.0683515Z Updating files:  82% (10630/12963)
+2026-11-18T04:08:09.0961867Z Updating files:  83% (10760/12963)
+2026-11-18T04:08:09.1241181Z Updating files:  84% (10889/12963)
+2026-11-18T04:08:09.1530979Z Updating files:  85% (11019/12963)
+2026-11-18T04:08:09.1853121Z Updating files:  86% (11149/12963)
+2026-11-18T04:08:09.2426164Z Updating files:  87% (11278/12963)
+2026-11-18T04:08:09.2721198Z Updating files:  88% (11408/12963)
+2026-11-18T04:08:09.4741103Z Updating files:  89% (11538/12963)
+2026-11-18T04:08:09.5136234Z Updating files:  90% (11667/12963)
+2026-11-18T04:08:09.5436735Z Updating files:  90% (11723/12963)
+2026-11-18T04:08:10.6532263Z Updating files:  91% (11797/12963)
+2026-11-18T04:08:11.5834789Z Updating files:  91% (11822/12963)
+2026-11-18T04:08:11.6200833Z Updating files:  91% (11834/12963)
+2026-11-18T04:08:11.9993520Z Updating files:  92% (11926/12963)
+2026-11-18T04:08:12.5590378Z Updating files:  93% (12056/12963)
+2026-11-18T04:08:13.4574786Z Updating files:  93% (12167/12963)
+2026-11-18T04:08:13.5942943Z Updating files:  94% (12186/12963)
+2026-11-18T04:08:14.5206964Z Updating files:  94% (12265/12963)
+2026-11-18T04:08:14.5406295Z Updating files:  95% (12315/12963)
+2026-11-18T04:08:14.5641971Z Updating files:  95% (12382/12963)
+2026-11-18T04:08:14.6036151Z Updating files:  96% (12445/12963)
+2026-11-18T04:08:14.6389689Z Updating files:  97% (12575/12963)
+2026-11-18T04:08:14.6757756Z Updating files:  98% (12704/12963)
+2026-11-18T04:08:14.7109623Z Updating files:  99% (12834/12963)
+2026-11-18T04:08:14.7135264Z Updating files: 100% (12963/12963)
+2026-11-18T04:08:14.7135822Z Updating files: 100% (12963/12963), done.
+2026-11-18T04:08:14.8097294Z Note: switching to 'refs/remotes/pull/13/merge'.
+2026-11-18T04:08:14.8097814Z 
+2026-11-18T04:08:14.8098107Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-18T04:08:14.8098831Z changes and commit them, and you can discard any commits you make in this
+2026-11-18T04:08:14.8099515Z state without impacting any branches by switching back to a branch.
+2026-11-18T04:08:14.8099923Z 
+2026-11-18T04:08:14.8100211Z If you want to create a new branch to retain commits you create, you may
+2026-11-18T04:08:14.8100843Z do so (now or later) by using -c with the switch command. Example:
+2026-11-18T04:08:14.8101377Z 
+2026-11-18T04:08:14.8581528Z   git switch -c <new-branch-name>
+2026-11-18T04:08:14.8594782Z 
+2026-11-18T04:08:14.8594965Z Or undo this operation with:
+2026-11-18T04:08:14.8595202Z 
+2026-11-18T04:08:14.8595308Z   git switch -
+2026-11-18T04:08:14.8595483Z 
+2026-11-18T04:08:14.8607400Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-18T04:08:14.8607889Z 
+2026-11-18T04:08:14.8608387Z HEAD is now at 93a443e Merge 6ee03451c49b86bc9f238ba0bed2f21b15f4299c into 024835cea9a7c12ad12deda10203f4f45f1fd285
+2026-11-18T04:08:16.9505056Z ##[endgroup]
+2026-11-18T04:08:17.1126034Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-18T04:08:17.1748065Z 93a443ebfc3d9b34e73005b9c9f3e91012fb211c
+2026-11-18T04:08:17.2113158Z ##[group]Removing auth
+2026-11-18T04:08:17.2113575Z Removing SSH command configuration
+2026-11-18T04:08:17.2143844Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T04:08:17.2608138Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-18T04:08:17.9520376Z Removing HTTP extra header
+2026-11-18T04:08:17.9533969Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T04:08:17.9961147Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-18T04:08:18.5586677Z Removing includeIf entries pointing to credentials config files
+2026-11-18T04:08:18.5598522Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T04:08:18.5947187Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-18T04:08:18.5949484Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-18T04:08:18.5950362Z includeif.gitdir:/github/workspace/.git.path
+2026-11-18T04:08:18.5950963Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-18T04:08:18.6023114Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-18T04:08:18.6392920Z D:\a\_temp\git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:08:18.6524819Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D\:\\a\\_temp\\git\-credentials\-69bb4b52\-3b45\-42a0\-bbbc\-bcb7a9e57a16\.config
+2026-11-18T04:08:18.6966515Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-18T04:08:18.7451352Z D:\a\_temp\git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:08:18.7503678Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-69bb4b52\-3b45\-42a0\-bbbc\-bcb7a9e57a16\.config
+2026-11-18T04:08:18.7916349Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-18T04:08:18.8261665Z /github/runner_temp/git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:08:18.8317375Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-69bb4b52\-3b45\-42a0\-bbbc\-bcb7a9e57a16\.config
+2026-11-18T04:08:18.8725911Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-18T04:08:18.9063636Z /github/runner_temp/git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config
+2026-11-18T04:08:18.9107538Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-69bb4b52\-3b45\-42a0\-bbbc\-bcb7a9e57a16\.config
+2026-11-18T04:08:18.9501709Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-18T04:08:19.5409412Z Removing credentials config 'D:\a\_temp\git-credentials-69bb4b52-3b45-42a0-bbbc-bcb7a9e57a16.config'
+2026-11-18T04:08:19.5654663Z ##[endgroup]
+2026-11-18T04:08:19.9756119Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+2026-11-18T04:08:19.9756841Z with:
+2026-11-18T04:08:19.9761100Z   python-version: 3.13
+2026-11-18T04:08:19.9761661Z   cache: pip
+2026-11-18T04:08:19.9764662Z   cache-dependency-path: requirements.lock.txt
+requirements-reference.lock.txt
+
+2026-11-18T04:08:19.9765327Z   check-latest: false
+2026-11-18T04:08:19.9768736Z   token: ***
+2026-11-18T04:08:19.9772475Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-18T04:08:19.9772986Z   update-environment: true
+2026-11-18T04:08:19.9776535Z   allow-prereleases: false
+2026-11-18T04:08:19.9776870Z   freethreaded: false
+2026-11-18T04:08:19.9777155Z env:
+2026-11-18T04:08:19.9780838Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:08:19.9781146Z   RUST_TEST_THREADS: 2
+2026-11-18T04:08:19.9784537Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:08:19.9784866Z   MKL_NUM_THREADS: 1
+2026-11-18T04:08:19.9785146Z   OMP_NUM_THREADS: 1
+2026-11-18T04:08:19.9788581Z   PYTHONUTF8: 1
+2026-11-18T04:08:19.9788872Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:08:19.9792353Z ##[endgroup]
+2026-11-18T04:08:20.4742511Z ##[group]Installed versions
+2026-11-18T04:08:20.5063045Z Successfully set up CPython (3.13.17)
+2026-11-18T04:08:20.5067740Z ##[endgroup]
+2026-11-18T04:08:23.6401098Z Cache hit for: setup-python-Windows-x64-python-3.13.17-pip-350b09181da1201fc317f16c42b2528337d54a2dc0486d0eec662f6aed3be360
+2026-11-18T04:08:24.3458191Z Received 93763488 of 93763488 (100.0%), 140.8 MBs/sec
+2026-11-18T04:08:24.3458912Z Cache Size: ~89 MB (93763488 B)
+2026-11-18T04:08:24.3497655Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/dd8da390-fc58-477d-b0f8-9e41338f815b/cache.tzst -P -C D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis --force-local --use-compress-program "zstd -d"
+2026-11-18T04:08:25.4881085Z Cache restored successfully
+2026-11-18T04:08:25.4972575Z Cache restored from key: setup-python-Windows-x64-python-3.13.17-pip-350b09181da1201fc317f16c42b2528337d54a2dc0486d0eec662f6aed3be360
+2026-11-18T04:08:25.5775634Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null
+2026-11-18T04:08:25.5776440Z [36;1mNew-Item -ItemType Directory -Force runs/ci | Out-Null[0m
+2026-11-18T04:08:25.5777095Z [36;1mrustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy[0m
+2026-11-18T04:08:25.5777737Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-18T04:08:25.5778344Z [36;1mpython -m pip install --disable-pip-version-check -r requirements-reference.lock.txt[0m
+2026-11-18T04:08:25.5778936Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-18T04:08:25.5779352Z [36;1mpython tools/freeze_sources.py runs/ci[0m
+2026-11-18T04:08:25.5779798Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-18T04:08:25.5780273Z [36;1mrustc --version --verbose | Out-File runs/ci/rust-version.log[0m
+2026-11-18T04:08:25.5780822Z [36;1mpython -m pip freeze | Out-File runs/ci/python-packages.log[0m
+2026-11-18T04:08:25.6356650Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T04:08:25.6357205Z env:
+2026-11-18T04:08:25.6357559Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:08:25.6357926Z   RUST_TEST_THREADS: 2
+2026-11-18T04:08:25.6358274Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:08:25.6358641Z   MKL_NUM_THREADS: 1
+2026-11-18T04:08:25.6359011Z   OMP_NUM_THREADS: 1
+2026-11-18T04:08:25.6359331Z   PYTHONUTF8: 1
+2026-11-18T04:08:25.6359682Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:08:25.6360171Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:08:25.6360927Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T04:08:25.6361610Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:08:25.6362223Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:08:25.6362894Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:08:25.6363402Z ##[endgroup]
+2026-11-18T04:08:28.1530177Z info: syncing channel updates for 1.99.1-x86_64-pc-windows-msvc
+2026-11-18T04:08:28.7295796Z info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-18T04:08:28.7455919Z info: downloading 5 components
+2026-11-18T04:08:38.7982830Z 
+2026-11-18T04:08:38.8309010Z   1.99.1-x86_64-pc-windows-msvc installed - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-18T04:08:38.8309450Z 
+2026-11-18T04:08:41.4010192Z Collecting gmsh==4.15.2 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 1))
+2026-11-18T04:08:41.4037007Z   Using cached gmsh-4.15.2-py2.py3-none-win_amd64.whl.metadata (1.7 kB)
+2026-11-18T04:08:41.4709210Z Collecting markdown-it-py==4.2.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 2))
+2026-11-18T04:08:41.4731174Z   Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-18T04:08:41.5320621Z Collecting mdurl==0.1.2 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 3))
+2026-11-18T04:08:41.5342864Z   Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-11-18T04:08:41.6046053Z Collecting meshio==5.3.5 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 4))
+2026-11-18T04:08:41.6068493Z   Using cached meshio-5.3.5-py3-none-any.whl.metadata (11 kB)
+2026-11-18T04:08:42.0165806Z Collecting numpy==2.5.4 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 5))
+2026-11-18T04:08:42.0191715Z   Using cached numpy-2.5.4-cp313-cp313-win_amd64.whl.metadata (6.6 kB)
+2026-11-18T04:08:42.0788863Z Collecting Pygments==2.21.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 6))
+2026-11-18T04:08:42.0812215Z   Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-18T04:08:42.1551098Z Collecting rich==15.0.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 7))
+2026-11-18T04:08:42.1572073Z   Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-11-18T04:08:42.2808760Z Collecting ijson==3.6.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 8))
+2026-11-18T04:08:42.2833765Z   Using cached ijson-3.6.0-cp313-cp313-win_amd64.whl.metadata (24 kB)
+2026-11-18T04:08:42.4658999Z Collecting scipy==1.18.1 (from -r requirements-reference.lock.txt (line 2))
+2026-11-18T04:08:42.4684549Z   Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl.metadata (61 kB)
+2026-11-18T04:08:42.4942802Z Using cached gmsh-4.15.2-py2.py3-none-win_amd64.whl (42.2 MB)
+2026-11-18T04:08:42.5206658Z Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-11-18T04:08:42.5245903Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-11-18T04:08:42.5265496Z Using cached meshio-5.3.5-py3-none-any.whl (166 kB)
+2026-11-18T04:08:42.5285710Z Using cached numpy-2.5.4-cp313-cp313-win_amd64.whl (12.6 MB)
+2026-11-18T04:08:42.5379103Z Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-18T04:08:42.5413860Z Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+2026-11-18T04:08:42.5434912Z Using cached ijson-3.6.0-cp313-cp313-win_amd64.whl (54 kB)
+2026-11-18T04:08:42.5458282Z Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl (36.6 MB)
+2026-11-18T04:08:43.6525543Z Installing collected packages: gmsh, Pygments, numpy, mdurl, ijson, scipy, markdown-it-py, rich, meshio
+2026-11-18T04:09:03.2978795Z 
+2026-11-18T04:09:03.2999156Z Successfully installed Pygments-2.21.0 gmsh-4.15.2 ijson-3.6.0 markdown-it-py-4.2.0 mdurl-0.1.2 meshio-5.3.5 numpy-2.5.4 rich-15.0.0 scipy-1.18.1
+2026-11-18T04:09:04.0311110Z Frozen acceptance sources: 923
+2026-11-18T04:09:04.6539796Z ##[group]Run cargo build --locked --release
+2026-11-18T04:09:04.6540835Z [36;1mcargo build --locked --release[0m
+2026-11-18T04:09:04.6624222Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T04:09:04.6624678Z env:
+2026-11-18T04:09:04.6624976Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:09:04.6625267Z   RUST_TEST_THREADS: 2
+2026-11-18T04:09:04.6625549Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:09:04.6625893Z   MKL_NUM_THREADS: 1
+2026-11-18T04:09:04.6626149Z   OMP_NUM_THREADS: 1
+2026-11-18T04:09:04.6626439Z   PYTHONUTF8: 1
+2026-11-18T04:09:04.6626719Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:09:04.6627151Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:09:04.6627708Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T04:09:04.6628247Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:09:04.6628881Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:09:04.6629399Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:09:04.6629818Z ##[endgroup]
+2026-11-18T04:09:05.7704920Z     Updating crates.io index
+2026-11-18T04:09:06.1301889Z  Downloading crates ...
+2026-11-18T04:09:06.2223772Z   Downloaded wide v0.7.33
+2026-11-18T04:09:06.2734711Z   Downloaded approx v0.5.1
+2026-11-18T04:09:06.2948577Z   Downloaded serde_derive v1.0.229
+2026-11-18T04:09:06.3315316Z   Downloaded cpufeatures v0.2.17
+2026-11-18T04:09:06.3438381Z   Downloaded autocfg v1.5.1
+2026-11-18T04:09:06.3598294Z   Downloaded cfg-if v1.0.5
+2026-11-18T04:09:06.3718419Z   Downloaded crypto-common v0.1.7
+2026-11-18T04:09:06.3821869Z   Downloaded glam v0.15.2
+2026-11-18T04:09:06.4624433Z   Downloaded rawpointer v0.2.1
+2026-11-18T04:09:06.4702712Z   Downloaded itoa v1.0.18
+2026-11-18T04:09:06.4857213Z   Downloaded block-buffer v0.10.4
+2026-11-18T04:09:06.4951208Z   Downloaded generic-array v0.14.7
+2026-11-18T04:09:06.5089996Z   Downloaded nalgebra-macros v0.3.0
+2026-11-18T04:09:06.5177672Z   Downloaded digest v0.10.7
+2026-11-18T04:09:06.5351177Z   Downloaded quote v1.0.47
+2026-11-18T04:09:06.5621454Z   Downloaded zmij v1.0.23
+2026-11-18T04:09:06.5759044Z   Downloaded num-integer v0.1.47
+2026-11-18T04:09:06.5911917Z   Downloaded thiserror-impl v2.0.21
+2026-11-18T04:09:06.6051729Z   Downloaded thiserror v2.0.21
+2026-11-18T04:09:06.7009766Z   Downloaded version_check v0.9.5
+2026-11-18T04:09:06.7119724Z   Downloaded num-complex v0.4.6
+2026-11-18T04:09:06.7236635Z   Downloaded sha2 v0.10.9
+2026-11-18T04:09:06.7578680Z   Downloaded paste v1.0.15
+2026-11-18T04:09:06.7963514Z   Downloaded unicode-ident v1.0.27
+2026-11-18T04:09:07.0066205Z   Downloaded num-rational v0.4.2
+2026-11-18T04:09:07.0322591Z   Downloaded num-traits v0.2.19
+2026-11-18T04:09:07.0626559Z   Downloaded bytemuck v1.25.2
+2026-11-18T04:09:07.0947189Z   Downloaded serde_core v1.0.229
+2026-11-18T04:09:07.1290140Z   Downloaded proc-macro2 v1.0.107
+2026-11-18T04:09:07.4169542Z   Downloaded matrixmultiply v0.3.11
+2026-11-18T04:09:07.4485032Z   Downloaded simba v0.9.1
+2026-11-18T04:09:07.4742620Z   Downloaded serde v1.0.229
+2026-11-18T04:09:07.5040513Z   Downloaded memchr v2.8.3
+2026-11-18T04:09:07.5495940Z   Downloaded safe_arch v0.7.4
+2026-11-18T04:09:07.5877778Z   Downloaded typenum v1.20.1
+2026-11-18T04:09:07.6104461Z   Downloaded num-bigint v0.4.8
+2026-11-18T04:09:07.6559711Z   Downloaded glam v0.14.0
+2026-11-18T04:09:07.7344204Z   Downloaded glam v0.16.0
+2026-11-18T04:09:07.8108608Z   Downloaded glam v0.17.3
+2026-11-18T04:09:07.9034383Z   Downloaded glam v0.18.0
+2026-11-18T04:09:08.0017464Z   Downloaded glam v0.19.0
+2026-11-18T04:09:09.2868759Z   Downloaded serde_json v1.0.154
+2026-11-18T04:09:09.3736031Z   Downloaded glam v0.20.5
+2026-11-18T04:09:09.4661044Z   Downloaded glam v0.21.3
+2026-11-18T04:09:09.5940533Z   Downloaded glam v0.23.0
+2026-11-18T04:09:09.7104412Z   Downloaded glam v0.22.0
+2026-11-18T04:09:09.8368269Z   Downloaded syn v2.0.119
+2026-11-18T04:09:09.9301557Z   Downloaded glam v0.24.2
+2026-11-18T04:09:10.3508036Z   Downloaded syn v3.0.9
+2026-11-18T04:09:10.4328565Z   Downloaded glam v0.25.0
+2026-11-18T04:09:10.5845737Z   Downloaded nalgebra v0.34.2
+2026-11-18T04:09:10.8358152Z   Downloaded glam v0.27.0
+2026-11-18T04:09:10.9869729Z   Downloaded glam v0.28.0
+2026-11-18T04:09:11.1931016Z   Downloaded glam v0.29.3
+2026-11-18T04:09:11.8000734Z   Downloaded glam v0.31.1
+2026-11-18T04:09:12.0130636Z   Downloaded glam v0.30.10
+2026-11-18T04:09:12.2165892Z   Downloaded glam v0.32.1
+2026-11-18T04:09:12.5364379Z    Compiling autocfg v1.5.1
+2026-11-18T04:09:12.5365030Z    Compiling proc-macro2 v1.0.107
+2026-11-18T04:09:12.9168484Z    Compiling unicode-ident v1.0.27
+2026-11-18T04:09:13.0100974Z    Compiling quote v1.0.47
+2026-11-18T04:09:15.1387469Z    Compiling num-traits v0.2.19
+2026-11-18T04:09:15.4952009Z    Compiling version_check v0.9.5
+2026-11-18T04:09:16.0534864Z    Compiling generic-array v0.14.7
+2026-11-18T04:09:16.2765765Z    Compiling typenum v1.20.1
+2026-11-18T04:09:17.3048023Z    Compiling syn v3.0.9
+2026-11-18T04:09:17.8295180Z    Compiling bytemuck v1.25.2
+2026-11-18T04:09:18.0302664Z    Compiling paste v1.0.15
+2026-11-18T04:09:18.2410876Z    Compiling serde_core v1.0.229
+2026-11-18T04:09:18.5586496Z    Compiling safe_arch v0.7.4
+2026-11-18T04:09:19.2704246Z    Compiling matrixmultiply v0.3.11
+2026-11-18T04:09:19.4996931Z    Compiling zmij v1.0.23
+2026-11-18T04:09:19.8140818Z    Compiling wide v0.7.33
+2026-11-18T04:09:23.0199573Z    Compiling crypto-common v0.1.7
+2026-11-18T04:09:23.1131959Z    Compiling block-buffer v0.10.4
+2026-11-18T04:09:23.2244155Z    Compiling num-complex v0.4.6
+2026-11-18T04:09:23.6463527Z    Compiling num-integer v0.1.47
+2026-11-18T04:09:23.7533538Z    Compiling approx v0.5.1
+2026-11-18T04:09:23.8606237Z    Compiling syn v2.0.119
+2026-11-18T04:09:24.2920722Z    Compiling serde v1.0.229
+2026-11-18T04:09:24.5521690Z    Compiling thiserror v2.0.21
+2026-11-18T04:09:24.8315528Z    Compiling serde_json v1.0.154
+2026-11-18T04:09:25.0030472Z    Compiling rawpointer v0.2.1
+2026-11-18T04:09:28.0949558Z    Compiling nalgebra-macros v0.3.0
+2026-11-18T04:09:28.1569542Z    Compiling num-rational v0.4.2
+2026-11-18T04:09:28.5639863Z    Compiling simba v0.9.1
+2026-11-18T04:09:29.7632056Z    Compiling digest v0.10.7
+2026-11-18T04:09:29.9549103Z    Compiling serde_derive v1.0.229
+2026-11-18T04:09:33.0619986Z    Compiling thiserror-impl v2.0.21
+2026-11-18T04:09:34.0172262Z    Compiling memchr v2.8.3
+2026-11-18T04:09:34.3623252Z    Compiling cpufeatures v0.2.17
+2026-11-18T04:09:34.4089531Z    Compiling itoa v1.0.18
+2026-11-18T04:09:34.6438783Z    Compiling cfg-if v1.0.5
+2026-11-18T04:09:34.6898703Z    Compiling sha2 v0.10.9
+2026-11-18T04:09:36.9798600Z    Compiling nalgebra v0.34.2
+2026-11-18T04:09:44.3739982Z    Compiling soil-fem-3d v0.1.0 (D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis)
+2026-11-18T04:13:13.3324781Z     Finished `release` profile [optimized] target(s) in 4m 07s
+2026-11-18T04:13:13.4985819Z ##[group]Run python tools/run_ci_python_evidence_shards.py --group python-core-1 --output runs/ci
+2026-11-18T04:13:13.4986745Z [36;1mpython tools/run_ci_python_evidence_shards.py --group python-core-1 --output runs/ci[0m
+2026-11-18T04:13:13.4987381Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-18T04:13:13.5071832Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T04:13:13.5072249Z env:
+2026-11-18T04:13:13.5072488Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:13:13.5075156Z   RUST_TEST_THREADS: 2
+2026-11-18T04:13:13.5075422Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:13:13.5075698Z   MKL_NUM_THREADS: 1
+2026-11-18T04:13:13.5075960Z   OMP_NUM_THREADS: 1
+2026-11-18T04:13:13.5076204Z   PYTHONUTF8: 1
+2026-11-18T04:13:13.5076466Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:13:13.5076845Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:13:13.5077475Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T04:13:13.5078009Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:13:13.5078483Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:13:13.5078996Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:13:13.5079672Z ##[endgroup]
+2026-11-18T04:13:16.4619151Z test_acceptance_without_positive_evidence (p6_status_reconciliation_cases.AuditMutationTests.test_acceptance_without_positive_evidence) ... ok
+2026-11-18T04:13:16.4700893Z test_approved_appendix_still_cannot_claim_completion (p6_status_reconciliation_cases.AuditMutationTests.test_approved_appendix_still_cannot_claim_completion) ... ok
+2026-11-18T04:13:16.4775957Z test_bad_pointer_escape (p6_status_reconciliation_cases.AuditMutationTests.test_bad_pointer_escape) ... ok
+2026-11-18T04:13:16.4852119Z test_blob_mutation (p6_status_reconciliation_cases.AuditMutationTests.test_blob_mutation) ... ok
+2026-11-18T04:13:16.4928271Z test_boolean_is_not_integer (p6_status_reconciliation_cases.AuditMutationTests.test_boolean_is_not_integer) ... ok
+2026-11-18T04:13:16.5005746Z test_cancelled_not_success (p6_status_reconciliation_cases.AuditMutationTests.test_cancelled_not_success) ... ok
+2026-11-18T04:13:16.5080405Z test_coverage (p6_status_reconciliation_cases.AuditMutationTests.test_coverage) ... ok
+2026-11-18T04:13:16.5156205Z test_different_scope_is_not_conflict (p6_status_reconciliation_cases.AuditMutationTests.test_different_scope_is_not_conflict) ... ok
+2026-11-18T04:13:16.5237673Z test_document_appendix_mutation (p6_status_reconciliation_cases.AuditMutationTests.test_document_appendix_mutation) ... ok
+2026-11-18T04:13:16.5319725Z test_document_status_column_completion (p6_status_reconciliation_cases.AuditMutationTests.test_document_status_column_completion) ... ok
+2026-11-18T04:13:16.5394227Z test_duplicate_id (p6_status_reconciliation_cases.AuditMutationTests.test_duplicate_id) ... ok
+2026-11-18T04:13:16.5472402Z test_exact_document_appendix_allowed (p6_status_reconciliation_cases.AuditMutationTests.test_exact_document_appendix_allowed) ... ok
+2026-11-18T04:13:16.5547019Z test_failed_job_even_with_success_run (p6_status_reconciliation_cases.AuditMutationTests.test_failed_job_even_with_success_run) ... ok
+2026-11-18T04:13:16.5623374Z test_false_cannot_be_acceptance (p6_status_reconciliation_cases.AuditMutationTests.test_false_cannot_be_acceptance) ... ok
+2026-11-18T04:13:16.5701122Z test_git_source_cannot_be_relabelled_as_external (p6_status_reconciliation_cases.AuditMutationTests.test_git_source_cannot_be_relabelled_as_external) ... ok
+2026-11-18T04:13:16.5776212Z test_historical_conflict_reported (p6_status_reconciliation_cases.AuditMutationTests.test_historical_conflict_reported) ... ok
+2026-11-18T04:13:16.5851192Z test_infra_checkout_failure_cannot_be_success (p6_status_reconciliation_cases.AuditMutationTests.test_infra_checkout_failure_cannot_be_success) ... ok
+2026-11-18T04:13:16.5927002Z test_inventory_value (p6_status_reconciliation_cases.AuditMutationTests.test_inventory_value) ... ok
+2026-11-18T04:13:16.6004015Z test_json_p6_completion (p6_status_reconciliation_cases.AuditMutationTests.test_json_p6_completion) ... ok
+2026-11-18T04:13:16.6078204Z test_key_value_mutation (p6_status_reconciliation_cases.AuditMutationTests.test_key_value_mutation) ... ok
+2026-11-18T04:13:16.6150771Z test_limited_acceptance (p6_status_reconciliation_cases.AuditMutationTests.test_limited_acceptance) ... ok
+2026-11-18T04:13:16.6225223Z test_missing_file (p6_status_reconciliation_cases.AuditMutationTests.test_missing_file) ... ok
+2026-11-18T04:13:16.6299380Z test_missing_pointer (p6_status_reconciliation_cases.AuditMutationTests.test_missing_pointer) ... ok
+2026-11-18T04:13:16.6375589Z test_nc_diagnostic_is_not_nc_completion (p6_status_reconciliation_cases.AuditMutationTests.test_nc_diagnostic_is_not_nc_completion) ... ok
+2026-11-18T04:13:16.6454610Z test_negated_completion_does_not_trigger (p6_status_reconciliation_cases.AuditMutationTests.test_negated_completion_does_not_trigger) ... ok
+2026-11-18T04:13:16.6539255Z test_new_source_not_inventoried (p6_status_reconciliation_cases.AuditMutationTests.test_new_source_not_inventoried) ... ok
+2026-11-18T04:13:16.6615617Z test_overall_cannot_inherit_small_acceptance (p6_status_reconciliation_cases.AuditMutationTests.test_overall_cannot_inherit_small_acceptance) ... ok
+2026-11-18T04:13:16.6734050Z test_path_traversal (p6_status_reconciliation_cases.AuditMutationTests.test_path_traversal) ... ok
+2026-11-18T04:13:16.6810329Z test_queued_not_success (p6_status_reconciliation_cases.AuditMutationTests.test_queued_not_success) ... ok
+2026-11-18T04:13:16.6885108Z test_quote_mutation (p6_status_reconciliation_cases.AuditMutationTests.test_quote_mutation) ... ok
+2026-11-18T04:13:16.6961722Z test_quote_range (p6_status_reconciliation_cases.AuditMutationTests.test_quote_range) ... ok
+2026-11-18T04:13:16.7075460Z test_registered_later_snapshot_is_checked (p6_status_reconciliation_cases.AuditMutationTests.test_registered_later_snapshot_is_checked) ... ok
+2026-11-18T04:13:16.7244753Z test_repository_requires_supplemental_manifest (p6_status_reconciliation_cases.AuditMutationTests.test_repository_requires_supplemental_manifest) ... ok
+2026-11-18T04:13:16.7328504Z test_rfc6901_arrays (p6_status_reconciliation_cases.AuditMutationTests.test_rfc6901_arrays) ... ok
+2026-11-18T04:13:16.7410615Z test_row_same_scope_conflict (p6_status_reconciliation_cases.AuditMutationTests.test_row_same_scope_conflict) ... ok
+2026-11-18T04:13:16.7492385Z test_same_scope_document_conflict (p6_status_reconciliation_cases.AuditMutationTests.test_same_scope_document_conflict) ... ok
+2026-11-18T04:13:16.7571798Z test_scope_broadening (p6_status_reconciliation_cases.AuditMutationTests.test_scope_broadening) ... ok
+2026-11-18T04:13:16.7649787Z test_sha_mutation (p6_status_reconciliation_cases.AuditMutationTests.test_sha_mutation) ... ok
+2026-11-18T04:13:16.7759112Z test_supplemental_boolean_cannot_be_replaced_by_zero (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_boolean_cannot_be_replaced_by_zero) ... ok
+2026-11-18T04:13:16.7867895Z test_supplemental_cannot_claim_p6_completion (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_cannot_claim_p6_completion) ... ok
+2026-11-18T04:13:16.7983339Z test_supplemental_changed_source_is_error (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_changed_source_is_error) ... ok
+2026-11-18T04:13:16.8082945Z test_supplemental_commit_must_be_immutable (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_commit_must_be_immutable) ... ok
+2026-11-18T04:13:16.8182914Z test_supplemental_id_cannot_override_historical_source (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_id_cannot_override_historical_source) ... ok
+2026-11-18T04:13:16.8315522Z test_supplemental_manifest_cannot_be_resealed_without_code_review (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_manifest_cannot_be_resealed_without_code_review) ... ok
+2026-11-18T04:13:16.8422703Z test_supplemental_missing_source_is_error (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_missing_source_is_error) ... ok
+2026-11-18T04:13:16.8527135Z test_supplemental_path_cannot_override_historical_source (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_path_cannot_override_historical_source) ... ok
+2026-11-18T04:13:16.8649021Z test_supplemental_updated_hashes_cannot_reseal_snapshot_bytes (p6_status_reconciliation_cases.AuditMutationTests.test_supplemental_updated_hashes_cannot_reseal_snapshot_bytes) ... ok
+2026-11-18T04:13:16.8724821Z test_timeout_not_success (p6_status_reconciliation_cases.AuditMutationTests.test_timeout_not_success) ... ok
+2026-11-18T04:13:16.8800250Z test_unsupported_completion (p6_status_reconciliation_cases.AuditMutationTests.test_unsupported_completion) ... ok
+2026-11-18T04:13:16.8880041Z test_unsupported_prose_completion (p6_status_reconciliation_cases.AuditMutationTests.test_unsupported_prose_completion) ... ok
+2026-11-18T04:13:16.8961075Z test_updated_hashes_cannot_reseal_changed_base_bytes (p6_status_reconciliation_cases.AuditMutationTests.test_updated_hashes_cannot_reseal_changed_base_bytes) ... ok
+2026-11-18T04:13:16.9035414Z test_valid_evidence (p6_status_reconciliation_cases.AuditMutationTests.test_valid_evidence) ... ok
+2026-11-18T04:13:16.9108991Z test_wrong_base (p6_status_reconciliation_cases.AuditMutationTests.test_wrong_base) ... ok
+2026-11-18T04:13:16.9186095Z test_wrong_ci_head (p6_status_reconciliation_cases.AuditMutationTests.test_wrong_ci_head) ... ok
+2026-11-18T04:13:16.9280731Z test_wrong_source_commit (p6_status_reconciliation_cases.AuditMutationTests.test_wrong_source_commit) ... ok
+2026-11-18T04:13:33.1224235Z test_all_fixed_sources_and_classifications (p6_status_reconciliation_cases.FixedRepositoryTests.test_all_fixed_sources_and_classifications) ... ok
+2026-11-18T04:13:33.1358730Z test_ledger_and_table (p6_status_reconciliation_cases.FixedRepositoryTests.test_ledger_and_table) ... ok
+2026-11-18T04:13:33.1382255Z test_document_terminal_status_with_real_crlf (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_document_terminal_status_with_real_crlf) ... ok
+2026-11-18T04:13:33.1720303Z test_duplicate_gauss_points_are_detected (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_duplicate_gauss_points_are_detected) ... ok
+2026-11-18T04:13:33.1761362Z test_endpoint_identity_keeps_unexplained_substep_work (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_endpoint_identity_keeps_unexplained_substep_work) ... ok
+2026-11-18T04:13:33.1764266Z test_fixed_order_reductions_and_invalid_correspondence (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_fixed_order_reductions_and_invalid_correspondence) ... ok
+2026-11-18T04:13:33.1767882Z test_original_acceptance_refusals_and_remaining_items_are_retained (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_original_acceptance_refusals_and_remaining_items_are_retained) ... ok
+2026-11-18T04:13:33.6285713Z test_reference_default_retains_original_small_input_only_solution (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_reference_default_retains_original_small_input_only_solution) ... ok
+2026-11-18T04:13:33.6289644Z test_same_system_svd_distinguishes_range_incompatibility (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_same_system_svd_distinguishes_range_incompatibility) ... ok
+2026-11-18T04:13:33.6839329Z test_small_fixture_and_archive_parts_sha_without_resolving_equilibrium (test_a01_joint_combo_cause_diagnosis.A01JointComboCauseDiagnosis.test_small_fixture_and_archive_parts_sha_without_resolving_equilibrium) ... ok
+2026-11-18T04:13:33.8003431Z test_cone_rejection_is_not_an_initial_return_mapping (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_cone_rejection_is_not_an_initial_return_mapping) ... ok
+2026-11-18T04:13:33.8006114Z test_coordinate_matching_never_interpolates_or_drops_fields (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_coordinate_matching_never_interpolates_or_drops_fields) ... ok
+2026-11-18T04:13:33.8030360Z test_document_terminal_status_with_real_crlf (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_document_terminal_status_with_real_crlf) ... ok
+2026-11-18T04:13:33.8032586Z test_fixed_order_norm_and_small_denominator_are_observations (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_fixed_order_norm_and_small_denominator_are_observations) ... ok
+2026-11-18T04:13:33.8043147Z test_generation_reset_in_saved_path_replay (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_generation_reset_in_saved_path_replay) ... ok
+2026-11-18T04:13:33.8045761Z test_original_acceptance_and_cloud_remaining_status (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_original_acceptance_and_cloud_remaining_status) ... ok
+2026-11-18T04:13:34.2905244Z test_sealed_evidence_parts_without_recomputing_equilibrium (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_sealed_evidence_parts_without_recomputing_equilibrium) ... ok
+2026-11-18T04:13:34.4124625Z test_weighted_projection_range_and_order_preserve_tip_zero_rows (test_a02_joint_birth_cause_diagnosis.A02JointBirthCauseDiagnosis.test_weighted_projection_range_and_order_preserve_tip_zero_rows) ... ok
+2026-11-18T04:13:34.4126691Z test_default_is_the_unchanged_original_function (test_a02_joint_partition_control.A02JointPartitionControl.test_default_is_the_unchanged_original_function) ... ok
+2026-11-18T04:13:34.9147857Z test_diagnostic_minimum_changes_partition_observation_only (test_a02_joint_partition_control.A02JointPartitionControl.test_diagnostic_minimum_changes_partition_observation_only) ... ok
+2026-11-18T04:13:34.9679781Z test_ci_sparse_selects_new_archive (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_ci_sparse_selects_new_archive) ... FAIL
+2026-11-18T04:13:34.9748793Z test_explicit_directional_constant_fresh_stress (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_explicit_directional_constant_fresh_stress) ... ok
+2026-11-18T04:13:34.9751173Z test_fixed_fsum_and_common_coordinates (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_fixed_fsum_and_common_coordinates) ... ok
+2026-11-18T04:13:34.9755748Z test_fixed_matrix (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_fixed_matrix) ... ok
+2026-11-18T04:13:34.9790934Z test_outside_matrix_is_rejected_before_solve (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_outside_matrix_is_rejected_before_solve) ... ok
+2026-11-18T04:13:34.9940186Z test_prior_records_sha_unchanged (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_prior_records_sha_unchanged) ... ok
+2026-11-18T04:13:35.0370974Z test_scope_failure_and_null_are_not_acceptance (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_scope_failure_and_null_are_not_acceptance) ... ok
+2026-11-18T04:13:39.3290760Z test_sealed_raw_evidence_sha (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_sealed_raw_evidence_sha) ... ok
+2026-11-18T04:13:39.3410154Z test_unequal_layer_bounds_volume_and_midpoints (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_unequal_layer_bounds_volume_and_midpoints) ... ok
+2026-11-18T04:13:39.3448303Z test_universal_newline_terminal_status (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_universal_newline_terminal_status) ... ok
+2026-11-18T04:13:39.3484014Z test_document_terminal_status_with_crlf (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_document_terminal_status_with_crlf) ... ok
+2026-11-18T04:13:39.9836165Z test_evidence_sha_without_equilibrium (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_evidence_sha_without_equilibrium) ... ok
+2026-11-18T04:13:40.0073308Z test_existing_refusals_and_failed_values_are_unchanged (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_existing_refusals_and_failed_values_are_unchanged) ... ok
+2026-11-18T04:13:40.0078313Z test_fixed_order_and_exact_common_coordinates (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_fixed_order_and_exact_common_coordinates) ... ok
+2026-11-18T04:13:40.0080973Z test_formed_interaction_is_not_subtracted_twice (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_formed_interaction_is_not_subtracted_twice) ... ok
+2026-11-18T04:13:40.0672876Z test_full_factorial_and_more_common_points (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_full_factorial_and_more_common_points) ... ok
+2026-11-18T04:13:40.0715726Z test_no_default_wiring_and_import_leaks (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_no_default_wiring_and_import_leaks) ... ok
+2026-11-18T04:13:40.1465625Z test_order_controls_restore_and_preserve_physical_keys (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_order_controls_restore_and_preserve_physical_keys) ... ok
+2026-11-18T04:13:40.2019507Z test_scope_and_null_accounting_are_retained (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_scope_and_null_accounting_are_retained) ... ok
+2026-11-18T04:13:40.2022449Z test_source_access_is_explicit (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_source_access_is_explicit) ... ok
+2026-11-18T04:13:40.2057381Z test_two_geometries_and_two_fresh_stress_distributions (test_a03_wet_soil_birth_cloud_followup.A03CloudFollowup.test_two_geometries_and_two_fresh_stress_distributions) ... ok
+2026-11-18T04:13:40.2059538Z test_bounded_matrix_and_false_status (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_bounded_matrix_and_false_status) ... ok
+2026-11-18T04:13:40.2096227Z test_document_end_with_real_crlf (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_document_end_with_real_crlf) ... ok
+2026-11-18T04:13:40.2097752Z test_fsum_fixed_order (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_fsum_fixed_order) ... ok
+2026-11-18T04:13:40.2390933Z test_order_failure_not_relaxed (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_order_failure_not_relaxed) ... ok
+2026-11-18T04:13:40.2393347Z test_physical_contact_canonicalization (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_physical_contact_canonicalization) ... ok
+2026-11-18T04:13:40.2468810Z test_production_default_is_untouched (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_production_default_is_untouched) ... ok
+2026-11-18T04:13:40.2470940Z test_rate_without_extrapolation (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_rate_without_extrapolation) ... ok
+2026-11-18T04:13:40.2759017Z test_scientific_status_is_not_software_status (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_scientific_status_is_not_software_status) ... ok
+2026-11-18T04:13:41.9850118Z test_sealed_parts_and_index (test_a04_richards_wet_joint_cloud_followup.A04RichardsWetJointCloudFollowup.test_sealed_parts_and_index) ... ok
+2026-11-18T04:13:41.9867381Z test_decimal_reforms_boundary_rhs_without_changing_matrix (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_decimal_reforms_boundary_rhs_without_changing_matrix) ... ok
+2026-11-18T04:13:42.0005705Z test_distorted_meshes_keep_actual_straight_midpoints (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_distorted_meshes_keep_actual_straight_midpoints) ... ok
+2026-11-18T04:13:42.0047018Z test_document_suffix_with_real_crlf (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_document_suffix_with_real_crlf) ... ok
+2026-11-18T04:13:42.0049210Z test_fixed_matrix_and_resource_limit (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_fixed_matrix_and_resource_limit) ... ok
+2026-11-18T04:13:42.0052275Z test_fsum_and_zero_reference_are_not_relaxed (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_fsum_and_zero_reference_are_not_relaxed) ... ok
+2026-11-18T04:13:42.0272316Z test_original_records_and_production_path_unchanged (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_original_records_and_production_path_unchanged) ... ok
+2026-11-18T04:13:42.0330917Z test_plane_polynomial_is_compatible_with_drilling_and_shear (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_plane_polynomial_is_compatible_with_drilling_and_shear) ... ok
+2026-11-18T04:13:42.0342112Z test_recovery_tensors_return_to_material_coordinates (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_recovery_tensors_return_to_material_coordinates) ... ok
+2026-11-18T04:13:42.0354114Z test_rotation_maps_work_and_all_six_dofs (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_rotation_maps_work_and_all_six_dofs) ... ok
+2026-11-18T04:13:42.0858263Z test_saved_status_and_rejections_not_promoted (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_saved_status_and_rejections_not_promoted) ... ok
+2026-11-18T04:13:42.4387961Z test_sealed_evidence_and_ci_archive_availability (test_b01_curved_tri6_cloud_followup.B01CurvedTri6CloudFollowup.test_sealed_evidence_and_ci_archive_availability) ... ok
+2026-11-18T04:13:42.4420520Z test_crlf_document_suffix (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_crlf_document_suffix) ... ok
+2026-11-18T04:13:42.4423265Z test_fixed_sum_and_raw_denominator (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_fixed_sum_and_raw_denominator) ... ok
+2026-11-18T04:13:42.4690388Z test_old_records_byte_bound_and_production_untouched (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_old_records_byte_bound_and_production_untouched) ... ok
+2026-11-18T04:13:42.4887789Z test_physical_input_inverse_and_bounded_thickness_series (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_physical_input_inverse_and_bounded_thickness_series) ... ok
+2026-11-18T04:13:42.5502419Z test_rule_is_plate_only_and_restored_after_exception (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_rule_is_plate_only_and_restored_after_exception) ... ok
+2026-11-18T04:13:42.5654049Z test_saved_status_and_fixed_matrix_controls (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_saved_status_and_fixed_matrix_controls) ... ok
+2026-11-18T04:13:44.0914370Z test_seal_and_ci_allocation (test_b02_offset_composite_cloud_followup.B02OffsetCompositeCloudFollowup.test_seal_and_ci_allocation) ... ok
+2026-11-18T04:13:44.0983997Z test_all_symptoms_and_undone_rows_remain_explicit (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_all_symptoms_and_undone_rows_remain_explicit) ... ok
+2026-11-18T04:13:44.0987813Z test_boundary_endpoints_and_all_face_orders_are_present (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_boundary_endpoints_and_all_face_orders_are_present) ... ok
+2026-11-18T04:13:44.0991974Z test_compensated_c_order_reduction_preserves_cancelled_term (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_compensated_c_order_reduction_preserves_cancelled_term) ... ok
+2026-11-18T04:13:44.0995305Z test_current_thickness_and_nontransitive_chain_are_distinct (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_current_thickness_and_nontransitive_chain_are_distinct) ... ok
+2026-11-18T04:13:44.0998846Z test_decimal_control_changes_arithmetic_without_new_physical_cases (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_decimal_control_changes_arithmetic_without_new_physical_cases) ... ok
+2026-11-18T04:13:44.1012613Z test_document_suffix_accepts_actual_crlf (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_document_suffix_accepts_actual_crlf) ... ok
+2026-11-18T04:13:44.1094367Z test_old_records_and_production_sources_are_unchanged (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_old_records_and_production_sources_are_unchanged) ... ok
+2026-11-18T04:13:44.1096433Z test_original_float64_exceedances_are_retained (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_original_float64_exceedances_are_retained) ... ok
+2026-11-18T04:13:44.1098051Z test_permitted_rotated_patch_inventory_and_rigid_modes (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_permitted_rotated_patch_inventory_and_rigid_modes) ... ok
+2026-11-18T04:13:44.7880921Z test_seal_and_sparse_checkout_keep_evidence_without_rerunning_solves (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_seal_and_sparse_checkout_keep_evidence_without_rerunning_solves) ... ok
+2026-11-18T04:13:44.7883627Z test_surface_force_couple_and_displacement_are_work_conjugate (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_surface_force_couple_and_displacement_are_work_conjugate) ... ok
+2026-11-18T04:13:44.7886321Z test_unacquired_literature_is_not_promoted_to_reference (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_unacquired_literature_is_not_promoted_to_reference) ... ok
+2026-11-18T04:13:44.7889135Z test_work_account_does_not_claim_missing_soil_or_external_allocation (test_b03_offset_kink_cloud_followup.B03OffsetKinkCloudFollowup.test_work_account_does_not_claim_missing_soil_or_external_allocation) ... ok
+2026-11-18T04:13:44.7890971Z test_constant_pressure_closed_form (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_constant_pressure_closed_form) ... ok
+2026-11-18T04:13:44.7931097Z test_documents_survive_real_crlf (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_documents_survive_real_crlf) ... ok
+2026-11-18T04:13:44.7936037Z test_linear_pressure_exact_yield_root (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_linear_pressure_exact_yield_root) ... ok
+2026-11-18T04:13:47.3715595Z test_native_local_law_against_exact_paths_and_independent_endpoint (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_native_local_law_against_exact_paths_and_independent_endpoint) ... ok
+2026-11-18T04:13:49.0223798Z test_new_sealed_evidence_integrity_and_original_failure (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_new_sealed_evidence_integrity_and_original_failure) ... ok
+2026-11-18T04:13:49.0226171Z test_pressure_release_at_fixed_displacement (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_pressure_release_at_fixed_displacement) ... ok
+2026-11-18T04:13:49.0233025Z test_reversal_opening_and_subdivision_invariant_exact_integral (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_reversal_opening_and_subdivision_invariant_exact_integral) ... ok
+2026-11-18T04:13:49.0243953Z test_signed_components_require_cross_terms (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_signed_components_require_cross_terms) ... ok
+2026-11-18T04:13:49.0261141Z test_signed_path_budget_with_known_switch_increment (test_c01_local_path_decomposition.LocalPathDecompositionTests.test_signed_path_budget_with_known_switch_increment) ... ok
+2026-11-18T04:13:49.0265186Z test_area_and_point_norms_remain_distinct (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_area_and_point_norms_remain_distinct) ... ok
+2026-11-18T04:13:49.0307871Z test_common_mapping_preserves_parent_discontinuity (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_common_mapping_preserves_parent_discontinuity) ... ok
+2026-11-18T04:13:49.0397391Z test_document_status_handles_actual_crlf (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_document_status_handles_actual_crlf) ... ok
+2026-11-18T04:13:49.0400329Z test_fixed_reduction_order (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_fixed_reduction_order) ... ok
+2026-11-18T04:13:49.0421668Z test_hidden_opening_times_are_not_endpoint_labels (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_hidden_opening_times_are_not_endpoint_labels) ... ok
+2026-11-18T04:13:49.0424066Z test_invalid_fields_are_rejected (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_invalid_fields_are_rejected) ... ok
+2026-11-18T04:13:49.2821480Z test_manufactured_interpolation_orders (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_manufactured_interpolation_orders) ... ok
+2026-11-18T04:13:49.2823301Z test_nearest_tie_chooses_lowest_index (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_nearest_tie_chooses_lowest_index) ... ok
+2026-11-18T04:13:49.2868837Z test_projection_reproduces_all_quadratics (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_projection_reproduces_all_quadratics) ... ok
+2026-11-18T04:13:49.3073877Z test_quadrature_variants_preserve_affine_patch_and_original (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_quadrature_variants_preserve_affine_patch_and_original) ... ok
+2026-11-18T04:13:49.3088372Z test_saved_closed_path_primitive_identity (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_saved_closed_path_primitive_identity) ... ok
+2026-11-18T04:13:52.0208531Z test_sealed_evidence_without_heavy_recalculation (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_sealed_evidence_without_heavy_recalculation) ... ok
+2026-11-18T04:13:52.0212042Z test_time_identity_partition_is_exhaustive (test_c02_spatial_cause_diagnosis.C02SpatialCauseDiagnosis.test_time_identity_partition_is_exhaustive) ... ok
+2026-11-18T04:13:52.0214892Z test_diagnostic_fixed_parts_reject_out_of_budget_inputs (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_diagnostic_fixed_parts_reject_out_of_budget_inputs) ... ok
+2026-11-18T04:13:52.0233952Z test_document_terminal_status_with_actual_crlf (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_document_terminal_status_with_actual_crlf) ... ok
+2026-11-18T04:13:52.0272650Z test_endpoint_products_do_not_determine_substep_dissipation (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_endpoint_products_do_not_determine_substep_dissipation) ... ok
+2026-11-18T04:13:52.0275567Z test_fixed_reduction_and_invalid_correspondence (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_fixed_reduction_and_invalid_correspondence) ... ok
+2026-11-18T04:13:52.0294024Z test_margin_bins_are_observation_labels_and_keep_boundary_points (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_margin_bins_are_observation_labels_and_keep_boundary_points) ... ok
+2026-11-18T04:13:52.0297663Z test_original_acceptance_and_richards_scope_remain_unachieved (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_original_acceptance_and_richards_scope_remain_unachieved) ... ok
+2026-11-18T04:13:52.1935063Z test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_parts_and_fixture_are_sha_fixed_without_equilibrium_recalculation) ... ok
+2026-11-18T04:13:52.1952922Z test_sealed_small_metrics_exact_without_float_tolerance (test_c04_transient_water_cause_diagnosis.C04TransientWaterCauseDiagnosis.test_sealed_small_metrics_exact_without_float_tolerance) ... ok
+2026-11-18T04:13:52.2073377Z test_an_empty_owned_fragment_is_rejected_before_any_mesh_is_exported (test_cad_excavation.CadExcavation.test_an_empty_owned_fragment_is_rejected_before_any_mesh_is_exported) ... 
+2026-11-18T04:13:52.2075673Z *******************************************************************
+2026-11-18T04:13:52.2076444Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.2076965Z 
+2026-11-18T04:13:52.2077164Z *******************************************************************
+2026-11-18T04:13:52.2077851Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.2078602Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.2092620Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.2109927Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpke6ti2da\Clay0.step(350 ents)  Write  Done
+2026-11-18T04:13:52.2133790Z 
+2026-11-18T04:13:52.2134278Z *******************************************************************
+2026-11-18T04:13:52.2135228Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.2135725Z 
+2026-11-18T04:13:52.2136016Z *******************************************************************
+2026-11-18T04:13:52.2136776Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.2137679Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.2145103Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.2158658Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpke6ti2da\Clay1.step(350 ents)  Write  Done
+2026-11-18T04:13:52.2174958Z 
+2026-11-18T04:13:52.2175265Z *******************************************************************
+2026-11-18T04:13:52.2176262Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.2176986Z 
+2026-11-18T04:13:52.2177194Z *******************************************************************
+2026-11-18T04:13:52.2177766Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.2178549Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.2184418Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.2216496Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpke6ti2da\Pit.step(350 ents)  Write  Done
+2026-11-18T04:13:52.2801051Z ok
+2026-11-18T04:13:52.2893132Z test_body_plane_sets_use_all_quadratic_nodes_and_preserve_existing_data_atomically (test_cad_excavation.CadExcavation.test_body_plane_sets_use_all_quadratic_nodes_and_preserve_existing_data_atomically) ... ok
+2026-11-18T04:13:52.2908729Z test_clipped_tool_does_not_add_soil_or_change_material_ownership (test_cad_excavation.CadExcavation.test_clipped_tool_does_not_add_soil_or_change_material_ownership) ... 
+2026-11-18T04:13:52.2909935Z *******************************************************************
+2026-11-18T04:13:52.2910740Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.2911099Z 
+2026-11-18T04:13:52.2911302Z *******************************************************************
+2026-11-18T04:13:52.2911781Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.2912575Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.2917102Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.2930480Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmps5ozprfv\Clay0.step(350 ents)  Write  Done
+2026-11-18T04:13:52.2946276Z 
+2026-11-18T04:13:52.2946603Z *******************************************************************
+2026-11-18T04:13:52.2947267Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.2947637Z 
+2026-11-18T04:13:52.2947809Z *******************************************************************
+2026-11-18T04:13:52.2948682Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.2949561Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.2955601Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.2968375Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmps5ozprfv\Clay1.step(350 ents)  Write  Done
+2026-11-18T04:13:52.2983941Z 
+2026-11-18T04:13:52.2984426Z *******************************************************************
+2026-11-18T04:13:52.2985150Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.2985673Z 
+2026-11-18T04:13:52.2985885Z *******************************************************************
+2026-11-18T04:13:52.2986585Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.2987360Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.2995036Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.3024873Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmps5ozprfv\Pit.step(350 ents)  Write  Done
+2026-11-18T04:13:52.8404639Z ok
+2026-11-18T04:13:52.8422493Z test_curved_tet10_projects_edge_nodes_and_passes_rust_jacobian_certification (test_cad_excavation.CadExcavation.test_curved_tet10_projects_edge_nodes_and_passes_rust_jacobian_certification) ... 
+2026-11-18T04:13:52.8423798Z *******************************************************************
+2026-11-18T04:13:52.8424328Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.8424666Z 
+2026-11-18T04:13:52.8425053Z *******************************************************************
+2026-11-18T04:13:52.8425536Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.8426366Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.8431475Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.8445143Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpp2c_7ke9\Clay0.step(350 ents)  Write  Done
+2026-11-18T04:13:52.8461148Z 
+2026-11-18T04:13:52.8461592Z *******************************************************************
+2026-11-18T04:13:52.8462324Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.8462839Z 
+2026-11-18T04:13:52.8463046Z *******************************************************************
+2026-11-18T04:13:52.8463749Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.8464523Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.8471561Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.8484791Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpp2c_7ke9\Clay1.step(350 ents)  Write  Done
+2026-11-18T04:13:52.8499449Z 
+2026-11-18T04:13:52.8499894Z *******************************************************************
+2026-11-18T04:13:52.8500667Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:52.8501211Z 
+2026-11-18T04:13:52.8501407Z *******************************************************************
+2026-11-18T04:13:52.8502085Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:52.8502930Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:52.8506312Z ** WorkSession : Sending all data
+2026-11-18T04:13:52.8538437Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpp2c_7ke9\Pit.step(118 ents)  Write  Done
+2026-11-18T04:13:54.4702504Z ok
+2026-11-18T04:13:54.4724854Z test_curved_tool_uses_boolean_membership_rather_than_its_bounding_box (test_cad_excavation.CadExcavation.test_curved_tool_uses_boolean_membership_rather_than_its_bounding_box) ... 
+2026-11-18T04:13:54.4725803Z *******************************************************************
+2026-11-18T04:13:54.4726163Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:54.4726426Z 
+2026-11-18T04:13:54.4726533Z *******************************************************************
+2026-11-18T04:13:54.4726840Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:54.4727481Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:54.4729918Z ** WorkSession : Sending all data
+2026-11-18T04:13:54.4743171Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmphk3jtvu8\Clay0.step(350 ents)  Write  Done
+2026-11-18T04:13:54.4759003Z 
+2026-11-18T04:13:54.4759240Z *******************************************************************
+2026-11-18T04:13:54.4759745Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:54.4760029Z 
+2026-11-18T04:13:54.4760140Z *******************************************************************
+2026-11-18T04:13:54.4781848Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:54.4782832Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:54.4783505Z ** WorkSession : Sending all data
+2026-11-18T04:13:54.4784274Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmphk3jtvu8\Clay1.step(350 ents)  Write  Done
+2026-11-18T04:13:54.4795681Z 
+2026-11-18T04:13:54.4796042Z *******************************************************************
+2026-11-18T04:13:54.4796676Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:54.4797123Z 
+2026-11-18T04:13:54.4797294Z *******************************************************************
+2026-11-18T04:13:54.4797844Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:54.4798480Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:54.4801361Z ** WorkSession : Sending all data
+2026-11-18T04:13:54.4829861Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmphk3jtvu8\Pit.step(118 ents)  Write  Done
+2026-11-18T04:13:54.9934381Z ok
+2026-11-18T04:13:54.9951242Z test_no_intersection_and_tampered_source_are_rejected (test_cad_excavation.CadExcavation.test_no_intersection_and_tampered_source_are_rejected) ... 
+2026-11-18T04:13:54.9952662Z *******************************************************************
+2026-11-18T04:13:54.9953341Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:54.9953854Z 
+2026-11-18T04:13:54.9954071Z *******************************************************************
+2026-11-18T04:13:54.9954750Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:54.9955558Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:54.9962845Z ** WorkSession : Sending all data
+2026-11-18T04:13:54.9976164Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmp1xfx9a8_\Clay0.step(350 ents)  Write  Done
+2026-11-18T04:13:54.9991786Z 
+2026-11-18T04:13:54.9992017Z *******************************************************************
+2026-11-18T04:13:54.9992591Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:54.9992991Z 
+2026-11-18T04:13:54.9993115Z *******************************************************************
+2026-11-18T04:13:54.9993808Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:54.9994194Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:55.0000910Z ** WorkSession : Sending all data
+2026-11-18T04:13:55.0012888Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmp1xfx9a8_\Clay1.step(350 ents)  Write  Done
+2026-11-18T04:13:55.0028038Z 
+2026-11-18T04:13:55.0028373Z *******************************************************************
+2026-11-18T04:13:55.0029003Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:55.0029445Z 
+2026-11-18T04:13:55.0029625Z *******************************************************************
+2026-11-18T04:13:55.0030182Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:55.0030856Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:55.0037687Z ** WorkSession : Sending all data
+2026-11-18T04:13:55.0069441Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmp1xfx9a8_\Pit.step(350 ents)  Write  Done
+2026-11-18T04:13:55.0400405Z ok
+2026-11-18T04:13:55.0414660Z test_tool_crosses_material_interface_without_changing_materials (test_cad_excavation.CadExcavation.test_tool_crosses_material_interface_without_changing_materials) ... 
+2026-11-18T04:13:55.0415761Z *******************************************************************
+2026-11-18T04:13:55.0416177Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:55.0416468Z 
+2026-11-18T04:13:55.0416580Z *******************************************************************
+2026-11-18T04:13:55.0416944Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:55.0417629Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:55.0421773Z ** WorkSession : Sending all data
+2026-11-18T04:13:55.0434021Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpptl6xcq5\Clay0.step(350 ents)  Write  Done
+2026-11-18T04:13:55.0448122Z 
+2026-11-18T04:13:55.0448369Z *******************************************************************
+2026-11-18T04:13:55.0449329Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:55.0449726Z 
+2026-11-18T04:13:55.0449868Z *******************************************************************
+2026-11-18T04:13:55.0450356Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:55.0450879Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:55.0457003Z ** WorkSession : Sending all data
+2026-11-18T04:13:55.0468744Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpptl6xcq5\Clay1.step(350 ents)  Write  Done
+2026-11-18T04:13:55.0483256Z 
+2026-11-18T04:13:55.0483490Z *******************************************************************
+2026-11-18T04:13:55.0484131Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:13:55.0484734Z 
+2026-11-18T04:13:55.0484872Z *******************************************************************
+2026-11-18T04:13:55.0485264Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:13:55.0485751Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:13:55.0492019Z ** WorkSession : Sending all data
+2026-11-18T04:13:55.0524439Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\tmpptl6xcq5\Pit.step(350 ents)  Write  Done
+2026-11-18T04:13:55.6147422Z ok
+2026-11-18T04:13:55.6149577Z test_ambiguous_or_empty_metadata_fails_closed (test_ci_rust_partition.Coverage.test_ambiguous_or_empty_metadata_fails_closed) ... ok
+2026-11-18T04:13:55.6151485Z test_core_retains_unit_binary_doc_and_example_checks (test_ci_rust_partition.Coverage.test_core_retains_unit_binary_doc_and_example_checks) ... ok
+2026-11-18T04:13:55.6801424Z test_real_metadata_is_covered_once_and_new_targets_are_not_lost (test_ci_rust_partition.Coverage.test_real_metadata_is_covered_once_and_new_targets_are_not_lost) ... ok
+2026-11-18T04:13:56.8514816Z test_changed_schedule_missing_fields_and_nonfinite_history_are_rejected (test_cut_volume_history.CutVolumeHistory.test_changed_schedule_missing_fields_and_nonfinite_history_are_rejected) ... ok
+2026-11-18T04:13:56.8611939Z test_corrupt_contact_energy_history_and_changed_physical_scope_are_rejected (test_cut_volume_history.CutVolumeHistory.test_corrupt_contact_energy_history_and_changed_physical_scope_are_rejected) ... ok
+2026-11-18T04:13:56.8721897Z test_existing_full_path_and_all_fields_are_checked (test_cut_volume_history.CutVolumeHistory.test_existing_full_path_and_all_fields_are_checked) ... ok
+2026-11-18T04:13:56.9213008Z test_old_256_path_is_checked_and_read_without_new_solve (test_cut_volume_history.CutVolumeHistory.test_old_256_path_is_checked_and_read_without_new_solve) ... ok
+2026-11-18T04:13:56.9428441Z test_missing_source_empty_identity_or_invalid_input_cannot_prepare (test_exact_fs.RealSectionPreparation.test_missing_source_empty_identity_or_invalid_input_cannot_prepare) ... ok
+2026-11-18T04:13:57.4812349Z test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing (test_exact_fs.RealSectionPreparation.test_prepare_inspects_inputs_and_creates_job_without_solving_or_passing) ... ok
+2026-11-18T04:14:07.9287817Z test_real_search_and_cli_verification_with_missing_or_modified_evidence (test_exact_fs.RealSectionPreparation.test_real_search_and_cli_verification_with_missing_or_modified_evidence) ... ok
+2026-11-18T04:14:09.2466852Z test_tampered_preparation_source_and_job_are_refused (test_exact_fs.RealSectionPreparation.test_tampered_preparation_source_and_job_are_refused) ... ok
+2026-11-18T04:14:09.2473484Z test_all_nodes_both_components_and_maximum_error_are_used (test_griffiths_2d.ManufacturedFields.test_all_nodes_both_components_and_maximum_error_are_used) ... ok
+2026-11-18T04:14:09.2477976Z test_exact_five_percent_boundary_is_inclusive (test_griffiths_2d.ManufacturedFields.test_exact_five_percent_boundary_is_inclusive) ... ok
+2026-11-18T04:14:09.2483234Z test_front_or_back_failure_cannot_be_hidden_by_middle_plane (test_griffiths_2d.ManufacturedFields.test_front_or_back_failure_cannot_be_hidden_by_middle_plane) ... ok
+2026-11-18T04:14:09.2493610Z test_known_affine_pass_and_fail_on_fixed_five_percent_limit (test_griffiths_2d.ManufacturedFields.test_known_affine_pass_and_fail_on_fixed_five_percent_limit) ... ok
+2026-11-18T04:14:09.2497854Z test_missing_nonfinite_wrong_count_and_zero_norm_are_refused (test_griffiths_2d.ManufacturedFields.test_missing_nonfinite_wrong_count_and_zero_norm_are_refused) ... ok
+2026-11-18T04:14:09.3379778Z test_actual_archive_measurements_preserve_four_failures_and_indeterminate_continuum (test_griffiths_2d.PinnedOriginal.test_actual_archive_measurements_preserve_four_failures_and_indeterminate_continuum) ... ok
+2026-11-18T04:14:09.3504862Z test_archived_native_field_modification_is_refused (test_griffiths_2d.PinnedOriginal.test_archived_native_field_modification_is_refused) ... ok
+2026-11-18T04:14:10.8056328Z test_cli_requires_explicit_data_and_returns_failure_for_actual_archives (test_griffiths_2d.PinnedOriginal.test_cli_requires_explicit_data_and_returns_failure_for_actual_archives) ... ok
+2026-11-18T04:14:10.8281680Z test_original_661_nodes_and_all_retained_copies_are_identical (test_griffiths_2d.PinnedOriginal.test_original_661_nodes_and_all_retained_copies_are_identical) ... ok
+2026-11-18T04:14:10.8342547Z test_reference_crlf_checkout_is_accepted (test_griffiths_2d.PinnedOriginal.test_reference_crlf_checkout_is_accepted) ... ok
+2026-11-18T04:14:10.8692796Z test_reference_missing_or_any_content_changed_is_refused (test_griffiths_2d.PinnedOriginal.test_reference_missing_or_any_content_changed_is_refused) ... ok
+2026-11-18T04:14:10.8729648Z test_source_verification_rejects_unverified_archive_bytes (test_griffiths_2d.PinnedOriginal.test_source_verification_rejects_unverified_archive_bytes) ... ok
+2026-11-18T04:14:12.9474548Z test_completed_run_preflight_and_physical_rejections (test_griffiths_2d.UserPcPreparation.test_completed_run_preflight_and_physical_rejections) ... ok
+2026-11-18T04:14:12.9519648Z test_f1_series_cannot_use_the_reduced_reference (test_griffiths_2d.UserPcPreparation.test_f1_series_cannot_use_the_reduced_reference) ... ok
+2026-11-18T04:14:14.9304341Z test_incomplete_result_is_rejected_before_independent_audit (test_griffiths_2d.UserPcPreparation.test_incomplete_result_is_rejected_before_independent_audit) ... ok
+2026-11-18T04:14:14.9371044Z test_initial_frame_bookkeeping_reset_preserves_the_total_displacement (test_griffiths_2d.UserPcPreparation.test_initial_frame_bookkeeping_reset_preserves_the_total_displacement) ... ok
+2026-11-18T04:14:15.3965750Z test_matching_material_exact_661_maps_and_unmodified_f1_defaults (test_griffiths_2d.UserPcPreparation.test_matching_material_exact_661_maps_and_unmodified_f1_defaults) ... ok
+2026-11-18T04:14:15.3974981Z test_missing_reference_fails_before_creating_output (test_griffiths_2d.UserPcPreparation.test_missing_reference_fails_before_creating_output) ... ok
+2026-11-18T04:14:15.4262358Z test_no_interpolation_when_original_sample_node_missing (test_griffiths_2d.UserPcPreparation.test_no_interpolation_when_original_sample_node_missing) ... ok
+2026-11-18T04:14:17.4242220Z test_prepared_file_changes_cannot_be_hidden_by_original_manifest (test_griffiths_2d.UserPcPreparation.test_prepared_file_changes_cannot_be_hidden_by_original_manifest) ... ok
+2026-11-18T04:14:19.3865819Z test_rehashed_manifest_tampering_is_rejected (test_griffiths_2d.UserPcPreparation.test_rehashed_manifest_tampering_is_rejected) ... ok
+2026-11-18T04:14:26.9161443Z test_series_orchestration_requires_all_independent_audits (test_griffiths_2d.UserPcPreparation.test_series_orchestration_requires_all_independent_audits) ... ok
+2026-11-18T04:14:26.9788976Z test_cube_analytic_moments_and_force_virtual_work (test_hydrostatic_cut_volume.HydrostaticCutVolume.test_cube_analytic_moments_and_force_virtual_work) ... ok
+2026-11-18T04:14:26.9798838Z test_curved_or_nonfinite_geometry_is_outside_reference (test_hydrostatic_cut_volume.HydrostaticCutVolume.test_curved_or_nonfinite_geometry_is_outside_reference) ... ok
+2026-11-18T04:14:27.1019692Z test_dry_vertex_face_partial_and_full_wetting_tet4_and_tet10 (test_hydrostatic_cut_volume.HydrostaticCutVolume.test_dry_vertex_face_partial_and_full_wetting_tet4_and_tet10) ... ok
+2026-11-18T04:14:28.0495331Z test_only_partial_pore_term_accounts_for_initial_displacement_change (test_hydrostatic_cut_volume.HydrostaticCutVolume.test_only_partial_pore_term_accounts_for_initial_displacement_change) ... ok
+2026-11-18T04:14:28.1906680Z test_recorded_256_histories_are_read_with_provenance_not_recomputed (test_hydrostatic_cut_volume.HydrostaticCutVolume.test_recorded_256_histories_are_read_with_provenance_not_recomputed) ... ok
+2026-11-18T04:14:28.2703534Z test_normal_help_remains_read_only (test_issue_triage_followups.SafePauseEntry.test_normal_help_remains_read_only) ... ok
+2026-11-18T04:14:28.9226909Z test_optimized_execute_is_refused_before_process_or_filesystem_work (test_issue_triage_followups.SafePauseEntry.test_optimized_execute_is_refused_before_process_or_filesystem_work) ... ok
+2026-11-18T04:14:59.2335646Z test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected (test_issue_triage_followups.SoilBoundaryFlow.test_first_and_last_nonfinite_non_scalar_or_mismatched_flow_are_rejected) ... ok
+2026-11-18T04:15:00.2893253Z test_normal_complete_boundary_inventory_in_all_modes (test_issue_triage_followups.SoilBoundaryFlow.test_normal_complete_boundary_inventory_in_all_modes) ... ok
+2026-11-18T04:15:07.6720412Z test_reported_balance_error_must_be_finite_scalar_and_nonnegative (test_issue_triage_followups.SoilBoundaryFlow.test_reported_balance_error_must_be_finite_scalar_and_nonnegative) ... ok
+2026-11-18T04:15:08.1149996Z test_all_nodes_reproduce_without_tip_forces (test_joint_birth_projection_a02.BirthProjectionA02.test_all_nodes_reproduce_without_tip_forces) ... ok
+2026-11-18T04:15:08.5154630Z test_balanced_shared_tip_residual_is_rejected (test_joint_birth_projection_a02.BirthProjectionA02.test_balanced_shared_tip_residual_is_rejected) ... ok
+2026-11-18T04:15:08.9111409Z test_comparison_rejects_missing_state_and_preserves_signed_zero (test_joint_birth_projection_a02.BirthProjectionA02.test_comparison_rejects_missing_state_and_preserves_signed_zero) ... ok
+2026-11-18T04:15:09.3056134Z test_reference_keeps_scope_rejections (test_joint_birth_projection_a02.BirthProjectionA02.test_reference_keeps_scope_rejections) ... ok
+2026-11-18T04:15:09.7512561Z test_tensile_and_outside_circle_are_rejected_without_clipping (test_joint_birth_projection_a02.BirthProjectionA02.test_tensile_and_outside_circle_are_rejected_without_clipping) ... ok
+2026-11-18T04:15:09.7685912Z test_branched_front_disconnected_edge_star_and_face_interior_are_rejected (test_joint_crack_tip.JointCrackTip.test_branched_front_disconnected_edge_star_and_face_interior_are_rejected) ... ok
+2026-11-18T04:15:09.7829069Z test_branching_cannot_be_hidden_by_multiple_interface_ids (test_joint_crack_tip.JointCrackTip.test_branching_cannot_be_hidden_by_multiple_interface_ids) ... ok
+2026-11-18T04:15:09.7956943Z test_independent_operator_exact_cancellation_virtual_work_and_rigid_motion (test_joint_crack_tip.JointCrackTip.test_independent_operator_exact_cancellation_virtual_work_and_rigid_motion) ... ok
+2026-11-18T04:15:09.8085183Z test_missing_partial_wrong_midpoint_interior_edge_and_duplicate_are_rejected (test_joint_crack_tip.JointCrackTip.test_missing_partial_wrong_midpoint_interior_edge_and_duplicate_are_rejected) ... ok
+2026-11-18T04:15:09.8451935Z test_multi_edge_front_and_nondeclared_boundary_are_distinct (test_joint_crack_tip.JointCrackTip.test_multi_edge_front_and_nondeclared_boundary_are_distinct) ... ok
+2026-11-18T04:15:09.9226771Z test_multiple_faces_internal_tip_glued_region_geometry_and_material_are_exact (test_joint_crack_tip.JointCrackTip.test_multiple_faces_internal_tip_glued_region_geometry_and_material_are_exact) ... ok
+2026-11-18T04:15:09.9298082Z test_reference_refuses_undeclared_or_tampered_tip_topology (test_joint_crack_tip.JointCrackTip.test_reference_refuses_undeclared_or_tampered_tip_topology) ... ok
+2026-11-18T04:15:09.9396272Z test_tri4_tip_nonconforming_midpoint_and_fully_tied_faces_are_rejected (test_joint_crack_tip.JointCrackTip.test_tri4_tip_nonconforming_midpoint_and_fully_tied_faces_are_rejected) ... ok
+2026-11-18T04:15:09.9417604Z test_explicit_legal_tet10_tip_of_the_old_partial_patch_is_separated (test_joint_split.JointSplit.test_explicit_legal_tet10_tip_of_the_old_partial_patch_is_separated) ... ok
+2026-11-18T04:15:09.9459552Z test_linear_and_quadratic_interfaces_preserve_material_geometry_and_volume (test_joint_split.JointSplit.test_linear_and_quadratic_interfaces_preserve_material_geometry_and_volume) ... ok
+2026-11-18T04:15:09.9476186Z test_missing_duplicate_and_partial_interface_declarations_are_rejected (test_joint_split.JointSplit.test_missing_duplicate_and_partial_interface_declarations_are_rejected) ... ok
+2026-11-18T04:15:09.9500296Z test_nonfinite_values_cannot_enter_encoded_evidence (test_linear_evidence_codec.LinearEvidenceCodec.test_nonfinite_values_cannot_enter_encoded_evidence) ... ok
+2026-11-18T04:15:09.9538453Z test_roundtrip_reconstructs_every_original_json_byte (test_linear_evidence_codec.LinearEvidenceCodec.test_roundtrip_reconstructs_every_original_json_byte) ... ok
+2026-11-18T04:15:09.9552561Z test_truncated_payload_is_rejected (test_linear_evidence_codec.LinearEvidenceCodec.test_truncated_payload_is_rejected) ... ok
+2026-11-18T04:15:10.0194891Z test_changed_free_load_is_refused_instead_of_being_named_equilibrium (test_low_preload_nc_diagnosis.LowNCDiagnosis.test_changed_free_load_is_refused_instead_of_being_named_equilibrium) ... ok
+2026-11-18T04:15:10.0281623Z test_difference_width_refines_only_existing_numerical_control (test_low_preload_nc_diagnosis.LowNCDiagnosis.test_difference_width_refines_only_existing_numerical_control) ... ok
+2026-11-18T04:15:10.1736208Z test_saved_fields_exclude_live_contact_switch_and_retain_history (test_low_preload_nc_diagnosis.LowNCDiagnosis.test_saved_fields_exclude_live_contact_switch_and_retain_history) ... ok
+2026-11-18T04:15:10.1737998Z test_decode_rejects_nonfinite (test_mc_epoch_export.EpochFields.test_decode_rejects_nonfinite) ... ok
+2026-11-18T04:15:10.1748247Z test_display_reset_and_increment_are_distinct (test_mc_epoch_export.EpochFields.test_display_reset_and_increment_are_distinct) ... ok
+2026-11-18T04:15:10.1947625Z test_full_packet_roundtrip_and_partial_progress (test_mc_epoch_export.EpochFields.test_full_packet_roundtrip_and_partial_progress) ... ok
+2026-11-18T04:15:10.1954155Z test_material_ids_and_removed_points (test_mc_epoch_export.EpochFields.test_material_ids_and_removed_points) ... ok
+2026-11-18T04:15:10.1960702Z test_origin_uses_origin_parameters_and_zero_increment (test_mc_epoch_export.EpochFields.test_origin_uses_origin_parameters_and_zero_increment) ... ok
+2026-11-18T04:15:10.1967446Z test_raw_stress_is_not_smoothed_and_average_uses_volume (test_mc_epoch_export.EpochFields.test_raw_stress_is_not_smoothed_and_average_uses_volume) ... ok
+2026-11-18T04:15:10.1993285Z test_refuses_output_in_source_without_reading_or_writing (test_mc_epoch_export.EpochFields.test_refuses_output_in_source_without_reading_or_writing) ... ok
+2026-11-18T04:15:11.7221751Z test_running_writer_has_bounded_retries (test_mc_epoch_export.EpochFields.test_running_writer_has_bounded_retries) ... ok
+2026-11-18T04:15:11.7233221Z test_tet10_keeps_midside_nodes_and_shape_interpolation (test_mc_epoch_export.EpochFields.test_tet10_keeps_midside_nodes_and_shape_interpolation) ... ok
+2026-11-18T04:15:11.7286234Z test_elastic_eigenvalues_for_rotated_directions (test_mcc_acoustic.Acoustic.test_elastic_eigenvalues_for_rotated_directions) ... ok
+2026-11-18T04:15:11.7290363Z test_invalid_pressure_parameters_direction_and_denominator_are_rejected (test_mcc_acoustic.Acoustic.test_invalid_pressure_parameters_direction_and_denominator_are_rejected) ... ok
+2026-11-18T04:15:11.7454524Z test_plastic_acoustic_matches_independent_engineering_voigt_rate (test_mcc_acoustic.Acoustic.test_plastic_acoustic_matches_independent_engineering_voigt_rate) ... ok
+2026-11-18T04:15:11.7490412Z test_plastic_tensor_is_covariant_under_arbitrary_rotation (test_mcc_acoustic.Acoustic.test_plastic_tensor_is_covariant_under_arbitrary_rotation) ... ok
+2026-11-18T04:15:11.7773313Z test_softening_by_itself_does_not_imply_a_negative_sampled_acoustic_mode (test_mcc_acoustic.Acoustic.test_softening_by_itself_does_not_imply_a_negative_sampled_acoustic_mode) ... ok
+2026-11-18T04:15:11.8040911Z test_softening_witness_is_negative_but_not_global_stability_claim (test_mcc_acoustic.Acoustic.test_softening_witness_is_negative_but_not_global_stability_claim) ... ok
+2026-11-18T04:15:11.8045692Z test_yield_gradient_matches_independent_tensor_finite_difference (test_mcc_acoustic.Acoustic.test_yield_gradient_matches_independent_tensor_finite_difference) ... ok
+2026-11-18T04:15:11.8065227Z test_bad_inventory_and_non_mcc_material_are_rejected (test_mcc_acoustic.Report.test_bad_inventory_and_non_mcc_material_are_rejected) ... ok
+2026-11-18T04:15:11.8143624Z test_batch_matches_independent_single_point_scan (test_mcc_acoustic.Report.test_batch_matches_independent_single_point_scan) ... ok
+2026-11-18T04:15:11.8164346Z test_positive_mean_does_not_hide_tensile_principal_stress (test_mcc_acoustic.Report.test_positive_mean_does_not_hide_tensile_principal_stress) ... ok
+2026-11-18T04:15:11.8252019Z test_report_integrates_active_volume_preserves_input_and_reports_candidate_witness (test_mcc_acoustic.Report.test_report_integrates_active_volume_preserves_input_and_reports_candidate_witness) ... ok
+2026-11-18T04:15:11.8255954Z test_bad_inputs_are_rejected (test_mcc_acoustic_exact.Exact.test_bad_inputs_are_rejected) ... ok
+2026-11-18T04:15:11.8261845Z test_boundary_classification_is_indeterminate (test_mcc_acoustic_exact.Exact.test_boundary_classification_is_indeterminate) ... ok
+2026-11-18T04:15:11.8323322Z test_dense_angular_search_cannot_exceed_analytic_maximum (test_mcc_acoustic_exact.Exact.test_dense_angular_search_cannot_exceed_analytic_maximum) ... ok
+2026-11-18T04:15:11.8327137Z test_extension_has_independently_negative_rayleigh_witness (test_mcc_acoustic_exact.Exact.test_extension_has_independently_negative_rayleigh_witness) ... ok
+2026-11-18T04:15:11.8338370Z test_extreme_compressibility_and_stress_scaling (test_mcc_acoustic_exact.Exact.test_extreme_compressibility_and_stress_scaling) ... ok
+2026-11-18T04:15:11.8341982Z test_hydrostatic_degenerate_axes_match_closed_form (test_mcc_acoustic_exact.Exact.test_hydrostatic_degenerate_axes_match_closed_form) ... ok
+2026-11-18T04:15:11.8427879Z test_ratio_matches_full_positive_definiteness_for_many_directions (test_mcc_acoustic_exact.Exact.test_ratio_matches_full_positive_definiteness_for_many_directions) ... ok
+2026-11-18T04:15:11.8434817Z test_rotation_covariance_of_criterion (test_mcc_acoustic_exact.Exact.test_rotation_covariance_of_criterion) ... ok
+2026-11-18T04:15:11.8438474Z test_softening_compression_is_positive_control (test_mcc_acoustic_exact.Exact.test_softening_compression_is_positive_control) ... ok
+2026-11-18T04:15:11.9267140Z test_coercive_rates_reuse_lu_and_retain_all_three_original_block_gates (test_mcc_factor_reference.FactorReference.test_coercive_rates_reuse_lu_and_retain_all_three_original_block_gates) ... ok
+2026-11-18T04:15:16.7284954Z test_complete_plastic_k0_cycle_matches_fresh_reference_without_changing_physical_gates (test_mcc_factor_reference.FactorReference.test_complete_plastic_k0_cycle_matches_fresh_reference_without_changing_physical_gates) ... ok
+2026-11-18T04:15:16.7454096Z test_large_coercive_tangent_change_refactors_the_current_original_matrix (test_mcc_factor_reference.FactorReference.test_large_coercive_tangent_change_refactors_the_current_original_matrix) ... ok
+2026-11-18T04:15:16.7589206Z test_noncoercive_mcc_branch_uses_fresh_lu_instead_of_a_cached_factor (test_mcc_factor_reference.FactorReference.test_noncoercive_mcc_branch_uses_fresh_lu_instead_of_a_cached_factor) ... ok
+2026-11-18T04:15:16.8242334Z test_coercive_rates_reuse_lu_and_retain_all_three_original_block_gates (test_mcc_factor_reference.MatrixFreeReference.test_coercive_rates_reuse_lu_and_retain_all_three_original_block_gates) ... ok
+2026-11-18T04:15:21.1366066Z test_complete_plastic_k0_cycle_matches_fresh_reference_without_changing_physical_gates (test_mcc_factor_reference.MatrixFreeReference.test_complete_plastic_k0_cycle_matches_fresh_reference_without_changing_physical_gates) ... ok
+2026-11-18T04:15:21.1544864Z test_large_coercive_tangent_change_refactors_the_current_original_matrix (test_mcc_factor_reference.MatrixFreeReference.test_large_coercive_tangent_change_refactors_the_current_original_matrix) ... ok
+2026-11-18T04:15:21.1639821Z test_matrix_free_action_matches_independently_assembled_three_field_matrix (test_mcc_factor_reference.MatrixFreeReference.test_matrix_free_action_matches_independently_assembled_three_field_matrix) ... ok
+2026-11-18T04:15:21.1773016Z test_noncoercive_mcc_branch_uses_fresh_lu_instead_of_a_cached_factor (test_mcc_factor_reference.MatrixFreeReference.test_noncoercive_mcc_branch_uses_fresh_lu_instead_of_a_cached_factor) ... ok
+2026-11-18T04:15:21.2427222Z test_coercive_rates_reuse_lu_and_retain_all_three_original_block_gates (test_mcc_factor_reference.SharedCoerciveReference.test_coercive_rates_reuse_lu_and_retain_all_three_original_block_gates) ... ok
+2026-11-18T04:15:26.9139437Z test_complete_plastic_k0_cycle_matches_fresh_reference_without_changing_physical_gates (test_mcc_factor_reference.SharedCoerciveReference.test_complete_plastic_k0_cycle_matches_fresh_reference_without_changing_physical_gates) ... ok
+2026-11-18T04:15:26.9317856Z test_large_coercive_tangent_change_refactors_the_current_original_matrix (test_mcc_factor_reference.SharedCoerciveReference.test_large_coercive_tangent_change_refactors_the_current_original_matrix) ... ok
+2026-11-18T04:15:26.9412323Z test_matrix_free_action_matches_independently_assembled_three_field_matrix (test_mcc_factor_reference.SharedCoerciveReference.test_matrix_free_action_matches_independently_assembled_three_field_matrix) ... ok
+2026-11-18T04:15:26.9544857Z test_noncoercive_mcc_branch_uses_fresh_lu_instead_of_a_cached_factor (test_mcc_factor_reference.SharedCoerciveReference.test_noncoercive_mcc_branch_uses_fresh_lu_instead_of_a_cached_factor) ... ok
+2026-11-18T04:15:27.0246926Z test_successive_distinct_coercive_material_masks_share_only_corrected_original_solves (test_mcc_factor_reference.SharedCoerciveReference.test_successive_distinct_coercive_material_masks_share_only_corrected_original_solves) ... ok
+2026-11-18T04:15:33.2879007Z test_affine_seed_global_audits_cover_both_mixed_forms_and_displacement_form (test_mcc_seed_audit.AffineSeedAudit.test_affine_seed_global_audits_cover_both_mixed_forms_and_displacement_form) ... ok
+2026-11-18T04:15:33.2910669Z test_reconstruction_rejects_modified_state_coefficients_and_nonzero_plastic_history (test_mcc_seed_audit.AffineSeedAudit.test_reconstruction_rejects_modified_state_coefficients_and_nonzero_plastic_history) ... ok
+2026-11-18T04:15:33.4151955Z test_equilibrated_original_body_seed_stays_zero_without_importing_rust_history (test_mcc_structural_initial.GeneralStructuralInitial.test_equilibrated_original_body_seed_stays_zero_without_importing_rust_history) ... ok
+2026-11-18T04:15:33.4957123Z test_unbalanced_general_seed_is_rejected_before_output (test_mcc_structural_initial.GeneralStructuralInitial.test_unbalanced_general_seed_is_rejected_before_output) ... ok
+2026-11-18T04:15:33.5030905Z test_both_endpoint_loads_are_exact_without_cancellation (test_mean_stress_release_control.MeanStressReleaseControl.test_both_endpoint_loads_are_exact_without_cancellation) ... ok
+2026-11-18T04:15:33.5084858Z test_complement_contains_exact_original_vector_with_roundoff_recorded (test_mean_stress_release_control.MeanStressReleaseControl.test_complement_contains_exact_original_vector_with_roundoff_recorded) ... ok
+2026-11-18T04:15:33.5086768Z test_invalid_field_order_or_progress_is_rejected (test_mean_stress_release_control.MeanStressReleaseControl.test_invalid_field_order_or_progress_is_rejected) ... ok
+2026-11-18T04:15:33.5111944Z test_mean_force_has_analytical_affine_virtual_work (test_mean_stress_release_control.MeanStressReleaseControl.test_mean_force_has_analytical_affine_virtual_work) ... ok
+2026-11-18T04:15:33.5138262Z test_mean_nodal_force_is_not_a_component_or_node_mask (test_mean_stress_release_control.MeanStressReleaseControl.test_mean_nodal_force_is_not_a_component_or_node_mask) ... ok
+2026-11-18T04:15:33.5194488Z test_trace_free_stress_and_shear_do_not_change_mean_force (test_mean_stress_release_control.MeanStressReleaseControl.test_trace_free_stress_and_shear_do_not_change_mean_force) ... ok
+2026-11-18T04:15:33.5216772Z test_existing_output_and_missing_completion_marker_are_preserved (test_native_capture.NativeCapture.test_existing_output_and_missing_completion_marker_are_preserved) ... 
+2026-11-18T04:15:33.5217600Z *******************************************************************
+2026-11-18T04:15:33.5217951Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:15:33.5218188Z 
+2026-11-18T04:15:33.5218295Z *******************************************************************
+2026-11-18T04:15:33.5218602Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:15:33.5218975Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:15:33.5226056Z ** WorkSession : Sending all data
+2026-11-18T04:15:33.5240807Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\soil-fem-native-capture-36_foe26\capture\body-0001.step(350 ents)  Write  Done
+2026-11-18T04:15:33.5455559Z ok
+2026-11-18T04:15:33.5475234Z test_logical_labels_and_mm_to_m_volume_are_independent_of_cad_display_names (test_native_capture.NativeCapture.test_logical_labels_and_mm_to_m_volume_are_independent_of_cad_display_names) ... 
+2026-11-18T04:15:33.5476878Z *******************************************************************
+2026-11-18T04:15:33.5477784Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:15:33.5478260Z 
+2026-11-18T04:15:33.5478458Z *******************************************************************
+2026-11-18T04:15:33.5479082Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:15:33.5479797Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:15:33.5485271Z ** WorkSession : Sending all data
+2026-11-18T04:15:33.5497825Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\soil-fem-native-capture-5vliew6i\capture\body-0001.step(350 ents)  Write  Done
+2026-11-18T04:15:33.5890261Z Native SolidCraft capture imported: 1 material bodies, 0 excavation tools
+2026-11-18T04:15:33.5890795Z ok
+2026-11-18T04:15:33.5907593Z test_nonfinite_json_is_rejected_before_file_import (test_native_capture.NativeCapture.test_nonfinite_json_is_rejected_before_file_import) ... 
+2026-11-18T04:15:33.5909138Z *******************************************************************
+2026-11-18T04:15:33.5910304Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:15:33.5910912Z 
+2026-11-18T04:15:33.5911164Z *******************************************************************
+2026-11-18T04:15:33.5911814Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:15:33.5912578Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:15:33.5919289Z ** WorkSession : Sending all data
+2026-11-18T04:15:33.5931724Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\soil-fem-native-capture-sazsf7r6\capture\body-0001.step(350 ents)  Write  Done
+2026-11-18T04:15:33.6074270Z ok
+2026-11-18T04:15:33.6091939Z test_overflowing_json_exponent_is_rejected_before_file_import (test_native_capture.NativeCapture.test_overflowing_json_exponent_is_rejected_before_file_import) ... 
+2026-11-18T04:15:33.6093323Z *******************************************************************
+2026-11-18T04:15:33.6093750Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:15:33.6094048Z 
+2026-11-18T04:15:33.6094161Z *******************************************************************
+2026-11-18T04:15:33.6094738Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:15:33.6095176Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:15:33.6099787Z ** WorkSession : Sending all data
+2026-11-18T04:15:33.6112358Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\soil-fem-native-capture-l9xpb1su\capture\body-0001.step(350 ents)  Write  Done
+2026-11-18T04:15:33.6237954Z ok
+2026-11-18T04:15:33.6256176Z test_resealed_ground_changes_and_bool_number_coercion_are_rejected (test_native_capture.NativeCapture.test_resealed_ground_changes_and_bool_number_coercion_are_rejected) ... 
+2026-11-18T04:15:33.6257893Z *******************************************************************
+2026-11-18T04:15:33.6258672Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:15:33.6259228Z 
+2026-11-18T04:15:33.6259412Z *******************************************************************
+2026-11-18T04:15:33.6260019Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:15:33.6260756Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:15:33.6266426Z ** WorkSession : Sending all data
+2026-11-18T04:15:33.6279365Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\soil-fem-native-capture-4clypyh5\capture\body-0001.step(350 ents)  Write  Done
+2026-11-18T04:15:33.6472143Z ok
+2026-11-18T04:15:33.6490238Z test_step_tampering_and_escaping_inventory_paths_are_rejected (test_native_capture.NativeCapture.test_step_tampering_and_escaping_inventory_paths_are_rejected) ... 
+2026-11-18T04:15:33.6491191Z *******************************************************************
+2026-11-18T04:15:33.6491599Z ******        Statistics on Transfer (Write)                 ******
+2026-11-18T04:15:33.6492053Z 
+2026-11-18T04:15:33.6492192Z *******************************************************************
+2026-11-18T04:15:33.6492565Z ******        Transfer Mode = 0  I.E.  As Is       ******
+2026-11-18T04:15:33.6493004Z ******        Transferring Shape, ShapeType = 0                      ******
+2026-11-18T04:15:33.6498416Z ** WorkSession : Sending all data
+2026-11-18T04:15:33.6511274Z  Step File Name : C:\Users\RUNNER~1\AppData\Local\Temp\soil-fem-native-capture-1bjqbo7d\capture\body-0001.step(350 ents)  Write  Done
+2026-11-18T04:15:33.6659547Z ok
+2026-11-18T04:15:33.6784190Z test_changed_source_inventory_and_unsafe_names_fail_before_creating_output (test_native_plate_expansion.NativePlateExpansion.test_changed_source_inventory_and_unsafe_names_fail_before_creating_output) ... ok
+2026-11-18T04:15:33.6843096Z test_compact_case_derives_exact_existing_plate_binding_without_source_mutation (test_native_plate_expansion.NativePlateExpansion.test_compact_case_derives_exact_existing_plate_binding_without_source_mutation) ... ok
+2026-11-18T04:15:33.6891206Z test_coordinate_ambiguity_is_rejected_before_a_native_attachment_can_change (test_native_plate_expansion.NativePlateExpansion.test_coordinate_ambiguity_is_rejected_before_a_native_attachment_can_change) ... ok
+2026-11-18T04:15:33.6945535Z test_generated_connections_do_not_consume_the_native_user_group_budget (test_native_plate_expansion.NativePlateExpansion.test_generated_connections_do_not_consume_the_native_user_group_budget) ... ok
+2026-11-18T04:15:33.6954494Z test_invalid_declarations_and_unverified_couplings_are_not_silently_dropped (test_native_plate_expansion.NativePlateExpansion.test_invalid_declarations_and_unverified_couplings_are_not_silently_dropped) ... ok
+2026-11-18T04:15:33.6978414Z test_legacy_case_is_unchanged_and_cannot_claim_an_unrequested_expansion (test_native_plate_expansion.NativePlateExpansion.test_legacy_case_is_unchanged_and_cannot_claim_an_unrequested_expansion) ... ok
+2026-11-18T04:15:33.7448469Z test_prepared_inventory_and_restart_copy_keep_reproducible_source_linkage (test_native_plate_expansion.NativePlateExpansion.test_prepared_inventory_and_restart_copy_keep_reproducible_source_linkage) ... ok
+2026-11-18T04:15:33.7958417Z test_regeneration_rejects_mesh_stage_binding_and_receipt_tampering (test_native_plate_expansion.NativePlateExpansion.test_regeneration_rejects_mesh_stage_binding_and_receipt_tampering) ... ok
+2026-11-18T04:15:33.8129873Z test_both_pinned_suffixes_checked_before_old_prefix (test_nc_collapse.CollapseAppendixTests.test_both_pinned_suffixes_checked_before_old_prefix) ... ok
+2026-11-18T04:15:33.8269806Z test_missing_new_manifest_is_rejected (test_nc_collapse.CollapseAppendixTests.test_missing_new_manifest_is_rejected) ... ok
+2026-11-18T04:15:33.8424434Z test_modified_new_suffix_is_rejected (test_nc_collapse.CollapseAppendixTests.test_modified_new_suffix_is_rejected) ... ok
+2026-11-18T04:15:33.8596387Z test_old_suffix_crlf_is_rejected_after_exact_new_suffix (test_nc_collapse.CollapseAppendixTests.test_old_suffix_crlf_is_rejected_after_exact_new_suffix) ... ok
+2026-11-18T04:15:33.9041443Z test_old_suffix_mutation_is_still_rejected (test_nc_collapse.CollapseAppendixTests.test_old_suffix_mutation_is_still_rejected) ... ok
+2026-11-18T04:15:33.9188826Z test_resealed_new_manifest_is_rejected (test_nc_collapse.CollapseAppendixTests.test_resealed_new_manifest_is_rejected) ... ok
+2026-11-18T04:15:33.9347350Z test_windows_text_translation_is_rejected_without_normalization (test_nc_collapse.CollapseAppendixTests.test_windows_text_translation_is_rejected_without_normalization) ... ok
+2026-11-18T04:15:34.4145830Z test_axisymmetric_cone_known_formula (test_nc_collapse.CollapseBoundsTests.test_axisymmetric_cone_known_formula) ... ok
+2026-11-18T04:15:34.4152330Z test_cone_section_support (test_nc_collapse.CollapseBoundsTests.test_cone_section_support) ... ok
+2026-11-18T04:15:34.4188381Z test_ellipse_support_duality_and_surface (test_nc_collapse.CollapseBoundsTests.test_ellipse_support_duality_and_surface) ... ok
+2026-11-18T04:15:34.4190875Z test_invalid_data_rejected (test_nc_collapse.CollapseBoundsTests.test_invalid_data_rejected) ... ok
+2026-11-18T04:15:34.4229621Z test_known_single_point_ellipse_bound (test_nc_collapse.CollapseBoundsTests.test_known_single_point_ellipse_bound) ... ok
+2026-11-18T04:15:34.4231913Z test_shear_work_pairing (test_nc_collapse.CollapseBoundsTests.test_shear_work_pairing) ... ok
+2026-11-18T04:15:34.4234053Z test_work_bound_sign_and_witness (test_nc_collapse.CollapseBoundsTests.test_work_bound_sign_and_witness) ... ok
+2026-11-18T04:15:34.6217316Z test_intersection_support_and_ordering (test_nc_collapse.IntersectionTests.test_intersection_support_and_ordering) ... ok
+2026-11-18T04:15:34.6222102Z test_bifurcation_orthogonal_load (test_nc_collapse.MatrixTests.test_bifurcation_orthogonal_load) ... ok
+2026-11-18T04:15:34.6226592Z test_nonsymmetric_left_controls_solvability (test_nc_collapse.MatrixTests.test_nonsymmetric_left_controls_solvability) ... ok
+2026-11-18T04:15:34.6229682Z test_regular_bordered_limit_point (test_nc_collapse.MatrixTests.test_regular_bordered_limit_point) ... ok
+2026-11-18T04:15:34.6311337Z test_gravity_off_is_literal_zero_without_small_weight_substitution (test_nc_collapse.SweepMaterialTests.test_gravity_off_is_literal_zero_without_small_weight_substitution) ... ok
+2026-11-18T04:15:34.6339967Z test_material_request_retains_history_and_engineering_strain (test_nc_collapse.SweepMaterialTests.test_material_request_retains_history_and_engineering_strain) ... ok
+2026-11-18T04:15:34.6376602Z test_sweep_only_requested_physics_and_separate_cap_pressure (test_nc_collapse.SweepMaterialTests.test_sweep_only_requested_physics_and_separate_cap_pressure) ... ok
+2026-11-18T04:15:34.6932939Z test_above_tolerance_is_saved_and_fails_with_zero_samples (test_nc_independent_arc_residual.IndependentArcResidual.test_above_tolerance_is_saved_and_fails_with_zero_samples) ... ok
+2026-11-18T04:15:34.6962550Z test_actual_bordered_matrix_improves_without_changing_norm_or_inputs (test_nc_independent_arc_residual.IndependentArcResidual.test_actual_bordered_matrix_improves_without_changing_norm_or_inputs) ... ok
+2026-11-18T04:15:34.7150765Z test_decimal_corrections_when_longdouble_has_no_extra_precision (test_nc_independent_arc_residual.IndependentArcResidual.test_decimal_corrections_when_longdouble_has_no_extra_precision) ... ok
+2026-11-18T04:15:34.7646203Z test_empty_trace_cannot_be_reported_as_usable (test_nc_independent_arc_residual.IndependentArcResidual.test_empty_trace_cannot_be_reported_as_usable) ... ok
+2026-11-18T04:15:43.3478094Z test_later_failure_keeps_accepted_sample_and_exact_solved_vectors (test_nc_independent_arc_residual.IndependentArcResidual.test_later_failure_keeps_accepted_sample_and_exact_solved_vectors) ... ok
+2026-11-18T04:15:46.1113709Z test_missing_and_empty_arc_cli_fail_clearly_and_preserve_sources (test_nc_independent_arc_residual.IndependentArcResidual.test_missing_and_empty_arc_cli_fail_clearly_and_preserve_sources) ... ok
+2026-11-18T04:15:46.1239893Z test_changed_binary_and_binding_are_rejected (test_nc_midpoint_resume.MidpointResumeGuards.test_changed_binary_and_binding_are_rejected) ... ok
+2026-11-18T04:15:46.1382925Z test_changed_scheme_and_100_kpa_preload_are_rejected_before_output (test_nc_midpoint_resume.MidpointResumeGuards.test_changed_scheme_and_100_kpa_preload_are_rejected_before_output) ... ok
+2026-11-18T04:15:46.1553652Z test_every_existing_numerical_and_physical_input_remains_bound (test_nc_midpoint_resume.MidpointResumeGuards.test_every_existing_numerical_and_physical_input_remains_bound) ... ok
+2026-11-18T04:15:46.1633840Z test_omitted_optional_audit_and_changed_old_history (test_nc_midpoint_resume.MidpointResumeGuards.test_omitted_optional_audit_and_changed_old_history) ... ok
+2026-11-18T04:15:46.1663494Z test_monotone_component_bounded_withdrawal (test_nc_oblique_release.ObliqueRelease.test_monotone_component_bounded_withdrawal) ... ok
+2026-11-18T04:15:46.1665049Z test_original_endpoints_and_waypoints (test_nc_oblique_release.ObliqueRelease.test_original_endpoints_and_waypoints) ... ok
+2026-11-18T04:15:46.1687670Z test_outside_original_component_box_is_rejected (test_nc_oblique_release.ObliqueRelease.test_outside_original_component_box_is_rejected) ... ok
+2026-11-18T04:15:52.2292041Z test_real_producer_writes_expected_json_names_and_types (test_nc_pc_gate_schema.PcGateSchema.test_real_producer_writes_expected_json_names_and_types) ... ok
+2026-11-18T04:16:07.3605860Z test_real_rerun_saves_specific_failure_and_preserves_pc3 (test_nc_pc_gate_schema.PcGateSchema.test_real_rerun_saves_specific_failure_and_preserves_pc3) ... ok
+2026-11-18T04:17:23.3516550Z test_reuse_refuses_bad_command_provenance (test_nc_pc_gate_schema.PcGateSchema.test_reuse_refuses_bad_command_provenance) ... ok
+2026-11-18T04:17:42.3846503Z test_reuse_refuses_changed_source_code (test_nc_pc_gate_schema.PcGateSchema.test_reuse_refuses_changed_source_code) ... ok
+2026-11-18T04:18:02.5771829Z test_reuse_refuses_missing_reference_or_bad_seed (test_nc_pc_gate_schema.PcGateSchema.test_reuse_refuses_missing_reference_or_bad_seed) ... ok
+2026-11-18T04:18:21.7450002Z test_reuse_validation_keeps_source_bytes_and_failure (test_nc_pc_gate_schema.PcGateSchema.test_reuse_validation_keeps_source_bytes_and_failure) ... ok
+2026-11-18T04:18:21.7615066Z test_added_document_text_cannot_hide_after_the_pinned_tail (test_nc_physical_appendix.PhysicalDocumentAppendix.test_added_document_text_cannot_hide_after_the_pinned_tail) ... ok
+2026-11-18T04:18:21.7672895Z test_exact_pinned_tails_are_accepted (test_nc_physical_appendix.PhysicalDocumentAppendix.test_exact_pinned_tails_are_accepted) ... ok
+2026-11-18T04:18:21.7720951Z test_missing_manifest_is_rejected (test_nc_physical_appendix.PhysicalDocumentAppendix.test_missing_manifest_is_rejected) ... ok
+2026-11-18T04:18:21.7845878Z test_old_prefix_mutation_still_fails_original_hash_check (test_nc_physical_appendix.PhysicalDocumentAppendix.test_old_prefix_mutation_still_fails_original_hash_check) ... ok
+2026-11-18T04:18:21.7897563Z test_resealed_or_whitespace_changed_manifest_is_rejected (test_nc_physical_appendix.PhysicalDocumentAppendix.test_resealed_or_whitespace_changed_manifest_is_rejected) ... ok
+2026-11-18T04:18:21.9435869Z test_changed_checkout_uses_verified_snapshot_and_reports_eol_separately (test_nc_replay_contract.HistoricalReplayContract.test_changed_checkout_uses_verified_snapshot_and_reports_eol_separately) ... ok
+2026-11-18T04:18:22.4901337Z test_corrupt_parts_sources_inventory_and_measurements_are_rejected (test_nc_replay_contract.HistoricalReplayContract.test_corrupt_parts_sources_inventory_and_measurements_are_rejected) ... ok
+2026-11-18T04:18:22.4910873Z test_actual_nonsymmetric_spectrum_and_both_singular_equations (test_nc_tangent_branch_diagnosis.TangentBranchDiagnostics.test_actual_nonsymmetric_spectrum_and_both_singular_equations) ... ok
+2026-11-18T04:18:22.4944705Z test_changed_retained_evidence_is_rejected_before_diagnosis (test_nc_tangent_branch_diagnosis.TangentBranchDiagnostics.test_changed_retained_evidence_is_rejected_before_diagnosis) ... ok
+2026-11-18T04:18:22.4949227Z test_late_arc_refuses_extrapolation_and_extra_holding (test_nc_tangent_branch_diagnosis.TangentBranchDiagnostics.test_late_arc_refuses_extrapolation_and_extra_holding) ... ok
+2026-11-18T04:18:22.4951039Z test_nonfinite_or_nonsquare_tangents_cannot_be_spectra (test_nc_tangent_branch_diagnosis.TangentBranchDiagnostics.test_nonfinite_or_nonsquare_tangents_cannot_be_spectra) ... ok
+2026-11-18T04:18:22.7191301Z test_actual_file_and_total_boundaries_and_no_success_on_overflow (test_p2_epoch_budget.Budgets.test_actual_file_and_total_boundaries_and_no_success_on_overflow) ... ok
+2026-11-18T04:18:22.7196750Z test_every_payload_uses_same_encoded_bytes_for_size_and_write (test_p2_epoch_budget.Budgets.test_every_payload_uses_same_encoded_bytes_for_size_and_write) ... ok
+2026-11-18T04:18:22.7558121Z test_interrupt_during_launch_retains_the_handle_for_cleanup (test_p2_resume_ownership.OwnedChild.test_interrupt_during_launch_retains_the_handle_for_cleanup) ... ok
+2026-11-18T04:18:23.0871750Z test_main_thread_runtime_sigint_reaps_real_child (test_p2_resume_ownership.OwnedChild.test_main_thread_runtime_sigint_reaps_real_child) ... ok
+2026-11-18T04:18:23.4320401Z test_main_thread_runtime_sigterm_reaps_real_child (test_p2_resume_ownership.OwnedChild.test_main_thread_runtime_sigterm_reaps_real_child) ... ok
+2026-11-18T04:18:23.4886817Z test_normal_child_failure_unlocks (test_p2_resume_ownership.OwnedChild.test_normal_child_failure_unlocks) ... ok
+2026-11-18T04:18:23.8091054Z test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry (test_p2_resume_ownership.OwnedChild.test_parent_only_sigint_reaps_child_before_unlock_and_allows_safe_retry) ... ok
+2026-11-18T04:18:24.1439180Z test_parent_only_sigterm_reaps_child_before_unlock_and_allows_safe_retry (test_p2_resume_ownership.OwnedChild.test_parent_only_sigterm_reaps_child_before_unlock_and_allows_safe_retry) ... ok
+2026-11-18T04:18:24.1785640Z test_status_exception_after_launch_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_status_exception_after_launch_stops_and_waits) ... ok
+2026-11-18T04:18:24.2237795Z test_unconfirmed_child_exit_retains_lock_with_owner_record (test_p2_resume_ownership.OwnedChild.test_unconfirmed_child_exit_retains_lock_with_owner_record) ... ok
+2026-11-18T04:18:24.2615138Z test_wait_exception_stops_and_waits (test_p2_resume_ownership.OwnedChild.test_wait_exception_stops_and_waits) ... ok
+2026-11-18T04:18:24.2617915Z test_live_handle_identity_guards_are_retained (test_p2_safe_pause.Ownership.test_live_handle_identity_guards_are_retained) ... ok
+2026-11-18T04:18:24.2619565Z test_ordered_children_grandchildren_and_excluded_are_respected (test_p2_safe_pause.Ownership.test_ordered_children_grandchildren_and_excluded_are_respected) ... ok
+2026-11-18T04:18:24.2624036Z test_reused_parent_pid_does_not_claim_older_child (test_p2_safe_pause.Ownership.test_reused_parent_pid_does_not_claim_older_child) ... ok
+2026-11-18T04:18:24.2627292Z test_unknown_missing_unparseable_and_identity_mismatch_fail_closed (test_p2_safe_pause.Ownership.test_unknown_missing_unparseable_and_identity_mismatch_fail_closed) ... ok
+2026-11-18T04:20:06.0302608Z test_ci_profile_keeps_the_slope_failure_and_does_not_close_p6 (test_plane_strain_2d.PlaneStrainOriginal2d.test_ci_profile_keeps_the_slope_failure_and_does_not_close_p6) ... ok
+2026-11-18T04:20:06.0359455Z test_consistent_load_rejects_equal_six_virtual_work (test_plate6.Plate6.test_consistent_load_rejects_equal_six_virtual_work) ... ok
+2026-11-18T04:20:06.0367389Z test_explicit_legacy_selection_matches_rust_canonical_input (test_plate6.Plate6.test_explicit_legacy_selection_matches_rust_canonical_input) ... ok
+2026-11-18T04:20:06.0429835Z test_independent_rank_and_constant_shear_energy (test_plate6.Plate6.test_independent_rank_and_constant_shear_energy) ... ok
+2026-11-18T04:20:06.0622347Z test_quadratic_vtu_roundtrip_and_mixed_legacy_contract (test_plate6.Plate6.test_quadratic_vtu_roundtrip_and_mixed_legacy_contract) ... ok
+2026-11-18T04:20:14.1493249Z test_small_coupled_study_direct_reference_restarts_and_falsification (test_plate6.Plate6.test_small_coupled_study_direct_reference_restarts_and_falsification) ... {
+2026-11-18T04:20:14.1495439Z   "schema": "soil-fem-independent-plate-beam-coupling/1",
+2026-11-18T04:20:14.1497970Z   "reference": "Full soil + plate/frame direct solve; independent polynomial CST/DKT or covariant-moment Mindlin Tri6 and GL25 surface integration; GL125 soil quadrature; SVD supports; no Rust solved field or installation reference generates the solution",
+2026-11-18T04:20:14.1499948Z   "frames": [
+2026-11-18T04:20:14.1500276Z     {
+2026-11-18T04:20:14.1500605Z       "frame": "initial_equilibrated",
+2026-11-18T04:20:14.1501022Z       "soil_free_dofs": 108,
+2026-11-18T04:20:14.1501392Z       "retained_frame_unknowns": 0,
+2026-11-18T04:20:14.1501829Z       "relative_joint_system_residual": 5.623791384531831e-15,
+2026-11-18T04:20:14.1502344Z       "relative_3d_displacement_error": 1.7987301627840754e-12,
+2026-11-18T04:20:14.1502832Z       "maximum_beam_displacement_error_m": 0.0,
+2026-11-18T04:20:14.1503264Z       "maximum_rotation_error_rad": 0.0,
+2026-11-18T04:20:14.1503672Z       "maximum_installation_reference_error": 0.0,
+2026-11-18T04:20:14.1504084Z       "maximum_end_action_error": 0.0,
+2026-11-18T04:20:14.1504511Z       "relative_all_point_stress_error": 1.689793936458122e-12,
+2026-11-18T04:20:14.1505025Z       "maximum_void_ratio_error": 1.5543122344752192e-15,
+2026-11-18T04:20:14.1505490Z       "global_moment_balance_kn_m": [
+2026-11-18T04:20:14.1505847Z         2.6867397195928788e-14,
+2026-11-18T04:20:14.1506168Z         -2.4202861936828413e-14,
+2026-11-18T04:20:14.1506772Z         2.220446049250313e-16
+2026-11-18T04:20:14.1507078Z       ],
+2026-11-18T04:20:14.1507364Z       "plate_maximum_absolute_errors": {}
+2026-11-18T04:20:14.1507719Z     },
+2026-11-18T04:20:14.1507994Z     {
+2026-11-18T04:20:14.1508252Z       "frame": "install",
+2026-11-18T04:20:14.1508567Z       "soil_free_dofs": 108,
+2026-11-18T04:20:14.1508903Z       "retained_frame_unknowns": 33,
+2026-11-18T04:20:14.1509609Z       "relative_joint_system_residual": 1.4334055678638122e-14,
+2026-11-18T04:20:14.1510118Z       "relative_3d_displacement_error": 7.937588281420301e-12,
+2026-11-18T04:20:14.1510649Z       "maximum_beam_displacement_error_m": 5.761206399099161e-15,
+2026-11-18T04:20:14.1511132Z       "maximum_rotation_error_rad": 1.0540538982004716e-14,
+2026-11-18T04:20:14.1511594Z       "maximum_installation_reference_error": 7.211570750287333e-16,
+2026-11-18T04:20:14.1512251Z       "maximum_end_action_error": 4.547473508864641e-13,
+2026-11-18T04:20:14.1512675Z       "relative_all_point_stress_error": 3.746171232158751e-12,
+2026-11-18T04:20:14.1513093Z       "maximum_void_ratio_error": 7.105427357601002e-15,
+2026-11-18T04:20:14.1513477Z       "global_moment_balance_kn_m": [
+2026-11-18T04:20:14.1513940Z         2.55351295663786e-13,
+2026-11-18T04:20:14.1514437Z         1.042721464727947e-12,
+2026-11-18T04:20:14.1514730Z         -3.1069591344135006e-13
+2026-11-18T04:20:14.1515028Z       ],
+2026-11-18T04:20:14.1515281Z       "plate_maximum_absolute_errors": {
+2026-11-18T04:20:14.1515600Z         "area_m2": 0.0,
+2026-11-18T04:20:14.1515868Z         "local_axes": 0.0,
+2026-11-18T04:20:14.1516175Z         "membrane_energy_kn_m": 1.2238666558314078e-18,
+2026-11-18T04:20:14.1516574Z         "bending_energy_kn_m": 3.330194735425007e-17,
+2026-11-18T04:20:14.1516978Z         "drilling_penalty_energy_kn_m": 2.661706001158774e-22,
+2026-11-18T04:20:14.1517393Z         "transverse_shear_energy_kn_m": 2.200273959611452e-18,
+2026-11-18T04:20:14.1517787Z         "barycentric": 0.0,
+2026-11-18T04:20:14.1518092Z         "membrane_strain": 1.0245710529988017e-17,
+2026-11-18T04:20:14.1518449Z         "curvature_per_m": 1.3241361132565466e-15,
+2026-11-18T04:20:14.1518810Z         "membrane_force_kn_m": 1.7584378397828004e-11,
+2026-11-18T04:20:14.1519171Z         "bending_moment_kn": 1.3793133302186789e-12,
+2026-11-18T04:20:14.1519570Z         "transverse_shear_strain": 1.4823076576950256e-17,
+2026-11-18T04:20:14.1519974Z         "transverse_shear_force_kn_m": 1.544064875957929e-11,
+2026-11-18T04:20:14.1520368Z         "drilling_mismatch_rad": 6.4890892598362286e-15
+2026-11-18T04:20:14.1520730Z       }
+2026-11-18T04:20:14.1520948Z     },
+2026-11-18T04:20:14.1521169Z     {
+2026-11-18T04:20:14.1521411Z       "frame": "load_plate_beam",
+2026-11-18T04:20:14.1521713Z       "soil_free_dofs": 108,
+2026-11-18T04:20:14.1522041Z       "retained_frame_unknowns": 33,
+2026-11-18T04:20:14.1522408Z       "relative_joint_system_residual": 7.844610677836864e-14,
+2026-11-18T04:20:14.1522832Z       "relative_3d_displacement_error": 7.781238748071599e-12,
+2026-11-18T04:20:14.1523261Z       "maximum_beam_displacement_error_m": 1.5347098591966812e-14,
+2026-11-18T04:20:14.1523717Z       "maximum_rotation_error_rad": 2.454889183644074e-14,
+2026-11-18T04:20:14.1524327Z       "maximum_installation_reference_error": 7.211570750287333e-16,
+2026-11-18T04:20:14.1524823Z       "maximum_end_action_error": 1.8189894035458565e-12,
+2026-11-18T04:20:14.1525263Z       "relative_all_point_stress_error": 6.218117613767281e-12,
+2026-11-18T04:20:14.1525670Z       "maximum_void_ratio_error": 2.398081733190338e-14,
+2026-11-18T04:20:14.1526036Z       "global_moment_balance_kn_m": [
+2026-11-18T04:20:14.1526348Z         2.005950960892733e-12,
+2026-11-18T04:20:14.1527435Z         3.772981926886132e-12,
+2026-11-18T04:20:14.1527990Z         -9.750256158014281e-13
+2026-11-18T04:20:14.1528408Z       ],
+2026-11-18T04:20:14.1528832Z       "plate_maximum_absolute_errors": {
+2026-11-18T04:20:14.1529370Z         "area_m2": 0.0,
+2026-11-18T04:20:14.1529825Z         "local_axes": 0.0,
+2026-11-18T04:20:14.1530355Z         "membrane_energy_kn_m": 1.1687784122688463e-17,
+2026-11-18T04:20:14.1531040Z         "bending_energy_kn_m": 2.009677146919131e-15,
+2026-11-18T04:20:14.1531720Z         "drilling_penalty_energy_kn_m": 4.940427362928278e-21,
+2026-11-18T04:20:14.1532488Z         "transverse_shear_energy_kn_m": 4.7379634937616544e-17,
+2026-11-18T04:20:14.1533385Z         "barycentric": 0.0,
+2026-11-18T04:20:14.1533911Z         "membrane_strain": 5.456247433033301e-17,
+2026-11-18T04:20:14.1534858Z         "curvature_per_m": 6.496105736664148e-15,
+2026-11-18T04:20:14.1535486Z         "membrane_force_kn_m": 7.748823804831773e-11,
+2026-11-18T04:20:14.1536093Z         "bending_moment_kn": 6.766809335090329e-12,
+2026-11-18T04:20:14.1536765Z         "transverse_shear_strain": 5.533496837822893e-17,
+2026-11-18T04:20:14.1537419Z         "transverse_shear_force_kn_m": 5.764100308169873e-11,
+2026-11-18T04:20:14.1538089Z         "drilling_mismatch_rad": 2.0568424189936212e-14
+2026-11-18T04:20:14.1538665Z       }
+2026-11-18T04:20:14.1539073Z     },
+2026-11-18T04:20:14.1539441Z     {
+2026-11-18T04:20:14.1540094Z       "frame": "unload_plate_beam",
+2026-11-18T04:20:14.1540591Z       "soil_free_dofs": 108,
+2026-11-18T04:20:14.1540944Z       "retained_frame_unknowns": 33,
+2026-11-18T04:20:14.1541322Z       "relative_joint_system_residual": 1.4334055678638122e-14,
+2026-11-18T04:20:14.1541770Z       "relative_3d_displacement_error": 5.6923426440864425e-11,
+2026-11-18T04:20:14.1542206Z       "maximum_beam_displacement_error_m": 6.989867669046634e-14,
+2026-11-18T04:20:14.1542654Z       "maximum_rotation_error_rad": 4.0555285299166514e-14,
+2026-11-18T04:20:14.1543081Z       "maximum_installation_reference_error": 7.211570750287333e-16,
+2026-11-18T04:20:14.1543510Z       "maximum_end_action_error": 4.547473508864641e-13,
+2026-11-18T04:20:14.1543909Z       "relative_all_point_stress_error": 3.574517843421218e-11,
+2026-11-18T04:20:14.1544342Z       "maximum_void_ratio_error": 4.773959005888173e-14,
+2026-11-18T04:20:14.1544695Z       "global_moment_balance_kn_m": [
+2026-11-18T04:20:14.1544999Z         2.55351295663786e-13,
+2026-11-18T04:20:14.1545282Z         1.042721464727947e-12,
+2026-11-18T04:20:14.1545587Z         -3.1069591344135006e-13
+2026-11-18T04:20:14.1545850Z       ],
+2026-11-18T04:20:14.1546133Z       "plate_maximum_absolute_errors": {
+2026-11-18T04:20:14.1546464Z         "area_m2": 0.0,
+2026-11-18T04:20:14.1546733Z         "local_axes": 0.0,
+2026-11-18T04:20:14.1547072Z         "membrane_energy_kn_m": 2.1707866251351616e-18,
+2026-11-18T04:20:14.1547437Z         "bending_energy_kn_m": 8.005748841632965e-16,
+2026-11-18T04:20:14.1547820Z         "drilling_penalty_energy_kn_m": 5.409148347948144e-23,
+2026-11-18T04:20:14.1548229Z         "transverse_shear_energy_kn_m": 2.86398780125624e-17,
+2026-11-18T04:20:14.1548623Z         "barycentric": 0.0,
+2026-11-18T04:20:14.1548923Z         "membrane_strain": 1.0906396228846371e-16,
+2026-11-18T04:20:14.1549268Z         "curvature_per_m": 1.3215665541077559e-14,
+2026-11-18T04:20:14.1549616Z         "membrane_force_kn_m": 1.3632994733114856e-10,
+2026-11-18T04:20:14.1550002Z         "bending_moment_kn": 1.3766321416142091e-11,
+2026-11-18T04:20:14.1550368Z         "transverse_shear_strain": 1.0739530738237274e-16,
+2026-11-18T04:20:14.1550763Z         "transverse_shear_force_kn_m": 1.1187006876411942e-10,
+2026-11-18T04:20:14.1551176Z         "drilling_mismatch_rad": 1.2369491591110893e-15
+2026-11-18T04:20:14.1551499Z       }
+2026-11-18T04:20:14.1551713Z     },
+2026-11-18T04:20:14.1551928Z     {
+2026-11-18T04:20:14.1552154Z       "frame": "remove",
+2026-11-18T04:20:14.1552693Z       "soil_free_dofs": 108,
+2026-11-18T04:20:14.1553004Z       "retained_frame_unknowns": 0,
+2026-11-18T04:20:14.1553365Z       "relative_joint_system_residual": 5.623791384531831e-15,
+2026-11-18T04:20:14.1553790Z       "relative_3d_displacement_error": 3.039135136560987e-12,
+2026-11-18T04:20:14.1554253Z       "maximum_beam_displacement_error_m": 6.989867669046634e-14,
+2026-11-18T04:20:14.1554888Z       "maximum_rotation_error_rad": 4.0555285299166514e-14,
+2026-11-18T04:20:14.1555326Z       "maximum_installation_reference_error": 7.211570750287333e-16,
+2026-11-18T04:20:14.1556062Z       "maximum_end_action_error": 0.0,
+2026-11-18T04:20:14.1556735Z       "relative_all_point_stress_error": 2.3165221728068295e-12,
+2026-11-18T04:20:14.1557379Z       "maximum_void_ratio_error": 2.6645352591003757e-15,
+2026-11-18T04:20:14.1557744Z       "global_moment_balance_kn_m": [
+2026-11-18T04:20:14.1558050Z         2.6867397195928788e-14,
+2026-11-18T04:20:14.1558358Z         -2.4202861936828413e-14,
+2026-11-18T04:20:14.1558628Z         2.220446049250313e-16
+2026-11-18T04:20:14.1558885Z       ],
+2026-11-18T04:20:14.1559135Z       "plate_maximum_absolute_errors": {}
+2026-11-18T04:20:14.1559470Z     }
+2026-11-18T04:20:14.1559685Z   ],
+2026-11-18T04:20:14.1560072Z   "solver_sha256": "6d3740a0b8f613724e4abfa561e63bc6591d1dea741da01511c1aac86373d0bf",
+2026-11-18T04:20:14.1560580Z   "plate_samples_and_energies_checked": true,
+2026-11-18T04:20:14.1560997Z   "spatial_convergence_accepted": false,
+2026-11-18T04:20:14.1561430Z   "goal_complete": false,
+2026-11-18T04:20:14.1561737Z   "p6_complete": false
+2026-11-18T04:20:14.1562079Z }
+2026-11-18T04:20:14.1562319Z ok
+2026-11-18T04:20:14.1562998Z test_surface_default_retains_four_split_and_high_order_is_explicit (test_plate6.Plate6.test_surface_default_retains_four_split_and_high_order_is_explicit) ... ok
+2026-11-18T04:20:14.1710555Z test_plate_export_preserves_local_raw_samples_and_inactive_frames (test_plate_reference.PlateReference.test_plate_export_preserves_local_raw_samples_and_inactive_frames) ... ok
+2026-11-18T04:20:14.1743393Z test_polynomial_constraints_reproduce_constant_strain_curvature_work_and_rigid_modes (test_plate_reference.PlateReference.test_polynomial_constraints_reproduce_constant_strain_curvature_work_and_rigid_modes) ... ok
+2026-11-18T04:20:23.9022983Z Exported 8 tetra10 frames and raw integration-point frames: C:\Users\RUNNER~1\AppData\Local\Temp\tmpjcnir_a7\prescribed\exports
+2026-11-18T04:20:23.9024658Z test_full_fields_quadrature_and_all_stage_restarts (test_prescribed_wet_structures.PrescribedWetStructures.test_full_fields_quadrature_and_all_stage_restarts) ... ok
+2026-11-18T04:20:24.4856078Z test_physical_pressure_both_side_loads_and_member_reference_tampering_fail (test_prescribed_wet_structures.PrescribedWetStructures.test_physical_pressure_both_side_loads_and_member_reference_tampering_fail) ... ok
+2026-11-18T04:20:24.7202721Z test_unscoped_fixed_head_and_soil_members_are_refused (test_prescribed_wet_structures.PrescribedWetStructures.test_unscoped_fixed_head_and_soil_members_are_refused) ... ok
+2026-11-18T04:20:25.3923930Z test_both_integrators_create_bound_initialization_and_construction (test_projected_reference_runner.ReferenceRunner.test_both_integrators_create_bound_initialization_and_construction) ... ok
+2026-11-18T04:20:26.1729750Z test_load_holds_preserve_all_histories_and_reaudit_original_gates (test_projected_reference_runner.ReferenceRunner.test_load_holds_preserve_all_histories_and_reaudit_original_gates) ... ok
+2026-11-18T04:20:27.5647176Z test_rk4_separate_cli_processes_share_the_same_bound_backend (test_projected_reference_runner.ReferenceRunner.test_rk4_separate_cli_processes_share_the_same_bound_backend) ... ok
+2026-11-18T04:20:27.8667409Z test_saved_initialization_rejects_another_integrator (test_projected_reference_runner.ReferenceRunner.test_saved_initialization_rejects_another_integrator) ... ok
+2026-11-18T04:20:28.3413297Z test_changed_source_input_and_backend_are_rejected_before_launch (test_reference_resume.ReferenceResume.test_changed_source_input_and_backend_are_rejected_before_launch) ... ok
+2026-11-18T04:20:28.6701357Z test_explicit_historical_program_requires_its_completed_cycle_binding (test_reference_resume.ReferenceResume.test_explicit_historical_program_requires_its_completed_cycle_binding) ... ok
+2026-11-18T04:20:28.6916659Z test_missing_frozen_module_is_rejected_before_running (test_reference_resume.ReferenceResume.test_missing_frozen_module_is_rejected_before_running) ... ok
+2026-11-18T04:20:28.8593601Z test_new_initial_and_cycle_are_verified_and_completed_phases_are_reused (test_reference_resume.ReferenceResume.test_new_initial_and_cycle_are_verified_and_completed_phases_are_reused) ... ok
+2026-11-18T04:20:28.8851714Z test_partial_result_and_existing_lock_are_preserved (test_reference_resume.ReferenceResume.test_partial_result_and_existing_lock_are_preserved) ... ok
+2026-11-18T04:20:29.1134394Z test_saved_initial_is_reused_without_replacing_its_history (test_reference_resume.ReferenceResume.test_saved_initial_is_reused_without_replacing_its_history) ... ok
+2026-11-18T04:20:40.2576269Z Exported 8 tetra10 frames and raw integration-point frames: C:\Users\RUNNER~1\AppData\Local\Temp\tmpl47_vick\soil-source\exports
+2026-11-18T04:20:40.6668738Z test_flux_head_pressure_and_balance_corruption_are_rejected (test_soil_source_wet_structures.SoilSourceWetStructures.test_flux_head_pressure_and_balance_corruption_are_rejected) ... ok
+2026-11-18T04:20:40.6670779Z test_nonzero_analytic_flow_full_3d_fields_and_restart_scope (test_soil_source_wet_structures.SoilSourceWetStructures.test_nonzero_analytic_flow_full_3d_fields_and_restart_scope) ... ok
+2026-11-18T04:20:43.0604825Z test_open_or_slip_label_with_unchanged_fields_is_not_elastic_acceptance (test_soil_source_wet_structures.SoilSourceWetStructures.test_open_or_slip_label_with_unchanged_fields_is_not_elastic_acceptance) ... ok
+2026-11-18T04:20:43.3031020Z test_plastic_unscoped_and_structural_head_are_refused (test_soil_source_wet_structures.SoilSourceWetStructures.test_plastic_unscoped_and_structural_head_are_refused) ... ok
+2026-11-18T04:20:43.3039773Z test_same_small_geometry_roles_and_source_only_flow_difference (test_soil_source_wet_structures.SoilSourceWetStructures.test_same_small_geometry_roles_and_source_only_flow_difference) ... ok
+2026-11-18T04:20:44.0951146Z test_tiny_or_nonfinite_plastic_history_cannot_be_hidden_by_work_tolerance (test_soil_source_wet_structures.SoilSourceWetStructures.test_tiny_or_nonfinite_plastic_history_cannot_be_hidden_by_work_tolerance) ... ok
+2026-11-18T04:20:44.5542619Z test_zero_source_structure_pressure_and_side_force_not_nonzero_acceptance (test_soil_source_wet_structures.SoilSourceWetStructures.test_zero_source_structure_pressure_and_side_force_not_nonzero_acceptance) ... ok
+2026-11-18T04:20:44.7468552Z test_complete_structural_transport_packet_has_explicit_version_and_sources (test_solidcraft_structure_fields.StructuralFields.test_complete_structural_transport_packet_has_explicit_version_and_sources) ... Native viewer data: 1 frames; explicit nodal, cell-average and raw integration-point fields
+2026-11-18T04:20:44.7470605Z ok
+2026-11-18T04:20:44.7522697Z test_inactive_results_are_null_and_archived_kinematics_remain_available (test_solidcraft_structure_fields.StructuralFields.test_inactive_results_are_null_and_archived_kinematics_remain_available) ... ok
+2026-11-18T04:20:44.7619859Z test_legacy_beam_configuration_retains_the_same_versioned_transport (test_solidcraft_structure_fields.StructuralFields.test_legacy_beam_configuration_retains_the_same_versioned_transport) ... ok
+2026-11-18T04:20:44.7722399Z test_local_axes_section_samples_and_installation_references_are_exact_and_unsmoothed (test_solidcraft_structure_fields.StructuralFields.test_local_axes_section_samples_and_installation_references_are_exact_and_unsmoothed) ... ok
+2026-11-18T04:20:44.8180566Z test_missing_duplicate_and_modified_result_fields_are_rejected (test_solidcraft_structure_fields.StructuralFields.test_missing_duplicate_and_modified_result_fields_are_rejected) ... ok
+2026-11-18T04:20:44.8207824Z test_nonfinite_inactive_reference_is_rejected_and_absent_configuration_is_explicit (test_solidcraft_structure_fields.StructuralFields.test_nonfinite_inactive_reference_is_rejected_and_absent_configuration_is_explicit) ... ok
+2026-11-18T04:20:44.9171231Z test_resealed_structural_moment_cannot_publish_a_complete_packet (test_solidcraft_structure_fields.StructuralFields.test_resealed_structural_moment_cannot_publish_a_complete_packet) ... ok
+2026-11-18T04:20:44.9634555Z test_separately_read_vtu_preserves_active_and_inactive_geometry_and_all_section_samples (test_solidcraft_structure_fields.StructuralFields.test_separately_read_vtu_preserves_active_and_inactive_geometry_and_all_section_samples) ... ok
+2026-11-18T04:20:44.9787069Z test_soil_display_reset_does_not_change_member_coordinates_or_displacements (test_solidcraft_structure_fields.StructuralFields.test_soil_display_reset_does_not_change_member_coordinates_or_displacements) ... ok
+2026-11-18T04:20:44.9956140Z test_structural_scene_uses_version_three_and_soil_raw_points_remain_separate (test_solidcraft_structure_fields.StructuralFields.test_structural_scene_uses_version_three_and_soil_raw_points_remain_separate) ... ok
+2026-11-18T04:20:44.9962133Z test_each_binding_and_semantic_tamper_is_rejected (test_source_point_descriptor.SourcePointDescriptorTests.test_each_binding_and_semantic_tamper_is_rejected) ... ok
+2026-11-18T04:20:44.9965664Z test_exact_source_count_active_mask_frame_units_and_components (test_source_point_descriptor.SourcePointDescriptorTests.test_exact_source_count_active_mask_frame_units_and_components) ... ok
+2026-11-18T04:20:44.9968543Z test_incomplete_wrong_family_invalid_hash_and_frame_are_rejected (test_source_point_descriptor.SourcePointDescriptorTests.test_incomplete_wrong_family_invalid_hash_and_frame_are_rejected) ... ok
+2026-11-18T04:20:44.9971360Z test_invalid_inventory_owner_and_empty_domain_are_rejected (test_source_point_descriptor.SourcePointDescriptorTests.test_invalid_inventory_owner_and_empty_domain_are_rejected) ... ok
+2026-11-18T04:20:44.9984082Z test_json_duplicate_key_cannot_be_hidden_by_last_value_wins (test_source_point_descriptor.SourcePointDescriptorTests.test_json_duplicate_key_cannot_be_hidden_by_last_value_wins) ... ok
+2026-11-18T04:20:45.0010763Z test_json_size_nonfinite_and_nonobject_are_rejected (test_source_point_descriptor.SourcePointDescriptorTests.test_json_size_nonfinite_and_nonobject_are_rejected) ... ok
+2026-11-18T04:20:45.0047781Z test_manifest_resealed_path_and_frame_inventory_tampering_is_rejected (test_source_point_descriptor.SourcePointDescriptorTests.test_manifest_resealed_path_and_frame_inventory_tampering_is_rejected) ... ok
+2026-11-18T04:20:45.0052089Z test_manifest_units_and_missing_source_are_rejected (test_source_point_descriptor.SourcePointDescriptorTests.test_manifest_units_and_missing_source_are_rejected) ... ok
+2026-11-18T04:20:45.0064022Z test_view_verifier_rejects_resealed_descriptor_tamper_before_reading_values (test_source_point_descriptor.SourcePointDescriptorTests.test_view_verifier_rejects_resealed_descriptor_tamper_before_reading_values) ... ok
+2026-11-18T04:20:45.0069488Z test_view_verifier_requires_explicit_version4_and_complete_source_semantics (test_source_point_descriptor.SourcePointDescriptorTests.test_view_verifier_requires_explicit_version4_and_complete_source_semantics) ... ok
+2026-11-18T04:20:45.0084597Z test_failed_trial_does_not_mutate_committed_material_history (test_spatial_release_control.SpatialReleaseControl.test_failed_trial_does_not_mutate_committed_material_history) ... ok
+2026-11-18T04:20:45.0117385Z test_fixture_is_exact_existing_5_kpa_case (test_spatial_release_control.SpatialReleaseControl.test_fixture_is_exact_existing_5_kpa_case) ... ok
+2026-11-18T04:20:45.0120087Z test_invalid_coordinate_or_degenerate_groups_are_rejected (test_spatial_release_control.SpatialReleaseControl.test_invalid_coordinate_or_degenerate_groups_are_rejected) ... ok
+2026-11-18T04:20:45.0138983Z test_real_newton_corrects_perturbed_zero_release (test_spatial_release_control.SpatialReleaseControl.test_real_newton_corrects_perturbed_zero_release) ... ok
+2026-11-18T04:20:45.0165746Z test_spatial_order_preserves_all_components_and_endpoints (test_spatial_release_control.SpatialReleaseControl.test_spatial_order_preserves_all_components_and_endpoints) ... ok
+2026-11-18T04:20:45.0181215Z test_spatial_partition_cannot_silently_become_horizontal_vertical (test_spatial_release_control.SpatialReleaseControl.test_spatial_partition_cannot_silently_become_horizontal_vertical) ... ok
+2026-11-18T04:20:45.0188527Z test_time_budget_is_inconclusive_without_equilibrium (test_spatial_release_control.SpatialReleaseControl.test_time_budget_is_inconclusive_without_equilibrium) ... ok
+2026-11-18T04:20:45.4734598Z test_blocked_scene_clean_keeps_arrays_strings_null_and_missing_semantics (test_streamed_export_source.StreamedExportSourceTests.test_blocked_scene_clean_keeps_arrays_strings_null_and_missing_semantics) ... ok
+2026-11-18T04:20:45.4750530Z test_existing_small_source_keeps_original_dictionary_reader (test_streamed_export_source.StreamedExportSourceTests.test_existing_small_source_keeps_original_dictionary_reader) ... ok
+2026-11-18T04:20:45.4771733Z test_large_input_requires_explicit_cache_and_projected_family (test_streamed_export_source.StreamedExportSourceTests.test_large_input_requires_explicit_cache_and_projected_family) ... ok
+2026-11-18T04:20:45.6315073Z test_large_input_uses_chunked_source_and_preserves_final_state (test_streamed_export_source.StreamedExportSourceTests.test_large_input_uses_chunked_source_and_preserves_final_state) ... ok
+2026-11-18T04:20:45.6330129Z test_streamed_encoded_admission_does_not_raise_component_or_display_caps (test_streamed_export_source.StreamedExportSourceTests.test_streamed_encoded_admission_does_not_raise_component_or_display_caps) ... ok
+2026-11-18T04:20:46.3768850Z test_all_fields_frames_seed_last_and_audits_equal_with_tiny_LRU (test_streamed_stage_source.StreamSourceTests.test_all_fields_frames_seed_last_and_audits_equal_with_tiny_LRU) ... ok
+2026-11-18T04:20:46.3944178Z test_changed_component_rejected_even_if_external_index_is_resealed (test_streamed_stage_source.StreamSourceTests.test_changed_component_rejected_even_if_external_index_is_resealed) ... ok
+2026-11-18T04:20:46.4108246Z test_changed_original_source_rejected (test_streamed_stage_source.StreamSourceTests.test_changed_original_source_rejected) ... ok
+2026-11-18T04:20:46.4154496Z test_duplicate_keys_rejected_in_nested_and_root_and_no_complete_index (test_streamed_stage_source.StreamSourceTests.test_duplicate_keys_rejected_in_nested_and_root_and_no_complete_index) ... ok
+2026-11-18T04:20:46.4231939Z test_encoded_tokens_bounded_even_across_read_chunks_and_escape_boundary (test_streamed_stage_source.StreamSourceTests.test_encoded_tokens_bounded_even_across_read_chunks_and_escape_boundary) ... ok
+2026-11-18T04:20:46.4348711Z test_invalid_numbers_root_trailing_and_nesting_are_rejected (test_streamed_stage_source.StreamSourceTests.test_invalid_numbers_root_trailing_and_nesting_are_rejected) ... ok
+2026-11-18T04:20:47.3240933Z test_literal_dots_item_collision_empty_and_unicode_map_keys_are_preserved (test_streamed_stage_source.StreamSourceTests.test_literal_dots_item_collision_empty_and_unicode_map_keys_are_preserved) ... ok
+2026-11-18T04:20:47.7197755Z test_null_geostatic_and_empty_transition_array_preserved (test_streamed_stage_source.StreamSourceTests.test_null_geostatic_and_empty_transition_array_preserved) ... ok
+2026-11-18T04:20:47.7247231Z test_source_byte_component_and_retained_budgets_are_independent (test_streamed_stage_source.StreamSourceTests.test_source_byte_component_and_retained_budgets_are_independent) ... ok
+2026-11-18T04:20:47.7264239Z test_curved_signed_projection_exact (test_surface_projection_reference.ProjectionTests.test_curved_signed_projection_exact) ... ok
+2026-11-18T04:20:47.7266886Z test_planar_shifted_projection (test_surface_projection_reference.ProjectionTests.test_planar_shifted_projection) ... ok
+2026-11-18T04:20:47.8739083Z saved tmpd33qb1w1 geostatic 1.0 accepted 4
+2026-11-18T04:20:47.9412087Z saved tmpd33qb1w1 shear 1.0 accepted 8
+2026-11-18T04:20:47.9905455Z saved tmpd33qb1w1 open 1.0 accepted 12
+2026-11-18T04:20:48.0455405Z saved tmpd33qb1w1 recontact 1.0 accepted 16
+2026-11-18T04:20:48.1233192Z saved tmpd33qb1w1 reverse 1.0 accepted 20
+2026-11-18T04:20:48.1864131Z saved tmpd33qb1w1 reload 1.0 accepted 24
+2026-11-18T04:20:48.2706385Z saved tmpd33qb1w1 return 1.0 accepted 28
+2026-11-18T04:20:48.7333931Z test_all_accepted_bulk_water_fields_reassemble_without_acceptance (test_wet_joint_bulk_history.BulkAcceptedHistory.test_all_accepted_bulk_water_fields_reassemble_without_acceptance) ... ok
+2026-11-18T04:20:49.1684818Z test_consistently_relabelled_interior_factor_is_rejected (test_wet_joint_bulk_history.BulkAcceptedHistory.test_consistently_relabelled_interior_factor_is_rejected) ... ok
+2026-11-18T04:20:49.1908564Z test_other_volume_metadata_is_not_certified_by_this_audit (test_wet_joint_bulk_history.BulkAcceptedHistory.test_other_volume_metadata_is_not_certified_by_this_audit) ... ok
+2026-11-18T04:20:49.6356016Z test_rehashed_interior_pore_pressure_is_rejected (test_wet_joint_bulk_history.BulkAcceptedHistory.test_rehashed_interior_pore_pressure_is_rejected) ... ok
+2026-11-18T04:20:50.0799332Z test_rehashed_interior_reaction_is_rejected (test_wet_joint_bulk_history.BulkAcceptedHistory.test_rehashed_interior_reaction_is_rejected) ... ok
+2026-11-18T04:20:50.5351121Z test_rehashed_interior_strain_is_rejected (test_wet_joint_bulk_history.BulkAcceptedHistory.test_rehashed_interior_strain_is_rejected) ... ok
+2026-11-18T04:20:50.9833604Z test_rehashed_interior_stress_is_rejected (test_wet_joint_bulk_history.BulkAcceptedHistory.test_rehashed_interior_stress_is_rejected) ... ok
+2026-11-18T04:20:51.4302954Z test_rehashed_interior_water_load_is_rejected (test_wet_joint_bulk_history.BulkAcceptedHistory.test_rehashed_interior_water_load_is_rejected) ... ok
+2026-11-18T04:22:06.9274321Z Exported 7 tetra10 frames and raw integration-point frames: C:\Users\runneradmin\AppData\Local\Temp\tmp5dvzbvyx\cycle\original\results
+2026-11-18T04:22:06.9275310Z Wet JOINT independent audit: 7 frames
+2026-11-18T04:22:06.9276138Z Exported 7 tetra10 frames and raw integration-point frames: C:\Users\runneradmin\AppData\Local\Temp\tmp5dvzbvyx\cycle\h8\results
+2026-11-18T04:22:06.9276998Z Wet JOINT independent audit: 7 frames
+2026-11-18T04:22:06.9277879Z Exported 7 tetra10 frames and raw integration-point frames: C:\Users\runneradmin\AppData\Local\Temp\tmp5dvzbvyx\cycle\h16\results
+2026-11-18T04:22:06.9278719Z Wet JOINT independent audit: 7 frames
+2026-11-18T04:22:06.9319855Z test_all_fields_all_frames_and_independent_work_identity (test_wet_joint_cycle.WetJointCycle.test_all_fields_all_frames_and_independent_work_identity) ... ok
+2026-11-18T04:22:06.9322426Z test_every_phase_interior_restart_matches_whole_run (test_wet_joint_cycle.WetJointCycle.test_every_phase_interior_restart_matches_whole_run) ... ok
+2026-11-18T04:22:06.9330221Z test_existing_geometry_input_and_actual_open_slip (test_wet_joint_cycle.WetJointCycle.test_existing_geometry_input_and_actual_open_slip) ... ok
+2026-11-18T04:22:06.9332868Z test_full_history_and_quadrature_differences_are_not_certified (test_wet_joint_cycle.WetJointCycle.test_full_history_and_quadrature_differences_are_not_certified) ... ok
+2026-11-18T04:22:07.1297509Z test_missing_frames_nonfinite_and_changed_displacement_fail (test_wet_joint_cycle.WetJointCycle.test_missing_frames_nonfinite_and_changed_displacement_fail) ... ok
+2026-11-18T04:22:07.1299216Z test_reference_signature_and_independent_schedule (test_wet_joint_cycle.WetJointCycle.test_reference_signature_and_independent_schedule) ... ok
+2026-11-18T04:22:07.1814098Z test_unsupported_water_domain_and_bulk_plasticity_refused (test_wet_joint_cycle.WetJointCycle.test_unsupported_water_domain_and_bulk_plasticity_refused) ... ok
+2026-11-18T04:22:07.2577237Z test_affine_hydrostatic_internal_force_preserves_rigid_work (test_wet_joint_plastic_bulk.PlasticReference.test_affine_hydrostatic_internal_force_preserves_rigid_work) ... ok
+2026-11-18T04:22:07.2588265Z test_elastic_limit_matches_tensor (test_wet_joint_plastic_bulk.PlasticReference.test_elastic_limit_matches_tensor) ... ok
+2026-11-18T04:22:07.2618967Z test_elastic_unload_preserves_irreversible_history (test_wet_joint_plastic_bulk.PlasticReference.test_elastic_unload_preserves_irreversible_history) ... ok
+2026-11-18T04:22:07.2667339Z test_material_subdivision_is_exercised_without_changing_yield (test_wet_joint_plastic_bulk.PlasticReference.test_material_subdivision_is_exercised_without_changing_yield) ... ok
+2026-11-18T04:22:07.2757463Z test_mcc_is_explicitly_outside_this_reference (test_wet_joint_plastic_bulk.PlasticReference.test_mcc_is_explicitly_outside_this_reference) ... ok
+2026-11-18T04:22:07.2782317Z test_plastic_nonassociated_return_is_admissible_and_dissipative (test_wet_joint_plastic_bulk.PlasticReference.test_plastic_nonassociated_return_is_admissible_and_dissipative) ... ok
+2026-11-18T04:22:07.2830941Z test_plastic_tensor_is_rotation_covariant (test_wet_joint_plastic_bulk.PlasticReference.test_plastic_tensor_is_rotation_covariant) ... ok
+2026-11-18T04:22:07.2924665Z test_rankine_apex_keeps_tensile_surface_and_return_category (test_wet_joint_plastic_bulk.PlasticReference.test_rankine_apex_keeps_tensile_surface_and_return_category) ... ok
+2026-11-18T04:22:07.2949671Z test_trial_does_not_mutate_committed_history (test_wet_joint_plastic_bulk.PlasticReference.test_trial_does_not_mutate_committed_history) ... ok
+2026-11-18T04:22:09.8668208Z test_changed_archive_is_rejected_without_solving (test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_archive_is_rejected_without_solving) ... ok
+2026-11-18T04:22:10.5388033Z test_changed_pressure_load_history_and_missing_frame_are_rejected (test_wet_joint_simultaneous.SimultaneousWetJoint.test_changed_pressure_load_history_and_missing_frame_are_rejected) ... ok
+2026-11-18T04:22:10.5491068Z test_every_axis_keeps_all_fields_and_does_not_invent_history_gate (test_wet_joint_simultaneous.SimultaneousWetJoint.test_every_axis_keeps_all_fields_and_does_not_invent_history_gate) ... ok
+2026-11-18T04:22:10.5576665Z test_incomplete_or_nonfinite_new_path_does_not_enter_comparisons (test_wet_joint_simultaneous.SimultaneousWetJoint.test_incomplete_or_nonfinite_new_path_does_not_enter_comparisons) ... ok
+2026-11-18T04:22:10.5581309Z test_pressure_trace_can_match_while_volume_equilibrium_is_rejected (test_wet_joint_simultaneous.SimultaneousWetJoint.test_pressure_trace_can_match_while_volume_equilibrium_is_rejected) ... ok
+2026-11-18T04:22:34.0724217Z test_every_refined_accepted_field_passes_existing_history_and_force_audits (test_wet_joint_small_refinement.SmallJointRefinement.test_every_refined_accepted_field_passes_existing_history_and_force_audits) ... ok
+2026-11-18T04:22:34.1155232Z test_forged_completion_flag_is_rejected (test_wet_joint_small_refinement.SmallJointRefinement.test_forged_completion_flag_is_rejected) ... ok
+2026-11-18T04:22:44.1178610Z test_missing_interior_accepted_chunk_is_rejected (test_wet_joint_small_refinement.SmallJointRefinement.test_missing_interior_accepted_chunk_is_rejected) ... ok
+2026-11-18T04:22:44.1227607Z test_prior_16_32_measurement_is_preserved_and_no_unsampled_point_is_certified (test_wet_joint_small_refinement.SmallJointRefinement.test_prior_16_32_measurement_is_preserved_and_no_unsampled_point_is_certified) ... ok
+2026-11-18T04:23:06.4706831Z test_all_entities_and_event_acceptance_are_retained (test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_all_entities_and_event_acceptance_are_retained) ... ok
+2026-11-18T04:23:06.8797712Z test_archived_sources_import_in_isolated_python (test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_archived_sources_import_in_isolated_python) ... ok
+2026-11-18T04:23:06.8926830Z test_contact_replay_and_chord_defect_are_distinct_from_solution (test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_contact_replay_and_chord_defect_are_distinct_from_solution) ... ok
+2026-11-18T04:23:06.9142718Z test_missing_interior_field_cannot_pass_as_complete (test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_missing_interior_field_cannot_pass_as_complete) ... ok
+2026-11-18T04:23:07.5743070Z test_real_file_checkpoints_match_all_suffix_states (test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_real_file_checkpoints_match_all_suffix_states) ... ok
+2026-11-18T04:23:08.5597642Z test_recomputed_nonmonotone_history_is_not_accepted (test_wet_joint_step_diagnosis.WetJointStepDiagnosis.test_recomputed_nonmonotone_history_is_not_accepted) ... ok
+2026-11-18T04:23:09.2606345Z test_closed_saturated_source_stores_exact_water_without_boundary_flux (test_wet_joint_transient_water.TransientWater.test_closed_saturated_source_stores_exact_water_without_boundary_flux) ... ok
+2026-11-18T04:23:09.4501736Z test_cut_water_force_is_reassembled_at_intermediate_level (test_wet_joint_transient_water.TransientWater.test_cut_water_force_is_reassembled_at_intermediate_level) ... ok
+2026-11-18T04:23:09.4578054Z test_hybrid_saturated_affine_head_patch_has_exact_darcy_flux (test_wet_joint_transient_water.TransientWater.test_hybrid_saturated_affine_head_patch_has_exact_darcy_flux) ... ok
+2026-11-18T04:23:09.9934887Z test_hydrostatic_exterior_buoyancy_and_interface_pair (test_wet_joint_transient_water.TransientWater.test_hydrostatic_exterior_buoyancy_and_interface_pair) ... ok
+2026-11-18T04:23:09.9943490Z test_independent_mechanical_scope_does_not_silently_accept_richards (test_wet_joint_transient_water.TransientWater.test_independent_mechanical_scope_does_not_silently_accept_richards) ... ok
+2026-11-18T04:23:09.9987769Z test_missing_interior_state_or_changed_full_field_is_exposed (test_wet_joint_transient_water.TransientWater.test_missing_interior_state_or_changed_full_field_is_exposed) ... ok
+2026-11-18T04:23:09.9994018Z test_only_water_stage_steps_change_in_three_level_matrix (test_wet_joint_transient_water.TransientWater.test_only_water_stage_steps_change_in_three_level_matrix) ... ok
+2026-11-18T04:23:10.0120786Z test_real_one_way_cli_refuses_joint_before_producing_result (test_wet_joint_transient_water.TransientWater.test_real_one_way_cli_refuses_joint_before_producing_result) ... ok
+2026-11-18T04:23:10.0160684Z test_vg_reference_refuses_unimplemented_atmospheric_policy (test_wet_joint_transient_water.TransientWater.test_vg_reference_refuses_unimplemented_atmospheric_policy) ... ok
+2026-11-18T04:23:10.0161904Z 
+2026-11-18T04:23:10.0162087Z ======================================================================
+2026-11-18T04:23:10.0163056Z FAIL: test_ci_sparse_selects_new_archive (test_a03_unequal_thickness_anisotropic_k.A03UnequalAnisotropic.test_ci_sparse_selects_new_archive)
+2026-11-18T04:23:10.0163922Z ----------------------------------------------------------------------
+2026-11-18T04:23:10.0164353Z Traceback (most recent call last):
+2026-11-18T04:23:10.0179311Z   File "D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\tests\test_a03_unequal_thickness_anisotropic_k.py", line 91, in test_ci_sparse_selects_new_archive
+2026-11-18T04:23:10.0180371Z     self.assertEqual(r.stdout.splitlines(),inputs.splitlines())
+2026-11-18T04:23:10.0180817Z     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-18T04:23:10.0181559Z AssertionError: Lists differ: ['"interim\\\\2027-01-06-a03-unequal-thickn[822 chars]09"'] != ['interim\\2027-01-06-a03-unequal-thickness[762 chars]009']
+2026-11-18T04:23:10.0182111Z 
+2026-11-18T04:23:10.0182254Z First differing element 0:
+2026-11-18T04:23:10.0182601Z '"interim\\\\2027-01-06-a03-unequal-thickn[38 chars]000"'
+2026-11-18T04:23:10.0183021Z 'interim\\2027-01-06-a03-unequal-thickness[32 chars]t000'
+2026-11-18T04:23:10.0183293Z 
+2026-11-18T04:23:10.0183506Z Diff is 2630 characters long. Set self.maxDiff to None to see it.
+2026-11-18T04:23:10.0183786Z 
+2026-11-18T04:23:10.0183972Z ----------------------------------------------------------------------
+2026-11-18T04:23:10.0184354Z Ran 492 tests in 593.568s
+2026-11-18T04:23:10.0184542Z 
+2026-11-18T04:23:10.0184638Z FAILED (failures=1)
+2026-11-18T04:23:10.3121459Z ##[error]Process completed with exit code 1.
+2026-11-18T04:23:10.3546109Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+2026-11-18T04:23:10.3546718Z with:
+2026-11-18T04:23:10.3547138Z   name: fem-windows-python-core-1-93a443ebfc3d9b34e73005b9c9f3e91012fb211c
+2026-11-18T04:23:10.3550520Z   path: runs/ci/*.json
+runs/ci/*.log
+runs/ci/wet-structures/verification.json
+runs/ci/wet-structures/stage-results.json
+runs/ci/wet-structures/mesh.json
+runs/ci/wet-structures/ground.json
+runs/ci/wet-structures/stages.json
+runs/ci/soil-wet-structures/**
+runs/ci/soil-source-wet-structures/**
+runs/ci/fixed-prescribed-wet-structures/**
+runs/ci/crack-tip*/**
+runs/ci/low-preload-nc/**
+!runs/ci/low-preload-nc/job/solver/**
+runs/ci/low-preload-nc-step32/**
+runs/ci/low-preload-nc-step64/**
+!runs/ci/low-preload-nc-step32/job/solver/**
+!runs/ci/low-preload-nc-step64/job/solver/**
+runs/ci/low-preload-nc-reference128/**
+runs/ci/low-preload-nc-reference256/**
+
+2026-11-18T04:23:10.3554052Z   if-no-files-found: warn
+2026-11-18T04:23:10.3554370Z   retention-days: 14
+2026-11-18T04:23:10.3554631Z   compression-level: 6
+2026-11-18T04:23:10.3554892Z   overwrite: false
+2026-11-18T04:23:10.3555148Z   include-hidden-files: false
+2026-11-18T04:23:10.3555445Z   archive: true
+2026-11-18T04:23:10.3555666Z env:
+2026-11-18T04:23:10.3555873Z   CARGO_BUILD_JOBS: 2
+2026-11-18T04:23:10.3556127Z   RUST_TEST_THREADS: 2
+2026-11-18T04:23:10.3556396Z   OPENBLAS_NUM_THREADS: 1
+2026-11-18T04:23:10.3556663Z   MKL_NUM_THREADS: 1
+2026-11-18T04:23:10.3556905Z   OMP_NUM_THREADS: 1
+2026-11-18T04:23:10.3557146Z   PYTHONUTF8: 1
+2026-11-18T04:23:10.3557391Z   PYTHONIOENCODING: utf-8
+2026-11-18T04:23:10.3557793Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:23:10.3558403Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T04:23:10.3559009Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:23:10.3559559Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:23:10.3560089Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T04:23:10.3560433Z ##[endgroup]
+2026-11-18T04:23:10.5667760Z With the provided path, there will be 5 files uploaded
+2026-11-18T04:23:10.5673493Z Artifact name is valid!
+2026-11-18T04:23:10.5674852Z Root directory input is valid!
+2026-11-18T04:23:10.7973747Z Uploading artifact: fem-windows-python-core-1-93a443ebfc3d9b34e73005b9c9f3e91012fb211c.zip
+2026-11-18T04:23:10.8018910Z Beginning upload of artifact content to blob storage
+2026-11-18T04:23:10.9252583Z Uploaded bytes 113722
+2026-11-18T04:23:10.9418679Z Finished uploading artifact content to blob storage!
+2026-11-18T04:23:10.9420402Z SHA256 digest of uploaded artifact is ac9991d093c4ed9c0c962ea18a7a46ef62d7242184a76f81f92e3e920c9fdaad
+2026-11-18T04:23:10.9421559Z Finalizing artifact upload
+2026-11-18T04:23:11.3305590Z Artifact fem-windows-python-core-1-93a443ebfc3d9b34e73005b9c9f3e91012fb211c successfully finalized. Artifact ID 14397363938
+2026-11-18T04:23:11.3307502Z Artifact fem-windows-python-core-1-93a443ebfc3d9b34e73005b9c9f3e91012fb211c has been successfully uploaded! Final size is 113722 bytes. Artifact ID is 14397363938
+2026-11-18T04:23:11.3313496Z Artifact download URL: https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/44234435017/artifacts/14397363938
+2026-11-18T04:23:11.3810783Z Post job cleanup.
+2026-11-18T04:23:11.5887332Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-18T04:23:11.6291443Z git version 2.56.0.windows.4
+2026-11-18T04:23:11.6347933Z Copying 'C:\Users\runneradmin\.gitconfig' to 'D:\a\_temp\2bb19e04-bf2b-46ca-9ae4-61b303b06b5e\.gitconfig'
+2026-11-18T04:23:11.6373820Z Temporarily overriding HOME='D:\a\_temp\2bb19e04-bf2b-46ca-9ae4-61b303b06b5e' before making global git config changes
+2026-11-18T04:23:11.6375254Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-18T04:23:11.6384906Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-18T04:23:11.6753461Z Removing SSH command configuration
+2026-11-18T04:23:11.6763520Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T04:23:11.7129881Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-18T04:23:12.2721821Z Removing HTTP extra header
+2026-11-18T04:23:12.2732774Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T04:23:12.3103668Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-18T04:23:12.8621535Z Removing includeIf entries pointing to credentials config files
+2026-11-18T04:23:12.8633505Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T04:23:12.9000294Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-18T04:23:13.4863951Z Cleaning up orphan processes
+2026-11-18T04:23:13.5937862Z Terminate orphan process: pid (7736) (vctip)

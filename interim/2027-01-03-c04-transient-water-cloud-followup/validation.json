@@ -1,0 +1,237 @@
+{
+  "passed": true,
+  "software_tests_passed": true,
+  "c04_complete": false,
+  "diagnostic_only": true,
+  "source_commit_base": "71655b7b09e1895e364ba476b9089075ba7130c0",
+  "rust": {
+    "discovered": 467,
+    "executed": 467,
+    "passed": 467,
+    "failed": 0,
+    "ignored": 0,
+    "filtered_out": 0,
+    "measured": 0,
+    "skipped": 0,
+    "unexecuted": 0,
+    "unexpected": 0
+  },
+  "python": {
+    "discovered": 929,
+    "executed": 929,
+    "passed": 929,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "unexecuted": 0,
+    "duplicate_ids": 0
+  },
+  "rust_processes": {
+    "fmt": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "pid": 4338,
+      "exit_code": 0,
+      "elapsed_seconds": 0.9567602920000127
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "pid": 4388,
+      "exit_code": 0,
+      "elapsed_seconds": 23.94161890999999
+    },
+    "build": {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 5054,
+      "exit_code": 0,
+      "elapsed_seconds": 831.0193313999999
+    },
+    "discovery": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "pid": 16494,
+      "exit_code": 0,
+      "elapsed_seconds": 2.726984291000008
+    },
+    "rust-all": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--all-targets"
+      ],
+      "pid": 17006,
+      "exit_code": 0,
+      "elapsed_seconds": 757.656444918
+    },
+    "rust-doc": {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "--doc"
+      ],
+      "pid": 788862,
+      "exit_code": 0,
+      "elapsed_seconds": 1.292533340999853
+    }
+  },
+  "python_processes": [
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-0",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-core-0"
+      ],
+      "pid": 529130,
+      "exit_code": 0,
+      "elapsed_seconds": 235.2534361810001
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-core-1",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-core-1"
+      ],
+      "pid": 529131,
+      "exit_code": 0,
+      "elapsed_seconds": 272.35909138500006
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-mean-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-mean-evidence"
+      ],
+      "pid": 766476,
+      "exit_code": 0,
+      "elapsed_seconds": 527.1119829859999
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-spatial-evidence",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-spatial-evidence"
+      ],
+      "pid": 815271,
+      "exit_code": 0,
+      "elapsed_seconds": 101.11791494099998
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-switch",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-c01-switch"
+      ],
+      "pid": 815297,
+      "exit_code": 0,
+      "elapsed_seconds": 35.01399781200007
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-path",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-c01-path"
+      ],
+      "pid": 815310,
+      "exit_code": 0,
+      "elapsed_seconds": 56.904131635999875
+    },
+    {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "tools/run_ci_python_evidence_shards.py",
+        "--group",
+        "python-c01-cause",
+        "--output",
+        "/workspace/solidcraft_soil_analysis/work/c04follow-full/python/python-c01-cause"
+      ],
+      "pid": 815311,
+      "exit_code": 0,
+      "elapsed_seconds": 46.68789534100006
+    }
+  ],
+  "source_count": 1596,
+  "source_unchanged_during_full_python": true,
+  "inventories_match": true,
+  "windows_ci_after_push": "未確定",
+  "acceptance_tolerance_changed": false,
+  "these_counts_do_not_override_acceptance": true,
+  "scientific_commit": "63a0be7df61fa2fd83028a29dd9877469c164921",
+  "fixed_full_test_source_commit": "751b8938179e99878d304ea010a659b2bf732b7c",
+  "test_source_count": 1596,
+  "before_after_and_fixed_commit_sources_exact": true,
+  "initial_full_suite_passed_without_retries": true,
+  "standalone_new_contract_smoke": {
+    "passed": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "not_added_to_full_unique_counts": true
+  },
+  "fresh_diagnostic": {
+    "global_equilibrium_paths": 16,
+    "accepted_states": 7552,
+    "complete_paths": 16,
+    "numerically_incomplete_paths": 0,
+    "diagnostic_only": true,
+    "c04_complete": false
+  },
+  "auxiliary_preparation_errors": {
+    "are_test_cases": false,
+    "retained": "validation/environment-preparation.json and validation/git-recovery/transport.zip",
+    "includes_failed_cache_presence_assertion_after_verified_cache_pruning": true,
+    "all_1524_transport_jobs_exit_zero": true,
+    "old_physical_file_missing": 0
+  },
+  "post_registration_results_path": "validation/post-registration.json",
+  "post_registration_checks_not_added_to_full_unique_counts": true,
+  "pc_execution_performed": false
+}

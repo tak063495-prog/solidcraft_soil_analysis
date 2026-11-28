@@ -1,0 +1,488 @@
+{
+  "schema": "nc-lambda-physical-limit/1",
+  "base_commit": "e541fe1d29d05f7301968555845accd628e5e76f",
+  "performed_date_jst": "2026-11-13",
+  "passed": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "hypothesis_as_stated": "not_supported",
+  "physical_collapse_vs_numerical_failure": "undetermined",
+  "stopped_after": 2,
+  "stop_reason": "The all-GP audit falsifies the uniform sigma_h and pc-range assumptions, and the MCC ellipse permits q>Mp on the dry side. The proposed cone argument cannot establish nonexistence for this input.",
+  "load": {
+    "final_kn": [
+      1.7763568394002505e-15,
+      -5.329070518200751e-15,
+      89.99999999999999
+    ],
+    "holding_kn": [
+      0.9999999999999925,
+      0.4999999999999815,
+      -110.0
+    ],
+    "self_weight_kn": [
+      0.0,
+      0.0,
+      -9.999999999999993
+    ],
+    "face_groups": {
+      "x=1": {
+        "area_m2": 0.4999999999999999,
+        "final_surface_traction_kn": [
+          -49.999999999999986,
+          0.0,
+          0.0
+        ],
+        "faces": 2
+      },
+      "z=0": {
+        "area_m2": 0.9999999999999998,
+        "final_surface_traction_kn": [
+          0.0,
+          0.0,
+          99.99999999999997
+        ],
+        "faces": 2
+      },
+      "y=1": {
+        "area_m2": 0.4999999999999999,
+        "final_surface_traction_kn": [
+          0.0,
+          -49.999999999999986,
+          0.0
+        ],
+        "faces": 2
+      },
+      "x=0": {
+        "area_m2": 0.4999999999999999,
+        "final_surface_traction_kn": [
+          49.999999999999986,
+          0.0,
+          0.0
+        ],
+        "faces": 2
+      },
+      "z=0.5": {
+        "area_m2": 0.9999999999999998,
+        "final_surface_traction_kn": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "faces": 2
+      },
+      "y=0": {
+        "area_m2": 0.4999999999999999,
+        "final_surface_traction_kn": [
+          0.0,
+          49.999999999999986,
+          0.0
+        ],
+        "faces": 2
+      }
+    },
+    "remaining_surface_pressure_kpa": 0.0,
+    "component_reassembly_error_kn": 0.0,
+    "holding_reconstruction_error_kn": 0.0
+  },
+  "native128": {
+    "peak_lambda": 0.9514000963742422,
+    "arc_report": {
+      "passed": false,
+      "history_converged": false,
+      "static_limit_confirmed": false,
+      "production_adopted": false,
+      "native_committed_increments": 0,
+      "equilibrium_samples": 32,
+      "stop_reason": "bounded step count; inconclusive",
+      "last_progress": 0.9513997082668152,
+      "arc_length_m": 0.0006400000000000004,
+      "full_removal_reached": false,
+      "full_release_freeze_verified": false,
+      "restart_to_completion_verified": false,
+      "elapsed_seconds": 1.980294579999736
+    },
+    "existing_judge": {
+      "conclusion": "local_fold_bracket",
+      "brackets": [
+        {
+          "indices": [
+            7,
+            8
+          ],
+          "lambdas": [
+            0.9514000960120372,
+            0.9514000963742422
+          ]
+        }
+      ],
+      "reason": "accepted oriented tangent changes + to - with transverse load and regular border",
+      "limitation": "requires refinement/independent agreement; no global nonexistence or dynamic stability claim"
+    },
+    "gp_summary": {
+      "count": 162,
+      "ranges": {
+        "sigma_v_kpa": {
+          "min": 2.0979195974991893,
+          "median": 8.645835086037735,
+          "max": 56.30973310949601
+        },
+        "sigma_h_kpa": {
+          "min": 42.97694955513218,
+          "median": 82.19005445330197,
+          "max": 136.0240529895118
+        },
+        "p_kpa": {
+          "min": 31.122720660555782,
+          "median": 59.68795938164162,
+          "max": 101.21254446075648
+        },
+        "q_kpa": {
+          "min": 41.00177488970354,
+          "median": 78.42743655508298,
+          "max": 118.96743005857078
+        },
+        "q_over_Mp": {
+          "min": 0.46836978332989354,
+          "median": 1.0033690064585223,
+          "max": 1.3569327400318212
+        },
+        "pc_kpa": {
+          "min": 68.9521884555204,
+          "median": 112.46867171685278,
+          "max": 172.55790642386373
+        },
+        "normalized_ellipse_yield": {
+          "min": -0.17267186009990587,
+          "median": 1.132880637372609e-16,
+          "max": 4.2502849312626855e-13
+        },
+        "plastic_volume_strain_increment": {
+          "min": -1.954930060119389e-06,
+          "median": -5.373739449948678e-09,
+          "max": 1.8168144126778918e-06
+        },
+        "fold_minus_uniform_formula": {
+          "min": -0.031339768901379905,
+          "median": -0.015654802758763797,
+          "max": 0.0055159765067206434
+        },
+        "fold_minus_weight_corrected_formula": {
+          "min": -0.12072116410508893,
+          "median": -0.06053137041825618,
+          "max": 0.0012892147977401347
+        }
+      },
+      "stress_side_counts": {
+        "dry": 84,
+        "wet": 78,
+        "critical": 0
+      },
+      "plastic_volume_increment_sign_counts": {
+        "positive": 76,
+        "negative": 81,
+        "zero": 5
+      },
+      "q_greater_than_Mp_count": 83
+    },
+    "top_gp_summary": {
+      "count": 30,
+      "ranges": {
+        "sigma_v_kpa": {
+          "min": 3.441819794186161,
+          "median": 9.980199236993755,
+          "max": 31.589527403245825
+        },
+        "sigma_h_kpa": {
+          "min": 89.17252005471924,
+          "median": 113.65542684184085,
+          "max": 136.0240529895118
+        },
+        "p_kpa": {
+          "min": 60.59561996787488,
+          "median": 79.30454186436245,
+          "max": 101.21254446075648
+        },
+        "q_kpa": {
+          "min": 86.69344864413,
+          "median": 105.22730094293787,
+          "max": 118.96743005857078
+        },
+        "q_over_Mp": {
+          "min": 0.8395869919965341,
+          "median": 0.9472264557563065,
+          "max": 1.0219202629083357
+        },
+        "pc_kpa": {
+          "min": 123.8768998470112,
+          "median": 150.48908431877032,
+          "max": 172.55790642386373
+        },
+        "normalized_ellipse_yield": {
+          "min": -1.132880637372609e-16,
+          "median": 1.0276643481766278e-13,
+          "max": 3.9676312122382196e-13
+        },
+        "plastic_volume_strain_increment": {
+          "min": -2.6708519995644053e-07,
+          "median": 8.32096584375136e-07,
+          "max": 1.8168144126778918e-06
+        },
+        "fold_minus_uniform_formula": {
+          "min": -0.012856110625983797,
+          "median": -0.0014437540688911343,
+          "max": 0.0055159765067206434
+        },
+        "fold_minus_weight_corrected_formula": {
+          "min": -0.021021454537477613,
+          "median": -0.004846238684466986,
+          "max": 0.0012892147977401347
+        }
+      },
+      "stress_side_counts": {
+        "dry": 2,
+        "wet": 28,
+        "critical": 0
+      },
+      "plastic_volume_increment_sign_counts": {
+        "positive": 28,
+        "negative": 2,
+        "zero": 0
+      },
+      "q_greater_than_Mp_count": 2
+    },
+    "pre_removal_active_pc_kpa": [
+      104.33648853875152,
+      111.66048728515794
+    ],
+    "pre_removal_active_sigma_v_kpa": [
+      106.91752801241002,
+      124.4433417172683
+    ],
+    "maximum_force_residual": 8.002275167514047e-16,
+    "maximum_augmented_residual": 1.8039597706740216e-15
+  },
+  "native256": {
+    "local_fold_observed": false,
+    "maximum_available_lambda": 0.951171875,
+    "summary": {
+      "count": 162,
+      "ranges": {
+        "sigma_v_kpa": {
+          "min": 3.1785066070500103,
+          "median": 8.484699530932627,
+          "max": 56.57209834630124
+        },
+        "sigma_h_kpa": {
+          "min": 44.277434471507824,
+          "median": 82.40140721675255,
+          "max": 132.31932435808525
+        },
+        "p_kpa": {
+          "min": 31.83639399166327,
+          "median": 59.728817841876136,
+          "max": 97.98451692726002
+        },
+        "q_kpa": {
+          "min": 39.345853516501705,
+          "median": 78.73458212721316,
+          "max": 115.11395860585516
+        },
+        "q_over_Mp": {
+          "min": 0.45115407382271516,
+          "median": 0.999143447000775,
+          "max": 1.3597772758461808
+        },
+        "pc_kpa": {
+          "min": 71.65126419408394,
+          "median": 112.7861032147085,
+          "max": 166.98346197437317
+        },
+        "normalized_ellipse_yield": {
+          "min": -0.17868106490485322,
+          "median": 2.3195731050204165e-14,
+          "max": 1.7239611099217675e-13
+        },
+        "plastic_volume_strain_increment": {
+          "min": -0.0022960996077958443,
+          "median": 6.505769451773096e-06,
+          "max": 0.00193695914433532
+        },
+        "fold_minus_uniform_formula": {
+          "min": -0.031231883874968447,
+          "median": -0.015802393686487892,
+          "max": 0.0036797238856990377
+        },
+        "fold_minus_weight_corrected_formula": {
+          "min": -0.12037958967289919,
+          "median": -0.06062534293581279,
+          "max": 0.00026726322986825313
+        }
+      },
+      "stress_side_counts": {
+        "dry": 82,
+        "wet": 80,
+        "critical": 0
+      },
+      "plastic_volume_increment_sign_counts": {
+        "positive": 83,
+        "negative": 73,
+        "zero": 6
+      },
+      "q_greater_than_Mp_count": 80
+    },
+    "top_gp_summary": {
+      "count": 30,
+      "ranges": {
+        "sigma_v_kpa": {
+          "min": 4.099670045760295,
+          "median": 9.47687005635246,
+          "max": 29.314902065609527
+        },
+        "sigma_h_kpa": {
+          "min": 90.38592381527886,
+          "median": 112.26719196828815,
+          "max": 132.31932435808525
+        },
+        "p_kpa": {
+          "min": 61.62383922543933,
+          "median": 78.38359252710859,
+          "max": 97.98451692726002
+        },
+        "q_kpa": {
+          "min": 87.04565610442748,
+          "median": 103.67578434784366,
+          "max": 115.11395860585516
+        },
+        "q_over_Mp": {
+          "min": 0.8391556005534995,
+          "median": 0.9488989060893345,
+          "max": 1.0089515588044145
+        },
+        "pc_kpa": {
+          "min": 124.35587523520888,
+          "median": 148.34905605987007,
+          "max": 166.98346197437317
+        },
+        "normalized_ellipse_yield": {
+          "min": 1.9542190994677503e-14,
+          "median": 9.819242924427087e-14,
+          "max": 1.536752584595944e-13
+        },
+        "plastic_volume_strain_increment": {
+          "min": 2.4000097572456774e-05,
+          "median": 0.0009310177012929258,
+          "max": 0.00193695914433532
+        },
+        "fold_minus_uniform_formula": {
+          "min": -0.012597952868897422,
+          "median": -0.0022937458567438562,
+          "max": 0.0036797238856990377
+        },
+        "fold_minus_weight_corrected_formula": {
+          "min": -0.020759178110633325,
+          "median": -0.005503597980752006,
+          "max": 0.00026726322986825313
+        }
+      },
+      "stress_side_counts": {
+        "dry": 2,
+        "wet": 28,
+        "critical": 0
+      },
+      "plastic_volume_increment_sign_counts": {
+        "positive": 30,
+        "negative": 0,
+        "zero": 0
+      },
+      "q_greater_than_Mp_count": 2
+    },
+    "process_observation": {
+      "command": [
+        "/workspace/solidcraft_soil_analysis/target/release/examples/nc_history_trace",
+        "trace",
+        "runs/2026-11-13-nc-lambda-physical-limit/series/256/mesh.json",
+        "runs/2026-11-13-nc-lambda-physical-limit/series/256/ground.json",
+        "runs/2026-11-13-nc-lambda-physical-limit/series/256/stages.json",
+        "runs/2026-11-13-nc-lambda-physical-limit/series/256/history"
+      ],
+      "budget_seconds": 45,
+      "elapsed_seconds": 45.01173817200015,
+      "exit_code": -15,
+      "timed_out": true,
+      "production_changed": false,
+      "passed": false
+    },
+    "comparison_to_pc_transcribed_peak_lambda": 0.951482232752456,
+    "distance_from_pc_peak": 0.00031035775245602526,
+    "original_pc_file_verified": false
+  },
+  "analytic": {
+    "m": 1.4,
+    "sigma_h_kpa": 100.0,
+    "assumed_sigma_v0_kpa": 100.0,
+    "uniform_lambda": 0.9545454545454546,
+    "fold128_minus_uniform": -0.00314535817121242,
+    "source": "axisymmetric uniform no-shear cone surrogate",
+    "is_mcc_bound": false,
+    "actual_holding_vertical_resultant_kn": -110.0,
+    "all_gp_formulas": "gp-audit-128.json and gp-audit-256-near-fold.json"
+  },
+  "independent_collapse": {
+    "material_point_lambda": null,
+    "lambda_LB": null,
+    "lambda_UB": null,
+    "fold_between_bounds": null,
+    "executed": false,
+    "reason": "stopped after falsification in step 2 as requested; no dependency was added"
+  },
+  "parameter_series": {
+    "requested_M": [
+      1.2,
+      1.3,
+      1.4,
+      1.45,
+      1.5,
+      1.6
+    ],
+    "requested_side_pressure_kpa": [
+      0,
+      50,
+      100
+    ],
+    "requested_self_weight": [
+      true,
+      false
+    ],
+    "requested_combinations": 36,
+    "executed": 0,
+    "generated_variant_inputs": 0,
+    "reason": "stopped after step 2; original NC inputs unchanged"
+  },
+  "mode": {
+    "kind": "existing analyze_nc_fold_path right singular vector of actual nonsymmetric K",
+    "maximum_node": 4,
+    "top_vertical_all_positive": true,
+    "top_vertical_range": [
+      0.03135112354819433,
+      0.4284765724641781
+    ],
+    "exact_null_vector": false,
+    "dynamic_stability_classified": false,
+    "second_order_work_audited": false,
+    "acoustic_tensor_audited": false
+  },
+  "missing": [
+    "fresh native256 fold-point field",
+    "material-point stress-path limit",
+    "cone-surrogate lower and upper loads",
+    "M/side-pressure/self-weight series",
+    "second-order-work and acoustic-tensor stability classification",
+    "global nonexistence of static lambda=1 equilibria",
+    "NC-01 full removal acceptance"
+  ],
+  "original_input_or_reference_changed": false,
+  "production_solver_changed": false,
+  "default_or_tolerance_changed": false,
+  "old_evidence_resealed": false
+}

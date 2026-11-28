@@ -1,0 +1,32 @@
+{
+  "schema": "b02follow-primary-source-review/1",
+  "review_date_jst": "2026-11-16",
+  "inherited_review": "interim/2026-12-24-b02-offset-composite-cause-diagnosis/primary-source-review.json",
+  "inherited_scope": "12-24で実際に確認した公式offset/参照面/力仕事、Bathe-Dvorkin本文の範囲を継承。再取得したとは称さない。Wiley2件およびPLAXIS大冊本文の未取得はそのまま。",
+  "additions": [
+    {
+      "title": "SIMULIA Abaqus 2026, Choosing a Shell Element",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-shellelem.htm",
+      "access": "official HTML body, Thick/Thin, Reduced Integration, Using S3/S3R",
+      "confirmed": "厚薄の区別には構造の特徴長とせん断柔性が関わる。低減積分には要素別の注意があり、一次低減積分のhourglassを確認する。",
+      "limit": "製品の比率や要素性能を本Tri6の合格条件/参照値へ移植しない。節点内接続置換と宣言配列の順番は別。"
+    },
+    {
+      "title": "Lee, P.S. and Bathe, K.J. (2004), Development of MITC isotropic triangular shell finite elements, Computers & Structures 82,945–962",
+      "doi": "10.1016/j.compstruc.2004.02.004",
+      "url": "https://web.mit.edu/kjb/www/Principal_Publications/Development_of_MITC_Isotropic_Triangular_Shell_Finite_Elements.pdf",
+      "access": "author-hosted full PDF, pp.945–946, introduction and spatial isotropy",
+      "confirmed": "薄さと形状/境界によるロッキング感度、MITCの混合補間、三角形の節点番号順に対するspatial isotropyを区別。",
+      "limit": "本作業は要素内の節点番号/向きを変えず、宣言配列順だけを変える。論文のisotropy試験を実施したとはしない。数表/収束次数の採用0。"
+    },
+    {
+      "title": "Goldberg, D. (1991), What Every Computer Scientist Should Know About Floating-Point Arithmetic, Computing Surveys, March 1991",
+      "url": "https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+      "access": "Oracle Numerical Computation Guide, licensed edited reprint, Languages and Compilers / Ambiguity",
+      "confirmed": "丸めにより加算の結合法則は一般には成立しない。",
+      "limit": "順序差が小さいことだけを本ソルバーの正しさの証明にしない。固定ID入力・局所項・組立・応答を別々に対照する。"
+    }
+  ],
+  "unobserved_text_rule": "12-24で本文未取得の資料は書誌/要旨のみ。未観測の式・数値・参照許容値を引用しない。",
+  "adopted_reference_numbers": 0
+}

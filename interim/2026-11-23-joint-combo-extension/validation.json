@@ -1,0 +1,167 @@
+{
+  "schema": "soil-fem-a01-validation/1",
+  "recorded_jst": "2026-11-12",
+  "base": "c70fb37ea025b6e40dda4db4adf67379ea2a6ee3",
+  "all_software_checks_passed": false,
+  "requested_linux_full_success": false,
+  "A01": "未達",
+  "numerical_acceptance": false,
+  "fmt": {
+    "exit_code": 0,
+    "command": "cargo fmt --all --check"
+  },
+  "clippy": {
+    "exit_code": 0,
+    "command": "cargo clippy --locked --all-targets -- -D warnings"
+  },
+  "rust": {
+    "passed": 451,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0,
+    "exit_code": 0,
+    "result_groups": 69,
+    "command": "cargo test --locked --release"
+  },
+  "additional_local_load_example": {
+    "build_exit_code": 0,
+    "test_exit_code": 0,
+    "unit_tests": 0,
+    "not_added_to_rust_test_count": true,
+    "actual_accepted_load_observations": 192
+  },
+  "python": {
+    "discovered": 562,
+    "assigned_unique_once": true,
+    "successful_tests": 554,
+    "executed_tests": 554,
+    "unexecuted_due_to_setup_errors": 8,
+    "setup_errors": 2,
+    "failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "all_discovered_executed": false,
+    "groups": {
+      "python-core-0-final": {
+        "group": "python-core-0",
+        "assigned_total": 291,
+        "tests_run": 291,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0
+      },
+      "python-core-1": {
+        "group": "python-core-1",
+        "assigned_total": 263,
+        "tests_run": 263,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 0
+      },
+      "python-mean-evidence": {
+        "group": "python-mean-evidence",
+        "assigned_total": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 1
+      },
+      "python-spatial-evidence": {
+        "group": "python-spatial-evidence",
+        "assigned_total": 4,
+        "tests_run": 0,
+        "failures": 0,
+        "errors": 1,
+        "skipped": 0,
+        "expected_failures": 0,
+        "unexpected_successes": 0,
+        "exit_code": 1
+      }
+    },
+    "unexecuted_test_ids": [
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_actual_checkpoints_restart_to_completion_with_exact_fields_and_systems",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_archive_and_exact_raw_json_reconstruction_are_verified",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_exploratory_paths_reach_zero_holding_but_keep_extra_confinement_separate",
+      "test_nc_mean_stress_evidence.MeanStressEvidence.test_forged_acceptance_is_rejected",
+      "test_nc_spatial_evidence.SpatialEvidence.test_all_archive_bytes_and_recomputed_measurements_match",
+      "test_nc_spatial_evidence.SpatialEvidence.test_both_maps_and_orders_have_full_saved_fields_and_frozen_histories",
+      "test_nc_spatial_evidence.SpatialEvidence.test_forged_acceptance_flag_is_rejected_by_field_audit",
+      "test_nc_spatial_evidence.SpatialEvidence.test_separate_process_restarts_match_actual_corresponding_fields"
+    ],
+    "old_core0_failure_retained": true,
+    "old_core0_missing_archives_restored_from_original_git_blobs_and_SHA_verified": true,
+    "new_observation_tests": 8,
+    "repeated_smokes_and_failed_attempts_not_added_to_totals": true
+  },
+  "legacy_replay_blockers": {
+    "mean": {
+      "error": "saved mean-stress/complement partition differs from own history",
+      "first_control_maximum_component_difference_kn": 2.220446049250313e-16,
+      "changed_components": 10
+    },
+    "spatial": {
+      "error": "remeasured JSON differs",
+      "derived_float_differences": 49,
+      "maximum_absolute_difference": 4.440892098500626e-16,
+      "discrete_type_key_and_order_changes": 0
+    },
+    "original_archives_verified": true,
+    "reference_values_changed": false,
+    "NC_code_changed": false,
+    "thresholds_or_integrity_checks_changed": false,
+    "platform_float_allowance_used_to_pass_linux": false,
+    "cause_not_fully_identified": true
+  },
+  "measurement_sources_unchanged_after_all_checks": true,
+  "measurement_source_files": 396,
+  "additional_postsolve_source_sha256": {
+    "examples/joint_combo_structure_loads.rs": "ac00f7110c50a948a2ce9b57c14f7e64953c1b40626c75ec2d6b62131f8631ad",
+    "interim/2026-11-23-joint-combo-extension/structure_work.py": "3a5852822efa53bcc3b3385f27255304cf9f82ecf6f331710a63bfa1463b6973",
+    "interim/2026-11-23-joint-combo-extension/geometry_audit.py": "2a0460c71085bce3d9b803fc693c6fe9045844717d8f7f981869598bfb79d0d6",
+    "interim/2026-11-23-joint-combo-extension/verify_archive.py": "30d5ab210be01135efaf6c169ef5668be8ff7ff67fdf5f06ef22508cfd3f4727"
+  },
+  "actual_checkpoint_restarts": {
+    "checkpoints": 21,
+    "suffix_states": 1204,
+    "all_states_and_entire_run_exact_except_elapsed": true
+  },
+  "scope_and_mutation_refusals": 18,
+  "numerical_matrix": {
+    "complete": true,
+    "fresh_native_paths": 7,
+    "fresh_independent_paths": 7,
+    "all_accepted_pairs": 672,
+    "all_new_combinations_verdict": "未達",
+    "new_limited_acceptance": false
+  },
+  "interrupted_initial_build_not_success": true,
+  "cancelled_preflight_not_success": true,
+  "windows_CI": "not_assessed_for_final_pushed_head",
+  "environment": {
+    "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "threading": {
+      "CARGO_BUILD_JOBS": "2",
+      "RUST_TEST_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "PYTHONUTF8": "1",
+      "PYTHONIOENCODING": "utf-8"
+    }
+  }
+}

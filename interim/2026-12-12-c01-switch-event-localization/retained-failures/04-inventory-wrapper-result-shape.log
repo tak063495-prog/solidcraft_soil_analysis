@@ -1,0 +1,4 @@
+The initial development caller used assert not report, treating the audit result as a findings list.
+The audit actually returned a summary dict with integrity_ok=true and historical info/warnings.
+No audit logic or findings were changed. The caller now checks integrity_ok, error severity, and SOURCE_NOT_INVENTORIED explicitly.
+This wrapper error is outside the final unittest counts.

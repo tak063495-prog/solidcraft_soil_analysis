@@ -1,0 +1,50 @@
+{
+  "passed": false,
+  "b01_complete": false,
+  "diagnostic_only": true,
+  "single_cause_fully_identified": false,
+  "inherited_unresolved_path": "interim/2026-12-25-b01-curved-tri6-cause-diagnosis/unresolved-cause-record.json",
+  "inherited_unresolved_sha256": "9230f865012eeb5d28c32667090b9ab894c677a98300ba9e2154bd1865242576",
+  "inherited_unresolved_unchanged": true,
+  "records": [
+    {
+      "symptoms": [
+        "S4",
+        "S5",
+        "S6",
+        "S7"
+      ],
+      "status": "曲面の原因寄与は未達・仕様/実装決定待ち",
+      "numeric_contribution": null,
+      "reason": "Current permitted-domain covariance and patch evidence cannot identify geometric/director/curvature/MITC curved-element contributions."
+    },
+    {
+      "symptoms": [
+        "S8",
+        "S9",
+        "S10",
+        "S11"
+      ],
+      "status": "未達・今回の対象外",
+      "numeric_contribution": null,
+      "reason": "No curved benchmark, reference-model substitution, attachment or restart implementation was performed."
+    },
+    {
+      "symptoms": [
+        "S6"
+      ],
+      "status": "許可域の零空間投影感度は追加演算診断可能",
+      "numeric_contribution": null,
+      "reason": "Physical K r residual <=2.573198655862994e-17 while eigenspace projection reaches 7.548097207594023e-8; high-precision eigenspace not computed."
+    },
+    {
+      "symptoms": [
+        "S6",
+        "S7"
+      ],
+      "status": "近零場の混在相対残差を合格にしない",
+      "numeric_contribution": null,
+      "reason": "Maximum mixed-DOF algebraic relative residual .7508756435367774 occurs in a rigid near-zero-force field; separate absolute force/moment raw values retained. No numerical acceptance threshold invented."
+    }
+  ]
+}

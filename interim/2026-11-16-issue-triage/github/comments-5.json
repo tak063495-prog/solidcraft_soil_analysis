@@ -1,0 +1,52 @@
+{
+  "comments": [
+    {
+      "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5#issuecomment-6753552523",
+      "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\n指定interimスクリプトの上下の各親子edgeでPID/image/parse可能なtimezone付きCreatedを確認し、parent.Created <= child.Createdを必須にしました。不明・欠落・parse不能は所有へ追加しません。親PID再利用、正しい子孫、excluded、identity不一致を純データ4 test methodsで試験。既存の保持handle本人image/生成時刻検査は保持しました。Windows CIM/実終了は未実行で、無関係processへのsignalは一切送っていません。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。",
+      "user": {
+        "login": "tak063495-prog",
+        "name": "tak063495-prog",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+        "id": 254234268
+      },
+      "id": 6753552523,
+      "pull_request_review_id": null,
+      "in_reply_to_id": null,
+      "created_at": null,
+      "updated_at": null,
+      "review": null,
+      "side": null,
+      "line": null,
+      "start_line": null,
+      "path": null,
+      "body_html": "<p dir=\"auto\">指定起点 <code class=\"notranslate\">f19ce642647207a87b9dda6cc31b006b85b5936c</code> で残存を再現し、その直接の子 <code class=\"notranslate\">5bee3b47f61878e614cae1e7268a57449d2f12d1</code> を同じ <code class=\"notranslate\">codex/plastic-spatial-convergence</code> へ反映しました。</p>\n<p dir=\"auto\">指定interimスクリプトの上下の各親子edgeでPID/image/parse可能なtimezone付きCreatedを確認し、parent.Created &lt;= child.Createdを必須にしました。不明・欠落・parse不能は所有へ追加しません。親PID再利用、正しい子孫、excluded、identity不一致を純データ4 test methodsで試験。既存の保持handle本人image/生成時刻検査は保持しました。Windows CIM/実終了は未実行で、無関係processへのsignalは一切送っていません。</p>\n<p dir=\"auto\">Linuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。</p>\n<p dir=\"auto\"><a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md\">日本語の修正・修正前再現・残件・PC手順</a> / <a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json\">試験件数・終了コード</a>。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。</p>\n<p dir=\"auto\">修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658\">Windows CI 42714778658</a> はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。</p>"
+    },
+    {
+      "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5#issuecomment-6754184803",
+      "body": "追加確認です。対象は PR #13 の固定SHA `5bee3b47f61878e614cae1e7268a57449d2f12d1`。本件の「snapshot内で現在の親より古い子を所有扱いにする経路」は修正され、該当する純データ回帰も独立に通りました。\n\n別条件として、同じinterim停止候補に **P2相当・Python最適化時に限定した保持handle本人確認の欠落**が残っています。#2と同じassert消失が、停止対象の確認にもあります。\n\n- [L206–220](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L206-L220)では、`QueryFullProcessImageNameW` / `GetProcessTimes`の呼出自体がassert式内にあり、`-O` / `PYTHONOPTIMIZE=1`で消えます。入口に最適化の明示拒否はありません。\n- CIM観測後、OpenProcess前に正規所有processが終了し、そのPIDが別processへ再利用された場合、snapshotの親子時刻が正しくても、実handleのimage/生成時刻を再確認できません。`--execute`、利用率条件、必要なローカル配置・保存処理等が通ると、[L582–593](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L582-L593)で当該handleを終了対象にし、本人確認済みのreceiptも書きます。\n\n独立確認はLinux/Pythonの隔離fixtureです。固定ソース全文を変更せず `compile(..., optimize=0/1)` で実行し、CIMとWindows APIだけをmock化しました。image不一致・生成時刻不一致の両方で、通常は停止前に拒否しreceiptなし、最適化時は照合APIを呼ばずmockのTerminateProcessへ進み、`held_identity_verified=true` / `unrelated_processes_touched=false`を記録しました。実Windows API・実signal・実process終了は一切行っていません。\n\nこのassert部分は修正前の直接親と同一で、今回の修正による回帰とは主張しません。対象はREADMEにある検証時のローカル配置を前提としたinterim候補であり、実studyでの誤停止や本体数値結果の誤りを確認したものでもありません。\n\n本人確認のAPI呼出・戻り値・image/生成時刻の条件を明示例外へ変更するか、停止処理より前に最適化モードを明示拒否するのがよいと思います。normal/最適化の両方で不一致時に終了呼出と成功receiptへ進まない回帰を追加してください。\n",
+      "user": {
+        "login": "tak063495-prog",
+        "name": "tak063495-prog",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+        "id": 254234268
+      },
+      "id": 6754184803,
+      "pull_request_review_id": null,
+      "in_reply_to_id": null,
+      "created_at": null,
+      "updated_at": null,
+      "review": null,
+      "side": null,
+      "line": null,
+      "start_line": null,
+      "path": null,
+      "body_html": "<p dir=\"auto\">追加確認です。対象は PR <a class=\"issue-link js-issue-link\" data-error-text=\"Failed to load title\" data-id=\"6258443468\" data-permission-text=\"Title is private\" data-url=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/13\" data-hovercard-type=\"pull_request\" data-hovercard-url=\"/tak063495-prog/solidcraft_soil_analysis/pull/13/hovercard\" href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/pull/13\">#13</a> の固定SHA <code class=\"notranslate\">5bee3b47f61878e614cae1e7268a57449d2f12d1</code>。本件の「snapshot内で現在の親より古い子を所有扱いにする経路」は修正され、該当する純データ回帰も独立に通りました。</p>\n<p dir=\"auto\">別条件として、同じinterim停止候補に <strong>P2相当・Python最適化時に限定した保持handle本人確認の欠落</strong>が残っています。#2と同じassert消失が、停止対象の確認にもあります。</p>\n<ul dir=\"auto\">\n<li><a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L206-L220\">L206–220</a>では、<code class=\"notranslate\">QueryFullProcessImageNameW</code> / <code class=\"notranslate\">GetProcessTimes</code>の呼出自体がassert式内にあり、<code class=\"notranslate\">-O</code> / <code class=\"notranslate\">PYTHONOPTIMIZE=1</code>で消えます。入口に最適化の明示拒否はありません。</li>\n<li>CIM観測後、OpenProcess前に正規所有processが終了し、そのPIDが別processへ再利用された場合、snapshotの親子時刻が正しくても、実handleのimage/生成時刻を再確認できません。<code class=\"notranslate\">--execute</code>、利用率条件、必要なローカル配置・保存処理等が通ると、<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-10-30-pause19-durable-SRM-mixed-elements/pause/scripts/safe-pause-latest102.py#L582-L593\">L582–593</a>で当該handleを終了対象にし、本人確認済みのreceiptも書きます。</li>\n</ul>\n<p dir=\"auto\">独立確認はLinux/Pythonの隔離fixtureです。固定ソース全文を変更せず <code class=\"notranslate\">compile(..., optimize=0/1)</code> で実行し、CIMとWindows APIだけをmock化しました。image不一致・生成時刻不一致の両方で、通常は停止前に拒否しreceiptなし、最適化時は照合APIを呼ばずmockのTerminateProcessへ進み、<code class=\"notranslate\">held_identity_verified=true</code> / <code class=\"notranslate\">unrelated_processes_touched=false</code>を記録しました。実Windows API・実signal・実process終了は一切行っていません。</p>\n<p dir=\"auto\">このassert部分は修正前の直接親と同一で、今回の修正による回帰とは主張しません。対象はREADMEにある検証時のローカル配置を前提としたinterim候補であり、実studyでの誤停止や本体数値結果の誤りを確認したものでもありません。</p>\n<p dir=\"auto\">本人確認のAPI呼出・戻り値・image/生成時刻の条件を明示例外へ変更するか、停止処理より前に最適化モードを明示拒否するのがよいと思います。normal/最適化の両方で不一致時に終了呼出と成功receiptへ進まない回帰を追加してください。</p>"
+    }
+  ],
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+  "title": "tak063495-prog/solidcraft_soil_analysis Issue #5 comments",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/5",
+  "display_title": "tak063495-prog/solidcraft_soil_analysis Issue #5 comments"
+}

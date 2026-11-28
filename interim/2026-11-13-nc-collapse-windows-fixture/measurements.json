@@ -1,0 +1,116 @@
+{
+  "schema": "nc-collapse-fixture-line-endings/1",
+  "base_commit": "092f1322ffce293edb3b93b03d0b7649e55f0641",
+  "cause_reproduced": true,
+  "comparison_normalization_used": false,
+  "diagnostic_only": true,
+  "passed": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "classification": "D",
+  "production_suffix_comparison_changed": false,
+  "records": [
+    {
+      "mode": "linux_text_LF",
+      "files": [
+        {
+          "path": "docs/LOW_PRELOAD_NC.ja.md",
+          "raw_sha256": "93b6f3dc9e3d9911e7339b2ef92242736ac2cb81b5e3ac848a283fffd7b958a4",
+          "diagnostic_lf_sha256": "93b6f3dc9e3d9911e7339b2ef92242736ac2cb81b5e3ac848a283fffd7b958a4",
+          "raw_bytes": 1892,
+          "CRLF_count": 0,
+          "LF_count": 13,
+          "raw_ends_with_fixed_new_suffix": true
+        },
+        {
+          "path": "interim/2026-11-16-issue-triage/todo.ja.md",
+          "raw_sha256": "2d924718f2751822f80b752badbc4c72ee9b5a5ab75c38ec71090ffa33a7213c",
+          "diagnostic_lf_sha256": "2d924718f2751822f80b752badbc4c72ee9b5a5ab75c38ec71090ffa33a7213c",
+          "raw_bytes": 1597,
+          "CRLF_count": 0,
+          "LF_count": 15,
+          "raw_ends_with_fixed_new_suffix": true
+        }
+      ],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "mode": "windows_text_CRLF",
+      "files": [
+        {
+          "path": "docs/LOW_PRELOAD_NC.ja.md",
+          "raw_sha256": "7db67fb6ecd2f66c5e39bfc3186ebbdbb027cf6863b9711341f585c9f699077d",
+          "diagnostic_lf_sha256": "93b6f3dc9e3d9911e7339b2ef92242736ac2cb81b5e3ac848a283fffd7b958a4",
+          "raw_bytes": 1905,
+          "CRLF_count": 13,
+          "LF_count": 13,
+          "raw_ends_with_fixed_new_suffix": false
+        },
+        {
+          "path": "interim/2026-11-16-issue-triage/todo.ja.md",
+          "raw_sha256": "093a3b824003a5a5f789a75c8cf83c13df3849f21cbbd79aaff71db390e48623",
+          "diagnostic_lf_sha256": "2d924718f2751822f80b752badbc4c72ee9b5a5ab75c38ec71090ffa33a7213c",
+          "raw_bytes": 1612,
+          "CRLF_count": 15,
+          "LF_count": 15,
+          "raw_ends_with_fixed_new_suffix": false
+        }
+      ],
+      "accepted": false,
+      "error": "NC collapse document appendix suffix differs: docs/LOW_PRELOAD_NC.ja.md"
+    },
+    {
+      "mode": "explicit_UTF8_bytes",
+      "files": [
+        {
+          "path": "docs/LOW_PRELOAD_NC.ja.md",
+          "raw_sha256": "93b6f3dc9e3d9911e7339b2ef92242736ac2cb81b5e3ac848a283fffd7b958a4",
+          "diagnostic_lf_sha256": "93b6f3dc9e3d9911e7339b2ef92242736ac2cb81b5e3ac848a283fffd7b958a4",
+          "raw_bytes": 1892,
+          "CRLF_count": 0,
+          "LF_count": 13,
+          "raw_ends_with_fixed_new_suffix": true
+        },
+        {
+          "path": "interim/2026-11-16-issue-triage/todo.ja.md",
+          "raw_sha256": "2d924718f2751822f80b752badbc4c72ee9b5a5ab75c38ec71090ffa33a7213c",
+          "diagnostic_lf_sha256": "2d924718f2751822f80b752badbc4c72ee9b5a5ab75c38ec71090ffa33a7213c",
+          "raw_bytes": 1597,
+          "CRLF_count": 0,
+          "LF_count": 15,
+          "raw_ends_with_fixed_new_suffix": true
+        }
+      ],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "mode": "old_suffix_CRLF_only",
+      "files": [
+        {
+          "path": "docs/LOW_PRELOAD_NC.ja.md",
+          "raw_sha256": "2790877ba58bd674f62b56cc4dc974bfd6942c35f87e6a4657b4d6bcbf421fa5",
+          "diagnostic_lf_sha256": "93b6f3dc9e3d9911e7339b2ef92242736ac2cb81b5e3ac848a283fffd7b958a4",
+          "raw_bytes": 1899,
+          "CRLF_count": 7,
+          "LF_count": 13,
+          "raw_ends_with_fixed_new_suffix": true
+        },
+        {
+          "path": "interim/2026-11-16-issue-triage/todo.ja.md",
+          "raw_sha256": "f36ce8db3a7b1f457607ddc88dc241600489b89059c94b72ef37913f341577b8",
+          "diagnostic_lf_sha256": "2d924718f2751822f80b752badbc4c72ee9b5a5ab75c38ec71090ffa33a7213c",
+          "raw_bytes": 1604,
+          "CRLF_count": 7,
+          "LF_count": 15,
+          "raw_ends_with_fixed_new_suffix": true
+        }
+      ],
+      "accepted": false,
+      "error": "NC physical document appendix suffix differs: docs/LOW_PRELOAD_NC.ja.md"
+    }
+  ],
+  "note": "CRLF-to-LF hashes are diagnostic only. The production audit compares raw bytes and rejects converted or mixed suffixes.",
+  "audit_source_sha256": "ea6ab1d8910808800d6a9d2424f4361a7c8ae9ceec2b613f27eed5fb3deef590"
+}

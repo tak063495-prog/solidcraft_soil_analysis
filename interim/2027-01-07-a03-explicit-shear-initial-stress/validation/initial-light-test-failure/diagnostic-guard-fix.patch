@@ -1,0 +1,11 @@
+--- used/a03shear_fixture.py
++++ guarded/a03shear_fixture.py
+@@ -41,6 +41,8 @@
+ def audit(m, g, c):
+     base = study.fixture(4, 2.)
+     assert m == base[0] and g == base[1]
++    if [stage.get('kind') for stage in c['stages']] != ['birth', 'joint_birth', 'pressure']:
++        raise ValueError('stage sequence outside fixed elastic diagnostic scope; do not solve')
+     assert c['settings']['kinematics'] == 'side_rollers' and c.get('boundary') is None
+     assert c['joint_system'] == base[2]['joint_system'] and c['initially_inactive_bodies'] == ['UpperClay']
+     assert c['stages'][0]['hydraulic_initialization'] == dict(kind='hydrostatic', level_m=2.)

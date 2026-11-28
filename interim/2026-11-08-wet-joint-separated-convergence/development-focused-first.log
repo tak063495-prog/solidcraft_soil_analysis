@@ -1,0 +1,37 @@
+reference 4 1 discrete
+reference 4 8 discrete
+reference 4 32 discrete
+reference 8 8 discrete
+reference 16 8 discrete
+reference 16 8 gl5
+reference 16 8 gl7
+native g4-m0.0005
+native g4-m5e-05
+native g4-m5e-06
+native g8-m5e-06
+native g16-m5e-06
+native rejected
+setUpClass (test_wet_joint_separated.SeparatedWetHistory) ... ERROR
+
+======================================================================
+ERROR: setUpClass (test_wet_joint_separated.SeparatedWetHistory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_wet_joint_separated.py", line 24, in setUpClass
+    cls.report = study.run(solver, cls.folder, steps=4)
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/diagnose_wet_joint_convergence.py", line 148, in run
+    key = f'g{4*steps}-m5e-06'; folder = output/key
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/diagnose_wet_joint_convergence.py", line 81, in measure
+    assert len(injected) == 3 and all(a['reason'] == 'verification_injected_rejection_after_convergence' for a in injected)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/diagnose_wet_joint_convergence.py", line 81, in <genexpr>
+    assert len(injected) == 3 and all(a['reason'] == 'verification_injected_rejection_after_convergence' for a in injected)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'rejected_trial_joint_slip_changed'
+
+----------------------------------------------------------------------
+Ran 0 tests in 209.896s
+
+FAILED (errors=1)

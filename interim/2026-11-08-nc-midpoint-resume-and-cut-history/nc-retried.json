@@ -1,0 +1,116 @@
+{
+  "schema": "soil-fem-nc-existing-midpoint-experiment/1",
+  "passed": false,
+  "production_adopted": false,
+  "scheme": "midpoint",
+  "source_patched": false,
+  "solver_sha256": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6",
+  "input_sha256": {
+    "ground.json": "4b055d60fb99d3e750b086079485f93dd92eeafed0926f29f922d74c4be2a701",
+    "stages.json": "66618fe8e0051e1679e4928ab1c3ac0ecdc7a457119c431d46c97ba4f1e9bb9e",
+    "mesh.json": "73360b7e5718089aec5391f99d13c3b1c42579440589430e3618cfa69e225fd2"
+  },
+  "budget_seconds": 60.0,
+  "stop_requested": false,
+  "owned_child_terminated": false,
+  "elapsed_seconds": 0.17920188499999767,
+  "exit_code": 1,
+  "stop_reason": "solver_returned",
+  "job_state": "failed",
+  "resume_command": "prepare-stages-recovery",
+  "snapshot": "incomplete.json",
+  "complete": false,
+  "input_condition": {
+    "pc_kpa": 100.0,
+    "preload_kpa": 5.0,
+    "force_kn": [
+      1.0,
+      0.5,
+      0.0
+    ]
+  },
+  "missing_acceptance": [
+    "full removal and post-release freeze",
+    "independent plastic 3D full path",
+    "both implementations step sensitivity",
+    "restart through full removal"
+  ],
+  "failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: true linear residual 1.4875587579753504e-10",
+  "observation": {
+    "accepted_increments": 266,
+    "completed_frames": [
+      "initial_equilibrated",
+      "load",
+      "unload"
+    ],
+    "stage_index": 3,
+    "stage_progress": 0.9514000415802002,
+    "geostatic_progress": 1.0,
+    "pc_range_kpa": [
+      68.98698315238919,
+      172.48228416305034
+    ],
+    "plastic_points": 324,
+    "rejections": 18,
+    "rejected_plastic_trial_changed": true,
+    "rejected_contact_trial_changed": true,
+    "all_rejections_preserve_committed_state": true,
+    "stored_stress_force_checks": [
+      {
+        "frame": "initial_equilibrated",
+        "relative_force_residual": 8.68824466314395e-15,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 2.0710246917833214e-13
+      },
+      {
+        "frame": "load",
+        "relative_force_residual": 2.7875529134744236e-09,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 3.965199320770922e-16
+      },
+      {
+        "frame": "unload",
+        "relative_force_residual": 2.1511469056151016e-09,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": -0.016690731061877098
+      }
+    ],
+    "last_committed_force_check": {
+      "relative_force_residual": 2.548049316350334e-09,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": 5.172455243676414e-13
+    },
+    "independent_plastic_3d_displacement": false,
+    "zero_release_check": {
+      "relative_force_residual": 2.036903615501215e-09,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": -0.018808107488697372
+    },
+    "fully_released_and_frozen": false,
+    "removed_joint_and_material_history_frozen": true
+  },
+  "last_attempt": {
+    "stage": "excavate_upper",
+    "progress_from": 0.9514000415802002,
+    "progress_to": 0.9514002799987793,
+    "accepted": false,
+    "reason": "numerical solve failed: true linear residual 1.4875587579753504e-10",
+    "newton_iterations": null,
+    "relative_force_residual": null,
+    "committed_state_unchanged_on_rejection": true,
+    "rejected_trial_material_changed": false,
+    "rejected_trial_plastic_changed": false,
+    "rejected_trial_active_set_changed": false,
+    "rejected_trial_load_changed": false,
+    "linear_solves": []
+  },
+  "restart_observation": {
+    "accepted_before": 266,
+    "accepted_after": 266,
+    "new_accepted": 0,
+    "starting_progress": 0.9514000415802002,
+    "preserved_attempt_and_frame_prefix": true,
+    "uninterrupted_full_path_compared": false,
+    "imported_checkpoint_sha256": "f0b53377010227aead58171b1f5923a6639f9c1c9b1e3132bc7ea47c6b8ecd6d"
+  }
+}

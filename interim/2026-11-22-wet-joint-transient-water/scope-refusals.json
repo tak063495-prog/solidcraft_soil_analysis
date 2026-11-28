@@ -1,0 +1,77 @@
+{
+  "Richards_joint_ONE_WAY_accepted": false,
+  "cases": [
+    {
+      "policy": "continuous",
+      "supported": false,
+      "refusal_verified": true,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/solver",
+          "solve-one-way",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/continuous.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/continuous-result.json"
+        ],
+        "pid": 3802,
+        "exit_code": 1,
+        "elapsed_seconds": 0.003748495999843726
+      },
+      "diagnostic": "invalid input: ONE_WAY requires dry-reference weights, explicit fluid/exterior loads and fixed active soil; construction/structures need their coupled policies"
+    },
+    {
+      "policy": "soil",
+      "supported": false,
+      "refusal_verified": true,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/solver",
+          "solve-one-way",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/soil.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/soil-result.json"
+        ],
+        "pid": 3803,
+        "exit_code": 1,
+        "elapsed_seconds": 0.0036693869999453455
+      },
+      "diagnostic": "invalid input: ONE_WAY requires dry-reference weights, explicit fluid/exterior loads and fixed active soil; construction/structures need their coupled policies"
+    },
+    {
+      "policy": "prescribed",
+      "supported": false,
+      "refusal_verified": true,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/solver",
+          "solve-one-way",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/prescribed.json",
+          "/workspace/solidcraft_soil_analysis/work/c04/formal/scope-refusals/prescribed-result.json"
+        ],
+        "pid": 3804,
+        "exit_code": 1,
+        "elapsed_seconds": 0.003567071999896143
+      },
+      "diagnostic": "invalid input: ONE_WAY requires dry-reference weights, explicit fluid/exterior loads and fixed active soil; construction/structures need their coupled policies"
+    }
+  ],
+  "bidirectional": {
+    "supported": false,
+    "executed": false,
+    "evidence": "No bidirectional controller/schema/CLI in src/main.rs, src/one_way.rs or src/one_way_construction.rs; no new feedback model was added."
+  },
+  "birth_death_generations": {
+    "supported": false,
+    "executed": false,
+    "reason": "ExternalMechanics rejects JOINT before any hydraulic-to-interface mapping or contact generation exists."
+  },
+  "pr19_exponential_Richards": {
+    "supported": false,
+    "executed": false,
+    "reason": "Production retention input is van Genuchten/Mualem, not PR #19 exponential conductivity/storage; no constitutive substitution."
+  }
+}

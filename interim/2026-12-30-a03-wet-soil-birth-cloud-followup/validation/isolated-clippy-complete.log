@@ -1,0 +1,16 @@
+    Checking soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis/work/a03follow-build/source)
+error: items after a test module
+    --> src/stages.rs:6495:1
+     |
+6495 | mod predictor_tests {
+     | ^^^^^^^^^^^^^^^^^^^
+...
+6642 | fn a03follow_minimum() -> usize {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#items_after_test_module
+     = note: `-D clippy::items-after-test-module` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(clippy::items_after_test_module)]`
+     = help: move the items to before the test module was defined
+
+error: could not compile `soil-fem-3d` (lib test) due to 1 previous error

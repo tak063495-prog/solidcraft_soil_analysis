@@ -30,6 +30,9 @@ def fingerprint(value):
 
 
 def derive(mesh, captured_case):
+    if any(p.get('formulation')=='mindlin_tri6_offset' or p.get('attachment_offset_m',0.)!=0.
+           for p in (captured_case.get('beam_system') or {}).get('plates',[])):
+        raise ValueError('Native offset plate preparation/display is unverified; use the explicit CLI-only offset scope')
     if KEY not in captured_case:
         return copy.deepcopy(mesh), copy.deepcopy(captured_case), None
     specification = captured_case[KEY]
@@ -63,7 +66,7 @@ def derive(mesh, captured_case):
 
 
 def receipt(source, mesh, case, binding):
-    return dict(schema='soil-fem-native-plate-expansion/1',
+    value=dict(schema='soil-fem-native-plate-expansion/1',
                 source_sha256={name: sha(source/name) for name in ('mesh.json', 'stages.json', 'native-capture.json')},
                 implementation_sha256={Path(path).name: sha(Path(path)) for path in
                                        (__file__, plate_surfaces.__file__, fem_reference.__file__)},
@@ -74,6 +77,9 @@ def receipt(source, mesh, case, binding):
                 coordinate_matching_tolerance_m=1e-8,
                 generated_singleton_sets_serialized=False,
                 persistent_cad_face_identity_claimed=False, p6_complete=False)
+    if any(p.get('formulation')=='mindlin_tri6' for p in case['beam_system'].get('plates',[])):
+        value['plate_translation_scope']='Mindlin Tri6: identical quadratic translations on the same straight planar reference face; no thickness offset. Legacy CST/DKT retains nodal-only identity.'
+    return value
 
 
 def prepare(source, output):

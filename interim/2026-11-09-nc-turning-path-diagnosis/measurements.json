@@ -1,0 +1,163 @@
+{
+  "schema": "soil-fem-nc-turning-path-diagnosis/1",
+  "passed": false,
+  "history_converged": false,
+  "base_commit": "06bff71dcc54f7060932aff57194f04ffe0593f8",
+  "parent_commit": "6429e8366ad7b02ab546cc9a9f7ff321b693962b",
+  "native_highest_accepted_progress": 0.9514000415802002,
+  "native_new_accepted_increments": 0,
+  "native_accepted_increments": 266,
+  "native_full_removal_reached": false,
+  "production_adopted": false,
+  "source_checkpoint_sha256": "33f1d411dd8e217d7040bbdbebcfc255559c1901839035f6732e2afe8aed2843",
+  "seed_zero_increment_force_checks": {
+    "path-diagnostic-coarse": {
+      "relative_force_residual": 2.5480493691118016e-09,
+      "state_exact": true,
+      "maximum_native_internal_difference_kn": 8.548717289613705e-15
+    },
+    "path-diagnostic-fine": {
+      "relative_force_residual": 2.5480493691118016e-09,
+      "state_exact": true,
+      "maximum_native_internal_difference_kn": 8.548717289613705e-15
+    }
+  },
+  "native_failure": "cutback exhausted; true linear residual 1.4875587579753504e-10 (prior archived run, not rerun here)",
+  "native_full_solve_executed_this_task": false,
+  "native_material_replays": 3240,
+  "derivative_fields": 20,
+  "all_derivative_fields_material_exact": true,
+  "contact_active_points_in_derivative_fields": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "paths": {
+    "path-diagnostic-coarse": {
+      "equilibrium_samples": 64,
+      "step_size_m": 2e-05,
+      "maximum_sampled_progress": 0.9514000963742426,
+      "peak_sample": 8,
+      "end_progress": 0.9513979061269694,
+      "positive_progress_increments": 9,
+      "negative_progress_increments": 55,
+      "maximum_reassembled_relative_force_residual": 1.5607675408623847e-15,
+      "augmented_linear_systems": 64,
+      "maximum_recomputed_true_linear_residual": 1.414891162005789e-15,
+      "minimum_sampled_symmetric_eigenvalue_kn_m": -0.07637334471791446,
+      "removed_material_frozen": true,
+      "active_material_points": 162,
+      "end_pc_decreasing_points": 81,
+      "end_plastic_dilating_points": 81,
+      "end_dry_side_points": 84,
+      "pc_change_range_kpa": [
+        -0.28014790606317774,
+        0.5435291991947224
+      ],
+      "native_committed_increments": 0,
+      "passed": false,
+      "history_converged": false
+    },
+    "path-diagnostic-fine": {
+      "equilibrium_samples": 64,
+      "step_size_m": 1e-05,
+      "maximum_sampled_progress": 0.9514000963737214,
+      "peak_sample": 17,
+      "end_progress": 0.9513997082645105,
+      "positive_progress_increments": 18,
+      "negative_progress_increments": 46,
+      "maximum_reassembled_relative_force_residual": 4.3853463651112884e-16,
+      "augmented_linear_systems": 64,
+      "maximum_recomputed_true_linear_residual": 1.2999743181321603e-15,
+      "minimum_sampled_symmetric_eigenvalue_kn_m": -0.03212318067272771,
+      "removed_material_frozen": true,
+      "active_material_points": 162,
+      "end_pc_decreasing_points": 81,
+      "end_plastic_dilating_points": 81,
+      "end_dry_side_points": 84,
+      "pc_change_range_kpa": [
+        -0.13990196372709818,
+        0.27159553249248347
+      ],
+      "native_committed_increments": 0,
+      "passed": false,
+      "history_converged": false
+    }
+  },
+  "turning": {
+    "coarse_sampled_peak": 0.9514000963742426,
+    "fine_sampled_peak": 0.9514000963737214,
+    "peak_difference": 5.21249710061511e-13,
+    "native_next_minimum_trial": 0.9514002799987793,
+    "next_trial_above_sampled_peaks": true,
+    "interpretation": "connected native-map displacement-controlled path turns back locally; sampled peaks are not an exact critical load or proof of global nonexistence"
+  },
+  "partial_diagnostic_step_comparison": {
+    "common_plane_displacement_m": 0.00064,
+    "progress_absolute_difference": 1.5432100042289676e-12,
+    "displacement": {
+      "absolute_l2": 3.987899572367674e-13,
+      "relative_l2": 2.715876719714228e-12,
+      "maximum_absolute": 1.535924165629865e-13
+    },
+    "fields": {
+      "effective_stress_compression_positive_kpa": {
+        "absolute_l2": 1.5644340925750366e-08,
+        "relative_l2": 9.703540937835548e-12,
+        "maximum_absolute": 3.5180818258595536e-09
+      },
+      "plastic_strain_compression_positive": {
+        "absolute_l2": 3.448894413521006e-12,
+        "relative_l2": 3.5014024482928884e-12,
+        "maximum_absolute": 4.838386635785952e-13
+      },
+      "preconsolidation_pressure_kpa": {
+        "absolute_l2": 4.00867859680053e-09,
+        "relative_l2": 2.5715706289419874e-12,
+        "maximum_absolute": 1.6245564893324627e-09
+      },
+      "void_ratio": {
+        "absolute_l2": 2.3533896673554053e-12,
+        "relative_l2": 1.4938986953678779e-13,
+        "maximum_absolute": 4.849454171562684e-13
+      }
+    }
+  },
+  "diagnosis": "Severe MCC loading-branch tangent softening and a local fold in the connected equilibrium path. Contact switching is absent in the observed window. The final FD/implicit mismatch is small; an exact static failure load and all alternative equilibrium branches remain unproved.",
+  "cloud_next_steps": [
+    "bounded pseudo-arclength with native and input-only independent material evolution, to test the branch and alternatives",
+    "stability and energy/dissipation audit along any alternative branch before considering a production solver change"
+  ],
+  "user_pc_required_for_this_small_diagnostic": false,
+  "specification_decision": "If the intended response crosses loss of the monotone quasi-static branch, choose the physical continuation (e.g. dynamic response or a justified length/time regularization). Do not silently reverse the prescribed removal or invent parameters.",
+  "full_release_material_contact_history_verified": false,
+  "remaining_region_zero_release_reverified_this_task": false,
+  "full_release_freeze_verified": false,
+  "independent_plastic_3d_full_field_verified": false,
+  "full_path_step_sensitivity_verified": false,
+  "restart_to_completion_verified": false,
+  "windows_ci_for_new_head": "unconfirmed",
+  "no_new_acceptance_thresholds": true,
+  "limitations": [
+    "native constitutive map, saved history and separate assembly; not an independent reference",
+    "sampled local turning path is not the prescribed monotone release path",
+    "no collapse/failure/stability acceptance, no global nonexistence theorem"
+  ]
+}

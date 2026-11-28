@@ -1,0 +1,45 @@
+{
+  "passed": false,
+  "events": [
+    {
+      "command": "source /workspace/soil-environment/env.sh",
+      "diagnostic": "No such file or directory",
+      "resolution": "Existing activate.sh used; build completed"
+    },
+    {
+      "command": "probe.py work/b03-probes --cli target/release/soil-fem-3d",
+      "diagnostic": "Old pre-existing CLI: trailing characters / unknown formulation field",
+      "resolution": "Retained 33 input/process/log records; not an acceptance result. Current sources rebuilt before authoritative 34-input run. Old executable SHA was not captured."
+    },
+    {
+      "command": "geometry_audit.py work/b03-probes-current before CLI build completed",
+      "diagnostic": "FileNotFoundError: work/b03-probes-current",
+      "resolution": "Rerun after actual CLI probes existed; raw geometry does not replace solve"
+    },
+    {
+      "command": "convergence_b03.py on unfinished main series",
+      "diagnostic": "FileNotFoundError: step-split-h0-s8/mesh.json",
+      "resolution": "Incomplete-series postprocessing retained; no numerical conclusion. Complete final series is postprocessed separately."
+    },
+    {
+      "command": "probe.py curved-midpoint-in-plane/out-of-plane",
+      "diagnostic": "geostatic mesh/CAD volume difference exceeds configured tolerance in UpperClay",
+      "resolution": "Original expectation mismatch false retained; separate unattached curved plates isolate the Mindlin geometry guard"
+    },
+    {
+      "command": "checkpoint_mutations.py initial run",
+      "diagnostic": "KeyError: attachment_offset_m on the zero-e sealed case",
+      "resolution": "Zero e is omitted by existing serde serialization. Diagnostic now uses the existing default 0.0; initial partial refusal evidence and traceback retained; final full 30 mutations rerun. No production or checkpoint semantics changed."
+    },
+    {
+      "command": "verify_contract.py first frame-consistency audit",
+      "diagnostic": "AssertionError: initial frame differs from geostatic endpoint by an omitted exact-zero geostatic_release_load_kn array as well as progress",
+      "resolution": "Read stages.rs:5132-5133. Audit now requires exactly the existing progress reset and exact-zero array clear, then compares every other field. Full Run and restart comparisons still exclude only elapsed_seconds. Original assertion log retained."
+    },
+    {
+      "command": "verify_contract.py second run",
+      "diagnostic": "KeyError: plates on an inactive plate report",
+      "resolution": "Existing serde omits empty report arrays. Read absent plates as [] while retaining equality of reported count to active_plates and six samples per active plate. Retained traceback; existing compare.py already uses this default."
+    }
+  ]
+}

@@ -112,6 +112,27 @@ def scan_batch(data, normals):
             for i in range(len(data))]
 
 
+def element_materials(mesh, ground, state):
+    """Resolve committed MATSET IDs; only legacy missing/empty lists fall back."""
+    count = len(mesh['tetrahedra'])
+    ids = state.get('element_material_ids', [])
+    if not isinstance(ids, list):
+        raise ValueError('element material inventory must be a list')
+    if not ids:
+        ids = mesh['material_ids']
+    if not isinstance(ids, list) or len(ids) != count or any(type(i) is not int for i in ids):
+        raise ValueError('one integer material ID per element required')
+    materials = {}
+    for material in ground['materials']:
+        key = material['id']
+        if type(key) is not int or key in materials or not isinstance(material.get('mcc'), dict):
+            raise ValueError('unique integer MCC material inventory required')
+        materials[key] = material['mcc']
+    if any(i not in materials for i in ids):
+        raise ValueError('unknown committed element material ID')
+    return [materials[i] for i in ids]
+
+
 def diagnose(mesh, ground, result, *, yield_tolerance=2e-6, normals=None):
     """Effective-stress skeleton only; near-yield points are potential plastic branches."""
     if not np.isfinite(yield_tolerance) or not 0 < yield_tolerance <= 1e-3:
@@ -124,20 +145,18 @@ def diagnose(mesh, ground, result, *, yield_tolerance=2e-6, normals=None):
     count = len(mesh['tetrahedra'])
     if not len(layout) or owners.dtype.kind not in 'iu' or (owners < 0).any() or (owners >= count).any() or not np.isfinite(weights).all() or (weights <= 0).any():
         raise ValueError('positive integration weights and valid element ownership required')
-    materials = {m['id']: m.get('mcc') for m in ground['materials']}
-    if not all(isinstance(value, dict) for value in materials.values()):
-        raise ValueError('MCC materials required for this diagnostic')
     normals = directions() if normals is None else np.asarray(normals)
     rows = []
     for frame in result['frames']:
         state = frame['state']
+        materials = element_materials(mesh, ground, state)
         if len(state['material_states']) != len(layout) or len(state['active_elements']) != count or any(type(x) is not bool for x in state['active_elements']):
             raise ValueError('committed state and integration inventory differ')
         active = np.asarray(state['active_elements'])[owners]
         candidates, ids = [], []
         for i in np.flatnonzero(active):
             value = state['material_states'][i]
-            material = materials[mesh['material_ids'][owners[i]]]
+            material = materials[owners[i]]
             data = branch(value['effective_stress_compression_positive_kpa'], value['preconsolidation_pressure_kpa'], value['void_ratio'], material)
             if abs(data['normalized_yield']) <= yield_tolerance:
                 candidates.append(data)

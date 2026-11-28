@@ -1,0 +1,13 @@
+"""Register the immutable generated validation copy, without deleting it or weakening audit."""
+from pathlib import Path
+import subprocess,os,json,hashlib
+root=Path.cwd();inv=root/'interim/2026-12-10-ci-p601-inventory-fix/inventory.toml';auditor=root/'interim/2026-12-06-p6-01-status-reconciliation/audit_status.py';prefix='interim/2027-01-04-a01-high-precision-nullspace/'
+commit='1545ad5d197285690719a3036f3d00573c127ad0';name=prefix+'validation/validation.json';env=dict(os.environ,GIT_NO_LAZY_FETCH='1');raw=(root/name).read_bytes();fixed=subprocess.check_output(['git','show',commit+':'+name],env=env);assert fixed==raw
+value=json.loads(raw);before=inv.read_bytes();sid='a01hp_20270104_generated_validation_copy';assert ('id = "'+sid+'"').encode() not in before
+sha=hashlib.sha256(raw).hexdigest();blob=hashlib.sha1(('blob '+str(len(raw))+'\0').encode()+raw).hexdigest();assert subprocess.check_output(['git','rev-parse',commit+':'+name],env=env,text=True).strip()==blob
+addition='\n[[sources]]\n'+''.join(k+' = '+json.dumps(v)+'\n' for k,v in dict(id=sid,path=name,commit=commit,kind='json',sha256=sha,git_blob_sha1=blob).items())
+for key in ('passed','a01_complete','diagnostic_only'):
+ assert type(value[key]) is bool
+ addition+='[[sources.status_keys]]\npointer = '+json.dumps('/'+key)+'\nvalue_json = '+json.dumps(json.dumps(value[key]))+'\n'
+after=before+addition.encode();inv.write_bytes(after);oldhash=hashlib.sha256(before).hexdigest();newhash=hashlib.sha256(after).hexdigest();source=auditor.read_text();old="SUPPLEMENTAL_SHA256 = '"+oldhash+"'";assert source.count(old)==1;auditor.write_text(source.replace(old,"SUPPLEMENTAL_SHA256 = '"+newhash+"'"),encoding='utf-8',newline='\n')
+(root/(prefix+'validation/generated-copy-registration.json')).write_text(json.dumps(dict(path=name,commit=commit,sha256=sha,git_blob_sha1=blob,old_inventory_exact_prefix=after.startswith(before),inventory_sha256=newhash,reason='collector generated an additional validation/validation.json; register the fixed copy rather than deleting evidence or weakening the inventory audit'),indent=2)+'\n')

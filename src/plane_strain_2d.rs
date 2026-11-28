@@ -576,8 +576,18 @@ fn reference_free_richardson(values: &[f64]) -> (Option<f64>, Option<f64>) {
     let coarse = values[count - 3];
     let mid = values[count - 2];
     let fine = values[count - 1];
-    let first = (coarse - mid).abs();
-    let second = (mid - fine).abs();
+    let first_difference = coarse - mid;
+    let second_difference = mid - fine;
+    // This Richardson model assumes monotone convergence and a positive ratio.
+    // Absolute differences alone would turn an oscillating series into a pass.
+    if !first_difference.is_finite()
+        || !second_difference.is_finite()
+        || first_difference.is_sign_positive() != second_difference.is_sign_positive()
+    {
+        return (None, None);
+    }
+    let first = first_difference.abs();
+    let second = second_difference.abs();
     if !(first > 0. && second > 0. && second < 0.7 * first) {
         return (None, None);
     }
@@ -778,6 +788,7 @@ fn column_inputs() -> Result<(Ground, StageCase)> {
         beam_system: None,
         schema: "soil-fem-stages/1".into(),
         settings: Settings {
+            attempt_budget_policy: Default::default(),
             kinematics: Kinematics::Explicit,
             relative_force_tolerance: 1e-8,
             relative_linear_tolerance: 1e-10,
@@ -788,6 +799,8 @@ fn column_inputs() -> Result<(Ground, StageCase)> {
             mcc_integration: None,
             tangent_perturbation: 1e-7,
             maximum_free_dofs: 100_000,
+            dense_lu_refinement: false,
+            dense_residual_method: None,
             linear_solver: LinearSolver::SparseGmresIlu0 {
                 options: GmresOptions::default(),
             },

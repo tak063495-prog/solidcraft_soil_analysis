@@ -1,0 +1,228 @@
+{
+  "passed": false,
+  "b03_complete": false,
+  "records": [
+    {
+      "name": "isolated-curved-midpoint-0",
+      "expected": "Mindlin Tri6 requires straight edges",
+      "legacy_control": false,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-0/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-0/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-0/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-0/run.json"
+        ],
+        "pid": 74042,
+        "exit_code": 1,
+        "elapsed_seconds": 0.028823329000033482,
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614"
+      },
+      "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+      "result_exists": false,
+      "complete": null,
+      "refused": true,
+      "input_sha256": {
+        "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+        "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages": "06420c1446ba166ffe1e550335789705824f84102028614d3630609a2bdc803e"
+      }
+    },
+    {
+      "name": "isolated-curved-midpoint-2",
+      "expected": "Mindlin Tri6 requires straight edges",
+      "legacy_control": false,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-2/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-2/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-2/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/isolated-curved-midpoint-2/run.json"
+        ],
+        "pid": 74055,
+        "exit_code": 1,
+        "elapsed_seconds": 0.046452563000002556,
+        "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614"
+      },
+      "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+      "result_exists": false,
+      "complete": null,
+      "refused": true,
+      "input_sha256": {
+        "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+        "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages": "8383d45bd65beda47c5e48ace707e148662a59d12d66a66112a8df0aabb23525"
+      }
+    },
+    {
+      "name": "implicit-planar-formulation-with-real-fold",
+      "expected": "same signed normal offset",
+      "legacy_control": false,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/implicit-planar-formulation-with-real-fold/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/implicit-planar-formulation-with-real-fold/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/implicit-planar-formulation-with-real-fold/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/implicit-planar-formulation-with-real-fold/run.json"
+        ],
+        "pid": 74068,
+        "exit_code": 1,
+        "elapsed_seconds": 0.02270212399992033,
+        "log_sha256": "ebef717f118deaf59484002737339ba726edf5fb74dea0786eb65b5fc7cfef1e"
+      },
+      "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+      "result_exists": false,
+      "complete": null,
+      "refused": true,
+      "input_sha256": {
+        "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+        "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages": "2b7b319bc4fb778545a46902a77061a51d274743b034ecf0a9b1e62a0d30123a"
+      }
+    },
+    {
+      "name": "legacy-mindlin_tri6-kink-zero",
+      "expected": null,
+      "legacy_control": true,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-mindlin_tri6-kink-zero/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-mindlin_tri6-kink-zero/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-mindlin_tri6-kink-zero/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-mindlin_tri6-kink-zero/run.json"
+        ],
+        "pid": 74069,
+        "exit_code": 0,
+        "elapsed_seconds": 0.9852580040000021,
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee"
+      },
+      "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+      "result_exists": true,
+      "complete": true,
+      "refused": false,
+      "input_sha256": {
+        "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+        "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages": "c171d600a2de13e87f41c0cabe7f83a96239839dec37ae3f20f1aa2d43e5c0c0"
+      }
+    },
+    {
+      "name": "legacy-cst_dkt-kink-zero",
+      "expected": null,
+      "legacy_control": true,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-cst_dkt-kink-zero/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-cst_dkt-kink-zero/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-cst_dkt-kink-zero/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-cst_dkt-kink-zero/run.json"
+        ],
+        "pid": 74799,
+        "exit_code": 0,
+        "elapsed_seconds": 1.3330435340000122,
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee"
+      },
+      "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+      "result_exists": true,
+      "complete": true,
+      "refused": false,
+      "input_sha256": {
+        "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+        "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages": "6627aa4583564b6699dcc30189d838476f7191e8de30f53e7ec6429ae9edb246"
+      }
+    },
+    {
+      "name": "legacy-default-kink-zero",
+      "expected": null,
+      "legacy_control": true,
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-default-kink-zero/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-default-kink-zero/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-default-kink-zero/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/legacy-default-kink-zero/run.json"
+        ],
+        "pid": 75590,
+        "exit_code": 0,
+        "elapsed_seconds": 0.996999689000063,
+        "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee"
+      },
+      "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+      "result_exists": true,
+      "complete": true,
+      "refused": false,
+      "input_sha256": {
+        "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+        "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+        "stages": "bedfdee3eb355a6bda824cfa19348f52d73cd5c35f10e8630247f953c2fe18ec"
+      }
+    },
+    {
+      "name": "compact-mindlin_tri6-0.05",
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6-0.05/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6-0.05/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6-0.05/specification.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6-0.05/expanded"
+        ],
+        "pid": 76327,
+        "exit_code": 1,
+        "elapsed_seconds": 0.3866566420000481,
+        "log_sha256": "5f08ab05105c372d4a7db69307807554e7623ecdd21b444a93c16398b65357b2"
+      },
+      "diagnostic": "Traceback (most recent call last):\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 225, in <module>\n    if __name__=='__main__':main()\n                            ~~~~^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 215, in main\n    mesh,case,binding=attach(*data)\n                      ~~~~~~^^^^^^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 87, in attach\n    if surface.get('thickness_offset_m',0.)!=0.:raise ValueError('plate thickness offset attachment unsupported')\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: plate thickness offset attachment unsupported\n",
+      "expected": "plate thickness offset attachment unsupported",
+      "refused": true
+    },
+    {
+      "name": "compact-mindlin_tri6_offset-0.0",
+      "process": {
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6_offset-0.0/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6_offset-0.0/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6_offset-0.0/specification.json",
+          "/workspace/solidcraft_soil_analysis/work/b03-supplemental/compact/mindlin_tri6_offset-0.0/expanded"
+        ],
+        "pid": 76413,
+        "exit_code": 1,
+        "elapsed_seconds": 0.30965588100002606,
+        "log_sha256": "893afb306d592a48efc2a9d8ea05a900d1ac0b9d9e982e8945dc176e885ead98"
+      },
+      "diagnostic": "Traceback (most recent call last):\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 225, in <module>\n    if __name__=='__main__':main()\n                            ~~~~^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 215, in main\n    mesh,case,binding=attach(*data)\n                      ~~~~~~^^^^^^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 86, in attach\n    if formulation not in ('cst_dkt','mindlin_tri6'):raise ValueError('unknown plate formulation')\n                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: unknown plate formulation\n",
+      "expected": "unknown plate formulation",
+      "refused": true
+    },
+    {
+      "name": "native-prepare-planar",
+      "entry": "prepare_native_plates.derive",
+      "diagnostic": "Native offset plate preparation/display is unverified; use the explicit CLI-only offset scope",
+      "refused": true
+    },
+    {
+      "name": "native-prepare-kink-zero",
+      "entry": "prepare_native_plates.derive",
+      "diagnostic": "Native offset plate preparation/display is unverified; use the explicit CLI-only offset scope",
+      "refused": true
+    }
+  ],
+  "refusal_contract_passed": true,
+  "legacy_controls_completed": true
+}

@@ -62,6 +62,16 @@ pub fn invariants(s: &[f64; 6]) -> (f64, f64) {
     (p, (1.5 * ss).sqrt())
 }
 
+#[path = "mcc_elastic_split.rs"]
+mod elastic_split;
+
+#[derive(Clone, Copy)]
+enum ElasticStep {
+    Frozen,
+    Split,
+    RefinePlastic(f64),
+}
+
 impl Parameters {
     /// Differentiate the converged local return and propagate sensitivities
     /// through the complete fixed partition. The primal update is unchanged.
@@ -263,6 +273,41 @@ impl Parameters {
         strain: [f64; 6],
         max_substep: f64,
     ) -> Result<Update> {
+        self.integrate_with_shear(committed, strain, max_substep, None)
+    }
+
+    /// Backward Euler with a prescribed constant G and state-dependent bulk modulus.
+    pub fn integrate_with_shear(
+        &self,
+        committed: &State,
+        strain: [f64; 6],
+        max_substep: f64,
+        shear_kpa: Option<f64>,
+    ) -> Result<Update> {
+        self.integrate_steps(
+            committed,
+            strain,
+            max_substep,
+            shear_kpa,
+            ElasticStep::Frozen,
+        )
+    }
+
+    fn integrate_steps(
+        &self,
+        committed: &State,
+        strain: [f64; 6],
+        max_substep: f64,
+        shear_kpa: Option<f64>,
+        elastic_step: ElasticStep,
+    ) -> Result<Update> {
+        if let Some(g) = shear_kpa
+            && (self.integration != Integration::BackwardEuler || !g.is_finite() || g <= 0.)
+        {
+            return Err(Error::Input(
+                "constant MCC shear modulus requires positive finite G and backward Euler".into(),
+            ));
+        }
         self.validate_state(committed)?;
         if !strain.iter().all(|x| x.is_finite())
             || !max_substep.is_finite()
@@ -292,11 +337,27 @@ impl Parameters {
             let mut plastic = 0;
             let increment = strain.map(|x| x / steps as f64);
             let mut failed = false;
+            let mut accepted = 0;
             for _ in 0..steps {
-                match self.substep(&state, increment) {
-                    Ok((next, yielded)) => {
+                let step = match (shear_kpa, elastic_step) {
+                    (Some(g), ElasticStep::Split) => {
+                        self.elastic_split_substep(&state, increment, g, None)
+                    }
+                    (Some(g), ElasticStep::RefinePlastic(h)) => {
+                        self.elastic_split_substep(&state, increment, g, Some(h))
+                    }
+                    _ => self
+                        .substep_with_shear(&state, increment, shear_kpa)
+                        .map(|(next, yielded)| (next, usize::from(yielded), 1)),
+                };
+                match step {
+                    Ok((next, yielded, count)) => {
                         state = next;
-                        plastic += usize::from(yielded);
+                        plastic += yielded;
+                        accepted += count;
+                        if accepted > 100_000 {
+                            return Err(Error::Material("MCC substep budget exceeded".into()));
+                        }
                     }
                     Err(e) => {
                         failed = true;
@@ -309,7 +370,7 @@ impl Parameters {
                 self.validate_state(&state)?;
                 return Ok(Update {
                     state,
-                    substeps: steps,
+                    substeps: accepted,
                     plastic_substeps: plastic,
                 });
             }
@@ -325,7 +386,17 @@ impl Parameters {
             let update = midpoint::integrate(self, old, de, 1, false)?.0;
             return Ok((update.state, update.plastic_substeps != 0));
         }
-        let (k, g) = self.moduli(old)?;
+        self.substep_with_shear(old, de, None)
+    }
+
+    fn substep_with_shear(
+        &self,
+        old: &State,
+        de: [f64; 6],
+        shear_kpa: Option<f64>,
+    ) -> Result<(State, bool)> {
+        let (k, elastic_shear) = self.moduli(old)?;
+        let g = shear_kpa.unwrap_or(elastic_shear);
         let ev = de[0] + de[1] + de[2];
         let mut trial = old.effective_stress_compression_positive_kpa;
         for i in 0..3 {

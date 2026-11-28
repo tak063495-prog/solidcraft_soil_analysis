@@ -1,0 +1,1 @@
+初回ビルド前初期化・900秒予算停止・続行後の時間メタデータ出力失敗・旧証拠取得前Python群の失敗を生証拠ZIPの paths/retained-failures と failure-*.json に保持する。初回停止の全確定場・checkpoint は native-interrupted-raw に保持する。いずれも成功件数に含めない。封印用ソース列挙には旧codec依存2ファイルをSHA照合して明示追加し、隔離importで確認した。

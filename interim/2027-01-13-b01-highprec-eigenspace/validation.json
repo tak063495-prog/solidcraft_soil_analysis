@@ -1,0 +1,242 @@
+{
+  "passed": false,
+  "b01_complete": false,
+  "p601_scientific_integrity_ok": true,
+  "scientific_commit": "fa11d601956d3aa6ed786ba98e5a5cffe383da88",
+  "base_commit": "f460f562fa42ebfe72f11cd1e3cdbbb07a241762",
+  "comparison_head": "f74e09a5288f2d126894d40c322fb3e446946aae",
+  "science_recomputed": false,
+  "linux": {
+    "fmt_exit": 0,
+    "clippy_exit": 0,
+    "release_build_exit": 0,
+    "rust": {
+      "discovered": 467,
+      "passed": 467,
+      "failed": 0,
+      "skipped": 0,
+      "not_run": 0,
+      "groups": {
+        "rust-core": {
+          "passed": 63,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        "rust-integration-0": {
+          "passed": 191,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        "rust-integration-1": {
+          "passed": 210,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        },
+        "rust-examples": {
+          "passed": 3,
+          "failed": 0,
+          "ignored": 0,
+          "measured": 0,
+          "filtered_out": 0
+        }
+      }
+    },
+    "python": {
+      "assigned": 998,
+      "passed": 988,
+      "failures": 0,
+      "setup_errors": 2,
+      "skipped": 2,
+      "not_run": 8,
+      "linux_pytest": 7,
+      "discovered_unittest_ids": 991,
+      "groups": {
+        "python-core-0": {
+          "assigned": 480,
+          "passed": 479,
+          "failures": 0,
+          "setup_errors": 0,
+          "skipped": 1,
+          "not_run": 0,
+          "exit_code": 1
+        },
+        "python-core-1": {
+          "assigned": 487,
+          "passed": 486,
+          "failures": 0,
+          "setup_errors": 0,
+          "skipped": 1,
+          "not_run": 0,
+          "exit_code": 1
+        },
+        "python-mean-evidence": {
+          "assigned": 4,
+          "passed": 0,
+          "failures": 0,
+          "setup_errors": 1,
+          "skipped": 0,
+          "not_run": 4,
+          "exit_code": 1
+        },
+        "python-spatial-evidence": {
+          "assigned": 4,
+          "passed": 0,
+          "failures": 0,
+          "setup_errors": 1,
+          "skipped": 0,
+          "not_run": 4,
+          "exit_code": 1
+        },
+        "python-c01-switch": {
+          "assigned": 4,
+          "passed": 4,
+          "failures": 0,
+          "setup_errors": 0,
+          "skipped": 0,
+          "not_run": 0,
+          "exit_code": 0
+        },
+        "python-c01-path": {
+          "assigned": 4,
+          "passed": 4,
+          "failures": 0,
+          "setup_errors": 0,
+          "skipped": 0,
+          "not_run": 0,
+          "exit_code": 0
+        },
+        "python-c01-cause": {
+          "assigned": 8,
+          "passed": 8,
+          "failures": 0,
+          "setup_errors": 0,
+          "skipped": 0,
+          "not_run": 0,
+          "exit_code": 0
+        }
+      },
+      "all_discovered_assigned_exactly_once": true
+    }
+  },
+  "prior_comparison_and_failure_log_sha256": "ad0e9e4899fbeea035098f875f3d89997caed41f553e099df2d8e6268bfe100e",
+  "carried_forward_from_previous_logs": [
+    "fmt",
+    "clippy",
+    "release-all-targets-build",
+    "rust discovery list",
+    "linux-only pytest",
+    "python-core-0",
+    "python-mean-evidence at both commits",
+    "P6 scientific inventory audit"
+  ],
+  "component_diagnosis_runs_after_input_fix": 1,
+  "mean_component_report_sha256": "845882a5c3de71e9d7943acc3ca8f8637dabb77236d1f1ed3ec66f94beac16e7",
+  "mean_comparison": {
+    "prior_success": {
+      "tests_run": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 1120.611863228,
+      "artifact": "interim/2027-01-12-a04-fixed-order-portable-reference/linux-validation.zip",
+      "member": "python-mean-evidence/python-test-inventory.json",
+      "member_sha256": "cd5f6523e0117033e8a8d7cbafa7c702fa850ea1ed0d33ce57e85ce20e04d95b"
+    },
+    "base": {
+      "assigned": 4,
+      "passed": 0,
+      "failures": 0,
+      "setup_errors": 1,
+      "skipped": 0,
+      "not_run": 4,
+      "exit_code": 1
+    },
+    "head": {
+      "assigned": 4,
+      "passed": 0,
+      "failures": 0,
+      "setup_errors": 1,
+      "skipped": 0,
+      "not_run": 4,
+      "exit_code": 1
+    },
+    "error": "ValueError: saved mean-stress/complement partition differs from own history",
+    "diagnosis": "Pre-existing Linux environment dependent failure reproduced at f460f56 and f74e09a5; unrelated to B-01. Specific cause of environment difference unresolved.",
+    "differing_components": 483,
+    "first_case": "bounded-independent-complement-resumed",
+    "cases_with_differences": 29,
+    "total_cases": 34,
+    "max_abs_difference_kn": 7.105427357601002e-15,
+    "largest_difference_case": "independent-complement-rate-resumed",
+    "component": {
+      "saved_key": "horizontal_holding_kn",
+      "split": "complement",
+      "dof": 59,
+      "node_zero_based": 19,
+      "component": "z",
+      "saved_kn": -0.38230727079140936,
+      "recomputed_kn": -0.38230727079140225,
+      "signed_difference_kn": 7.105427357601002e-15,
+      "saved_hex": "-0x1.877b8ea449d9ap-2",
+      "recomputed_hex": "-0x1.877b8ea449d1ap-2"
+    }
+  },
+  "previous_interrupted_report_sha256": "02f0001847f0b7fd411ba94a0d749ee6c6fb204557ca1144ba3e89921fc57580",
+  "previous_interrupted_log_sha256": "3a79370be5e55ae9c999d98134c1de93b6f2fba65ab88c870bce8443e192582f",
+  "linux_log_sha256": "9a4b1d0357afc961745bd6b2ea031f9f1c550627fc5df511d48fb7fce2994044",
+  "status": "linux_validation_finished_with_two_pre_existing_setup_errors",
+  "prior_spatial_stop_record_sha256": "a7deea43988690bd9f3fdc3491138ed1caf45e37010061cf72369ed8fa24a924",
+  "spatial_comparison": {
+    "base": {
+      "assigned_total": 4,
+      "tests_run": 0,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "exit_code": 1,
+      "exception_from_group": "OSError: [Errno 18] Invalid cross-device link",
+      "ran_line": "Ran 0 tests in 169.207s"
+    },
+    "head": {
+      "assigned_total": 4,
+      "tests_run": 0,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0,
+      "exit_code": 1,
+      "exception_from_group": "ValueError: remeasured JSON differs",
+      "ran_line": "Ran 0 tests in 179.791s"
+    },
+    "common_nc_tree": "2f093479f0c46e194e14f007e2616f51c276d2cd",
+    "error": "ValueError: remeasured JSON differs",
+    "diagnosis": "Pre-existing Linux environment dependent failure reproduced at f460f56 and f74e09a5; unrelated to B-01. Specific cause unresolved.",
+    "baseline_group_runs": 1,
+    "baseline_direct_fixture_measurement": {
+      "calls": 1,
+      "exit_code": 1,
+      "error": "ValueError: remeasured JSON differs",
+      "runner": "direct-spatial.py",
+      "source": "unchanged baseline remeasure.run with original Linux argument"
+    },
+    "numeric_fields_differing": 49,
+    "largest_absolute_difference": {
+      "pointer": "/paths/native-left256/remaining_holding_norm_kn",
+      "saved": 3.883669499505146,
+      "remeasured": 3.8836694995051464,
+      "delta": 4.440892098500626e-16,
+      "abs_delta": 4.440892098500626e-16
+    },
+    "stored_sha256": "964215b9ebff7652fa3499607182f097eef07f51a7b1337c117f288e1ca987dc",
+    "remeasured_sha256": "f44ea8b2b5d7420e93b9e14860c51264f052a59d390a6f0cfc4addbcf657d65b",
+    "evidence_zip": "linux-spatial-comparison.zip",
+    "evidence_zip_sha256": "743e755413fb18719917e05bc491da4d6bfbbc4c4c9a94e06aa035793f535d65"
+  },
+  "windows_verification": "See PR 13 Actions runs for the published head; Linux totals exclude Windows and the separate baseline reproduction."
+}

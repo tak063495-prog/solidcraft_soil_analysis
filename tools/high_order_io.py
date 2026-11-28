@@ -84,7 +84,7 @@ def stages(mesh_file,result_file,output):
         pore=np.zeros(len(layout)) if h is None else np.maximum(h-np.array([p['position_m'][2] for p in layout]),0)*gamma
         if state.get('pore_pressure_kpa') is not None:pore=np.asarray(state['pore_pressure_kpa'])
         structures=set((result['case'].get('joint_system') or {}).get('structure_bodies',[]))
-        if result['schema']=='soil-fem-stage-result/13':
+        if result['schema'] in ('soil-fem-stage-result/13','soil-fem-stage-result/14'):
             bodies={r['id']:r['body'] for r in mesh['regions']};total=np.asarray([bodies[mesh['region_ids'][p['element_index']]] in structures for p in layout])
             if state.get('pore_pressure_kpa') is not None:assert np.all(pore[total]==0.)
             pore=pore.copy();pore[total]=0.;raw['material_stress_reference']=total.astype(np.uint8)

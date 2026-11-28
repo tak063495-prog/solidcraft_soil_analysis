@@ -1,0 +1,17 @@
+tree a917a04ffb253b86b459e34ca1737a5d5ad7a6b6
+parent eaeb160b68a1ec982634f45def65fc47bb279b45
+author 剛宏 新谷 <tak063495@gmail.com> 1794145464 +0000
+committer 剛宏 新谷 <tak063495@gmail.com> 1794145464 +0000
+
+Verify bounded NC linear refinement without certifying removal
+
+Start from PR #13 head eaeb160b and verify its parent 840de37c.
+Independently verify compensated LU refinement on 19 saved and 60
+bounded-trial systems at the unchanged 1e-10 gate. The next minimum
+increment still fails Newton60 at force residual 1.4429505136071174e-7;
+retain progress 0.9514000415802002 and all physical acceptance flags false.
+
+Add Japanese README/Windows instructions, SHA256 raw evidence, independent
+remeasurement, and validation. Preserve all 3200 existing tracked files.
+Linux: 23 selected Rust and 17 selected Python tests pass; 52 lib tests
+filtered, remaining suites unrun. New-head Windows CI unverified.

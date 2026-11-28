@@ -1,0 +1,5180 @@
+{
+  "schema": "b03cause-measurements/1",
+  "passed": false,
+  "b03_complete": false,
+  "diagnostic_only": true,
+  "production_scope_expanded": false,
+  "general_joint_acceptance": null,
+  "original_all_field_acceptance": null,
+  "all_other_remainders_unmet": true,
+  "cloud_diagnostics_remaining": true,
+  "specification_decisions_needed": true,
+  "pc_executed": false,
+  "maximum_tri6": 2,
+  "maximum_structural_dofs": 72,
+  "formal_patch_observations": {
+    "passed": false,
+    "b03_complete": false,
+    "diagnostic_only": true,
+    "production_scope_expanded": false,
+    "general_joint_acceptance": null,
+    "public_kernel_unique_requests": 58,
+    "public_kernel_total_evaluations": 104,
+    "global_equilibrium_solves": 46,
+    "node_order": [
+      {
+        "id": "panel0-012",
+        "permutation": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "e_m": 0.05,
+        "physical_id_stiffness_relative_difference": 0.0
+      },
+      {
+        "id": "panel0-021",
+        "permutation": [
+          0,
+          2,
+          1,
+          5,
+          4,
+          3
+        ],
+        "e_m": -0.05,
+        "physical_id_stiffness_relative_difference": 1.4368516519387852e-16
+      },
+      {
+        "id": "panel0-102",
+        "permutation": [
+          1,
+          0,
+          2,
+          3,
+          5,
+          4
+        ],
+        "e_m": -0.05,
+        "physical_id_stiffness_relative_difference": 3.417865928293437e-16
+      },
+      {
+        "id": "panel0-120",
+        "permutation": [
+          1,
+          2,
+          0,
+          4,
+          5,
+          3
+        ],
+        "e_m": 0.05,
+        "physical_id_stiffness_relative_difference": 5.681360604716549e-16
+      },
+      {
+        "id": "panel0-201",
+        "permutation": [
+          2,
+          0,
+          1,
+          5,
+          3,
+          4
+        ],
+        "e_m": 0.05,
+        "physical_id_stiffness_relative_difference": 3.567360437774975e-16
+      },
+      {
+        "id": "panel0-210",
+        "permutation": [
+          2,
+          1,
+          0,
+          4,
+          3,
+          5
+        ],
+        "e_m": -0.05,
+        "physical_id_stiffness_relative_difference": 5.60274119589063e-16
+      },
+      {
+        "id": "panel1-012",
+        "permutation": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "e_m": 0.05,
+        "physical_id_stiffness_relative_difference": 0.0
+      },
+      {
+        "id": "panel1-021",
+        "permutation": [
+          0,
+          2,
+          1,
+          5,
+          4,
+          3
+        ],
+        "e_m": -0.05,
+        "physical_id_stiffness_relative_difference": 4.2980008927257246e-16
+      },
+      {
+        "id": "panel1-102",
+        "permutation": [
+          1,
+          0,
+          2,
+          3,
+          5,
+          4
+        ],
+        "e_m": -0.05,
+        "physical_id_stiffness_relative_difference": 3.417858750794924e-16
+      },
+      {
+        "id": "panel1-120",
+        "permutation": [
+          1,
+          2,
+          0,
+          4,
+          5,
+          3
+        ],
+        "e_m": 0.05,
+        "physical_id_stiffness_relative_difference": 3.567331527208147e-16
+      },
+      {
+        "id": "panel1-201",
+        "permutation": [
+          2,
+          0,
+          1,
+          5,
+          3,
+          4
+        ],
+        "e_m": 0.05,
+        "physical_id_stiffness_relative_difference": 4.735191026412849e-16
+      },
+      {
+        "id": "panel1-210",
+        "permutation": [
+          2,
+          1,
+          0,
+          4,
+          3,
+          5
+        ],
+        "e_m": -0.05,
+        "physical_id_stiffness_relative_difference": 3.3420434567694254e-16
+      }
+    ],
+    "reproducibility": {
+      "first_pid": 8602,
+      "repeat_pid": 8603,
+      "repeat_exit_code": 0,
+      "response_bytes_exact": true,
+      "repeated_kernel_requests": 46
+    },
+    "native_patch_solves": 23,
+    "input_only_independent_patch_solves": 23,
+    "covariance": [
+      {
+        "case": "fold90-1",
+        "rotated_stiffness_relative_difference": 0.0,
+        "element_order_stiffness_exact": true,
+        "warning": "rotated force seed is different; compliance is not an orientation-invariant comparison"
+      },
+      {
+        "case": "paired-sign",
+        "rotated_stiffness_relative_difference": 0.0,
+        "element_order_stiffness_exact": true,
+        "warning": "rotated force seed is different; compliance is not an orientation-invariant comparison"
+      },
+      {
+        "case": "zero90",
+        "rotated_stiffness_relative_difference": 0.0,
+        "element_order_stiffness_exact": true,
+        "warning": "rotated force seed is different; compliance is not an orientation-invariant comparison"
+      }
+    ],
+    "cases": [
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018708238820174731,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.144722876625006e-17,
+        "force_residual_l2_kn": 9.238154930236697e-11,
+        "moment_residual_l2_kn_m": 2.3173117333963683e-11,
+        "external_wrench": {
+          "force_kn": [
+            -1.5265566588595902e-16,
+            -1.5265566588595902e-16,
+            -1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            4.718447854656915e-16,
+            6.38378239159465e-16,
+            -8.326672684688674e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -8.079856228526694e-12,
+            -2.0301205161388225e-11,
+            -1.924767289995799e-11
+          ],
+          "moment_kn_m": [
+            8.671958984241002e-12,
+            4.965583499938475e-12,
+            -8.744158175311156e-12
+          ]
+        },
+        "work_kn_m": 0.45244056443583935,
+        "twice_energy_kn_m": 0.4524405644365643,
+        "work_balance_residual_kn_m": -7.24920123928996e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 0.0,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.161346127695913e-16,
+          "maximum_displacement_difference": 1.6957268922368485e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018708238820174716,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.52969046351277e-17,
+            "force_residual_l2_kn": 1.0517365796725351e-10,
+            "moment_residual_l2_kn_m": 1.8882674633989326e-11,
+            "external_wrench": {
+              "force_kn": [
+                -1.5265566588595902e-16,
+                -1.5265566588595902e-16,
+                -1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                4.718447854656915e-16,
+                6.38378239159465e-16,
+                -8.326672684688674e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -3.2380903514095394e-12,
+                1.7074161529073706e-11,
+                5.238483605229938e-11
+              ],
+              "moment_kn_m": [
+                5.289726989765597e-13,
+                -2.1109863856949573e-11,
+                1.59837421076503e-12
+              ]
+            },
+            "work_kn_m": 0.452440564435512,
+            "twice_energy_kn_m": 0.45244056443621394,
+            "work_balance_residual_kn_m": -7.019385073192552e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.6263032587282567e-19,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "zero90/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.0
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018708238820174736,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.144722876625006e-17,
+        "force_residual_l2_kn": 8.096139522765654e-11,
+        "moment_residual_l2_kn_m": 1.764197110433324e-11,
+        "external_wrench": {
+          "force_kn": [
+            -8.326672684688674e-17,
+            -1.1449174941446927e-16,
+            -1.6653345369377348e-16
+          ],
+          "moment_kn_m": [
+            1.3530843112619095e-16,
+            -3.608224830031759e-16,
+            2.7755575615628914e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -1.651268011215734e-11,
+            -1.2789876796537314e-11,
+            2.1728049914848668e-11
+          ],
+          "moment_kn_m": [
+            4.1475156642434285e-13,
+            -6.725509038574273e-12,
+            -4.460071201251026e-12
+          ]
+        },
+        "work_kn_m": 0.2372935991868702,
+        "twice_energy_kn_m": 0.2372935991873001,
+        "work_balance_residual_kn_m": -4.2990611071047624e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 0.0,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.161346127695913e-16,
+          "maximum_displacement_difference": 4.4758641237763186e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018708238820174731,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.52969046351277e-17,
+            "force_residual_l2_kn": 6.667891119184139e-11,
+            "moment_residual_l2_kn_m": 1.649853984474033e-11,
+            "external_wrench": {
+              "force_kn": [
+                -8.326672684688674e-17,
+                -1.1449174941446927e-16,
+                -1.6653345369377348e-16
+              ],
+              "moment_kn_m": [
+                1.3530843112619095e-16,
+                -3.608224830031759e-16,
+                2.7755575615628914e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                8.18491108223185e-12,
+                3.516403834780135e-11,
+                5.368074040834614e-12
+              ],
+              "moment_kn_m": [
+                -1.1510833952677046e-11,
+                -3.0792313143734873e-12,
+                1.3675172105820366e-12
+              ]
+            },
+            "work_kn_m": 0.2372935991864622,
+            "twice_energy_kn_m": 0.23729359918653697,
+            "work_balance_residual_kn_m": -7.477352070850429e-14,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.6263032587282567e-19,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "zero90/rotated",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              -0.0,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              -1.0,
+              -6.123233995736766e-17,
+              -0.0
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.0
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018708238820174731,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.144722876625006e-17,
+        "force_residual_l2_kn": 9.238154930236697e-11,
+        "moment_residual_l2_kn_m": 2.3173117333963683e-11,
+        "external_wrench": {
+          "force_kn": [
+            -1.5265566588595902e-16,
+            -1.5265566588595902e-16,
+            -1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            4.718447854656915e-16,
+            6.38378239159465e-16,
+            -8.326672684688674e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -8.079856228526694e-12,
+            -2.0301205161388225e-11,
+            -1.924767289995799e-11
+          ],
+          "moment_kn_m": [
+            8.671958984241002e-12,
+            4.965583499938475e-12,
+            -8.744158175311156e-12
+          ]
+        },
+        "work_kn_m": 0.45244056443583935,
+        "twice_energy_kn_m": 0.4524405644365643,
+        "work_balance_residual_kn_m": -7.24920123928996e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 0.0,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.161346127695913e-16,
+          "maximum_displacement_difference": 1.6957268922368485e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018708238820174716,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.52969046351277e-17,
+            "force_residual_l2_kn": 1.0517365796725351e-10,
+            "moment_residual_l2_kn_m": 1.8882674633989326e-11,
+            "external_wrench": {
+              "force_kn": [
+                -1.5265566588595902e-16,
+                -1.5265566588595902e-16,
+                -1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                4.718447854656915e-16,
+                6.38378239159465e-16,
+                -8.326672684688674e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -3.2380903514095394e-12,
+                1.7074161529073706e-11,
+                5.238483605229938e-11
+              ],
+              "moment_kn_m": [
+                5.289726989765597e-13,
+                -2.1109863856949573e-11,
+                1.59837421076503e-12
+              ]
+            },
+            "work_kn_m": 0.452440564435512,
+            "twice_energy_kn_m": 0.45244056443621394,
+            "work_balance_residual_kn_m": -7.019385073192552e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.6263032587282567e-19,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "zero90/element-order",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.0
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017556329052210104,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 4.888730312401229e-17,
+        "force_residual_l2_kn": 2.4489275906949575e-10,
+        "moment_residual_l2_kn_m": 6.338594017551967e-11,
+        "external_wrench": {
+          "force_kn": [
+            -5.637851296924623e-17,
+            -2.636779683484747e-16,
+            -6.938893903907228e-17
+          ],
+          "moment_kn_m": [
+            -4.163336342344337e-16,
+            8.049116928532385e-16,
+            5.551115123125783e-17
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -1.557090394121996e-12,
+            2.4618043714674798e-11,
+            1.4557799410397365e-14
+          ],
+          "moment_kn_m": [
+            4.709010958947601e-13,
+            -3.933797732003086e-13,
+            5.639927413980672e-11
+          ]
+        },
+        "work_kn_m": 0.5270481993592748,
+        "twice_energy_kn_m": 0.527048199369901,
+        "work_balance_residual_kn_m": -1.0626166613292298e-11,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 7.701456167858387e-16,
+          "maximum_displacement_difference": 1.9962198560818933e-11,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017556329052210086,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.49634615225208e-17,
+            "force_residual_l2_kn": 3.376096639311025e-10,
+            "moment_residual_l2_kn_m": 7.560986126246095e-11,
+            "external_wrench": {
+              "force_kn": [
+                -5.637851296924623e-17,
+                -2.636779683484747e-16,
+                -6.938893903907228e-17
+              ],
+              "moment_kn_m": [
+                -4.163336342344337e-16,
+                8.049116928532385e-16,
+                5.551115123125783e-17
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                1.4408832113566028e-10,
+                1.6376774936155414e-11,
+                -7.480127628411992e-15
+              ],
+              "moment_kn_m": [
+                1.857236586744193e-12,
+                -7.225886555772831e-12,
+                3.7636060934431725e-11
+              ]
+            },
+            "work_kn_m": 0.5270481993651857,
+            "twice_energy_kn_m": 0.527048199380675,
+            "work_balance_residual_kn_m": -1.5489387550360334e-11,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.80389063596972e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "paired-sign/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              -0.0,
+              0.0,
+              -1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              -0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.0
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017556329052210104,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 4.888730312401229e-17,
+        "force_residual_l2_kn": 4.793205637348856e-10,
+        "moment_residual_l2_kn_m": 1.4139474933345957e-10,
+        "external_wrench": {
+          "force_kn": [
+            -3.608224830031759e-16,
+            -8.326672684688674e-17,
+            9.020562075079397e-17
+          ],
+          "moment_kn_m": [
+            5.100087019371813e-16,
+            1.3877787807814457e-16,
+            -1.8041124150158794e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            1.0887540868864676e-11,
+            -1.509903313490213e-14,
+            4.577036666342238e-12
+          ],
+          "moment_kn_m": [
+            7.179326577677614e-14,
+            5.6889146171634764e-11,
+            -1.458277942845143e-13
+          ]
+        },
+        "work_kn_m": 0.9201988804413426,
+        "twice_energy_kn_m": 0.9201988804587783,
+        "work_balance_residual_kn_m": -1.7435719534830696e-11,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679978943e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 7.702448271944236e-16,
+          "maximum_displacement_difference": 3.427369499320321e-11,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017556329052210086,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.609261092443382e-17,
+            "force_residual_l2_kn": 3.638415419406412e-10,
+            "moment_residual_l2_kn_m": 1.3020450995370172e-10,
+            "external_wrench": {
+              "force_kn": [
+                -3.608224830031759e-16,
+                -8.326672684688674e-17,
+                9.020562075079397e-17
+              ],
+              "moment_kn_m": [
+                5.100087019371813e-16,
+                1.3877787807814457e-16,
+                -1.8041124150158794e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                1.4395540315348399e-11,
+                -2.7745861164163443e-13,
+                -1.22485382947346e-10
+              ],
+              "moment_kn_m": [
+                -5.660590052247727e-12,
+                1.3350875960327357e-11,
+                -1.9656082317354162e-12
+              ]
+            },
+            "work_kn_m": 0.9201988804483247,
+            "twice_energy_kn_m": 0.9201988804696782,
+            "work_balance_residual_kn_m": -2.135358556643041e-11,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.495417467997916e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "paired-sign/rotated",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              -0.05,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.05,
+              -0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.0
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017556329052210104,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 4.888730312401229e-17,
+        "force_residual_l2_kn": 2.4489275906949575e-10,
+        "moment_residual_l2_kn_m": 6.338594017551967e-11,
+        "external_wrench": {
+          "force_kn": [
+            -5.637851296924623e-17,
+            -2.636779683484747e-16,
+            -6.938893903907228e-17
+          ],
+          "moment_kn_m": [
+            -4.163336342344337e-16,
+            8.049116928532385e-16,
+            5.551115123125783e-17
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -1.557090394121996e-12,
+            2.4618043714674798e-11,
+            1.4557799410397365e-14
+          ],
+          "moment_kn_m": [
+            4.709010958947601e-13,
+            -3.933797732003086e-13,
+            5.639927413980672e-11
+          ]
+        },
+        "work_kn_m": 0.5270481993592748,
+        "twice_energy_kn_m": 0.527048199369901,
+        "work_balance_residual_kn_m": -1.0626166613292298e-11,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 7.701456167858387e-16,
+          "maximum_displacement_difference": 1.9962198560818933e-11,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017556329052210086,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.49634615225208e-17,
+            "force_residual_l2_kn": 3.376096639311025e-10,
+            "moment_residual_l2_kn_m": 7.560986126246095e-11,
+            "external_wrench": {
+              "force_kn": [
+                -5.637851296924623e-17,
+                -2.636779683484747e-16,
+                -6.938893903907228e-17
+              ],
+              "moment_kn_m": [
+                -4.163336342344337e-16,
+                8.049116928532385e-16,
+                5.551115123125783e-17
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                1.4408832113566028e-10,
+                1.6376774936155414e-11,
+                -7.480127628411992e-15
+              ],
+              "moment_kn_m": [
+                1.857236586744193e-12,
+                -7.225886555772831e-12,
+                3.7636060934431725e-11
+              ]
+            },
+            "work_kn_m": 0.5270481993651857,
+            "twice_energy_kn_m": 0.527048199380675,
+            "work_balance_residual_kn_m": -1.5489387550360334e-11,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.80389063596972e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "paired-sign/element-order",
+        "arms": [
+          {
+            "normal": [
+              -0.0,
+              0.0,
+              -1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              -0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.0
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017534551924804354,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 4.893037569853122e-17,
+        "force_residual_l2_kn": 2.6893253598119083e-10,
+        "moment_residual_l2_kn_m": 1.652255496270269e-10,
+        "external_wrench": {
+          "force_kn": [
+            -5.637851296924623e-17,
+            -2.636779683484747e-16,
+            -6.938893903907228e-17
+          ],
+          "moment_kn_m": [
+            -4.163336342344337e-16,
+            8.049116928532385e-16,
+            5.551115123125783e-17
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -5.224248984803115e-12,
+            1.911719393898892e-11,
+            4.7378767575878555e-14
+          ],
+          "moment_kn_m": [
+            6.579459199684834e-13,
+            4.9195647555677624e-12,
+            5.615233278355447e-11
+          ]
+        },
+        "work_kn_m": 0.5266473001896456,
+        "twice_energy_kn_m": 0.5266473001993406,
+        "work_balance_residual_kn_m": -9.69502256253918e-12,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 7.703322925254797e-16,
+          "maximum_displacement_difference": 1.1486533946225563e-11,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017534551924804343,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.499846641237689e-17,
+            "force_residual_l2_kn": 3.224826666874891e-10,
+            "moment_residual_l2_kn_m": 1.2560034592651394e-10,
+            "external_wrench": {
+              "force_kn": [
+                -5.637851296924623e-17,
+                -2.636779683484747e-16,
+                -6.938893903907228e-17
+              ],
+              "moment_kn_m": [
+                -4.163336342344337e-16,
+                8.049116928532385e-16,
+                5.551115123125783e-17
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                1.2939526793792622e-10,
+                1.7207624214421458e-11,
+                -1.8138268664813495e-14
+              ],
+              "moment_kn_m": [
+                5.220823773299799e-13,
+                -3.763267475420662e-12,
+                1.2419260064788773e-11
+              ]
+            },
+            "work_kn_m": 0.5266473001865691,
+            "twice_energy_kn_m": 0.5266473001904419,
+            "work_balance_residual_kn_m": -3.8727909767999336e-12,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969612e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "normal-only/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              -0.0,
+              0.0,
+              -1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.1
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017534551924804345,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.992906423141517e-17,
+        "force_residual_l2_kn": 3.0966506919984274e-10,
+        "moment_residual_l2_kn_m": 1.1322349880650005e-10,
+        "external_wrench": {
+          "force_kn": [
+            -5.637851296924623e-17,
+            -2.636779683484747e-16,
+            -6.938893903907228e-17
+          ],
+          "moment_kn_m": [
+            -4.163336342344337e-16,
+            8.049116928532385e-16,
+            5.551115123125783e-17
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            1.3390038210159272e-11,
+            2.4488661098942544e-11,
+            -1.915134717478395e-14
+          ],
+          "moment_kn_m": [
+            1.3445355939722958e-12,
+            5.363001709390858e-12,
+            9.582756810289084e-11
+          ]
+        },
+        "work_kn_m": 0.5266473001919115,
+        "twice_energy_kn_m": 0.5266473002062972,
+        "work_balance_residual_kn_m": -1.4385714841580466e-11,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.120987743627332e-16,
+          "maximum_displacement_difference": 9.600709116597272e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017534551924804343,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.910020465422665e-17,
+            "force_residual_l2_kn": 2.391207749667139e-10,
+            "moment_residual_l2_kn_m": 1.0952129748157013e-10,
+            "external_wrench": {
+              "force_kn": [
+                -5.637851296924623e-17,
+                -2.636779683484747e-16,
+                -6.938893903907228e-17
+              ],
+              "moment_kn_m": [
+                -4.163336342344337e-16,
+                8.049116928532385e-16,
+                5.551115123125783e-17
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                1.861514440856804e-10,
+                4.7326698116023636e-11,
+                3.459732500488144e-14
+              ],
+              "moment_kn_m": [
+                -1.5319412405290223e-12,
+                -2.2738200211591675e-12,
+                2.897043716032499e-12
+              ]
+            },
+            "work_kn_m": 0.526647300186368,
+            "twice_energy_kn_m": 0.5266473001889054,
+            "work_balance_residual_kn_m": -2.5374147227807953e-12,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969612e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "e-only/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.1
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017548228866959518,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.991521502995159e-17,
+        "force_residual_l2_kn": 3.3548599549292493e-10,
+        "moment_residual_l2_kn_m": 1.57088019414369e-10,
+        "external_wrench": {
+          "force_kn": [
+            -5.637851296924623e-17,
+            -2.636779683484747e-16,
+            -6.938893903907228e-17
+          ],
+          "moment_kn_m": [
+            -4.163336342344337e-16,
+            8.049116928532385e-16,
+            5.551115123125783e-17
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            2.1570899580436453e-11,
+            -2.8043956046275298e-12,
+            -1.9456658506555868e-14
+          ],
+          "moment_kn_m": [
+            -1.3858358904883517e-13,
+            1.5121931484785023e-12,
+            6.216877013187627e-11
+          ]
+        },
+        "work_kn_m": 0.5270216210168654,
+        "twice_energy_kn_m": 0.5270216210067943,
+        "work_balance_residual_kn_m": 1.0071166123282183e-11,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.11953753634876e-16,
+          "maximum_displacement_difference": 2.0549784096601798e-11,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017548228866959524,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.906622312325026e-17,
+            "force_residual_l2_kn": 2.4707738970289083e-10,
+            "moment_residual_l2_kn_m": 7.840193183723894e-11,
+            "external_wrench": {
+              "force_kn": [
+                -5.637851296924623e-17,
+                -2.636779683484747e-16,
+                -6.938893903907228e-17
+              ],
+              "moment_kn_m": [
+                -4.163336342344337e-16,
+                8.049116928532385e-16,
+                5.551115123125783e-17
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                2.081117396468546e-10,
+                8.379938409852628e-11,
+                2.6798008256889716e-14
+              ],
+              "moment_kn_m": [
+                2.3499813206484532e-12,
+                -9.946987677977859e-12,
+                3.477551580033378e-11
+              ]
+            },
+            "work_kn_m": 0.5270216210296276,
+            "twice_energy_kn_m": 0.5270216210290495,
+            "work_balance_residual_kn_m": 5.78093128922319e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969612e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "step/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.04,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.04
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.010000000000000002
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018722292313160126,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.1436756319346985e-17,
+        "force_residual_l2_kn": 7.9087548132101e-11,
+        "moment_residual_l2_kn_m": 2.6996287162215862e-11,
+        "external_wrench": {
+          "force_kn": [
+            -1.5265566588595902e-16,
+            -1.5265566588595902e-16,
+            -1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            4.718447854656915e-16,
+            6.38378239159465e-16,
+            -8.326672684688674e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -2.0476328965735036e-11,
+            -5.376463163564438e-12,
+            -1.6103319198934596e-11
+          ],
+          "moment_kn_m": [
+            4.755487670315972e-12,
+            -6.15341111398493e-14,
+            -3.3517633113433476e-12
+          ]
+        },
+        "work_kn_m": 0.45241475126248126,
+        "twice_energy_kn_m": 0.4524147512626438,
+        "work_balance_residual_kn_m": -1.6253665080512292e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.162351780517397e-16,
+          "maximum_displacement_difference": 1.0220158053186879e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.001872229231316011,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.52594090126544e-17,
+            "force_residual_l2_kn": 8.789818628836349e-11,
+            "moment_residual_l2_kn_m": 1.4092532431079573e-11,
+            "external_wrench": {
+              "force_kn": [
+                -1.5265566588595902e-16,
+                -1.5265566588595902e-16,
+                -1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                4.718447854656915e-16,
+                6.38378239159465e-16,
+                -8.326672684688674e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -1.9024448683069295e-11,
+                3.0124097660788607e-12,
+                5.161285374782887e-11
+              ],
+              "moment_kn_m": [
+                1.0253846383090348e-12,
+                -1.9596879674566026e-11,
+                2.7919333511761124e-13
+              ]
+            },
+            "work_kn_m": 0.45241475126298347,
+            "twice_energy_kn_m": 0.4524147512637285,
+            "work_balance_residual_kn_m": -7.450151606747113e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969612e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "one-zero/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": 0.0,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.05
+      },
+      {
+        "nodes": 12,
+        "dofs": 72,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 12,
+        "inherited_eigen_cutoff": 0.0014585583661200132,
+        "inherited_algebraic_zero_count": 12,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.4886215807095708e-17,
+        "force_residual_l2_kn": 2.1125270360937337e-10,
+        "moment_residual_l2_kn_m": 7.563886412192746e-11,
+        "external_wrench": {
+          "force_kn": [
+            5.93275428784068e-16,
+            6.401129626354418e-16,
+            1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            -3.5041414214731503e-16,
+            6.938893903907228e-17,
+            -4.85722573273506e-17
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -4.461378488862522e-11,
+            1.599895389781114e-11,
+            -1.3672882270832076e-11
+          ],
+          "moment_kn_m": [
+            6.898717708203606e-13,
+            -5.0835030629414746e-12,
+            4.073651138636336e-12
+          ]
+        },
+        "work_kn_m": 0.4372124621979849,
+        "twice_energy_kn_m": 0.43721246219651716,
+        "work_balance_residual_kn_m": 1.467714838554457e-12,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679978889e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.361258407380147e-16,
+          "maximum_displacement_difference": 8.465034229132584e-12,
+          "global_observations": {
+            "nodes": 12,
+            "dofs": 72,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 12,
+            "inherited_eigen_cutoff": 0.0014585583661200126,
+            "inherited_algebraic_zero_count": 12,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.6489104225737107e-17,
+            "force_residual_l2_kn": 2.5505380383776854e-10,
+            "moment_residual_l2_kn_m": 6.440696655975739e-11,
+            "external_wrench": {
+              "force_kn": [
+                5.93275428784068e-16,
+                6.401129626354418e-16,
+                1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                -3.5041414214731503e-16,
+                6.938893903907228e-17,
+                -4.85722573273506e-17
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                2.424938722045411e-11,
+                -4.211500939654833e-12,
+                1.4578352414140738e-11
+              ],
+              "moment_kn_m": [
+                9.454277638543118e-13,
+                -2.0828311297904634e-11,
+                -5.195027047433243e-11
+              ]
+            },
+            "work_kn_m": 0.4372124622086908,
+            "twice_energy_kn_m": 0.4372124622145657,
+            "work_balance_residual_kn_m": -5.87491166825771e-12,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.495417467997878e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "split90/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.05,
+              3.061616997868383e-18
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.07071067811865477
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017447514879121156,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.017874065194683e-17,
+        "force_residual_l2_kn": 2.701678275285683e-11,
+        "moment_residual_l2_kn_m": 1.9455118190767743e-11,
+        "external_wrench": {
+          "force_kn": [
+            -2.3071822230491534e-16,
+            -2.7755575615628914e-17,
+            4.163336342344337e-17
+          ],
+          "moment_kn_m": [
+            4.85722573273506e-16,
+            -5.828670879282072e-16,
+            1.6653345369377348e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -1.1452401527112244e-12,
+            -4.367894934631522e-12,
+            1.2860545961501657e-13
+          ],
+          "moment_kn_m": [
+            1.202704602576432e-12,
+            1.2731482534888983e-13,
+            5.725531160294395e-12
+          ]
+        },
+        "work_kn_m": 0.28624262155566754,
+        "twice_energy_kn_m": 0.2862426215557537,
+        "work_balance_residual_kn_m": -8.615330671091215e-14,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.040948333013336e-16,
+          "maximum_displacement_difference": 4.53859172466764e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.001744751487912114,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.821363981362314e-17,
+            "force_residual_l2_kn": 2.883189829425899e-11,
+            "moment_residual_l2_kn_m": 1.3460957779406983e-11,
+            "external_wrench": {
+              "force_kn": [
+                -2.3071822230491534e-16,
+                -2.7755575615628914e-17,
+                4.163336342344337e-17
+              ],
+              "moment_kn_m": [
+                4.85722573273506e-16,
+                -5.828670879282072e-16,
+                1.6653345369377348e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                2.5672044351443546e-11,
+                4.6829068400811025e-12,
+                4.901551386993219e-12
+              ],
+              "moment_kn_m": [
+                -3.366334988541553e-13,
+                -6.006584118978253e-13,
+                2.6353641491283497e-12
+              ]
+            },
+            "work_kn_m": 0.28624262155561714,
+            "twice_energy_kn_m": 0.28624262155562785,
+            "work_balance_residual_kn_m": -1.071365218763276e-14,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969612e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold15-1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.25881904510252074,
+              0.9659258262890683
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.012940952255126037,
+              0.04829629131445342
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.013052619222005157
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.001745522127074064,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.018085448943196e-17,
+        "force_residual_l2_kn": 2.1271979992588843e-11,
+        "moment_residual_l2_kn_m": 1.0612698754700076e-11,
+        "external_wrench": {
+          "force_kn": [
+            -2.3071822230491534e-16,
+            -2.7755575615628914e-17,
+            4.163336342344337e-17
+          ],
+          "moment_kn_m": [
+            4.85722573273506e-16,
+            -5.828670879282072e-16,
+            1.6653345369377348e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -1.5193315355821468e-12,
+            -4.3454337350645744e-12,
+            -1.1924211618108416e-12
+          ],
+          "moment_kn_m": [
+            7.797928969210943e-14,
+            1.0391687510491465e-13,
+            4.605205106145149e-12
+          ]
+        },
+        "work_kn_m": 0.2859286597511572,
+        "twice_energy_kn_m": 0.28592865975101817,
+        "work_balance_residual_kn_m": 1.3905543383430086e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.041773757249629e-16,
+          "maximum_displacement_difference": 3.5138558729386205e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017455221270740633,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.818183395134086e-17,
+            "force_residual_l2_kn": 2.330495984108639e-11,
+            "moment_residual_l2_kn_m": 1.3598393481271428e-11,
+            "external_wrench": {
+              "force_kn": [
+                -2.3071822230491534e-16,
+                -2.7755575615628914e-17,
+                4.163336342344337e-17
+              ],
+              "moment_kn_m": [
+                4.85722573273506e-16,
+                -5.828670879282072e-16,
+                1.6653345369377348e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                2.1247743148267162e-11,
+                2.6215626891534782e-12,
+                6.789208084612142e-12
+              ],
+              "moment_kn_m": [
+                -2.435926460542248e-12,
+                -4.533734498934905e-13,
+                -2.4653612484826226e-12
+              ]
+            },
+            "work_kn_m": 0.285928659751426,
+            "twice_energy_kn_m": 0.2859286597514895,
+            "work_balance_residual_kn_m": -6.350475700855895e-14,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.80389063596934e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold15--1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.25881904510252074,
+              0.9659258262890683
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.012940952255126037,
+              -0.04829629131445342
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.013052619222005157
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0017358238793628135,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.7895170162524885e-17,
+        "force_residual_l2_kn": 6.01443836859298e-11,
+        "moment_residual_l2_kn_m": 1.3391326813106028e-11,
+        "external_wrench": {
+          "force_kn": [
+            -2.0296264668928643e-16,
+            4.163336342344337e-17,
+            -1.3877787807814457e-17
+          ],
+          "moment_kn_m": [
+            6.314393452555578e-16,
+            -2.498001805406602e-16,
+            7.355227538141662e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -5.591175092356515e-12,
+            -1.2755477230008694e-11,
+            -1.2205153554489812e-11
+          ],
+          "moment_kn_m": [
+            7.581636707332251e-12,
+            1.2433387652777128e-12,
+            -1.0087208845988016e-11
+          ]
+        },
+        "work_kn_m": 0.4195675229633664,
+        "twice_energy_kn_m": 0.41956752296270805,
+        "work_balance_residual_kn_m": 6.583622536027178e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969503e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.157924547933255e-16,
+          "maximum_displacement_difference": 4.770073225301985e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017358238793628111,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.7704597614734643e-17,
+            "force_residual_l2_kn": 5.941477246330996e-11,
+            "moment_residual_l2_kn_m": 1.8454777288668876e-11,
+            "external_wrench": {
+              "force_kn": [
+                -2.0296264668928643e-16,
+                4.163336342344337e-17,
+                -1.3877787807814457e-17
+              ],
+              "moment_kn_m": [
+                6.314393452555578e-16,
+                -2.498001805406602e-16,
+                7.355227538141662e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -1.4989712596169547e-11,
+                -5.28580651470989e-13,
+                2.7236143895770226e-11
+              ],
+              "moment_kn_m": [
+                -1.8343382368612993e-12,
+                -1.2707807028888851e-11,
+                2.9419522373785867e-12
+              ]
+            },
+            "work_kn_m": 0.41956752296368777,
+            "twice_energy_kn_m": 0.4195675229634091,
+            "work_balance_residual_kn_m": 2.786659791809143e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969612e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold45-1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.7071067811865475,
+              0.7071067811865476
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.035355339059327376,
+              0.03535533905932738
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.038268343236508975
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.001736147764286314,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.787600928211476e-17,
+        "force_residual_l2_kn": 3.5199382130627545e-11,
+        "moment_residual_l2_kn_m": 1.2136849190154825e-11,
+        "external_wrench": {
+          "force_kn": [
+            -2.0296264668928643e-16,
+            4.163336342344337e-17,
+            -1.3877787807814457e-17
+          ],
+          "moment_kn_m": [
+            6.314393452555578e-16,
+            -2.498001805406602e-16,
+            7.355227538141662e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -5.145979128928779e-12,
+            -1.2913812380555001e-11,
+            -1.0947381889891972e-11
+          ],
+          "moment_kn_m": [
+            5.431516347798038e-12,
+            -2.586431069317996e-12,
+            -9.157619107469372e-12
+          ]
+        },
+        "work_kn_m": 0.4194110468713216,
+        "twice_energy_kn_m": 0.4194110468710755,
+        "work_balance_residual_kn_m": 2.4608093340816595e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.155563185215323e-16,
+          "maximum_displacement_difference": 6.889488979311409e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0017361477642863126,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.766328473168209e-17,
+            "force_residual_l2_kn": 4.4137266628599215e-11,
+            "moment_residual_l2_kn_m": 1.3548946359373734e-11,
+            "external_wrench": {
+              "force_kn": [
+                -2.0296264668928643e-16,
+                4.163336342344337e-17,
+                -1.3877787807814457e-17
+              ],
+              "moment_kn_m": [
+                6.314393452555578e-16,
+                -2.498001805406602e-16,
+                7.355227538141662e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -2.1323366683478895e-11,
+                -3.007743359928483e-12,
+                2.1653567827684128e-11
+              ],
+              "moment_kn_m": [
+                1.3257797637500346e-12,
+                -1.4721501795378344e-11,
+                -3.653993774221931e-12
+              ]
+            },
+            "work_kn_m": 0.4194110468708214,
+            "twice_energy_kn_m": 0.41941104687006764,
+            "work_balance_residual_kn_m": 7.5378592256925e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 9.80389063596934e-06,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold45--1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.7071067811865475,
+              0.7071067811865476
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.035355339059327376,
+              -0.03535533905932738
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.038268343236508975
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018730634046353516,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.143421208661738e-17,
+        "force_residual_l2_kn": 1.0724995172687524e-10,
+        "moment_residual_l2_kn_m": 2.634250296447645e-11,
+        "external_wrench": {
+          "force_kn": [
+            -1.5265566588595902e-16,
+            -1.5265566588595902e-16,
+            -1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            4.718447854656915e-16,
+            6.38378239159465e-16,
+            -8.326672684688674e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -2.261663079039522e-13,
+            -7.035733107230158e-12,
+            -2.6162673590068852e-11
+          ],
+          "moment_kn_m": [
+            5.697102511970087e-12,
+            3.1462887850608467e-12,
+            -5.267619673787749e-12
+          ]
+        },
+        "work_kn_m": 0.45232212619103235,
+        "twice_energy_kn_m": 0.4523221261921827,
+        "work_balance_residual_kn_m": -1.150357586965356e-12,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679978889e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.162546953762223e-16,
+          "maximum_displacement_difference": 2.2558430817776198e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018730634046353496,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.5290530226617654e-17,
+            "force_residual_l2_kn": 1.0628722097775968e-10,
+            "moment_residual_l2_kn_m": 2.354507800258978e-11,
+            "external_wrench": {
+              "force_kn": [
+                -1.5265566588595902e-16,
+                -1.5265566588595902e-16,
+                -1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                4.718447854656915e-16,
+                6.38378239159465e-16,
+                -8.326672684688674e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -8.235370718701063e-12,
+                7.119624334528396e-12,
+                4.1954548342382214e-11
+              ],
+              "moment_kn_m": [
+                -7.507154620167711e-13,
+                -1.1679407441178569e-11,
+                1.6223411503091256e-12
+              ]
+            },
+            "work_kn_m": 0.4523221261909235,
+            "twice_energy_kn_m": 0.4523221261917664,
+            "work_balance_residual_kn_m": -8.429368314466501e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.495417467997878e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold90-1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.05,
+              3.061616997868383e-18
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.07071067811865477
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018730634046353512,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.143421208661738e-17,
+        "force_residual_l2_kn": 9.435165729341699e-11,
+        "moment_residual_l2_kn_m": 1.8509424800444558e-11,
+        "external_wrench": {
+          "force_kn": [
+            -8.326672684688674e-17,
+            -1.1449174941446927e-16,
+            -1.6653345369377348e-16
+          ],
+          "moment_kn_m": [
+            1.3530843112619095e-16,
+            -3.608224830031759e-16,
+            2.7755575615628914e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -1.99793653843372e-11,
+            -1.192519694104277e-11,
+            5.92303983637521e-12
+          ],
+          "moment_kn_m": [
+            3.42143674503248e-12,
+            -1.0111966819437157e-11,
+            -4.862832359009417e-12
+          ]
+        },
+        "work_kn_m": 0.23716041656251763,
+        "twice_energy_kn_m": 0.2371604165632,
+        "work_balance_residual_kn_m": -6.823708265102368e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679978943e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.162547046158987e-16,
+          "maximum_displacement_difference": 3.0817015606032783e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018730634046353505,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.5290530226617654e-17,
+            "force_residual_l2_kn": 8.021252704683324e-11,
+            "moment_residual_l2_kn_m": 1.9873352161240815e-11,
+            "external_wrench": {
+              "force_kn": [
+                -8.326672684688674e-17,
+                -1.1449174941446927e-16,
+                -1.6653345369377348e-16
+              ],
+              "moment_kn_m": [
+                1.3530843112619095e-16,
+                -3.608224830031759e-16,
+                2.7755575615628914e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                7.234310372972175e-12,
+                2.539825988412403e-11,
+                -1.4002583814676228e-11
+              ],
+              "moment_kn_m": [
+                -5.97107779887196e-12,
+                1.3131440379510195e-12,
+                2.4553692412609962e-12
+              ]
+            },
+            "work_kn_m": 0.23716041656244274,
+            "twice_energy_kn_m": 0.23716041656330147,
+            "work_balance_residual_kn_m": -8.58729753971943e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679979052e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold90-1/rotated",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              -0.05,
+              0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              -1.0,
+              -6.123233995736766e-17,
+              -0.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.05,
+              -3.061616997868383e-18,
+              -0.0
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.07071067811865477
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0018730634046353516,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.143421208661738e-17,
+        "force_residual_l2_kn": 1.0724995172687524e-10,
+        "moment_residual_l2_kn_m": 2.634250296447645e-11,
+        "external_wrench": {
+          "force_kn": [
+            -1.5265566588595902e-16,
+            -1.5265566588595902e-16,
+            -1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            4.718447854656915e-16,
+            6.38378239159465e-16,
+            -8.326672684688674e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -2.261663079039522e-13,
+            -7.035733107230158e-12,
+            -2.6162673590068852e-11
+          ],
+          "moment_kn_m": [
+            5.697102511970087e-12,
+            3.1462887850608467e-12,
+            -5.267619673787749e-12
+          ]
+        },
+        "work_kn_m": 0.45232212619103235,
+        "twice_energy_kn_m": 0.4523221261921827,
+        "work_balance_residual_kn_m": -1.150357586965356e-12,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679978889e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.162546953762223e-16,
+          "maximum_displacement_difference": 2.2558430817776198e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018730634046353496,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.5290530226617654e-17,
+            "force_residual_l2_kn": 1.0628722097775968e-10,
+            "moment_residual_l2_kn_m": 2.354507800258978e-11,
+            "external_wrench": {
+              "force_kn": [
+                -1.5265566588595902e-16,
+                -1.5265566588595902e-16,
+                -1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                4.718447854656915e-16,
+                6.38378239159465e-16,
+                -8.326672684688674e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -8.235370718701063e-12,
+                7.119624334528396e-12,
+                4.1954548342382214e-11
+              ],
+              "moment_kn_m": [
+                -7.507154620167711e-13,
+                -1.1679407441178569e-11,
+                1.6223411503091256e-12
+              ]
+            },
+            "work_kn_m": 0.4523221261909235,
+            "twice_energy_kn_m": 0.4523221261917664,
+            "work_balance_residual_kn_m": -8.429368314466501e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.495417467997878e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold90-1/element-order",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.05,
+              3.061616997868383e-18
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.07071067811865477
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.001873724600971812,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 3.1431261610735825e-17,
+        "force_residual_l2_kn": 1.0211522665512289e-10,
+        "moment_residual_l2_kn_m": 2.026404128611479e-11,
+        "external_wrench": {
+          "force_kn": [
+            -1.5265566588595902e-16,
+            -1.5265566588595902e-16,
+            -1.249000902703301e-16
+          ],
+          "moment_kn_m": [
+            4.718447854656915e-16,
+            6.38378239159465e-16,
+            -8.326672684688674e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -2.6890142890145796e-11,
+            -6.169523225629803e-12,
+            -1.4635061391932158e-11
+          ],
+          "moment_kn_m": [
+            3.227796502303093e-12,
+            -4.833050626373847e-12,
+            1.2700812623833713e-12
+          ]
+        },
+        "work_kn_m": 0.4524120021468502,
+        "twice_energy_kn_m": 0.4524120021471067,
+        "work_balance_residual_kn_m": -2.565170298396424e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679978943e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.158074791350048e-16,
+          "maximum_displacement_difference": 5.804245972740318e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0018737246009718114,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.520215774295339e-17,
+            "force_residual_l2_kn": 1.1704912416082587e-10,
+            "moment_residual_l2_kn_m": 2.1218720796572703e-11,
+            "external_wrench": {
+              "force_kn": [
+                -1.5265566588595902e-16,
+                -1.5265566588595902e-16,
+                -1.249000902703301e-16
+              ],
+              "moment_kn_m": [
+                4.718447854656915e-16,
+                6.38378239159465e-16,
+                -8.326672684688674e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -8.848893839896732e-13,
+                -1.4353518373866336e-12,
+                4.035470221874782e-11
+              ],
+              "moment_kn_m": [
+                2.7735869156941817e-12,
+                -1.8406304258533623e-11,
+                -3.7838621125274585e-12
+              ]
+            },
+            "work_kn_m": 0.452412002147219,
+            "twice_energy_kn_m": 0.4524120021479819,
+            "work_balance_residual_kn_m": -7.628897513711763e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.4954174679979052e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold90--1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              1.0,
+              6.123233995736766e-17
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.05,
+              -3.061616997868383e-18
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.07071067811865477
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0020351236437623097,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.906703474845028e-17,
+        "force_residual_l2_kn": 1.2409865186173447e-10,
+        "moment_residual_l2_kn_m": 1.75278087789326e-11,
+        "external_wrench": {
+          "force_kn": [
+            1.0408340855860843e-16,
+            2.3245294578089215e-16,
+            -4.85722573273506e-17
+          ],
+          "moment_kn_m": [
+            -1.249000902703301e-16,
+            -3.3306690738754696e-16,
+            0.0
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -4.1375403103671715e-11,
+            -2.4016798966242092e-11,
+            5.9311722200305894e-12
+          ],
+          "moment_kn_m": [
+            7.458395012704955e-12,
+            1.4392376179728217e-12,
+            -5.078881759601472e-12
+          ]
+        },
+        "work_kn_m": 0.26840741163371284,
+        "twice_energy_kn_m": 0.2684074116337789,
+        "work_balance_residual_kn_m": -6.605826996519681e-14,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.7506595873966575e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.148899545613529e-16,
+          "maximum_displacement_difference": 1.895011925157064e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0020351236437623076,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.6894405366101956e-17,
+            "force_residual_l2_kn": 1.6404278216240303e-10,
+            "moment_residual_l2_kn_m": 3.470812424086452e-11,
+            "external_wrench": {
+              "force_kn": [
+                1.0408340855860843e-16,
+                2.3245294578089215e-16,
+                -4.85722573273506e-17
+              ],
+              "moment_kn_m": [
+                -1.249000902703301e-16,
+                -3.3306690738754696e-16,
+                0.0
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                -2.8445718003311526e-12,
+                3.7206362990538366e-11,
+                2.9167425419363013e-11
+              ],
+              "moment_kn_m": [
+                -3.9532821460852574e-12,
+                -2.965100387442021e-12,
+                -7.436190552212452e-12
+              ]
+            },
+            "work_kn_m": 0.26840741163572335,
+            "twice_energy_kn_m": 0.2684074116376233,
+            "work_balance_residual_kn_m": -1.8999801731922616e-12,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.7506595873966412e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold135-1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.7071067811865476,
+              -0.7071067811865475
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.03535533905932738,
+              -0.035355339059327376
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.09238795325112868
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0020357024570316733,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.9076862400884466e-17,
+        "force_residual_l2_kn": 9.489211681664191e-11,
+        "moment_residual_l2_kn_m": 2.5601143815660004e-11,
+        "external_wrench": {
+          "force_kn": [
+            1.0408340855860843e-16,
+            2.3245294578089215e-16,
+            -4.85722573273506e-17
+          ],
+          "moment_kn_m": [
+            -1.249000902703301e-16,
+            -3.3306690738754696e-16,
+            0.0
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -8.633718739936569e-12,
+            -2.5666340580654534e-11,
+            7.024547610257059e-12
+          ],
+          "moment_kn_m": [
+            7.389422407300117e-12,
+            -4.243383422419811e-12,
+            -1.4653001034758972e-12
+          ]
+        },
+        "work_kn_m": 0.26836261719299387,
+        "twice_energy_kn_m": 0.2683626171938736,
+        "work_balance_residual_kn_m": -8.79740724712974e-13,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.7506595873966575e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.144539702357512e-16,
+          "maximum_displacement_difference": 5.326685273421283e-13,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.002035702457031672,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 4.685384888678438e-17,
+            "force_residual_l2_kn": 1.0366945510529595e-10,
+            "moment_residual_l2_kn_m": 2.6564225761077307e-11,
+            "external_wrench": {
+              "force_kn": [
+                1.0408340855860843e-16,
+                2.3245294578089215e-16,
+                -4.85722573273506e-17
+              ],
+              "moment_kn_m": [
+                -1.249000902703301e-16,
+                -3.3306690738754696e-16,
+                0.0
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                1.5501787353766616e-11,
+                3.6196986380465646e-11,
+                2.9796720646402264e-11
+              ],
+              "moment_kn_m": [
+                -1.522157400124513e-12,
+                -7.791239875487577e-12,
+                -6.276923425474479e-13
+              ]
+            },
+            "work_kn_m": 0.2683626171932501,
+            "twice_energy_kn_m": 0.26836261719407717,
+            "work_balance_residual_kn_m": -8.270606421945104e-13,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.7506595873966737e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold135--1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.7071067811865476,
+              -0.7071067811865475
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.03535533905932738,
+              0.035355339059327376
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.09238795325112868
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.0021081348156129246,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.7508731214159494e-17,
+        "force_residual_l2_kn": 1.9871560886127352e-10,
+        "moment_residual_l2_kn_m": 7.712557236782729e-11,
+        "external_wrench": {
+          "force_kn": [
+            -5.967448757360216e-16,
+            -1.8041124150158794e-16,
+            -2.5326962749261384e-16
+          ],
+          "moment_kn_m": [
+            2.636779683484747e-16,
+            1.1102230246251565e-15,
+            -1.6653345369377348e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            6.949786232612887e-12,
+            1.0222017676753126e-11,
+            5.119168977607558e-14
+          ],
+          "moment_kn_m": [
+            -2.8895288939345676e-13,
+            1.7641443861293737e-13,
+            1.9162227360425277e-11
+          ]
+        },
+        "work_kn_m": 0.46668502278372886,
+        "twice_energy_kn_m": 0.4666850227753095,
+        "work_balance_residual_kn_m": 8.419376307244875e-12,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.006338379038851e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.117062824400604e-16,
+          "maximum_displacement_difference": 2.8014986164226485e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0021081348156129225,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.853587478458003e-17,
+            "force_residual_l2_kn": 3.17796808854857e-10,
+            "moment_residual_l2_kn_m": 9.218194044005163e-11,
+            "external_wrench": {
+              "force_kn": [
+                -5.967448757360216e-16,
+                -1.8041124150158794e-16,
+                -2.5326962749261384e-16
+              ],
+              "moment_kn_m": [
+                2.636779683484747e-16,
+                1.1102230246251565e-15,
+                -1.6653345369377348e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                2.7324928777994195e-11,
+                9.794959288100813e-11,
+                8.874186108176474e-13
+              ],
+              "moment_kn_m": [
+                -4.26453317103892e-12,
+                -1.9222123892603804e-13,
+                1.614186562193254e-11
+              ]
+            },
+            "work_kn_m": 0.4666850227798583,
+            "twice_energy_kn_m": 0.4666850227664003,
+            "work_balance_residual_kn_m": 1.3458012482203685e-11,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.0063383790388401e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold179-1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.0,
+              0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.01745240643728344,
+              -0.9998476951563913
+            ],
+            "e_m": 0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              0.0,
+              0.000872620321864172,
+              -0.049992384757819565
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.09999619230641714
+      },
+      {
+        "nodes": 9,
+        "dofs": 54,
+        "tri6": 2,
+        "physical_rigid_modes": 6,
+        "component_rigid_modes": 6,
+        "inherited_eigen_cutoff": 0.002108149926867895,
+        "inherited_algebraic_zero_count": 6,
+        "additional_modes_below_inherited_cutoff": 0,
+        "global_rigid_normalized_residual": 2.7508196167968025e-17,
+        "force_residual_l2_kn": 2.91682006624019e-10,
+        "moment_residual_l2_kn_m": 7.004045122635304e-11,
+        "external_wrench": {
+          "force_kn": [
+            -5.967448757360216e-16,
+            -1.8041124150158794e-16,
+            -2.5326962749261384e-16
+          ],
+          "moment_kn_m": [
+            2.636779683484747e-16,
+            1.1102230246251565e-15,
+            -1.6653345369377348e-16
+          ]
+        },
+        "internal_wrench": {
+          "force_kn": [
+            -2.379043836930883e-11,
+            3.657962821534966e-12,
+            -9.434120151752268e-14
+          ],
+          "moment_kn_m": [
+            -1.7581769373720135e-13,
+            -8.591322098183696e-13,
+            2.251249187068538e-11
+          ]
+        },
+        "work_kn_m": 0.46628554723707,
+        "twice_energy_kn_m": 0.46628554722512,
+        "work_balance_residual_kn_m": 1.1949996547855335e-11,
+        "maximum_omitted_arm_couple_work_error_kn_m": 1.0063383790388564e-05,
+        "original_general_joint_acceptance": null,
+        "production_scope_expanded": false,
+        "input_only_independent": {
+          "relative_stiffness_difference": 8.115150152744172e-16,
+          "maximum_displacement_difference": 5.2221837965049644e-12,
+          "global_observations": {
+            "nodes": 9,
+            "dofs": 54,
+            "tri6": 2,
+            "physical_rigid_modes": 6,
+            "component_rigid_modes": 6,
+            "inherited_eigen_cutoff": 0.0021081499268678946,
+            "inherited_algebraic_zero_count": 6,
+            "additional_modes_below_inherited_cutoff": 0,
+            "global_rigid_normalized_residual": 5.855805174134917e-17,
+            "force_residual_l2_kn": 3.2990294929711674e-10,
+            "moment_residual_l2_kn_m": 6.081063858899296e-11,
+            "external_wrench": {
+              "force_kn": [
+                -5.967448757360216e-16,
+                -1.8041124150158794e-16,
+                -2.5326962749261384e-16
+              ],
+              "moment_kn_m": [
+                2.636779683484747e-16,
+                1.1102230246251565e-15,
+                -1.6653345369377348e-16
+              ]
+            },
+            "internal_wrench": {
+              "force_kn": [
+                2.4147855590128664e-11,
+                8.687499331028192e-11,
+                4.28129753871076e-13
+              ],
+              "moment_kn_m": [
+                4.974864270534951e-12,
+                -6.736139424035059e-13,
+                2.348687910824765e-11
+              ]
+            },
+            "work_kn_m": 0.4662855472474153,
+            "twice_energy_kn_m": 0.4662855472457597,
+            "work_balance_residual_kn_m": 1.6555645743210334e-12,
+            "maximum_omitted_arm_couple_work_error_kn_m": 1.0063383790388672e-05,
+            "original_general_joint_acceptance": null,
+            "production_scope_expanded": false
+          }
+        },
+        "id": "fold179--1/base",
+        "arms": [
+          {
+            "normal": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.0,
+              -0.05
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          },
+          {
+            "normal": [
+              0.0,
+              0.01745240643728344,
+              -0.9998476951563913
+            ],
+            "e_m": -0.05,
+            "thickness_m": 0.1,
+            "arm_m": [
+              -0.0,
+              -0.000872620321864172,
+              0.049992384757819565
+            ],
+            "finite_within_original_range": true,
+            "original_shared_cutoff_m": 1.4210854715202005e-15
+          }
+        ],
+        "neutral_point_gap_at_common_attachment_m": 0.09999619230641714
+      }
+    ],
+    "independent_source_sha256": {
+      "tools/plate6_offset_reference.py": "ff98c1004bc90d2e132c9653ac5bc8d1926443cd6ef2b4510bc2fe80731713c8",
+      "tools/plate6_reference.py": "334eadd544f7045a76cd9dd87b315e327dd4ff8052e784124282ce1cfc194747",
+      "tools/plate_reference.py": "3b04078ea2873f5d9c40c8a6aea7cd82287ae735eb6a1330f6495015cf885cbd"
+    }
+  },
+  "production_contract_observations": {
+    "passed": false,
+    "b03_complete": false,
+    "diagnostic_only": true,
+    "production_scope_expanded": false,
+    "solver_sha256": "2c8684a37901ca5bf74c9966b531b9aa11dc7c253768b6cda6c3b05951bcf0e7",
+    "model_guards": [
+      {
+        "id": "fold-15-positive",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-15-negative",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-15-one-zero",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-45-positive",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-45-negative",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-45-one-zero",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-90-positive",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-90-negative",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-90-one-zero",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-135-positive",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-135-negative",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-135-one-zero",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-179-positive",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-179-negative",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "fold-179-one-zero",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "near-step-0.5",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "near-step-1.0",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "near-step-2.0",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range--0.049999999999999996",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range--0.05",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range--0.05000000000000001",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset scope requires finite |e| <= thickness/2"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range--0.051",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset scope requires finite |e| <= thickness/2"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range-0.049999999999999996",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range-0.05",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range-0.05000000000000001",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset scope requires finite |e| <= thickness/2"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "range-0.051",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset scope requires finite |e| <= thickness/2"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "three-order-012",
+        "expected_acceptance": null,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": null
+      },
+      {
+        "id": "three-order-021",
+        "expected_acceptance": null,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": null
+      },
+      {
+        "id": "three-order-102",
+        "expected_acceptance": null,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": null
+      },
+      {
+        "id": "three-order-120",
+        "expected_acceptance": null,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": null
+      },
+      {
+        "id": "three-order-201",
+        "expected_acceptance": null,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": null
+      },
+      {
+        "id": "three-order-210",
+        "expected_acceptance": null,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": null
+      },
+      {
+        "id": "thickness-order-False",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "thickness-order-True",
+        "expected_acceptance": false,
+        "production_model_guard": {
+          "accepted": false,
+          "error": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified"
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "existing-planar",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "existing-kink-zero",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "existing-normal-sign-pair",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "existing-step-split",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "existing-kink-split",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      },
+      {
+        "id": "existing-height-step",
+        "expected_acceptance": true,
+        "production_model_guard": {
+          "accepted": true,
+          "error": null
+        },
+        "matches_predeclared_expectation": true
+      }
+    ],
+    "model_guard_requests": 40,
+    "cli_controls": [
+      {
+        "name": "planar",
+        "expected_diagnostic": null,
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/planar/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/planar/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/planar/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/planar/run.json"
+        ],
+        "pid": 9442,
+        "exit_code": 0,
+        "elapsed_seconds": 0.32009092199996303,
+        "result_exists": true,
+        "complete": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "a2cb617f542a8337038685a15ab63ede2b6b7e755d4089a93c1662b30c30b6a2"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "kink-zero",
+        "expected_diagnostic": null,
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-zero/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-zero/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-zero/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-zero/run.json"
+        ],
+        "pid": 9807,
+        "exit_code": 0,
+        "elapsed_seconds": 0.2945820869999807,
+        "result_exists": true,
+        "complete": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "52a57f035357662a6dc52ec66389fc8973fdf73c2be5309dc32ed6f8761705ad"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "normal-sign-pair",
+        "expected_diagnostic": null,
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-sign-pair/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-sign-pair/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-sign-pair/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-sign-pair/run.json"
+        ],
+        "pid": 10172,
+        "exit_code": 0,
+        "elapsed_seconds": 0.28307985900005406,
+        "result_exists": true,
+        "complete": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "e1229793801fd22eb0274cd2e2281d5532ab7bdc9f5cadc5d58ce875582b4674"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "step-split",
+        "expected_diagnostic": null,
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/step-split/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/step-split/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/step-split/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/step-split/run.json"
+        ],
+        "pid": 10537,
+        "exit_code": 0,
+        "elapsed_seconds": 0.286900494000065,
+        "result_exists": true,
+        "complete": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "4d0c865bc05fe41904af1bb9e4a6f3e74380cf3a14270536cb45554e8f6af990"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "kink-split",
+        "expected_diagnostic": null,
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-split/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-split/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-split/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/kink-split/run.json"
+        ],
+        "pid": 10902,
+        "exit_code": 0,
+        "elapsed_seconds": 0.6106879230001141,
+        "result_exists": true,
+        "complete": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "098be4443ac988e94edc2a94927a614f7621c684aeb44759708411620d82cdfd"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "height-step",
+        "expected_diagnostic": null,
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/height-step/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/height-step/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/height-step/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/height-step/run.json"
+        ],
+        "pid": 11267,
+        "exit_code": 0,
+        "elapsed_seconds": 0.297022749000007,
+        "result_exists": true,
+        "complete": true,
+        "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+        "input_sha256": {
+          "mesh": "9c3979ddaaf5d7f1aeae11c068710d3c3ae341f10928588c6df79eab5213f93d",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "d2b14746ca9384faf7c4a2ffe25be69503b0c94605f3bc60e334a5b0c91b678f"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "nonzero-fold",
+        "expected_diagnostic": "same signed normal offset",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/nonzero-fold/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/nonzero-fold/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/nonzero-fold/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/nonzero-fold/run.json"
+        ],
+        "pid": 11632,
+        "exit_code": 1,
+        "elapsed_seconds": 0.016196891000163305,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "2b7b319bc4fb778545a46902a77061a51d274743b034ecf0a9b1e62a0d30123a"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "one-zero-fold",
+        "expected_diagnostic": "same signed normal offset",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/one-zero-fold/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/one-zero-fold/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/one-zero-fold/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/one-zero-fold/run.json"
+        ],
+        "pid": 11633,
+        "exit_code": 1,
+        "elapsed_seconds": 0.01519829100016068,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "78b8edf5ecfbd3bcf54812d1d7bcbc6c718208ce9cb16c5fdd4eef06772f1a94"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "e-step",
+        "expected_diagnostic": "same signed normal offset",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-step/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-step/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-step/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-step/run.json"
+        ],
+        "pid": 11634,
+        "exit_code": 1,
+        "elapsed_seconds": 0.014756868999938888,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "64162214ef4cc4fd27b6909bcdb0662cc47d6e96275136bbeba0c29bac1a0b42"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "e-only",
+        "expected_diagnostic": "same signed normal offset",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-only/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-only/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-only/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/e-only/run.json"
+        ],
+        "pid": 11635,
+        "exit_code": 1,
+        "elapsed_seconds": 0.023666903000048478,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "6fe2137ab01e4558d1abb9b6d7a936f9dba5bca47c001196a2ddfb8f8b6559b5"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "range-positive",
+        "expected_diagnostic": "finite |e| <= thickness/2",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-positive/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-positive/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-positive/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-positive/run.json"
+        ],
+        "pid": 11636,
+        "exit_code": 1,
+        "elapsed_seconds": 0.01720501099998728,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset scope requires finite |e| <= thickness/2\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "4f58cf2b70b62645255169afb9826a751af3873203ba908e9a23bc5653cc512c"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "range-negative",
+        "expected_diagnostic": "finite |e| <= thickness/2",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-negative/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-negative/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-negative/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/range-negative/run.json"
+        ],
+        "pid": 11637,
+        "exit_code": 1,
+        "elapsed_seconds": 0.015570470000056957,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset scope requires finite |e| <= thickness/2\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "072b4f50e0e4c4ae88dcb926a056b738c5fc9b62e113fe8de593894d3df35784"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "normal-only",
+        "expected_diagnostic": "same signed normal offset",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-only/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-only/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-only/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/normal-only/run.json"
+        ],
+        "pid": 11638,
+        "exit_code": 1,
+        "elapsed_seconds": 0.019857055000102264,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "d05ca381646ed7bdb27ed978e5cd54ffd695fa17640b10c12c41a8447bfdbc4c"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-midpoint-0",
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-0/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-0/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-0/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-0/run.json"
+        ],
+        "pid": 11639,
+        "exit_code": 1,
+        "elapsed_seconds": 0.014429065000058472,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "06420c1446ba166ffe1e550335789705824f84102028614d3630609a2bdc803e"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "curved-midpoint-2",
+        "expected_diagnostic": "Mindlin Tri6 requires straight edges",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-2/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-2/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-2/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/curved-midpoint-2/run.json"
+        ],
+        "pid": 11640,
+        "exit_code": 1,
+        "elapsed_seconds": 0.015742999999929452,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+        "input_sha256": {
+          "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "8383d45bd65beda47c5e48ace707e148662a59d12d66a66112a8df0aabb23525"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "unknown-normal",
+        "expected_diagnostic": "unknown field",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-normal/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-normal/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-normal/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-normal/run.json"
+        ],
+        "pid": 11641,
+        "exit_code": 1,
+        "elapsed_seconds": 0.001543718999982957,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "unknown field `normal`, expected one of `id`, `position_m`, `soil_node_set`, `match_soil_node` at line 101 column 16\n",
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "516292dbb3daddcbb12f6efb74b60861121bf657a08839ec920b4d0635bea029"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "unknown-e",
+        "expected_diagnostic": "unknown field",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-e/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-e/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-e/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/unknown-e/run.json"
+        ],
+        "pid": 11642,
+        "exit_code": 1,
+        "elapsed_seconds": 0.001605913000048531,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "unknown field `attachment_offset_m`, expected one of `id`, `position_m`, `soil_node_set`, `match_soil_node` at line 101 column 29\n",
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "29c4363d89019e83dc76ddf7a296119b8cdc2e904b0236b098aca9c2a5f7c06f"
+        },
+        "contract_confirmed": true
+      },
+      {
+        "name": "attachment-mismatch",
+        "expected_diagnostic": "attachment coordinate mismatch",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+          "solve-stages",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/attachment-mismatch/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/attachment-mismatch/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/attachment-mismatch/stages.json",
+          "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/cli/attachment-mismatch/run.json"
+        ],
+        "pid": 11643,
+        "exit_code": 1,
+        "elapsed_seconds": 0.017597816000034072,
+        "result_exists": false,
+        "complete": null,
+        "diagnostic": "invalid input: beam attachment coordinate mismatch\n",
+        "input_sha256": {
+          "mesh": "d4fe8baf0bceabe4304fa335f49184478a79c80388d5016fad91683e46019563",
+          "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+          "stages": "c388aa0ee284f06546105e50cb08a94c19bd9c0c2cb51884d2a60f10b3a2a72c"
+        },
+        "contract_confirmed": true
+      }
+    ],
+    "preparation_and_legacy": {
+      "passed": false,
+      "b03_complete": false,
+      "records": [
+        {
+          "name": "isolated-curved-midpoint-0",
+          "expected": "Mindlin Tri6 requires straight edges",
+          "legacy_control": false,
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+              "solve-stages",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-0/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-0/ground.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-0/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-0/run.json"
+            ],
+            "pid": 11645,
+            "exit_code": 1,
+            "elapsed_seconds": 0.01955680800006121,
+            "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614"
+          },
+          "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+          "result_exists": false,
+          "complete": null,
+          "refused": true,
+          "input_sha256": {
+            "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+            "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+            "stages": "06420c1446ba166ffe1e550335789705824f84102028614d3630609a2bdc803e"
+          }
+        },
+        {
+          "name": "isolated-curved-midpoint-2",
+          "expected": "Mindlin Tri6 requires straight edges",
+          "legacy_control": false,
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+              "solve-stages",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-2/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-2/ground.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-2/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/isolated-curved-midpoint-2/run.json"
+            ],
+            "pid": 11646,
+            "exit_code": 1,
+            "elapsed_seconds": 0.01566293900009441,
+            "log_sha256": "09adbc46f2d409308dd97dc3a0eb1abd6d399c5c8ce0a61450db069b34371614"
+          },
+          "diagnostic": "invalid input: Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\n",
+          "result_exists": false,
+          "complete": null,
+          "refused": true,
+          "input_sha256": {
+            "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+            "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+            "stages": "8383d45bd65beda47c5e48ace707e148662a59d12d66a66112a8df0aabb23525"
+          }
+        },
+        {
+          "name": "implicit-planar-formulation-with-real-fold",
+          "expected": "same signed normal offset",
+          "legacy_control": false,
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+              "solve-stages",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/implicit-planar-formulation-with-real-fold/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/implicit-planar-formulation-with-real-fold/ground.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/implicit-planar-formulation-with-real-fold/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/implicit-planar-formulation-with-real-fold/run.json"
+            ],
+            "pid": 11647,
+            "exit_code": 1,
+            "elapsed_seconds": 0.015501676999974734,
+            "log_sha256": "ebef717f118deaf59484002737339ba726edf5fb74dea0786eb65b5fc7cfef1e"
+          },
+          "diagnostic": "invalid input: offset plates sharing a node require the same signed normal offset; folds/steps unverified\n",
+          "result_exists": false,
+          "complete": null,
+          "refused": true,
+          "input_sha256": {
+            "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+            "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+            "stages": "2b7b319bc4fb778545a46902a77061a51d274743b034ecf0a9b1e62a0d30123a"
+          }
+        },
+        {
+          "name": "legacy-mindlin_tri6-kink-zero",
+          "expected": null,
+          "legacy_control": true,
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+              "solve-stages",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-mindlin_tri6-kink-zero/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-mindlin_tri6-kink-zero/ground.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-mindlin_tri6-kink-zero/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-mindlin_tri6-kink-zero/run.json"
+            ],
+            "pid": 11648,
+            "exit_code": 0,
+            "elapsed_seconds": 0.26281225200000335,
+            "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee"
+          },
+          "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+          "result_exists": true,
+          "complete": true,
+          "refused": false,
+          "input_sha256": {
+            "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+            "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+            "stages": "c171d600a2de13e87f41c0cabe7f83a96239839dec37ae3f20f1aa2d43e5c0c0"
+          }
+        },
+        {
+          "name": "legacy-cst_dkt-kink-zero",
+          "expected": null,
+          "legacy_control": true,
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+              "solve-stages",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-cst_dkt-kink-zero/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-cst_dkt-kink-zero/ground.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-cst_dkt-kink-zero/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-cst_dkt-kink-zero/run.json"
+            ],
+            "pid": 12013,
+            "exit_code": 0,
+            "elapsed_seconds": 0.294688898000004,
+            "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee"
+          },
+          "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+          "result_exists": true,
+          "complete": true,
+          "refused": false,
+          "input_sha256": {
+            "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+            "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+            "stages": "6627aa4583564b6699dcc30189d838476f7191e8de30f53e7ec6429ae9edb246"
+          }
+        },
+        {
+          "name": "legacy-default-kink-zero",
+          "expected": null,
+          "legacy_control": true,
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+              "solve-stages",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-default-kink-zero/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-default-kink-zero/ground.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-default-kink-zero/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/legacy-default-kink-zero/run.json"
+            ],
+            "pid": 12378,
+            "exit_code": 0,
+            "elapsed_seconds": 0.2665163010001379,
+            "log_sha256": "46761089f7f5e86ed06e1643739e005c438651ebf4c74d9459464dc090006dee"
+          },
+          "diagnostic": "Soil stages completed: 5 frames, 16 accepted / 0 rejected increments\n",
+          "result_exists": true,
+          "complete": true,
+          "refused": false,
+          "input_sha256": {
+            "mesh": "1919bdf628a2a85930e70bd48d3d74b2b31c30865712724982413aa2c854f147",
+            "ground": "c68e1728a6698f590d5c7015a76e934a9fcf729d71d3a9912514c3599748e49b",
+            "stages": "bedfdee3eb355a6bda824cfa19348f52d73cd5c35f10e8630247f953c2fe18ec"
+          }
+        },
+        {
+          "name": "compact-mindlin_tri6-0.05",
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+              "/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6-0.05/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6-0.05/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6-0.05/specification.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6-0.05/expanded"
+            ],
+            "pid": 12743,
+            "exit_code": 1,
+            "elapsed_seconds": 0.08785733099989557,
+            "log_sha256": "5f08ab05105c372d4a7db69307807554e7623ecdd21b444a93c16398b65357b2"
+          },
+          "diagnostic": "Traceback (most recent call last):\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 225, in <module>\n    if __name__=='__main__':main()\n                            ~~~~^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 215, in main\n    mesh,case,binding=attach(*data)\n                      ~~~~~~^^^^^^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 87, in attach\n    if surface.get('thickness_offset_m',0.)!=0.:raise ValueError('plate thickness offset attachment unsupported')\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: plate thickness offset attachment unsupported\n",
+          "expected": "plate thickness offset attachment unsupported",
+          "refused": true
+        },
+        {
+          "name": "compact-mindlin_tri6_offset-0.0",
+          "process": {
+            "command": [
+              "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+              "/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6_offset-0.0/mesh.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6_offset-0.0/stages.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6_offset-0.0/specification.json",
+              "/workspace/solidcraft_soil_analysis/work/b03cause-final-controls/supplemental/compact/mindlin_tri6_offset-0.0/expanded"
+            ],
+            "pid": 12744,
+            "exit_code": 1,
+            "elapsed_seconds": 0.08035770500009676,
+            "log_sha256": "893afb306d592a48efc2a9d8ea05a900d1ac0b9d9e982e8945dc176e885ead98"
+          },
+          "diagnostic": "Traceback (most recent call last):\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 225, in <module>\n    if __name__=='__main__':main()\n                            ~~~~^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 215, in main\n    mesh,case,binding=attach(*data)\n                      ~~~~~~^^^^^^^\n  File \"/workspace/solidcraft_soil_analysis/tools/plate_surfaces.py\", line 86, in attach\n    if formulation not in ('cst_dkt','mindlin_tri6'):raise ValueError('unknown plate formulation')\n                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: unknown plate formulation\n",
+          "expected": "unknown plate formulation",
+          "refused": true
+        },
+        {
+          "name": "native-prepare-planar",
+          "entry": "prepare_native_plates.derive",
+          "diagnostic": "Native offset plate preparation/display is unverified; use the explicit CLI-only offset scope",
+          "refused": true
+        },
+        {
+          "name": "native-prepare-kink-zero",
+          "entry": "prepare_native_plates.derive",
+          "diagnostic": "Native offset plate preparation/display is unverified; use the explicit CLI-only offset scope",
+          "refused": true
+        }
+      ],
+      "refusal_contract_passed": true,
+      "legacy_controls_completed": true
+    },
+    "predeclared_model_expectations_confirmed": true,
+    "all_cli_contracts_confirmed": true,
+    "gui_gpu_real_cad_native_display_executed": false
+  },
+  "local_trial_energy_observations": [
+    {
+      "case": "e-only-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "e-only-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.055271971302242,
+        "bending_energy_kn_m": 0.0021916481031024984,
+        "transverse_shear_energy_kn_m": 0.14174616451840508,
+        "drilling_penalty_energy_kn_m": 1.5552510350454005e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": -0.002575891920333806
+    },
+    {
+      "case": "fold135--1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 5.019537547037691,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.087441416992852e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": 0.04710206645793491
+    },
+    {
+      "case": "fold135--1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.6861821338167715,
+        "bending_energy_kn_m": 0.001966884705228846,
+        "transverse_shear_energy_kn_m": 0.43459302234610386,
+        "drilling_penalty_energy_kn_m": 2.5280407769876406e-05
+      },
+      "virtual_work_residual_kn_m": -5.421010862427522e-20,
+      "omitted_arm_couple_work_error_kn_m": -1.7506595873966575e-05,
+      "arm_energy_change_kn_m": 0.004980821643216338
+    },
+    {
+      "case": "fold135-1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "fold135-1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.6880251038526093,
+        "bending_energy_kn_m": 0.001966884705228846,
+        "transverse_shear_energy_kn_m": 0.4345930223461038,
+        "drilling_penalty_energy_kn_m": 2.2079367835293298e-05
+      },
+      "virtual_work_residual_kn_m": -5.421010862427522e-20,
+      "omitted_arm_couple_work_error_kn_m": 1.7506595873966575e-05,
+      "arm_energy_change_kn_m": 0.006820590639119217
+    },
+    {
+      "case": "fold15--1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 5.019537547037691,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.087441416992852e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": 0.04710206645793491
+    },
+    {
+      "case": "fold15--1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.7702317998091432,
+        "bending_energy_kn_m": 0.0020288190011224054,
+        "transverse_shear_energy_kn_m": 0.13036475013245652,
+        "drilling_penalty_energy_kn_m": 1.5960862970506628e-05
+      },
+      "virtual_work_residual_kn_m": -5.421010862427522e-20,
+      "omitted_arm_couple_work_error_kn_m": 5.5994059524280436e-06,
+      "arm_energy_change_kn_m": -0.001938395826411199
+    },
+    {
+      "case": "fold15-1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "fold15-1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.7862826916953853,
+        "bending_energy_kn_m": 0.0020288190011224054,
+        "transverse_shear_energy_kn_m": 0.1303647501324566,
+        "drilling_penalty_energy_kn_m": 1.4878009142232428e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -5.5994059524280436e-06,
+      "arm_energy_change_kn_m": 0.014111413206002954
+    },
+    {
+      "case": "fold179--1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 5.019537547037691,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.087441416992852e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": 0.04710206645793491
+    },
+    {
+      "case": "fold179--1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.193192903791302,
+        "bending_energy_kn_m": 0.002175527119730692,
+        "transverse_shear_energy_kn_m": 0.41418106901757734,
+        "drilling_penalty_energy_kn_m": 4.3537090443362984e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -1.0063383790388564e-05,
+      "arm_energy_change_kn_m": 0.004523556734092438
+    },
+    {
+      "case": "fold179-1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "fold179-1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.197202703914863,
+        "bending_energy_kn_m": 0.002175527119730692,
+        "transverse_shear_energy_kn_m": 0.4141810690175775,
+        "drilling_penalty_energy_kn_m": 3.9905161256271064e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 1.006338379038851e-05,
+      "arm_energy_change_kn_m": 0.008529724928465932
+    },
+    {
+      "case": "fold45--1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 5.019537547037691,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.087441416992852e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": 0.04710206645793491
+    },
+    {
+      "case": "fold45--1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.9271014738354935,
+        "bending_energy_kn_m": 0.0015018349613414694,
+        "transverse_shear_energy_kn_m": 0.31943000836163976,
+        "drilling_penalty_energy_kn_m": 1.267215594562764e-05
+      },
+      "virtual_work_residual_kn_m": -5.421010862427522e-20,
+      "omitted_arm_couple_work_error_kn_m": -3.6418007725559317e-06,
+      "arm_energy_change_kn_m": -9.236566042192251e-05
+    },
+    {
+      "case": "fold45-1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "fold45-1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.9362979939788318,
+        "bending_energy_kn_m": 0.0015018349613414694,
+        "transverse_shear_energy_kn_m": 0.3194300083616398,
+        "drilling_penalty_energy_kn_m": 1.1945653542528256e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 3.6418007725559317e-06,
+      "arm_energy_change_kn_m": 0.009103427980513779
+    },
+    {
+      "case": "fold90--1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 5.019537547037691,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.087441416992852e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": 0.04710206645793491
+    },
+    {
+      "case": "fold90--1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.522315306538424,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 9.504066429130438e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -1.4954174679978943e-05,
+      "arm_energy_change_kn_m": 0.003081051568942339
+    },
+    {
+      "case": "fold90-1-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "fold90-1-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.5236223840339527,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 8.394781625136874e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 1.4954174679978889e-05,
+      "arm_energy_change_kn_m": 0.004387019779667156
+    },
+    {
+      "case": "fold90-1-element-order",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.5236223840339527,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 8.394781625136874e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 1.4954174679978889e-05,
+      "arm_energy_change_kn_m": 0.004387019779667156
+    },
+    {
+      "case": "fold90-1-element-order",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "fold90-1-rotated",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.4947684510298727,
+        "bending_energy_kn_m": 0.0014866717561257338,
+        "transverse_shear_energy_kn_m": 1.699657917046801,
+        "drilling_penalty_energy_kn_m": 1.0793002451518487e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -1.4954174679978943e-05,
+      "arm_energy_change_kn_m": 0.11621239514372128
+    },
+    {
+      "case": "fold90-1-rotated",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.8481670928018064,
+        "bending_energy_kn_m": 0.0014457464200630368,
+        "transverse_shear_energy_kn_m": 0.6486928994968206,
+        "drilling_penalty_energy_kn_m": 1.1845975470256375e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.928059998981834e-06,
+      "arm_energy_change_kn_m": -0.044316643117096266
+    },
+    {
+      "case": "normal-only-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "normal-only-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.0948782910834227,
+        "bending_energy_kn_m": 0.004697396237029795,
+        "transverse_shear_energy_kn_m": 0.37840574166522745,
+        "drilling_penalty_energy_kn_m": 0.00010032617416925104
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 9.803890635969449e-06,
+      "arm_energy_change_kn_m": -0.026214824066653097
+    },
+    {
+      "case": "one-zero-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "one-zero-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.519234830210185,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 8.928825725717294e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    },
+    {
+      "case": "paired-sign-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "paired-sign-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.1754909408293077,
+        "bending_energy_kn_m": 0.004697396237029795,
+        "transverse_shear_energy_kn_m": 0.37840574166522745,
+        "drilling_penalty_energy_kn_m": 0.000101739392217976
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": 0.0543992388972816
+    },
+    {
+      "case": "paired-sign-element-order",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.1754909408293077,
+        "bending_energy_kn_m": 0.004697396237029795,
+        "transverse_shear_energy_kn_m": 0.37840574166522745,
+        "drilling_penalty_energy_kn_m": 0.000101739392217976
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": 0.0543992388972816
+    },
+    {
+      "case": "paired-sign-element-order",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "paired-sign-rotated",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.4947684510298727,
+        "bending_energy_kn_m": 0.0014866717561257338,
+        "transverse_shear_energy_kn_m": 1.699657917046801,
+        "drilling_penalty_energy_kn_m": 1.0793002451518487e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -1.4954174679978943e-05,
+      "arm_energy_change_kn_m": 0.11621239514372128
+    },
+    {
+      "case": "paired-sign-rotated",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.3196730733343736,
+        "bending_energy_kn_m": 0.001369040632015405,
+        "transverse_shear_energy_kn_m": 1.966745273100661,
+        "drilling_penalty_energy_kn_m": 1.7209514476845953e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -1.4954174679978943e-05,
+      "arm_energy_change_kn_m": -0.004183857237111788
+    },
+    {
+      "case": "split90-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "split90-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.5236223840339527,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 8.394781625136874e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 1.4954174679978889e-05,
+      "arm_energy_change_kn_m": 0.004387019779667156
+    },
+    {
+      "case": "step-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.938378650046978,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.4769967902057165e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": -9.803890635969503e-06,
+      "arm_energy_change_kn_m": -0.03405293497904616
+    },
+    {
+      "case": "step-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 3.069377572565283,
+        "bending_energy_kn_m": 0.0021916481031024984,
+        "transverse_shear_energy_kn_m": 0.14174616451840508,
+        "drilling_penalty_energy_kn_m": 1.4567605636672375e-05
+      },
+      "virtual_work_residual_kn_m": -5.421010862427522e-20,
+      "omitted_arm_couple_work_error_kn_m": -7.84311250877557e-06,
+      "arm_energy_change_kn_m": 0.01152872443799291
+    },
+    {
+      "case": "zero90-base",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.9724336566827185,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.269831120652275e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    },
+    {
+      "case": "zero90-base",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.519234830210185,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 8.928825725717294e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    },
+    {
+      "case": "zero90-element-order",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.519234830210185,
+        "bending_energy_kn_m": 0.0012446716920011137,
+        "transverse_shear_energy_kn_m": 0.5977274762442006,
+        "drilling_penalty_energy_kn_m": 8.928825725717294e-06
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    },
+    {
+      "case": "zero90-element-order",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 4.9724336566827185,
+        "bending_energy_kn_m": 0.0021748139532050863,
+        "transverse_shear_energy_kn_m": 0.3047888196402222,
+        "drilling_penalty_energy_kn_m": 5.269831120652275e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    },
+    {
+      "case": "zero90-rotated",
+      "element": 0,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 2.378555172985448,
+        "bending_energy_kn_m": 0.0014866717561257338,
+        "transverse_shear_energy_kn_m": 1.699657917046801,
+        "drilling_penalty_energy_kn_m": 1.1675903153862894e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    },
+    {
+      "case": "zero90-rotated",
+      "element": 1,
+      "energy_kn_m": {
+        "membrane_energy_kn_m": 1.892483548103597,
+        "bending_energy_kn_m": 0.0014457464200630368,
+        "transverse_shear_energy_kn_m": 0.6486928994968206,
+        "drilling_penalty_energy_kn_m": 1.2033790775896456e-05
+      },
+      "virtual_work_residual_kn_m": 0.0,
+      "omitted_arm_couple_work_error_kn_m": 0.0,
+      "arm_energy_change_kn_m": 0.0
+    }
+  ],
+  "maxima": {
+    "global_rigid_normalized_residual": 4.893037569853122e-17,
+    "force_residual_l2_kn": 4.793205637348856e-10,
+    "moment_residual_l2_kn_m": 1.652255496270269e-10,
+    "work_balance_residual_kn_m": 1.7435719534830696e-11,
+    "maximum_omitted_arm_couple_work_error_kn_m": 1.7506595873966575e-05
+  },
+  "maximum_input_only_relative_stiffness_difference": 8.361258407380147e-16,
+  "maximum_node_permutation_stiffness_difference": 5.681360604716549e-16,
+  "maximum_local_virtual_work_residual_kn_m": 5.421010862427522e-20,
+  "prior_reference_assessment": {
+    "saved_values_unchanged": true,
+    "new_benchmark_solves": 0,
+    "new_h_series_solves": 0,
+    "original_b03_spatial_levels": 2,
+    "spatial_observed_order": null,
+    "reference_is_finite_flat_discretization": true,
+    "continuum_reference_certified": false,
+    "richardson_or_extrapolation_used": false,
+    "literature_values_adopted_as_acceptance": false,
+    "b02_old_failure_and_negative_orders_replaced": false,
+    "series": [
+      {
+        "family": "height-step",
+        "spatial_levels": 2,
+        "spatial_observed_order": null,
+        "original_spatial_acceptance": null,
+        "native": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.00029475504110765244,
+            "soil_probe_stress_kpa": 139.52799691080978,
+            "global_F_dot_d_kn_m": 0.0005549670519475031,
+            "cumulative_total_work_kn_m": 0.00030106324551741,
+            "support_generalized_reactions_kn": 1.5542871643007685,
+            "plate_attachment_u_m": 0.0001381462106748807,
+            "plate_rotation_rad": 3.358098041227904e-05,
+            "plate_membrane_global_kn_m": 2.3453462554221565,
+            "plate_bending_global_kn": 0.12830847130653936,
+            "plate_attachment_moment_global_kn": 0.1276969947593048,
+            "plate_shear_global_kn_m": 0.5601040084527965
+          },
+          "original_load_work_trend": {
+            "first": 4.6704193537009395e-05,
+            "second": 2.3352096768496895e-05,
+            "decreasing": true,
+            "observed_order": 1.000000000000482
+          }
+        },
+        "independent": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.0002947550411083634,
+            "soil_probe_stress_kpa": 139.5279969110397,
+            "global_F_dot_d_kn_m": 0.0005549670519705213,
+            "cumulative_total_work_kn_m": 0.0003010632454692808,
+            "support_generalized_reactions_kn": 1.5542871642967608,
+            "plate_attachment_u_m": 0.00013814621067738424,
+            "plate_rotation_rad": 3.3580980404146376e-05,
+            "plate_membrane_global_kn_m": 2.345346255459133,
+            "plate_bending_global_kn": 0.12830847130469789,
+            "plate_attachment_moment_global_kn": 0.12769699475926405,
+            "plate_shear_global_kn_m": 0.5601040084482789
+          },
+          "original_load_work_trend": {
+            "first": 4.67041935359201e-05,
+            "second": 2.3352096767959886e-05,
+            "decreasing": true,
+            "observed_order": 1.00000000000001
+          }
+        }
+      },
+      {
+        "family": "kink-split",
+        "spatial_levels": 2,
+        "spatial_observed_order": null,
+        "original_spatial_acceptance": null,
+        "native": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.0002559017758613384,
+            "soil_probe_stress_kpa": 119.34122118731706,
+            "global_F_dot_d_kn_m": 0.00044109621828837417,
+            "cumulative_total_work_kn_m": 0.00021697832478510652,
+            "support_generalized_reactions_kn": 1.3486926457052273,
+            "plate_attachment_u_m": 0.00017927987123173814,
+            "plate_rotation_rad": 3.14286867057286e-05,
+            "plate_membrane_global_kn_m": 2.1535220240875663,
+            "plate_bending_global_kn": 0.32701642732614816,
+            "plate_attachment_moment_global_kn": 0.35626054803592594,
+            "plate_shear_global_kn_m": 3.251109877740913
+          },
+          "original_load_work_trend": {
+            "first": 1.4054767303535486e-05,
+            "second": 7.0273836518914504e-06,
+            "decreasing": true,
+            "observed_order": 0.9999999999746034
+          }
+        },
+        "independent": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.00025590177585928345,
+            "soil_probe_stress_kpa": 119.34122118750594,
+            "global_F_dot_d_kn_m": 0.0004410962182818446,
+            "cumulative_total_work_kn_m": 0.00021697832478901995,
+            "support_generalized_reactions_kn": 1.348692645701159,
+            "plate_attachment_u_m": 0.00017927987122534763,
+            "plate_rotation_rad": 3.142868670224916e-05,
+            "plate_membrane_global_kn_m": 2.15352202410059,
+            "plate_bending_global_kn": 0.3270164273205844,
+            "plate_attachment_moment_global_kn": 0.35626054803021534,
+            "plate_shear_global_kn_m": 3.2511098777210035
+          },
+          "original_load_work_trend": {
+            "first": 1.4054767300712223e-05,
+            "second": 7.027383650357304e-06,
+            "decreasing": true,
+            "observed_order": 0.9999999999997551
+          }
+        }
+      },
+      {
+        "family": "kink-zero",
+        "spatial_levels": 2,
+        "spatial_observed_order": null,
+        "original_spatial_acceptance": null,
+        "native": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.00025333685419364366,
+            "soil_probe_stress_kpa": 118.68423500421069,
+            "global_F_dot_d_kn_m": 0.00042711489951599145,
+            "cumulative_total_work_kn_m": 0.00020530577423488592,
+            "support_generalized_reactions_kn": 1.3206352937292423,
+            "plate_attachment_u_m": 0.00017829333607832364,
+            "plate_rotation_rad": 3.080271376438501e-05,
+            "plate_membrane_global_kn_m": 2.552430258616933,
+            "plate_bending_global_kn": 0.43770702280215595,
+            "plate_attachment_moment_global_kn": 0.43770702280215595,
+            "plate_shear_global_kn_m": 4.298077091977909
+          },
+          "original_load_work_trend": {
+            "first": 1.1725193348970922e-05,
+            "second": 5.8625966747005665e-06,
+            "decreasing": true,
+            "observed_order": 0.9999999999470658
+          }
+        },
+        "independent": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.00025333685419146577,
+            "soil_probe_stress_kpa": 118.68423500436515,
+            "global_F_dot_d_kn_m": 0.0004271148995130588,
+            "cumulative_total_work_kn_m": 0.0002053057742411807,
+            "support_generalized_reactions_kn": 1.3206352937268522,
+            "plate_attachment_u_m": 0.00017829333607195604,
+            "plate_rotation_rad": 3.080271376383561e-05,
+            "plate_membrane_global_kn_m": 2.552430258641632,
+            "plate_bending_global_kn": 0.4377070228018971,
+            "plate_attachment_moment_global_kn": 0.4377070228018971,
+            "plate_shear_global_kn_m": 4.2980770919326075
+          },
+          "original_load_work_trend": {
+            "first": 1.172519334543382e-05,
+            "second": 5.862596672718862e-06,
+            "decreasing": true,
+            "observed_order": 0.9999999999995198
+          }
+        }
+      },
+      {
+        "family": "normal-sign-pair",
+        "spatial_levels": 2,
+        "spatial_observed_order": null,
+        "original_spatial_acceptance": null,
+        "native": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.00026423177633025315,
+            "soil_probe_stress_kpa": 124.56670636605449,
+            "global_F_dot_d_kn_m": 0.000396276845733941,
+            "cumulative_total_work_kn_m": 0.00019944189287582782,
+            "support_generalized_reactions_kn": 1.3030035160504128,
+            "plate_attachment_u_m": 8.093355076533172e-05,
+            "plate_rotation_rad": 1.0361140760181278e-05,
+            "plate_membrane_global_kn_m": 0.6475078111889817,
+            "plate_bending_global_kn": 0.07666804804963942,
+            "plate_attachment_moment_global_kn": 0.09963611963022949,
+            "plate_shear_global_kn_m": 0.9311353744055676
+          },
+          "original_load_work_trend": {
+            "first": 1.829344778733115e-05,
+            "second": 9.146723893542789e-06,
+            "decreasing": true,
+            "observed_order": 1.0000000000193667
+          }
+        },
+        "independent": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.0002642317763345748,
+            "soil_probe_stress_kpa": 124.56670636622978,
+            "global_F_dot_d_kn_m": 0.000396276845765823,
+            "cumulative_total_work_kn_m": 0.00019944189278559382,
+            "support_generalized_reactions_kn": 1.303003516036221,
+            "plate_attachment_u_m": 8.093355076792722e-05,
+            "plate_rotation_rad": 1.0361140738387447e-05,
+            "plate_membrane_global_kn_m": 0.6475078112007118,
+            "plate_bending_global_kn": 0.07666804804137971,
+            "plate_attachment_moment_global_kn": 0.09963611962499938,
+            "plate_shear_global_kn_m": 0.9311353743755362
+          },
+          "original_load_work_trend": {
+            "first": 1.82934477947768e-05,
+            "second": 9.146723897389105e-06,
+            "decreasing": true,
+            "observed_order": 0.9999999999998889
+          }
+        }
+      },
+      {
+        "family": "step-split",
+        "spatial_levels": 2,
+        "spatial_observed_order": null,
+        "original_spatial_acceptance": null,
+        "native": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.00026420965398235677,
+            "soil_probe_stress_kpa": 124.48577684678956,
+            "global_F_dot_d_kn_m": 0.0003951135799050425,
+            "cumulative_total_work_kn_m": 0.00019843102303357632,
+            "support_generalized_reactions_kn": 1.3009550857380872,
+            "plate_attachment_u_m": 8.073329067871192e-05,
+            "plate_rotation_rad": 1.4205461668080537e-05,
+            "plate_membrane_global_kn_m": 1.9103745146481903,
+            "plate_bending_global_kn": 0.10262490656120618,
+            "plate_attachment_moment_global_kn": 0.1390454299767625,
+            "plate_shear_global_kn_m": 0.22430867993244658
+          },
+          "original_load_work_trend": {
+            "first": 1.8342263563806815e-05,
+            "second": 9.17113178163073e-06,
+            "decreasing": true,
+            "observed_order": 1.0000000000428941
+          }
+        },
+        "independent": {
+          "original_space_difference": {
+            "soil_common_nodes_m": 0.000264209653988483,
+            "soil_probe_stress_kpa": 124.48577684698581,
+            "global_F_dot_d_kn_m": 0.00039511357993827166,
+            "cumulative_total_work_kn_m": 0.00019843102294512044,
+            "support_generalized_reactions_kn": 1.3009550857212975,
+            "plate_attachment_u_m": 8.07332906828991e-05,
+            "plate_rotation_rad": 1.4205461645987864e-05,
+            "plate_membrane_global_kn_m": 1.9103745146615638,
+            "plate_bending_global_kn": 0.10262490655855003,
+            "plate_attachment_moment_global_kn": 0.1390454299746515,
+            "plate_shear_global_kn_m": 0.22430867990422462
+          },
+          "original_load_work_trend": {
+            "first": 1.8342263571194785e-05,
+            "second": 9.171131785598043e-06,
+            "decreasing": true,
+            "observed_order": 0.9999999999998976
+          }
+        }
+      }
+    ]
+  },
+  "unresolved_symptoms": [
+    {
+      "id": "S1",
+      "symptom": "nonzero shared-ID folds and steps",
+      "axes": [
+        "i",
+        "ii",
+        "iii",
+        "iv"
+      ],
+      "primary_contribution": "signed-arm contract and unspecified joint/rotation ownership",
+      "unique_numerical_cause": null,
+      "status": "未達・現行拒否",
+      "next": "仕様・実装決定"
+    },
+    {
+      "id": "S2",
+      "symptom": "one-zero/e-step/only normal or e reversal",
+      "axes": [
+        "i",
+        "iii",
+        "iv"
+      ],
+      "primary_contribution": "different arms, neutral points and work-conjugate couples",
+      "unique_numerical_cause": null,
+      "status": "未達・現行拒否",
+      "next": "仕様・実装決定"
+    },
+    {
+      "id": "S3",
+      "symptom": "normal averaging/sign/order/rounding",
+      "axes": [
+        "i",
+        "ii"
+      ],
+      "primary_contribution": "constant facet normals; adjacent sequential tolerance and current thickness; actual near-boundary order dependence",
+      "unique_numerical_cause": null,
+      "status": "限定観測・一般一意性未達",
+      "next": "クラウド小型交差対照可能"
+    },
+    {
+      "id": "S4",
+      "symptom": "rigid arms/rotation continuity/drilling/membrane-bending coupling",
+      "axes": [
+        "iii",
+        "iv"
+      ],
+      "primary_contribution": "per-facet A transform is consistent in tested patches; joint physical contract remains absent",
+      "unique_numerical_cause": null,
+      "status": "限定確認・一般接合未達",
+      "next": "仕様決定・小型全体対照"
+    },
+    {
+      "id": "S5",
+      "symptom": "installation references/authentication/restart for general joints",
+      "axes": [
+        "ii",
+        "iv"
+      ],
+      "primary_contribution": "old limited references do not define a new joint state or generation",
+      "unique_numerical_cause": null,
+      "status": "未定義・未達",
+      "next": "仕様・実装決定"
+    },
+    {
+      "id": "S6",
+      "symptom": "reaction/work/general field acceptance",
+      "axes": [
+        "i",
+        "iv",
+        "v"
+      ],
+      "primary_contribution": "missing original comprehensive gates; algebraic patch work is not physical joint validation",
+      "unique_numerical_cause": null,
+      "status": "未定義・未達",
+      "next": "対象物理と元基準の充足証拠が必要"
+    },
+    {
+      "id": "S7",
+      "symptom": "out-of-range e",
+      "axes": [
+        "i",
+        "iii"
+      ],
+      "primary_contribution": "explicit finite abs(e)<=t/2 model guard; no solve beyond it",
+      "unique_numerical_cause": null,
+      "status": "未達・現行拒否",
+      "next": "仕様・実装決定"
+    },
+    {
+      "id": "S8",
+      "symptom": "curved midsides or changed attachment/unknown nodal e or normal",
+      "axes": [
+        "i",
+        "ii",
+        "iii"
+      ],
+      "primary_contribution": "affine geometry, declared attachment and strict input types; curved directors absent",
+      "unique_numerical_cause": null,
+      "status": "未達・現行拒否",
+      "next": "B-01/接続仕様の決定"
+    },
+    {
+      "id": "S9",
+      "symptom": "compact/Native preparation and display",
+      "axes": [
+        "i",
+        "ii",
+        "iv"
+      ],
+      "primary_contribution": "conversion/display/reference/authentication contract unimplemented",
+      "unique_numerical_cause": null,
+      "status": "未達・準備拒否、表示未実行",
+      "next": "仕様・実装待ち、表示はPC"
+    },
+    {
+      "id": "S10",
+      "symptom": "12 to 96 spatial series and reference solution",
+      "axes": [
+        "v"
+      ],
+      "primary_contribution": "only two levels; literature joint/support/load/model definitions differ",
+      "unique_numerical_cause": null,
+      "status": "次数未認定・未達",
+      "next": "小型h系列と仕様判断。上限超は確認不可"
+    },
+    {
+      "id": "S11",
+      "symptom": "load-step cumulative work sensitivity",
+      "axes": [
+        "i",
+        "v"
+      ],
+      "primary_contribution": "old endpoint quadrature with installation/removal switches; near-first-order finite differences",
+      "unique_numerical_cause": null,
+      "status": "限定観測・物理仕事未達",
+      "next": "クラウド小型交差対照可能"
+    },
+    {
+      "id": "S12",
+      "symptom": "offset plus JOINT/water/plasticity/anchors/soil activity",
+      "axes": [
+        "ii",
+        "iii",
+        "iv"
+      ],
+      "primary_contribution": "ownership, material/water generations and initial-state/work contracts remain undefined",
+      "unique_numerical_cause": null,
+      "status": "B-02/A群の未達・拒否を保持",
+      "next": "仕様・実装決定"
+    }
+  ],
+  "limitations": [
+    "free structural patch only; no soil-coupled rejected production path",
+    "input-only independent polynomial reference shares flat Mindlin and drilling model, not an exact shell continuum",
+    "trial energy differences are not causal percentages; no coefficient/support/tolerance tuning",
+    "rotated force seed differs; only stiffness covariance is compared",
+    "no general corner attachment, installation, reaction/work acceptance or new restart defined"
+  ],
+  "numerical_tolerances_relaxed": false,
+  "old_values_rewritten": false,
+  "nc_code_or_settings_changed": false,
+  "production_rust_changed": false,
+  "windows_ci_after_push": "未確定"
+}

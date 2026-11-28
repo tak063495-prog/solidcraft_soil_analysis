@@ -1,0 +1,24 @@
+test_absent_control_keeps_every_independent_numerical_field_exact (test_c01_path_error_control.GlobalPathErrorControl.test_absent_control_keeps_every_independent_numerical_field_exact) ... ok
+test_document_pc_command_and_decision_survive_crlf (test_c01_path_error_control.GlobalPathErrorControl.test_document_pc_command_and_decision_survive_crlf) ... ok
+test_reference_owns_its_rollback_and_prescribed_coordinates (test_c01_path_error_control.GlobalPathErrorControl.test_reference_owns_its_rollback_and_prescribed_coordinates) ... ok
+test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused (test_c01_path_error_control.GlobalPathErrorSavedEvidence.test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused) ... ERROR
+
+======================================================================
+ERROR: test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused (test_c01_path_error_control.GlobalPathErrorSavedEvidence.test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_c01_path_error_control.py", line 70, in test_all_history_metrics_are_recomputed_and_forged_acceptance_is_refused
+    result=evidence.replay(evidence.extract(Path(tmp)/'replay'))
+                           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-12-c01-switch-event-localization/evidence.py", line 37, in extract
+    target=output/path;target.parent.mkdir(parents=True,exist_ok=True)
+                       ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device: '/tmp/tmpk657sfhr/replay/paths/g256/native'
+
+----------------------------------------------------------------------
+Ran 4 tests in 24.641s
+
+FAILED (errors=1)

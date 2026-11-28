@@ -1,0 +1,136 @@
+{
+  "platform": "Linux",
+  "base_commit": "18b6e9e104f9cc4fbb7c50a3f475b82de86d99db",
+  "passed": true,
+  "commands": [
+    [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "cargo",
+      "build",
+      "--locked",
+      "--release"
+    ],
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--release"
+    ],
+    [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "interim/2026-11-10-nc-component-release",
+      "-p",
+      "test_*.py",
+      "-v"
+    ]
+  ],
+  "quality_exit_codes": {
+    "fmt": 0,
+    "clippy": 0,
+    "release_build": 0,
+    "rust_tests": 0
+  },
+  "rust": {
+    "passed": 410,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 0
+  },
+  "python": [
+    {
+      "log": "python-tests-final.log",
+      "ran": 361,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "log": "python-tools-tests.log",
+      "ran": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "log": "evidence-tests-final.log",
+      "ran": 8,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  ],
+  "python_total": 371,
+  "original_runtime_test_sources_unchanged": 608,
+  "diagnostic_sources_match_final_archive": true,
+  "source_freeze_note": "Original sources fixed during final standard checks; reporting-only reduced-load diagnostics were added to measure.py and separately rechecked by all 8 evidence checks and independent archive remeasurement.",
+  "new_evidence_checks": 8,
+  "initial_attempts": [
+    {
+      "kind": "Rust",
+      "exit_code": 101,
+      "reported_passed": 59,
+      "failed": 1,
+      "reason": "sparse checkout omitted archived slope failure JSON"
+    },
+    {
+      "kind": "Python",
+      "exit_code": 1,
+      "reported_ran": 356,
+      "errors": 5,
+      "reason": "sparse checkout omitted old evidence; includes setUpClass error"
+    },
+    {
+      "kind": "archive_roundtrip",
+      "exit_code": 1,
+      "reason": "source guard rejected pre-reporting-update measure.py snapshot; repackaged and independently remeasured"
+    }
+  ],
+  "numerical_diagnostics_not_unit_tests": 10,
+  "reexpanded_evidence_checks_repeated_not_added": 8,
+  "full_release_acceptance": false,
+  "windows_latest_head_success_not_claimed_here": true
+}

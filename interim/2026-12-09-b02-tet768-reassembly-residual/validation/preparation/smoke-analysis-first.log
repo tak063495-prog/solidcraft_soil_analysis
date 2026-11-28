@@ -1,0 +1,11 @@
+beam-positive native precision 2
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-09-b02-tet768-reassembly-residual/analyze.py", line 67, in <module>
+    p=argparse.ArgumentParser();p.add_argument('formal',type=Path);p.add_argument('output',type=Path);a=p.parse_args();analyze(a.formal.resolve(),a.output.resolve())
+                                                                                                                       ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-09-b02-tet768-reassembly-residual/analyze.py", line 24, in analyze
+    probe=Probe(folder,kind=='native');rows=[];linear=[]
+  File "/workspace/solidcraft_soil_analysis/interim/2026-12-09-b02-tet768-reassembly-residual/precision.py", line 34, in __init__
+    for e in self.elements:
+             ^^^^^^^^^^^^^
+AttributeError: 'Probe' object has no attribute 'elements'

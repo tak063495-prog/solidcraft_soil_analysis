@@ -1,0 +1,30 @@
+{
+  "passed": false,
+  "software_failures": [
+    {
+      "operation": "initial probe build",
+      "exit_code": 127,
+      "reason": "cargo was absent from PATH; existing /workspace/.cargo and /workspace/.rustup were selected for retry"
+    },
+    {
+      "operation": "development frozen_history measurement",
+      "exit_code": 1,
+      "reason": "UnboundLocalError: material_points counter was not initialized",
+      "correction": "initialize the observation counter; no solver or field was changed"
+    },
+    {
+      "operation": "initial isolated archived-source replay",
+      "exit_code": 1,
+      "reason": "The archive omitted the existing codec dependency folder 2026-11-08-wet-joint-finer-full-history",
+      "correction": "Archive those unchanged dependency sources and add an isolated-import regression test; retain initial archive manifest and log; no numerical field changed"
+    },
+    {
+      "operation": "archive repack manifest write",
+      "exit_code": 1,
+      "reason": "exclusive manifest creation refused the initial existing index after writing the completed v2 archive parts",
+      "correction": "Retain the initial index, derive the new index from all completed archive entries and parts, then SHA-check extraction; no solve or measurement changed"
+    }
+  ],
+  "setup_downloads": "The initial full-history git download and a redundant fetch were stopped; filtered source checkout was used, followed by the existing CI evidence checkout. These are not numerical solves or successful CI results.",
+  "included_in_final_success_count": false
+}

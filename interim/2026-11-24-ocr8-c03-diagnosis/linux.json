@@ -1,0 +1,109 @@
+{
+  "tested_parent": "04fd689cecaf7854a19f1dfbc007ca0de95c89c4",
+  "format": "cargo fmt --all --check",
+  "clippy": "cargo clippy --offline --locked --all-targets -- -D warnings",
+  "rust_command": "cargo test --offline --locked --release --all-targets",
+  "rust_passed": 541,
+  "doctests": 0,
+  "python_total": 1123,
+  "python_passed": 1121,
+  "python_skipped": [
+    "test_nc_pc_gate_schema.PcGateSchema.test_real_rerun_saves_specific_failure_and_preserves_pc3",
+    "test_nc_pc_gate.RateArcGate.test_powershell_gate_when_available"
+  ],
+  "python_groups": {
+    "python-c01-cause": {
+      "assigned": 8,
+      "ran": 8,
+      "skipped": {},
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    },
+    "python-c01-path": {
+      "assigned": 5,
+      "ran": 5,
+      "skipped": {},
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    },
+    "python-c01-switch": {
+      "assigned": 4,
+      "ran": 4,
+      "skipped": {},
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    },
+    "python-core-0": {
+      "assigned": 555,
+      "ran": 555,
+      "skipped": {
+        "test_nc_pc_gate_schema.PcGateSchema.test_real_rerun_saves_specific_failure_and_preserves_pc3": "PowerShell unavailable; Python reuse tests still run"
+      },
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    },
+    "python-core-1": {
+      "assigned": 536,
+      "ran": 536,
+      "skipped": {
+        "test_nc_pc_gate.RateArcGate.test_powershell_gate_when_available": "PowerShell unavailable; all Python gate checks still run"
+      },
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    },
+    "python-mean-evidence": {
+      "assigned": 4,
+      "ran": 4,
+      "skipped": {},
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    },
+    "python-spatial-evidence": {
+      "assigned": 4,
+      "ran": 4,
+      "skipped": {},
+      "errors": 0,
+      "failures": 0,
+      "expected_failures": 0,
+      "unexpected_successes": 0,
+      "result": true
+    }
+  },
+  "linux_only_passed": 7,
+  "python_inventory": "tools/run_ci_python_evidence_shards.py discover(root), all seven groups; plus tests/linux",
+  "evidence_archive_blobs_verified": 1540,
+  "log_sha256": {
+    "clippy.log": "24cd313ea8afda084033dab8234f13bfed68fe7a9feb8784d8d621f470db6f52",
+    "fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "linux-only.log": "bd28f4299df82aa7cac5c82965edc76acbbe11faf48a7f9a41e38ce000ffe9df",
+    "materialize.log": "c6a21a90040683013994ae3b2d25aa9f109bf8790d4dcc1d30230ebbb0112506",
+    "python-c01-cause.log": "ec6701ce9f5dac40998592eda61e9a3c6729941b7355de5b752bdc8ce6a89341",
+    "python-c01-path.log": "f79a5376d4389d7709791d298741361406bc54687446cc45f440ac0b73a36f2a",
+    "python-c01-switch.log": "29e34ecb93ce5a68dc96e0b6b4ad9267f289f90994cc319296dc712232c435dc",
+    "python-core-0.log": "8e261a9c6df038a3e9bcd123323efb2e52efd5ff807bb58a686831bc575d354b",
+    "python-core-1.log": "3149668b82189211ef4319d2cdd4dd3f393d56014b3b08e03d8db3045ddcec13",
+    "python-mean-evidence.log": "05fba6e2313d10a8a75ae1b816dfb44066f4c2dbaeba37c7f5edae3004dca61c",
+    "python-spatial-evidence.log": "ab3f2d7fd862057e32afb94836941a568504f233f57fc983e7621393a5fc5a44",
+    "reproduction.log": "97f1984a220f45f06109e8ae48d687bff93217129f13e579855c314de1a0deb5",
+    "rust-doc.log": "b3051036e74c49f55ca1afdeda9cd39823dfe582d2df8e81f565fa1c8d49fe8c",
+    "rust.log": "5b2041cdbf0dfe9853e7c60d34b3d9a02ac4d986d5ff17dff0995f6e8f7d3145"
+  }
+}

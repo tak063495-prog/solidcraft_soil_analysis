@@ -1,0 +1,23 @@
+{
+  "command": [
+    "rustc",
+    "--edition=2024",
+    "-C",
+    "opt-level=3",
+    "--crate-name",
+    "b02_frame_observer",
+    "interim/2026-12-09-b02-tet768-reassembly-residual/frame_observer.rs",
+    "-L",
+    "dependency=target/release/deps",
+    "--extern",
+    "soil_fem_3d=target/release/deps/libsoil_fem_3d-4c99bb72e563dada.rlib",
+    "--extern",
+    "serde=target/release/deps/libserde-3a8e00671525d578.rlib",
+    "--extern",
+    "serde_json=target/release/deps/libserde_json-77d02007b475c2d3.rlib",
+    "-o",
+    "work/b02-frame-observer"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 24.16856363199986
+}

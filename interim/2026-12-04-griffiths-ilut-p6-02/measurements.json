@@ -1,0 +1,550 @@
+{
+  "passed": false,
+  "p6_complete": false,
+  "p602_complete": false,
+  "cases": [
+    {
+      "stride": 5,
+      "elements": 48,
+      "nodes": 135,
+      "processes": {
+        "base": {
+          "argv": [
+            "/workspace/solidcraft_soil_analysis/work/ilut/base/soil-fem-3d",
+            "solve-stages",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/base.json"
+          ],
+          "pid": 11646,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_seconds": 4.576090035999869,
+          "log_sha256": "12568f41c4fcf37990c8646e830cf5a5c75b2ee6cb59bebb87670d9a9e010298"
+        },
+        "default": {
+          "argv": [
+            "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/default.json"
+          ],
+          "pid": 12457,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_seconds": 3.6587299559998883,
+          "log_sha256": "12568f41c4fcf37990c8646e830cf5a5c75b2ee6cb59bebb87670d9a9e010298"
+        },
+        "ilut": {
+          "argv": [
+            "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/ilut.json"
+          ],
+          "pid": 13274,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_seconds": 8.719202881000001,
+          "log_sha256": "12568f41c4fcf37990c8646e830cf5a5c75b2ee6cb59bebb87670d9a9e010298"
+        }
+      },
+      "summaries": {
+        "base": {
+          "complete": true,
+          "failure_reason": null,
+          "stages": [
+            {
+              "stage": "geostatic",
+              "attempts": 32,
+              "accepted": 32,
+              "newton_iterations": 54,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 4,
+              "gmres_iterations": 2066,
+              "maximum_gmres_iterations": 40,
+              "reported_linear_solves": 54,
+              "maximum_true_linear_residual": 9.561784968755728e-11,
+              "final_relative_force_residual": 6.280181458291043e-09,
+              "rejected_reasons": []
+            },
+            {
+              "stage": "retain_full_gravity_state",
+              "attempts": 4,
+              "accepted": 4,
+              "newton_iterations": 0,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 0,
+              "gmres_iterations": 0,
+              "maximum_gmres_iterations": 0,
+              "reported_linear_solves": 0,
+              "maximum_true_linear_residual": 0.0,
+              "final_relative_force_residual": 6.280181458291043e-09,
+              "rejected_reasons": []
+            }
+          ],
+          "force_gate": 1e-08,
+          "true_linear_gate": 1e-10
+        },
+        "default": {
+          "complete": true,
+          "failure_reason": null,
+          "stages": [
+            {
+              "stage": "geostatic",
+              "attempts": 32,
+              "accepted": 32,
+              "newton_iterations": 54,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 4,
+              "gmres_iterations": 2066,
+              "maximum_gmres_iterations": 40,
+              "reported_linear_solves": 54,
+              "maximum_true_linear_residual": 9.561784968755728e-11,
+              "final_relative_force_residual": 6.280181458291043e-09,
+              "rejected_reasons": []
+            },
+            {
+              "stage": "retain_full_gravity_state",
+              "attempts": 4,
+              "accepted": 4,
+              "newton_iterations": 0,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 0,
+              "gmres_iterations": 0,
+              "maximum_gmres_iterations": 0,
+              "reported_linear_solves": 0,
+              "maximum_true_linear_residual": 0.0,
+              "final_relative_force_residual": 6.280181458291043e-09,
+              "rejected_reasons": []
+            }
+          ],
+          "force_gate": 1e-08,
+          "true_linear_gate": 1e-10
+        },
+        "ilut": {
+          "complete": true,
+          "failure_reason": null,
+          "stages": [
+            {
+              "stage": "geostatic",
+              "attempts": 32,
+              "accepted": 32,
+              "newton_iterations": 54,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 4,
+              "gmres_iterations": 265,
+              "maximum_gmres_iterations": 5,
+              "reported_linear_solves": 54,
+              "maximum_true_linear_residual": 7.95220397646561e-11,
+              "final_relative_force_residual": 6.280181766399258e-09,
+              "rejected_reasons": []
+            },
+            {
+              "stage": "retain_full_gravity_state",
+              "attempts": 4,
+              "accepted": 4,
+              "newton_iterations": 0,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 0,
+              "gmres_iterations": 0,
+              "maximum_gmres_iterations": 0,
+              "reported_linear_solves": 0,
+              "maximum_true_linear_residual": 0.0,
+              "final_relative_force_residual": 6.280181766399258e-09,
+              "rejected_reasons": []
+            }
+          ],
+          "force_gate": 1e-08,
+          "true_linear_gate": 1e-10
+        }
+      },
+      "default_unchanged": true,
+      "field_differences": [
+        {
+          "name": "initial_equilibrated",
+          "displacement_m": {
+            "shape": [
+              135,
+              3
+            ],
+            "components": 405,
+            "maximum_absolute": 2.0166160408230382e-17,
+            "absolute_l2": 9.075419433700286e-17,
+            "relative_l2": 1.5255893542043564e-15,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          },
+          "stress_kpa": {
+            "shape": [
+              1296,
+              6
+            ],
+            "components": 7776,
+            "maximum_absolute": 7.815970093361102e-13,
+            "absolute_l2": 9.640433612540115e-12,
+            "relative_l2": 2.5181931743790712e-15,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          }
+        },
+        {
+          "name": "retain_full_gravity_state",
+          "displacement_m": {
+            "shape": [
+              135,
+              3
+            ],
+            "components": 405,
+            "maximum_absolute": 2.0166160408230382e-17,
+            "absolute_l2": 9.075419433700286e-17,
+            "relative_l2": 1.5255893542043564e-15,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          },
+          "stress_kpa": {
+            "shape": [
+              1296,
+              6
+            ],
+            "components": 7776,
+            "maximum_absolute": 7.815970093361102e-13,
+            "absolute_l2": 9.640433612540115e-12,
+            "relative_l2": 2.5181931743790712e-15,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          }
+        }
+      ]
+    },
+    {
+      "stride": 2,
+      "elements": 300,
+      "nodes": 693,
+      "processes": {
+        "base": {
+          "argv": [
+            "/workspace/solidcraft_soil_analysis/work/ilut/base/soil-fem-3d",
+            "solve-stages",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/mesh.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/ground.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/case.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/base.json"
+          ],
+          "pid": 14091,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_seconds": 30.136938565000037,
+          "log_sha256": "12568f41c4fcf37990c8646e830cf5a5c75b2ee6cb59bebb87670d9a9e010298"
+        },
+        "default": {
+          "argv": [
+            "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/mesh.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/ground.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/case.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/default.json"
+          ],
+          "pid": 15941,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_seconds": 26.254025657000057,
+          "log_sha256": "12568f41c4fcf37990c8646e830cf5a5c75b2ee6cb59bebb87670d9a9e010298"
+        },
+        "ilut": {
+          "argv": [
+            "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+            "solve-stages",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/mesh.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/ground.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/input/case-ilut.json",
+            "/workspace/solidcraft_soil_analysis/work/ilut/final/stride2/ilut.json"
+          ],
+          "pid": 17760,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_seconds": 95.88635247700017,
+          "log_sha256": "12568f41c4fcf37990c8646e830cf5a5c75b2ee6cb59bebb87670d9a9e010298"
+        }
+      },
+      "summaries": {
+        "base": {
+          "complete": true,
+          "failure_reason": null,
+          "stages": [
+            {
+              "stage": "geostatic",
+              "attempts": 32,
+              "accepted": 32,
+              "newton_iterations": 61,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 5,
+              "gmres_iterations": 5556,
+              "maximum_gmres_iterations": 100,
+              "reported_linear_solves": 61,
+              "maximum_true_linear_residual": 9.710693672970184e-11,
+              "final_relative_force_residual": 1.2958448016035458e-10,
+              "rejected_reasons": []
+            },
+            {
+              "stage": "retain_full_gravity_state",
+              "attempts": 4,
+              "accepted": 4,
+              "newton_iterations": 0,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 0,
+              "gmres_iterations": 0,
+              "maximum_gmres_iterations": 0,
+              "reported_linear_solves": 0,
+              "maximum_true_linear_residual": 0.0,
+              "final_relative_force_residual": 1.2958448016035458e-10,
+              "rejected_reasons": []
+            }
+          ],
+          "force_gate": 1e-08,
+          "true_linear_gate": 1e-10
+        },
+        "default": {
+          "complete": true,
+          "failure_reason": null,
+          "stages": [
+            {
+              "stage": "geostatic",
+              "attempts": 32,
+              "accepted": 32,
+              "newton_iterations": 61,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 5,
+              "gmres_iterations": 5556,
+              "maximum_gmres_iterations": 100,
+              "reported_linear_solves": 61,
+              "maximum_true_linear_residual": 9.710693672970184e-11,
+              "final_relative_force_residual": 1.2958448016035458e-10,
+              "rejected_reasons": []
+            },
+            {
+              "stage": "retain_full_gravity_state",
+              "attempts": 4,
+              "accepted": 4,
+              "newton_iterations": 0,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 0,
+              "gmres_iterations": 0,
+              "maximum_gmres_iterations": 0,
+              "reported_linear_solves": 0,
+              "maximum_true_linear_residual": 0.0,
+              "final_relative_force_residual": 1.2958448016035458e-10,
+              "rejected_reasons": []
+            }
+          ],
+          "force_gate": 1e-08,
+          "true_linear_gate": 1e-10
+        },
+        "ilut": {
+          "complete": true,
+          "failure_reason": null,
+          "stages": [
+            {
+              "stage": "geostatic",
+              "attempts": 32,
+              "accepted": 32,
+              "newton_iterations": 61,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 5,
+              "gmres_iterations": 426,
+              "maximum_gmres_iterations": 7,
+              "reported_linear_solves": 61,
+              "maximum_true_linear_residual": 7.88003864839953e-11,
+              "final_relative_force_residual": 1.2958433752132326e-10,
+              "rejected_reasons": []
+            },
+            {
+              "stage": "retain_full_gravity_state",
+              "attempts": 4,
+              "accepted": 4,
+              "newton_iterations": 0,
+              "unreported_newton_attempts": 0,
+              "maximum_newton_iterations": 0,
+              "gmres_iterations": 0,
+              "maximum_gmres_iterations": 0,
+              "reported_linear_solves": 0,
+              "maximum_true_linear_residual": 0.0,
+              "final_relative_force_residual": 1.2958433752132326e-10,
+              "rejected_reasons": []
+            }
+          ],
+          "force_gate": 1e-08,
+          "true_linear_gate": 1e-10
+        }
+      },
+      "default_unchanged": true,
+      "field_differences": [
+        {
+          "name": "initial_equilibrated",
+          "displacement_m": {
+            "shape": [
+              693,
+              3
+            ],
+            "components": 2079,
+            "maximum_absolute": 2.6020852139652106e-18,
+            "absolute_l2": 2.2196198182104463e-17,
+            "relative_l2": 1.6446755415697742e-16,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          },
+          "stress_kpa": {
+            "shape": [
+              8100,
+              6
+            ],
+            "components": 48600,
+            "maximum_absolute": 7.789324740770098e-13,
+            "absolute_l2": 1.4503209018915628e-11,
+            "relative_l2": 1.5198559425853273e-15,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          }
+        },
+        {
+          "name": "retain_full_gravity_state",
+          "displacement_m": {
+            "shape": [
+              693,
+              3
+            ],
+            "components": 2079,
+            "maximum_absolute": 2.6020852139652106e-18,
+            "absolute_l2": 2.2196198182104463e-17,
+            "relative_l2": 1.6446755415697742e-16,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          },
+          "stress_kpa": {
+            "shape": [
+              8100,
+              6
+            ],
+            "components": 48600,
+            "maximum_absolute": 7.789324740770098e-13,
+            "absolute_l2": 1.4503209018915628e-11,
+            "relative_l2": 1.5198559425853273e-15,
+            "comparison_criterion": null,
+            "verdict": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057"
+          }
+        }
+      ]
+    }
+  ],
+  "binaries_sha256": {
+    "base": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+    "current": "e4ec829c32edb4cd79c33ca3ebb5b2dc8d473a133e6193a8ba2bd52569e0c6e5"
+  },
+  "full_field_criterion": "\u5224\u5b9a\u57fa\u6e96\u306a\u3057",
+  "unmet": [
+    "\u51435%\u57fa\u6e96",
+    "\u6b63\u78ba\u306a\u659c\u9762Fs",
+    "\u5b9f\u65ad\u9762SRM",
+    "xy2"
+  ],
+  "p602_decision": {
+    "limited_acceptance": [
+      "\u8ffd\u52a0\u30aa\u30d7\u30b7\u30e7\u30f3\u306e\u5165\u529b/\u4fdd\u5b58/\u62d2\u5426\u5951\u7d04",
+      "48/300\u8981\u7d20\u306e\u65e2\u5b58\u6570\u5024\u53d7\u7406\u6761\u4ef6\u3068\u8a08\u6e2c\u6574\u5408",
+      "\u5c0f\u578b\u5225PID\u306e\u5168\u72b6\u614b/\u5168Run\u4e00\u81f4"
+    ],
+    "unmet": [
+      "\u51435%\u57fa\u6e96",
+      "\u6b63\u78ba\u306a\u659c\u9762Fs",
+      "\u5b9f\u65ad\u9762SRM",
+      "xy2",
+      "\u53cd\u5fa9\u4e0a\u9650\u4ed8\u8fd1\u306e\u6539\u5584"
+    ]
+  },
+  "restart_summary": {
+    "checkpoints": 2,
+    "later_states": 36,
+    "ordinary_cli": {
+      "create": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "checkpoint-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "34",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json"
+        ],
+        "pid": 248723,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 11.51802457299982,
+        "log_sha256": "3bede78377cfea6909f4f1a8e0241175a68ca55275bcc8f1503ffed4398664e7"
+      },
+      "resume": {
+        "argv": [
+          "/workspace/solidcraft_soil_analysis/work/ilut/frozen/soil-fem-3d",
+          "resume-stages",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/mesh.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/ground.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/final/stride5/input/case-ilut.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-checkpoint.json",
+          "/workspace/solidcraft_soil_analysis/work/ilut/restarts/cli-resumed.json"
+        ],
+        "pid": 252259,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 14.042442343999937,
+        "log_sha256": "7cb3a1c3f7e0d06c836af4e9d1e6d0df9ff06fc7e49a65e26c0bf7cd1cf6d3e4"
+      },
+      "separate_pid": true,
+      "whole_run_equal": true
+    },
+    "input_rejections": 9,
+    "mutations": 6,
+    "accepted_states_per_preconditioner": 36
+  },
+  "observer_to_cli_binding": [
+    {
+      "mode": "default",
+      "all_run_except_clock_and_authenticated_binary_sha_equal": true
+    },
+    {
+      "mode": "ilut",
+      "all_run_except_clock_and_authenticated_binary_sha_equal": true
+    }
+  ],
+  "measurements_reproduced_from_raw": true,
+  "user_pc_report_unreproduced_in_cloud": {
+    "elements": 4800,
+    "geostatic_progress": 0.4717,
+    "relative_force_residual": 1.109e-07,
+    "force_limit": 1e-08,
+    "gmres_limit": 3000,
+    "newton_limit": 35,
+    "gmres_limit_reported_from_progress_approximately": 0.44,
+    "subdivision_residuals_reported": [
+      1.33e-08,
+      3.47e-08,
+      1.11e-07
+    ],
+    "source": "user instruction; no xy2 Run generated here"
+  },
+  "software_contracts_verified_in_this_small_scope": true,
+  "small_case_all_accepted_field_difference_maxima": {
+    "displacement_m": {
+      "maximum_absolute": 3.585656484185115e-15,
+      "relative_l2": 1.0367147231050623e-11
+    },
+    "stress_kpa": {
+      "maximum_absolute": 1.4157686134552705e-10,
+      "relative_l2": 1.6159050852321142e-11
+    }
+  }
+}

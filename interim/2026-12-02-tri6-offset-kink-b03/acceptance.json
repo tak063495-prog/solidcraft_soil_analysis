@@ -1,0 +1,108 @@
+{
+  "passed": false,
+  "b03_complete": false,
+  "all_field_numerical_acceptance": null,
+  "combinations": [
+    {
+      "combination": "shared-ID finite-angle nonzero-arm fold, one-zero-arm fold",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "shared-ID equal-normal e step, only normal reversed, only e reversed",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "zero-arm e=0 90-degree two-plane patch",
+      "judgment": "限定受入の再確認：直線平面要素・乾燥弾性MC・この小型直接入力のみ",
+      "family": "kink-zero"
+    },
+    {
+      "combination": "coplanar simultaneous normal/e reversal with identical e*n",
+      "judgment": "限定受入の再確認：同じ剛体腕を持つ平面パッチのみ",
+      "family": "normal-sign-pair"
+    },
+    {
+      "combination": "different structural IDs on same soil node; independent rotations; e step / nonzero-arm fold",
+      "judgment": "独立回転の明示モデルだけの限定確認。連続段差/折れ目のB-03は未達",
+      "families": [
+        "step-split",
+        "kink-split"
+      ]
+    },
+    {
+      "combination": "two parallel planes z=.5/1 without shared structural nodes",
+      "judgment": "独立平板群だけの限定確認。段差継手の受入は未達",
+      "family": "height-step"
+    },
+    {
+      "combination": "nonplanar/curved midside node or attachment mismatch",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "compact offset surfaces / Native preparation and GUI/GPU / real CAD",
+      "judgment": "未達／未対応（現行拒否を保持）。GUI/GPU/実CADはPC手順のみ"
+    }
+  ],
+  "family_measurements": {
+    "height-step": {
+      "cases": [
+        "height-step-h0-s4",
+        "height-step-h1-s4",
+        "height-step-h0-s8",
+        "height-step-h0-s16"
+      ],
+      "accepted_points": 160,
+      "existing_limited_gates_passed": true
+    },
+    "kink-split": {
+      "cases": [
+        "kink-split-h0-s4",
+        "kink-split-h1-s4",
+        "kink-split-h0-s8",
+        "kink-split-h0-s16"
+      ],
+      "accepted_points": 160,
+      "existing_limited_gates_passed": true
+    },
+    "kink-zero": {
+      "cases": [
+        "kink-zero-h0-s4",
+        "kink-zero-h1-s4",
+        "kink-zero-h0-s8",
+        "kink-zero-h0-s16"
+      ],
+      "accepted_points": 160,
+      "existing_limited_gates_passed": true
+    },
+    "normal-sign-pair": {
+      "cases": [
+        "normal-sign-pair-h0-s4",
+        "normal-sign-pair-h1-s4",
+        "normal-sign-pair-h0-s8",
+        "normal-sign-pair-h0-s16"
+      ],
+      "accepted_points": 160,
+      "existing_limited_gates_passed": true
+    },
+    "planar": {
+      "cases": [
+        "planar-h0-s4"
+      ],
+      "accepted_points": 20,
+      "existing_limited_gates_passed": true
+    },
+    "step-split": {
+      "cases": [
+        "step-split-h0-s4",
+        "step-split-h1-s4",
+        "step-split-h0-s8",
+        "step-split-h0-s16"
+      ],
+      "accepted_points": 160,
+      "existing_limited_gates_passed": true
+    }
+  },
+  "no_production_scope_or_default_change": true,
+  "all_other_remainders_preserved": true,
+  "inherited_B02_768_Tet10_reassembly_and_negative_spatial_orders_preserved": true
+}

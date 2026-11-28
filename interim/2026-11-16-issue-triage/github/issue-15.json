@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+    "title": "[P2] 修正前ソースを封印したNC証拠と現行HEADが不整合で全Python CIが停止する",
+    "issue_number": 15,
+    "body": "## 現行HEADと保存NC証拠のsource binding不整合\n\n対象は `5bee3b47f61878e614cae1e7268a57449d2f12d1` です。#11のorigin再検証修正そのものを再指摘するものではありません。修正後のcheckoutと、修正前ソースを封印したNC証拠の組合せが不整合です。\n\n### 確認結果・影響\n\n[Windows Python CI](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658/job/129493349763) は `test_nc_mean_stress_evidence.MeanStressEvidence.setUpClass` で次のエラーになり、416 tests / 807.851秒、errors=1・skipped=2で終了しています。CIのmerge commitと対象headのtree一致も確認済みです。\n\n```\nValueError: diagnostic source differs: sources/src/epoch_srm_gate.rs\n```\n\n[配布manifest L4995–4997](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-nc-mean-stress-release/archive-sha256.json#L4995-L4997) の旧ソースは29,470 bytes・SHA256 `40db0f40eadd71cf1b7549d0b123a0d41f877fedd9c805621b01db7a6a778e86`。現在は29,654 bytes・`4d32aa84e17c1974eab5eac60295c6de3b35375686d564f9283b3ec5190492c7`です。[verify_origin呼出し等の追加 L504–518](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/src/epoch_srm_gate.rs#L504-L518)を含むため、改行差ではありません。\n\n[remeasure.py L69–74](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-nc-mean-stress-release/remeasure.py#L69-L74) はこの差を正しく拒否します。[試験 L16–21](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/tests/test_nc_mean_stress_evidence.py#L16-L21)は再計測前に止まるため、当該クラスの4試験は実行されません。\n\n固定headのcheckoutでの最小読取確認:\n\n```python\nimport hashlib, json\nfrom pathlib import Path\nd = Path('interim/2026-11-10-nc-mean-stress-release')\nm = json.loads((d / 'archive-sha256.json').read_text())\nb = Path('src/epoch_srm_gate.rs').read_bytes()\nprint(m['entries']['sources/src/epoch_srm_gate.rs'])\nprint({'size': len(b), 'sha256': hashlib.sha256(b).hexdigest()})\n```\n\n該当試験の実行コマンドは `python -m unittest discover -s tests -p test_nc_mean_stress_evidence.py -v` です。配布証拠約5.49 GBの検証を伴います。\n\n手元では旧commit `90d24e4181016a1ba8211719ee16b284d82b5eef` のsourceを独立取得し、manifestのhash/sizeとの完全一致を確認しました。その1ファイルだけの小さな検証archiveを作り、変更していない現行 `remeasure.run` に渡すPython再現でも同じ例外になりました。platform float差許容の有無で結果は同じです。配布archive全体の手元再実行やRust/native求解は行っていません。\n\nなお、手元で照合できた122 source中、少なくとも10件が旧snapshotと不一致です。epoch本体/試験、plane_strain_2d、beam_reference、export_mc_epoch_view、mcc_acoustic_diagnostic、mcc_acoustic_exact_report、resume_projected_sparse_study、solidcraft_structure_fields、verify_soil_source_columnが該当します。epochだけ直すと後続の不一致が残ります。\n\n### 修正・回帰案\n\n- 旧証拠と実際のsource/binary bindingは不変で保持してください。現行ソースで証拠を再生成して旧記録と併存させるか、旧証拠の再計測を明示した旧source環境へ結び付け、現行headの検証と分離する必要があります。\n- hash/snapshotだけを書き換えて旧実行を新sourceの実行に見せないでください。整合検査の削除、改行/float例外の拡張、試験skipでは解決しません。\n- 全source bindingの軽量事前照合、意図的source変更の拒否、CRLF/LFだけの対照、旧版の真正な再計測、現行headの試験を追加・再実行してください。\n\n新たな数値収束/物理安定性の不合格を主張するものではなく、配布証拠と現行CIの再現性の問題です。コード修正・push・mergeは含みません。\n",
+    "state": "open",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": null,
+    "comments": 1,
+    "created_at": "2026-11-09T23:20:31Z",
+    "updated_at": "2026-11-11T00:08:11Z",
+    "closed_at": null,
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+    "display_title": "[P2] 修正前ソースを封印したNC証拠と現行HEADが不整合で全Python CIが停止する"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+  "title": "[P2] 修正前ソースを封印したNC証拠と現行HEADが不整合で全Python CIが停止する",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/15",
+  "display_title": "[P2] 修正前ソースを封印したNC証拠と現行HEADが不整合で全Python CIが停止する"
+}

@@ -333,6 +333,7 @@ pub(crate) fn linear_solve(
                     stored_nonzeros: dimension * dimension,
                     iterations: 1,
                     restarts: 0,
+                    true_absolute_residual: None,
                     true_relative_residual: residual,
                     matrix_storage_bytes: dimension * dimension * 8,
                     workspace_storage_bytes: (dimension * dimension + 2 * dimension) * 8,

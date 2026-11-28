@@ -1,0 +1,44 @@
+{
+  "schema": "b02follow-unresolved-cause/1",
+  "passed": false,
+  "b02_complete": false,
+  "diagnostic_only": true,
+  "single_cause_fully_identified": false,
+  "old_records_preserved": true,
+  "residual_768": "5e3d191 quotation only; no new 768 computation",
+  "user_decisions_required": [
+    "接続の所有（付着/接触面と並進/回転）",
+    "設置参照（荷重点/中立面/腕）",
+    "初期状態と土/板/接触/水理世代",
+    "荷重伝達と瞬間/累積仕事の比較定義",
+    "保存内容の改変拒否契約",
+    "途中状態の実再開契約"
+  ],
+  "interventions_performed": [],
+  "unsupported_contributions": {
+    "joint": null,
+    "water": null,
+    "plastic_soil": null,
+    "mcc": null,
+    "idh": null,
+    "anchor": null,
+    "soil_birth_death_matset": null
+  },
+  "scope": "Dry elastic MC + existing planar offset Tri6 + linear beam only; no ownership/installation/state/generation/work-definition intervention.",
+  "resource_limit": "768/6144 and >40GB or >1day per path are not planned; general confirmation requiring these is 規模上限のため確認不可・未達",
+  "retained_failures": [
+    {
+      "path": "b02follow-retained-first/tet12-h0.5-reverse",
+      "classification": "diagnostic input generator connectivity mismatch",
+      "numerical_incomplete": false,
+      "physical_failure": false,
+      "scope_rejection": false,
+      "accepted": false
+    }
+  ],
+  "remaining_cloud_candidates": [
+    "eを許可内の一定値に固定した板厚対照で、e/t固定系列に混ざる腕長/板自重の寄与を分離（本追補の交差とは別の入力対照）",
+    "要素・面・板の宣言配列を一つずつ置換する小型対照で、合成順序因子の内部寄与を分離"
+  ],
+  "pc_role": "Same bounded small inputs on Windows; not a replacement for missing specifications or a new large mesh plan"
+}

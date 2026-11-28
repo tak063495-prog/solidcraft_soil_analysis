@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/workspace/work/p14/source/interim/2026-11-26-remaining-p7/contact.py", line 162, in <module>
+    run(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve(),int(sys.argv[3]),sys.argv[4])
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/p14/source/interim/2026-11-26-remaining-p7/contact.py", line 39, in run
+    with (folder/"trace.jsonl").open("xb") as log, Fields(folder/"fields",256,"native") as fields, subprocess.Popen(
+                                                   ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/p14/source/interim/2026-11-24-c01-event4-retry/c01_retry_fields.py", line 33, in __init__
+    study, mesh, ground, case, _ = context(n)
+                                   ~~~~~~~^^^
+  File "/workspace/work/p14/source/interim/2026-11-23-c01-method-improvements/run_case.py", line 20, in context
+    spec.loader.exec_module(study)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1027, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/workspace/work/p14/source/interim/2026-12-12-c01-switch-event-localization/study.py", line 21, in <module>
+    import study as prior
+  File "/workspace/work/p14/source/interim/2026-11-15-wet-joint-convergence/study.py", line 25, in <module>
+    import fem_reference as fem
+ModuleNotFoundError: No module named 'fem_reference'
+{"exit_code": 1, "seconds": 0.1271125429999529, "peak_rss_kib": 25044}

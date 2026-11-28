@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-26-remaining-p7/contact.py", line 162, in <module>
+    run(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve(),int(sys.argv[3]),sys.argv[4])
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-26-remaining-p7/contact.py", line 39, in run
+    with (folder/"trace.jsonl").open("xb") as log, Fields(folder/"fields",256,"native") as fields, subprocess.Popen(
+                                                   ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-24-c01-event4-retry/c01_retry_fields.py", line 33, in __init__
+    study, mesh, ground, case, _ = context(n)
+                                   ~~~~~~~^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-23-c01-method-improvements/run_case.py", line 20, in context
+    spec.loader.exec_module(study)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1218, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/solidcraft_soil_analysis/interim/2026-12-12-c01-switch-event-localization/study.py'
+{"exit_code": 1, "seconds": 0.22384144299996933, "peak_rss_kib": 24024}

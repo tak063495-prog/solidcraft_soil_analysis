@@ -1,0 +1,83 @@
+{
+  "schema": "soil-fem-griffiths-archived-2d-comparison/1",
+  "reference_file_sha256": "91a089dc6bf7c19acd1e6ddf33b4456ccf20503e07790d6737194f6baee5b3db",
+  "reference_content_sha256": "29822140bcfb32da9954d75db23062b65ea28f127630971475ce5c2ab0cb9715",
+  "comparison_measured": true,
+  "new_slope_solve_performed": false,
+  "p6_complete": false,
+  "general_3d_spatial_convergence_demonstrated": false,
+  "griffiths_slope_five_percent_closed": false,
+  "fs": {
+    "status": "not_attempted",
+    "value": null,
+    "failure_upper_bound": null
+  },
+  "cases": [
+    {
+      "source": "interim/2026-10-30-Root635-CI-and-refinement-controls/slope/xy1-ny1/all661-nodes-and200-prisms.json",
+      "source_content_sha256": "c898a7305933820e866e1dbcdce9b0adced30b0a762ed537a1b45db032c6491f",
+      "in_plane_h_series": false,
+      "displacement_sample_relative_L2_per_depth": {
+        "0.0": 0.15573786046571098,
+        "0.5": 0.1558199870691725,
+        "1.0": 0.155843679062039
+      },
+      "displacement_sample_relative_L2_limit": 0.05,
+      "five_percent_verdict": "fail",
+      "maximum_displacement_error_over_reference_max": 0.20372181877528212,
+      "depth_displacement_variation_over_max": 0.006009040331303335,
+      "maximum_displacement_error_passed": false,
+      "depth_variation_passed": true
+    },
+    {
+      "source": "interim/2026-10-30-Root635-CI-and-refinement-controls/slope/xy1-ny2/all661-nodes-and200-prisms.json",
+      "source_content_sha256": "9642b8876e9eb35bf513f63bc4437f0319a90078d9281ab46ece3446608724fb",
+      "in_plane_h_series": false,
+      "displacement_sample_relative_L2_per_depth": {
+        "0.0": 0.1588263235760114,
+        "0.5": 0.15885691929516224,
+        "1.0": 0.15889320649422153
+      },
+      "displacement_sample_relative_L2_limit": 0.05,
+      "five_percent_verdict": "fail",
+      "maximum_displacement_error_over_reference_max": 0.20691910165971608,
+      "depth_displacement_variation_over_max": 0.003914561073435504,
+      "maximum_displacement_error_passed": false,
+      "depth_variation_passed": true
+    },
+    {
+      "source": "interim/2026-10-30-Root635-CI-and-refinement-controls/slope/xy1-ny1-global64/all661-nodes-and200-prisms.json",
+      "source_content_sha256": "57028b96fca596626bd2c30d5a62e98854927ecbd156a564b72a5508b5b9e927",
+      "in_plane_h_series": false,
+      "displacement_sample_relative_L2_per_depth": {
+        "0.0": 0.15585001694877829,
+        "0.5": 0.15593219845164077,
+        "1.0": 0.15595588813535055
+      },
+      "displacement_sample_relative_L2_limit": 0.05,
+      "five_percent_verdict": "fail",
+      "maximum_displacement_error_over_reference_max": 0.20382130483810182,
+      "depth_displacement_variation_over_max": 0.006005353005151993,
+      "maximum_displacement_error_passed": false,
+      "depth_variation_passed": true
+    },
+    {
+      "source": "interim/2026-10-30-async-UI-and-independent-SRM-bound/slope/material-half1200/all661-nodes-and200-prisms.json",
+      "source_content_sha256": "d55c2e715e6bca1a83306cf2d600d6c838f043b29374a9a4132e0cd39d786f61",
+      "in_plane_h_series": false,
+      "displacement_sample_relative_L2_per_depth": {
+        "0.0": 0.15664208109666408,
+        "0.5": 0.15672391195315055,
+        "1.0": 0.15674718803004387
+      },
+      "displacement_sample_relative_L2_limit": 0.05,
+      "five_percent_verdict": "fail",
+      "maximum_displacement_error_over_reference_max": 0.20453479929306104,
+      "depth_displacement_variation_over_max": 0.005951360354117138,
+      "maximum_displacement_error_passed": false,
+      "depth_variation_passed": true
+    }
+  ],
+  "continuum_verdict": "indeterminate",
+  "note": "Remeasured retained actual fields only; no new h-series solve or convergence claim."
+}

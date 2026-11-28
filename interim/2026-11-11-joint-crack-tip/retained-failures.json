@@ -1,0 +1,55 @@
+{
+  "schema": "soil-fem-joint-crack-tip-retained-failures/1",
+  "passed": false,
+  "entries": [
+    {
+      "path": "attempt-01",
+      "reason": "New fixture maximum_free_dofs=3000 exceeded unchanged dense limit 2000; rejected before solve."
+    },
+    {
+      "path": "attempt-02",
+      "reason": "Unused synthetic excavation set had no geostatic excavation-tool mapping; rejected before solve."
+    },
+    {
+      "path": "attempt-03",
+      "reason": "Opening with fixture MC cohesion 1000 kPa yielded bulk soil; independent elastic comparison correctly rejected; maximum equivalent plastic strain 0.026559304441340432."
+    },
+    {
+      "path": "water-01.log",
+      "reason": "Acceptance driver missing fixture import; failed before solve."
+    },
+    {
+      "path": "water-soil-01",
+      "reason": "Independent reference used an affine approximation of a quadratic Tet10 pressure field; Darcy displacement difference 0.00027458704481463905 failed 1e-7; corrected to input-derived head shape functions without changing tolerances."
+    },
+    {
+      "path": "rust-incomplete-checkout-FAILED.log",
+      "reason": "First all-Rust attempt: 59 library tests passed, historical Griffiths failure file missing while sparse materialization was pending; exit 101. Excluded from final passed count; all-Rust rerun uses original retained files."
+    },
+    {
+      "path": "baseline-archive-setup-FAILED.log",
+      "reason": "Optional old-version comparison setup was terminated before build/solve because git archive tried to fetch unused historical blobs; not accepted. Replaced by a hash-verified cached source copy and isolated offline build."
+    },
+    {
+      "path": "ambiguity-before-fix.log",
+      "reason": "New regression test proved that excluding an already matched side-b face could conceal a later geometric ambiguity. Assertion failed as expected before the fix; the final declared-tip search checks all candidates. This failed reproduction is not counted as a passing test."
+    },
+    {
+      "path": "python-before-spatial-isolation-FAILED.log",
+      "reason": "First full Python run: 472 tests executed and one setUpClass error because historical spatial replay compared live modified joint_reference.py with its archived source. No reference values changed. The replay now verifies archive SHA and executes the historical source plus SHA-pinned missing dependencies in an isolated UTF-8 child. Failed run is excluded from final passed counts."
+    },
+    {
+      "path": "cross-joint-branch-before-fix.log",
+      "reason": "A valid three-arm front split across three JOINT IDs was accepted by per-definition checks; the new regression failed before adding a network-wide duplicate/degree check. Final Rust/Python checks reject it."
+    },
+    {
+      "path": "rust-before-network-validation-CANCELLED.log",
+      "reason": "Intermediate all-Rust execution was terminated during compilation to add the independently reproduced cross-JOINT branch rejection. Exit 143; not counted as passing."
+    },
+    {
+      "path": "python-before-network-validation-CANCELLED.log",
+      "reason": "Intermediate all-Python execution was terminated to add network-wide branch validation. Exit 143; not counted as passing. Only its temporary extraction cache was removed; original archives and logs remain."
+    }
+  ],
+  "note": "Every listed failure and its available input/run/log stays in evidence.zip. No failure, cancellation or incomplete run is accepted."
+}

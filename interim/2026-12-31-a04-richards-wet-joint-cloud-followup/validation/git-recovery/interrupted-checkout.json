@@ -1,0 +1,32 @@
+{
+  "reason": "Eager checkout requested artifacts excluded from normal CI; recover complete objects and request required blobs individually",
+  "processes": [
+    {
+      "pid": 865,
+      "parent": 862,
+      "command": "git switch -c codex/plastic-spatial-convergence FETCH_HEAD"
+    },
+    {
+      "pid": 876,
+      "parent": 865,
+      "command": "/usr/local/libexec/git-core/git -c fetch.negotiationAlgorithm=noop fetch origin --no-tags --no-write-fetch-head --recurse-submodules=no --filter=blob:none --stdin"
+    },
+    {
+      "pid": 877,
+      "parent": 876,
+      "command": "/usr/local/libexec/git-core/git remote-https origin https://github.com/tak063495-prog/solidcraft_soil_analysis.git"
+    },
+    {
+      "pid": 878,
+      "parent": 877,
+      "command": "/usr/local/libexec/git-core/git-remote-https origin https://github.com/tak063495-prog/solidcraft_soil_analysis.git"
+    },
+    {
+      "pid": 884,
+      "parent": 876,
+      "command": "/usr/local/libexec/git-core/git index-pack --stdin --fix-thin --keep=fetch-pack 876 on de8e2d282e01 --promisor --pack_header=2,6359"
+    }
+  ],
+  "fixed_head": "d9ca6634a7c394d0188a502c11c9038a4a0b98e5",
+  "full_history_requested": false
+}

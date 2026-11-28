@@ -1,0 +1,54 @@
+{
+  "session_date_jst": "2026-11-18",
+  "prior_review": [
+    "../2026-12-20-a01-joint-combo-cause-diagnosis/primary-source-review.txt",
+    "../2026-12-28-a01-joint-combo-cloud-followup/primary-source-review.json"
+  ],
+  "prior_findings_retained_not_relabelled_as_new_body_access": true,
+  "sources": [
+    {
+      "title": "mpmath 1.3.0, matrices/eigen_symmetric.py",
+      "url": "https://raw.githubusercontent.com/mpmath/mpmath/1.3.0/mpmath/matrices/eigen_symmetric.py",
+      "access": "一次ソフトウェア本文取得",
+      "sections": "svd/svd_rの実装・docstring。A=U S V、Sは降順、Vの行が右特異ベクトル。",
+      "use": "mpmath 1.3.0で直接SVD。50/80桁の収束と再構成誤差を実測する。任意精度だけで厳密rankの証明としない。",
+      "sha256": "14f28f790af5706630e98e9e6b7d9ad587445900cb3fa265407100d967cd2d88"
+    },
+    {
+      "title": "SciPy v1.15.2, optimize/_numdiff.py",
+      "url": "https://raw.githubusercontent.com/scipy/scipy/v1.15.2/scipy/optimize/_numdiff.py",
+      "access": "一次ソフトウェア本文取得",
+      "sections": "approx_derivative Notesと_eps_for_method、lines 95–143, 377–386",
+      "use": "中央差分の打切り誤差と丸め誤差を区別する動機。EPS^(1/3)という既定の説明を確認したが、本件hを変更して採用しない。今回のh^2則は実測と保存Coulomb式のTaylor展開による自前の説明。",
+      "sha256": "0a979418a5874ec024f899efb5b0c18e95ef948f29721d685c83e3e3408d6367"
+    },
+    {
+      "title": "Abaqus 2026 Generally Applicable Contact Controls / rigid body stabilization",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEITNRefMap/simaitn-c-contactcontrolsstd.htm",
+      "access": "今回HTTP403、本文再取得不可。12-28で確認済みの取得範囲だけを継承。",
+      "use": "接触成立前の剛体運動、安定化が別操作であるという既存確認だけ。今回新たに本文確認したとはしない。"
+    },
+    {
+      "title": "Wriggers, Computational Contact Mechanics, 2nd ed., 2006",
+      "url": "https://doi.org/10.1007/978-3-540-32609-0",
+      "access": "本文未取得・書誌だけ（12-20/28から継承）"
+    },
+    {
+      "title": "Laursen, Computational Contact and Impact Mechanics, hardcover 2002 / copyright 2003",
+      "url": "https://doi.org/10.1007/978-3-662-04864-1",
+      "access": "本文未取得・書誌だけ（12-20/28から継承）"
+    },
+    {
+      "title": "Nocedal & Wright, Numerical Optimization, 2nd ed., 2006",
+      "url": "https://users.iems.northwestern.edu/~nocedal/book/toc.html",
+      "access": "本文未取得・書誌/目次だけ（12-28から継承）"
+    },
+    {
+      "title": "Dennis & Schnabel, Numerical Methods for Unconstrained Optimization and Nonlinear Equations, SIAM reprint 1996",
+      "url": "https://epubs.siam.org/doi/10.1137/1.9781611971200.ch6",
+      "access": "本文未取得・書誌/公開要旨だけ（12-28から継承）"
+    }
+  ],
+  "external_reference_values_introduced": false,
+  "book_body_claims_invented": false
+}

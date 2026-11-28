@@ -512,3 +512,34 @@ fn unchanged_domain_reuses_geometry_but_applies_each_new_period_boundary() -> Re
     assert_eq!(precut.state.hydraulic, reference.last_committed);
     Ok(())
 }
+
+#[test]
+fn later_cut_reservoir_must_match_prescribed_head_on_the_same_physical_face() -> Result<()> {
+    let (mut mesh, ground, mut case) = fixture(false, false)?;
+    mesh.face_sets
+        .insert("waterline".into(), mesh.face_sets["floor"].clone());
+    let richards::Analysis::Transient { periods } = &mut case.one_way.flow.analysis else {
+        unreachable!()
+    };
+    let mut later = periods[1].clone();
+    later.name = "later".into();
+    later.end_time_s += 200.;
+    later.boundaries[1].condition = serde_json::from_value(serde_json::json!({
+        "kind": "head", "value": {"head_m":2.1}
+    }))?;
+    periods.push(later);
+    case.one_way.exterior_periods.push(one_way::ExteriorPeriod {
+        name: "later".into(),
+        reservoirs: vec![one_way::Reservoir {
+            face_set: "waterline".into(),
+            level_m: 2.2,
+        }],
+    });
+    assert!(
+        construction::solve(&mesh, ground, case)
+            .unwrap_err()
+            .to_string()
+            .contains("head disagree on cut face")
+    );
+    Ok(())
+}

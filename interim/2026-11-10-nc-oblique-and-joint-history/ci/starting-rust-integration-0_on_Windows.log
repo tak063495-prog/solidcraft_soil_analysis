@@ -1,0 +1,970 @@
+﻿2026-11-10T02:57:54.7196436Z Current runner version: '2.338.2'
+2026-11-10T02:57:54.7223455Z ##[group]Runner Image Provisioner
+2026-11-10T02:57:54.7224255Z Hosted Compute Agent
+2026-11-10T02:57:54.7224801Z Version: 20261103.629
+2026-11-10T02:57:54.7225471Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-10T02:57:54.7226196Z Build Date: 2026-11-03T17:26:59Z
+2026-11-10T02:57:54.7226859Z Worker ID: {f53b550a-3274-454c-bbfd-4fb765d6c89b}
+2026-11-10T02:57:54.7227552Z Region: westus
+2026-11-10T02:57:54.7228047Z Cloud: Azure
+2026-11-10T02:57:54.7228559Z ##[endgroup]
+2026-11-10T02:57:54.7229843Z ##[group]Operating System
+2026-11-10T02:57:54.7230481Z Microsoft Windows Server 2025
+2026-11-10T02:57:54.7231077Z 10.0.26100
+2026-11-10T02:57:54.7231596Z Datacenter
+2026-11-10T02:57:54.7232129Z ##[endgroup]
+2026-11-10T02:57:54.7232661Z ##[group]Runner Image
+2026-11-10T02:57:54.7233468Z Image: windows-2025-vs2026
+2026-11-10T02:57:54.7234034Z Version: 20261103.298.1
+2026-11-10T02:57:54.7235484Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-10T02:57:54.7237539Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-10T02:57:54.7238541Z ##[endgroup]
+2026-11-10T02:57:54.7239581Z ##[group]GITHUB_TOKEN Permissions
+2026-11-10T02:57:54.7241427Z Contents: read
+2026-11-10T02:57:54.7242007Z Metadata: read
+2026-11-10T02:57:54.7242541Z ##[endgroup]
+2026-11-10T02:57:54.7244578Z Secret source: Actions
+2026-11-10T02:57:54.7245502Z Cache mode: write
+2026-11-10T02:57:54.7246292Z Prepare workflow directory
+2026-11-10T02:57:54.7728922Z Prepare all required actions
+2026-11-10T02:57:54.7798354Z Getting action download info
+2026-11-10T02:57:55.1026008Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-10T02:57:55.3553248Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+2026-11-10T02:57:55.8423496Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-11-10T02:57:56.2405624Z Complete job name: rust-integration-0 on Windows
+2026-11-10T02:57:56.6700511Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-10T02:57:56.6703736Z with:
+2026-11-10T02:57:56.6705380Z   persist-credentials: false
+2026-11-10T02:57:56.6707625Z   sparse-checkout-cone-mode: false
+2026-11-10T02:57:56.6710136Z   sparse-checkout: /*
+!/interim/2026-11-10-nc-postfold-branches/evidence.tar.gz.part*
+
+2026-11-10T02:57:56.6712243Z   repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:56.6721599Z   token: ***
+2026-11-10T02:57:56.6722574Z   ssh-strict: true
+2026-11-10T02:57:56.6723613Z   ssh-user: git
+2026-11-10T02:57:56.6724484Z   clean: true
+2026-11-10T02:57:56.6725391Z   fetch-depth: 1
+2026-11-10T02:57:56.6726357Z   fetch-tags: false
+2026-11-10T02:57:56.6727436Z   show-progress: true
+2026-11-10T02:57:56.6728562Z   lfs: false
+2026-11-10T02:57:56.6729524Z   submodules: false
+2026-11-10T02:57:56.6730650Z   set-safe-directory: true
+2026-11-10T02:57:56.6731769Z   allow-unsafe-pr-checkout: false
+2026-11-10T02:57:56.6733371Z env:
+2026-11-10T02:57:56.6734282Z   CARGO_BUILD_JOBS: 2
+2026-11-10T02:57:56.6735282Z   RUST_TEST_THREADS: 2
+2026-11-10T02:57:56.6736346Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T02:57:56.6737414Z   MKL_NUM_THREADS: 1
+2026-11-10T02:57:56.6738902Z   OMP_NUM_THREADS: 1
+2026-11-10T02:57:56.6740028Z   PYTHONUTF8: 1
+2026-11-10T02:57:56.6741018Z   PYTHONIOENCODING: utf-8
+2026-11-10T02:57:56.6742081Z ##[endgroup]
+2026-11-10T02:57:56.9169734Z Syncing repository: tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:56.9171876Z ##[group]Getting Git version info
+2026-11-10T02:57:56.9172831Z Working directory is 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-10T02:57:57.0367311Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T02:57:57.5730029Z git version 2.56.0.windows.4
+2026-11-10T02:57:57.5776666Z ##[endgroup]
+2026-11-10T02:57:57.5793003Z Temporarily overriding HOME='D:\a\_temp\80822dfa-465a-4825-9076-45e35baa15a9' before making global git config changes
+2026-11-10T02:57:57.5794888Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T02:57:57.5802947Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-10T02:57:57.6927306Z Deleting the contents of 'D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis'
+2026-11-10T02:57:57.6930807Z ##[group]Determining repository object format
+2026-11-10T02:57:57.6933217Z ##[endgroup]
+2026-11-10T02:57:57.6936398Z ##[group]Initializing the repository
+2026-11-10T02:57:57.6952126Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-10T02:57:57.7844759Z Initialized empty Git repository in D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/
+2026-11-10T02:57:57.7902793Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:57:57.8657381Z ##[endgroup]
+2026-11-10T02:57:57.8659173Z ##[group]Disabling automatic garbage collection
+2026-11-10T02:57:57.8667228Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-10T02:57:57.9046013Z ##[endgroup]
+2026-11-10T02:57:57.9047804Z ##[group]Setting up auth
+2026-11-10T02:57:57.9049140Z Removing SSH command configuration
+2026-11-10T02:57:57.9057653Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T02:57:57.9441982Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T02:57:59.3134434Z Removing HTTP extra header
+2026-11-10T02:57:59.3152867Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T02:57:59.3660616Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T02:57:59.9130274Z Removing includeIf entries pointing to credentials config files
+2026-11-10T02:57:59.9140715Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T02:57:59.9518980Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T02:58:00.4679313Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-10T02:58:00.5071072Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D:\a\_temp\git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T02:58:00.5450721Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D:\a\_temp\git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T02:58:00.5862188Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T02:58:00.6247324Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T02:58:00.6645376Z ##[endgroup]
+2026-11-10T02:58:00.6646025Z ##[group]Fetching the repository
+2026-11-10T02:58:00.6659228Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +260281fbbc09ec0402165339b4772bf423567d93:refs/remotes/pull/13/merge
+2026-11-10T02:58:01.8398618Z From https://github.com/tak063495-prog/solidcraft_soil_analysis
+2026-11-10T02:58:01.8400492Z  * [new ref]         260281fbbc09ec0402165339b4772bf423567d93 -> pull/13/merge
+2026-11-10T02:58:01.8444062Z ##[endgroup]
+2026-11-10T02:58:01.8444678Z ##[group]Determining the checkout info
+2026-11-10T02:58:01.8445566Z ##[endgroup]
+2026-11-10T02:58:01.8446518Z ##[group]Setting up sparse checkout
+2026-11-10T02:58:01.8456687Z [command]"C:\Program Files\Git\bin\git.exe" config core.sparseCheckout true
+2026-11-10T02:58:01.8861984Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse --git-path info/sparse-checkout
+2026-11-10T02:58:01.9282213Z .git/info/sparse-checkout
+2026-11-10T02:58:01.9323609Z ##[endgroup]
+2026-11-10T02:58:01.9324224Z ##[group]Checking out the ref
+2026-11-10T02:58:01.9333016Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/13/merge
+2026-11-10T03:18:56.3898154Z Updating files:   0% (1/4562)
+2026-11-10T03:18:56.3899175Z Updating files:   1% (46/4562)
+2026-11-10T03:18:56.3899741Z Updating files:   2% (92/4562)
+2026-11-10T03:18:56.3900552Z Updating files:   3% (137/4562)
+2026-11-10T03:18:56.3923121Z Updating files:   4% (183/4562)
+2026-11-10T03:18:56.4745356Z Updating files:   5% (229/4562)
+2026-11-10T03:18:56.4884129Z Updating files:   6% (274/4562)
+2026-11-10T03:18:56.5014831Z Updating files:   7% (320/4562)
+2026-11-10T03:18:56.5162846Z Updating files:   8% (365/4562)
+2026-11-10T03:18:56.5464350Z Updating files:   9% (411/4562)
+2026-11-10T03:18:56.5757319Z Updating files:  10% (457/4562)
+2026-11-10T03:18:56.5992131Z Updating files:  11% (502/4562)
+2026-11-10T03:18:56.6107465Z Updating files:  12% (548/4562)
+2026-11-10T03:18:56.6280660Z Updating files:  13% (594/4562)
+2026-11-10T03:18:56.6503865Z Updating files:  14% (639/4562)
+2026-11-10T03:18:56.6620827Z Updating files:  15% (685/4562)
+2026-11-10T03:18:56.7165127Z Updating files:  16% (730/4562)
+2026-11-10T03:18:56.7498718Z Updating files:  17% (776/4562)
+2026-11-10T03:18:56.8708001Z Updating files:  18% (822/4562)
+2026-11-10T03:18:56.9473957Z Updating files:  19% (867/4562)
+2026-11-10T03:18:56.9957931Z Updating files:  20% (913/4562)
+2026-11-10T03:18:57.0170986Z Updating files:  21% (959/4562)
+2026-11-10T03:18:57.0640583Z Updating files:  22% (1004/4562)
+2026-11-10T03:18:57.0819161Z Updating files:  23% (1050/4562)
+2026-11-10T03:18:57.1252222Z Updating files:  24% (1095/4562)
+2026-11-10T03:18:57.2132126Z Updating files:  25% (1141/4562)
+2026-11-10T03:18:57.2237787Z Updating files:  26% (1187/4562)
+2026-11-10T03:18:57.3583890Z Updating files:  26% (1215/4562)
+2026-11-10T03:18:57.3810484Z Updating files:  27% (1232/4562)
+2026-11-10T03:18:57.4035727Z Updating files:  28% (1278/4562)
+2026-11-10T03:18:57.4500540Z Updating files:  29% (1323/4562)
+2026-11-10T03:18:57.4971871Z Updating files:  30% (1369/4562)
+2026-11-10T03:18:57.5096084Z Updating files:  31% (1415/4562)
+2026-11-10T03:18:57.5490730Z Updating files:  32% (1460/4562)
+2026-11-10T03:18:57.5722159Z Updating files:  33% (1506/4562)
+2026-11-10T03:18:57.6101369Z Updating files:  34% (1552/4562)
+2026-11-10T03:18:57.6276265Z Updating files:  35% (1597/4562)
+2026-11-10T03:18:57.6611775Z Updating files:  36% (1643/4562)
+2026-11-10T03:18:57.6863389Z Updating files:  37% (1688/4562)
+2026-11-10T03:18:57.7203534Z Updating files:  38% (1734/4562)
+2026-11-10T03:18:57.7433074Z Updating files:  39% (1780/4562)
+2026-11-10T03:18:57.7737301Z Updating files:  40% (1825/4562)
+2026-11-10T03:18:57.7921108Z Updating files:  41% (1871/4562)
+2026-11-10T03:18:57.8028973Z Updating files:  42% (1917/4562)
+2026-11-10T03:18:57.8388768Z Updating files:  43% (1962/4562)
+2026-11-10T03:18:57.8689976Z Updating files:  44% (2008/4562)
+2026-11-10T03:18:57.8854233Z Updating files:  45% (2053/4562)
+2026-11-10T03:18:57.9024605Z Updating files:  46% (2099/4562)
+2026-11-10T03:18:57.9621452Z Updating files:  47% (2145/4562)
+2026-11-10T03:18:58.0196738Z Updating files:  48% (2190/4562)
+2026-11-10T03:18:58.1863899Z Updating files:  49% (2236/4562)
+2026-11-10T03:18:58.2772212Z Updating files:  50% (2281/4562)
+2026-11-10T03:18:58.2827073Z Updating files:  50% (2304/4562)
+2026-11-10T03:18:58.6503704Z Updating files:  51% (2327/4562)
+2026-11-10T03:18:58.7904945Z Updating files:  52% (2373/4562)
+2026-11-10T03:18:58.8478583Z Updating files:  53% (2418/4562)
+2026-11-10T03:18:59.0369259Z Updating files:  54% (2464/4562)
+2026-11-10T03:18:59.1245910Z Updating files:  55% (2510/4562)
+2026-11-10T03:18:59.2857102Z Updating files:  56% (2555/4562)
+2026-11-10T03:18:59.6848284Z Updating files:  56% (2597/4562)
+2026-11-10T03:19:00.2606885Z Updating files:  57% (2601/4562)
+2026-11-10T03:19:01.0066144Z Updating files:  57% (2607/4562)
+2026-11-10T03:19:01.1075116Z Updating files:  58% (2646/4562)
+2026-11-10T03:19:01.1981893Z Updating files:  59% (2692/4562)
+2026-11-10T03:19:01.2370810Z Updating files:  60% (2738/4562)
+2026-11-10T03:19:01.8035577Z Updating files:  60% (2746/4562)
+2026-11-10T03:19:02.2915050Z Updating files:  61% (2783/4562)
+2026-11-10T03:19:03.2460821Z Updating files:  61% (2790/4562)
+2026-11-10T03:19:03.4446061Z Updating files:  61% (2805/4562)
+2026-11-10T03:19:04.2778634Z Updating files:  62% (2829/4562)
+2026-11-10T03:19:05.2925547Z Updating files:  62% (2841/4562)
+2026-11-10T03:19:06.2685386Z Updating files:  62% (2856/4562)
+2026-11-10T03:19:06.5167003Z Updating files:  62% (2871/4562)
+2026-11-10T03:19:07.2778267Z Updating files:  63% (2875/4562)
+2026-11-10T03:19:08.2966135Z Updating files:  63% (2887/4562)
+2026-11-10T03:19:08.3560691Z Updating files:  63% (2902/4562)
+2026-11-10T03:19:09.3084406Z Updating files:  64% (2920/4562)
+2026-11-10T03:19:10.0443159Z Updating files:  64% (2956/4562)
+2026-11-10T03:19:10.3382336Z Updating files:  65% (2966/4562)
+2026-11-10T03:19:11.3141162Z Updating files:  65% (2970/4562)
+2026-11-10T03:19:12.3535144Z Updating files:  65% (2984/4562)
+2026-11-10T03:19:13.3162092Z Updating files:  65% (2997/4562)
+2026-11-10T03:19:13.4625611Z Updating files:  65% (3009/4562)
+2026-11-10T03:19:14.4198761Z Updating files:  66% (3011/4562)
+2026-11-10T03:19:15.3441533Z Updating files:  66% (3046/4562)
+2026-11-10T03:19:16.3915084Z Updating files:  66% (3050/4562)
+2026-11-10T03:19:16.5312666Z Updating files:  66% (3054/4562)
+2026-11-10T03:19:16.6549037Z Updating files:  67% (3057/4562)
+2026-11-10T03:19:17.5038204Z Updating files:  68% (3103/4562)
+2026-11-10T03:19:17.5091033Z Updating files:  68% (3129/4562)
+2026-11-10T03:19:18.3751806Z Updating files:  69% (3148/4562)
+2026-11-10T03:19:19.3385894Z Updating files:  69% (3179/4562)
+2026-11-10T03:19:19.7700675Z Updating files:  69% (3188/4562)
+2026-11-10T03:19:20.4988136Z Updating files:  70% (3194/4562)
+2026-11-10T03:19:21.4116090Z Updating files:  70% (3199/4562)
+2026-11-10T03:19:22.4331534Z Updating files:  70% (3212/4562)
+2026-11-10T03:19:23.3806145Z Updating files:  70% (3221/4562)
+2026-11-10T03:19:24.1119547Z Updating files:  70% (3230/4562)
+2026-11-10T03:19:24.6138526Z Updating files:  71% (3240/4562)
+2026-11-10T03:19:25.4431751Z Updating files:  71% (3242/4562)
+2026-11-10T03:19:26.4420464Z Updating files:  71% (3253/4562)
+2026-11-10T03:19:27.4209510Z Updating files:  71% (3260/4562)
+2026-11-10T03:19:28.7558711Z Updating files:  71% (3269/4562)
+2026-11-10T03:19:29.1600394Z Updating files:  71% (3281/4562)
+2026-11-10T03:19:29.4254436Z Updating files:  72% (3285/4562)
+2026-11-10T03:19:30.4802539Z Updating files:  72% (3289/4562)
+2026-11-10T03:19:30.5557851Z Updating files:  72% (3330/4562)
+2026-11-10T03:19:31.5647987Z Updating files:  73% (3331/4562)
+2026-11-10T03:19:32.4293065Z Updating files:  73% (3340/4562)
+2026-11-10T03:19:35.2107227Z Updating files:  73% (3351/4562)
+2026-11-10T03:19:35.5256298Z Updating files:  73% (3354/4562)
+2026-11-10T03:19:36.2821883Z Updating files:  73% (3358/4562)
+2026-11-10T03:19:36.5253167Z Updating files:  74% (3376/4562)
+2026-11-10T03:19:37.4790536Z Updating files:  74% (3405/4562)
+2026-11-10T03:19:37.9381767Z Updating files:  74% (3416/4562)
+2026-11-10T03:19:38.4780561Z Updating files:  75% (3422/4562)
+2026-11-10T03:19:39.5127790Z Updating files:  75% (3429/4562)
+2026-11-10T03:19:40.5018658Z Updating files:  75% (3441/4562)
+2026-11-10T03:19:41.6965136Z Updating files:  75% (3452/4562)
+2026-11-10T03:19:41.9264211Z Updating files:  75% (3465/4562)
+2026-11-10T03:19:42.5213344Z Updating files:  76% (3468/4562)
+2026-11-10T03:19:43.5473518Z Updating files:  76% (3476/4562)
+2026-11-10T03:19:44.6238579Z Updating files:  76% (3486/4562)
+2026-11-10T03:19:45.5397763Z Updating files:  76% (3497/4562)
+2026-11-10T03:19:46.0923226Z Updating files:  76% (3509/4562)
+2026-11-10T03:19:46.5545607Z Updating files:  77% (3513/4562)
+2026-11-10T03:19:47.5948399Z Updating files:  77% (3519/4562)
+2026-11-10T03:19:49.0193044Z Updating files:  77% (3528/4562)
+2026-11-10T03:19:49.5535670Z Updating files:  77% (3541/4562)
+2026-11-10T03:19:51.2038710Z Updating files:  77% (3548/4562)
+2026-11-10T03:19:51.6331887Z Updating files:  77% (3552/4562)
+2026-11-10T03:19:51.7762409Z Updating files:  77% (3557/4562)
+2026-11-10T03:19:52.6170784Z Updating files:  78% (3559/4562)
+2026-11-10T03:19:53.6116623Z Updating files:  78% (3568/4562)
+2026-11-10T03:19:54.6422690Z Updating files:  78% (3581/4562)
+2026-11-10T03:19:55.6459505Z Updating files:  78% (3591/4562)
+2026-11-10T03:19:56.0291272Z Updating files:  78% (3599/4562)
+2026-11-10T03:19:56.9059351Z Updating files:  79% (3604/4562)
+2026-11-10T03:19:57.6174123Z Updating files:  79% (3612/4562)
+2026-11-10T03:19:58.6848056Z Updating files:  79% (3621/4562)
+2026-11-10T03:19:59.8288806Z Updating files:  79% (3631/4562)
+2026-11-10T03:20:00.6280042Z Updating files:  79% (3641/4562)
+2026-11-10T03:20:00.7235814Z Updating files:  80% (3650/4562)
+2026-11-10T03:20:01.6867720Z Updating files:  80% (3651/4562)
+2026-11-10T03:20:02.6567842Z Updating files:  80% (3660/4562)
+2026-11-10T03:20:03.6763651Z Updating files:  80% (3668/4562)
+2026-11-10T03:20:04.6902783Z Updating files:  80% (3677/4562)
+2026-11-10T03:20:05.7218996Z Updating files:  80% (3686/4562)
+2026-11-10T03:20:06.6944233Z Updating files:  81% (3696/4562)
+2026-11-10T03:20:07.6986265Z Updating files:  81% (3705/4562)
+2026-11-10T03:20:08.7591151Z Updating files:  81% (3714/4562)
+2026-11-10T03:20:09.4028286Z Updating files:  81% (3724/4562)
+2026-11-10T03:20:09.4570443Z Updating files:  82% (3741/4562)
+2026-11-10T03:20:09.7580502Z Updating files:  83% (3787/4562)
+2026-11-10T03:20:10.9314147Z Updating files:  83% (3819/4562)
+2026-11-10T03:20:11.2834179Z Updating files:  83% (3828/4562)
+2026-11-10T03:20:11.7662517Z Updating files:  84% (3833/4562)
+2026-11-10T03:20:12.9708586Z Updating files:  84% (3837/4562)
+2026-11-10T03:20:13.8706724Z Updating files:  84% (3848/4562)
+2026-11-10T03:20:14.7524032Z Updating files:  84% (3856/4562)
+2026-11-10T03:20:15.7913674Z Updating files:  84% (3863/4562)
+2026-11-10T03:20:15.7914320Z Updating files:  85% (3878/4562)
+2026-11-10T03:20:16.6405745Z Updating files:  85% (3898/4562)
+2026-11-10T03:20:16.6891565Z Updating files:  86% (3924/4562)
+2026-11-10T03:20:16.7225543Z Updating files:  87% (3969/4562)
+2026-11-10T03:20:16.7363343Z Updating files:  88% (4015/4562)
+2026-11-10T03:20:16.7407018Z Updating files:  88% (4051/4562)
+2026-11-10T03:20:16.7912470Z Updating files:  89% (4061/4562)
+2026-11-10T03:20:16.8171632Z Updating files:  90% (4106/4562)
+2026-11-10T03:20:16.8380156Z Updating files:  91% (4152/4562)
+2026-11-10T03:20:16.8567246Z Updating files:  92% (4198/4562)
+2026-11-10T03:20:16.9787379Z Updating files:  93% (4243/4562)
+2026-11-10T03:20:17.0606939Z Updating files:  94% (4289/4562)
+2026-11-10T03:20:17.0774746Z Updating files:  95% (4334/4562)
+2026-11-10T03:20:17.0950698Z Updating files:  96% (4380/4562)
+2026-11-10T03:20:17.1226361Z Updating files:  97% (4426/4562)
+2026-11-10T03:20:17.1396957Z Updating files:  98% (4471/4562)
+2026-11-10T03:20:17.1551587Z Updating files:  99% (4517/4562)
+2026-11-10T03:20:17.1556610Z Updating files: 100% (4562/4562)
+2026-11-10T03:20:17.1557026Z Updating files: 100% (4562/4562), done.
+2026-11-10T03:20:17.2300157Z Note: switching to 'refs/remotes/pull/13/merge'.
+2026-11-10T03:20:17.2303626Z 
+2026-11-10T03:20:17.2303973Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-10T03:20:17.2304701Z changes and commit them, and you can discard any commits you make in this
+2026-11-10T03:20:17.2305366Z state without impacting any branches by switching back to a branch.
+2026-11-10T03:20:17.2308621Z 
+2026-11-10T03:20:17.2308954Z If you want to create a new branch to retain commits you create, you may
+2026-11-10T03:20:17.2309638Z do so (now or later) by using -c with the switch command. Example:
+2026-11-10T03:20:17.2310015Z 
+2026-11-10T03:20:17.2368802Z   git switch -c <new-branch-name>
+2026-11-10T03:20:17.2369339Z 
+2026-11-10T03:20:17.2369536Z Or undo this operation with:
+2026-11-10T03:20:17.2369818Z 
+2026-11-10T03:20:17.2369950Z   git switch -
+2026-11-10T03:20:17.2585437Z 
+2026-11-10T03:20:17.2585832Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-10T03:20:17.2586384Z 
+2026-11-10T03:20:17.2708176Z HEAD is now at 260281f Merge 1c0d57b6943efbe0df85659f99ba47a7ffa15205 into 024835cea9a7c12ad12deda10203f4f45f1fd285
+2026-11-10T03:20:19.0498643Z ##[endgroup]
+2026-11-10T03:20:19.2737691Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-10T03:20:19.3118645Z 260281fbbc09ec0402165339b4772bf423567d93
+2026-11-10T03:20:19.3252309Z ##[group]Removing auth
+2026-11-10T03:20:19.3255107Z Removing SSH command configuration
+2026-11-10T03:20:19.3265567Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T03:20:19.3698848Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T03:20:20.0285715Z Removing HTTP extra header
+2026-11-10T03:20:20.0331438Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T03:20:20.0765338Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T03:20:20.6532564Z Removing includeIf entries pointing to credentials config files
+2026-11-10T03:20:20.6545245Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T03:20:20.6880869Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-10T03:20:20.6885115Z includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-10T03:20:20.6885970Z includeif.gitdir:/github/workspace/.git.path
+2026-11-10T03:20:20.6889033Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-10T03:20:20.6938441Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path
+2026-11-10T03:20:20.7293095Z D:\a\_temp\git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T03:20:20.7365659Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git.path D\:\\a\\_temp\\git\-credentials\-5eb0fffa\-e5e5\-41ad\-a4a8\-eabf1a816b5e\.config
+2026-11-10T03:20:20.7752074Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path
+2026-11-10T03:20:20.8160235Z D:\a\_temp\git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T03:20:20.8202247Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-5eb0fffa\-e5e5\-41ad\-a4a8\-eabf1a816b5e\.config
+2026-11-10T03:20:20.8607860Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-10T03:20:20.8974819Z /github/runner_temp/git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T03:20:20.9019751Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-5eb0fffa\-e5e5\-41ad\-a4a8\-eabf1a816b5e\.config
+2026-11-10T03:20:20.9392462Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-10T03:20:20.9718216Z /github/runner_temp/git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config
+2026-11-10T03:20:20.9762342Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-5eb0fffa\-e5e5\-41ad\-a4a8\-eabf1a816b5e\.config
+2026-11-10T03:20:21.0136526Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T03:20:21.5424638Z Removing credentials config 'D:\a\_temp\git-credentials-5eb0fffa-e5e5-41ad-a4a8-eabf1a816b5e.config'
+2026-11-10T03:20:21.5517020Z ##[endgroup]
+2026-11-10T03:20:21.9295839Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+2026-11-10T03:20:21.9298776Z with:
+2026-11-10T03:20:21.9299104Z   python-version: 3.13
+2026-11-10T03:20:21.9299399Z   cache: pip
+2026-11-10T03:20:21.9302261Z   cache-dependency-path: requirements.lock.txt
+requirements-reference.lock.txt
+
+2026-11-10T03:20:21.9302846Z   check-latest: false
+2026-11-10T03:20:21.9308127Z   token: ***
+2026-11-10T03:20:21.9308592Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+2026-11-10T03:20:21.9309105Z   update-environment: true
+2026-11-10T03:20:21.9311894Z   allow-prereleases: false
+2026-11-10T03:20:21.9312215Z   freethreaded: false
+2026-11-10T03:20:21.9312533Z env:
+2026-11-10T03:20:21.9315112Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:20:21.9315403Z   RUST_TEST_THREADS: 2
+2026-11-10T03:20:21.9318155Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:20:21.9318493Z   MKL_NUM_THREADS: 1
+2026-11-10T03:20:21.9318777Z   OMP_NUM_THREADS: 1
+2026-11-10T03:20:21.9321501Z   PYTHONUTF8: 1
+2026-11-10T03:20:21.9321792Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:20:21.9324401Z ##[endgroup]
+2026-11-10T03:20:22.3965419Z ##[group]Installed versions
+2026-11-10T03:20:22.4102467Z Successfully set up CPython (3.13.17)
+2026-11-10T03:20:22.4106771Z ##[endgroup]
+2026-11-10T03:20:25.1168170Z Cache hit for: setup-python-Windows-x64-python-3.13.17-pip-c844d4bb1f478392485359569493f93acb18af9adb109ffe82641637bcb9ad74
+2026-11-10T03:20:26.4449753Z Received 33554432 of 93763187 (35.8%), 31.7 MBs/sec
+2026-11-10T03:20:26.8614630Z Received 93763187 of 93763187 (100.0%), 62.4 MBs/sec
+2026-11-10T03:20:26.8627919Z Cache Size: ~89 MB (93763187 B)
+2026-11-10T03:20:26.8678325Z [command]"C:\Program Files\Git\usr\bin\tar.exe" -xf D:/a/_temp/40094a41-2f8d-41a7-a75c-6622ed3525c9/cache.tzst -P -C D:/a/solidcraft_soil_analysis/solidcraft_soil_analysis --force-local --use-compress-program "zstd -d"
+2026-11-10T03:20:27.7757588Z Cache restored successfully
+2026-11-10T03:20:27.7872617Z Cache restored from key: setup-python-Windows-x64-python-3.13.17-pip-c844d4bb1f478392485359569493f93acb18af9adb109ffe82641637bcb9ad74
+2026-11-10T03:20:27.8705724Z ##[group]Run New-Item -ItemType Directory -Force runs/ci | Out-Null
+2026-11-10T03:20:27.8706564Z [36;1mNew-Item -ItemType Directory -Force runs/ci | Out-Null[0m
+2026-11-10T03:20:27.8710817Z [36;1mrustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy[0m
+2026-11-10T03:20:27.8712084Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:20:27.8716563Z [36;1mpython -m pip install --disable-pip-version-check -r requirements-reference.lock.txt[0m
+2026-11-10T03:20:27.8720883Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:20:27.8721664Z [36;1mpython tools/freeze_sources.py runs/ci[0m
+2026-11-10T03:20:27.8725235Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:20:27.8726102Z [36;1mrustc --version --verbose | Out-File runs/ci/rust-version.log[0m
+2026-11-10T03:20:27.8729740Z [36;1mpython -m pip freeze | Out-File runs/ci/python-packages.log[0m
+2026-11-10T03:20:27.9368529Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:20:27.9371516Z env:
+2026-11-10T03:20:27.9371867Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:20:27.9372233Z   RUST_TEST_THREADS: 2
+2026-11-10T03:20:27.9374910Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:20:27.9375277Z   MKL_NUM_THREADS: 1
+2026-11-10T03:20:27.9378186Z   OMP_NUM_THREADS: 1
+2026-11-10T03:20:27.9378532Z   PYTHONUTF8: 1
+2026-11-10T03:20:27.9378856Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:20:27.9381820Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:20:27.9382641Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:20:27.9385760Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:20:27.9386528Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:20:27.9389756Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:20:27.9390390Z ##[endgroup]
+2026-11-10T03:20:30.2759635Z info: syncing channel updates for 1.99.1-x86_64-pc-windows-msvc
+2026-11-10T03:20:30.8299956Z info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-10T03:20:30.8441334Z info: downloading 5 components
+2026-11-10T03:20:39.8504227Z 
+2026-11-10T03:20:39.9347483Z   1.99.1-x86_64-pc-windows-msvc installed - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-11-10T03:20:39.9348134Z 
+2026-11-10T03:20:42.1576121Z Collecting gmsh==4.15.2 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 1))
+2026-11-10T03:20:42.1599065Z   Using cached gmsh-4.15.2-py2.py3-none-win_amd64.whl.metadata (1.7 kB)
+2026-11-10T03:20:42.2000762Z Collecting markdown-it-py==4.2.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 2))
+2026-11-10T03:20:42.2024416Z   Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-10T03:20:42.2398287Z Collecting mdurl==0.1.2 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 3))
+2026-11-10T03:20:42.2422829Z   Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-11-10T03:20:42.2901933Z Collecting meshio==5.3.5 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 4))
+2026-11-10T03:20:42.2926076Z   Using cached meshio-5.3.5-py3-none-any.whl.metadata (11 kB)
+2026-11-10T03:20:42.5326781Z Collecting numpy==2.5.4 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 5))
+2026-11-10T03:20:42.5355812Z   Using cached numpy-2.5.4-cp313-cp313-win_amd64.whl.metadata (6.6 kB)
+2026-11-10T03:20:42.5743127Z Collecting Pygments==2.21.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 6))
+2026-11-10T03:20:42.5762573Z   Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-10T03:20:42.6244942Z Collecting rich==15.0.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 7))
+2026-11-10T03:20:42.6264848Z   Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+2026-11-10T03:20:42.7312180Z Collecting ijson==3.6.0 (from -r D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis\requirements.lock.txt (line 8))
+2026-11-10T03:20:42.7325388Z   Using cached ijson-3.6.0-cp313-cp313-win_amd64.whl.metadata (24 kB)
+2026-11-10T03:20:42.8841616Z Collecting scipy==1.18.1 (from -r requirements-reference.lock.txt (line 2))
+2026-11-10T03:20:42.8865772Z   Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl.metadata (61 kB)
+2026-11-10T03:20:42.9116053Z Using cached gmsh-4.15.2-py2.py3-none-win_amd64.whl (42.2 MB)
+2026-11-10T03:20:42.9345206Z Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+2026-11-10T03:20:42.9416174Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-11-10T03:20:42.9431322Z Using cached meshio-5.3.5-py3-none-any.whl (166 kB)
+2026-11-10T03:20:42.9452921Z Using cached numpy-2.5.4-cp313-cp313-win_amd64.whl (12.6 MB)
+2026-11-10T03:20:42.9536684Z Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-10T03:20:42.9565414Z Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+2026-11-10T03:20:42.9585003Z Using cached ijson-3.6.0-cp313-cp313-win_amd64.whl (54 kB)
+2026-11-10T03:20:42.9602848Z Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl (36.6 MB)
+2026-11-10T03:20:43.7035478Z Installing collected packages: gmsh, Pygments, numpy, mdurl, ijson, scipy, markdown-it-py, rich, meshio
+2026-11-10T03:20:59.3359574Z 
+2026-11-10T03:20:59.3382829Z Successfully installed Pygments-2.21.0 gmsh-4.15.2 ijson-3.6.0 markdown-it-py-4.2.0 mdurl-0.1.2 meshio-5.3.5 numpy-2.5.4 rich-15.0.0 scipy-1.18.1
+2026-11-10T03:20:59.9715473Z Frozen acceptance sources: 778
+2026-11-10T03:21:00.5433039Z ##[group]Run python tools/run_ci_rust_tests.py --group rust-integration-0 --output runs/ci
+2026-11-10T03:21:00.5436390Z [36;1mpython tools/run_ci_rust_tests.py --group rust-integration-0 --output runs/ci[0m
+2026-11-10T03:21:00.5436990Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+2026-11-10T03:21:00.5516083Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-10T03:21:00.5519180Z env:
+2026-11-10T03:21:00.5519452Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:21:00.5522452Z   RUST_TEST_THREADS: 2
+2026-11-10T03:21:00.5522843Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:21:00.5523122Z   MKL_NUM_THREADS: 1
+2026-11-10T03:21:00.5525773Z   OMP_NUM_THREADS: 1
+2026-11-10T03:21:00.5526068Z   PYTHONUTF8: 1
+2026-11-10T03:21:00.5528663Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:21:00.5529086Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:21:00.5532009Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:21:00.5532590Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:21:00.5533064Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:21:00.5535920Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:21:00.5536331Z ##[endgroup]
+2026-11-10T03:21:01.5213111Z cargo test --locked --release --test anchors --test construction --test embedding --test epoch_srm_gate_job --test epoch_srm_search --test free_contact --test geostatic_affine --test hardening_fem --test hydrostatic --test joint_law --test joints --test low_preload_cut --test mc_epoch_cli --test mc_fem --test mc_parameter_global --test mcc_midpoint --test mcc_split --test mechanics --test mixed_mechanics --test one_way --test one_way_lifecycle --test projected_mcc --test reset --test rigidity --test srm_bound --test srm_search_control --test srm_virtual_work --test stage_job --test surface_projection --test water_stages
+2026-11-10T03:21:01.6327585Z     Updating crates.io index
+2026-11-10T03:21:01.8527579Z  Downloading crates ...
+2026-11-10T03:21:01.9118899Z   Downloaded digest v0.10.7
+2026-11-10T03:21:01.9317769Z   Downloaded simba v0.9.1
+2026-11-10T03:21:01.9664133Z   Downloaded autocfg v1.5.1
+2026-11-10T03:21:01.9910454Z   Downloaded num-traits v0.2.19
+2026-11-10T03:21:02.0187442Z   Downloaded safe_arch v0.7.4
+2026-11-10T03:21:02.0649919Z   Downloaded cfg-if v1.0.5
+2026-11-10T03:21:02.0760850Z   Downloaded syn v2.0.119
+2026-11-10T03:21:02.1540614Z   Downloaded approx v0.5.1
+2026-11-10T03:21:02.1721379Z   Downloaded serde_core v1.0.229
+2026-11-10T03:21:02.1935940Z   Downloaded num-complex v0.4.6
+2026-11-10T03:21:02.2039554Z   Downloaded glam v0.17.3
+2026-11-10T03:21:02.2773963Z   Downloaded nalgebra v0.34.2
+2026-11-10T03:21:02.5095762Z   Downloaded glam v0.16.0
+2026-11-10T03:21:02.5813410Z   Downloaded num-integer v0.1.47
+2026-11-10T03:21:02.5935086Z   Downloaded block-buffer v0.10.4
+2026-11-10T03:21:02.6082397Z   Downloaded glam v0.18.0
+2026-11-10T03:21:02.6975772Z   Downloaded quote v1.0.47
+2026-11-10T03:21:02.7253312Z   Downloaded glam v0.14.0
+2026-11-10T03:21:02.7937112Z   Downloaded rawpointer v0.2.1
+2026-11-10T03:21:02.8021373Z   Downloaded proc-macro2 v1.0.107
+2026-11-10T03:21:02.8292576Z   Downloaded crypto-common v0.1.7
+2026-11-10T03:21:02.8411436Z   Downloaded bytemuck v1.25.2
+2026-11-10T03:21:02.8725234Z   Downloaded thiserror v2.0.21
+2026-11-10T03:21:03.4668790Z   Downloaded matrixmultiply v0.3.11
+2026-11-10T03:21:03.4952740Z   Downloaded unicode-ident v1.0.27
+2026-11-10T03:21:03.5202669Z   Downloaded version_check v0.9.5
+2026-11-10T03:21:03.5321607Z   Downloaded serde v1.0.229
+2026-11-10T03:21:03.5582621Z   Downloaded cpufeatures v0.2.17
+2026-11-10T03:21:03.5699294Z   Downloaded sha2 v0.10.9
+2026-11-10T03:21:03.5960476Z   Downloaded paste v1.0.15
+2026-11-10T03:21:03.6352167Z   Downloaded thiserror-impl v2.0.21
+2026-11-10T03:21:03.6506715Z   Downloaded glam v0.20.5
+2026-11-10T03:21:03.7364597Z   Downloaded num-rational v0.4.2
+2026-11-10T03:21:03.7487314Z   Downloaded serde_derive v1.0.229
+2026-11-10T03:21:03.7761643Z   Downloaded glam v0.19.0
+2026-11-10T03:21:04.5634170Z   Downloaded glam v0.25.0
+2026-11-10T03:21:04.7053520Z   Downloaded glam v0.15.2
+2026-11-10T03:21:04.7745364Z   Downloaded typenum v1.20.1
+2026-11-10T03:21:04.7949871Z   Downloaded nalgebra-macros v0.3.0
+2026-11-10T03:21:04.8028998Z   Downloaded memchr v2.8.3
+2026-11-10T03:21:04.8529389Z   Downloaded glam v0.24.2
+2026-11-10T03:21:04.9838854Z   Downloaded glam v0.30.10
+2026-11-10T03:21:05.1816445Z   Downloaded serde_json v1.0.154
+2026-11-10T03:21:05.2475358Z   Downloaded wide v0.7.33
+2026-11-10T03:21:05.2841693Z   Downloaded num-bigint v0.4.8
+2026-11-10T03:21:05.3318866Z   Downloaded glam v0.23.0
+2026-11-10T03:21:05.4436130Z   Downloaded glam v0.32.1
+2026-11-10T03:21:05.6781788Z   Downloaded glam v0.29.3
+2026-11-10T03:21:06.4161689Z   Downloaded syn v3.0.9
+2026-11-10T03:21:06.4956784Z   Downloaded generic-array v0.14.7
+2026-11-10T03:21:06.5085506Z   Downloaded glam v0.28.0
+2026-11-10T03:21:06.6631907Z   Downloaded glam v0.31.1
+2026-11-10T03:21:06.8724796Z   Downloaded glam v0.22.0
+2026-11-10T03:21:06.9931112Z   Downloaded itoa v1.0.18
+2026-11-10T03:21:07.0049125Z   Downloaded zmij v1.0.23
+2026-11-10T03:21:07.0494195Z   Downloaded glam v0.21.3
+2026-11-10T03:21:07.5796884Z   Downloaded glam v0.27.0
+2026-11-10T03:21:07.8250190Z    Compiling autocfg v1.5.1
+2026-11-10T03:21:07.8251182Z    Compiling proc-macro2 v1.0.107
+2026-11-10T03:21:08.2005440Z    Compiling quote v1.0.47
+2026-11-10T03:21:09.6908888Z    Compiling unicode-ident v1.0.27
+2026-11-10T03:21:09.8533242Z    Compiling num-traits v0.2.19
+2026-11-10T03:21:10.1713325Z    Compiling version_check v0.9.5
+2026-11-10T03:21:10.7069086Z    Compiling generic-array v0.14.7
+2026-11-10T03:21:10.9471798Z    Compiling typenum v1.20.1
+2026-11-10T03:21:11.8860834Z    Compiling syn v3.0.9
+2026-11-10T03:21:12.4591626Z    Compiling paste v1.0.15
+2026-11-10T03:21:12.6636886Z    Compiling bytemuck v1.25.2
+2026-11-10T03:21:12.8559576Z    Compiling serde_core v1.0.229
+2026-11-10T03:21:13.1313978Z    Compiling safe_arch v0.7.4
+2026-11-10T03:21:13.8485302Z    Compiling matrixmultiply v0.3.11
+2026-11-10T03:21:14.0342015Z    Compiling zmij v1.0.23
+2026-11-10T03:21:14.7514673Z    Compiling wide v0.7.33
+2026-11-10T03:21:17.4228947Z    Compiling crypto-common v0.1.7
+2026-11-10T03:21:17.5062195Z    Compiling block-buffer v0.10.4
+2026-11-10T03:21:17.6113792Z    Compiling num-integer v0.1.47
+2026-11-10T03:21:17.7052449Z    Compiling num-complex v0.4.6
+2026-11-10T03:21:18.2056718Z    Compiling approx v0.5.1
+2026-11-10T03:21:18.2408488Z    Compiling syn v2.0.119
+2026-11-10T03:21:18.3227616Z    Compiling serde_json v1.0.154
+2026-11-10T03:21:18.4995146Z    Compiling thiserror v2.0.21
+2026-11-10T03:21:18.7923700Z    Compiling serde v1.0.229
+2026-11-10T03:21:19.0438752Z    Compiling rawpointer v0.2.1
+2026-11-10T03:21:22.0643142Z    Compiling simba v0.9.1
+2026-11-10T03:21:22.4339915Z    Compiling nalgebra-macros v0.3.0
+2026-11-10T03:21:22.9086275Z    Compiling num-rational v0.4.2
+2026-11-10T03:21:24.4715741Z    Compiling digest v0.10.7
+2026-11-10T03:21:24.6523286Z    Compiling thiserror-impl v2.0.21
+2026-11-10T03:21:26.0191056Z    Compiling serde_derive v1.0.229
+2026-11-10T03:21:27.7914170Z    Compiling cfg-if v1.0.5
+2026-11-10T03:21:27.8356180Z    Compiling cpufeatures v0.2.17
+2026-11-10T03:21:27.8785681Z    Compiling memchr v2.8.3
+2026-11-10T03:21:29.3565129Z    Compiling itoa v1.0.18
+2026-11-10T03:21:30.1727270Z    Compiling sha2 v0.10.9
+2026-11-10T03:21:32.4003779Z    Compiling nalgebra v0.34.2
+2026-11-10T03:21:39.6871793Z    Compiling soil-fem-3d v0.1.0 (D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis)
+2026-11-10T03:33:16.9346753Z     Finished `release` profile [optimized] target(s) in 12m 15s
+2026-11-10T03:33:16.9616153Z      Running tests\anchors.rs (target\release\deps\anchors-d9f8060160973a84.exe)
+2026-11-10T03:33:16.9727764Z 
+2026-11-10T03:33:16.9729967Z running 6 tests
+2026-11-10T03:33:16.9755902Z test anchor_affine_tension_rigid_motion_and_distributed_transfer_preserve_work ... ok
+2026-11-10T03:33:16.9767844Z test anchor_tangent_and_energy_match_independent_perturbations ... ok
+2026-11-10T03:33:17.5464751Z test excavation_with_retained_anchor_and_beam_releases_only_removed_soil_stress ... ok
+2026-11-10T03:33:17.5480361Z test installation_reference_and_lost_host_are_atomic_and_explicit ... ok
+2026-11-10T03:33:17.5498163Z test jacking_lockoff_slack_and_reloading_follow_free_length_theory ... ok
+2026-11-10T03:33:24.4771279Z test anchor_jack_lock_slack_and_plastic_soil_restore_exactly_on_cutback_and_restart ... ok
+2026-11-10T03:33:24.4772178Z 
+2026-11-10T03:33:24.4772624Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.50s
+2026-11-10T03:33:24.4773193Z 
+2026-11-10T03:33:24.4801724Z      Running tests\construction.rs (target\release\deps\construction-94bcdb765e99395c.exe)
+2026-11-10T03:33:24.4911823Z 
+2026-11-10T03:33:24.4912323Z running 6 tests
+2026-11-10T03:33:24.9224171Z test material_density_change_rebuilds_gravity_and_matches_layered_column_theory ... ok
+2026-11-10T03:33:25.3041895Z test mcc_foundation_accepts_mc_fill_and_rejects_implicit_history_conversion ... ok
+2026-11-10T03:33:25.3063000Z test inconsistent_replacement_born_active_wet_or_aged_material_is_rejected ... ok
+2026-11-10T03:33:26.2364575Z test rebirth_placement_distinguishes_cad_nodes_from_archived_excavated_displacements ... ok
+2026-11-10T03:33:26.5603768Z test stress_free_fill_and_material_change_match_oedometer_theory_and_restore_rejected_trials ... ok
+2026-11-10T03:33:27.1527853Z test plastic_birth_history_material_ids_and_holding_load_resume_exactly ... ok
+2026-11-10T03:33:27.1528337Z 
+2026-11-10T03:33:27.1528639Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.66s
+2026-11-10T03:33:27.1529014Z 
+2026-11-10T03:33:27.1555166Z      Running tests\embedding.rs (target\release\deps\embedding-f4d9fc375de12be4.exe)
+2026-11-10T03:33:27.1684420Z 
+2026-11-10T03:33:27.1684769Z running 3 tests
+2026-11-10T03:33:27.1690747Z test embedding_rejects_missing_host_body_outside_and_nonconforming_overlap ... ok
+2026-11-10T03:33:27.1701560Z test tet4_and_tet10_embedding_preserve_affine_fields_force_moment_and_work ... ok
+2026-11-10T03:33:27.1704225Z test curved_tet10_inverse_and_interface_hosts_keep_coordinate_and_activity ... ok
+2026-11-10T03:33:27.1704788Z 
+2026-11-10T03:33:27.1705124Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-11-10T03:33:27.1706473Z 
+2026-11-10T03:33:27.1722121Z      Running tests\epoch_srm_gate_job.rs (target\release\deps\epoch_srm_gate_job-96721591841fff45.exe)
+2026-11-10T03:33:27.1826971Z 
+2026-11-10T03:33:27.1827259Z running 3 tests
+2026-11-10T03:33:47.4661740Z test exclusion_and_nonconvergence_remain_distinct_and_do_not_start_the_later_stage ... ok
+2026-11-10T03:34:25.4076110Z test paused_gate_recovery_matches_the_continuous_gate_and_the_unreduced_solve ... ok
+2026-11-10T03:34:30.3066200Z test prepared_stop_invalid_budget_and_second_launch_keep_the_saved_checkpoint ... ok
+2026-11-10T03:34:30.3066981Z 
+2026-11-10T03:34:30.3067561Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 63.12s
+2026-11-10T03:34:30.3068282Z 
+2026-11-10T03:34:30.3088089Z      Running tests\epoch_srm_search.rs (target\release\deps\epoch_srm_search-b555a648e0be1066.exe)
+2026-11-10T03:34:30.3198532Z 
+2026-11-10T03:34:30.3199151Z running 9 tests
+2026-11-10T03:34:30.3996018Z test changed_producer_inputs_and_unbound_loads_cannot_define_an_origin ... ok
+2026-11-10T03:34:30.6750858Z test accepted_origin_search_brackets_four_over_three_and_keeps_every_factor_independent ... ok
+2026-11-10T03:34:30.8688929Z test factor_trial_limit_is_reported_without_claiming_the_requested_interval_width ... ok
+2026-11-10T03:34:31.0013972Z test incomplete_epoch_paths_stay_unknown_and_cannot_create_an_attained_side ... ok
+2026-11-10T03:34:31.0812147Z test malformed_schema_prefix_path_controls_and_virtual_dimensions_are_refused ... ok
+2026-11-10T03:34:31.1020820Z test cli_creates_a_bound_epoch_report_refuses_foreign_producer_and_preserves_existing_output ... ok
+2026-11-10T03:34:31.5753391Z test post_excavation_trials_keep_all_dormant_history_and_reject_resealed_frozen_metadata ... ok
+2026-11-10T03:34:31.6355111Z test plastic_preload_unload_epoch_fields_match_confined_column_compliance_and_separate_path ... ok
+2026-11-10T03:34:31.9466214Z test required_factor_above_limit_has_independent_exclusion_without_an_epoch ... ok
+2026-11-10T03:34:31.9466908Z 
+2026-11-10T03:34:31.9467413Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.63s
+2026-11-10T03:34:31.9470420Z 
+2026-11-10T03:34:31.9494484Z      Running tests\free_contact.rs (target\release\deps\free_contact-41ffbe7069750a56.exe)
+2026-11-10T03:34:31.9606172Z 
+2026-11-10T03:34:31.9606552Z running 2 tests
+2026-11-10T03:34:39.6999512Z test free_upper_block_closes_without_physical_pins_and_restores_predictor_history ... ok
+2026-11-10T03:34:49.1718906Z test free_frictionless_or_overcapacity_blocks_never_commit_a_false_equilibrium ... ok
+2026-11-10T03:34:49.1719732Z 
+2026-11-10T03:34:49.1720201Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 17.21s
+2026-11-10T03:34:49.1721233Z 
+2026-11-10T03:34:49.1747181Z      Running tests\geostatic_affine.rs (target\release\deps\geostatic_affine-e839cdb1a2010a94.exe)
+2026-11-10T03:34:49.1859912Z 
+2026-11-10T03:34:49.1860452Z running 2 tests
+2026-11-10T03:34:49.1946390Z test affine_global_tensor_uses_all_coordinates_material_ncl_and_rejects_invalid_recipes ... ok
+2026-11-10T03:34:49.2433658Z test affine_seed_matches_original_plastic_history_and_checkpoint_without_mesh_point_values ... ok
+2026-11-10T03:34:49.2434730Z 
+2026-11-10T03:34:49.2435341Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+2026-11-10T03:34:49.2436256Z 
+2026-11-10T03:34:49.2460572Z      Running tests\hardening_fem.rs (target\release\deps\hardening_fem-a949cb255f87cfaa.exe)
+2026-11-10T03:34:49.2567596Z 
+2026-11-10T03:34:49.2567919Z running 3 tests
+2026-11-10T03:34:49.6038517Z test idh_initial_cap_is_distinct_from_mcc_ocr_and_tampered_history_is_rejected ... ok
+2026-11-10T03:35:15.5398084Z test idh_preload_unload_reload_and_excavation_satisfy_current_force_and_sparse_dense_gates ... ok
+2026-11-10T03:35:41.3281605Z test idh_cap_shear_void_ratio_and_release_histories_restore_after_cutback_and_all_phase_restarts ... ok
+2026-11-10T03:35:41.3282615Z 
+2026-11-10T03:35:41.3285422Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 52.07s
+2026-11-10T03:35:41.3286087Z 
+2026-11-10T03:35:41.3308258Z      Running tests\hydrostatic.rs (target\release\deps\hydrostatic-420b518931157906.exe)
+2026-11-10T03:35:41.3417420Z 
+2026-11-10T03:35:41.3417989Z running 5 tests
+2026-11-10T03:35:41.3422685Z test invalid_geometry_controls_and_unresolved_domain_are_rejected ... ok
+2026-11-10T03:35:41.3426021Z test planar_partial_water_force_and_moment_match_closed_polynomial_integrals ... ok
+2026-11-10T03:35:41.3628606Z test curved_partial_face_matches_independent_root_and_all_six_nodal_integrals ... ok
+2026-11-10T03:35:41.4424670Z test wet_dry_limits_reversed_normal_and_world_translation_are_consistent ... ok
+2026-11-10T03:35:41.4692070Z test wet_interior_island_is_detected_when_all_six_surface_nodes_are_dry ... ok
+2026-11-10T03:35:41.4692922Z 
+2026-11-10T03:35:41.4693446Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+2026-11-10T03:35:41.4694247Z 
+2026-11-10T03:35:41.4716601Z      Running tests\joint_law.rs (target\release\deps\joint_law-0675ebe08e114b98.exe)
+2026-11-10T03:35:41.4822689Z 
+2026-11-10T03:35:41.4823010Z running 6 tests
+2026-11-10T03:35:41.4828022Z test algorithmic_tangent_is_nonsymmetric_and_matches_half_step ... ok
+2026-11-10T03:35:41.4829956Z test global_rotation_and_restart_preserve_all_interface_history ... ok
+2026-11-10T03:35:41.4831289Z test numerical_dissipation_refines_and_failed_history_does_not_mutate_state ... ok
+2026-11-10T03:35:41.4832445Z test normal_compression_stick_and_opening_obey_unilateral_friction_and_work ... ok
+2026-11-10T03:35:41.4835586Z test open_motion_is_not_plastic_sliding_and_recontact_starts_unloaded ... ok
+2026-11-10T03:35:41.4838824Z test two_direction_reversal_preserves_residual_slip_and_positive_dissipation ... ok
+2026-11-10T03:35:41.4839585Z 
+2026-11-10T03:35:41.4840056Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-11-10T03:35:41.4840758Z 
+2026-11-10T03:35:41.4855829Z      Running tests\joints.rs (target\release\deps\joints-26bb883cb71b2237.exe)
+2026-11-10T03:35:41.4960002Z 
+2026-11-10T03:35:41.4960334Z running 5 tests
+2026-11-10T03:35:41.4991880Z test contact_normal_points_from_side_a_into_side_b ... ok
+2026-11-10T03:35:41.7422470Z test excavation_of_contact_side_archives_history_and_releases_only_its_old_force ... ok
+2026-11-10T03:35:41.7438139Z test interface_assembly_tangent_matches_independent_direction_and_rejects_bad_layouts ... ok
+2026-11-10T03:35:41.7453109Z test opposing_tri3_tri6_transfer_three_direction_traction_work_and_moment ... ok
+2026-11-10T03:36:41.5100603Z test global_joint_closure_sliding_opening_recontact_cutback_and_restart has been running for over 60 seconds
+2026-11-10T03:40:58.9414170Z test global_joint_closure_sliding_opening_recontact_cutback_and_restart ... ok
+2026-11-10T03:40:58.9414948Z 
+2026-11-10T03:40:58.9415525Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 317.44s
+2026-11-10T03:40:58.9416501Z 
+2026-11-10T03:40:58.9442021Z      Running tests\low_preload_cut.rs (target\release\deps\low_preload_cut-3171d2309e2553b2.exe)
+2026-11-10T03:40:58.9552387Z 
+2026-11-10T03:40:58.9553223Z running 2 tests
+2026-11-10T03:40:59.9504406Z test low_preload_nc_partial_cut_freezes_removed_plastic_and_contact_history ... ok
+2026-11-10T03:41:00.8811621Z test low_preload_nc_cut_checkpoint_resumes_exact_prefix_and_rejects_preload_change ... ok
+2026-11-10T03:41:00.8812535Z 
+2026-11-10T03:41:00.8813178Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.93s
+2026-11-10T03:41:00.8814041Z 
+2026-11-10T03:41:00.8840740Z      Running tests\mc_epoch_cli.rs (target\release\deps\mc_epoch_cli-ce8e483f42353fc3.exe)
+2026-11-10T03:41:00.8955218Z 
+2026-11-10T03:41:00.8955580Z running 4 tests
+2026-11-10T03:41:03.1797633Z test material_failure_rejected_prefix_recovers_without_inventing_stability_bounds ... ok
+2026-11-10T03:41:04.9447780Z test product_cli_pause_recovery_and_durable_checkpoint_match_continuous ... ok
+2026-11-10T03:41:06.8974282Z test stop_before_run_one_shot_immutable_inputs_and_pointer_paths_are_guarded ... ok
+2026-11-10T03:41:10.9662622Z test owned_abrupt_exit_recovers_the_last_complete_plastic_epoch ... ok
+2026-11-10T03:41:10.9663273Z 
+2026-11-10T03:41:10.9663770Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.07s
+2026-11-10T03:41:10.9664455Z 
+2026-11-10T03:41:10.9686536Z      Running tests\mc_fem.rs (target\release\deps\mc_fem-5283721d1e8a1d03.exe)
+2026-11-10T03:41:10.9793737Z 
+2026-11-10T03:41:10.9794285Z running 4 tests
+2026-11-10T03:41:10.9813372Z test mc_initial_k0_has_no_fictitious_ocr_and_mcc_json_remains_compatible ... ok
+2026-11-10T03:41:19.0665028Z test mc_checkpoint_restores_nonzero_plastic_history_and_rejects_state_model_mismatch ... ok
+2026-11-10T03:41:19.1084290Z test mc_tet4_and_tet10_global_newton_match_series_column_theory ... ok
+2026-11-10T03:41:19.2024184Z test mcc_and_mc_share_one_mesh_without_sharing_history_fields ... ok
+2026-11-10T03:41:19.2024618Z 
+2026-11-10T03:41:19.2024899Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.22s
+2026-11-10T03:41:19.2025294Z 
+2026-11-10T03:41:19.2052038Z      Running tests\mc_parameter_global.rs (target\release\deps\mc_parameter_global-0569bb3018ef4679.exe)
+2026-11-10T03:41:19.2159762Z 
+2026-11-10T03:41:19.2160090Z running 3 tests
+2026-11-10T03:41:19.2848645Z test invalid_epoch_retains_parameters_and_history_and_rejects_wrong_origin ... ok
+2026-11-10T03:41:19.3792917Z test post_load_tresca_weakening_matches_confined_compression_closed_form ... ok
+2026-11-10T03:41:19.9367841Z test unit_epoch_preserves_loaded_plastic_origin_and_independent_controllers ... ok
+2026-11-10T03:41:19.9368278Z 
+2026-11-10T03:41:19.9368629Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+2026-11-10T03:41:19.9369028Z 
+2026-11-10T03:41:19.9391573Z      Running tests\mcc_midpoint.rs (target\release\deps\mcc_midpoint-6f0db571edcfaee2.exe)
+2026-11-10T03:41:19.9501996Z 
+2026-11-10T03:41:19.9502354Z running 10 tests
+2026-11-10T03:41:19.9511031Z test adaptive_partition_and_its_consistent_tangent_use_the_identical_material_map ... ok
+2026-11-10T03:41:19.9513572Z test arbitrary_rotation_preserves_stress_plastic_history_and_directional_tangent ... ok
+2026-11-10T03:41:19.9514967Z test elastic_reversal_and_permitted_positive_drift_unloading_retain_pc_without_projection ... ok
+2026-11-10T03:41:19.9670208Z test full_partition_tangent_includes_first_yield_hardening_and_opposite_reyield ... ok
+2026-11-10T03:41:20.1717292Z test both_global_schemes_start_nearly_hydrostatic_elastic_newton_steps ... ok
+2026-11-10T03:41:21.4744463Z test global_midpoint_cutback_checkpoint_restores_plastic_history_and_binds_scheme ... ok
+2026-11-10T03:41:21.4746824Z test invalid_midpoint_trials_leave_committed_material_history_unchanged ... ok
+2026-11-10T03:41:21.4753343Z test ocr_first_yield_and_unloading_converge_quadratically_to_closed_form ... ok
+2026-11-10T03:41:21.4756284Z test optional_scheme_preserves_legacy_json_and_rejects_unknown_integration ... ok
+2026-11-10T03:41:26.2352570Z test global_displacement_and_both_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms ... ok
+2026-11-10T03:41:26.2353844Z 
+2026-11-10T03:41:26.2354444Z test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.28s
+2026-11-10T03:41:26.2355181Z 
+2026-11-10T03:41:26.2378408Z      Running tests\mcc_split.rs (target\release\deps\mcc_split-2d76ebe3a83798bd.exe)
+2026-11-10T03:41:26.2484455Z 
+2026-11-10T03:41:26.2507365Z running 4 tests
+2026-11-10T03:41:26.2508223Z test elastic_split_has_exact_bulk_and_deviatoric_moduli ... ok
+2026-11-10T03:41:26.2518825Z test rotated_plastic_response_and_failed_trials_preserve_committed_state ... ok
+2026-11-10T03:41:26.2553846Z test plastic_split_reconstructs_all_history_and_unsymmetrized_full_tangent ... ok
+2026-11-10T03:41:26.2573638Z test split_blocks_predict_independent_directional_derivatives ... ok
+2026-11-10T03:41:26.2574492Z 
+2026-11-10T03:41:26.2575025Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-11-10T03:41:26.2575666Z 
+2026-11-10T03:41:26.2591825Z      Running tests\mechanics.rs (target\release\deps\mechanics-7f4b499db43f3280.exe)
+2026-11-10T03:41:26.2690892Z 
+2026-11-10T03:41:26.2691119Z running 5 tests
+2026-11-10T03:41:26.2747551Z test nodal_force_totals_and_underconstrained_components_are_checked ... ok
+2026-11-10T03:41:26.2771012Z test nonzero_displacement_lifting_recovers_reaction_and_energy ... ok
+2026-11-10T03:41:26.2851608Z test tet10_cantilever_pure_bending_matches_exact_quadratic_solution ... ok
+2026-11-10T03:41:26.2853141Z test signed_surface_pressure_and_rotated_direction_constraints_are_objective ... ok
+2026-11-10T03:41:26.2899565Z test two_material_series_bar_has_correct_interface_force_and_compliance ... ok
+2026-11-10T03:41:26.2900142Z 
+2026-11-10T03:41:26.2900436Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+2026-11-10T03:41:26.2900838Z 
+2026-11-10T03:41:26.2921670Z      Running tests\mixed_mechanics.rs (target\release\deps\mixed_mechanics-b3238c03b50a81f2.exe)
+2026-11-10T03:41:26.3030525Z 
+2026-11-10T03:41:26.3030804Z running 4 tests
+2026-11-10T03:41:26.3141521Z test affine_strain_pressure_and_rigid_motion_are_exact_on_straight_and_curved_cells ... ok
+2026-11-10T03:41:26.3245091Z test two_material_column_preserves_pressure_jump_and_series_compliance ... ok
+2026-11-10T03:41:26.3250461Z test unsupported_linear_cells_underintegration_and_exact_incompressibility_are_rejected ... ok
+2026-11-10T03:41:26.3367304Z test near_incompressible_uniaxial_stress_sparse_and_dense_match_theory ... ok
+2026-11-10T03:41:26.3368002Z 
+2026-11-10T03:41:26.3368485Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+2026-11-10T03:41:26.3369432Z 
+2026-11-10T03:41:26.3387574Z      Running tests\one_way.rs (target\release\deps\one_way-5063667b178ed795.exe)
+2026-11-10T03:41:26.3493375Z 
+2026-11-10T03:41:26.3493622Z running 9 tests
+2026-11-10T03:41:26.5962677Z test bishop_zero_one_and_separate_exterior_pressure_match_exact_elastic_limits ... ok
+2026-11-10T03:41:26.6139006Z test declared_compressible_water_mass_includes_positive_storage_and_closed_head_is_preserved ... ok
+2026-11-10T03:41:26.7070327Z test genuine_mechanical_exhaustion_does_not_commit_the_successful_hydraulic_trial ... ok
+2026-11-10T03:41:26.8741149Z test initial_unsaturated_column_matches_independent_continuous_elastic_integrals ... ok
+2026-11-10T03:41:26.8768025Z test invalid_closure_porosity_exterior_and_mixed_stage_policies_are_rejected ... ok
+2026-11-10T03:41:27.2173700Z test plastic_coupled_cutbacks_restore_both_histories_and_same_accepted_times_replay_exactly ... ok
+2026-11-10T03:41:27.8151117Z test raw_hydraulic_quadrature_transfers_water_mass_and_symmetric_pore_force_without_double_counting ... ok
+2026-11-10T03:41:27.9720893Z test saturated_limit_recovers_existing_pore_pressure_displacement_increments ... ok
+2026-11-10T03:41:28.9928182Z test checkpoints_replay_initialization_and_physical_periods_and_reject_resealed_changes ... ok
+2026-11-10T03:41:28.9928673Z 
+2026-11-10T03:41:28.9929020Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.64s
+2026-11-10T03:41:28.9929423Z 
+2026-11-10T03:41:28.9957691Z      Running tests\one_way_lifecycle.rs (target\release\deps\one_way_lifecycle-16a9c6e217eb0f0f.exe)
+2026-11-10T03:41:29.0066291Z 
+2026-11-10T03:41:29.0066821Z running 12 tests
+2026-11-10T03:41:29.5877753Z test birth_water_source_includes_declared_positive_pressure_storage ... ok
+2026-11-10T03:41:29.6438619Z test impossible_water_preserving_change_keeps_the_previous_accepted_state_and_archive ... ok
+2026-11-10T03:41:30.8059320Z test excavated_mcc_can_be_replaced_while_inactive_and_reborn_as_wet_fresh_mc_without_losing_archive ... ok
+2026-11-10T03:41:30.9733296Z test lifecycle_rejections_restore_ledgers_and_same_clean_release_path_is_exact ... ok
+2026-11-10T03:41:31.0904242Z test lifecycle_checkpoints_restore_birth_reference_material_ids_porosity_and_mass_sources ... ok
+2026-11-10T03:41:31.6311964Z test material_set_preserve_head_uses_new_water_law_and_accounts_for_added_water ... ok
+2026-11-10T03:41:31.6337860Z test new_born_surface_missing_water_law_and_inherited_plastic_history_are_rejected_before_work ... ok
+2026-11-10T03:41:31.8106852Z test material_set_preserve_water_inverts_head_and_retains_unchanged_primary_cells_exactly ... ok
+2026-11-10T03:41:32.3621354Z test time_zero_cut_keeps_clock_zero_and_nonzero_holding_checkpoint_resumes_exactly ... ok
+2026-11-10T03:41:33.0334809Z test wet_stress_free_birth_matches_closed_saturated_oedometer_theory_and_added_water ... ok
+2026-11-10T03:41:33.1575952Z test zero_storage_saturated_change_requires_a_physical_pressure_reference ... ok
+2026-11-10T03:41:34.0233005Z test rejected_birth_with_genuine_plastic_history_replays_the_same_clean_path_exactly ... ok
+2026-11-10T03:41:34.0233836Z 
+2026-11-10T03:41:34.0234351Z test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.02s
+2026-11-10T03:41:34.0235035Z 
+2026-11-10T03:41:34.0272606Z      Running tests\projected_mcc.rs (target\release\deps\projected_mcc-83ea14a0d911c83b.exe)
+2026-11-10T03:41:34.0382911Z 
+2026-11-10T03:41:34.0384094Z running 4 tests
+2026-11-10T03:41:34.9108099Z test altered_volume_offset_and_formulation_are_rejected_after_resealing ... ok
+2026-11-10T03:41:35.3515142Z test affine_plastic_cycle_dense_sparse_and_removed_history ... ok
+2026-11-10T03:41:37.0314168Z test pressure_unload_then_display_reset_preserves_exact_load_and_mixed_history ... ok
+2026-11-10T03:41:41.3317542Z test local_death_freezes_nonzero_compatibility_offset_and_restarts ... ok
+2026-11-10T03:41:41.3318237Z 
+2026-11-10T03:41:41.3318616Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.29s
+2026-11-10T03:41:41.3319031Z 
+2026-11-10T03:41:41.3351536Z      Running tests\reset.rs (target\release\deps\reset-9720bc5605f11cd2.exe)
+2026-11-10T03:41:41.3476337Z 
+2026-11-10T03:41:41.3476796Z running 4 tests
+2026-11-10T03:41:42.1099189Z test born_nodes_get_their_new_display_origin_after_reset ... ok
+2026-11-10T03:41:43.1246456Z test explicit_state_reset_reequilibrates_without_resetting_constitutive_displacement ... ok
+2026-11-10T03:41:43.7614896Z test mcc_reset_uses_explicit_admissible_pc_and_void_ratio_then_forms_new_history ... ok
+2026-11-10T03:41:44.7922816Z test display_reset_preserves_every_physical_history_for_mc_and_mcc ... ok
+2026-11-10T03:41:44.7923468Z 
+2026-11-10T03:41:44.7923947Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.44s
+2026-11-10T03:41:44.7924575Z 
+2026-11-10T03:41:44.7949145Z      Running tests\rigidity.rs (target\release\deps\rigidity-1f677e438bd6cb6c.exe)
+2026-11-10T03:41:44.8057010Z 
+2026-11-10T03:41:44.8057450Z running 7 tests
+2026-11-10T03:41:44.8097815Z test contact_alone_never_restrains_global_motion_after_large_coordinate_translation ... ok
+2026-11-10T03:41:44.8158883Z test contact_support_counts_open_normal_stick_and_one_sided_limit_modes ... ok
+2026-11-10T03:41:44.8163190Z test inactive_contact_histories_are_validated_before_reporting ... ok
+2026-11-10T03:41:44.8168736Z test rigid_audit_rejects_malformed_geometry_and_nonlocal_or_nonorthogonal_transforms ... ok
+2026-11-10T03:41:44.8171903Z test shared_edge_and_vertex_retain_real_hinge_modes ... ok
+2026-11-10T03:41:44.8177973Z test weak_early_rigid_rows_are_repivoted_without_inventing_extra_constraints ... ok
+2026-11-10T03:41:45.0959996Z test explicit_contact_supported_column_releases_upper_side_without_artificial_clamps ... ok
+2026-11-10T03:41:45.0960795Z 
+2026-11-10T03:41:45.0961295Z test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+2026-11-10T03:41:45.0962335Z 
+2026-11-10T03:41:45.0984011Z      Running tests\srm_bound.rs (target\release\deps\srm_bound-7d90d758c467afcb.exe)
+2026-11-10T03:41:45.1094180Z 
+2026-11-10T03:41:45.1094732Z running 9 tests
+2026-11-10T03:41:45.1109585Z test body_weight_and_all_six_reactions_enter_the_first_moment ... ok
+2026-11-10T03:41:45.1110679Z test certificate_is_rotation_translation_and_nonassociated_flow_invariant ... ok
+2026-11-10T03:41:45.1114789Z test distributed_or_singular_supports_cannot_be_misreported_as_physical_uppers ... ok
+2026-11-10T03:41:45.1116365Z test davis_uses_its_effective_strength_instead_of_the_untransformed_cohesion ... ok
+2026-11-10T03:41:45.1119424Z test invalid_or_heterogeneous_inputs_never_become_an_upper_candidate ... ok
+2026-11-10T03:41:45.1125197Z test rankine_exclusion_is_distinct_from_mc_and_not_an_admissibility_sufficiency_claim ... ok
+2026-11-10T03:41:45.1129812Z test uniaxial_closed_form_excludes_only_after_the_strength_limit_without_a_solver_failure ... ok
+2026-11-10T03:41:45.1139601Z test unknown_water_policy_and_overflow_do_not_create_physical_exclusion ... ok
+2026-11-10T03:41:45.1174735Z test mean_stress_agrees_with_an_independent_elastic_global_fem_and_tet10 ... ok
+2026-11-10T03:41:45.1175375Z 
+2026-11-10T03:41:45.1175813Z test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-11-10T03:41:45.1176474Z 
+2026-11-10T03:41:45.1194427Z      Running tests\srm_search_control.rs (target\release\deps\srm_search_control-7eb3ab1f4e580456.exe)
+2026-11-10T03:41:45.1298370Z 
+2026-11-10T03:41:45.1298566Z running 6 tests
+2026-11-10T03:41:45.2556185Z test changed_material_mesh_full_case_specification_and_saved_history_are_rejected ... ok
+2026-11-10T03:41:46.3961833Z test genuine_nonlinear_failure_after_restarts_is_unknown_and_never_an_upper ... ok
+2026-11-10T03:41:46.4419546Z test observer_failure_leaves_last_saved_snapshot_valid_and_cannot_create_a_trial_failure ... ok
+2026-11-10T03:41:47.8025862Z test original_geostatic_and_each_factor_keep_their_own_accepted_checkpoint ... ok
+2026-11-10T03:41:48.0118802Z test distributed_frictional_virtual_upper_survives_all_restarts_without_history_transfer ... ok
+2026-11-10T03:41:49.1062791Z test restart_every_increment_matches_uninterrupted_closed_form_search_and_all_scientific_history ... ok
+2026-11-10T03:41:49.1063649Z 
+2026-11-10T03:41:49.1064185Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.98s
+2026-11-10T03:41:49.1064870Z 
+2026-11-10T03:41:49.1091928Z      Running tests\srm_virtual_work.rs (target\release\deps\srm_virtual_work-fb6a8fcc2fbaa91d.exe)
+2026-11-10T03:41:49.1198810Z 
+2026-11-10T03:41:49.1199152Z running 12 tests
+2026-11-10T03:41:49.1354684Z test actual_global_elastic_fem_and_independent_affine_solution_have_identical_virtual_work ... ok
+2026-11-10T03:41:49.1360460Z test davis_effective_strength_and_rankine_superset_are_explicit_and_conservative ... ok
+2026-11-10T03:41:49.1378827Z test distributed_support_bounds_match_the_closed_form_for_tet4_and_tet10 ... ok
+2026-11-10T03:41:49.1383189Z test even_tiny_supported_displacement_and_unsupported_oblique_reactions_cannot_make_an_upper ... ok
+2026-11-10T03:41:49.6884817Z test fresh_search_uses_a_verified_distributed_support_upper_and_retains_honest_numerical_unknowns ... ok
+2026-11-10T03:41:49.6902789Z test full_3d_tensor_rotation_preserves_work_capacity_and_eigenvalue_order ... ok
+2026-11-10T03:41:49.6916571Z test heterogeneous_material_capacities_are_integrated_without_an_average_yield_domain ... ok
+2026-11-10T03:41:49.6921976Z test invalid_data_zero_strain_and_tresca_nonzero_trace_never_become_an_upper ... ok
+2026-11-10T03:41:49.6928797Z test one_bad_gp_is_rejected_even_when_the_mean_strain_is_strictly_dual_feasible ... ok
+2026-11-10T03:41:49.6964836Z test positive_scaling_and_streamed_point_observer_preserve_the_exclusion ... ok
+2026-11-10T03:41:49.7149008Z test actual_frictional_plastic_fem_internal_work_matches_external_work_and_is_not_excluded ... ok
+2026-11-10T03:41:49.9638243Z test real_nonlinear_failure_with_unavailable_virtual_fields_stays_indeterminate_without_an_upper ... ok
+2026-11-10T03:41:49.9638949Z 
+2026-11-10T03:41:49.9639274Z test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.84s
+2026-11-10T03:41:49.9639675Z 
+2026-11-10T03:41:49.9665053Z      Running tests\stage_job.rs (target\release\deps\stage_job-8d5b7ac9839c6820.exe)
+2026-11-10T03:41:49.9769434Z 
+2026-11-10T03:41:49.9769804Z running 8 tests
+2026-11-10T03:41:50.0243583Z test a_different_running_solver_cannot_claim_a_valid_foreign_solver_snapshot ... ok
+2026-11-10T03:41:51.6766092Z test a_stop_request_for_another_job_is_refused_and_cannot_pause_the_running_job ... ok
+2026-11-10T03:41:53.6671166Z test cli_pause_and_separate_process_resume_preserve_every_non_time_result_field ... ok
+2026-11-10T03:41:55.9730405Z test durable_interval_and_recovery_tampering_are_rejected_without_claiming_an_output ... ok
+2026-11-10T03:42:00.0362048Z test durable_slots_and_snapshot_fork_preserve_all_non_time_result_fields ... ok
+2026-11-10T03:42:00.1684159Z test immutable_input_changes_existing_output_and_second_execution_are_refused_before_solving ... ok
+2026-11-10T03:42:00.7364437Z test invalid_material_and_numerical_failure_never_publish_success_or_a_false_checkpoint ... ok
+2026-11-10T03:42:05.6960610Z test durable_checkpoint_survives_abrupt_owned_child_exit_and_recovers_exact_history ... ok
+2026-11-10T03:42:05.6961092Z 
+2026-11-10T03:42:05.6962374Z test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.72s
+2026-11-10T03:42:05.6962829Z 
+2026-11-10T03:42:05.6983064Z      Running tests\surface_projection.rs (target\release\deps\surface_projection-ee67dd3d4d297b62.exe)
+2026-11-10T03:42:05.7092075Z 
+2026-11-10T03:42:05.7092402Z running 2 tests
+2026-11-10T03:42:05.7097454Z test planar_projection_handles_vertical_downward_and_scaled_shifted_geometry ... ok
+2026-11-10T03:42:05.7098739Z test curved_triangle_rain_projection_crossing_zero_normal_matches_exact_integral ... ok
+2026-11-10T03:42:05.7099424Z 
+2026-11-10T03:42:05.7099941Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-11-10T03:42:05.7100631Z 
+2026-11-10T03:42:05.7114639Z      Running tests\water_stages.rs (target\release\deps\water_stages-cd282c9ac03d5b92.exe)
+2026-11-10T03:42:05.7215172Z 
+2026-11-10T03:42:05.7215539Z running 3 tests
+2026-11-10T03:42:06.2300360Z test intermediate_water_head_rebuilds_actual_pressure_and_does_not_interpolate_endpoint_loads ... ok
+2026-11-10T03:42:06.7290014Z test hydrostatic_drawdown_flooding_and_buoyant_excavation_follow_column_theory ... ok
+2026-11-10T03:42:08.4457186Z test plastic_water_history_and_partial_excavation_resume_exactly_and_reject_tampering ... ok
+2026-11-10T03:42:08.4457985Z 
+2026-11-10T03:42:08.4458467Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.72s
+2026-11-10T03:42:08.4459207Z 
+2026-11-10T03:42:08.6086598Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+2026-11-10T03:42:08.6087135Z with:
+2026-11-10T03:42:08.6087503Z   name: fem-windows-rust-integration-0-260281fbbc09ec0402165339b4772bf423567d93
+2026-11-10T03:42:08.6090400Z   path: runs/ci/*.json
+runs/ci/*.log
+runs/ci/wet-structures/verification.json
+runs/ci/wet-structures/stage-results.json
+runs/ci/wet-structures/mesh.json
+runs/ci/wet-structures/ground.json
+runs/ci/wet-structures/stages.json
+runs/ci/soil-wet-structures/**
+runs/ci/soil-source-wet-structures/**
+runs/ci/fixed-prescribed-wet-structures/**
+runs/ci/low-preload-nc/**
+!runs/ci/low-preload-nc/job/solver/**
+runs/ci/low-preload-nc-step32/**
+runs/ci/low-preload-nc-step64/**
+!runs/ci/low-preload-nc-step32/job/solver/**
+!runs/ci/low-preload-nc-step64/job/solver/**
+runs/ci/low-preload-nc-reference128/**
+runs/ci/low-preload-nc-reference256/**
+
+2026-11-10T03:42:08.6093313Z   if-no-files-found: warn
+2026-11-10T03:42:08.6093884Z   retention-days: 14
+2026-11-10T03:42:08.6094134Z   compression-level: 6
+2026-11-10T03:42:08.6094378Z   overwrite: false
+2026-11-10T03:42:08.6094632Z   include-hidden-files: false
+2026-11-10T03:42:08.6094921Z   archive: true
+2026-11-10T03:42:08.6095104Z env:
+2026-11-10T03:42:08.6095274Z   CARGO_BUILD_JOBS: 2
+2026-11-10T03:42:08.6095477Z   RUST_TEST_THREADS: 2
+2026-11-10T03:42:08.6095693Z   OPENBLAS_NUM_THREADS: 1
+2026-11-10T03:42:08.6095908Z   MKL_NUM_THREADS: 1
+2026-11-10T03:42:08.6096103Z   OMP_NUM_THREADS: 1
+2026-11-10T03:42:08.6096298Z   PYTHONUTF8: 1
+2026-11-10T03:42:08.6096497Z   PYTHONIOENCODING: utf-8
+2026-11-10T03:42:08.6096816Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:42:08.6097300Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-10T03:42:08.6097780Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:42:08.6098211Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:42:08.6098645Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-10T03:42:08.6098980Z ##[endgroup]
+2026-11-10T03:42:08.8197753Z With the provided path, there will be 5 files uploaded
+2026-11-10T03:42:08.8203635Z Artifact name is valid!
+2026-11-10T03:42:08.8205099Z Root directory input is valid!
+2026-11-10T03:42:09.2541555Z Uploading artifact: fem-windows-rust-integration-0-260281fbbc09ec0402165339b4772bf423567d93.zip
+2026-11-10T03:42:09.2586120Z Beginning upload of artifact content to blob storage
+2026-11-10T03:42:09.7329828Z Uploaded bytes 44039
+2026-11-10T03:42:09.8097739Z Finished uploading artifact content to blob storage!
+2026-11-10T03:42:09.8098906Z SHA256 digest of uploaded artifact is a8783979b40a8ae363cc6696bc233a767028a39952e82842bbd0f3446242cfd7
+2026-11-10T03:42:09.8100050Z Finalizing artifact upload
+2026-11-10T03:42:10.3380345Z Artifact fem-windows-rust-integration-0-260281fbbc09ec0402165339b4772bf423567d93 successfully finalized. Artifact ID 13733636367
+2026-11-10T03:42:10.3382230Z Artifact fem-windows-rust-integration-0-260281fbbc09ec0402165339b4772bf423567d93 has been successfully uploaded! Final size is 44039 bytes. Artifact ID is 13733636367
+2026-11-10T03:42:10.3388718Z Artifact download URL: https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42746232533/artifacts/13733636367
+2026-11-10T03:42:10.3762940Z Post job cleanup.
+2026-11-10T03:42:10.5282861Z Cache hit occurred on the primary key setup-python-Windows-x64-python-3.13.17-pip-c844d4bb1f478392485359569493f93acb18af9adb109ffe82641637bcb9ad74, not saving cache.
+2026-11-10T03:42:10.5616467Z Post job cleanup.
+2026-11-10T03:42:10.7781335Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-10T03:42:10.8181703Z git version 2.56.0.windows.4
+2026-11-10T03:42:10.8263602Z Temporarily overriding HOME='D:\a\_temp\de59c6b3-f665-415b-b3db-1d3fb0379c28' before making global git config changes
+2026-11-10T03:42:10.8264882Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-10T03:42:10.8274650Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\solidcraft_soil_analysis\solidcraft_soil_analysis
+2026-11-10T03:42:10.8687269Z Removing SSH command configuration
+2026-11-10T03:42:10.8698729Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-10T03:42:10.9083451Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-10T03:42:11.4520662Z Removing HTTP extra header
+2026-11-10T03:42:11.4531181Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-10T03:42:11.4909725Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-10T03:42:12.0352992Z Removing includeIf entries pointing to credentials config files
+2026-11-10T03:42:12.0364805Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-10T03:42:12.0805815Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-10T03:42:12.6331249Z Cleaning up orphan processes
+2026-11-10T03:42:12.6573135Z Terminate orphan process: pid (7296) (vctip)
+

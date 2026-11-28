@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/work/source/interim/p19-execution/nc_next.py", line 115, in <module>
+    run(Path(sys.argv[1]).resolve(),Path(sys.argv[2]).resolve())
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/source/interim/p19-execution/nc_next.py", line 29, in run
+    model = prior.old.nc_extended.Extended(work/"inputs", bin_dir/"p5_homogeneous")
+  File "/workspace/work/source/interim/2026-11-25-remaining5-p2/nc_continue.py", line 51, in __init__
+    with np.load(p1) as f:
+         ~~~~~~~^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/lib/_npyio_impl.py", line 454, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/workspace/work/source/interim/2026-11-25-remaining5-p1/nc/increment-4.npz'
+{"exit_code": 1, "seconds": 1.340271587000018, "peak_rss_kib": 68496}

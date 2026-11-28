@@ -1,0 +1,30 @@
+{
+  "pip_inventory_first_attempt": {
+    "command": "python -m pip freeze",
+    "exit_code": 1,
+    "stderr": "No module named pip",
+    "software_test": false
+  },
+  "package_inventory_recovery": {
+    "command": "uv pip freeze --python .venv/bin/python",
+    "dependency_changes": 0,
+    "provided_activation_script_sourced": true,
+    "UV_CACHE_DIR": "/workspace/.cache/uv"
+  },
+  "metadata_label_audit": {
+    "mislabeled": 28,
+    "numeric_values_changed": 0
+  },
+  "automatic_git_maintenance": {
+    "stopped_unfinished_background_repack": true,
+    "original_objects_preserved": true,
+    "local_gc_auto": 0,
+    "local_maintenance_auto": false
+  },
+  "uv_inventory_first_attempt": {
+    "command": "uv pip freeze --python .venv/bin/python",
+    "exit_code": 2,
+    "stderr": "Read-only HOME cache before sourcing the provided activation script",
+    "software_test": false
+  }
+}

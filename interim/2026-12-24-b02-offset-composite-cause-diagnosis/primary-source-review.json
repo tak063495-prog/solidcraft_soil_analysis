@@ -1,0 +1,126 @@
+{
+  "schema": "b02cause-primary-source-review/1",
+  "review_date_jst": "2026-11-15",
+  "rule": "Only fetched primary text or explicitly labelled abstract/bibliography. No unobserved quotation or numerical reference imported.",
+  "sources": [
+    {
+      "title": "SIMULIA Abaqus 2026: Defining the Initial Geometry of Conventional Shell Elements",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-shellgeometry.htm",
+      "access": "official HTML body, Offset: Reference Surface Versus Midsurface",
+      "confirmed": "Reference-surface DOFs and kinematics, offset as thickness fraction, membrane loading causing moments with nonzero offset.",
+      "use": "Keep reference/midsurface and work-conjugate force/moment labels explicit; not a proof of this Tri6 implementation."
+    },
+    {
+      "title": "SIMULIA Abaqus 2026: *SHELL SECTION",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEKEYRefMap/simakey-r-shellsection.htm",
+      "access": "official HTML body, OFFSET",
+      "confirmed": "Signed thickness-fraction OFFSET; SPOS/SNEG and default zero.",
+      "use": "Compare conventions only: this repository uses length e and x_p=x_s-e*n; do not equate numerical offset inputs between products."
+    },
+    {
+      "title": "SIMULIA Abaqus 2026: Coupling Constraints",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-coupling.htm",
+      "access": "official HTML body, Surface-Based Coupling Definitions",
+      "confirmed": "Kinematic coupling imposes rigidity; distributing coupling uses weighted average motion and accounts for reference-node offset.",
+      "use": "A different coupling model is a specification change. Do not change the corner point attachment to improve convergence."
+    },
+    {
+      "title": "SIMULIA Abaqus 2026: Shell-to-Solid Coupling",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-shelltosolidcoup.htm",
+      "access": "official HTML body, constraints and influence distance",
+      "confirmed": "Shell edge to solid surface uses distributing constraints; force/moment transfer is self-equilibrating; influence distance accounts for offset.",
+      "use": "Audit nodal force and moment transfer; this edge/surface transition is not the same as a plate bonded over a soil face."
+    },
+    {
+      "title": "EDF Code_Aster U4.42.01, Mot cle COQUE",
+      "url": "https://codeaster.gitlab.io/doc/docaster/manuals/man_u/u4/u4.42.01/Mot_cle_COQUE.html",
+      "access": "official HTML body, 8.3.2 EXCENTREMENT",
+      "confirmed": "Signed distance between mesh and midsurface for DKT/DST/GRILLE_EXCENTRE; influence on bending and membrane coupling.",
+      "use": "Separate kinematic offset coupling from assumed transverse shear. Do not infer this implementation has the Code_Aster element formulation."
+    },
+    {
+      "title": "EDF Code_Aster R3.07.06, Mise en oeuvre et post-traitements",
+      "url": "https://code-aster.org/doc/v17/manuals/man_r/r3/r3.07.06/Mise_en__uvre_et_post-traitements.html",
+      "access": "official HTML body, sections 5.1-5.3",
+      "confirmed": "Loads/couples and displacement conditions require reference-plane transforms; generalized resultants can be transferred to midsurface through POST_CHAMP/COQUE_EXCENT.",
+      "use": "Retain N/Mp/Ms and load application plane; check virtual work without replacing original definitions."
+    },
+    {
+      "title": "Bentley PLAXIS: Modelling soil-structure interaction: interfaces",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0110020",
+      "access": "official support article body",
+      "confirmed": "Without interface soil and structure are tied; interface node pairs allow slipping/gapping with elastic-perfectly-plastic interaction.",
+      "use": "Distinguish present bonded trace from an interface law. No hypothetical JOINT contribution can be supplied by the dry reference."
+    },
+    {
+      "title": "Bentley PLAXIS: Frequently Asked Questions - Interface elements",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0047965",
+      "access": "official support article body, Q1/Q2/Q6",
+      "confirmed": "Mechanical relative motion, hydraulic permeability/active-in-flow settings and structural-side selection are distinct choices.",
+      "use": "Document missing offset interface ownership, pressure and activity contracts; no defaults imported."
+    },
+    {
+      "title": "Bentley PLAXIS: Initial degree of saturation for soil activated during staged construction",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article&sysparm_article=KB0107818",
+      "access": "official support article body, version 2024.1",
+      "confirmed": "Newly activated soil initial saturation/pore pressure depends on chosen water condition and pore-pressure generation method.",
+      "use": "Explain why retaining inactive pore-array values does not define a new soil generation's initial state."
+    },
+    {
+      "title": "Bentley PLAXIS: Regenerate staged construction",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0110294",
+      "access": "official support article body",
+      "confirmed": "Soil/structure active state, assigned material and loads are phase-specific; global material parameter values are separate.",
+      "use": "Separate activation/deactivation/material assignment from material-state transfer and equilibrium."
+    },
+    {
+      "title": "Bentley PLAXIS: Structural results in tables and curve plots",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0108821",
+      "access": "official support article body",
+      "confirmed": "Structural stress-point extrapolation and smoothing can yield different nodal/table/curve values.",
+      "use": "Keep raw, recovered and smoothed quantities distinct; no smoothing introduced as acceptance."
+    },
+    {
+      "title": "Bentley PLAXIS: Shear stress sign convention in interfaces",
+      "url": "https://bentleysystems.service-now.com/community?id=kb_article_view&sysparm_article=KB0108294",
+      "access": "official support article body",
+      "confirmed": "Interface shear sign depends on local axes, paired relative motion and previous-phase shear state; node and stress-point conventions can differ.",
+      "use": "Future interface comparison must specify owner, local basis, generation and output location, not nearest coordinates alone."
+    },
+    {
+      "title": "Bathe and Dvorkin (1985), A four-node plate bending element based on Mindlin/Reissner plate theory and a mixed interpolation, IJNME 21, 367-383",
+      "doi": "10.1002/nme.1620210213",
+      "url": "https://web.mit.edu/kjb/www/Publications_Prior_to_1998/A_Four-Node_Plate_Bending_Element_Based_on_Mindlin_Reissner_Plate_Theory_and_a_Mixed_Interpolation.pdf",
+      "access": "author-hosted full PDF, 17 pages, especially pp.368-371 and 380",
+      "confirmed": "Separate displacement/rotation and covariant transverse shear interpolation addresses thin-element locking; stress-resultant accuracy near large gradients needs refinement.",
+      "use": "Observe assumed shear versus raw displacement-gradient shear separately. Four-node paper is not a Tri6 offset-plus-soil convergence theorem."
+    },
+    {
+      "title": "Zienkiewicz and Zhu (1992), The superconvergent patch recovery and a posteriori error estimates. Part 1: The recovery technique, IJNME 33, 1331-1364",
+      "doi": "10.1002/nme.1620330702",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/nme.1620330702",
+      "access": "publisher bibliography and abstract only; full body not obtained",
+      "confirmed": "Abstract distinguishes recovered nodal derivatives from global L2 projection and reports element-dependent superconvergence.",
+      "use": "Bibliographic motivation only. Do not call the existing six-point Nedelec reconstruction SPR or import a convergence order."
+    },
+    {
+      "title": "Maunder and Moitinho de Almeida (2018), Recovery of strong equilibrium from displacement-based finite element models of Reissner-Mindlin plates, IJNME 114, 375-398",
+      "doi": "10.1002/nme.5747",
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/nme.5747",
+      "access": "publisher bibliography and summary only; full body not obtained",
+      "confirmed": "Summary describes equilibrated stress recovery on overlapping star patches and complementary-energy comparison.",
+      "use": "Bibliographic motivation only; local reconstruction is not proof of whole-system balance and is not substituted for the original Q."
+    },
+    {
+      "title": "PLAXIS 3D Reference Manual 2024.1 / 2024.3 / 2025.1",
+      "urls": [
+        "https://bentleysystems.service-now.com/sys_attachment.do?sys_id=5aee025f9751661081d373b0f053af6c",
+        "https://bentleysystems.service-now.com/sys_attachment.do?sys_id=1d1dbad79751a61081d373b0f053afa7",
+        "https://files.seequent.com/PLAXIS/Manuals/PLAXIS_3D/English/PLAXIS_3D_2_Reference%20Manual.pdf"
+      ],
+      "access": "full-body fetch failed: web-tool document exceeds 10 MiB; bibliography/search metadata only",
+      "use": "Do not quote unobserved manual equations, Mindlin or activation details from its body. Official support article bodies above are the confirmed PLAXIS evidence."
+    }
+  ],
+  "other_failed_fetch": "Abaqus 2024 shellgeometry HTML returned 403; 2026 official HTML was fetched instead."
+}

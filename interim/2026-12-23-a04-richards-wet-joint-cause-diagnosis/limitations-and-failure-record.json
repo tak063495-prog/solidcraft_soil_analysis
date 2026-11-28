@@ -1,0 +1,34 @@
+{
+  "diagnostic_only": true,
+  "passed": false,
+  "a04_complete": false,
+  "single_cause_complete": false,
+  "not_identifiable_after_scope_refusal": [
+    "Richards interface head error",
+    "hydraulic opening/generation reproducibility",
+    "interface storage/flow/mass error",
+    "combined soil/interface global force balance",
+    "coupled physical time-step error"
+  ],
+  "reasons": [
+    "No permitted coupled input path exists; fabricated head or soil-ledger substitution is forbidden",
+    "Soil dt and volume quadrature sensitivity are measured separately, not a coupled attribution",
+    "Historical C-04 local subdivision and global path effects were not completely exchanged in a new solve"
+  ],
+  "known_retained_failure": {
+    "same_face_boundary_head_inconsistency": "native complete, independent initialization rejects; expectation of native rejection remains unmet",
+    "included_in_successful_16_refusals": false
+  },
+  "numerical_incompleteness_not_reclassified_as_scope_refusal_or_physical_failure": true,
+  "cloud_remaining": [
+    "bounded small-mesh h/dt/quadrature cross sensitivity inside existing permitted soil scope",
+    "face declaration and assembly order sensitivity",
+    "C-04 full predictor/repartition exchange in global equilibrium"
+  ],
+  "specifications_required_before_Richards_joint_solves": true,
+  "pc_executed": false,
+  "pc_optional": "same 12 Tet4 only, N32/64/128",
+  "new_above_40GB_or_24h_per_path_runs_planned": false,
+  "beyond_scale_limit_status": "規模上限のため確認不可・未達（一般空間/界面参照に上限超の確認が必要な場合）",
+  "old_failure_records_values_archives_deleted_or_resealed": false
+}

@@ -1,0 +1,158 @@
+"""Roundoff observations on newly solved fields; never updates any solution."""
+import math
+from decimal import Decimal, localcontext
+import numpy as np
+from common import read
+import fem_reference as ref
+from plate6_offset_reference import System
+
+LD = np.longdouble
+
+def norm(x):
+    a=np.asarray(x, dtype=LD).ravel()
+    return float(np.sqrt(np.sum(a*a, dtype=LD)))
+
+def summary(x, free, scale):
+    v=np.asarray(x)[free]
+    return dict(absolute_l2_kn=norm(v),relative_l2=norm(v)/scale,maximum_absolute_kn=float(np.max(np.abs(v),initial=0.)))
+
+class Probe:
+    def __init__(self, folder, native=True, independent_k=None):
+        self.m,self.g,self.c=[read(folder/(s+'.json')) for s in ('mesh','ground','stages')]
+        self.model=System(self.m,self.c['beam_system'])
+        self.nd=3*len(self.m['nodes']);fixed=np.ravel(np.asarray(self.m['node_sets']['bottom'])[:,None]*3+np.arange(3))
+        self.free=np.setdiff1d(np.arange(self.nd),fixed)
+        self.native=native;self.independent_k=independent_k
+        if native:
+            ops=read(folder/'native/operators.json')
+            self.ops=[]
+            for q in ops['soil']:
+                nq=len(q['weights']);b=np.array(q['b_column_major']).reshape(nq,30,6).transpose(0,2,1)
+                self.ops.append((np.ravel(np.asarray(q['nodes'])[:,None]*3+np.arange(3)),b,np.asarray(q['weights'])))
+            self.elements=ops['structures']
+            for e in self.elements:
+                n=6*len(e['nodes']);e['k']=np.asarray(e.pop('stiffness_column_major')).reshape(n,n).T.copy()
+        else:
+            self.ops=[]
+            for ei in range(len(self.m['tetrahedra'])):
+                q=ref.volume(self.m,ei)
+                self.ops.append((np.ravel(q['nodes'][:,None]*3+np.arange(3)),q['b'],q['weight']))
+            self.elements=[]
+            for i,(nodes,_,kernel) in enumerate(self.model.plate_data):
+                self.elements.append(dict(kind='plate',index=i,nodes=nodes,k=kernel.stiffness))
+            for i,(nodes,_,_,_,t,k) in enumerate(self.model.data):
+                self.elements.append(dict(kind='beam',index=i,nodes=nodes,k=t.T@k@t))
+        mats={m['id']:m['mohr_coulomb'] for m in self.g['materials']}
+        self.d=[ref.elastic_tensor(mats[mid]['young_kpa'],mats[mid]['poisson']) for mid in self.m['material_ids']]
+
+    def observe(self,row):
+        s=row['state'] if self.native else row
+        applied=np.asarray(s['applied_nodal_load_kn'] if self.native else row['applied_nodal_load_kn'])
+        scale=max(norm(applied),1.)
+        stress=np.asarray([v['effective_stress_compression_positive_kpa'] for v in s['material_states']] if self.native else row['stress_kpa'])
+        u=np.asarray(s['displacement_m']).ravel()
+        soil={key:np.zeros(self.nd,dtype=LD if key in ('extended','elastic_extended','absolute_terms') else float) for key in ('forward','reverse','kahan','extended','elastic_extended','absolute_terms')}
+        comp=np.zeros(self.nd);terms=[];point=0;stress_drift=[]
+        for (idx,b,w),d in zip(self.ops,self.d,strict=True):
+            nq=len(w);sig=stress[point:point+nq];point+=nq
+            values=-np.einsum('qai,qa->qi',b,sig)*w[:,None]
+            ext=-np.einsum('qai,qa->qi',b.astype(LD),sig.astype(LD))*w.astype(LD)[:,None]
+            elastic=-np.einsum('qai,i->qa',b.astype(LD),u[idx].astype(LD))@d.astype(LD).T
+            stress_drift.append(sig.astype(LD)-elastic)
+            ev=-np.einsum('qai,qa->qi',b.astype(LD),elastic)*w.astype(LD)[:,None]
+            for v in values:
+                soil['forward'][idx]+=v
+                y=v-comp[idx];t=soil['kahan'][idx]+y;comp[idx]=(t-soil['kahan'][idx])-y;soil['kahan'][idx]=t
+            soil['extended'][idx]+=ext.sum(axis=0,dtype=LD)
+            soil['elastic_extended'][idx]+=ev.sum(axis=0,dtype=LD)
+            soil['absolute_terms'][idx]+=np.abs(ext).sum(axis=0,dtype=LD)
+            terms.append((idx,values))
+        for idx,values in reversed(terms):
+            for v in values[::-1]:soil['reverse'][idx]+=v
+        bs=row.get('reevaluated_beams',s['beams'])
+        ds=np.c_[bs['node_displacement_m'],bs['node_rotation_rad']].ravel()
+        parts={mode:{kind:np.zeros(self.nd,dtype=LD if mode=='extended' else float) for kind in ('plate','beam')} for mode in ('split','relative','compensated','extended')}
+        total_size=len(ds);global_k=np.zeros((total_size,total_size));rest=np.zeros(total_size)
+        structural_absolute_terms=np.zeros(self.nd,dtype=LD)
+        interior_force=np.zeros(total_size,dtype=LD)
+        element_inputs=[]
+        for e in self.elements:
+            kind=e['kind'];i=e['index'];nodes=e['nodes'];k=e['k']
+            if not bs['active_plates' if kind=='plate' else 'active_members'][i]:continue
+            idx=np.ravel(np.asarray(nodes)[:,None]*6+np.arange(6))
+            reference=np.asarray(bs['plate_reference_global_kinematics' if kind=='plate' else 'reference_global_kinematics'][i])
+            kin=ds[idx];element_inputs.append((e,kin,reference))
+            global_k[np.ix_(idx,idx)]+=k;rest[idx]-=k@reference
+            actions={'split':k@kin-k@reference,'relative':k@(kin-reference),'extended':k.astype(LD)@(kin.astype(LD)-reference.astype(LD)),
+                     'compensated':np.array([math.fsum([*(row*kin),*(-row*reference)]) for row in k])}
+            abs_terms=np.abs(k.astype(LD))*np.abs(kin.astype(LD))[None,:]+np.abs(k.astype(LD))*np.abs(reference.astype(LD))[None,:]
+            interior_force[idx]+=actions['extended']
+            for j,n in enumerate(nodes):
+                attached=self.model.attach[n]
+                if attached is None:continue
+                ii=slice(3*attached,3*attached+3);jj=slice(6*j,6*j+3)
+                for mode in actions:parts[mode][kind][ii]+=actions[mode][jj]
+                structural_absolute_terms[ii]+=abs_terms[jj].sum(axis=1)
+        assembled_action=global_k@ds+rest
+        assembled_interface=np.zeros(self.nd)
+        for n,attached in enumerate(self.model.attach):
+            if attached is not None:assembled_interface[3*attached:3*attached+3]+=assembled_action[6*n:6*n+3]
+        if self.native:
+            original_soil=np.asarray(row['soil_internal_kn']);original_structure=np.zeros(self.nd)
+            original_structure[np.asarray(row['interface_dofs'],int)]+=row['interface_internal_kn']
+        else:
+            original_soil=np.asarray(row['soil_internal_kn']);original_structure=np.asarray(row['total_internal_kn'])-original_soil
+        original=original_soil+original_structure-applied
+        residuals={'original':original}
+        for mode in ('forward','reverse','kahan','extended'):
+            residuals['soil_'+mode]=soil[mode]+original_structure-applied
+        for mode in parts:
+            residuals['structure_'+mode]=original_soil+parts[mode]['plate']+parts[mode]['beam']-applied
+        residuals['both_extended']=soil['extended']+parts['extended']['plate']+parts['extended']['beam']-applied
+        residuals['elastic_stress_both_extended']=soil['elastic_extended']+parts['extended']['plate']+parts['extended']['beam']-applied
+        ids=sorted(self.free,key=lambda i:abs(original[i]),reverse=True)[:12]
+        top=[dict(node=int(i//3),axis=int(i%3),position_m=self.m['nodes'][i//3],residual_kn=float(original[i]),
+                  soil_kn=float(original_soil[i]),structure_kn=float(original_structure[i]),plate_kn=float(parts['extended']['plate'][i]),beam_kn=float(parts['extended']['beam'][i]),applied_kn=float(applied[i]),
+                  extended_residual_kn=float(residuals['both_extended'][i]),soil_absolute_terms_kn=float(soil['absolute_terms'][i]),structural_absolute_terms_kn=float(structural_absolute_terms[i])) for i in ids]
+        # Decimal evaluates exact binary64 input operands at 80 decimal digits.
+        # This remains extended precision on Windows where longdouble == double.
+        with localcontext() as context:
+            context.prec=80
+            D=lambda v: Decimal.from_float(float(v))
+            for entry,g in zip(top,ids,strict=True):
+                point=0;soil80=Decimal(0);plate80=Decimal(0);beam80=Decimal(0)
+                for idx,b,w in self.ops:
+                    nq=len(w);where=np.flatnonzero(idx==g)
+                    if len(where):
+                        j=int(where[0])
+                        for qi in range(nq):
+                            soil80-=D(w[qi])*sum((D(b[qi,a,j])*D(stress[point+qi,a]) for a in range(6)),Decimal(0))
+                    point+=nq
+                for e,kin,reference in element_inputs:
+                    for j,n in enumerate(e['nodes']):
+                        if self.model.attach[n] != g//3:continue
+                        local_row=6*j+g%3
+                        action=sum((D(v)*(D(a)-D(b)) for v,a,b in zip(e['k'][local_row],kin,reference,strict=True)),Decimal(0))
+                        if e['kind']=='plate':plate80+=action
+                        else:beam80+=action
+                residual80=soil80+plate80+beam80-D(applied[g])
+                entry['decimal80_residual_kn']=float(residual80)
+                entry['decimal80_minus_longdouble_kn']=float(residual80-D(residuals['both_extended'][g]))
+                entry['decimal80_soil_kn']=float(soil80)
+                entry['decimal80_plate_kn']=float(plate80)
+                entry['decimal80_beam_kn']=float(beam80)
+        drift=np.concatenate(stress_drift)
+        groups={}
+        attached={n for n in self.model.attach if n is not None}
+        beam_attached={self.model.attach[n] for e in self.elements if e['kind']=='beam' for n in e['nodes'] if self.model.attach[n] is not None}
+        for name,predicate in [('beam_attachment',lambda n:n in beam_attached),('plate_attachment',lambda n:n in attached and n not in beam_attached),('other_soil',lambda n:n not in attached)]:
+            sub=np.array([i for i in self.free if predicate(i//3)],int)
+            groups[name]=summary(original,sub,scale)
+        return dict(accepted_index=row['accepted_index'],stage_index=row['stage_index'],progress=row['progress'],denominator_kn=scale,
+                    residuals={k:summary(v,self.free,scale) for k,v in residuals.items()},
+                    changes_from_original={k:summary(v-original,self.free,scale) for k,v in residuals.items()},
+                    contributions={k:summary(v,self.free,scale) for k,v in dict(soil=original_soil,plate=parts['extended']['plate'],beam=parts['extended']['beam'],applied=applied).items()},
+                    structural_native_vs_reconstructed=summary(original_structure-assembled_interface,self.free,scale),
+                    stored_stress_minus_elastic_from_total_u=dict(maximum_absolute_kpa=float(np.max(np.abs(drift))),absolute_l2_kpa=norm(drift)),
+                    node_groups=groups,maximum_contributors=top,
+                    extended_mantissa_bits=int(np.finfo(LD).nmant+1),acceptance_changed=False)

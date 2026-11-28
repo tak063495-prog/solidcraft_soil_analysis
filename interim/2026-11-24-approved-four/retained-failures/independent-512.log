@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/workspace/work/c01-support/interim/2026-11-24-c01-event4-retry/route.py", line 48, in <module>
+    run(a.folder, a.steps, a.solver, a.mode, a.seeds, a.binary, not a.counts_only)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/c01-support/interim/2026-11-24-c01-event4-retry/route.py", line 31, in run
+    execute(options, fields)
+    ~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/workspace/work/c01-support/interim/2026-11-23-c01-method-improvements/run_case.py", line 167, in execute
+    study.reference._reference(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        mesh,
+        ^^^^^
+    ...<11 lines>...
+        field_observer=fields,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/workspace/work/c01-support/interim/2026-12-12-c01-switch-event-localization/reference.py", line 487, in _reference
+    phase('geostatic', 0., 0., True)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/c01-support/interim/2026-12-12-c01-switch-event-localization/reference.py", line 468, in phase
+    accepted=increment(base+(1-next_progress)*holding if geostatic else base+factor*boundary,
+                       factor, name, next_progress, progress,
+                       start_load=base+(1-progress)*holding if geostatic else base+old_factor*boundary,
+                       start_factor=old_factor)
+  File "/workspace/work/c01-support/interim/2026-12-12-c01-switch-event-localization/reference.py", line 308, in increment
+    fixed = offset(factor); initial = methods.initial(name, progress, u) if methods is not None else u
+            ^^^^^^
+UnboundLocalError: cannot access local variable 'offset' where it is not associated with a value

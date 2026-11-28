@@ -1,5 +1,21 @@
 # BIRTH・MATSET・再盛土の検証記録
 
+## 範囲拡張(a)：先端接合と静水圧の新設土
+
+[限定受入と証拠](../interim/2026-11-13-joint-ext-combos/README.ja.md)。乾燥・単一の先端宣言付きTri6 JOINTについて、A/B、接合専用DEATH→再誕生を追加した。共有先端は一つの物理節点であり、力回収の節点対未知数から除く。全節点力の厳密再現、非一様GP初期力、Bの実際の誕生時ジャンプ、すべり後の旧世代凍結、別CLI再開と再ハッシュ改変拒否を専用参照で検査する。先端を跨ぐボディBIRTH・部分活動面の再誕生・湿潤先端BIRTH・構造部材との複合は拒否する。
+
+湿潤土BIRTHは、完全水没の新規MC土1ボディ、`cad_new_nodes`、明示した同一静水位、両側が土の単一CONTINUOUS JOINT・モードBに限定する。`hydraulic_initialization: {kind: hydrostatic, level_m: ...}` と新規の有効応力・材料状態を必須とし、静水圧を体積内部力と面荷重へそれぞれ一度だけ組み立てる。SOIL/CONTINUOUS/PRESCRIBEDの定常流後BIRTHとRichards湿潤JOINTは未受入で拒否を維持する。独立参照は `joint_ext_reference.py` であり、既存verifyの許可リストと `joint_birth_reference.py` は変更しない。
+
+この追補は以下の過去記録の受入範囲を変更しない。低プレロードNC全上部撤去、湿潤JOINT塑性すべり全履歴の刻み収束、P6全体、大規模実CAD・GUI/GPUは未達のままである。Windows CIの今回の成否はLinux結果から確定しない。
+
+
+## 案2 接触BIRTHの追加試験
+
+土のBIRTHと接合のJointBirthを別工程とし、方針省略時・古い材料履歴・活動中の土・未定義湿潤BIRTHの既存拒否を保つ。新規 `tests/joint_birth.rs`、`tests/joint_birth_law.rs`、`tests/test_joint_birth.py` と独立ドライバで、厳密な等変位、A/Bの誕生基準・全節点力・初期エネルギー、旧世代の凍結、乾燥新設土と接合の別BIRTH、湿潤面荷重の再積分、受理地点からの別CLI再開、外側ハッシュを再計算した改変の拒否を検証する。
+
+[測定値・全試験件数・保持した不合格](../interim/2026-11-12-joint-birth/README.ja.md) を参照する。新しい独立参照は既存のwet-structure参照と分離し、既存参照が未対応のBIRTHを拒否する試験も保持する。許容値、参照値、過去の未達は変更していない。
+
+
 2026-10-24、Windows x64、Rust 1.99.1。盛土の有効化・材料交換を、全体非線形FEMと保存再開へ接続した。P3aのRESET/SRM施工再生、P6全体は未完。
 
 最終統合実行は`runs/construction-test-20261024-010601-facc3ce8/`。`verification.json`と`final-validation.json`が合格の受入記録。スクリプトは`scripts/Test-Construction.ps1 -SkipChecks -MccBaseline runs/tet10-boundary-test-20261023-224400-66dd339e/flat/stage-results.json`。別途同じソースで行った全Rust試験、Clippy、整形は`runs/construction-placement-final-{rust,clippy,format}-20261024.log`に保存する。

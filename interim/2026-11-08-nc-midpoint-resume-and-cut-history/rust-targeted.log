@@ -1,0 +1,55 @@
+   Compiling soil-fem-3d v0.1.0 (/workspace/solidcraft_soil_analysis)
+    Finished `release` profile [optimized] target(s) in 27.77s
+     Running tests/free_contact.rs (target/release/deps/free_contact-a0349405ec5e1ea8)
+
+running 2 tests
+test free_upper_block_closes_without_physical_pins_and_restores_predictor_history ... ok
+test free_frictionless_or_overcapacity_blocks_never_commit_a_false_equilibrium ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.47s
+
+     Running tests/joint_water.rs (target/release/deps/joint_water-3fc85b423b24ade4)
+
+running 9 tests
+test partial_submergence_integrates_actual_sloped_tri3_and_tri6_force_and_moment ... ok
+test pressure_survives_open_contact_and_does_not_enter_friction_twice ... ok
+test continuous_heads_pass_series_flow_through_split_displacement_nodes ... ok
+test soil_structure_is_impermeable_and_prescribed_heads_are_not_averaged ... ok
+test wet_global_sliding_opening_recontact_preserves_water_load_and_rejected_slip_history ... ok
+test hydrostatic_contact_uses_effective_spring_pressure_and_total_equals_effective_plus_water ... ok
+test wet_stage_cutback_restores_pressure_contact_history_and_checkpoint ... ok
+test death_after_wet_seepage_releases_interface_water_and_archives_contact_history ... ok
+test staged_darcy_interface_policies_preserve_primary_pressure_and_exact_midstage_restart ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.59s
+
+     Running tests/mcc_midpoint.rs (target/release/deps/mcc_midpoint-261d0ef8ca2fd45b)
+
+running 10 tests
+test elastic_reversal_and_permitted_positive_drift_unloading_retain_pc_without_projection ... ok
+test adaptive_partition_and_its_consistent_tangent_use_the_identical_material_map ... ok
+test arbitrary_rotation_preserves_stress_plastic_history_and_directional_tangent ... ok
+test full_partition_tangent_includes_first_yield_hardening_and_opposite_reyield ... ok
+test invalid_midpoint_trials_leave_committed_material_history_unchanged ... ok
+test ocr_first_yield_and_unloading_converge_quadratically_to_closed_form ... ok
+test optional_scheme_preserves_legacy_json_and_rejects_unknown_integration ... ok
+test both_global_schemes_start_nearly_hydrostatic_elastic_newton_steps ... ok
+test global_midpoint_cutback_checkpoint_restores_plastic_history_and_binds_scheme ... ok
+test global_displacement_and_both_mixed_forms_follow_hydrostatic_nc_and_unloading_closed_forms ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.69s
+
+     Running tests/stage_job.rs (target/release/deps/stage_job-86c45b9b08a064d3)
+
+running 8 tests
+test a_different_running_solver_cannot_claim_a_valid_foreign_solver_snapshot ... ok
+test a_stop_request_for_another_job_is_refused_and_cannot_pause_the_running_job ... ok
+test durable_interval_and_recovery_tampering_are_rejected_without_claiming_an_output ... ok
+test immutable_input_changes_existing_output_and_second_execution_are_refused_before_solving ... ok
+test invalid_material_and_numerical_failure_never_publish_success_or_a_false_checkpoint ... ok
+test cli_pause_and_separate_process_resume_preserve_every_non_time_result_field ... ok
+test durable_slots_and_snapshot_fork_preserve_all_non_time_result_fields ... ok
+test durable_checkpoint_survives_abrupt_owned_child_exit_and_recovers_exact_history ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.83s
+

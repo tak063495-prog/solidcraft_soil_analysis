@@ -7,7 +7,7 @@ updates and drift limits are unchanged. No solution state is cached across steps
 import numpy as np
 
 
-def advance_cached(self,state,displacement,force_rate,count,progress=None):
+def advance_cached(self,state,displacement,force_rate,count,progress=None,accepted_callback=None):
     terms=self.constitutive_terms
     t=0.;state=state.copy();u=displacement.copy();plastic=np.zeros(len(state),dtype=bool)
     maximum_drift=0.;events=0;accepted=0;minimum_step=1.;step=1/count
@@ -45,6 +45,7 @@ def advance_cached(self,state,displacement,force_rate,count,progress=None):
             continue
         if h<1e-11:raise ValueError('independent event integration stalled')
         state=candidate;u+=du;plastic=next_plastic;t+=h;accepted+=1;minimum_step=min(minimum_step,h);maximum_drift=max(maximum_drift,drift)
+        if accepted_callback is not None:accepted_callback(t,state,u)
         if progress is not None and accepted%100==0:progress(t,accepted,events)
     return state,u,dict(accepted_steps=accepted,events=events,maximum_normalized_yield_drift=maximum_drift,
                        minimum_progress_step=minimum_step,rate_assemblies=self.calls,

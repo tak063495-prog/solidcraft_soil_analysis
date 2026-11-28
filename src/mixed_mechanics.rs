@@ -247,6 +247,7 @@ pub fn solve(mesh: &Mesh, case: Case) -> Result<Solution> {
             stored_nonzeros: a.len(),
             iterations: 1,
             restarts: 0,
+            true_absolute_residual: None,
             true_relative_residual: residual,
             matrix_storage_bytes: a.len() * 8,
             workspace_storage_bytes: (a.len() + 2 * total) * 8,

@@ -1,0 +1,53 @@
+{
+  "schema": "soil-fem-plate-surface-binding/1",
+  "surfaces": [
+    {
+      "id": "wall",
+      "face_set": "top",
+      "owner_body": "UpperClay",
+      "source_faces": 2,
+      "plate_triangles": 2,
+      "shared_soil_nodes": 9,
+      "area_m2": 1.0,
+      "source_area_m2": 0.9999999999999998,
+      "outward_orientation_checked": true,
+      "all_quadratic_trace_nodes_retained": true,
+      "formulation": "mindlin_tri6",
+      "translation_interpolation": "Tet10 face quadratic Tri6; same reference plane; no thickness offset"
+    }
+  ],
+  "member_groups": {
+    "wall": [
+      "wall_face0_part0",
+      "wall_face1_part0"
+    ]
+  },
+  "soil_node_to_structure_id": {
+    "8": "plate_mesh_node_8",
+    "9": "plate_mesh_node_9",
+    "10": "plate_mesh_node_10",
+    "11": "plate_mesh_node_11",
+    "37": "plate_mesh_node_37",
+    "38": "plate_mesh_node_38",
+    "40": "plate_mesh_node_40",
+    "41": "plate_mesh_node_41",
+    "43": "plate_mesh_node_43"
+  },
+  "generated_soil_attachment_nodes": [
+    8,
+    9,
+    11,
+    41,
+    43,
+    40,
+    10,
+    38,
+    37
+  ],
+  "geometry_and_connectivity_changed": false,
+  "soil_plate_coupling": "Exact shared nodal translations; structural rotations shared by node ID",
+  "interpolation_limitation": "Per-surface selection: mindlin_tri6 has identical quadratic translations on the same straight planar Tri6 reference face; cst_dkt retains its piecewise-linear limitation. Thickness offsets unsupported.",
+  "geometry_scope": "Straight exterior Tri3/Tri6 faces; no persistent CAD face ID claim",
+  "goal_complete": false,
+  "p6_complete": false
+}

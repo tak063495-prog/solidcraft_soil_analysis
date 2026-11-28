@@ -110,6 +110,63 @@ impl Checkpoint {
                 "checkpoint history/load checksum mismatch".into(),
             ));
         }
+        if case.settings.linear_solver.uses_ilut()
+            || case.has_offset_plates()
+            || case
+                .joint_system
+                .as_ref()
+                .is_some_and(|c| c.joints.iter().any(|d| d.birth_policy.is_some()))
+            || case.stages.iter().any(|s| {
+                matches!(
+                    s,
+                    stages::Stage::Birth {
+                        hydraulic_initialization: Some(_),
+                        ..
+                    }
+                )
+            })
+        {
+            // A checksum can be recomputed by an editor. Replay the accepted
+            // path from immutable inputs to authenticate generation, reference,
+            // force and face-load history, including completed stages.
+            let count = self.run.attempts.iter().filter(|a| a.accepted).count()
+                + self
+                    .run
+                    .geostatic
+                    .as_ref()
+                    .map_or(0, |g| g.attempts.iter().filter(|a| a.accepted).count());
+            if count == 0 {
+                return Err(Error::Input(
+                    "checkpoint has no accepted path for replay".into(),
+                ));
+            }
+            let replay = stages::solve_until(mesh, ground.clone(), case.clone(), count)?;
+            fn without_clock(v: &mut serde_json::Value) {
+                match v {
+                    serde_json::Value::Object(map) => {
+                        map.remove("elapsed_seconds");
+                        for value in map.values_mut() {
+                            without_clock(value);
+                        }
+                    }
+                    serde_json::Value::Array(a) => {
+                        for value in a {
+                            without_clock(value);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            let mut expected = serde_json::to_value(&replay)?;
+            let mut actual = serde_json::to_value(&self.run)?;
+            without_clock(&mut expected);
+            without_clock(&mut actual);
+            if actual != expected {
+                return Err(Error::Input(
+                    "checkpoint accepted-path replay mismatch".into(),
+                ));
+            }
+        }
         Ok(())
     }
     pub fn resume(

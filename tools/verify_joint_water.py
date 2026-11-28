@@ -57,6 +57,9 @@ def audit(mesh,ground,run,exports=None):
         if had_flow:assert np.allclose(state['pore_pressure_kpa'],pore,rtol=1e-10,atol=1e-8)
         frame_ground={**ground,'initialization':{**ground['initialization'],'water_level_m':level}}
         force,yield_value=internal(mesh,frame_ground,state['material_states'],active,q,offset,state.get('element_material_ids'),pore)
+        from hydrostatic_volume_audit import correction,enabled
+        if enabled(run) and not had_flow:
+            force+=correction(mesh,active,q,level,water.gamma,water.soil)
         load,geometry=physical(mesh,frame_ground,active,pressure,case['pressure_on_original_surface_only'],state.get('element_material_ids'),water.contact)
         if case.get('boundary') and factor:load+=factor*fem.conditions_load(mesh,case['boundary'],active)
         load+=interface['load'];force+=water.audit(state,frame['joint_results'],interface)

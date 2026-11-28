@@ -1,0 +1,59 @@
+diff --git a/examples/nc_newton_trace.rs b/examples/nc_newton_trace.rs
+index c246656..fea1c07 100644
+--- a/examples/nc_newton_trace.rs
++++ b/examples/nc_newton_trace.rs
+@@ -19,8 +19,8 @@ impl Observer for Trace {
+     fn on_progress(&self, p: &Progress) -> Result<()> {
+         self.on_diagnostic(&serde_json::json!({"kind": "progress", "event": p}))
+     }
+-    fn diagnostic_enabled(&self, stage: usize, progress: f64) -> bool {
+-        stage == 3 && (0.9512958..=0.951297).contains(&progress)
++    fn diagnostic_enabled(&self, _stage: usize, _progress: f64) -> bool {
++        false
+     }
+     fn on_diagnostic(&self, value: &serde_json::Value) -> Result<()> {
+         let mut f = self.file.borrow_mut();
+diff --git a/src/stages.rs b/src/stages.rs
+index 054ed97..baeb062 100644
+--- a/src/stages.rs
++++ b/src/stages.rs
+@@ -769,10 +769,20 @@ impl Tangent {
+             }
+             Self::Dense(a) => {
+                 let started = Instant::now();
+-                let x = a.clone().lu().solve(rhs).ok_or_else(|| {
++                let lu = a.clone().full_piv_lu();
++                let mut x = lu.solve(rhs).ok_or_else(|| {
+                     Error::Solve("singular non-symmetric tangent; inspect active supports".into())
+                 })?;
+-                let residual = (a * &x - rhs).norm() / rhs.norm().max(1e-30);
++                let mut residual = (a * &x - rhs).norm() / rhs.norm().max(1e-30);
++                for _ in 0..8 {
++                    if residual <= settings.relative_linear_tolerance { break; }
++                    let Some(delta) = lu.solve(&(rhs - a * &x)) else { break; };
++                    let next = &x + delta;
++                    let next_residual = (a * &next - rhs).norm() / rhs.norm().max(1e-30);
++                    if !next_residual.is_finite() || next_residual >= residual { break; }
++                    x = next;
++                    residual = next_residual;
++                }
+                 if !residual.is_finite()
+                     || residual > settings.relative_linear_tolerance
+                     || !x.iter().all(|v| v.is_finite())
+@@ -2540,7 +2550,6 @@ impl<'a> Model<'a> {
+                 }
+             }
+         }
+-        let constrained_start = u.clone();
+         let mut partitions =
+             vec![1; self.point_count + self.joints.as_ref().map_or(0, |j| j.point_count())];
+         if let Some(joints) = &self.joints {
+@@ -2987,7 +2996,7 @@ impl<'a> Model<'a> {
+                     if let Some(i) = predictor_index {
+                         contact_predictors[i].repartitioned = true;
+                     }
+-                    u = constrained_start.clone();
++                    // Reevaluate the current iterate with the enlarged fixed partition.
+                     break;
+                 }
+                 let candidate_evaluation = self.evaluate(

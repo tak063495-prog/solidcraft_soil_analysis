@@ -1,0 +1,46 @@
+{
+  "passed": false,
+  "b01_complete": false,
+  "curved_shell_acceptance": null,
+  "combinations": [
+    {
+      "combination": "平面・直線Tri6のe=0多面体、両端地盤付着の円筒2/4/8分割",
+      "judgment": "限定受入の再確認：今回の乾燥弾性・直接入力・小型範囲のみ"
+    },
+    {
+      "combination": "平面・直線Tri6のe=0古典屋根2/4分割",
+      "judgment": "限定受入の再確認：実装/全場一致のみ。曲面h収束の数値受入は未達"
+    },
+    {
+      "combination": "面内で曲がった中間節点／曲線辺",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "面外中間節点・要素内で法線が変わる二次曲面・真曲面パッチ",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "真曲面＋正負オフセット",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "共有IDの非ゼロ腕で法線/e不一致・範囲外e・宣言偽装",
+      "judgment": "未達／未対応（現行拒否を保持）"
+    },
+    {
+      "combination": "平面offsetの既存限定範囲、旧mindlin/cst/既定のeなし",
+      "judgment": "既存動作を保持。今回の4 CLI回帰対照も完走"
+    },
+    {
+      "combination": "曲面Tri6仕様/適合製造解/曲面MITC/drilling/円筒・半球の本体h系列",
+      "judgment": "未達／未対応（現行拒否を保持）。古典屋根の多面体比較で代替しない"
+    },
+    {
+      "combination": "コンパクト/Native曲面準備・GUI/GPU・実CAD",
+      "judgment": "未達／未対応。既存拒否を保持、PC手順のみ"
+    }
+  ],
+  "no_production_scope_or_default_change": true,
+  "all_other_remainders_preserved": true,
+  "old_B02_B03_failures_and_NC_records_preserved": true
+}

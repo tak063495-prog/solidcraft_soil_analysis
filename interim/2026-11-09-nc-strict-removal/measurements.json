@@ -1,0 +1,149 @@
+{
+  "schema": "soil-fem-nc-strict-removal-followup/1",
+  "passed": false,
+  "history_converged": false,
+  "production_adopted": false,
+  "base_commit": "6429e8366ad7b02ab546cc9a9f7ff321b693962b",
+  "highest_accepted_progress": 0.9514000415802002,
+  "accepted_increments": 266,
+  "fresh_head_run": true,
+  "fresh_head_committed_state_exact_to_old_sealed_state": true,
+  "fresh_failure_reason": "excavate_upper: cutback exhausted: numerical solve failed: true linear residual 1.4875587579753504e-10",
+  "fresh_process": {
+    "budget_seconds": 180.0,
+    "stop_requested": false,
+    "owned_child_terminated": false,
+    "elapsed_seconds": 134.72995843800004,
+    "exit_code": 1,
+    "stop_reason": "solver_returned",
+    "job_state": "failed",
+    "resume_command": null
+  },
+  "history_audit": {
+    "accepted_increments": 266,
+    "completed_frames": [
+      "initial_equilibrated",
+      "load",
+      "unload"
+    ],
+    "stage_index": 3,
+    "stage_progress": 0.9514000415802002,
+    "geostatic_progress": 1.0,
+    "pc_range_kpa": [
+      68.98698315238919,
+      172.48228416305034
+    ],
+    "plastic_points": 324,
+    "rejections": 18,
+    "rejected_plastic_trial_changed": true,
+    "rejected_contact_trial_changed": true,
+    "all_rejections_preserve_committed_state": true,
+    "stored_stress_force_checks": [
+      {
+        "frame": "initial_equilibrated",
+        "relative_force_residual": 8.68824466314395e-15,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 2.0710246917833214e-13
+      },
+      {
+        "frame": "load",
+        "relative_force_residual": 2.7875529134744236e-09,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": 3.965199320770922e-16
+      },
+      {
+        "frame": "unload",
+        "relative_force_residual": 2.1511469056151016e-09,
+        "constraint_error_m": 0.0,
+        "maximum_normalized_mcc_yield": -0.016690731061877098
+      }
+    ],
+    "last_committed_force_check": {
+      "relative_force_residual": 2.548049316350334e-09,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": 5.172455243676414e-13
+    },
+    "independent_plastic_3d_displacement": false,
+    "zero_release_check": {
+      "relative_force_residual": 2.036903615501215e-09,
+      "constraint_error_m": 0.0,
+      "maximum_normalized_mcc_yield": -0.018808107488697372
+    },
+    "fully_released_and_frozen": false,
+    "removed_joint_and_material_history_frozen": true
+  },
+  "current_restart_lambda_zero": {
+    "relative_force_residual": 2.548049316350334e-09,
+    "constraint_error_m": 0.0,
+    "maximum_normalized_mcc_yield": 5.172455243676414e-13
+  },
+  "restart_observation": {
+    "accepted_before": 266,
+    "accepted_after": 266,
+    "new_accepted": 0,
+    "starting_progress": 0.9514000415802002,
+    "preserved_attempt_and_frame_prefix": true,
+    "uninterrupted_full_path_compared": false,
+    "imported_checkpoint_sha256": "33f1d411dd8e217d7040bbdbebcfc255559c1901839035f6732e2afe8aed2843"
+  },
+  "fresh_and_resumed_physical_run_equal_except_elapsed": true,
+  "fresh_restart_process": {
+    "budget_seconds": 180.0,
+    "stop_requested": false,
+    "owned_child_terminated": false,
+    "elapsed_seconds": 0.1718337459999475,
+    "exit_code": 1,
+    "stop_reason": "solver_returned",
+    "job_state": "failed",
+    "resume_command": "prepare-stages-recovery"
+  },
+  "experiment": {
+    "passed": false,
+    "history_converged": false,
+    "production_adopted": false,
+    "full_removal_reached": false,
+    "target_trial_converged": false,
+    "checkpoint_resume": false,
+    "new_continuation_created": false,
+    "accepted_new_increments": 0,
+    "controls": {
+      "compensated_control_trace_exact_except_elapsed": true,
+      "preceding_accepted_state_exact": true
+    },
+    "note": "single trial diagnostic; a converged trial is not a committed increment"
+  },
+  "experiment_scope": "one minimum increment, not public checkpoint resume and not a new committed increment",
+  "experimental_retain_failure": {
+    "converged": false,
+    "error": "numerical solve failed: bounded compensated LU refinement failed both true residual gates"
+  },
+  "saved_checkpoint_sha256": "f0b53377010227aead58171b1f5923a6639f9c1c9b1e3132bc7ea47c6b8ecd6d",
+  "full_removal_reached": false,
+  "fully_released_and_frozen": false,
+  "independent_plastic_3d_full_path": false,
+  "both_implementations_full_path_step_sensitivity": false,
+  "full_path_restart_verified": false,
+  "partial_field_comparison": "partial-field-comparisons.json",
+  "p3b_rows_complete": false,
+  "p4_rows_complete": false,
+  "structure_water_joint_complete": false,
+  "p6_complete": false,
+  "windows_ci_numerical_acceptance": false,
+  "priority2_new_solves": false,
+  "retained_wet_joint": {
+    "passed": false,
+    "history_converged": false,
+    "production_512_max_contact_increment_m": 2.5e-06,
+    "production_512_vs_independent_4096_64_plastic_slip_percent": 5.083166083259321,
+    "independent_2048_64_to_4096_64_plastic_slip_percent": 0.9535071429812697,
+    "independent_512_64_to_4096_64_plastic_slip_percent": 5.083092768505683,
+    "new_measurement": false
+  },
+  "missing": [
+    "全上部撤去1.0と全解放・凍結",
+    "撤去中の全経路材料/接触履歴",
+    "入力のみの独立塑性3D全場の全経路",
+    "両実装の全経路刻み感度",
+    "完了までの途中再開一致"
+  ]
+}

@@ -1,0 +1,129 @@
+   Compiling autocfg v1.5.1
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling num-traits v0.2.19
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+   Compiling typenum v1.20.1
+   Compiling syn v3.0.9
+   Compiling bytemuck v1.25.2
+   Compiling serde_core v1.0.229
+   Compiling paste v1.0.15
+   Compiling safe_arch v0.7.4
+   Compiling matrixmultiply v0.3.11
+   Compiling zmij v1.0.23
+   Compiling wide v0.7.33
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling approx v0.5.1
+   Compiling num-integer v0.1.47
+   Compiling num-complex v0.4.6
+   Compiling syn v2.0.119
+   Compiling rawpointer v0.2.1
+   Compiling thiserror v2.0.21
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling simba v0.9.1
+   Compiling nalgebra-macros v0.3.0
+   Compiling num-rational v0.4.2
+   Compiling digest v0.10.7
+   Compiling thiserror-impl v2.0.21
+   Compiling serde_derive v1.0.229
+   Compiling memchr v2.8.3
+   Compiling cpufeatures v0.2.17
+   Compiling cfg-if v1.0.5
+   Compiling itoa v1.0.18
+   Compiling sha2 v0.10.9
+   Compiling nalgebra v0.34.2
+   Compiling soil-fem-3d v0.1.0 (/workspace/work/base18/probe)
+warning: unnecessary parentheses around assigned value
+   --> src/mcc_midpoint.rs:282:17
+    |
+282 |     let trace = (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get());
+    |                 ^                                                                      ^
+    |
+    = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+    |
+282 -     let trace = (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get());
+282 +     let trace = std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get();
+    |
+
+warning: unnecessary parentheses around `if` condition
+   --> src/mcc_midpoint.rs:415:8
+    |
+415 |     if (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get()) {
+    |        ^                                                                      ^
+    |
+help: remove these parentheses
+    |
+415 -     if (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get()) {
+415 +     if std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get() {
+    |
+
+warning: unnecessary parentheses around `if` condition
+   --> src/mcc_midpoint.rs:481:12
+    |
+481 |         if (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get()) {
+    |            ^                                                                      ^
+    |
+help: remove these parentheses
+    |
+481 -         if (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get()) {
+481 +         if std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get() {
+    |
+
+warning: unnecessary parentheses around `if` condition
+   --> src/mcc_midpoint.rs:519:12
+    |
+519 |         if (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get()) {
+    |            ^                                                                      ^
+    |
+help: remove these parentheses
+    |
+519 -         if (std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get()) {
+519 +         if std::env::var_os("P5_POINT_TRACE").is_some() || super::P17_TRACE.get() {
+    |
+
+error[E0277]: the trait bound `Matrix<f64, nalgebra::Const<3>, nalgebra::Const<1>, ArrayStorage<f64, 3, 1>>: serde::Serialize` is not satisfied
+    --> src/stages.rs:6851:36
+     |
+6851 |                       eprintln!("{}",serde_json::json!({"p18_parent":progress,"attempt":count,
+     |  ____________________________________^
+6852 | |                         "previous":prev,"previous_jumps":old,"points":sample,"nominal":nominal,
+6853 | |                         "forecasts":forecasts,"proposal":proposal}));
+     | |                                                                   ^
+     | |                                                                   |
+     | |___________________________________________________________________unsatisfied trait bound
+     |                                                                     required by a bound introduced by this call
+     |
+     = help: the trait `anchors::_::_serde::Serialize` is not implemented for `Matrix<f64, nalgebra::Const<3>, nalgebra::Const<1>, ArrayStorage<f64, 3, 1>>`
+     = note: for local types consider adding `#[derive(serde::Serialize)]` to your `Matrix<f64, nalgebra::Const<3>, nalgebra::Const<1>, ArrayStorage<f64, 3, 1>>` type
+     = note: for types from other crates check whether the crate offers a `serde` feature flag
+     = help: the following other types implement trait `anchors::_::_serde::Serialize`:
+               &'a T
+               &'a mut T
+               ()
+               (T,)
+               (T0, T1)
+               (T0, T1, T2)
+               (T0, T1, T2, T3)
+               (T0, T1, T2, T3, T4)
+             and 469 others
+     = note: required for `Vec<Matrix<f64, nalgebra::Const<3>, nalgebra::Const<1>, ArrayStorage<f64, 3, 1>>>` to implement `anchors::_::_serde::Serialize`
+     = note: 2 redundant requirements hidden
+     = note: required for `&&Vec<Matrix<f64, nalgebra::Const<3>, nalgebra::Const<1>, ArrayStorage<f64, 3, 1>>>` to implement `anchors::_::_serde::Serialize`
+note: required by a bound in `to_value`
+    --> /workspace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde_json-1.0.154/src/value/mod.rs:997:8
+     |
+ 995 | pub fn to_value<T>(value: T) -> Result<Value, Error>
+     |        -------- required by a bound in this function
+ 996 | where
+ 997 |     T: Serialize,
+     |        ^^^^^^^^^ required by this bound in `to_value`
+     = note: this error originates in the macro `$crate::json_internal` which comes from the expansion of the macro `serde_json::json` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0277`.
+warning: `soil-fem-3d` (lib) generated 4 warnings
+error: could not compile `soil-fem-3d` (lib) due to 1 previous error; 4 warnings emitted

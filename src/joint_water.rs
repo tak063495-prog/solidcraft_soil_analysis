@@ -1,7 +1,10 @@
 //! Physical interface pressure is a pair of external forces, separate from
 //! effective contact springs. Displacement nodes never merge here.
 use crate::{Error, Result, darcy, ground::Ground, hydrostatic, joints, mesh::Mesh};
+#[path = "joint_richards.rs"]
+pub(crate) mod rt0;
 use nalgebra::Vector3;
+pub use rt0::{PointTraces, Trace};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -52,6 +55,8 @@ struct Face {
     owner_b: usize,
 }
 pub struct Model {
+    pub(crate) record_trace_points: bool,
+    pub(crate) histories: BTreeMap<String, rt0::HeadHistory>,
     mesh: Mesh,
     configuration: joints::Configuration,
     layout: Vec<joints::PointInfo>,
@@ -148,6 +153,8 @@ impl Model {
             }
         }
         Ok(Self {
+            record_trace_points: false,
+            histories: BTreeMap::new(),
             mesh: mesh.clone(),
             configuration,
             layout,
@@ -349,6 +356,20 @@ impl Model {
         }
         report.water = Some(field.clone());
         Ok(())
+    }
+
+    /// A born face must be integrated again from its declared pressure source.
+    /// `retain` only zeros disappearing faces and cannot create a face load.
+    pub fn regenerate_birth(
+        &self,
+        active: &[bool],
+        current_level: Option<f64>,
+        heads: Option<&darcy::HeadField>,
+    ) -> Result<Field> {
+        match heads {
+            Some(field) => self.from_heads(active, field, current_level),
+            None => self.hydrostatic(active, current_level),
+        }
     }
 
     pub fn retain(&self, field: &Field, active: &[bool]) -> Result<Field> {

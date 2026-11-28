@@ -1,0 +1,30 @@
+{
+  "comments": [
+    {
+      "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3#issuecomment-6753560986",
+      "body": "指定起点 `f19ce642647207a87b9dda6cc31b006b85b5936c` で残存を再現し、その直接の子 `5bee3b47f61878e614cae1e7268a57449d2f12d1` を同じ `codex/plastic-spatial-convergence` へ反映しました。\n\nsampled/exact共通の材料解決関数を導入し、各frameの確定element_material_idsを優先しました。空/欠落listのみlegacy fallback、型不正・長さ不一致・未知IDは明示拒否します。旧M=1.6/新M=1.4の前後frame、lambda/kappa/nu、同一ID、legacy、非活動要素も含む不正inventory、sampled→exact実CLIを確認。材料解決の新規Python4 test methods。実Rust MATSET施工全体の新しい受入とは区別しています。\n\nLinuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。\n\n[日本語の修正・修正前再現・残件・PC手順](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md) / [試験件数・終了コード](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json)。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。\n\n修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の[Windows CI 42714778658](https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658) はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。",
+      "user": {
+        "login": "tak063495-prog",
+        "name": "tak063495-prog",
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+        "id": 254234268
+      },
+      "id": 6753560986,
+      "pull_request_review_id": null,
+      "in_reply_to_id": null,
+      "created_at": null,
+      "updated_at": null,
+      "review": null,
+      "side": null,
+      "line": null,
+      "start_line": null,
+      "path": null,
+      "body_html": "<p dir=\"auto\">指定起点 <code class=\"notranslate\">f19ce642647207a87b9dda6cc31b006b85b5936c</code> で残存を再現し、その直接の子 <code class=\"notranslate\">5bee3b47f61878e614cae1e7268a57449d2f12d1</code> を同じ <code class=\"notranslate\">codex/plastic-spatial-convergence</code> へ反映しました。</p>\n<p dir=\"auto\">sampled/exact共通の材料解決関数を導入し、各frameの確定element_material_idsを優先しました。空/欠落listのみlegacy fallback、型不正・長さ不一致・未知IDは明示拒否します。旧M=1.6/新M=1.4の前後frame、lambda/kappa/nu、同一ID、legacy、非活動要素も含む不正inventory、sampled→exact実CLIを確認。材料解決の新規Python4 test methods。実Rust MATSET施工全体の新しい受入とは区別しています。</p>\n<p dir=\"auto\">Linuxは全Rust414件・関係するPython87件・tools Python2件が成功、各終了コード0。追加Rust2/Python24件はこの件数に内包し、途中の失敗・無効な試験実装を成功数へ加算していません。fmt、Clippy（--locked --all-targets -- -D warnings）、locked release buildも終了0です。</p>\n<p dir=\"auto\"><a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/README.ja.md\">日本語の修正・修正前再現・残件・PC手順</a> / <a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/5bee3b47f61878e614cae1e7268a57449d2f12d1/interim/2026-11-10-p2-issue-repairs/validation.json\">試験件数・終了コード</a>。保護記録・過去の失敗・既存passed=false、許容値・参照値を保持し、P6/低プレロードNC未達を完了扱いにしていません。</p>\n<p dir=\"auto\">修正の同ブランチ反映とLinux回帰通過を根拠にcloseします。PR #13は未マージ。新先端の<a href=\"https://github.com/tak063495-prog/solidcraft_soil_analysis/actions/runs/42714778658\">Windows CI 42714778658</a> はGitHub check runで5群ともin_progressを確認した段階で、成功未確認です。</p>"
+    }
+  ],
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+  "title": "tak063495-prog/solidcraft_soil_analysis Issue #3 comments",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/3",
+  "display_title": "tak063495-prog/solidcraft_soil_analysis Issue #3 comments"
+}

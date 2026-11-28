@@ -1,0 +1,108 @@
+{
+  "src/plates.rs": {
+    "sha256": "18c89d6f23b28d39a99dbbc59aa62717c8be64b24429d1a3ed2519defd06ac49",
+    "observed_lines": [
+      {
+        "line": 121,
+        "text": "pub struct Kernel {"
+      },
+      {
+        "line": 228,
+        "text": "    fn operators(&self, l: [f64; 3]) -> (B3, SMatrix<f64, 1, 18>) {"
+      }
+    ]
+  },
+  "src/plates/mindlin.rs": {
+    "sha256": "8d35ad298804fc32e0ce5b8f42c65f19daabdebca18764904ebb5b93e2396240",
+    "observed_lines": [
+      {
+        "line": 52,
+        "text": "pub struct Kernel {"
+      },
+      {
+        "line": 78,
+        "text": "            if (x[3 + e] - (x[i] + x[j]) * 0.5).norm() > 64. * f64::EPSILON * scale {"
+      },
+      {
+        "line": 79,
+        "text": "                return Err(Error::Input(\"Mindlin Tri6 requires straight edges and a planar reference surface; curved/nonplanar/offset attachment unsupported\".into()));"
+      },
+      {
+        "line": 182,
+        "text": "    fn operators(&self, l: [f64; 3]) -> (B, B, H, D) {"
+      }
+    ]
+  },
+  "src/plates/offset.rs": {
+    "sha256": "db44e1475b523a68bd0747515f4d8d115f624579b52ca8444bbe7f7d0101b255",
+    "observed_lines": [
+      {
+        "line": 9,
+        "text": "pub struct Kernel {"
+      }
+    ]
+  },
+  "src/beams.rs": {
+    "sha256": "7206e00020020dd2237027bc2d2a09e04ec908197969342b798f6d729d5d1eea",
+    "observed_lines": [
+      {
+        "line": 158,
+        "text": "pub struct Kernel {"
+      },
+      {
+        "line": 650,
+        "text": "                        > 64. * f64::EPSILON * c.plate_sections[section].thickness_m"
+      },
+      {
+        "line": 652,
+        "text": "                    return Err(Error::Input(\"offset plates sharing a node require the same signed normal offset; folds/steps unverified\".into()));"
+      }
+    ]
+  },
+  "src/stages.rs": {
+    "sha256": "e7dda68068ced4d8ac16aadb73f1b4225bd4ee6c5ec6960e37bbcb24bbc301cb",
+    "observed_lines": [
+      {
+        "line": 959,
+        "text": "    pub(crate) fn has_offset_plates(&self) -> bool {"
+      },
+      {
+        "line": 997,
+        "text": "        if self.has_offset_plates()"
+      },
+      {
+        "line": 2712,
+        "text": "        if self.case.has_offset_plates()"
+      },
+      {
+        "line": 5079,
+        "text": "    if case.has_offset_plates()"
+      },
+      {
+        "line": 5089,
+        "text": "    if case.has_offset_plates() && ground.initialization.water_level_m.is_some() {"
+      }
+    ]
+  },
+  "src/checkpoint.rs": {
+    "sha256": "ad82a5da2de3e5c6fd79d83cdc2245e8797d7d195cb2781030720aa3afcb251c",
+    "observed_lines": [
+      {
+        "line": 114,
+        "text": "            || case.has_offset_plates()"
+      },
+      {
+        "line": 166,
+        "text": "                    \"checkpoint accepted-path replay mismatch\".into(),"
+      }
+    ]
+  },
+  "tools/plate_surfaces.py": {
+    "sha256": "79b6c97b3e9ecbffc65128ce5c947fce942d3e55e75c8411e222c19e9ed73290",
+    "observed_lines": []
+  },
+  "tools/prepare_native_plates.py": {
+    "sha256": "54a9de4fe2911a0b9468db432cadd1ecb844527ec6ce0f2e3694c3dd79631d43",
+    "observed_lines": []
+  }
+}

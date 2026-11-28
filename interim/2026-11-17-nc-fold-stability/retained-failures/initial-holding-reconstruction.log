@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tools/analyze_nc_fold.py", line 189, in <module>
+    a=parser.parse_args();r=run(a.evidence.resolve(),a.output.resolve());print(json.dumps(dict(conclusion=r['conclusion_ja'],comparison=r['comparison']),ensure_ascii=False,indent=2))
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/analyze_nc_fold.py", line 84, in run
+    for lam in (0.,native.lam0,1.):audit_load(native.load(lam),final,holding,lam)
+                                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/fold_stability.py", line 95, in audit_load
+    raise ValueError('component load violates Ffinal+(1-lambda)H')
+ValueError: component load violates Ffinal+(1-lambda)H

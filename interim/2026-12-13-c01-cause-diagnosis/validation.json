@@ -1,0 +1,350 @@
+{
+  "schema": "c01-cause-validation/1",
+  "starting_commit": "e8133f045a852c6ca374a552070526067f11dbe9",
+  "evidence_commit": "bf6542410cee90e76807e835b48f6775f6bb771f",
+  "core_validation_code_commit": "8ffeaa4a54bd76a335a79e8101abc01c7c216e04",
+  "passed": false,
+  "c01_decision": "未達",
+  "software_tests_passed": true,
+  "rust": {
+    "inventory_total": 463,
+    "suites": 72,
+    "passed": 463,
+    "failed": 0,
+    "not_run": 0,
+    "skip": 0,
+    "measured": 0,
+    "filtered": 0,
+    "source_unchanged": true,
+    "commands": [
+      {
+        "name": "fmt",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--check"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.6786612490000152,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--all-targets",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1.073749565999833,
+        "log_sha256": "e4404ed179095bc128307d5b7c8bdf3795587ace491e032523c006424039943a"
+      },
+      {
+        "name": "build",
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 185.6374779570001,
+        "log_sha256": "c2405ce7324048556c8ade466b4ba860e07fa5f7870b2c8cadabce77871de91f"
+      },
+      {
+        "name": "rust-list",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "--",
+          "--list"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1363.234731519,
+        "log_sha256": "1baa879c8710a37152f569163c5ba048584c8e079e8570a2e4d63ad9b925ea19"
+      },
+      {
+        "name": "rust-tests",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 1180.1874708149994,
+        "log_sha256": "d9799d3e8ad04a44e9ff5654d9b714c727212c37688bb3d9d0dd7e2237f84ecd"
+      }
+    ]
+  },
+  "python": {
+    "discovered_total": 726,
+    "success": 726,
+    "failure": 0,
+    "error": 0,
+    "not_run": 0,
+    "skip": 0,
+    "expected_failure": 0,
+    "unexpected_success": 0,
+    "all_discovered_ids_run_exactly_once": true,
+    "source_code_before_after_exact": true,
+    "groups": {
+      "python-core-0": {
+        "assigned_total": 329,
+        "tests_run": 329,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 570.1227724050004
+      },
+      "python-core-1": {
+        "assigned_total": 389,
+        "tests_run": 389,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 625.0917857299996
+      },
+      "python-mean-evidence": {
+        "assigned_total": 4,
+        "tests_run": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 1240.2677374260002
+      },
+      "python-spatial-evidence": {
+        "assigned_total": 4,
+        "tests_run": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "elapsed_seconds": 249.62993238499985
+      }
+    }
+  },
+  "environment": {
+    "python": "3.13.17",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "powershell": "7.5.4",
+    "host": "Linux-6.18.57-x86_64-with-glibc2.41"
+  },
+  "validation_files": {
+    "validation/build.log": {
+      "bytes": 133,
+      "sha256": "c2405ce7324048556c8ade466b4ba860e07fa5f7870b2c8cadabce77871de91f"
+    },
+    "validation/clippy.log": {
+      "bytes": 126,
+      "sha256": "e4404ed179095bc128307d5b7c8bdf3795587ace491e032523c006424039943a"
+    },
+    "validation/development-tests-2.log": {
+      "bytes": 1183,
+      "sha256": "49d1e82682b3e1cb6cb3f604c57d877059e3b2b29287b3336872549710a3414a"
+    },
+    "validation/development-tests.log": {
+      "bytes": 2989,
+      "sha256": "55ecdb22e234a6a6ec94dc5650b6263882a99503d2c3c33b72fe88f644c8959f"
+    },
+    "validation/discovery-failures.log": {
+      "bytes": 2265,
+      "sha256": "46f5bf780213def8cad7e8ce4ff4a75c65e42071392183224a77659074aa189d"
+    },
+    "validation/discovery-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation/discovery.log": {
+      "bytes": 869,
+      "sha256": "b201e518a646bb622f4ab2c2fb336a5a7106cc6a6f73cdc2531f6c9f05095e55"
+    },
+    "validation/final-full-unit-tests.log": {
+      "bytes": 1354,
+      "sha256": "e2ac6892ce4f12684f67f4bbe85a62252b47629be06271258b2ea660ae0796a7"
+    },
+    "validation/final-replay.log": {
+      "bytes": 643,
+      "sha256": "c33e49bdd68554ae37ddddd6c6ee1d34e0e7648292f225ff9ba7e3ccd6893aed"
+    },
+    "validation/final-unit-tests.log": {
+      "bytes": 1352,
+      "sha256": "ea925ad304afd63094028ddd69b8074793c9d4f55cf3c85118bbf9df2757dada"
+    },
+    "validation/fixed-commits.tsv": {
+      "bytes": 349,
+      "sha256": "eb34b0ffc87fe88c6502df653419f9b09d78bd5c47958ee6ed07109f069069e2"
+    },
+    "validation/fmt.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation/initial-inventory-audit.log": {
+      "bytes": 9610,
+      "sha256": "60f334e365d730466e877e5ef466bb13b2eb7547a87f4339917ab076eadd6687"
+    },
+    "validation/initial-inventory-registration.log": {
+      "bytes": 135,
+      "sha256": "fc7b26422f9700448d4eb39369b1e6099869a70f7cd2a5fc5e651f4f78dafa7f"
+    },
+    "validation/initial-sparse-omissions.tsv": {
+      "bytes": 154403,
+      "sha256": "755b82f901d589a0b4d4cd85b3485bdaf108ffa215d378248483b33c06287dea"
+    },
+    "validation/preloaded-evidence.json": {
+      "bytes": 118127,
+      "sha256": "69f2973d17bac8a19c88948891bcd72daf072e9d0ac66765ed2251be8a6489da"
+    },
+    "validation/python-code-after.json": {
+      "bytes": 128490,
+      "sha256": "8d9959fc57c2dcc182e9cce69b29b1cb7705cac9b428ea85e1bfd4b5d6a0c41f"
+    },
+    "validation/python-code-before.json": {
+      "bytes": 128490,
+      "sha256": "8d9959fc57c2dcc182e9cce69b29b1cb7705cac9b428ea85e1bfd4b5d6a0c41f"
+    },
+    "validation/python-core-0/python-test-inventory.json": {
+      "bytes": 156089,
+      "sha256": "9a4241db9343aece911e766fe0fb7fe7ca73a71721a3cf2887374980ecdb1f6a"
+    },
+    "validation/python-core-0/python-tests.log": {
+      "bytes": 55552,
+      "sha256": "f1d24aae3a9926e526dfcddb11c6ff903cadcdf243d2b5c6357c06500e6a4f62"
+    },
+    "validation/python-core-1/python-test-inventory.json": {
+      "bytes": 156089,
+      "sha256": "b63646563cd563c51e990345220acadf4ffaa82ae4a6feaeb06eb287f4ac3b54"
+    },
+    "validation/python-core-1/python-tests.log": {
+      "bytes": 63455,
+      "sha256": "78df60d73aa131cb2152222a0fe1ccf5be44d682cbe46f02dfaccdc549dc6a00"
+    },
+    "validation/python-mean-evidence/python-test-inventory.json": {
+      "bytes": 156093,
+      "sha256": "b416f1eb3633f893e3298d73af8085a194f6389ee256b0378f96de7eff4de510"
+    },
+    "validation/python-mean-evidence/python-tests.log": {
+      "bytes": 827,
+      "sha256": "af0d303be67cd7daa1045fa5bfe0f84015f60508721854c4f4d2dbac5603605a"
+    },
+    "validation/python-spatial-evidence/python-test-inventory.json": {
+      "bytes": 156096,
+      "sha256": "700ccc9f37b630f11118370c4458cfa9398ebd4566fc43a2c1f66229cf73dcc3"
+    },
+    "validation/python-spatial-evidence/python-tests.log": {
+      "bytes": 794,
+      "sha256": "98fe2d37d0ec89711829e864c2ca5760aef1b8836cbabb806b8191be5ad135e8"
+    },
+    "validation/python-test-ids.tsv": {
+      "bytes": 82215,
+      "sha256": "171b3f0da8d071912078b8c03850bd762fbe15045be6b17ddce51fffc5f61646"
+    },
+    "validation/replay-diff-fixed.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "validation/replay-diff.log": {
+      "bytes": 696,
+      "sha256": "9783b4bd7dd1e38c83406228117ce12512d5331778cc7a6829d1e2a17e986078"
+    },
+    "validation/restored-blob-cache.log": {
+      "bytes": 52,
+      "sha256": "0d14adc5ee92e81d2fe8c93d07342076f057bded1e66b78914f8b7f2f0acd71b"
+    },
+    "validation/rust-list.log": {
+      "bytes": 45064,
+      "sha256": "1baa879c8710a37152f569163c5ba048584c8e079e8570a2e4d63ad9b925ea19"
+    },
+    "validation/rust-processes.log": {
+      "bytes": 1241,
+      "sha256": "5e8e010bdb6c03a9c83e5ed940d7fcbfb94bbe11452713e257ec855f3b9b5996"
+    },
+    "validation/rust-result.json": {
+      "bytes": 33517,
+      "sha256": "2b6ad5de9e8ffa0ff82270f0f4d2cc7279bc8149e11eade3e51790e8abaf15c0"
+    },
+    "validation/rust-tests.log": {
+      "bytes": 54987,
+      "sha256": "d9799d3e8ad04a44e9ff5654d9b714c727212c37688bb3d9d0dd7e2237f84ecd"
+    },
+    "validation/tree-preservation-before-validation.tsv": {
+      "bytes": 361,
+      "sha256": "4895230b0bd84e748854914aef2abb9630885da6f451426976458f7440d90e49"
+    }
+  },
+  "development_records": {
+    "included_in_unique_final_counts": false,
+    "initial_analytic_tests": {
+      "success": 6,
+      "failure": 0,
+      "error": 1,
+      "not_run": 0,
+      "skip": 0,
+      "reason": "partial source dependency not yet placed"
+    },
+    "second_analytic_tests": {
+      "success": 7,
+      "failure": 0,
+      "error": 0,
+      "not_run": 0,
+      "skip": 0
+    },
+    "first_seal_integrity_unit_tests": {
+      "success": 8,
+      "failure": 0,
+      "error": 0,
+      "not_run": 0,
+      "skip": 0
+    },
+    "initial_full_replay": {
+      "success": false,
+      "reason": "integer histogram keys versus JSON string keys; corrected without changing numerical values"
+    },
+    "final_isolated_full_replay_unit_tests": {
+      "success": 8,
+      "failure": 0,
+      "error": 0,
+      "not_run": 0,
+      "skip": 0
+    },
+    "initial_discovery_failed_imports": [
+      "test_nc_oblique_release",
+      "test_nc_tangent_branch_diagnosis"
+    ],
+    "discovery_collision_resolved_in_new_module_names_only": true,
+    "initial_independent_configuration_failures": 7,
+    "incomplete_original_path_error_reference_512": true,
+    "initial_p6_audit": {
+      "success": 76,
+      "failure": 0,
+      "error": 0,
+      "not_run": 0,
+      "skip": 0
+    }
+  },
+  "post_registration_audit_file": "validation/final-inventory-audit.tsv",
+  "post_registration_audit_log": "validation/final-inventory-audit.log",
+  "windows_ci": "push後の新先端は未確定",
+  "c02_complete": false,
+  "c03_complete": false,
+  "c04_complete": false,
+  "nc01_complete": false,
+  "p6_complete": false,
+  "ab_items_completed": false,
+  "user_pc_runs_executed": false,
+  "old_reference_values_rewritten": false,
+  "nc_code_or_settings_changed": false
+}

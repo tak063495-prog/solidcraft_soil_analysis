@@ -56,6 +56,11 @@ pub struct ExteriorPeriod {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Case {
+    /// Fully water-filled aperture at zero mechanical jump, in metres.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub joint_aperture_storage_m: Option<f64>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub joint_reservoir_heads: BTreeMap<String, crate::joint_water::rt0::HeadHistory>,
     pub schema: String,
     pub flow: richards::Case,
     pub mechanics: stages::StageCase,
@@ -69,6 +74,9 @@ pub struct Case {
     pub exterior_periods: Vec<ExteriorPeriod>,
     #[serde(default = "default_store_points")]
     pub store_transfer_integration_points: bool,
+    /// Include the face-local integration point index in JOINT trace evidence.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub verification_record_joint_trace_points: bool,
     #[serde(default)]
     pub verification_reject_once_at_times_s: Vec<f64>,
 }
@@ -94,6 +102,10 @@ pub struct Sample {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Fluid {
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub joint_water_volume_m3: BTreeMap<usize, f64>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub joint_traces: Vec<crate::joint_water::PointTraces>,
     pub hydraulic_points: Vec<Sample>,
     pub mechanical_points: Vec<Sample>,
     pub fluid_internal_nodal_force_kn: Vec<f64>,
@@ -116,6 +128,8 @@ pub struct State {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct MechanicalAudit {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub joint_results: Option<crate::joints::Report>,
     pub newton_iterations: usize,
     pub relative_effective_rhs_residual: f64,
     pub maximum_constraint_error_m: f64,
@@ -128,6 +142,8 @@ pub struct MechanicalAudit {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Frame {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub staggered_iterations: Option<usize>,
     pub name: String,
     pub phase: String,
     pub initialization_progress: f64,
@@ -466,6 +482,8 @@ impl<'a> Transfer<'a> {
             return Err(Error::Solve("non-finite ONE_WAY transfer".into()));
         }
         Ok(Fluid {
+            joint_water_volume_m3: BTreeMap::new(),
+            joint_traces: vec![],
             hydraulic_points: raw,
             mechanical_points: mechanical,
             fluid_internal_nodal_force_kn: internal,
@@ -479,12 +497,39 @@ impl<'a> Transfer<'a> {
     }
 }
 
+impl Fluid {
+    pub(crate) fn apply_joint(
+        &mut self,
+        wet: Option<&crate::joint_water::Model>,
+        active: &[bool],
+        state: &richards::State,
+        faces: &[richards::Face],
+        datum: f64,
+        time: f64,
+    ) -> Result<Option<crate::joint_water::Field>> {
+        let Some(wet) = wet else { return Ok(None) };
+        let (field, traces) = wet.richards_field(active, state, faces, datum, time)?;
+        for ((physical, rhs), wall) in self
+            .physical_nodal_load_kn
+            .iter_mut()
+            .zip(&mut self.equivalent_mechanical_rhs_kn)
+            .zip(&field.nodal_load_kn)
+        {
+            *physical += wall;
+            *rhs += wall;
+        }
+        self.joint_traces = traces;
+        Ok(Some(field))
+    }
+}
+
 pub(crate) fn audit(t: &stages::ExternalTrial, fluid: &Fluid) -> MechanicalAudit {
     let mut physical = [0.; 3];
     for (g, f) in fluid.physical_nodal_load_kn.iter().enumerate() {
         physical[g % 3] += f;
     }
     MechanicalAudit {
+        joint_results: t.frame.joint_results.clone(),
         newton_iterations: t.iterations,
         relative_effective_rhs_residual: t.frame.relative_force_residual,
         maximum_constraint_error_m: t.frame.maximum_constraint_error_m,
@@ -506,7 +551,23 @@ pub(crate) fn validate(case: &Case) -> Result<&[richards::Period]> {
             "ONE_WAY needs transient Richards periods".into(),
         ));
     };
-    if case.schema != "soil-fem-one-way/1"
+    if let Some(aperture) = case.joint_aperture_storage_m
+        && (!aperture.is_finite()
+            || aperture <= 0.
+            || case.schema != "soil-fem-staggered-transfer/1"
+            || case.mechanics.joint_system.as_ref().is_none_or(|c| {
+                c.joints.is_empty()
+                    || c.joints.iter().any(|d| {
+                        !matches!(d.water, Some(crate::joint_water::Policy::Continuous))
+                            || d.birth_policy.is_some()
+                    })
+            }))
+    {
+        return Err(Error::Input("joint aperture storage requires positive reference aperture and active CONTINUOUS staggered joints".into()));
+    }
+    if !(case.schema == "soil-fem-one-way/1"
+        || (case.schema == "soil-fem-staggered-transfer/1"
+            && case.mechanics.joint_system.is_some()))
         || !case.initial_porosity_tolerance.is_finite()
         || !(1e-12..=0.2).contains(&case.initial_porosity_tolerance)
         || !case.maximum_initial_engineering_strain.is_finite()
@@ -534,7 +595,40 @@ pub(crate) fn validate(case: &Case) -> Result<&[richards::Period]> {
             "invalid ONE_WAY closure, initialization or exterior history".into(),
         ));
     }
+    for (id, h) in &case.joint_reservoir_heads {
+        if !case.mechanics.joint_system.as_ref().is_some_and(|j| {
+            j.joints.iter().any(|d| {
+                d.id == *id
+                    && matches!(
+                        d.water,
+                        Some(crate::joint_water::Policy::Prescribed { level_m: None })
+                    )
+            })
+        }) {
+            return Err(Error::Input(
+                "head history needs a declared PRESCRIBED wall without a fixed level".into(),
+            ));
+        }
+        h.validate(
+            periods
+                .last()
+                .ok_or_else(|| Error::Input("missing hydraulic period".into()))?
+                .end_time_s,
+        )?;
+    }
     Ok(periods)
+}
+
+impl Case {
+    pub(crate) fn clip_dt(&self, t: f64, dt: f64) -> f64 {
+        self.joint_reservoir_heads
+            .values()
+            .flat_map(|h| &h.0)
+            .map(|k| k[0])
+            .filter(|s| *s > t)
+            .map(|s| s - t)
+            .fold(dt, f64::min)
+    }
 }
 
 pub fn solve(mesh: &Mesh, ground: Ground, case: Case) -> Result<Report> {
@@ -617,16 +711,52 @@ fn advance(
         return Err(Error::Input("checkpoint count must be positive".into()));
     }
     let periods = validate(&case)?;
-    let flow = if let Some(active) = initial_active {
-        richards::Stepper::initial_on_domain(mesh, &case.flow, active)?
-    } else {
-        richards::Stepper::new(mesh, &case.flow)?
-    };
     let mut kernel = stages::ExternalMechanics::new(mesh, &ground, &case.mechanics)?;
-    let seed_mechanics = if let Some(active) = initial_active {
+    kernel.set_head_histories(&case.joint_reservoir_heads);
+    kernel.set_joint_trace_point_recording(case.verification_record_joint_trace_points);
+    let mut seed_mechanics = if let Some(active) = initial_active {
         kernel.seed_on_domain(active)?
     } else {
         kernel.seed()?
+    };
+    let active = seed_mechanics.active_elements.clone();
+    let flow = if let Some(wet) = kernel.wet_joints() {
+        let pairs = wet.richards_pairs(&active)?;
+        let walls: BTreeSet<_> = pairs
+            .iter()
+            .flat_map(|p| [p.a.corners, p.b.corners])
+            .collect();
+        for reservoir in case
+            .initial_exterior_water
+            .iter()
+            .chain(case.exterior_periods.iter().flat_map(|p| &p.reservoirs))
+        {
+            if mesh
+                .face_sets
+                .get(&reservoir.face_set)
+                .into_iter()
+                .flatten()
+                .any(|f| {
+                    let mut key = *f;
+                    key.sort_unstable();
+                    walls.contains(&key)
+                })
+            {
+                return Err(Error::Input(
+                    "same wall registered for exterior and JOINT pressure".into(),
+                ));
+            }
+        }
+        richards::Stepper::initial_with_joints(
+            mesh,
+            &case.flow,
+            &wet.soil_domain(&active)?,
+            &pairs,
+        )?
+    } else if let Some(active) = initial_active {
+        richards::Stepper::initial_on_domain(mesh, &case.flow, active)?
+    } else {
+        richards::Stepper::new(mesh, &case.flow)?
     };
     let layout = kernel.layout();
     let transfer = Transfer::new(mesh, &ground, &case, &seed_mechanics, layout.clone())?;
@@ -636,7 +766,35 @@ fn advance(
         transfer.exterior(&p.reservoirs)?;
     }
     let initial = flow.initial()?;
-    let fluid = transfer.field(&initial.state, &case.initial_exterior_water)?;
+    let faces = flow.faces();
+    let mut fluid = transfer.field(&initial.state, &case.initial_exterior_water)?;
+    seed_mechanics.joint_water = fluid.apply_joint(
+        kernel.wet_joints(),
+        &active,
+        &initial.state,
+        &faces,
+        case.flow.head_datum_m,
+        0.,
+    )?;
+    let volumes = |wet: Option<&crate::joint_water::Model>,
+                   mechanics: &stages::Committed,
+                   fluid: &Fluid|
+     -> Result<BTreeMap<usize, f64>> {
+        match case.joint_aperture_storage_m {
+            Some(b0) => wet
+                .ok_or_else(|| Error::Input("missing wet joints".into()))?
+                .saturated_volumes(
+                    b0,
+                    mechanics
+                        .joints
+                        .as_ref()
+                        .ok_or_else(|| Error::Input("missing joint state".into()))?,
+                    &fluid.joint_traces,
+                ),
+            None => Ok(BTreeMap::new()),
+        }
+    };
+    fluid.joint_water_volume_m3 = volumes(kernel.wet_joints(), &seed_mechanics, &fluid)?;
     let internal = kernel.internal(&seed_mechanics)?;
     let mut initial_mechanics = seed_mechanics;
     initial_mechanics.applied_nodal_load_kn = internal.clone();
@@ -663,6 +821,7 @@ fn advance(
             seed: initial_state.clone(),
             initial_reference_displacement_m: vec![],
             frames: vec![Frame {
+                staggered_iterations: None,
                 name: "seed".into(),
                 phase: "initialization_seed".into(),
                 initialization_progress: 0.,
@@ -713,7 +872,7 @@ fn advance(
             None
         } else {
             Some(
-                rt.next_time_step_s
+                case.clip_dt(old.hydraulic.time_s, rt.next_time_step_s)
                     .min(periods[rt.period_index].end_time_s - old.hydraulic.time_s),
             )
         };
@@ -730,60 +889,120 @@ fn advance(
         let mut plastic = false;
         let mut invalid = false;
         let result = (|| -> Result<()> {
-            let hydraulic = if let Some(dt) = dt {
-                let (trial, log) = flow.trial(&old.hydraulic, rt.period_index, dt);
-                hydraulic_log = log;
-                trial?
-            } else {
-                flow.initial()?
-            };
-            hchanged = changed(&old.hydraulic, &hydraulic.state)?;
-            let reservoirs = if initializing {
-                &case.initial_exterior_water
-            } else {
-                &case.exterior_periods[rt.period_index].reservoirs
-            };
-            let fluid = transfer.field(&hydraulic.state, reservoirs)?;
-            let rhs = if initializing {
-                rt.seed_internal_kn
-                    .iter()
-                    .zip(&fluid.equivalent_mechanical_rhs_kn)
-                    .map(|(a, b)| if to == 1. { *b } else { a + (b - a) * to })
-                    .collect()
-            } else {
-                fluid.equivalent_mechanical_rhs_kn.clone()
-            };
-            let trial = kernel.trial(&old.mechanical, rhs, name.clone())?;
-            mchanged = changed(&old.mechanical, &trial.frame.state)?;
-            plastic = old
-                .mechanical
-                .material_states
-                .iter()
-                .zip(&trial.frame.state.material_states)
-                .any(|(a, b)| a.plastic_strain() != b.plastic_strain());
-            let audit = audit(&trial, &fluid);
-            mechanical_audit = Some(audit.clone());
-            if initializing && kernel.maximum_strain(&trial.frame.state) > initial_strain_limit {
-                return Err(Error::Input("initial ONE_WAY engineering strain exceeds declared limit; no equilibrium accepted".into()));
-            }
-            let state = State {
-                hydraulic: hydraulic.state,
-                mechanical: trial.frame.state,
-                fluid,
-            };
-            candidate = Some(Frame {
-                name: name.clone(),
-                phase: if initializing {
-                    "initialization"
+            let staggered = !initializing && case.schema == "soil-fem-staggered-transfer/1";
+            let mut previous = None;
+            let mut rates = BTreeMap::new();
+            for iteration in 1..=if staggered { 2 } else { 1 } {
+                let mut hydraulic = if let Some(dt) = dt {
+                    let (trial, log) =
+                        flow.trial_with_storage(&old.hydraulic, rt.period_index, dt, &rates);
+                    hydraulic_log.extend(log);
+                    trial?
                 } else {
-                    "transient"
+                    flow.initial()?
+                };
+                hchanged = changed(&old.hydraulic, &hydraulic.state)?;
+                let reservoirs = if initializing {
+                    &case.initial_exterior_water
+                } else {
+                    &case.exterior_periods[rt.period_index].reservoirs
+                };
+                let mut fluid = transfer.field(&hydraulic.state, reservoirs)?;
+                let water = fluid.apply_joint(
+                    kernel.wet_joints(),
+                    &active,
+                    &hydraulic.state,
+                    &faces,
+                    case.flow.head_datum_m,
+                    old.hydraulic.time_s + dt.unwrap_or(0.),
+                )?;
+                let rhs = if initializing {
+                    rt.seed_internal_kn
+                        .iter()
+                        .zip(&fluid.equivalent_mechanical_rhs_kn)
+                        .map(|(a, b)| if to == 1. { *b } else { a + (b - a) * to })
+                        .collect()
+                } else {
+                    fluid.equivalent_mechanical_rhs_kn.clone()
+                };
+                let trial = kernel.trial(&old.mechanical, rhs, name.clone(), water)?;
+                mchanged = changed(&old.mechanical, &trial.frame.state)?;
+                plastic = old
+                    .mechanical
+                    .material_states
+                    .iter()
+                    .zip(&trial.frame.state.material_states)
+                    .any(|(a, b)| a.plastic_strain() != b.plastic_strain());
+                let audit = audit(&trial, &fluid);
+                mechanical_audit = Some(audit.clone());
+                if initializing && kernel.maximum_strain(&trial.frame.state) > initial_strain_limit
+                {
+                    return Err(Error::Input("initial ONE_WAY engineering strain exceeds declared limit; no equilibrium accepted".into()));
                 }
-                .into(),
-                initialization_progress: to,
-                state,
-                hydraulic_balance: (!initializing).then_some(hydraulic.balance),
-                mechanical_audit: Some(audit),
-            });
+                fluid.joint_water_volume_m3 =
+                    volumes(kernel.wet_joints(), &trial.frame.state, &fluid)?;
+                if let Some(seconds) = dt
+                    && case.joint_aperture_storage_m.is_some()
+                {
+                    rates = fluid
+                        .joint_water_volume_m3
+                        .iter()
+                        .map(|(&fi, &v)| (fi, (v - old.fluid.joint_water_volume_m3[&fi]) / seconds))
+                        .collect();
+                    if iteration == 1 {
+                        continue;
+                    }
+                    // Check the original water equations with the actual endpoint
+                    // opening, rather than accepting the previous exchange iterate.
+                    hydraulic.balance = flow.balance_with_storage(
+                        &hydraulic.state,
+                        &old.hydraulic,
+                        rt.period_index,
+                        seconds,
+                        &rates,
+                    )?;
+                    if hydraulic.balance.maximum_scaled_residual > 1. {
+                        return Err(Error::Solve(
+                            "joint aperture storage exchange residual exceeds Richards criterion"
+                                .into(),
+                        ));
+                    }
+                }
+                let state = State {
+                    hydraulic: hydraulic.state,
+                    mechanical: trial.frame.state,
+                    fluid,
+                };
+                if staggered && case.joint_aperture_storage_m.is_none() {
+                    // With no reverse constitutive law the exchange operator is constant.
+                    // Re-solve from n and require exactly the same final state (including
+                    // the two subsolver fields and contact history) before committing.
+                    let exchange = checkpoint::hash_json(&state)?;
+                    if iteration == 1 {
+                        previous = Some(exchange);
+                        continue;
+                    }
+                    if previous.as_ref() != Some(&exchange) {
+                        return Err(Error::Solve(
+                            "staggered transfer fields did not settle".into(),
+                        ));
+                    }
+                }
+                candidate = Some(Frame {
+                    staggered_iterations: staggered.then_some(iteration),
+                    name: name.clone(),
+                    phase: if initializing {
+                        "initialization"
+                    } else {
+                        "transient"
+                    }
+                    .into(),
+                    initialization_progress: to,
+                    state,
+                    hydraulic_balance: (!initializing).then_some(hydraulic.balance),
+                    mechanical_audit: Some(audit),
+                });
+            }
             if !initializing {
                 for (i, t) in case.verification_reject_once_at_times_s.iter().enumerate() {
                     if !rt.injected_times.contains(&i)

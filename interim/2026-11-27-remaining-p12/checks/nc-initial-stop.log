@@ -1,0 +1,31 @@
+Traceback (most recent call last):
+  File "/workspace/work/p12/tree/interim/2026-11-27-remaining-p12/nc.py", line 117, in <module>
+    run(Path(sys.argv[1]).resolve(),Path(sys.argv[2]))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/p12/tree/interim/2026-11-27-remaining-p12/nc.py", line 86, in run
+    row=predict(model,probe,state,lam,t,ordinary,accepted+1,local)
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p11/nc_paths.py", line 48, in predict
+    mid=sample((a["width"]+b["width"])/2)
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p11/nc_paths.py", line 31, in sample
+    obs = p8.point(probe, rec)
+  File "/workspace/work/p12/tree/interim/2026-11-26-remaining-p8/nc.py", line 33, in point
+    np.testing.assert_allclose(rhs/denominator,j["dx"][7],rtol=5e-9,atol=1e-14)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+    assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         verbose=verbose, header=header, equal_nan=equal_nan,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         strict=strict)
+                         ^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Not equal to tolerance rtol=5e-09, atol=1e-14
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference among violations: 0.00017731
+Max relative difference among violations: 1.32094273e-08
+ ACTUAL: array(-13422.932231)
+ DESIRED: array(-13422.932408)
+{"exit_code": 1, "seconds": 13.011291282999991, "peak_rss_kib": 77624}

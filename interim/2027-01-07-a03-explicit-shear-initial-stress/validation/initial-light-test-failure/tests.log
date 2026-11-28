@@ -1,0 +1,27 @@
+test_ci_sparse_posix_nul_paths_include_archive (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_ci_sparse_posix_nul_paths_include_archive) ... ok
+test_explicit_fresh_stress_and_unchanged_bodies (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_explicit_fresh_stress_and_unchanged_bodies) ... ok
+test_fixed_fsum_c_order_and_common_coordinates (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_fixed_fsum_c_order_and_common_coordinates) ... ok
+test_fixed_matrix_and_counts (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_fixed_matrix_and_counts) ... ok
+test_outside_matrix_refused_without_solve (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_outside_matrix_refused_without_solve) ... 
+  test_outside_matrix_refused_without_solve (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_outside_matrix_refused_without_solve) (mutation='darcy') ... ERROR
+test_preserved_prior_source_sha (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_preserved_prior_source_sha) ... ok
+test_scope_null_and_failed_acceptance (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_scope_null_and_failed_acceptance) ... ok
+test_sealed_evidence_sha (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_sealed_evidence_sha) ... ok
+test_universal_newline_terminal_status (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_universal_newline_terminal_status) ... ok
+
+======================================================================
+ERROR: test_outside_matrix_refused_without_solve (test_a03_explicit_shear_initial_stress.A03ExplicitShear.test_outside_matrix_refused_without_solve) (mutation='darcy')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_a03_explicit_shear_initial_stress.py", line 52, in test_outside_matrix_refused_without_solve
+    with self.subTest(mutation=mutation),self.assertRaises((ValueError,AssertionError)):audit(m,g,c)
+                                                                                        ~~~~~^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2027-01-07-a03-explicit-shear-initial-stress/a03shear_fixture.py", line 46, in audit
+    assert c['stages'][0]['hydraulic_initialization'] == dict(kind='hydrostatic', level_m=2.)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'hydraulic_initialization'
+
+----------------------------------------------------------------------
+Ran 9 tests in 6.699s
+
+FAILED (errors=1)

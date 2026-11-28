@@ -9,6 +9,51 @@ use std::{env, fs, path::Path};
 fn run() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [command, operators, output] if command == "study-joint-p-cycle" => {
+            soil_fem_3d::joint_p_cycle::run(Path::new(operators), Path::new(output))?;
+        }
+[command, case, output, rest @ ..] if command == "offset-kink-joint" => {
+            use soil_fem_3d::curved_shell::path;
+            let case: soil_fem_3d::curved_shell::kink::Input = serde_json::from_reader(fs::File::open(case)?)?;
+            let (until, resume) = match rest {
+                [] => (case.shell.steps.len(), None),
+                [flag, index] if flag == "--until" => (index.parse().map_err(|_| Error::Input("invalid accepted index".into()))?, None),
+                [flag, file] if flag == "--resume" => (case.shell.steps.len(), Some(serde_json::from_reader(fs::File::open(file)?)?)),
+                _ => return Err(Error::Input("offset-kink-joint CASE OUTPUT [--until INDEX | --resume RUN]".into())),
+            };
+            write_new(output, &path::run_kink(&case, until, resume.as_ref())?)?;
+        }
+
+[command, case, output, rest @ ..] if command == "curved-shell" => {
+            use soil_fem_3d::curved_shell::path;
+            let case: path::Case = serde_json::from_reader(fs::File::open(case)?)?;
+            use soil_fem_3d::curved_shell::ShearInterpolation;
+            let (shear, rest) = match rest {
+                [flag, remaining @ ..] if flag == "--shear-mean" => (ShearInterpolation::ElementMean, remaining),
+                _ => (ShearInterpolation::Centroid, rest),
+            };
+            let (until, resume) = match rest {
+                [] => (case.steps.len(), None),
+                [flag, index] if flag == "--until" => (index.parse().map_err(|_| Error::Input("invalid accepted index".into()))?, None),
+                [flag, file] if flag == "--resume" => (case.steps.len(), Some(serde_json::from_reader(fs::File::open(file)?)?)),
+                _ => return Err(Error::Input("curved-shell CASE OUTPUT [--shear-mean] [--until INDEX | --resume RUN]".into())),
+            };
+            write_new(output, &path::run_with_shear(&case, until, resume.as_ref(), shear)?)?;
+        }
+
+[command, mesh, case, output, rest @ ..] if command == "offset-composite" => {
+            use soil_fem_3d::offset_composite::path;
+            let mesh: Mesh = serde_json::from_reader(fs::File::open(mesh)?)?;
+            let case: path::Case = serde_json::from_reader(fs::File::open(case)?)?;
+            let (until, resume) = match rest {
+                [] => (case.steps.len(), None),
+                [flag, index] if flag == "--until" => (index.parse().map_err(|_| Error::Input("invalid accepted index".into()))?, None),
+                [flag, file] if flag == "--resume" => (case.steps.len(), Some(serde_json::from_reader(fs::File::open(file)?)?)),
+                _ => return Err(Error::Input("offset-composite MESH CASE OUTPUT [--until INDEX | --resume RUN]".into())),
+            };
+            write_new(output, &path::run(&mesh, &case, until, resume.as_ref())?)?;
+        }
+
         [command, profile, output] if command == "plane-strain-2d" && (profile == "ci" || profile == "user") => {
             if Path::new(output).exists() {
                 return Err(Error::Input("plane-strain-2d output already exists".into()));
@@ -63,6 +108,33 @@ fn run() -> Result<()> {
                 report.smooth_linear_elasticity_orders_demonstrated,
                 report.uniform_srm_factor_within_search_spacing
             );
+        }
+        [command,mesh,origin,spec,report,expected_sha256,output] if command=="verify-exact-epoch-fs" => {
+            if soil_fem_3d::checkpoint::hash_file(Path::new(report))? != *expected_sha256 {
+                return Err(Error::Input("Fs report differs from the separately retained SHA-256".into()));
+            }
+            let mesh: Mesh=serde_json::from_reader(fs::File::open(mesh)?)?;
+            let spec=serde_json::from_reader(fs::File::open(spec)?)?;
+            let report=serde_json::from_reader(fs::File::open(report)?)?;
+            let origin=serde_json::from_reader(fs::File::open(origin)?)?;
+            let checked=soil_fem_3d::exact_fs::epoch(&mesh,&origin,&spec,&report)?;
+            write_new(output,&checked)?;
+            println!("Fs evidence verified; exact_fs_for_this_case={}",checked.exact_fs_for_this_case);
+            if !checked.exact_fs_for_this_case { std::process::exit(2); }
+        }
+        [command,mesh,ground,case,spec,report,expected_sha256,output] if command=="verify-exact-fs" => {
+            if soil_fem_3d::checkpoint::hash_file(Path::new(report))? != *expected_sha256 {
+                return Err(Error::Input("Fs report differs from the separately retained SHA-256".into()));
+            }
+            let mesh: Mesh=serde_json::from_reader(fs::File::open(mesh)?)?;
+            let ground=serde_json::from_reader(fs::File::open(ground)?)?;
+            let case=serde_json::from_reader(fs::File::open(case)?)?;
+            let spec=serde_json::from_reader(fs::File::open(spec)?)?;
+            let report=serde_json::from_reader(fs::File::open(report)?)?;
+            let checked=soil_fem_3d::exact_fs::fresh(&mesh,&ground,&case,&spec,&report)?;
+            write_new(output,&checked)?;
+            println!("Fs evidence verified; exact_fs_for_this_case={}",checked.exact_fs_for_this_case);
+            if !checked.exact_fs_for_this_case { std::process::exit(2); }
         }
         [command,mesh,ground,case,spec,interval,output] if command=="prepare-mc-epoch-srm-gate-job" => {
             let interval:usize=interval.parse().map_err(|_|Error::Input("epoch SRM gate accepted-unit interval must be positive".into()))?;
@@ -485,7 +557,7 @@ fn run() -> Result<()> {
             write_new(out,&result)?;
             println!("iterations={} true_relative_residual={:.3e} equilibrium_error_kn={:?}",result.iterations,result.true_relative_residual,result.equilibrium_error_kn);
         }
-        _ => return Err(Error::Input("usage: soil-fem-3d plane-strain-2d ci|user NEW_REPORT.json | plane-strain-2d judge SERIES.json NEW_REPORT.json | spatial-convergence ci|user NEW_REPORT.json | prepare-mc-epoch-srm-gate-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_UNITS NEW_JOB | run-mc-epoch-srm-gate-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-gate-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-gate-job JOB | mc-epoch-srm-gate-job-status JOB | verify-mc-epoch-srm-gate-job JOB | solve-mc-epoch-srm-gate MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | prepare-mc-epoch-srm-job MESH.json ORIGINAL_RUN.json SPEC.json MATERIAL_ATTEMPTS_PER_SAVE NEW_JOB | run-mc-epoch-srm-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-job JOB | mc-epoch-srm-job-status JOB | verify-mc-epoch-srm-job JOB | search-mc-epoch-srm MESH.json ORIGINAL_RUN.json SPEC.json NEW_REPORT.json | prepare-srm-search-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_INTERVAL NEW_JOB | run-srm-search-job JOB [ADVANCE_BUDGET] | prepare-srm-search-recovery PREVIOUS_JOB NEW_JOB | stop-srm-search-job JOB | srm-search-job-status JOB | verify-srm-search-job JOB | mc-virtual-work-bound MESH.json PROBLEM.json NEW_REPORT.json | search-mc-srm MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mc-mean-stress-bound MESH.json PROBLEM.json NEW_REPORT.json | prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
+        _ => return Err(Error::Input("usage: soil-fem-3d study-joint-p-cycle OPERATORS NEW_STEPS.jsonl | offset-kink-joint CASE NEW_RUN [--until INDEX | --resume RUN] | curved-shell CASE NEW_RUN [--until INDEX | --resume RUN] | offset-composite MESH CASE NEW_RUN [--until INDEX | --resume RUN] | verify-exact-fs MESH GROUND CASE SPEC REPORT EXPECTED_SHA256 NEW_ASSESSMENT | verify-exact-epoch-fs MESH ORIGINAL_RUN SPEC REPORT EXPECTED_SHA256 NEW_ASSESSMENT | plane-strain-2d ci|user NEW_REPORT.json | plane-strain-2d judge SERIES.json NEW_REPORT.json | spatial-convergence ci|user NEW_REPORT.json | prepare-mc-epoch-srm-gate-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_UNITS NEW_JOB | run-mc-epoch-srm-gate-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-gate-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-gate-job JOB | mc-epoch-srm-gate-job-status JOB | verify-mc-epoch-srm-gate-job JOB | solve-mc-epoch-srm-gate MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | prepare-mc-epoch-srm-job MESH.json ORIGINAL_RUN.json SPEC.json MATERIAL_ATTEMPTS_PER_SAVE NEW_JOB | run-mc-epoch-srm-job JOB [ADVANCE_BUDGET] | prepare-mc-epoch-srm-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-srm-job JOB | mc-epoch-srm-job-status JOB | verify-mc-epoch-srm-job JOB | search-mc-epoch-srm MESH.json ORIGINAL_RUN.json SPEC.json NEW_REPORT.json | prepare-srm-search-job MESH.json GROUND.json CASE.json SPEC.json ACCEPTED_INTERVAL NEW_JOB | run-srm-search-job JOB [ADVANCE_BUDGET] | prepare-srm-search-recovery PREVIOUS_JOB NEW_JOB | stop-srm-search-job JOB | srm-search-job-status JOB | verify-srm-search-job JOB | mc-virtual-work-bound MESH.json PROBLEM.json NEW_REPORT.json | search-mc-srm MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mc-mean-stress-bound MESH.json PROBLEM.json NEW_REPORT.json | prepare-mc-epoch-job MESH.json ORIGINAL_RUN.json SPEC.json NEW_JOB | run-mc-epoch-job JOB [ATTEMPT_BUDGET] | prepare-mc-epoch-recovery PREVIOUS_JOB NEW_JOB | stop-mc-epoch-job JOB | mc-epoch-job-status JOB | verify-mc-epoch-job JOB | prepare-durable-stages-job MESH.json GROUND.json CASE.json ACCEPTED_INTERVAL NEW_JOB | prepare-stages-recovery PREVIOUS_JOB NEW_JOB | solve-mixed-mechanics MESH.json CASE.json NEW_RESULT.json | solve-one-way-construction MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way-construction MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way-construction MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-one-way MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-one-way MESH.json GROUND.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-one-way MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-richards MESH.json CASE.json NEW_RESULT.json | checkpoint-richards MESH.json CASE.json ACCEPTED_STEPS NEW_CHECKPOINT.json | resume-richards MESH.json CASE.json CHECKPOINT.json NEW_RESULT.json | solve-darcy MESH.json FLOW.json NEW_RESULT.json | replay-through-stage MESH.json GROUND.json CASE.json SPEC.json THROUGH_STAGES NEW_REPORT.json | replay-stages MESH.json GROUND.json CASE.json SPEC.json NEW_REPORT.json | mesh-identity MESH.json NEW_IDENTITY.json | validate MESH.json | solve-elastic MESH.json CASE.json NEW_RESULT.json | solve-mechanics MESH.json CASE.json NEW_RESULT.json | initialize-ground MESH.json GROUND.json NEW_STATE.json | mc-path PATH.json NEW_RESULT.json | mcc-path PATH.json NEW_RESULT.json | hydrostatic-face CASE.json NEW_RESULT.json | hardening-path PATH.json NEW_RESULT.json | solve-stages MESH.json GROUND.json CASE.json NEW_RESULT.json | checkpoint-stages MESH.json GROUND.json CASE.json ACCEPTED_INCREMENTS NEW_CHECKPOINT.json | resume-stages MESH.json GROUND.json CASE.json CHECKPOINT.json NEW_RESULT.json | benchmark-tet4 CASE.json NEW_REPORT.json".into())),
     }
     Ok(())
 }

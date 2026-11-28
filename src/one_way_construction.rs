@@ -25,6 +25,8 @@ pub enum CutTractionPolicy {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Excavation {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub water_destination: Option<water::ExternalWaterParty>,
     pub name: String,
     pub before_period: String,
     pub bodies: Vec<String>,
@@ -56,6 +58,12 @@ pub enum Action {
         states: BTreeMap<String, soil::State>,
         placement: stages::BirthPlacement,
         initial_head: richards::AffineHead,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        material_id: Option<u32>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        formation: Option<crate::soil_birth::Formation>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        internal_donors: Option<BTreeMap<usize, usize>>,
     },
     MaterialSet {
         bodies: Vec<String>,
@@ -67,6 +75,8 @@ pub enum Action {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Transition {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub water_source: Option<water::ExternalWaterParty>,
     pub name: String,
     pub before_period: String,
     pub action: Action,
@@ -82,12 +92,20 @@ impl Transition {
                 bodies,
                 states,
                 placement,
+                material_id,
+                formation,
                 ..
             } => stages::Stage::Birth {
                 name: self.name.clone(),
                 bodies: bodies.clone(),
                 states: states.clone(),
                 placement: placement.clone(),
+                hydraulic_initialization: material_id.map(|material_id| {
+                    stages::BirthHydraulicState::RichardsPlacement {
+                        material_id,
+                        formation: formation.clone(),
+                    }
+                }),
                 initial_increment: self.initial_increment,
             },
             Action::MaterialSet {
@@ -102,6 +120,14 @@ impl Transition {
                 history: history.clone(),
                 initial_increment: self.initial_increment,
             },
+        }
+    }
+    fn internal_donors(&self) -> Option<&BTreeMap<usize, usize>> {
+        match &self.action {
+            Action::Birth {
+                internal_donors, ..
+            } => internal_donors.as_ref(),
+            _ => None,
         }
     }
     fn water(&self) -> water::WaterPolicy {
@@ -124,6 +150,11 @@ pub struct ArchivedPoint {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransitionRecord {
+    /// Initial soil is generation zero. Each accepted placement advances it once.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub placed_generations: BTreeMap<usize, u64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub water_source: Option<water::ExternalWaterParty>,
     pub name: String,
     pub time_s: f64,
     pub origin_pair_sha256: String,
@@ -153,6 +184,12 @@ fn zero_usize(v: &usize) -> bool {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExcavationRecord {
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub removed_generations: BTreeMap<usize, u64>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub removed_hydraulic_points: Vec<one_way::Sample>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub water_destination: Option<water::ExternalWaterParty>,
     pub name: String,
     pub time_s: f64,
     pub origin_pair_sha256: String,
@@ -205,6 +242,8 @@ pub struct Attempt {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Pending {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wall_field: Option<crate::joint_water::Field>,
     pub event_index: usize,
     pub progress: f64,
     pub increment: f64,
@@ -286,6 +325,11 @@ pub fn domain_mesh(mesh: &Mesh, active: &[bool]) -> Result<Mesh> {
 
 fn periods(case: &Case) -> Result<&[richards::Period]> {
     one_way::validate(&case.one_way)?;
+    if case.one_way.joint_aperture_storage_m.is_some() {
+        return Err(Error::Input(
+            "joint aperture storage requires a fixed hydraulic domain".into(),
+        ));
+    }
     if case.schema != "soil-fem-one-way-construction/1"
         || (case.excavations.is_empty()
             && case.transitions.is_empty()
@@ -309,6 +353,22 @@ fn periods(case: &Case) -> Result<&[richards::Period]> {
     {
         return Err(Error::Input(
             "construction exterior/flow history mismatch".into(),
+        ));
+    }
+    if case.one_way.mechanics.joint_system.is_some()
+        && (case.excavations.iter().any(|e| {
+            e.water_destination
+                .as_ref()
+                .is_none_or(|p| p.reservoir_id.trim().is_empty())
+        }) || case.transitions.iter().any(|e| {
+            e.internal_donors().is_none()
+                && e.water_source
+                    .as_ref()
+                    .is_none_or(|p| p.reservoir_id.trim().is_empty())
+        }))
+    {
+        return Err(Error::Input(
+            "wet JOINT construction requires a named event water source/destination".into(),
         ));
     }
     let map = periods
@@ -348,6 +408,39 @@ fn periods(case: &Case) -> Result<&[richards::Period]> {
     let mut transition_names = BTreeSet::new();
     let mut prior = None;
     for event in &case.transitions {
+        if matches!(
+            event.action,
+            Action::Birth {
+                formation: Some(_),
+                material_id: None,
+                ..
+            }
+        ) {
+            return Err(Error::Input(
+                "MCC placement requires the calibrated material ID".into(),
+            ));
+        }
+        if event.internal_donors().is_some() && event.water_source.is_some() {
+            return Err(Error::Input(
+                "internal transfer cannot also have an external water source".into(),
+            ));
+        }
+        if matches!(
+            &event.action,
+            Action::Birth {
+                material_id: Some(_),
+                ..
+            }
+        ) && event.internal_donors().is_none()
+            && event
+                .water_source
+                .as_ref()
+                .is_none_or(|p| p.reservoir_id.trim().is_empty())
+        {
+            return Err(Error::Input(
+                "explicit placement requires a named event water source".into(),
+            ));
+        }
         let i = *map
             .get(event.before_period.as_str())
             .ok_or_else(|| Error::Input("unknown transition period".into()))?;
@@ -430,6 +523,14 @@ fn new_exposed(mesh: &Mesh, before: &[bool], after: &[bool]) -> BTreeSet<[usize;
         .map(|(k, _)| k)
         .collect()
 }
+fn generation(records: &[TransitionRecord], element: usize) -> u64 {
+    records
+        .iter()
+        .rev()
+        .find_map(|r| r.placed_generations.get(&element).copied())
+        .unwrap_or(0)
+}
+#[allow(clippy::too_many_arguments)]
 fn prepare_pending(
     kernel: &stages::ExternalMechanics<'_>,
     mesh: &Mesh,
@@ -438,26 +539,62 @@ fn prepare_pending(
     old: &State,
     event: &Transition,
     porosity: &[f64],
+    records: &[TransitionRecord],
 ) -> Result<PendingTransition> {
-    let (prepared, selected) =
+    let (mut prepared, selected) =
         kernel.prepare_external_transition(&old.mechanical, &event.stage())?;
     let old_ids = material_ids(mesh, &old.mechanical);
     let ids = material_ids(mesh, &prepared);
-    let change = water::change(
+    let change = richards::transition_domain(
         mesh,
         &case.one_way.flow,
-        water::Domain {
-            active: &old.mechanical.active_elements,
-            material_ids: &old_ids,
-        },
-        water::Domain {
-            active: &prepared.active_elements,
-            material_ids: &ids,
-        },
         &old.hydraulic,
-        &selected,
-        &event.water(),
+        water::TransitionInput {
+            before: water::Domain {
+                active: &old.mechanical.active_elements,
+                material_ids: &old_ids,
+            },
+            after: water::Domain {
+                active: &prepared.active_elements,
+                material_ids: &ids,
+            },
+            selected: &selected,
+            policy: &event.water(),
+            internal_donors: event.internal_donors(),
+        },
+        kernel.wet_joints(),
     )?;
+    if let Action::Birth {
+        formation: Some(f),
+        material_id: Some(id),
+        ..
+    } = &event.action
+    {
+        let law = &case
+            .one_way
+            .flow
+            .materials
+            .iter()
+            .find(|m| m.id == *id)
+            .ok_or_else(|| Error::Input("missing MCC hydraulic material".into()))?
+            .retention;
+        if !crate::soil_birth::consistent(f.hydraulic_porosity, law.saturated_water_content) {
+            return Err(Error::Input(
+                "MCC formation porosity conflicts with hydraulic material".into(),
+            ));
+        }
+        for &e in &selected {
+            let relative = change.state.relative_cell_head_m[e]
+                .ok_or_else(|| Error::Input("missing placed MCC head".into()))?;
+            if !crate::soil_birth::saturated_element(mesh, e, |p| {
+                case.one_way.flow.head_datum_m - p[2] + relative
+            }) {
+                return Err(Error::Input(
+                    "MCC placement requires full saturation".into(),
+                ));
+            }
+        }
+    }
     let layout = kernel.layout();
     let chosen = selected.into_iter().collect::<BTreeSet<_>>();
     if porosity.len() != layout.len() {
@@ -487,11 +624,23 @@ fn prepare_pending(
         .find(|p| p.name == event.before_period)
         .ok_or_else(|| Error::Input("missing lifecycle reservoirs".into()))?
         .reservoirs;
-    let fluid = transfer.field_with_base(
+    let mut fluid = transfer.field_with_base(
         &change.state,
         reservoirs,
         &kernel.dry_load(&prepared, &prepared.active_elements)?,
     )?;
+    prepared.joint_water = fluid.apply_joint(
+        kernel.wet_joints(),
+        &prepared.active_elements,
+        &change.state,
+        &change.new_faces,
+        case.one_way.flow.head_datum_m,
+        old.hydraulic.time_s,
+    )?;
+    if kernel.wet_joints().is_some() && matches!(event.action, Action::Birth { .. }) {
+        prepared.applied_nodal_load_kn = fluid.equivalent_mechanical_rhs_kn.clone();
+        kernel.birth_new_walls(&old.mechanical, &mut prepared)?;
+    }
     let (holding, residual) =
         kernel.transition_holding(&prepared, &fluid.equivalent_mechanical_rhs_kn)?;
     if residual > case.one_way.mechanics.settings.relative_force_tolerance * 10. {
@@ -506,6 +655,15 @@ fn prepare_pending(
             .initial_increment
             .unwrap_or(case.one_way.mechanics.settings.initial_increment),
         record: TransitionRecord {
+            placed_generations: if matches!(event.action, Action::Birth { .. }) {
+                chosen
+                    .iter()
+                    .map(|&i| (i, generation(records, i) + 1))
+                    .collect()
+            } else {
+                BTreeMap::new()
+            },
+            water_source: event.water_source.clone(),
             name: event.name.clone(),
             time_s: old.hydraulic.time_s,
             origin_pair_sha256: checkpoint::hash_json(old)?,
@@ -527,37 +685,81 @@ fn validate_domain(
     active: &[bool],
     period: usize,
     projected: &Mesh,
+    joint_exposed: &BTreeSet<[usize; 3]>,
 ) -> Result<()> {
     let p = &periods(case)?[period];
-    let explicit = p
+    let faces = |name: &str| {
+        projected
+            .face_sets
+            .get(name)
+            .into_iter()
+            .flatten()
+            .map(|face| {
+                let mut key = *face;
+                key.sort_unstable();
+                key
+            })
+    };
+    let conditions: BTreeMap<_, _> = p
         .boundaries
         .iter()
-        .flat_map(|b| projected.face_sets.get(&b.face_set).into_iter().flatten())
-        .map(|f| {
-            let mut key = *f;
-            key.sort_unstable();
-            key
-        })
-        .collect::<BTreeSet<_>>();
+        .flat_map(|b| faces(&b.face_set).map(move |key| (key, &b.condition)))
+        .collect();
+    let levels: BTreeMap<_, _> = case.one_way.exterior_periods[period]
+        .reservoirs
+        .iter()
+        .flat_map(|r| faces(&r.face_set).map(move |key| (key, r.level_m)))
+        .collect();
     for (key, owners) in boundary::surface_owners(mesh) {
-        if matches!(
-            case.one_way.mechanics.settings.kinematics,
-            stages::Kinematics::Oedometer
-        ) && owners.len() == 2
-            && owners.iter().filter(|&&e| active[e]).count() == 1
+        let shared_cut = owners.len() == 2;
+        if !shared_cut && !joint_exposed.contains(&key) {
+            continue;
+        }
+        let mut remaining = owners.into_iter().filter(|&owner| active[owner]);
+        let Some(owner) = remaining.next() else {
+            continue;
+        };
+        if remaining.next().is_some() {
+            continue;
+        }
+        if shared_cut
+            && matches!(
+                case.one_way.mechanics.settings.kinematics,
+                stages::Kinematics::Oedometer
+            )
             && key
                 .iter()
                 .any(|&n| (mesh.nodes[n][2] - mesh.nodes[key[0]][2]).abs() > 1e-8)
         {
             return Err(Error::Input("oedometer domain changes require horizontal cuts; use 3D supports for local excavation".into()));
         }
-        if owners.len() == 2
-            && owners.iter().filter(|&&e| active[e]).count() == 1
-            && !explicit.contains(&key)
-        {
-            return Err(Error::Input(
-                "new cut faces require explicit water boundaries in every subsequent period".into(),
-            ));
+        let condition = match conditions.get(&key) {
+            Some(condition) => condition,
+            None if shared_cut => {
+                return Err(Error::Input(
+                    "new cut faces require explicit water boundaries in every subsequent period"
+                        .into(),
+                ));
+            }
+            None => continue, // Missing JOINT boundaries are reported with the other exposed walls.
+        };
+        if let Some(&level) = levels.get(&key) {
+            for n in mesh.face_nodes(owner, &key)? {
+                let x = mesh.nodes[n];
+                let consistent = match condition {
+                    richards::Condition::Head { value } => value.relative(x, level) == 0.,
+                    richards::Condition::Pressure { pressure_head_m } => {
+                        *pressure_head_m == level - x[2]
+                    }
+                    _ => true,
+                };
+                if !consistent {
+                    return Err(Error::Input(format!(
+                        "period {}: exterior reservoir and prescribed hydraulic head disagree on cut face {key:?}",
+                        p.name
+                    )));
+                }
+            }
         }
     }
     Ok(())
@@ -635,6 +837,8 @@ fn advance(
     }
     let ps = periods(&case)?;
     let mut kernel = stages::ExternalMechanics::new(mesh, &ground, &case.one_way.mechanics)?;
+    kernel.set_head_histories(&case.one_way.joint_reservoir_heads);
+    kernel.set_joint_trace_point_recording(case.one_way.verification_record_joint_trace_points);
     let starting_active = initial_active(&kernel, &case, mesh.tetrahedra.len())?;
     let seed = if case.initially_inactive_bodies.is_empty() {
         kernel.seed()?
@@ -649,6 +853,7 @@ fn advance(
     let mut previous_active = vec![];
     let mut previous_ids = vec![];
     let mut required_exposed = BTreeSet::new();
+    let mut joint_exposed = BTreeSet::new();
     for (i, p) in ps.iter().enumerate() {
         let before = dummy.active_elements.clone();
         if let Some(event) = case.excavations.iter().find(|e| e.before_period == p.name) {
@@ -682,25 +887,71 @@ fn advance(
             )
         } else {
             let projected = Arc::new(domain_mesh(mesh, &dummy.active_elements)?);
-            let flow = if lifecycle {
-                richards::Stepper::deferred_domain(
-                    &projected,
-                    &case.one_way.flow,
-                    &dummy.active_elements,
-                    Some(&ids),
-                    i,
-                )?
+            let (domain, pairs) = if let Some(wet) = kernel.wet_joints() {
+                (
+                    wet.soil_domain(&dummy.active_elements)?,
+                    wet.richards_pairs(&dummy.active_elements)?,
+                )
             } else {
-                richards::Stepper::for_domain(
-                    &projected,
-                    &case.one_way.flow,
-                    &dummy.active_elements,
-                    i,
-                )?
+                (dummy.active_elements.clone(), vec![])
             };
+            let flow = richards::Stepper::construction_domain(
+                &projected,
+                &case.one_way.flow,
+                &domain,
+                Some(&ids),
+                i,
+                &pairs,
+                !lifecycle,
+            )?;
             (projected, flow)
         };
-        validate_domain(mesh, &case, &dummy.active_elements, i, &projected)?;
+        if let Some(wet) = kernel.wet_joints() {
+            let pairs = wet.richards_pairs(&dummy.active_elements)?;
+            let walls: BTreeSet<_> = pairs
+                .iter()
+                .flat_map(|p| [p.a.corners, p.b.corners])
+                .collect();
+            for reservoir in &case.one_way.exterior_periods[i].reservoirs {
+                if projected
+                    .face_sets
+                    .get(&reservoir.face_set)
+                    .into_iter()
+                    .flatten()
+                    .any(|f| {
+                        let mut key = *f;
+                        key.sort_unstable();
+                        walls.contains(&key)
+                    })
+                {
+                    return Err(Error::Input(
+                        "same wall registered for exterior and JOINT pressure".into(),
+                    ));
+                }
+            }
+            for pair in wet.richards_pairs(&before)? {
+                if dummy.active_elements[pair.a.element] != dummy.active_elements[pair.b.element] {
+                    let retained = if dummy.active_elements[pair.a.element] {
+                        pair.a
+                    } else {
+                        pair.b
+                    };
+                    if wet.is_soil(retained.element) {
+                        joint_exposed.insert(retained.corners);
+                    }
+                }
+            }
+            required_exposed.retain(|key| !walls.contains(key));
+            joint_exposed.retain(|key| !walls.contains(key));
+        }
+        validate_domain(
+            mesh,
+            &case,
+            &dummy.active_elements,
+            i,
+            &projected,
+            &joint_exposed,
+        )?;
         let explicit = ps[i]
             .boundaries
             .iter()
@@ -717,8 +968,8 @@ fn advance(
             .map(|(k, _)| k)
             .collect::<BTreeSet<_>>();
         if required_exposed
-            .intersection(&exposed)
-            .any(|k| !explicit.contains(k))
+            .union(&joint_exposed)
+            .any(|k| exposed.contains(k) && !explicit.contains(k))
         {
             return Err(Error::Input(
                 "new BIRTH surfaces require explicit water conditions in every exposed period"
@@ -768,7 +1019,11 @@ fn advance(
         }
         initial_case.exterior_periods.truncate(1);
         initial_case.verification_reject_once_at_times_s.clear();
-        let initial_mesh = domain_mesh(mesh, &seed.active_elements)?;
+        let initial_mesh = if kernel.wet_joints().is_some() {
+            mesh.clone()
+        } else {
+            domain_mesh(mesh, &seed.active_elements)?
+        };
         let initialization = if case.initially_inactive_bodies.is_empty() {
             one_way::initialize(&initial_mesh, ground.clone(), initial_case)?
         } else {
@@ -858,13 +1113,14 @@ fn advance(
             let event = &case.excavations[rt.event_index];
             let active = kernel.excavation_active(&old.mechanical, &event.bodies)?;
             let ids = material_ids(mesh, &old.mechanical);
-            let removal = richards::remove_domain_materials(
+            let removal = richards::remove_joint_domain(
                 mesh,
                 &case.one_way.flow,
                 &old.mechanical.active_elements,
                 &active,
                 Some(&ids),
                 &old.hydraulic,
+                kernel.wet_joints(),
             )?;
             let projected = &domains[rt.period_index].0;
             let mut transfer =
@@ -873,10 +1129,18 @@ fn advance(
             if !rt.porosity_reference.is_empty() {
                 transfer.set_porosity_reference(&rt.porosity_reference)?;
             }
-            let fluid = transfer.field_with_base(
+            let mut fluid = transfer.field_with_base(
                 &removal.state,
                 &case.one_way.exterior_periods[rt.period_index].reservoirs,
                 &kernel.dry_load(&old.mechanical, &active)?,
+            )?;
+            let wall_field = fluid.apply_joint(
+                kernel.wet_joints(),
+                &active,
+                &removal.state,
+                &removal.new_faces,
+                case.one_way.flow.head_datum_m,
+                old.hydraulic.time_s,
             )?;
             let (holding, residual) = kernel.cut_holding(
                 &old.mechanical,
@@ -911,6 +1175,7 @@ fn advance(
                 vec![]
             };
             rt.pending = Some(Pending {
+                wall_field,
                 event_index: rt.event_index,
                 progress: 0.,
                 increment: event
@@ -919,6 +1184,29 @@ fn advance(
                 active,
                 fluid,
                 record: ExcavationRecord {
+                    removed_generations: removal
+                        .removed_cells
+                        .iter()
+                        .map(|c| {
+                            (
+                                c.element_index,
+                                generation(&report.transitions, c.element_index),
+                            )
+                        })
+                        .collect(),
+                    removed_hydraulic_points: old
+                        .fluid
+                        .hydraulic_points
+                        .iter()
+                        .filter(|p| {
+                            removal
+                                .removed_cells
+                                .iter()
+                                .any(|c| c.element_index == p.element_index)
+                        })
+                        .cloned()
+                        .collect(),
+                    water_destination: event.water_destination.clone(),
                     name: event.name.clone(),
                     time_s: old.hydraulic.time_s,
                     origin_pair_sha256: checkpoint::hash_json(old)?,
@@ -948,6 +1236,7 @@ fn advance(
                 old,
                 event,
                 &rt.porosity_reference,
+                &report.transitions,
             ) {
                 Ok(mut p) => {
                     p.event_index = rt.transition_index;
@@ -998,7 +1287,8 @@ fn advance(
                 0.,
                 1.,
                 Some(
-                    rt.next_dt_s
+                    case.one_way
+                        .clip_dt(old.hydraulic.time_s, rt.next_dt_s)
                         .min(ps[rt.period_index].end_time_s - old.hydraulic.time_s),
                 ),
             )
@@ -1024,8 +1314,13 @@ fn advance(
                     .iter()
                     .map(|h| if to == 1. { 0. } else { (1. - to) * h })
                     .collect::<Vec<_>>();
+                let mut origin = old.mechanical.clone();
+                origin.joint_water = p.wall_field.clone();
+                if p.progress == 0. {
+                    kernel.freeze_removed_walls(&mut origin, &p.active)?;
+                }
                 let trial = kernel.excavation_trial(
-                    &old.mechanical,
+                    &origin,
                     p.active.clone(),
                     p.fluid.equivalent_mechanical_rhs_kn.clone(),
                     holding.clone(),
@@ -1079,15 +1374,24 @@ fn advance(
                 if !rt.porosity_reference.is_empty() {
                     transfer.set_porosity_reference(&rt.porosity_reference)?;
                 }
-                let fluid = transfer.field_with_base(
+                let mut fluid = transfer.field_with_base(
                     &hyd.state,
                     &case.one_way.exterior_periods[rt.period_index].reservoirs,
                     &kernel.dry_load(&old.mechanical, active)?,
+                )?;
+                let water = fluid.apply_joint(
+                    kernel.wet_joints(),
+                    active,
+                    &hyd.state,
+                    &flow.faces(),
+                    case.one_way.flow.head_datum_m,
+                    old.hydraulic.time_s + dt.unwrap_or(0.),
                 )?;
                 let trial = kernel.trial(
                     &old.mechanical,
                     fluid.equivalent_mechanical_rhs_kn.clone(),
                     name.clone(),
+                    water,
                 )?;
                 (
                     hyd.state,
@@ -1149,10 +1453,12 @@ fn advance(
                 .into(),
                 progress: to,
                 hydraulic_faces: flow.faces(),
-                hydraulic_cell_element_indices: active
+                hydraulic_cell_element_indices: state
+                    .hydraulic
+                    .relative_cell_head_m
                     .iter()
                     .enumerate()
-                    .filter_map(|(e, a)| a.then_some(e))
+                    .filter_map(|(e, h)| h.is_some().then_some(e))
                     .collect(),
                 hydraulic_balance: balance,
                 mechanical_audit: audit,

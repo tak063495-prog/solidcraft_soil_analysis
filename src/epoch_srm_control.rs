@@ -220,6 +220,18 @@ fn verify_trials(
     Ok(())
 }
 
+/// Read-only verification of a standalone result using the same reconstruction
+/// as durable jobs. Does not advance a material path or launch a solve.
+pub fn verify_report(mesh: &Mesh, report: &Report) -> Result<()> {
+    let origin = &report.original_unreduced_run;
+    let spec = &report.specification;
+    let mut snapshot = Snapshot::new(mesh, origin, spec)?;
+    snapshot.payload.basis = None;
+    snapshot.payload.report = Some(serde_json::from_slice(&serde_json::to_vec(report)?)?);
+    snapshot.seal()?;
+    snapshot.verify(mesh, origin, spec)
+}
+
 impl Snapshot {
     pub fn new(mesh: &Mesh, origin: &Run, spec: &Specification) -> Result<Self> {
         mesh.validate()?;

@@ -185,10 +185,10 @@ impl Model {
         }
         for (i, p) in self.plates.iter().enumerate() {
             if state.active_plates[i] {
-                for a in 0..18 {
-                    for b in 0..18 {
+                for a in 0..6 * p.nodes.len() {
+                    for b in 0..6 * p.nodes.len() {
                         k[(6 * p.nodes[a / 6] + a % 6, 6 * p.nodes[b / 6] + b % 6)] +=
-                            p.kernel.stiffness[(a, b)];
+                            p.stiffness[(a, b)];
                     }
                 }
             }

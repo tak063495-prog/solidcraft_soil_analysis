@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-26-remaining-p8/alternate.py", line 66, in <module>
+    run(HERE/"c01/alternate")
+    ~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-26-remaining-p8/alternate.py", line 55, in run
+    np.testing.assert_allclose(sum(pieces.values()),report["raw"]["stages"][stage]["dot"],rtol=2e-13)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+    assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         verbose=verbose, header=header, equal_nan=equal_nan,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         strict=strict)
+                         ^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/.venv/lib/python3.13/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError:
+Not equal to tolerance rtol=2e-13, atol=0
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference among violations: 4.91381458e-27
+Max relative difference among violations: 1.18870833e-12
+ ACTUAL: array(-4.133743e-15)
+ DESIRED: array(-4.133743e-15)

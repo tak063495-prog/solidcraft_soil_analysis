@@ -1,0 +1,1555 @@
+{
+  "base_commit": "f377e8eda41777c84c3bb849af556bf61683b4cb",
+  "status": "diagnostic_only",
+  "accepted": null,
+  "tolerance": "未定義",
+  "p6_03_complete": false,
+  "p6_complete": false,
+  "nc_01_complete": false,
+  "source_documents": {
+    "S1": {
+      "path": "docs/MCC_RATE_FEM.ja.md",
+      "sha256": "759858f9f07129ae11c9cb48efeed2baa6bc6f57ebf6c18e667e7e2b7645a743"
+    },
+    "S2": {
+      "path": "docs/MCC_TRIAXIAL_VERIFICATION.ja.md",
+      "sha256": "89dcfbf0e8cd8898ed23a09a4974116df441186518ba52240c74ef1535389ef6"
+    },
+    "S3": {
+      "path": "docs/MCC_AFFINE_SEED.ja.md",
+      "sha256": "3d2aa76fd5069537add916a5e29a84cef3a59aad03657bb6701afe72da82c875"
+    },
+    "S4": {
+      "path": "docs/MCC_MIDPOINT.ja.md",
+      "sha256": "3bdf44211213aee926a5326002110a4c62c4f22b83191b0905d3d18a278739a4"
+    },
+    "S5": {
+      "path": "docs/PLANE_STRAIN_2D.ja.md",
+      "sha256": "973cc59918dc69676b821d43ae171dd7315c0457d884905a2d7a9fbfe242c27d"
+    },
+    "S6": {
+      "path": "docs/2D_COMPARISON.ja.md",
+      "sha256": "c480ae8c6d2743eea653c214efdb5f6130a8175a725d98e5430edd95e1e818d6"
+    },
+    "S7": {
+      "path": "interim/2026-11-16-issue-triage/todo.ja.md",
+      "sha256": "074f0143838ddbd417697785ab684120e88c0b98dc610e917ce413a7d210f0c7"
+    },
+    "S8": {
+      "path": "docs/MCC_MIXED.ja.md",
+      "sha256": "67376e2e64b06a2313d26b5e6fdde427fbd82a1de2bc9ccb65092f4b9a91df7d"
+    },
+    "S9": {
+      "path": "tools/prepare_mixed_mcc_reference.py",
+      "sha256": "5bbf2b1c552433d09ca22be3fcdd796f348637c64d9de192225ddba16c329bb8"
+    },
+    "S10": {
+      "path": "examples/ground-mixed-mcc.json",
+      "sha256": "38a2d7a14c30ea4e2ede49d5be981b01020f8b61d3b9d5e3611a65591a13621d"
+    }
+  },
+  "implementation_sha256": {
+    "assess_series.py": "4aa2bc9bf282d450d522e5985f2d3f6049a297bf37b3d6f65887fdbde6a31aec",
+    "checks.py": "f1c55dd76f4b8bd4b3ff9ee5af377f2ae83a9c8b5a64d0532a508a667f24c71a",
+    "column_reference.py": "cac0b7e482d224f00410d9d2c89fdfc46c7e75291182c4a167b49ac4b6acf46c",
+    "compare_history.py": "0484117b1ae7c9289f066a10c737a8ae587766018ee77d1a24a166e74358188f",
+    "mcc_reference.py": "bf88c658f516fcac3d00ec17be8d9186697946cfa28abe3ded5a4ad6ba5933fa",
+    "run_reference.py": "652f58db87a8cd25ff30afa888a86c2ae970d2b6b6eb24af3e12fda7ebea5fa6",
+    "validate_linux.py": "0df4903a2f043e042dbad11dc2f2f2553e94181cab71b6603093b37118975118"
+  },
+  "environment": {
+    "python": "3.13.17",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "parameters": {
+    "lam": 0.2,
+    "kap": 0.04,
+    "M": 1.2,
+    "nu": 0.3,
+    "N": 3.5,
+    "pref": 1.0,
+    "p0": 100.0,
+    "pressure_unit": "kPa",
+    "source_ids": [
+      "S1",
+      "S2",
+      "S3"
+    ]
+  },
+  "material_paths": {
+    "k0-ocr1": {
+      "accepted": null,
+      "tolerance": "未定義",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "initial": {
+        "step": 0,
+        "axial_strain": 0.0,
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 100.00000000000004,
+        "e": 1.5789659628023816,
+        "eps_v": 0.0
+      },
+      "final": {
+        "step": 16,
+        "axial_strain": 0.08,
+        "p": 241.44602950479495,
+        "q": 111.19770603223652,
+        "pc": 277.0099084619468,
+        "e": 1.3806856370376268,
+        "eps_v": 0.08
+      },
+      "event_axial_strain": 0.0,
+      "axial_strain_end": 0.08,
+      "substeps_per_output_interval": [
+        128,
+        256,
+        512
+      ],
+      "increment_series": {
+        "p": {
+          "observed_order": 2.0012057127196092,
+          "extrapolated": [
+            100.0,
+            103.78421161683958,
+            106.90826451257001,
+            111.44128558843421,
+            117.26850556606932,
+            124.0753573737371,
+            131.64896449239902,
+            139.87326546181,
+            148.69414166712318,
+            158.0938331852696,
+            168.07552865496805,
+            178.65462000320414,
+            189.85385575877325,
+            201.7006877571119,
+            214.22583353717013,
+            227.46250903820163,
+            241.446030691313
+          ],
+          "fine_error_estimate": 7.24620520574869e-06,
+          "difference_coarse": 8.712418007010305e-05,
+          "difference_fine": 2.1762849410405317e-05,
+          "raw_observed_order": 2.0012057127196092,
+          "difference_direction_cosine": 0.9999999953942128,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "q": {
+          "observed_order": 2.0017219550520395,
+          "extrapolated": [
+            0.0,
+            23.147637646625075,
+            36.266247215575454,
+            44.39873589033541,
+            50.25800456178841,
+            55.09270641114347,
+            59.50285236504286,
+            63.79526800168795,
+            68.13569846907312,
+            72.61856140653695,
+            77.30111988213658,
+            82.22101994497869,
+            87.40555958105612,
+            92.87667907948394,
+            98.65368225266837,
+            104.7547362136237,
+            111.1977076078232
+          ],
+          "fine_error_estimate": 1.2296566979667172e-05,
+          "difference_coarse": 0.0001479702799196924,
+          "difference_fine": 3.694844316087725e-05,
+          "raw_observed_order": 2.0017219550520395,
+          "difference_direction_cosine": 0.9999999837917231,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "pc": {
+          "observed_order": 2.0017569275252027,
+          "extrapolated": [
+            100.00000000000004,
+            107.36946263892108,
+            115.45167874599348,
+            123.72508185769104,
+            132.22626692929,
+            141.06327663230593,
+            150.32547042859457,
+            160.07923651347832,
+            170.37582885057162,
+            181.2580627722696,
+            192.76459083286952,
+            204.9324183844278,
+            217.79834662255402,
+            231.39980121054975,
+            245.77531796413453,
+            260.9648394703897,
+            277.00990823089967
+          ],
+          "fine_error_estimate": 1.9608714009495105e-06,
+          "difference_coarse": 2.3597407044407438e-05,
+          "difference_fine": 5.892171848076056e-06,
+          "raw_observed_order": 2.0017569275252027,
+          "difference_direction_cosine": 0.9999999435087823,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "e": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        },
+        "eps_v": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        }
+      },
+      "invariant_drift_by_level": [
+        {
+          "max_normalized_yield_abs": 9.347308625312634e-07,
+          "max_ncl_volume_abs": 1.0405996064832834e-09,
+          "max_volume_strain_identity_abs": 1.8388068845354155e-16
+        },
+        {
+          "max_normalized_yield_abs": 2.334814188237333e-07,
+          "max_ncl_volume_abs": 2.59429810967049e-10,
+          "max_volume_strain_identity_abs": 1.8388068845354155e-16
+        },
+        {
+          "max_normalized_yield_abs": 5.83451599117657e-08,
+          "max_ncl_volume_abs": 6.476863489979223e-11,
+          "max_volume_strain_identity_abs": 1.8388068845354155e-16
+        }
+      ],
+      "pc_regression": false,
+      "spatial_order": null,
+      "spatial_reason": "material point; no spatial discretization"
+    },
+    "k0-ocr4": {
+      "accepted": null,
+      "tolerance": "未定義",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "initial": {
+        "step": 0,
+        "axial_strain": 0.0,
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 399.9999999999999,
+        "e": 1.3571588650231994,
+        "eps_v": 0.0
+      },
+      "final": {
+        "step": 16,
+        "axial_strain": 0.08,
+        "p": 672.0570740278375,
+        "q": 309.6228657540889,
+        "pc": 771.1168647111225,
+        "e": 1.1759318793330849,
+        "eps_v": 0.08
+      },
+      "event_axial_strain": 0.019597167241142157,
+      "axial_strain_end": 0.08,
+      "substeps_per_output_interval": [
+        128,
+        256,
+        512
+      ],
+      "increment_series": {
+        "p": {
+          "observed_order": 2.0023291529648186,
+          "extrapolated": [
+            100.0,
+            134.16624403347652,
+            179.74213683784163,
+            240.4490639192618,
+            316.6109774910733,
+            348.24753598680735,
+            376.0973486112732,
+            402.33140108801473,
+            428.2130852614237,
+            454.4719793479235,
+            481.5442511418841,
+            509.7053348201144,
+            539.1418824444557,
+            569.9913522966153,
+            602.3641912743933,
+            636.3564547482212,
+            672.0570739666451
+          ],
+          "fine_error_estimate": 3.6941848441119403e-06,
+          "difference_coarse": 4.449750084505314e-05,
+          "difference_fine": 1.110642999999062e-05,
+          "raw_observed_order": 2.0023291529648186,
+          "difference_direction_cosine": 0.9999999961340578,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "q": {
+          "observed_order": 2.002812097506943,
+          "extrapolated": [
+            0.0,
+            31.538071415516786,
+            73.60812631185381,
+            129.64528977162627,
+            196.6595002697808,
+            191.35834487376997,
+            191.68844389008305,
+            196.21731949304927,
+            203.6512021140731,
+            213.10035297891474,
+            224.01376175719847,
+            236.06947044202084,
+            249.08875707905196,
+            262.9796040996194,
+            277.701859179994,
+            293.2464022034838,
+            309.62286624691905
+          ],
+          "fine_error_estimate": 2.4540107498982993e-06,
+          "difference_coarse": 2.9582343051298108e-05,
+          "difference_fine": 7.381184346014488e-06,
+          "raw_observed_order": 2.002812097506943,
+          "difference_direction_cosine": 0.9999999088506448,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "pc": {
+          "observed_order": 2.002169624533045,
+          "extrapolated": [
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            401.4394021454804,
+            421.267946058854,
+            443.94410656708703,
+            468.78649183786297,
+            495.47225928111936,
+            523.862274423535,
+            553.9129398545932,
+            585.6326389963174,
+            619.0595294144711,
+            654.2497848231568,
+            691.2711871837384,
+            730.1995749624884,
+            771.1168643158412
+          ],
+          "fine_error_estimate": 2.1084663156554118e-06,
+          "difference_coarse": 2.5390523169871993e-05,
+          "difference_fine": 6.338091960858511e-06,
+          "raw_observed_order": 2.002169624533045,
+          "difference_direction_cosine": 0.9999999969522787,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "e": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        },
+        "eps_v": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        }
+      },
+      "invariant_drift_by_level": [
+        {
+          "max_normalized_yield_abs": 6.403941626986764e-08,
+          "max_ncl_volume_abs": 1.7450947353836455e-09,
+          "max_volume_strain_identity_abs": 1.942890293094024e-16
+        },
+        {
+          "max_normalized_yield_abs": 1.5992795060482123e-08,
+          "max_ncl_volume_abs": 4.357958438561127e-10,
+          "max_volume_strain_identity_abs": 1.942890293094024e-16
+        },
+        {
+          "max_normalized_yield_abs": 3.9960544317985125e-09,
+          "max_ncl_volume_abs": 1.088875656307664e-10,
+          "max_volume_strain_identity_abs": 1.942890293094024e-16
+        }
+      ],
+      "pc_regression": false,
+      "spatial_order": null,
+      "spatial_reason": "material point; no spatial discretization"
+    },
+    "undrained-ocr1": {
+      "accepted": null,
+      "tolerance": "未定義",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "initial": {
+        "step": 0,
+        "axial_strain": 0.0,
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 100.00000000000004,
+        "e": 1.5789659628023816,
+        "eps_v": 0.0
+      },
+      "final": {
+        "step": 16,
+        "axial_strain": 0.08,
+        "p": 57.454499934920385,
+        "q": 68.91600790236957,
+        "pc": 114.8600466263641,
+        "e": 1.5789659628023816,
+        "eps_v": 0.0
+      },
+      "event_axial_strain": 0.0,
+      "axial_strain_end": 0.08,
+      "substeps_per_output_interval": [
+        128,
+        256,
+        512
+      ],
+      "increment_series": {
+        "p": {
+          "observed_order": 1.9976513071144768,
+          "extrapolated": [
+            100.0,
+            91.2064211448047,
+            78.06530400260831,
+            69.45156436017349,
+            64.50327674201644,
+            61.656032430307214,
+            59.98477893950326,
+            58.987012105194616,
+            58.38427840337115,
+            58.01738017458333,
+            57.79295474181665,
+            57.655260126741425,
+            57.57061892533234,
+            57.51852886618902,
+            57.48644828925058,
+            57.46668206881249,
+            57.45449989080554
+          ],
+          "fine_error_estimate": 9.395304975872763e-06,
+          "difference_coarse": 0.00011231613291801427,
+          "difference_fine": 2.812478284049081e-05,
+          "raw_observed_order": 1.9976513071144768,
+          "difference_direction_cosine": 0.9999997197175998,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "q": {
+          "observed_order": 1.9982854210742766,
+          "extrapolated": [
+            0.0,
+            38.21847146112595,
+            56.42403293798033,
+            63.32002040336978,
+            66.12973986081347,
+            67.41917518285476,
+            68.071266568981,
+            68.42464712169088,
+            68.62528614027524,
+            68.74272380308912,
+            68.81281428775182,
+            68.85516415094389,
+            68.88095038710603,
+            68.89672666432438,
+            68.90640746961618,
+            68.91235883965861,
+            68.91602166220032
+          ],
+          "fine_error_estimate": 5.160690942917776e-05,
+          "difference_coarse": 0.0006175677875813119,
+          "difference_fine": 0.00015457554393806736,
+          "raw_observed_order": 1.9982854210742766,
+          "difference_direction_cosine": 0.9999998874747366,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "pc": {
+          "observed_order": 1.9959062988018639,
+          "extrapolated": [
+            100.00000000000004,
+            102.3278021695793,
+            106.38624642876357,
+            109.54170386780956,
+            111.58467573296876,
+            112.85118048488151,
+            113.62914381562489,
+            114.1066355813499,
+            114.39999902706803,
+            114.58043626918608,
+            114.69151123603369,
+            114.75992771536097,
+            114.80208492864057,
+            114.82806793669302,
+            114.84408466815857,
+            114.8539588277229,
+            114.8600465150999
+          ],
+          "fine_error_estimate": 2.92716141572502e-06,
+          "difference_coarse": 3.489407670771861e-05,
+          "difference_fine": 8.748307641699862e-06,
+          "raw_observed_order": 1.9959062988018639,
+          "difference_direction_cosine": 0.9999991469461055,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "e": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        },
+        "eps_v": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        }
+      },
+      "invariant_drift_by_level": [
+        {
+          "max_normalized_yield_abs": 2.408898124861558e-06,
+          "max_ncl_volume_abs": 6.682696174209468e-09,
+          "max_volume_strain_identity_abs": 0.0
+        },
+        {
+          "max_normalized_yield_abs": 6.029360345438661e-07,
+          "max_ncl_volume_abs": 1.6666374946794349e-09,
+          "max_volume_strain_identity_abs": 0.0
+        },
+        {
+          "max_normalized_yield_abs": 1.5082264170906967e-07,
+          "max_ncl_volume_abs": 4.1615733081812323e-10,
+          "max_volume_strain_identity_abs": 0.0
+        }
+      ],
+      "pc_regression": false,
+      "spatial_order": null,
+      "spatial_reason": "material point; no spatial discretization",
+      "critical_state_limit": {
+        "p": 57.434917749851756,
+        "q": 68.92190129982211,
+        "pc": 114.86983549970351,
+        "source": "S2; asymptotic limit, NOT finite axial strain endpoint reference"
+      }
+    },
+    "undrained-ocr4": {
+      "accepted": null,
+      "tolerance": "未定義",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "initial": {
+        "step": 0,
+        "axial_strain": 0.0,
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 399.9999999999999,
+        "e": 1.3571588650231994,
+        "eps_v": 0.0
+      },
+      "final": {
+        "step": 16,
+        "axial_strain": 0.08,
+        "p": 173.07119958879233,
+        "q": 209.23916353272696,
+        "pc": 348.741628646914,
+        "e": 1.3571588650231994,
+        "eps_v": 0.0
+      },
+      "event_axial_strain": 0.025473220700858494,
+      "axial_strain_end": 0.08,
+      "substeps_per_output_interval": [
+        128,
+        256,
+        512
+      ],
+      "increment_series": {
+        "p": {
+          "observed_order": 2.002958965273703,
+          "extrapolated": [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            115.52437093682802,
+            131.08147635565683,
+            143.81637402141192,
+            153.43466883858102,
+            160.29539208299155,
+            165.0070690125971,
+            168.16524530602854,
+            170.2498965239835,
+            171.61268090106464,
+            172.49812736303042,
+            173.0711996206363
+          ],
+          "fine_error_estimate": 1.415907813448564e-06,
+          "difference_coarse": 1.7072385519491156e-05,
+          "difference_fine": 4.259351491810768e-06,
+          "raw_observed_order": 2.002958965273703,
+          "difference_direction_cosine": 0.9999998276137719,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "q": {
+          "observed_order": 2.0000608777479356,
+          "extrapolated": [
+            0.0,
+            40.79698035617076,
+            81.59396071234151,
+            122.39094106851226,
+            163.18792142468303,
+            203.9849017808538,
+            212.05203936610937,
+            214.0575740140653,
+            214.15182657768162,
+            213.32461418858242,
+            212.26471514467295,
+            211.30921901162856,
+            210.56426362490183,
+            210.02626556679618,
+            209.65456748091697,
+            209.4045565013308,
+            209.23916485279662
+          ],
+          "fine_error_estimate": 3.4939480100212165e-06,
+          "difference_coarse": 4.193150427661538e-05,
+          "difference_fine": 1.0482433730056191e-05,
+          "raw_observed_order": 2.0000608777479356,
+          "difference_direction_cosine": 0.9999999971489019,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "pc": {
+          "observed_order": 2.000659310619515,
+          "extrapolated": [
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            385.82608685032477,
+            373.83043861063106,
+            365.26487204671463,
+            359.40086352809305,
+            355.4919181392753,
+            352.92656874209797,
+            351.25776208130003,
+            350.177531693784,
+            349.4802577725584,
+            349.03091448634297,
+            348.741627794533
+          ],
+          "fine_error_estimate": 3.1327282102389617e-06,
+          "difference_coarse": 3.763284444701551e-05,
+          "difference_fine": 9.403912548184571e-06,
+          "raw_observed_order": 2.000659310619515,
+          "difference_direction_cosine": 0.9999999914031417,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "e": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        },
+        "eps_v": {
+          "observed_order": null,
+          "extrapolated": null,
+          "fine_error_estimate": null,
+          "difference_coarse": 0.0,
+          "difference_fine": 0.0,
+          "raw_observed_order": null,
+          "difference_direction_cosine": null,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "roundoff_or_exact; order 未定義"
+        }
+      },
+      "invariant_drift_by_level": [
+        {
+          "max_normalized_yield_abs": 1.0064015465438558e-07,
+          "max_ncl_volume_abs": 6.142693464994409e-09,
+          "max_volume_strain_identity_abs": 0.0
+        },
+        {
+          "max_normalized_yield_abs": 2.5156037863904857e-08,
+          "max_ncl_volume_abs": 1.5357026761364523e-09,
+          "max_volume_strain_identity_abs": 0.0
+        },
+        {
+          "max_normalized_yield_abs": 6.2885103235821305e-09,
+          "max_ncl_volume_abs": 3.8392933277009433e-10,
+          "max_volume_strain_identity_abs": 0.0
+        }
+      ],
+      "pc_regression": true,
+      "spatial_order": null,
+      "spatial_reason": "material point; no spatial discretization",
+      "critical_state_limit": {
+        "p": 174.11011265922482,
+        "q": 208.9321351910698,
+        "pc": 348.22022531844965,
+        "source": "S2; asymptotic limit, NOT finite axial strain endpoint reference"
+      },
+      "exchange_contract": "REJECTED: physical OC dilative pc decrease; monotone-pc exchange unsupported"
+    },
+    "drained-ocr1": {
+      "accepted": null,
+      "tolerance": "未定義",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "initial": {
+        "step": 0,
+        "axial_strain": 0.0,
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 100.00000000000004,
+        "e": 1.5789659628023816,
+        "eps_v": 0.0
+      },
+      "final": {
+        "step": 16,
+        "axial_strain": 0.08,
+        "p": 140.48819963444015,
+        "q": 121.4645989033227,
+        "pc": 213.41667209153138,
+        "e": 1.444075626306081,
+        "eps_v": 0.0537215444933937
+      },
+      "event_axial_strain": 0.0,
+      "axial_strain_end": 0.08,
+      "substeps_per_output_interval": [
+        128,
+        256,
+        512
+      ],
+      "increment_series": {
+        "p": {
+          "observed_order": 2.0029003777484706,
+          "extrapolated": [
+            100.0,
+            106.51140579498247,
+            111.03837122295208,
+            114.67253817507587,
+            117.78382544823938,
+            120.54161727700583,
+            123.03828289750004,
+            125.33011524667936,
+            127.45417889726123,
+            129.4363210694409,
+            131.29539420968828,
+            133.04566031016603,
+            134.6982444423455,
+            136.26205645260544,
+            137.74439853291844,
+            139.15137875311174,
+            140.4882001530459
+          ],
+          "fine_error_estimate": 2.8204251529599076e-06,
+          "difference_coarse": 3.400420847928712e-05,
+          "difference_fine": 8.483978868736813e-06,
+          "raw_observed_order": 2.0029003777484706,
+          "difference_direction_cosine": 0.9999999727722676,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "q": {
+          "observed_order": 2.0029004389706064,
+          "extrapolated": [
+            0.0,
+            19.534217384947233,
+            33.11511366885549,
+            44.01761452522726,
+            53.35147634471728,
+            61.624851831016386,
+            69.11484869249921,
+            75.99034574003721,
+            82.36253669178221,
+            88.30896320832152,
+            93.88618262906371,
+            99.13698093049808,
+            104.09473332703703,
+            108.7861693578184,
+            113.23319559875725,
+            117.45413625933786,
+            121.46460045914063
+          ],
+          "fine_error_estimate": 8.46127476316245e-06,
+          "difference_coarse": 0.00010201262723147235,
+          "difference_fine": 2.54519359736355e-05,
+          "raw_observed_order": 2.0029004389706064,
+          "difference_direction_cosine": 0.9999999727701089,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "pc": {
+          "observed_order": 2.003323323279391,
+          "extrapolated": [
+            100.00000000000004,
+            108.99930868536579,
+            117.89667828821672,
+            126.40613302785788,
+            134.56586483606222,
+            142.41985163613663,
+            149.99952955495183,
+            157.32635260569378,
+            164.41510602909963,
+            171.27624817800825,
+            177.91744561193966,
+            184.344574480151,
+            190.56238044409508,
+            196.5749185076744,
+            202.3858483794877,
+            207.99863309305786,
+            213.41667163411327
+          ],
+          "fine_error_estimate": 2.7884248354240283e-06,
+          "difference_coarse": 3.3641394485267164e-05,
+          "difference_fine": 8.39099724158712e-06,
+          "raw_observed_order": 2.003323323279391,
+          "difference_direction_cosine": 0.9999999383397945,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "e": {
+          "observed_order": 2.0031141516010695,
+          "extrapolated": [
+            1.5789659628023816,
+            1.562655270577468,
+            1.548435585562353,
+            1.5359967768918807,
+            1.5249173568467644,
+            1.514915493913463,
+            1.5057990327531405,
+            1.4974303805693086,
+            1.489706624972364,
+            1.4825480004512914,
+            1.4758908672655204,
+            1.469683233810667,
+            1.4638817824124577,
+            1.458449823575417,
+            1.4533558461290468,
+            1.4485724628656262,
+            1.4440756264273735
+          ],
+          "fine_error_estimate": 1.7659020025790593e-09,
+          "difference_coarse": 2.129780163024919e-08,
+          "difference_fine": 5.3129696285911815e-09,
+          "raw_observed_order": 2.0031141516010695,
+          "difference_direction_cosine": 0.9999997705291327,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "eps_v": {
+          "observed_order": 2.0031386058186698,
+          "extrapolated": [
+            0.0,
+            0.006344592959523161,
+            0.011908853937582117,
+            0.016801763351943944,
+            0.02118019675441949,
+            0.025149326826883096,
+            0.028780870158403662,
+            0.03212617348031391,
+            0.03522364674552477,
+            0.038103076704944436,
+            0.040788251359019805,
+            0.043298631989470426,
+            0.0456504623811518,
+            0.047857530688139645,
+            0.0499317085425568,
+            0.051883342462995266,
+            0.053721544443767665
+          ],
+          "fine_error_estimate": 7.025551870289933e-10,
+          "difference_coarse": 8.473557906623879e-09,
+          "difference_fine": 2.1137858963303033e-09,
+          "raw_observed_order": 2.0031386058186698,
+          "difference_direction_cosine": 0.9999997702628242,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        }
+      },
+      "invariant_drift_by_level": [
+        {
+          "max_normalized_yield_abs": 5.538591112824731e-07,
+          "max_ncl_volume_abs": 1.3344005900250977e-09,
+          "max_volume_strain_identity_abs": 1.6653345369377348e-16
+        },
+        {
+          "max_normalized_yield_abs": 1.3821622257825794e-07,
+          "max_ncl_volume_abs": 3.3289193623886604e-10,
+          "max_volume_strain_identity_abs": 1.457167719820518e-16
+        },
+        {
+          "max_normalized_yield_abs": 3.4522990716157054e-08,
+          "max_ncl_volume_abs": 8.313394417314157e-11,
+          "max_volume_strain_identity_abs": 1.97758476261356e-16
+        }
+      ],
+      "pc_regression": false,
+      "spatial_order": null,
+      "spatial_reason": "material point; no spatial discretization",
+      "critical_state_limit": {
+        "p": 166.66666666666663,
+        "q": 199.99999999999994,
+        "pc": 333.33333333333326,
+        "source": "S2; asymptotic limit, NOT finite axial strain endpoint reference"
+      }
+    },
+    "drained-ocr4": {
+      "accepted": null,
+      "tolerance": "未定義",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "initial": {
+        "step": 0,
+        "axial_strain": 0.0,
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 399.9999999999999,
+        "e": 1.3571588650231994,
+        "eps_v": 0.0
+      },
+      "final": {
+        "step": 16,
+        "axial_strain": 0.08,
+        "p": 173.66788098039316,
+        "q": 221.00364294117972,
+        "pc": 368.9744575793962,
+        "e": 1.3479978228301812,
+        "eps_v": 0.003894048329090852
+      },
+      "event_axial_strain": 0.0249618101488805,
+      "axial_strain_end": 0.08,
+      "substeps_per_output_interval": [
+        128,
+        256,
+        512
+      ],
+      "increment_series": {
+        "p": {
+          "observed_order": 2.0001527104588006,
+          "extrapolated": [
+            100.0,
+            112.49517702410954,
+            126.52188139518195,
+            142.26413174727745,
+            159.92760601972972,
+            179.57644081750948,
+            178.86838035197502,
+            178.20132151419415,
+            177.5726466270926,
+            176.9799326319082,
+            176.42093355872018,
+            175.89356490544498,
+            175.39588968247125,
+            174.92610591497004,
+            174.48253542426932,
+            174.06361373445188,
+            173.66788097130836
+          ],
+          "fine_error_estimate": 2.12257240046227e-08,
+          "difference_coarse": 2.5477149162263423e-07,
+          "difference_fine": 6.368613131938865e-08,
+          "raw_observed_order": 2.0001527104588006,
+          "difference_direction_cosine": 0.9999999999306168,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "q": {
+          "observed_order": 2.0001828807932465,
+          "extrapolated": [
+            0.0,
+            37.48553107232861,
+            79.56564418554585,
+            126.79239524183234,
+            179.78281805918917,
+            238.72932245252863,
+            236.6051410559252,
+            234.60396454258262,
+            232.717939881278,
+            230.9397978957258,
+            229.26280067616227,
+            227.68069471633686,
+            226.187669047415,
+            224.77831774491057,
+            223.4476062728088,
+            222.19084120335663,
+            221.00364291392648
+          ],
+          "fine_error_estimate": 6.367437999766269e-08,
+          "difference_coarse": 7.643184865126373e-07,
+          "difference_fine": 1.910554012787292e-07,
+          "raw_observed_order": 2.0001828807932465,
+          "difference_direction_cosine": 0.9999999999548995,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "pc": {
+          "observed_order": 2.000278761906279,
+          "extrapolated": [
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.9999999999999,
+            399.97039618392023,
+            396.2146983227638,
+            392.6864974167602,
+            389.3703115205853,
+            386.2518942848458,
+            383.3181171929283,
+            380.5568650222526,
+            377.95694282711736,
+            375.50799298585355,
+            373.200421061739,
+            371.02532940120085,
+            368.9744575404412
+          ],
+          "fine_error_estimate": 9.184542525936629e-08,
+          "difference_coarse": 1.1026420185489908e-06,
+          "difference_fine": 2.7560724582504014e-07,
+          "raw_observed_order": 2.000278761906279,
+          "difference_direction_cosine": 0.9999999992335274,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "e": {
+          "observed_order": 2.0001851058710396,
+          "extrapolated": [
+            1.3571588650231994,
+            1.3524492584695755,
+            1.3477490617161219,
+            1.3430582559620454,
+            1.338376822444117,
+            1.3337534755707807,
+            1.3354209937063575,
+            1.3370015904390737,
+            1.3384998721728283,
+            1.3399201887530214,
+            1.3412666496804901,
+            1.342543139023796,
+            1.3437533291693846,
+            1.3449006935305916,
+            1.3459885183206846,
+            1.347019913481701,
+            1.3479978228493559
+          ],
+          "fine_error_estimate": 4.4397800340989665e-11,
+          "difference_coarse": 5.329327401678119e-10,
+          "difference_fine": 1.3321609157314283e-10,
+          "raw_observed_order": 2.0001851058710396,
+          "difference_direction_cosine": 0.9999999998857599,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        },
+        "eps_v": {
+          "observed_order": 2.00018521150598,
+          "extrapolated": [
+            0.0,
+            0.002,
+            0.004,
+            0.006,
+            0.008,
+            0.009979117913043834,
+            0.009264851090313891,
+            0.008588286946321043,
+            0.007947379528358505,
+            0.007340201632688008,
+            0.006764936850028097,
+            0.00621987228400415,
+            0.005703391868945451,
+            0.0052139702231792494,
+            0.004750166982273375,
+            0.0043106215637598545,
+            0.0038940483209245597
+          ],
+          "fine_error_estimate": 1.8934263134394785e-11,
+          "difference_coarse": 2.2727922852645808e-10,
+          "difference_fine": 5.6812513139280735e-11,
+          "raw_observed_order": 2.00018521150598,
+          "difference_direction_cosine": 0.9999999999568447,
+          "accepted": null,
+          "tolerance": "未定義",
+          "reason": "diagnostic_only"
+        }
+      },
+      "invariant_drift_by_level": [
+        {
+          "max_normalized_yield_abs": 2.37380448631086e-10,
+          "max_ncl_volume_abs": 2.993605363599272e-12,
+          "max_volume_strain_identity_abs": 1.8561541192951836e-16
+        },
+        {
+          "max_normalized_yield_abs": 5.933331603813485e-11,
+          "max_ncl_volume_abs": 7.500666754367558e-13,
+          "max_volume_strain_identity_abs": 1.8561541192951836e-16
+        },
+        {
+          "max_normalized_yield_abs": 1.4807599590938025e-11,
+          "max_ncl_volume_abs": 1.8385293287792592e-13,
+          "max_volume_strain_identity_abs": 1.8561541192951836e-16
+        }
+      ],
+      "pc_regression": true,
+      "spatial_order": null,
+      "spatial_reason": "material point; no spatial discretization",
+      "critical_state_limit": {
+        "p": 166.66666666666663,
+        "q": 199.99999999999994,
+        "pc": 333.33333333333326,
+        "source": "S2; asymptotic limit, NOT finite axial strain endpoint reference"
+      },
+      "exchange_contract": "REJECTED: physical OC dilative pc decrease; monotone-pc exchange unsupported"
+    }
+  },
+  "isotropic": {
+    "rows": [
+      {
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 100.0,
+        "e": 1.5789659628023816,
+        "eps_v": 0.0
+      },
+      {
+        "p": 130.0,
+        "q": 0.0,
+        "pc": 130.0,
+        "e": 1.5264931099088832,
+        "eps_v": 0.02055631036719623
+      },
+      {
+        "p": 100.0,
+        "q": 0.0,
+        "pc": 130.0,
+        "e": 1.536987680487583,
+        "eps_v": 0.01641110431616636
+      }
+    ],
+    "solution": "closed_form; no load-step truncation",
+    "observed_order": null,
+    "accepted": null,
+    "tolerance": "未定義"
+  },
+  "original_column": {
+    "material": "MC; MCC mapping 未定義",
+    "source_ids": [
+      "S5",
+      "S6"
+    ],
+    "top_displacement_m": {
+      "gravity": -0.0003333333333333334,
+      "load": -0.0027001672299753485,
+      "unload": -0.000700167229975348
+    },
+    "independent_1d_representation_order": 2.0000000000000027,
+    "original_tet4_fine_relative_l2": 0.068282,
+    "original_tet4_fine_accepted": false,
+    "original_continuum_relative_l2": 0.010336,
+    "original_continuum_accepted": true,
+    "original_reported_order": 1.197,
+    "original_threshold_relative_l2": 0.05,
+    "original_discretization_component": 0.057946,
+    "original_stress_extrusion_accepted": null,
+    "original_finite_width_stress_accepted": null,
+    "mcc_column_same_conditions": "未確認: original .2m MC column has no documented MCC mapping; separate 1m MCC column S8--S10 identified",
+    "mcc_general_spatial_order": null
+  },
+  "documented_mcc_column": {
+    "source_ids": [
+      "S1",
+      "S3",
+      "S8",
+      "S9",
+      "S10"
+    ],
+    "accepted": null,
+    "tolerance": "未定義",
+    "geometry_m": {
+      "width": 1.0,
+      "depth": 1.0,
+      "height": 1.0,
+      "layer_interface": 0.5
+    },
+    "initial": {
+      "surcharge_kpa": 100.0,
+      "unit_weight_kn_m3": 20.0,
+      "k0": 1.0,
+      "pc_over_p": 1.0
+    },
+    "pressure_kpa": [
+      100.0,
+      130.0,
+      100.0,
+      100.0
+    ],
+    "cut_height_m": 0.5,
+    "kinematics": "fixed domain; small strain; u=-integral(eps_v dz); logarithmic v evolution",
+    "material_levels": [
+      256,
+      512,
+      1024
+    ],
+    "spatial_cells": [
+      8,
+      16,
+      32
+    ],
+    "spatial_fixed_material_n": 2048,
+    "material_increment_values_m": [
+      [
+        -0.0039028250673530124,
+        -0.002588804955652486,
+        -0.002098062960556586
+      ],
+      [
+        -0.003902824332428842,
+        -0.0025888043109986883,
+        -0.0020980623535289075
+      ],
+      [
+        -0.003902824147183163,
+        -0.0025888041482956324,
+        -0.0020980622002217666
+      ]
+    ],
+    "spatial_values_m": [
+      [
+        -0.00390275534141789,
+        -0.002588746809269284,
+        -0.002098010316210552
+      ],
+      [
+        -0.003902806910340907,
+        -0.002588789782416245,
+        -0.0020980491998932424
+      ],
+      [
+        -0.0039028198030643204,
+        -0.0025888005261452715,
+        -0.002098058921222128
+      ]
+    ],
+    "material_increment_diagnostic": {
+      "observed_order": 1.9867827233446833,
+      "extrapolated": [
+        -0.003902824084674525,
+        -0.0025888040933936965,
+        -0.0020980621484903545
+      ],
+      "fine_error_estimate": 9.796780792214717e-11,
+      "difference_coarse": 1.1507278818304643e-09,
+      "difference_fine": 2.9032968404075004e-10,
+      "raw_observed_order": 1.9867827233446833,
+      "difference_direction_cosine": 0.9999996569192197,
+      "accepted": null,
+      "tolerance": "未定義",
+      "reason": "diagnostic_only"
+    },
+    "spatial_diagnostic": {
+      "observed_order": 1.9999421923636478,
+      "extrapolated": [
+        -0.0039028241008683996,
+        -0.0025888041075796168,
+        -0.002098062161838218
+      ],
+      "fine_error_estimate": 6.465244350864513e-09,
+      "difference_coarse": 7.757567892330145e-08,
+      "difference_fine": 1.9394696845245868e-08,
+      "raw_observed_order": 1.9999421923636478,
+      "difference_direction_cosine": 0.9999999999985889,
+      "accepted": null,
+      "tolerance": "未定義",
+      "reason": "diagnostic_only"
+    },
+    "gauss16_to_32_max_abs_m": 1.431146867680866e-17,
+    "continuum_quadrature_values_m": [
+      -0.0039028241006825765,
+      -0.0025888041074275834,
+      -0.0020980621617013597
+    ],
+    "stage_names": [
+      "load",
+      "unload",
+      "cut"
+    ],
+    "original_mixed_mcc_failure_preserved": {
+      "pc_max_abs_kpa": 0.001773,
+      "threshold_kpa": 0.0001,
+      "later_eight_layer_pc_abs_kpa": 0.0005334,
+      "accepted": false,
+      "source": "S8"
+    },
+    "general_3d_spatial_order": null,
+    "point_histories": [
+      {
+        "z_m": 0.125,
+        "active": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "rows": [
+          {
+            "stage": "initial",
+            "p": 117.5,
+            "q": 0.0,
+            "pc": 117.49999999999999,
+            "e": 1.5467123332831574,
+            "eps_v": 0.0
+          },
+          {
+            "stage": "load",
+            "p": 123.5908888366782,
+            "q": 35.86366674498309,
+            "pc": 130.81792855453313,
+            "e": 1.5275118872169697,
+            "eps_v": 0.0075678712134704665
+          },
+          {
+            "stage": "unload",
+            "p": 105.01946026524963,
+            "q": 18.72080960212595,
+            "pc": 130.81792855453313,
+            "e": 1.5340251335589068,
+            "eps_v": 0.0049942458857218834
+          },
+          {
+            "stage": "cut",
+            "p": 98.82898407477344,
+            "q": 13.006523887840235,
+            "pc": 130.81792855453313,
+            "e": 1.5364553234001828,
+            "eps_v": 0.004035681880600319
+          }
+        ]
+      },
+      {
+        "z_m": 0.375,
+        "active": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "rows": [
+          {
+            "stage": "initial",
+            "p": 112.5,
+            "q": 0.0,
+            "pc": 112.49999999999999,
+            "e": 1.555409355671105,
+            "eps_v": 0.0
+          },
+          {
+            "stage": "load",
+            "p": 118.67791765489537,
+            "q": 35.73312351765685,
+            "pc": 126.14944795166295,
+            "e": 1.534948702199764,
+            "eps_v": 0.008039027286249936
+          },
+          {
+            "stage": "unload",
+            "p": 100.1064890834668,
+            "q": 18.590266374799707,
+            "pc": 126.14944795166295,
+            "e": 1.5417558517661405,
+            "eps_v": 0.005357305876797504
+          },
+          {
+            "stage": "cut",
+            "p": 93.91601289299061,
+            "q": 12.875980660513992,
+            "pc": 126.14944795166295,
+            "e": 1.544309196054603,
+            "eps_v": 0.00435325088380667
+          }
+        ]
+      },
+      {
+        "z_m": 0.625,
+        "active": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "rows": [
+          {
+            "stage": "initial",
+            "p": 107.5,
+            "q": 0.0,
+            "pc": 107.49999999999996,
+            "e": 1.5645018304864564,
+            "eps_v": 0.0
+          },
+          {
+            "stage": "load",
+            "p": 113.79179465363865,
+            "q": 35.56230801954209,
+            "pc": 121.50982446395422,
+            "e": 1.5426259642852704,
+            "eps_v": 0.008566850437640484
+          },
+          {
+            "stage": "unload",
+            "p": 95.22036608221008,
+            "q": 18.419450876684945,
+            "pc": 121.50982446395422,
+            "e": 1.5497530269860968,
+            "eps_v": 0.005767739308467301
+          },
+          {
+            "stage": "cut",
+            "p": 95.22036608221008,
+            "q": 18.419450876684945,
+            "pc": 121.50982446395422,
+            "e": 1.5497530269860968,
+            "eps_v": 0.005767739308467301
+          }
+        ]
+      },
+      {
+        "z_m": 0.875,
+        "active": [
+          true,
+          true,
+          true,
+          false
+        ],
+        "rows": [
+          {
+            "stage": "initial",
+            "p": 102.5,
+            "q": 0.0,
+            "pc": 102.50000000000001,
+            "e": 1.5740274402843073,
+            "eps_v": 0.0
+          },
+          {
+            "stage": "load",
+            "p": 108.93842900233184,
+            "q": 35.34235649650227,
+            "pc": 116.90089188277574,
+            "e": 1.5505564463002584,
+            "eps_v": 0.009160220077758519
+          },
+          {
+            "stage": "unload",
+            "p": 90.36700043090327,
+            "q": 18.199499353645127,
+            "pc": 116.90089188277574,
+            "e": 1.5580325938929396,
+            "eps_v": 0.0062333246586790785
+          },
+          {
+            "stage": "cut",
+            "p": 90.36700043090327,
+            "q": 18.199499353645127,
+            "pc": 116.90089188277574,
+            "e": 1.5580325938929396,
+            "eps_v": 0.0062333246586790785
+          }
+        ]
+      }
+    ]
+  },
+  "elapsed_seconds": 9.770777124000233
+}

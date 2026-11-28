@@ -1,0 +1,87 @@
+{
+  "review_date_japan": "2026-11-15",
+  "review_preceded_numerical_solve_scope": "Inherited source review and B-01/02 records were read before execution. Network re-acquisition attempts are supplemental; no new reference values.",
+  "inherited_review_path": "interim/2026-12-26-b03-offset-kink-cause-diagnosis/primary-source-review.json",
+  "inherited_review_sha256": "71e9a362b9853b83dd76fd6109afc65fdf8f338352812ae42f4a81d3021f2fec",
+  "inherited_sources": [
+    {
+      "id": "ABAQUS-GEOMETRY",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-shellgeometry.htm",
+      "scope": "公式本文 Defining Nodal Normals / Calculation of Average Nodal Normals / Meshing Concerns / Offset",
+      "confirmed": "折れ線には要素別法線を指定できる。20度の平均化アルゴリズムには偽折れ目/平滑化の注意がある。自由度・運動学は参照面に属し、偏心した面内荷重は膜力と曲げを生む。",
+      "use": "法線平均を本体へ導入せず、一定面法線・節点順・e*n・荷重面を別観測する。20度を本件の判定閾値にしない。"
+    },
+    {
+      "id": "ABAQUS-OFFSET",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-usingshellsection.htm",
+      "scope": "公式本文 Defining a Shell Offset Value for Conventional Shells",
+      "confirmed": "OFFSETは中立面から参照面への厚さ比。SPOS=.5、SNEG=-.5。絶対値.5超も指定可能だが高曲率で注意が必要。",
+      "use": "本件の長さeと厚さ比を区別する。製品の範囲を理由に本件abs(e)<=t/2を拡大しない。"
+    },
+    {
+      "id": "ABAQUS-MPC",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-mpc.htm",
+      "scope": "公式本文 Using MPC Type BEAM、冒頭の出力制約",
+      "confirmed": "BEAMは2節点の変位・回転を剛体梁として結ぶ。MPC拘束力そのものは出力されず、必要なら等価connectorを用いると説明される。",
+      "use": "剛体腕と単純な変位同値を区別し、反力を何の量で検証するかを未定義事項として残す。"
+    },
+    {
+      "id": "ABAQUS-KINEMATIC",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAECSTRefMap/simacst-c-kinematiccoupling.htm",
+      "scope": "公式本文 Defining the Constraint / Rotational Degrees of Freedom",
+      "confirmed": "参照節点の剛体運動へ選択DOFを従属させる。全並進と3回転の選択はBEAM、2回転はREVOLUTE、1回転はUNIVERSALに相当する。",
+      "use": "共有回転・独立回転・ヒンジを同じ折れ目モデルにしない。新MPCを実装しない。"
+    },
+    {
+      "id": "ASTER-WORK",
+      "url": "https://code-aster.org/doc/v17/manuals/man_r/r3/r3.07.06/Mise_en__uvre_et_post-traitements.html",
+      "scope": "公式本文 R3.07.06 §5.1–3",
+      "confirmed": "FORCE_COQUEの作用面INF/MOY/SUP/MAILを区別し、荷重・偶力をメッシュ面へ移す。節点/辺荷重の面変換は利用者が行う。変位・断面力の評価面も区別する。",
+      "use": "c'=c+d*n cross fと変位写像の転置関係を照合する動機。本件eは中立面→付着面であり符号規約を同一視しない。"
+    },
+    {
+      "id": "CHAPELLE-BATHE-BIBLIOGRAPHY",
+      "url": "https://link.springer.com/book/10.1007/978-3-642-16408-8",
+      "bibliography": "D. Chapelle, K.-J. Bathe, The Finite Element Analysis of Shells – Fundamentals, 2nd ed., Springer, copyright 2011, DOI 10.1007/978-3-642-16408-8",
+      "scope": "出版社書誌・紹介のみ。教科書本文未取得",
+      "use": "書誌候補に限定。未確認の定式化・本文・ベンチマーク値を引用しない。"
+    }
+  ],
+  "supplemental_retrieval_attempts": [
+    {
+      "id": "ABAQUS-GEOMETRY",
+      "url": "https://docs.software.vt.edu/abaqusv2026/English/SIMACAEELMRefMap/simaelm-c-shellgeometry.htm",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "body_obtained": false
+    },
+    {
+      "id": "ASTER-WORK",
+      "url": "https://code-aster.org/doc/v17/manuals/man_r/r3/r3.07.06/Mise_en__uvre_et_post-traitements.html",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "body_obtained": false
+    },
+    {
+      "id": "MACNEAL-HARDER-BIBLIOGRAPHY",
+      "url": "https://doi.org/10.1016/0168-874X(85)90003-4",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "body_obtained": false
+    },
+    {
+      "id": "CHAPELLE-BATHE-BIBLIOGRAPHY",
+      "url": "https://link.springer.com/book/10.1007/978-3-642-16408-8",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "body_obtained": false
+    }
+  ],
+  "macneal_harder": {
+    "bibliography": "R.H. MacNeal and R.L. Harder, A proposed standard set of problems to test finite element accuracy, Finite Elements in Analysis and Design 1 (1985), 3–20",
+    "doi": "10.1016/0168-874X(85)90003-4",
+    "inherited_bibliography_source": "interim/2026-12-25-b01-curved-tri6-cause-diagnosis/primary-source-review.json",
+    "body_obtained": false,
+    "use": "書誌のみ。本文のpatch形状・支持・数表は未取得。本診断はこの試験の完全再現を称しない。"
+  },
+  "new_primary_fulltext_confirmations": 0,
+  "new_acceptance_reference_values": [],
+  "coordinate_covariance": "Coordinate maps and work identities are explicitly derived from the existing local model; not attributed to an unacquired textbook theorem.",
+  "nodal_averaging": "No averaging exists in this production guard. Declaration-order observations come from src/beams.rs and actual Model::new, not from a literature claim."
+}

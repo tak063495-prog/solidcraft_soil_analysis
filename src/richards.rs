@@ -45,7 +45,7 @@ impl AffineHead {
         }
         Ok(())
     }
-    fn relative(&self, p: [f64; 3], datum: f64) -> f64 {
+    pub(crate) fn relative(&self, p: [f64; 3], datum: f64) -> f64 {
         self.head_m - datum
             + (0..3)
                 .map(|a| self.gradient[a] * (p[a] - self.reference_point_m[a]))
@@ -255,6 +255,8 @@ struct Model {
     materials: Vec<Material>,
     inverse_k: Vec<Matrix3<f64>>,
     faces: Vec<Face>,
+    wall_histories: BTreeMap<[usize; 3], crate::joint_water::rt0::HeadHistory>,
+    wall_conditions: BTreeMap<[usize; 3], Bc>,
     cell_faces: Vec<[usize; 4]>,
     active: Vec<bool>,
     ids: Vec<u32>,
@@ -275,6 +277,11 @@ struct Local {
     capacity: f64,
     source: f64,
 }
+impl Local {
+    fn outflow(&self, head: f64, face_heads: &[f64], faces: [usize; 4]) -> Vector4<f64> {
+        self.c * Vector4::from_fn(|j, _| head - face_heads[faces[j]])
+    }
+}
 struct Evaluated {
     locals: Vec<Local>,
     fluxes: Vec<Vector4<f64>>,
@@ -283,6 +290,15 @@ struct Evaluated {
 
 impl Model {
     fn new(mesh: &Mesh, case: &Case, active: &[bool], ids: Option<&[u32]>) -> Result<Self> {
+        Self::with_joints(mesh, case, active, ids, &[])
+    }
+    fn with_joints(
+        mesh: &Mesh,
+        case: &Case,
+        active: &[bool],
+        ids: Option<&[u32]>,
+        pairs: &[crate::joint_water::rt0::Pair],
+    ) -> Result<Self> {
         mesh.validate()?;
         case.initial_head.validate()?;
         case.settings.linear_solver.validate()?;
@@ -356,6 +372,53 @@ impl Model {
                 }
             }
         }
+        let mut wall_histories = BTreeMap::new();
+        let mut wall_conditions = BTreeMap::new();
+        for pair in pairs {
+            use crate::joint_water::Policy;
+            match &pair.policy {
+                Policy::Continuous => {
+                    let b = owners
+                        .remove(&pair.b.corners)
+                        .ok_or_else(|| Error::Input("missing continuous b face".into()))?;
+                    let a = owners
+                        .get_mut(&pair.a.corners)
+                        .ok_or_else(|| Error::Input("missing continuous a face".into()))?;
+                    if a.len() != 1 || b.len() != 1 {
+                        return Err(Error::Input(
+                            "continuous wall already has another owner".into(),
+                        ));
+                    }
+                    a.extend(b);
+                    wall_conditions.insert(pair.a.corners, Bc::Internal);
+                }
+                policy => {
+                    let condition = match policy {
+                        Policy::Prescribed { level_m: Some(h) } => Bc::Head(h - case.head_datum_m),
+                        Policy::Prescribed { level_m: None } if pair.history.is_some() => {
+                            Bc::Head(pair.history.as_ref().unwrap().at(0.)? - case.head_datum_m)
+                        }
+                        Policy::Soil { .. } => Bc::Flux(0.),
+                        _ => {
+                            return Err(Error::Input(
+                                "explicit Richards reservoir head required".into(),
+                            ));
+                        }
+                    };
+                    for w in [&pair.a, &pair.b].into_iter().filter(|w| active[w.element]) {
+                        if let Some(h) = &pair.history {
+                            wall_histories.insert(w.corners, h.clone());
+                        }
+                        if wall_conditions
+                            .insert(w.corners, condition.clone())
+                            .is_some()
+                        {
+                            return Err(Error::Input("duplicate hydraulic wall".into()));
+                        }
+                    }
+                }
+            }
+        }
         let mut faces = Vec::new();
         let mut cell_faces = vec![[0; 4]; cells.len()];
         for (key, o) in owners {
@@ -392,11 +455,24 @@ impl Model {
             materials,
             inverse_k,
             faces,
+            wall_histories,
+            wall_conditions,
             cell_faces,
             active: active.to_vec(),
             ids,
             datum: case.head_datum_m,
         })
+    }
+    fn owner_face_map(&self) -> BTreeMap<(usize, usize), usize> {
+        self.faces
+            .iter()
+            .enumerate()
+            .flat_map(|(fi, f)| {
+                f.owners
+                    .iter()
+                    .map(move |&[c, j]| ((self.cells[c].element_index, j), fi))
+            })
+            .collect()
     }
     fn boundaries(&self, mesh: &Mesh, definitions: &[Boundary]) -> Result<Vec<Bc>> {
         let face_map: BTreeMap<_, _> = self
@@ -409,7 +485,9 @@ impl Model {
             .faces
             .iter()
             .map(|f| {
-                if f.owners.len() == 2 {
+                if let Some(condition) = self.wall_conditions.get(&f.corners) {
+                    condition.clone()
+                } else if f.owners.len() == 2 {
                     Bc::Internal
                 } else {
                     Bc::Flux(0.)
@@ -448,7 +526,8 @@ impl Model {
                     Error::Input("inactive/unknown Richards boundary face".into())
                 })?;
                 let f = &self.faces[i];
-                if f.owners.len() != 1 || !used.insert(i) {
+                if self.wall_conditions.contains_key(&key) || f.owners.len() != 1 || !used.insert(i)
+                {
                     return Err(Error::Input(
                         "overlapping/internal Richards boundary".into(),
                     ));
@@ -547,9 +626,7 @@ impl Model {
             let h = state.relative_cell_head_m[e]
                 .ok_or_else(|| Error::Input("undefined hydraulic cell head".into()))?;
             let l = self.local(i, h)?;
-            let difference =
-                Vector4::from_fn(|j, _| h - state.relative_face_head_m[self.cell_faces[i][j]]);
-            let flux = l.c * difference;
+            let flux = l.outflow(h, &state.relative_face_head_m, self.cell_faces[i]);
             let rate = dt.map_or(0., |dt| {
                 (l.storage - old.cell_storage_offset_m3[e].unwrap_or(0.)) / dt
             });
@@ -573,6 +650,13 @@ impl Model {
             let scale: f64 = f.owners.iter().map(|&[i, j]| fluxes[i][j].abs()).sum();
             if f.owners.len() == 1 {
                 boundary_outflow += q;
+            }
+            // On an interior trace the prescribed sum of both outward fluxes
+            // fills the joint void. It is storage, with no exterior source.
+            if f.owners.len() == 2
+                && let Bc::Flux(rate) = bc[fi]
+            {
+                storage_rate += rate;
             }
             let r = match bc[fi] {
                 Bc::Internal => q,
@@ -684,14 +768,18 @@ impl Model {
         }
         // Projection of the specified initial affine field on each reference face.
         for (fi, f) in self.faces.iter().enumerate() {
-            state.relative_face_head_m[fi] = case
-                .initial_head
-                .relative(f.reference_position_m, self.datum);
+            state.relative_face_head_m[fi] = match self.wall_conditions.get(&f.corners) {
+                Some(Bc::Head(head)) => *head,
+                _ => case
+                    .initial_head
+                    .relative(f.reference_position_m, self.datum),
+            };
         }
         for (i, c) in self.cells.iter().enumerate() {
             let h = state.relative_cell_head_m[c.element_index].unwrap_or(0.);
-            let q = self.local(i, h)?.c
-                * Vector4::from_fn(|j, _| h - state.relative_face_head_m[self.cell_faces[i][j]]);
+            let q = self
+                .local(i, h)?
+                .outflow(h, &state.relative_face_head_m, self.cell_faces[i]);
             state.cell_outflow_m3_s[c.element_index] = Some(q.into());
         }
         Ok(state)
@@ -1077,7 +1165,15 @@ impl Stepper {
         Self::initial_on_domain(mesh, case, &vec![true; mesh.tetrahedra.len()])
     }
     pub fn initial_on_domain(mesh: &Mesh, case: &Case, active: &[bool]) -> Result<Self> {
-        let model = Model::new(mesh, case, active, None)?;
+        Self::initial_with_joints(mesh, case, active, &[])
+    }
+    pub(crate) fn initial_with_joints(
+        mesh: &Mesh,
+        case: &Case,
+        active: &[bool],
+        pairs: &[crate::joint_water::rt0::Pair],
+    ) -> Result<Self> {
+        let model = Model::with_joints(mesh, case, active, None, pairs)?;
         let boundaries = validated_boundaries(&model, mesh, case)?;
         if !matches!(case.analysis, Analysis::Transient { .. }) {
             return Err(Error::Input(
@@ -1110,54 +1206,38 @@ impl Stepper {
     }
     /// Validate only the period applicable to this construction domain. Earlier
     /// and later periods may prescribe faces that are not exposed here.
-    pub fn for_domain(mesh: &Mesh, case: &Case, active: &[bool], period: usize) -> Result<Self> {
-        Self::for_domain_materials(mesh, case, active, None, period)
-    }
-    pub fn for_domain_materials(
+    pub fn construction_domain(
         mesh: &Mesh,
         case: &Case,
         active: &[bool],
         ids: Option<&[u32]>,
         period: usize,
+        pairs: &[crate::joint_water::rt0::Pair],
+        initialize: bool,
     ) -> Result<Self> {
         let Analysis::Transient { periods } = &case.analysis else {
             return Err(Error::Input("construction needs transient flow".into()));
         };
-        let model = Model::new(mesh, case, active, ids)?;
+        let model = Model::with_joints(mesh, case, active, ids, pairs)?;
         let boundaries = one_period_boundaries(&model, mesh, periods, period)?;
-        let state = model.initial(case)?;
-        let initial = model.frame(
-            "domain_initial_guess".into(),
-            state.clone(),
-            &state,
-            None,
-            &boundaries[period].2,
-            &case.settings,
-        )?;
-        Ok(Self {
-            model: Arc::new(model),
-            boundaries,
-            settings: case.settings.clone(),
-            initial: Some(Arc::new(initial)),
-        })
-    }
-    pub fn deferred_domain(
-        mesh: &Mesh,
-        case: &Case,
-        active: &[bool],
-        ids: Option<&[u32]>,
-        period: usize,
-    ) -> Result<Self> {
-        let Analysis::Transient { periods } = &case.analysis else {
-            return Err(Error::Input("construction needs transient flow".into()));
+        let initial = if initialize {
+            let state = model.initial(case)?;
+            Some(Arc::new(model.frame(
+                "domain_initial_guess".into(),
+                state.clone(),
+                &state,
+                None,
+                &boundaries[period].2,
+                &case.settings,
+            )?))
+        } else {
+            None
         };
-        let model = Model::new(mesh, case, active, ids)?;
-        let boundaries = one_period_boundaries(&model, mesh, periods, period)?;
         Ok(Self {
             model: Arc::new(model),
             boundaries,
             settings: case.settings.clone(),
-            initial: None,
+            initial,
         })
     }
     /// Immutable domain and its specified initial field are shared across
@@ -1179,35 +1259,88 @@ impl Stepper {
         self.model.faces.clone()
     }
     pub fn trial(&self, old: &State, period: usize, dt: f64) -> (Result<Frame>, Vec<Iteration>) {
+        self.trial_with_storage(old, period, dt, &BTreeMap::new())
+    }
+
+    fn storage_boundaries(
+        &self,
+        old: &State,
+        period: usize,
+        dt: f64,
+        rates: &BTreeMap<usize, f64>,
+    ) -> Result<(&str, std::borrow::Cow<'_, [Bc]>)> {
+        let (name, end, bc) = self
+            .boundaries
+            .get(period)
+            .ok_or_else(|| Error::Input("invalid hydraulic period".into()))?;
+        if bc.len() != self.model.faces.len() {
+            return Err(Error::Input("unprepared hydraulic domain period".into()));
+        }
+        let start = if period == 0 {
+            0.
+        } else {
+            self.boundaries[period - 1].1.unwrap_or(0.)
+        };
+        if !dt.is_finite()
+            || dt <= 0.
+            || old.time_s < start
+            || old.time_s + dt == old.time_s
+            || end.is_none_or(|end| old.time_s + dt > end)
+        {
+            return Err(Error::Input(
+                "hydraulic trial crosses physical period boundary".into(),
+            ));
+        }
+        let mut bc = std::borrow::Cow::Borrowed(bc.as_slice());
+        if !self.model.wall_histories.is_empty() {
+            for (fi, f) in self.model.faces.iter().enumerate() {
+                if let Some(h) = self.model.wall_histories.get(&f.corners) {
+                    bc.to_mut()[fi] = Bc::Head(h.at(old.time_s + dt)? - self.model.datum);
+                }
+            }
+        }
+        for (&fi, &rate) in rates {
+            if !rate.is_finite()
+                || !matches!(bc.get(fi), Some(Bc::Internal))
+                || self.model.faces[fi].owners.len() != 2
+            {
+                return Err(Error::Input("invalid internal JOINT storage trace".into()));
+            }
+            bc.to_mut()[fi] = Bc::Flux(rate);
+        }
+        Ok((name, bc))
+    }
+
+    pub(crate) fn balance_with_storage(
+        &self,
+        new: &State,
+        old: &State,
+        period: usize,
+        dt: f64,
+        rates: &BTreeMap<usize, f64>,
+    ) -> Result<Balance> {
+        let (_, bc) = self.storage_boundaries(old, period, dt, rates)?;
+        Ok(self
+            .model
+            .evaluate(new, old, Some(dt), &bc, &self.settings)?
+            .balance)
+    }
+
+    pub(crate) fn trial_with_storage(
+        &self,
+        old: &State,
+        period: usize,
+        dt: f64,
+        rates: &BTreeMap<usize, f64>,
+    ) -> (Result<Frame>, Vec<Iteration>) {
         let mut log = Vec::new();
         let result = (|| {
-            let (name, end, bc) = self
-                .boundaries
-                .get(period)
-                .ok_or_else(|| Error::Input("invalid hydraulic period".into()))?;
-            if bc.len() != self.model.faces.len() {
-                return Err(Error::Input("unprepared hydraulic domain period".into()));
-            }
-            let start = if period == 0 {
-                0.
-            } else {
-                self.boundaries[period - 1].1.unwrap_or(0.)
-            };
-            if !dt.is_finite()
-                || dt <= 0.
-                || old.time_s < start
-                || old.time_s + dt == old.time_s
-                || end.is_none_or(|end| old.time_s + dt > end)
-            {
-                return Err(Error::Input(
-                    "hydraulic trial crosses physical period boundary".into(),
-                ));
-            }
+            let (name, bc) = self.storage_boundaries(old, period, dt, rates)?;
             let next = self
                 .model
-                .trial(old, Some(dt), bc, &self.settings, &mut log)?;
+                .trial(old, Some(dt), &bc, &self.settings, &mut log)?;
             self.model
-                .frame(name.clone(), next, old, Some(dt), bc, &self.settings)
+                .frame(name.to_owned(), next, old, Some(dt), &bc, &self.settings)
         })();
         (result, log)
     }
@@ -1295,6 +1428,27 @@ pub(crate) fn remove_domain_materials(
     ids: Option<&[u32]>,
     old: &State,
 ) -> Result<DomainRemoval> {
+    remove_joint_domain(mesh, case, before, after, ids, old, None)
+}
+pub(crate) fn remove_joint_domain(
+    mesh: &Mesh,
+    case: &Case,
+    before: &[bool],
+    after: &[bool],
+    ids: Option<&[u32]>,
+    old: &State,
+    wet: Option<&crate::joint_water::Model>,
+) -> Result<DomainRemoval> {
+    let make = |active: &[bool]| match wet {
+        Some(w) => Model::with_joints(
+            mesh,
+            case,
+            &w.soil_domain(active)?,
+            ids,
+            &w.richards_pairs(active)?,
+        ),
+        None => Model::new(mesh, case, active, ids),
+    };
     if before.len() != after.len()
         || before.len() != mesh.tetrahedra.len()
         || before.iter().zip(after).any(|(a, b)| !a && *b)
@@ -1304,8 +1458,10 @@ pub(crate) fn remove_domain_materials(
             "hydraulic DEATH requires a strict remaining subdomain".into(),
         ));
     }
-    let original = Model::new(mesh, case, before, ids)?;
-    let remaining = Model::new(mesh, case, after, ids)?;
+    let original = make(before)?;
+    let remaining = make(after)?;
+    let before = &original.active;
+    let after = &remaining.active;
     let n = before.len();
     if !old.time_s.is_finite()
         || old.time_s < 0.
@@ -1370,17 +1526,13 @@ pub(crate) fn remove_domain_materials(
             state.cell_outflow_m3_s[e] = None;
         }
     }
-    let old_map: BTreeMap<_, _> = original
-        .faces
-        .iter()
-        .enumerate()
-        .map(|(i, f)| (f.corners, i))
-        .collect();
+    let old_map = original.owner_face_map();
     let mut mapping = vec![];
     let mut newly_exposed = vec![];
     for f in &remaining.faces {
+        let [c, j] = f.owners[0];
         let i = *old_map
-            .get(&f.corners)
+            .get(&(remaining.cells[c].element_index, j))
             .ok_or_else(|| Error::Input("DEATH created an unknown face".into()))?;
         mapping.push(i);
         if f.owners.len() == 1 && original.faces[i].owners.len() == 2 {
@@ -1500,13 +1652,38 @@ fn storage_head(model: &Model, i: usize, target: f64, reference: &AffineHead) ->
 pub(crate) fn transition_domain(
     mesh: &Mesh,
     case: &Case,
-    before: crate::hydraulic_transition::Domain<'_>,
-    after: crate::hydraulic_transition::Domain<'_>,
     old: &State,
-    selected: &[usize],
-    policy: &crate::hydraulic_transition::WaterPolicy,
+    input: crate::hydraulic_transition::TransitionInput<'_>,
+    wet: Option<&crate::joint_water::Model>,
 ) -> Result<crate::hydraulic_transition::WaterChange> {
-    use crate::hydraulic_transition::{ChangedCell, WaterChange, WaterPolicy};
+    use crate::hydraulic_transition::{ChangedCell, TransitionInput, WaterChange, WaterPolicy};
+    let TransitionInput {
+        before,
+        after,
+        selected,
+        policy,
+        internal_donors,
+    } = input;
+    let models = |d: &crate::hydraulic_transition::Domain<'_>| match wet {
+        Some(w) => Model::with_joints(
+            mesh,
+            case,
+            &w.soil_domain(d.active)?,
+            Some(d.material_ids),
+            &w.richards_pairs(d.active)?,
+        ),
+        None => Model::new(mesh, case, d.active, Some(d.material_ids)),
+    };
+    let original = models(&before)?;
+    let new = models(&after)?;
+    let before = crate::hydraulic_transition::Domain {
+        active: &original.active,
+        material_ids: before.material_ids,
+    };
+    let after = crate::hydraulic_transition::Domain {
+        active: &new.active,
+        material_ids: after.material_ids,
+    };
     let n = mesh.tetrahedra.len();
     let chosen = selected.iter().copied().collect::<BTreeSet<_>>();
     if before.active.len() != n
@@ -1547,8 +1724,7 @@ pub(crate) fn transition_domain(
         WaterPolicy::PreserveWater { reference_head } => reference_head.validate()?,
         _ => {}
     }
-    let original = Model::new(mesh, case, before.active, Some(before.material_ids))?;
-    let new = Model::new(mesh, case, after.active, Some(after.material_ids))?;
+
     if !old.time_s.is_finite()
         || old.time_s < 0.
         || old.relative_cell_head_m.len() != n
@@ -1600,16 +1776,15 @@ pub(crate) fn transition_domain(
             },
         );
     }
-    let map = original
-        .faces
-        .iter()
-        .enumerate()
-        .map(|(i, f)| (f.corners, i))
-        .collect::<BTreeMap<_, _>>();
+    let map = original.owner_face_map();
     let mapping = new
         .faces
         .iter()
-        .map(|f| map.get(&f.corners).copied())
+        .map(|f| {
+            f.owners
+                .iter()
+                .find_map(|&[c, j]| map.get(&(new.cells[c].element_index, j)).copied())
+        })
         .collect::<Vec<_>>();
     let mut state = old.clone();
     state.relative_face_head_m = new
@@ -1617,7 +1792,11 @@ pub(crate) fn transition_domain(
         .iter()
         .zip(&mapping)
         .map(|(f, i)| {
-            if let Some(i) = i {
+            if let Some(h) = new.wall_histories.get(&f.corners) {
+                Ok(h.at(old.time_s)? - new.datum)
+            } else if let Some(Bc::Head(value)) = new.wall_conditions.get(&f.corners) {
+                Ok(*value)
+            } else if let Some(i) = i {
                 Ok(old.relative_face_head_m[*i])
             } else if let WaterPolicy::InitializeHead { value } = policy {
                 Ok(value.relative(f.reference_position_m, new.datum))
@@ -1663,9 +1842,9 @@ pub(crate) fn transition_domain(
                 }
             };
             let local = new.local(i, h)?;
-            let q: [f64; 4] = (local.c
-                * Vector4::from_fn(|j, _| h - state.relative_face_head_m[new.cell_faces[i][j]]))
-            .into();
+            let q = local
+                .outflow(h, &state.relative_face_head_m, new.cell_faces[i])
+                .into();
             let water =
                 new.materials[i].retention.saturated_water_content * c.volume_m3 + local.storage;
             if !water.is_finite() || water < 0. {
@@ -1702,6 +1881,102 @@ pub(crate) fn transition_domain(
             water_after += snapshots[&e].water_equivalent_volume_m3;
         }
     }
+    let mut internal_transfers = Vec::new();
+    if let Some(donors) = internal_donors {
+        if donors.keys().copied().collect::<BTreeSet<_>>() != chosen
+            || changed.iter().any(|c| c.before.is_some())
+        {
+            return Err(Error::Input(
+                "internal supply requires one donor for each new soil cell".into(),
+            ));
+        }
+        let mut debits = BTreeMap::new();
+        for receiver in &changed {
+            let e = receiver.element_index;
+            let donor = donors[&e];
+            if !snapshots.contains_key(&donor)
+                || !new.faces.iter().any(|f| {
+                    f.owners.len() == 2 && {
+                        let owners = f
+                            .owners
+                            .iter()
+                            .map(|o| new.cells[o[0]].element_index)
+                            .collect::<Vec<_>>();
+                        owners.contains(&e) && owners.contains(&donor)
+                    }
+                })
+            {
+                return Err(Error::Input(
+                    "internal water donor must be a retained adjacent cell".into(),
+                ));
+            }
+            let v = receiver.after.water_equivalent_volume_m3;
+            *debits.entry(donor).or_insert(0.) += v;
+            internal_transfers.push(crate::hydraulic_transition::CellTransfer {
+                donor_element: donor,
+                receiver_element: e,
+                volume_m3: v,
+            });
+        }
+        for (e, debit) in debits {
+            let prior = &snapshots[&e];
+            let i = new
+                .cells
+                .iter()
+                .position(|c| c.element_index == e)
+                .ok_or_else(|| Error::Input("missing donor cell".into()))?;
+            let reference = AffineHead {
+                head_m: new.datum + prior.relative_head_m,
+                gradient: [0.; 3],
+                reference_point_m: [0.; 3],
+            };
+            let h = storage_head(&new, i, prior.storage_offset_m3 - debit, &reference)?;
+            let local = new.local(i, h)?;
+            let q = local
+                .outflow(h, &state.relative_face_head_m, new.cell_faces[i])
+                .into();
+            state.relative_cell_head_m[e] = Some(h);
+            state.cell_storage_offset_m3[e] = Some(local.storage);
+            state.cell_outflow_m3_s[e] = Some(q);
+            let water = new.materials[i].retention.saturated_water_content * prior.volume_m3
+                + local.storage;
+            water_after += water - prior.water_equivalent_volume_m3;
+            changed.push(ChangedCell {
+                element_index: e,
+                old_material_id: Some(after.material_ids[e]),
+                new_material_id: after.material_ids[e],
+                before: Some(prior.clone()),
+                after: RemovedCell {
+                    element_index: e,
+                    relative_head_m: h,
+                    outflow_m3_s: q,
+                    storage_offset_m3: local.storage,
+                    volume_m3: prior.volume_m3,
+                    water_equivalent_volume_m3: water,
+                },
+            });
+        }
+        added = 0.;
+    }
+    // Prescribed walls can change a retained cell's trace at the event even
+    // when its inventory is untouched. Publish the instantaneous RT0 rates
+    // without changing the fixed-time water transfer.
+    let updated: BTreeSet<_> = changed.iter().map(|c| c.element_index).collect();
+    for (i, cell) in new.cells.iter().enumerate() {
+        let e = cell.element_index;
+        let faces = new.cell_faces[i];
+        if !updated.contains(&e)
+            && faces.iter().enumerate().any(|(j, &f)| {
+                state.relative_face_head_m[f] != old.relative_face_head_m[map[&(e, j)]]
+            })
+        {
+            let head = snapshots[&e].relative_head_m;
+            let outflow = new
+                .local(i, head)?
+                .outflow(head, &state.relative_face_head_m, faces);
+            state.cell_outflow_m3_s[e] = Some(outflow.into());
+        }
+    }
     let error = (water_after - water_before - added + removed).abs();
     if error > 1e-11 * water_before.max(water_after).max(1e-30) {
         return Err(Error::Solve(
@@ -1709,6 +1984,7 @@ pub(crate) fn transition_domain(
         ));
     }
     Ok(WaterChange {
+        internal_transfers,
         state,
         old_faces: original.faces,
         new_faces: new.faces,
@@ -1942,4 +2218,81 @@ fn advance(
         last_committed: state,
         runtime,
     })
+}
+
+#[cfg(test)]
+mod soil_construction_transfer_tests {
+    use super::*;
+    use crate::hydraulic_transition::{Domain, TransitionInput, WaterPolicy};
+
+    #[test]
+    fn adjacent_donor_loses_the_new_inventory_once_at_the_same_time() -> Result<()> {
+        let mesh: Mesh =
+            serde_json::from_str(include_str!("../examples/seepage-column-tet4-mesh.json"))?;
+        let input: crate::one_way::Case =
+            serde_json::from_str(include_str!("../examples/one-way-mc.json"))?;
+        let mut case = input.flow;
+        case.initial_head.head_m = 2.;
+        // A closed two-tank control with positive compressible storage and a small fill.
+        let (donor, receiver) = mesh
+            .tetrahedra
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| mesh.material_ids[*i] == 1)
+            .find_map(|(d, a)| {
+                mesh.tetrahedra
+                    .iter()
+                    .enumerate()
+                    .find(|(i, b)| {
+                        mesh.material_ids[*i] == 2
+                            && a.iter().filter(|n| b.contains(n)).count() == 3
+                    })
+                    .map(|(r, _)| (d, r))
+            })
+            .unwrap();
+        case.materials[0].retention.saturated_specific_storage_per_m = 0.05;
+        case.materials[1].retention.residual_water_content = 0.01;
+        case.materials[1].retention.saturated_water_content = 0.05;
+        let mut start = vec![false; mesh.tetrahedra.len()];
+        start[donor] = true;
+        let mut end = start.clone();
+        end[receiver] = true;
+        let model = Model::new(&mesh, &case, &start, None)?;
+        let old = model.initial(&case)?;
+        let donors = BTreeMap::from([(receiver, donor)]);
+        let change = transition_domain(
+            &mesh,
+            &case,
+            &old,
+            TransitionInput {
+                before: Domain {
+                    active: &start,
+                    material_ids: &mesh.material_ids,
+                },
+                after: Domain {
+                    active: &end,
+                    material_ids: &mesh.material_ids,
+                },
+                selected: &[receiver],
+                policy: &WaterPolicy::InitializeHead {
+                    value: case.initial_head.clone(),
+                },
+                internal_donors: Some(&donors),
+            },
+            None,
+        )?;
+        assert_eq!(change.state.time_s, old.time_s);
+        assert_eq!((change.water_added_m3, change.water_removed_m3), (0., 0.));
+        let v = change.internal_transfers[0].volume_m3;
+        assert!(v > 0.);
+        assert!((change.water_before_m3 - change.water_after_m3).abs() < 1e-12);
+        assert!(
+            (old.cell_storage_offset_m3[donor].unwrap()
+                - change.state.cell_storage_offset_m3[donor].unwrap()
+                - v)
+                .abs()
+                < 1e-12
+        );
+        Ok(())
+    }
 }

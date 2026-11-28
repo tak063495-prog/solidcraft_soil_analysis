@@ -592,6 +592,7 @@ fn srm_inputs(mesh: &Mesh) -> Result<(Ground, StageCase)> {
         beam_system: None,
         schema: "soil-fem-stages/1".into(),
         settings: Settings {
+            attempt_budget_policy: Default::default(),
             kinematics: Kinematics::Explicit,
             relative_force_tolerance: 1e-8,
             relative_linear_tolerance: 1e-10,
@@ -602,6 +603,8 @@ fn srm_inputs(mesh: &Mesh) -> Result<(Ground, StageCase)> {
             mcc_integration: None,
             tangent_perturbation: 1e-7,
             maximum_free_dofs: 100_000,
+            dense_lu_refinement: false,
+            dense_residual_method: None,
             linear_solver: sparse(),
         },
         boundary: Some(srm_boundary(mesh)),

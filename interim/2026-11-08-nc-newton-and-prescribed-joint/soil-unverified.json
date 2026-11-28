@@ -1,0 +1,16 @@
+{
+  "passed": false,
+  "status": "input_rejected",
+  "command": [
+    "/workspace/solidcraft_soil_analysis/target/release/soil-fem-3d",
+    "solve-stages",
+    "/workspace/solidcraft_soil_analysis/work/final-soil-refusal/mesh.json",
+    "/workspace/solidcraft_soil_analysis/work/final-soil-refusal/ground.json",
+    "/workspace/solidcraft_soil_analysis/work/final-soil-refusal/stages.json",
+    "/workspace/solidcraft_soil_analysis/work/final-soil-refusal/result.json"
+  ],
+  "exit_code": 1,
+  "solver_sha256": "598a0d42a13bb00bdaffef52e82c45debb2a974c0f54c94cce9926b27fc4bfd6",
+  "reason": "SOIL policy alone lacks impermeable structure-side declaration; independent SOIL/member reference remains unsupported",
+  "valid_role_reference_refusal_test": "tests/test_prescribed_wet_structures.py::test_unscoped_fixed_head_and_soil_members_are_refused"
+}

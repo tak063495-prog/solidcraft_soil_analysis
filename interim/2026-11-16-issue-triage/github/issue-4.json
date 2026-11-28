@@ -1,0 +1,30 @@
+{
+  "issue": {
+    "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4",
+    "title": "[P2] MC epoch view の容量検査と実際の JSON 保存形式が異なり、上限超過を成功扱いする",
+    "issue_number": 4,
+    "body": "## 対象・優先度\n- **P2（出力容量契約・大規模結果の表示用パケット）**\n- main: `ff72bbac52f97e375626ce2fed892627dd1e7ccb`。PR途中版ではありません。\n- `tools/export_mc_epoch_view.py` blob: `255beeb71da67d0c98ba0c140b6dee1238ee446a`。\n- 数値解そのものの誤りではなく、成功扱いとなる表示出力のサイズ検査不整合です。通常のPythonで発生し、既存 #2 の `-O` によるassert無効化とは別です。\n\n## 根拠・発生条件\n[容量事前検査（90–92行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_mc_epoch_view.py#L90-L92) は既定の `json.dumps` のUTF-8長を測りますが、[実保存（105–109行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_mc_epoch_view.py#L105-L109) では [`write_json`（167–169行）](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_mc_epoch.py#L167-L169) の `indent=2` を使います。大量の配列を含むframe/pointsでは保存バイト数が事前検査より大幅に増えます。\n\nまたコピーするgeometryと最後のmanifestが `MAX_TOTAL` に加算されていません。通常view exporterは[実際に書くバイトを検査して累積計上](https://github.com/tak063495-prog/solidcraft_soil_analysis/blob/ff72bbac52f97e375626ce2fed892627dd1e7ccb/tools/export_solidcraft_view.py#L263-L271)しており、epoch側自身も「unchanged display budgets」として上限を強制しています。単なる推奨値の問題ではありません。\n\n## 独立再現結果\n1. 既存の小型transport fixtureを使い、力学受理部分のみmock、容量定数を縮小した同じproduction exporterを実行しました。事前検査の4ファイルは `[1475,1340,581,581]` bytes、実保存は `[2657,2522,1075,1075]` bytes。ファイル上限1475／総量3977 bytesでも `complete=True` で成功し、最大実ファイル2657 bytes、viewディレクトリ総量11006 bytesとなりました。\n2. **上限を変更しない実writerの確認**：6成分応力配列300万件を含む代表的JSON値について、productionと同じ事前encodingは **96,000,059 bytes**、production `export_mc_epoch.write_json` が実際にディスクへ書いたファイルは **282,000,077 bytes**。実上限 **268,435,456 bytes（256 MiB）**を超えました。保存ファイルSHA256: `9d774150c538df4a54372220877eae80b39f10fcb721e921a533f14165eda75f`。一時ファイルは確認後削除しました。\n\n2は代表的フィールドのserialization実行であり、300万GPの物理解析や完全なNative workflowを実行したという意味ではありません。1はtransport fixtureでのexport完了判定の確認です。\n\n## 影響\n配列の多い大規模出力では256 MiB/512 MiBの表示予算を超えるパケットに完了マーカー・成功receiptが付きます。容量制限を前提とする下流読込へ過大出力を渡し、表示失敗や予想外のメモリ使用につながる可能性があります。Native GUIでの拒否・メモリ消費は未実行であり、ここで確定しているのは出力サイズ検査の逸脱です。\n\n## 修正案\n実際に書くバイト列を一度だけ生成し、その同じバイト列の長さを検査して保存してください。geometry・frame・points・manifestの実バイトを累積計上し、上限を超える場合はcomplete/成功receiptを公開しないようにしてください。\n\n## 回帰試験・未検証範囲\n- 配列主体のJSONで事前計測値と保存ファイル長が一致すること。\n- 各ファイルが上限ちょうど／1 byte超、geometryを含む累積が総量上限ちょうど／1 byte超の境界試験。\n- 上限超過時に成功manifest/receiptが残らないこと。\n- 上記独立Python実行以外のRust力学、Windows/Native GUI、Excel、実大規模FEM・表示は未検証。作者のCI・保存結果を独立実行確認とは扱っていません。\n",
+    "state": "closed",
+    "user": {
+      "login": "tak063495-prog",
+      "name": "tak063495-prog",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/254234268?v=4",
+      "id": 254234268
+    },
+    "assignees": null,
+    "labels": null,
+    "milestone": null,
+    "state_reason": "completed",
+    "comments": 1,
+    "created_at": "2026-10-30T23:25:46Z",
+    "updated_at": "2026-11-09T22:48:47Z",
+    "closed_at": "2026-11-09T22:48:47Z",
+    "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4",
+    "display_title": "[P2] MC epoch view の容量検査と実際の JSON 保存形式が異なり、上限超過を成功扱いする"
+  },
+  "url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4",
+  "title": "[P2] MC epoch view の容量検査と実際の JSON 保存形式が異なり、上限超過を成功扱いする",
+  "display_url": "https://github.com/tak063495-prog/solidcraft_soil_analysis/issues/4",
+  "display_title": "[P2] MC epoch view の容量検査と実際の JSON 保存形式が異なり、上限超過を成功扱いする"
+}

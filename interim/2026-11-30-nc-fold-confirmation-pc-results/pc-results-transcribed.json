@@ -1,0 +1,196 @@
+{
+  "schema": "nc-fold-pc-results-transcription/1",
+  "provenance": {
+    "kind": "user_transcribed_pc_output",
+    "cloud_new_solve": false,
+    "description_ja": "ユーザーがPC出力をチャットへ転記した値。クラウドの新規求解ではない。元zipはクラウドから見えず、原ファイル・SHA・全場を検証していない。",
+    "platform": "Windows",
+    "worktree": "D:\\Work\\scsa_b069ec8",
+    "head": "702a19a7ce189f1173caed727ee2a0059298a607",
+    "python": "3.13.14",
+    "execution_start_jst": "2026-11-12T07:57:00+09:00",
+    "execution_end_jst": "2026-11-12T08:01:00+09:00",
+    "time_precision": "minute",
+    "procedure": "interim/2026-11-24-nc-pc-rerun-fix/REPRODUCE.ja.md sections 1-2",
+    "command_placeholders": [
+      "<observer>",
+      "<FixRun>"
+    ],
+    "precision_note_ja": "approxフィールドは転記時の概数。欠落値は補間・推測しない。bracket_reported_pointsは転記表記を保持し、元JSONのindex/stepとの対応は未検証。",
+    "series_label_note_ja": "ユーザー転記では128/256をメッシュと呼ぶが、prepare_nc_fold_series.pyでは同一メッシュで撤去初期刻み1/128・1/256だけを変える。実PC原ファイルのhashは未確認。"
+  },
+  "fixed_inputs": [
+    {
+      "series_denominator": 128,
+      "rc": 0,
+      "raw_equal": false,
+      "fixed_inputs_match": true
+    },
+    {
+      "series_denominator": 256,
+      "rc": 0,
+      "raw_equal": false,
+      "fixed_inputs_match": true
+    }
+  ],
+  "common_to_all_runs": {
+    "command_rc": 0,
+    "analysis_command_rc": 0,
+    "report_passed": false,
+    "history_converged": false,
+    "static_limit_confirmed": false,
+    "production_adopted": false,
+    "native_committed_increments": 0,
+    "full_removal_reached": false,
+    "full_release_freeze_verified": false,
+    "restart_to_completion_verified": false,
+    "stop_reason": "bounded step count; inconclusive",
+    "arc_length_m": 0.00256,
+    "all_points_accepted": true,
+    "oriented_sign_changes": 1,
+    "oriented_sign_change_direction": "+ to -",
+    "fold_passed": false,
+    "nc01_complete": false,
+    "augmented_minimum_singular_value_approx": 0.99999999,
+    "stiffness_numerical_rank": 54,
+    "augmented_numerical_rank": 55,
+    "bracket_relative_force_residual_approx": 5e-16,
+    "removed_all_gp_contacts_frozen": true,
+    "verdict": {
+      "conclusion": "local_fold_bracket",
+      "reason": "accepted oriented tangent changes + to - with transverse load and regular border",
+      "limitation": "requires refinement/independent agreement; no global nonexistence or dynamic stability claim"
+    }
+  },
+  "runs": [
+    {
+      "id": "native128-coarse",
+      "series_denominator": 128,
+      "step_size_m": 2e-05,
+      "count": 128,
+      "accepted_points": 128,
+      "elapsed_seconds": 14.1,
+      "peak_lambda": 0.9514000963742456,
+      "bracket_reported_points": [
+        7,
+        8
+      ],
+      "bracket_lambdas": [
+        0.9514000960120256,
+        0.9514000963742456
+      ],
+      "bracket_dlambda_ds_approx": [
+        5.4049e-05,
+        -1.7814e-05
+      ],
+      "bracket_transversality_approx": [
+        0.372154,
+        0.372173
+      ],
+      "bracket_stiffness_min_singular_values_approx": [
+        0.0010389,
+        0.00034242
+      ],
+      "last_lambda": 0.9513899099079405,
+      "first_dlambda_ds_approx": 0.00055724,
+      "last_dlambda_ds_approx": -0.0085286,
+      "transversality_range_approx": [
+        0.372026,
+        0.374364
+      ],
+      "stiffness_minimum_singular_value_approx": 0.00034242,
+      "command": "python tools/nc_fold_path.py --map native --fresh-native runs/NEW-nc-fold-PC/series/128/history --binary <observer>/material_diagnostic.exe --step-size 0.00002 --count 128 --budget-seconds 1800 --output <FixRun>/native128-coarse",
+      "analysis_command": "python tools/analyze_nc_fold_path.py --path <FixRun>/native128-coarse --output <FixRun>/native128-coarse-audit"
+    },
+    {
+      "id": "native128-fine",
+      "series_denominator": 128,
+      "step_size_m": 1e-05,
+      "count": 256,
+      "accepted_points": 256,
+      "elapsed_seconds": 28.4,
+      "peak_lambda": 0.9514000963737252,
+      "bracket_reported_points": [
+        16,
+        17
+      ],
+      "bracket_lambdas": [
+        0.9514000963722934,
+        0.9514000963737252
+      ],
+      "bracket_dlambda_ds_approx": [
+        1.811e-05,
+        -1.782e-05
+      ],
+      "bracket_stiffness_min_singular_values_approx": [
+        0.00034809,
+        0.00034253
+      ],
+      "last_lambda": 0.9513899099022921,
+      "transversality_range_approx": [
+        0.372003,
+        0.374351
+      ],
+      "stiffness_minimum_singular_value_approx": 0.00034253,
+      "command": "python tools/nc_fold_path.py --map native --fresh-native runs/NEW-nc-fold-PC/series/128/history --binary <observer>/material_diagnostic.exe --step-size 0.00001 --count 256 --budget-seconds 1800 --output <FixRun>/native128-fine",
+      "analysis_command": "python tools/analyze_nc_fold_path.py --path <FixRun>/native128-fine --output <FixRun>/native128-fine-audit"
+    },
+    {
+      "id": "native256-coarse",
+      "series_denominator": 256,
+      "step_size_m": 2e-05,
+      "count": 128,
+      "accepted_points": 128,
+      "elapsed_seconds": 14.4,
+      "peak_lambda": 0.951482232752456,
+      "bracket_reported_points": [
+        14,
+        15
+      ],
+      "bracket_lambdas": [
+        0.9514822324549407,
+        0.951482232752456
+      ],
+      "last_lambda": 0.9514733053795776,
+      "transversality_range_approx": [
+        0.371489,
+        0.373817
+      ],
+      "stiffness_minimum_singular_value_approx": 0.00039585,
+      "command": "python tools/nc_fold_path.py --map native --fresh-native runs/NEW-nc-fold-PC/series/256/history --binary <observer>/material_diagnostic.exe --step-size 0.00002 --count 128 --budget-seconds 1800 --output <FixRun>/native256-coarse",
+      "analysis_command": "python tools/analyze_nc_fold_path.py --path <FixRun>/native256-coarse --output <FixRun>/native256-coarse-audit"
+    },
+    {
+      "id": "native256-fine",
+      "series_denominator": 256,
+      "step_size_m": 1e-05,
+      "count": 256,
+      "accepted_points": 256,
+      "elapsed_seconds": 28.3,
+      "peak_lambda": 0.9514822327804049,
+      "bracket_reported_points": [
+        30,
+        31
+      ],
+      "bracket_lambdas": [
+        0.9514822327804049,
+        0.9514822327516502
+      ],
+      "last_lambda": 0.9514733053740204,
+      "transversality_range_approx": [
+        0.371466,
+        0.373804
+      ],
+      "stiffness_minimum_singular_value_approx": 0.00028559,
+      "command": "python tools/nc_fold_path.py --map native --fresh-native runs/NEW-nc-fold-PC/series/256/history --binary <observer>/material_diagnostic.exe --step-size 0.00001 --count 256 --budget-seconds 1800 --output <FixRun>/native256-fine",
+      "analysis_command": "python tools/analyze_nc_fold_path.py --path <FixRun>/native256-fine --output <FixRun>/native256-fine-audit"
+    }
+  ],
+  "user_observations": {
+    "absolute_peak_difference_same_series_approx": {
+      "128": 5.2e-13,
+      "256": 2.8e-11
+    },
+    "absolute_peak_difference_between_series_approx": 8.21e-05
+  }
+}

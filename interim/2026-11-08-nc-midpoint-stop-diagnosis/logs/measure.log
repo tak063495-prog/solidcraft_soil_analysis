@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-08-nc-midpoint-stop-diagnosis/measure.py", line 180, in <module>
+    r=measure(a.prior.resolve(),a.traces.resolve(),a.material_probe.resolve(),a.output.resolve());print('Diagnostic complete; passed=false')
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-08-nc-midpoint-stop-diagnosis/measure.py", line 150, in measure
+    write(out/'iterate-measurements.json',matrices)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/probe_low_preload_nc.py", line 35, in write
+    json.dump(value, stream, indent=2, ensure_ascii=False, allow_nan=False)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/json/__init__.py", line 181, in dump
+    for chunk in iterable:
+                 ^^^^^^^^
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/json/encoder.py", line 433, in _iterencode
+    yield from _iterencode_list(o, _current_indent_level)
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/json/encoder.py", line 328, in _iterencode_list
+    yield from chunks
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/json/encoder.py", line 409, in _iterencode_dict
+    yield from chunks
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/json/encoder.py", line 442, in _iterencode
+    o = _default(o)
+  File "/workspace/.soil-python/cpython-3.13.17-linux-x86_64-gnu/lib/python3.13/json/encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type int64 is not JSON serializable

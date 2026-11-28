@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-27-remaining-p13/local_face.py", line 190, in <module>
+    run(sys.argv[1],Path(sys.argv[2]))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-27-remaining-p13/local_face.py", line 108, in run
+    original, reds, gains, law, data=face.setup(sign)
+                                     ~~~~~~~~~~^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-27-remaining-p12/face.py", line 23, in setup
+    blocks, law = base.prev.geometry(folder)
+                  ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/interim/2026-11-26-remaining-p9/face_bounds.py", line 65, in geometry
+    tiles=np.array([t for leaf in face["leaves"] for t in p6.split(np.array(leaf))])
+                                                          ^^^^^^^^
+AttributeError: module 'face' has no attribute 'split'
+{"exit_code": 1, "seconds": 0.45408225400001356, "peak_rss_kib": 43768}

@@ -1,0 +1,134 @@
+{
+  "commands": [
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.775042823999911
+    },
+    {
+      "name": "clippy-diagnostic",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "work/nc-stop/source/Cargo.toml",
+        "--example",
+        "nc_stop_probe",
+        "--example",
+        "nc_midpoint_map_probe",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.75570155100013
+    },
+    {
+      "name": "nc-midpoint-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_midpoint_resume.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.1506128670000635
+    },
+    {
+      "name": "nc-diagnosis-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_low_preload_nc_diagnosis.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.26468734500008395
+    },
+    {
+      "name": "nc-trace-tests",
+      "command": [
+        "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_nc_newton_trace.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.12831814199989822
+    }
+  ],
+  "all_rust_tests_run": false,
+  "all_python_tests_run": false,
+  "windows_ci": "unverified",
+  "related_existing_python_tests": 9,
+  "new_diagnostic_guard_tests": 5,
+  "all_14_tests_passed": true,
+  "diagnostic_guard_test_command": [
+    "python",
+    "interim/2026-11-08-nc-midpoint-stop-diagnosis/test_diagnosis.py",
+    "--probe",
+    "work/nc-stop/source/target/release/examples/nc_stop_probe",
+    "--prior",
+    "work/nc-stop/prior",
+    "--traces",
+    "work/nc-stop/diagnostic",
+    "-v"
+  ],
+  "guard_test_exit_code": 0,
+  "guard_test_unittest_reported_seconds": 0.34,
+  "diagnostic_builds": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "work/nc-stop/source/Cargo.toml",
+        "--example",
+        "nc_stop_probe"
+      ],
+      "exit_code": 0,
+      "log": "logs/build-diagnostic.log",
+      "cargo_reported_duration": "1m 18s"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "work/nc-stop/source/Cargo.toml",
+        "--example",
+        "nc_midpoint_map_probe"
+      ],
+      "exit_code": 0,
+      "log": "logs/build-map-probe.log",
+      "cargo_reported_duration": "16.32s"
+    }
+  ]
+}

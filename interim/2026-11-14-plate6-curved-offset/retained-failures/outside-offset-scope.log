@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tools/plate6_offset_study.py", line 133, in <module>
+    args=parser.parse_args();print(json.dumps(study(args.output,args.binary,args.offset),indent=2))
+                                              ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/plate6_offset_study.py", line 50, in study
+    command(solver,['solve-stages',*base,output/'stage-results.json'])
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/plate6_offset_study.py", line 32, in command
+    if p.returncode:raise RuntimeError(f'CLI failed {p.returncode}: {p.stdout}\n{p.stderr}')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: CLI failed 1: 
+invalid input: offset scope requires finite |e| <= thickness/2
+

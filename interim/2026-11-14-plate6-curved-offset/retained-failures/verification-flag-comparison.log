@@ -1,0 +1,174 @@
+test_curves_and_unverified_combinations_remain_refused (test_plate6_offset.Plate6Offset.test_curves_and_unverified_combinations_remain_refused) ... ok
+test_independent_offset_rank_rigid_modes_and_trace (test_plate6_offset.Plate6Offset.test_independent_offset_rank_rigid_modes_and_trace) ... ok
+test_independent_work_map_and_zero_exactness (test_plate6_offset.Plate6Offset.test_independent_work_map_and_zero_exactness) ... ok
+test_old_reference_does_not_silently_accept_offset (test_plate6_offset.Plate6Offset.test_old_reference_does_not_silently_accept_offset) ... ok
+test_positive_and_negative_offset_direct_system_restart_and_quadratic_vtu (test_plate6_offset.Plate6Offset.test_positive_and_negative_offset_direct_system_restart_and_quadratic_vtu) ... FAIL
+test_zero_offset_complete_physical_run_exactly_matches_planar (test_plate6_offset.Plate6Offset.test_zero_offset_complete_physical_run_exactly_matches_planar) ... ok
+
+======================================================================
+FAIL: test_positive_and_negative_offset_direct_system_restart_and_quadratic_vtu (test_plate6_offset.Plate6Offset.test_positive_and_negative_offset_direct_system_restart_and_quadratic_vtu)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/solidcraft_soil_analysis/tests/test_plate6_offset.py", line 84, in test_positive_and_negative_offset_direct_system_restart_and_quadratic_vtu
+    output=Path(tmp)/str(e);r=study(output,e=e)
+                              ~~~~~^^^^^^^^^^^^
+  File "/workspace/solidcraft_soil_analysis/tools/plate6_offset_study.py", line 143, in study
+    assert accepted_run(clean)==accepted_run(run), 'accepted Run differs beyond rejection/step-control inputs and their hashes'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: accepted Run differs beyond rejection/step-control inputs and their hashes
+
+----------------------------------------------------------------------
+Ran 6 tests in 42.892s
+
+FAILED (failures=1)
+{
+  "schema": "soil-fem-independent-offset-plate-beam-coupling/1",
+  "reference": "Full soil + plate/frame direct solve; explicit offset rigid-arm work map and independent polynomial Mindlin Tri6 and GL25 surface integration; GL125 soil quadrature; SVD supports; no Rust solved field or installation reference generates the solution",
+  "frames": [
+    {
+      "frame": "initial_equilibrated",
+      "soil_free_dofs": 108,
+      "retained_frame_unknowns": 0,
+      "relative_joint_system_residual": 4.319037972042e-15,
+      "relative_3d_displacement_error": 1.7738317084192199e-12,
+      "maximum_beam_displacement_error_m": 0.0,
+      "maximum_rotation_error_rad": 0.0,
+      "maximum_installation_reference_error": 0.0,
+      "maximum_end_action_error": 0.0,
+      "relative_all_point_stress_error": 1.6660895635864092e-12,
+      "maximum_void_ratio_error": 1.5543122344752192e-15,
+      "global_moment_balance_kn_m": [
+        2.4358293160275934e-13,
+        -2.4452662117369073e-13,
+        -8.326672684688674e-16
+      ],
+      "plate_maximum_absolute_errors": {}
+    },
+    {
+      "frame": "install",
+      "soil_free_dofs": 108,
+      "retained_frame_unknowns": 33,
+      "relative_joint_system_residual": 1.8694969151016457e-14,
+      "relative_3d_displacement_error": 2.0899880686103825e-12,
+      "maximum_beam_displacement_error_m": 4.4971079811439996e-15,
+      "maximum_rotation_error_rad": 5.7740109961628046e-15,
+      "maximum_installation_reference_error": 7.039182604862138e-16,
+      "maximum_end_action_error": 1.7053025658242404e-13,
+      "relative_all_point_stress_error": 1.0611874612985268e-12,
+      "maximum_void_ratio_error": 2.886579864025407e-15,
+      "global_moment_balance_kn_m": [
+        2.3372415114408795e-12,
+        -1.20614629395277e-12,
+        -4.99711383383783e-13
+      ],
+      "plate_maximum_absolute_errors": {
+        "area_m2": 0.0,
+        "local_axes": 0.0,
+        "membrane_energy_kn_m": 1.9028462811169849e-19,
+        "bending_energy_kn_m": 5.250249020261055e-17,
+        "drilling_penalty_energy_kn_m": 1.2017199966029537e-22,
+        "transverse_shear_energy_kn_m": 6.240515238896058e-19,
+        "barycentric": 0.0,
+        "membrane_strain": 3.3068166260807885e-18,
+        "curvature_per_m": 2.6907187415659006e-16,
+        "membrane_force_kn_m": 8.402556428421804e-12,
+        "bending_moment_kn": 4.729688862781245e-13,
+        "transverse_shear_strain": 2.6020852139652106e-18,
+        "transverse_shear_force_kn_m": 2.710498492319857e-12,
+        "drilling_mismatch_rad": 3.2149226196847524e-15
+      }
+    },
+    {
+      "frame": "load_plate_beam",
+      "soil_free_dofs": 108,
+      "retained_frame_unknowns": 33,
+      "relative_joint_system_residual": 8.167078041435724e-14,
+      "relative_3d_displacement_error": 5.815466925535867e-12,
+      "maximum_beam_displacement_error_m": 2.1430773822217475e-14,
+      "maximum_rotation_error_rad": 3.0516072931389623e-14,
+      "maximum_installation_reference_error": 7.039182604862138e-16,
+      "maximum_end_action_error": 2.7284841053187847e-12,
+      "relative_all_point_stress_error": 3.4976759707776422e-12,
+      "maximum_void_ratio_error": 1.4654943925052066e-14,
+      "global_moment_balance_kn_m": [
+        1.0487166690609229e-11,
+        -5.554667836804583e-12,
+        -1.6213974607381942e-12
+      ],
+      "plate_maximum_absolute_errors": {
+        "area_m2": 0.0,
+        "local_axes": 0.0,
+        "membrane_energy_kn_m": 4.481990137101405e-17,
+        "bending_energy_kn_m": 2.881809374466471e-16,
+        "drilling_penalty_energy_kn_m": 2.6840737214082614e-21,
+        "transverse_shear_energy_kn_m": 6.58652819784944e-17,
+        "barycentric": 0.0,
+        "membrane_strain": 7.41594285980085e-17,
+        "curvature_per_m": 3.2197551916302025e-15,
+        "membrane_force_kn_m": 1.0601386435382665e-10,
+        "bending_moment_kn": 6.328271240363392e-12,
+        "transverse_shear_strain": 3.8055496254241206e-17,
+        "transverse_shear_force_kn_m": 3.964117922805599e-11,
+        "drilling_mismatch_rad": 1.3211304760693465e-14
+      }
+    },
+    {
+      "frame": "unload_plate_beam",
+      "soil_free_dofs": 108,
+      "retained_frame_unknowns": 33,
+      "relative_joint_system_residual": 1.8694969151016457e-14,
+      "relative_3d_displacement_error": 3.219519226300777e-11,
+      "maximum_beam_displacement_error_m": 1.887845348796935e-14,
+      "maximum_rotation_error_rad": 1.9718872801971488e-14,
+      "maximum_installation_reference_error": 7.039182604862138e-16,
+      "maximum_end_action_error": 2.2737367544323206e-13,
+      "relative_all_point_stress_error": 1.61012082807312e-11,
+      "maximum_void_ratio_error": 2.220446049250313e-14,
+      "global_moment_balance_kn_m": [
+        2.3372415114408795e-12,
+        -1.20614629395277e-12,
+        -4.99711383383783e-13
+      ],
+      "plate_maximum_absolute_errors": {
+        "area_m2": 0.0,
+        "local_axes": 0.0,
+        "membrane_energy_kn_m": 1.4895451571826196e-17,
+        "bending_energy_kn_m": 3.2490828603959354e-16,
+        "drilling_penalty_energy_kn_m": 1.351368089670433e-22,
+        "transverse_shear_energy_kn_m": 1.7572545523737715e-17,
+        "barycentric": 0.0,
+        "membrane_strain": 1.5802246663976227e-16,
+        "curvature_per_m": 6.119806267648742e-15,
+        "membrane_force_kn_m": 2.143035748858324e-10,
+        "bending_moment_kn": 1.1705136859774257e-11,
+        "transverse_shear_strain": 8.723084104003687e-17,
+        "transverse_shear_force_kn_m": 9.086553731663116e-11,
+        "drilling_mismatch_rad": 3.578098755785442e-15
+      }
+    },
+    {
+      "frame": "remove",
+      "soil_free_dofs": 108,
+      "retained_frame_unknowns": 0,
+      "relative_joint_system_residual": 4.319037972042e-15,
+      "relative_3d_displacement_error": 2.9503109338561118e-12,
+      "maximum_beam_displacement_error_m": 1.887845348796935e-14,
+      "maximum_rotation_error_rad": 1.9718872801971488e-14,
+      "maximum_installation_reference_error": 7.039182604862138e-16,
+      "maximum_end_action_error": 0.0,
+      "relative_all_point_stress_error": 2.274592183239573e-12,
+      "maximum_void_ratio_error": 2.6645352591003757e-15,
+      "global_moment_balance_kn_m": [
+        2.4358293160275934e-13,
+        -2.4452662117369073e-13,
+        -8.326672684688674e-16
+      ],
+      "plate_maximum_absolute_errors": {}
+    }
+  ],
+  "solver_sha256": "586700f17b94476f56776cad9952fe74e681140c82dec8b116fee7638351eac7",
+  "plate_samples_and_energies_checked": true,
+  "spatial_convergence_accepted": false,
+  "goal_complete": false,
+  "p6_complete": false
+}

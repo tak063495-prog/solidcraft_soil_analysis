@@ -1,0 +1,369 @@
+{
+  "schema": "nc-fold-linux-short-path-comparison/1",
+  "provenance": {
+    "provenance": "new Linux local diagnostic solves, separate from user-transcribed PC output",
+    "runtime": {
+      "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41"
+    },
+    "seed": "SHA-verified original 2026-11-09-nc-pseudo-arclength archive; existing --evidence adapter; no prehistory solve",
+    "pc_seed_note": "PC used --fresh-native Windows accepted histories; original PC files unavailable. This is not an identical-input/binary cross-platform certification.",
+    "records": [
+      {
+        "id": "linux-native128-coarse",
+        "head": "e6e4e735495951661bcc7b1d72168c14866597b6",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/nc_fold_path.py",
+          "--map",
+          "native",
+          "--evidence",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/old-fold-replay/evidence/prior",
+          "--binary",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/observer/target/release/examples/material_diagnostic",
+          "--step-size",
+          "0.00002",
+          "--count",
+          "32",
+          "--budget-seconds",
+          "60",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-coarse"
+        ],
+        "rc": 0,
+        "start_utc": "2026-11-12T03:41:59.782250+00:00",
+        "total_wall_seconds": 3.6602445409998836,
+        "analysis_command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/analyze_nc_fold_path.py",
+          "--path",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-coarse",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-coarse-audit"
+        ],
+        "analysis_rc": 0
+      },
+      {
+        "id": "linux-native128-fine",
+        "head": "e6e4e735495951661bcc7b1d72168c14866597b6",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/nc_fold_path.py",
+          "--map",
+          "native",
+          "--evidence",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/old-fold-replay/evidence/prior",
+          "--binary",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/observer/target/release/examples/material_diagnostic",
+          "--step-size",
+          "0.00001",
+          "--count",
+          "64",
+          "--budget-seconds",
+          "60",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-fine"
+        ],
+        "rc": 0,
+        "start_utc": "2026-11-12T03:42:04.650882+00:00",
+        "total_wall_seconds": 5.8857281460000195,
+        "analysis_command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/analyze_nc_fold_path.py",
+          "--path",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-fine",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-fine-audit"
+        ],
+        "analysis_rc": 0
+      }
+    ]
+  },
+  "note_ja": "新規Linux局所求解。既存の封印済み1/128前史を--evidenceで使用。PCは別ファイルの--fresh-native履歴であり、純粋なOS差・全場一致の検定ではない。Linuxの32/64点・弧長0.00064mをPCの128/256点・0.00256mの全区間再現と数えない。PCの256初期刻み系列は再計算していない。",
+  "pc_original_values_changed": false,
+  "prehistory_solved": false,
+  "production_adopted": false,
+  "nc01_complete": false,
+  "paths": [
+    {
+      "id": "linux-native128-coarse",
+      "pc_comparison_id": "native128-coarse",
+      "execution": {
+        "id": "linux-native128-coarse",
+        "head": "e6e4e735495951661bcc7b1d72168c14866597b6",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/nc_fold_path.py",
+          "--map",
+          "native",
+          "--evidence",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/old-fold-replay/evidence/prior",
+          "--binary",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/observer/target/release/examples/material_diagnostic",
+          "--step-size",
+          "0.00002",
+          "--count",
+          "32",
+          "--budget-seconds",
+          "60",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-coarse"
+        ],
+        "rc": 0,
+        "start_utc": "2026-11-12T03:41:59.782250+00:00",
+        "total_wall_seconds": 3.6602445409998836,
+        "analysis_command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/analyze_nc_fold_path.py",
+          "--path",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-coarse",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-coarse-audit"
+        ],
+        "analysis_rc": 0
+      },
+      "report": {
+        "passed": false,
+        "history_converged": false,
+        "static_limit_confirmed": false,
+        "production_adopted": false,
+        "native_committed_increments": 0,
+        "equilibrium_samples": 32,
+        "stop_reason": "bounded step count; inconclusive",
+        "last_progress": 0.9513997082668152,
+        "arc_length_m": 0.0006400000000000004,
+        "full_removal_reached": false,
+        "full_release_freeze_verified": false,
+        "restart_to_completion_verified": false,
+        "elapsed_seconds": 2.626653812999848
+      },
+      "peak_lambda": 0.9514000963742423,
+      "initial_lambda": 0.9514000415802002,
+      "accepted_points": 32,
+      "verdict": {
+        "conclusion": "local_fold_bracket",
+        "brackets": [
+          {
+            "indices": [
+              7,
+              8
+            ],
+            "lambdas": [
+              0.9514000960120372,
+              0.9514000963742423
+            ]
+          }
+        ],
+        "reason": "accepted oriented tangent changes + to - with transverse load and regular border",
+        "limitation": "requires refinement/independent agreement; no global nonexistence or dynamic stability claim"
+      },
+      "absolute_peak_difference_to_pc_transcription_decimal": "3.3E-15",
+      "maximum_relative_force_residual": 7.81076385291949e-16,
+      "maximum_augmented_linear_residual": 1.933010283842017e-15,
+      "maximum_force_block_linear_residual": 1.259418263484337e-15,
+      "minimum_stiffness_singular_value": 0.00034243331576476514,
+      "minimum_augmented_singular_value": 0.999999996398272,
+      "normalized_transversality_range": [
+        0.37202583439611053,
+        0.3725953853843599
+      ],
+      "all_removed_gp_contacts_frozen": true,
+      "full_component_load_max_relative_error": 3.500236108477514e-16,
+      "source_binding": {
+        "map": "native",
+        "source_sha256": {
+          "tools/nc_fold_path.py": "419c06f62251ed5969c498aae2b089128c2aa52ab0328bbb8de0531334bb234f",
+          "tools/nc_fold_fresh.py": "697ae29e352065515cea59bc82bd5a10785c72d7ce5ddf7ca0654e5c19ed1a03",
+          "tools/nc_fixed_inputs.py": "c900ef6b99032a533a29269087e8590a1886bf90d130583893750d295cba6eb0",
+          "tools/fold_stability.py": "4d01a1577284736ad6a6070f0736ec5fe2d200df263db5d72d9d34e0ac0bc0de",
+          "interim/2026-11-09-nc-beyond-fold/continue_path.py": "bae2b6d75c56d3ccd5476c260e9f164f42440b9b4d6bb79378062a3bffde1d06",
+          "interim/2026-11-09-nc-pseudo-arclength/native_arc.py": "a1d0b8ead216d7ab8fbdad6b697f903d8337a97451fe9ffd5ee664a9fb16b7da",
+          "interim/2026-11-09-nc-pseudo-arclength/independent_map_arc.py": "96b790ee46d9880125efe8f296bb2c34d01dfb753dcb9b536a0d01080328aad0",
+          "interim/2026-11-09-nc-pseudo-arclength/independent_branches.py": "030c9688975cb63a8b41f4b023b6de05c3a27affa4c3e8b458a9e5931b966055",
+          "interim/2026-11-09-nc-pseudo-arclength/independent_arc.py": "a073fd6de96086457b52db6a128ac0bf3fc6c2191acfd861d68a70a2c072baf8",
+          "tools/mcc_rate_fem.py": "57d0a183b386c0ff0940f70075686d657176026e9a98be344ff519b0dcab0720",
+          "tools/mcc_rate_rk4.py": "1c25b4596ac73a2104af0e3f513c51d68f6134d2501f9207346afff22b452ca2",
+          "tools/mcc_rate_midpoint.py": "5bc12ff71e82176a8c1ea53ba77e4151580273451251e3b1a627ccc7390059af",
+          "tools/fem_reference.py": "4a244d586e2e4a9e3b541c860b6b72a4c6f1ce8cf60dd7815f19346361e296c6",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/joint_reference.py": "e8bc60ecdad2f8450f2d24aa23dd91aec3db57c6aab7abf3e9506d7d94ef2aef",
+          "tools/low_preload_nc_reference.py": "eaa5527effb327768f748a0d82f0c9177397581a6005c6d9ad65e6ddf0624158",
+          "tools/probe_nc_midpoint.py": "c4453e96ec47ff7d089da83c8cad8827167991e8dffba966ef46f3fd8fd91ab7",
+          "tools/probe_low_preload_nc.py": "d60824cd9b4ccd0f00f55341867b0f80d6938fa3f15fe871fceb536117c6a0c8",
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399"
+        },
+        "model_sha256": "d0f6ffdd083daa62ef25683b5c68995cc73acfa2422b643bfd15289303808bdb",
+        "geometry_sha256": "3bb89e75af6a29d9de30dbefd47cda4ed89d74d3c619a576c31c71681f166e7f",
+        "runtime": {
+          "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+          "numpy": "2.5.4",
+          "scipy": "1.18.1",
+          "platform": "linux",
+          "machine": "x86_64"
+        },
+        "step_size_m": 2e-05,
+        "material_steps": 4,
+        "original_initial_increment": 0.0078125,
+        "independent_reference_steps": null,
+        "final_load_sha256": "fe00a5b5e72a2d871c4a1286ebca2ff4705bdb0dac4ea5a14e5b3f7878c7b460",
+        "holding_sha256": "5c9e3598653a03430d88b03868236b2aba6fbd962c874fc6a0f5fb5d9773ed3c",
+        "fold_control": "common_lambda_moving_tangent_plane/1",
+        "arc_lambda_scale_m": 1.0,
+        "force_tolerance": 1e-08,
+        "true_linear_tolerance": 1e-10,
+        "arc_constraint_tolerance_m": 1e-12,
+        "checkpoint_state_fields": [
+          "progress",
+          "tangent",
+          "states",
+          "displacement_m",
+          "contacts",
+          "arc_length_m",
+          "applied_nodal_load_kn"
+        ]
+      },
+      "passed": false,
+      "nc01_complete": false
+    },
+    {
+      "id": "linux-native128-fine",
+      "pc_comparison_id": "native128-fine",
+      "execution": {
+        "id": "linux-native128-fine",
+        "head": "e6e4e735495951661bcc7b1d72168c14866597b6",
+        "command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/nc_fold_path.py",
+          "--map",
+          "native",
+          "--evidence",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/old-fold-replay/evidence/prior",
+          "--binary",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/observer/target/release/examples/material_diagnostic",
+          "--step-size",
+          "0.00001",
+          "--count",
+          "64",
+          "--budget-seconds",
+          "60",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-fine"
+        ],
+        "rc": 0,
+        "start_utc": "2026-11-12T03:42:04.650882+00:00",
+        "total_wall_seconds": 5.8857281460000195,
+        "analysis_command": [
+          "/workspace/solidcraft_soil_analysis/.venv/bin/python",
+          "/workspace/solidcraft_soil_analysis/tools/analyze_nc_fold_path.py",
+          "--path",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-fine",
+          "--output",
+          "/workspace/solidcraft_soil_analysis/work/nc-fold-confirmation/linux-native128-fine-audit"
+        ],
+        "analysis_rc": 0
+      },
+      "report": {
+        "passed": false,
+        "history_converged": false,
+        "static_limit_confirmed": false,
+        "production_adopted": false,
+        "native_committed_increments": 0,
+        "equilibrium_samples": 64,
+        "stop_reason": "bounded step count; inconclusive",
+        "last_progress": 0.9513997082652738,
+        "arc_length_m": 0.000640000000000001,
+        "full_removal_reached": false,
+        "full_release_freeze_verified": false,
+        "restart_to_completion_verified": false,
+        "elapsed_seconds": 5.1844512349998695
+      },
+      "peak_lambda": 0.9514000963737215,
+      "initial_lambda": 0.9514000415802002,
+      "accepted_points": 64,
+      "verdict": {
+        "conclusion": "local_fold_bracket",
+        "brackets": [
+          {
+            "indices": [
+              16,
+              17
+            ],
+            "lambdas": [
+              0.9514000963722975,
+              0.9514000963737215
+            ]
+          }
+        ],
+        "reason": "accepted oriented tangent changes + to - with transverse load and regular border",
+        "limitation": "requires refinement/independent agreement; no global nonexistence or dynamic stability claim"
+      },
+      "absolute_peak_difference_to_pc_transcription_decimal": "3.7E-15",
+      "maximum_relative_force_residual": 7.386516397299007e-16,
+      "maximum_augmented_linear_residual": 2.4253851544459753e-15,
+      "maximum_force_block_linear_residual": 1.3933276931534767e-15,
+      "minimum_stiffness_singular_value": 0.00034254982709240914,
+      "minimum_augmented_singular_value": 0.9999999990787851,
+      "normalized_transversality_range": [
+        0.37200343506372735,
+        0.3725820594557805
+      ],
+      "all_removed_gp_contacts_frozen": true,
+      "full_component_load_max_relative_error": 3.501370271342821e-16,
+      "source_binding": {
+        "map": "native",
+        "source_sha256": {
+          "tools/nc_fold_path.py": "419c06f62251ed5969c498aae2b089128c2aa52ab0328bbb8de0531334bb234f",
+          "tools/nc_fold_fresh.py": "697ae29e352065515cea59bc82bd5a10785c72d7ce5ddf7ca0654e5c19ed1a03",
+          "tools/nc_fixed_inputs.py": "c900ef6b99032a533a29269087e8590a1886bf90d130583893750d295cba6eb0",
+          "tools/fold_stability.py": "4d01a1577284736ad6a6070f0736ec5fe2d200df263db5d72d9d34e0ac0bc0de",
+          "interim/2026-11-09-nc-beyond-fold/continue_path.py": "bae2b6d75c56d3ccd5476c260e9f164f42440b9b4d6bb79378062a3bffde1d06",
+          "interim/2026-11-09-nc-pseudo-arclength/native_arc.py": "a1d0b8ead216d7ab8fbdad6b697f903d8337a97451fe9ffd5ee664a9fb16b7da",
+          "interim/2026-11-09-nc-pseudo-arclength/independent_map_arc.py": "96b790ee46d9880125efe8f296bb2c34d01dfb753dcb9b536a0d01080328aad0",
+          "interim/2026-11-09-nc-pseudo-arclength/independent_branches.py": "030c9688975cb63a8b41f4b023b6de05c3a27affa4c3e8b458a9e5931b966055",
+          "interim/2026-11-09-nc-pseudo-arclength/independent_arc.py": "a073fd6de96086457b52db6a128ac0bf3fc6c2191acfd861d68a70a2c072baf8",
+          "tools/mcc_rate_fem.py": "57d0a183b386c0ff0940f70075686d657176026e9a98be344ff519b0dcab0720",
+          "tools/mcc_rate_rk4.py": "1c25b4596ac73a2104af0e3f513c51d68f6134d2501f9207346afff22b452ca2",
+          "tools/mcc_rate_midpoint.py": "5bc12ff71e82176a8c1ea53ba77e4151580273451251e3b1a627ccc7390059af",
+          "tools/fem_reference.py": "4a244d586e2e4a9e3b541c860b6b72a4c6f1ce8cf60dd7815f19346361e296c6",
+          "tools/verify_high_order.py": "7f5933093371d9e42ca5b04e058ebc08ebae81b71d3d81ef0a77ba8c486a4dd1",
+          "tools/joint_reference.py": "e8bc60ecdad2f8450f2d24aa23dd91aec3db57c6aab7abf3e9506d7d94ef2aef",
+          "tools/low_preload_nc_reference.py": "eaa5527effb327768f748a0d82f0c9177397581a6005c6d9ad65e6ddf0624158",
+          "tools/probe_nc_midpoint.py": "c4453e96ec47ff7d089da83c8cad8827167991e8dffba966ef46f3fd8fd91ab7",
+          "tools/probe_low_preload_nc.py": "d60824cd9b4ccd0f00f55341867b0f80d6938fa3f15fe871fceb536117c6a0c8",
+          "tools/make_free_contact.py": "5cccf3fd4a92210c80d47e444d1b34938091fbb105425a6a5a82e41247afb399"
+        },
+        "model_sha256": "d0f6ffdd083daa62ef25683b5c68995cc73acfa2422b643bfd15289303808bdb",
+        "geometry_sha256": "3bb89e75af6a29d9de30dbefd47cda4ed89d74d3c619a576c31c71681f166e7f",
+        "runtime": {
+          "python": "3.13.17 (main, Oct 21 2026, 17:49:22) [Clang 23.1.3 ]",
+          "numpy": "2.5.4",
+          "scipy": "1.18.1",
+          "platform": "linux",
+          "machine": "x86_64"
+        },
+        "step_size_m": 1e-05,
+        "material_steps": 4,
+        "original_initial_increment": 0.0078125,
+        "independent_reference_steps": null,
+        "final_load_sha256": "fe00a5b5e72a2d871c4a1286ebca2ff4705bdb0dac4ea5a14e5b3f7878c7b460",
+        "holding_sha256": "5c9e3598653a03430d88b03868236b2aba6fbd962c874fc6a0f5fb5d9773ed3c",
+        "fold_control": "common_lambda_moving_tangent_plane/1",
+        "arc_lambda_scale_m": 1.0,
+        "force_tolerance": 1e-08,
+        "true_linear_tolerance": 1e-10,
+        "arc_constraint_tolerance_m": 1e-12,
+        "checkpoint_state_fields": [
+          "progress",
+          "tangent",
+          "states",
+          "displacement_m",
+          "contacts",
+          "arc_length_m",
+          "applied_nodal_load_kn"
+        ]
+      },
+      "passed": false,
+      "nc01_complete": false
+    }
+  ]
+}
